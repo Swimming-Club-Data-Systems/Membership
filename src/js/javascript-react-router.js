@@ -17,6 +17,11 @@ const NotifySuccess = React.lazy(() => import("./notify/forms/Composer"));
 const AboutReactApp = React.lazy(() => import("./pages/AboutReactApp"));
 const JuniorLeagueMembers = React.lazy(() => import("./admin/forms/JuniorLeagueMembers"));
 
+// Onboarding pages
+const OnboardingHome = React.lazy(() => import("./membership-and-onboarding/pages/OnboardingHome"));
+const NewOnboardingSessionForm = React.lazy(() => import("./membership-and-onboarding/forms/NewOnboardingSessionForm"));
+const AmendOnboardingSessionForm = React.lazy(() => import("./membership-and-onboarding/forms/AmendOnboardingSessionForm"));
+
 const rootElement = document.getElementById("root");
 render(
   <Provider store={store}>
@@ -31,6 +36,15 @@ render(
             <Route path="notify/new/success" element={<NotifySuccess />} />
             <Route path="about" element={<AboutReactApp />} />
             <Route path="admin/reports/junior-league-report" element={<IsAuthorised permissions={["Admin"]}><JuniorLeagueMembers /></IsAuthorised>} />
+            <Route path="/memberships">
+              {/* <Route index element={<LoginPage />} />
+              <Route path="forgot-password" element={<FindAccount />} /> */}
+            </Route>
+            <Route path="/onboarding">
+              <Route index element={<OnboardingHome />} />
+              <Route path="new" element={<NewOnboardingSessionForm />} />
+              <Route path=":sessionId/edit" element={<AmendOnboardingSessionForm />} />
+            </Route>
             <Route
               path="*"
               element={<NotFound />}
