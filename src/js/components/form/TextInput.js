@@ -13,7 +13,7 @@ const TextInput = ({ label, helpText, mb, disabled, ...props }) => {
       <Form.Group className={marginBotton} controlId={props.id || props.name}>
         <Form.Label>{label}</Form.Label>
         <Form.Control
-          isValid={meta.touched && !meta.error}
+          isValid={props.showValid && meta.touched && !meta.error}
           isInvalid={meta.touched && meta.error}
           disabled={isSubmitting || disabled}
           {...field}

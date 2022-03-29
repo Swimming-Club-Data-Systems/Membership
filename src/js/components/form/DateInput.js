@@ -14,7 +14,7 @@ const DateInput = ({ label, helpText, mb, disabled, ...props }) => {
         <Form.Label>{label}</Form.Label>
         <Form.Control
           type="date"
-          isValid={meta.touched && !meta.error}
+          isValid={props.showValid && meta.touched && !meta.error}
           isInvalid={meta.touched && meta.error}
           disabled={isSubmitting || disabled}
           {...field}
