@@ -2,8 +2,8 @@
 
 $tenant = app()->tenant;
 
-$stylesheet = autoUrl(getCompiledAsset('generic.css'), false);
-$stylesheetDarkMode = autoUrl(getCompiledAsset('generic-dark-mode.css'), false);
+$stylesheet = autoUrl(getCompiledAsset('scds.css'), false);
+$stylesheetDarkMode = autoUrl(getCompiledAsset('scds-dark-mode.css'), false);
 
 header('Link: <' . $stylesheet . '>; rel=preload; as=style', false);
 header('Link: <' . $stylesheetDarkMode . '>; rel=preload; as=style', false);

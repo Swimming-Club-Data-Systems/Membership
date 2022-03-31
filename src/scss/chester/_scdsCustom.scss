@@ -51,8 +51,8 @@
 
 $enable-caret:                true !default;
 $enable-rounded:              true !default;
-$enable-shadows:              false !default;
-$enable-gradients:            false !default;
+$enable-shadows:              false;
+$enable-gradients:            false;
 $enable-transitions:          true !default;
 $enable-reduced-motion:       true !default;
 $enable-smooth-scroll:        false;
