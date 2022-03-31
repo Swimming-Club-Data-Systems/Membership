@@ -50,7 +50,7 @@ include BASE_PATH . 'views/header.php';
           COVID-19 Tools
         </h1>
         <p class="lead mb-0">
-          A number of COVID-19 tools are available to help clubs through the current situation.
+          A number of COVID-19 tools have been provided to help clubs during COVID-19.
         </p>
       </div>
     </div>
@@ -58,6 +58,18 @@ include BASE_PATH . 'views/header.php';
 </div>
 
 <div class="container-xl">
+
+  <div class="alert alert-info">
+    <p class="mb-0">
+      <strong>SCDS has now de-prioritised COVID-19 related features</strong>
+    </p>
+    <p>
+      This follows the end of general COVID-19 measures and testing by the UK Government. As part of this we've started to move COVID links to the end of menus and will prepare to remove COVID features altogether.
+    </p>
+    <p class="mb-0">
+      When we remove these features, we will also remove COVID-19 related data from our database.
+    </p>
+  </div>
 
   <div class="row mb-0">
 

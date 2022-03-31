@@ -68,9 +68,6 @@ if (!function_exists('chesterStandardMenu')) {
             <li class="nav-item">
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl('')) ?>">Home</a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a>
-            </li>
             <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
               <?php
               $getSwimmers = $db->prepare("SELECT MForename Name, MSurname Surname, MemberID ID FROM `members` WHERE `UserID` = ? ORDER BY Name ASC, Surname ASC");
@@ -406,6 +403,10 @@ if (!function_exists('chesterStandardMenu')) {
               <?php } ?>
             <?php } ?>
 
+            <li class="nav-item">
+              <a class="nav-link" href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a>
+            </li>
+
             <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
               <li class="nav-item d-lg-none">
                 <a class="nav-link" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
@@ -422,9 +423,6 @@ if (!function_exists('chesterStandardMenu')) {
                 <a class="nav-link" href="<?= htmlspecialchars(autoUrl("register/university-of-sheffield")) ?>">Sign Up (Trials)</a>
               </li>
             <?php } ?>
-            <li class="nav-item">
-              <a class="nav-link" href="<?= htmlspecialchars(autoUrl("covid/contact-tracing")) ?>">COVID-19 Contact Tracing</a>
-            </li>
             <li class="nav-item">
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl("timetable")) ?>">Timetable</a>
             </li>

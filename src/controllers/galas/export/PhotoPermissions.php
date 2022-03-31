@@ -122,7 +122,7 @@ ob_start();
                 <li>Our social media channels</li>
               <?php } ?>
               <?php if (bool($data['Noticeboard'])) { ?>
-                <li>Our club noticeboard</li>
+                <li>Print media</li>
               <?php } ?>
               <?php if (bool($data['FilmTraining'])) { ?>
                 <li>Filming for training purposes (swimmer feedback)</li>
@@ -142,7 +142,7 @@ ob_start();
                 <li>Our social media channels</li>
               <?php } ?>
               <?php if (!bool($data['Noticeboard'])) { ?>
-                <li>Our club noticeboard</li>
+                <li>Print media</li>
               <?php } ?>
               <?php if (!bool($data['FilmTraining'])) { ?>
                 <li>Filming for training purposes (swimmer feedback)</li>

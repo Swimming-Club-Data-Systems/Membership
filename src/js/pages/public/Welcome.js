@@ -27,21 +27,13 @@ const Welcome = () => {
                 Login
               </Link>
             </p>
-            <h2>COVID-19 Contact Tracing</h2>
-            <p className="lead">
-              Check in online if you&apos;ve been asked to fill out a contact tracing form
-            </p>
-            <p className="mb-5">
-              <a className="btn btn-lg btn-primary" href="https://testclub.mt.myswimmingclub.uk/covid/contact-tracing">
-                Check In
-              </a>
-            </p>
+
             <h2>Not got an account?</h2>
             <p className="lead">
-              Your club will create your account.
+              Your club will create your account for you.
             </p>
             <p className="mb-5">
-              If you&apos;ve just joined, the person handling your application will be in touch soon.
+              If you&apos;ve just joined, the person handling your application will be in touch with you soon.
             </p>
 
 
