@@ -59,6 +59,7 @@
   },
   "scripts": {
     "build": "webpack --mode development",
+    "watch": "webpack --watch --mode development",
     "build-js": "webpack --mode development --env buildType='js'",
     "build-css": "webpack --mode development --env buildType='css'",
     "build-production": "webpack --mode production",

@@ -8,7 +8,7 @@ const OnboardingStages = (props) => {
 
   return (
     <>
-      <h2>Onboarding details</h2>
+      <h2>Onboarding Details</h2>
       <TextInput
         label="Member/Parent name"
         name="memberParentName"

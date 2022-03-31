@@ -4,6 +4,7 @@ import Tenant from "./Tenant";
 import User from "./User";
 import UserSettings from "./UserSettings";
 import Login from "./Login";
+import MainStore from "./MainStore";
 
 export default combineReducers({
   "SKIPCLEAR/GlobalSettings": GlobalSettings,
@@ -11,4 +12,5 @@ export default combineReducers({
   "SKIPCLEAR/User": User,
   "SKIPCLEAR/UserSettings": UserSettings,
   "Login": Login,
+  "MainStore": MainStore,
 });

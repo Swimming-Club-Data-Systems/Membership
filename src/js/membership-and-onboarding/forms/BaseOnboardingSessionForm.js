@@ -21,6 +21,11 @@ const BaseOnboardingSessionForm = () => {
       title: "Onboarding",
       name: "Onboarding",
     },
+    {
+      to: "/onboarding/new",
+      title: "Amend",
+      name: "Amend",
+    },
   ];
 
   useEffect(() => {

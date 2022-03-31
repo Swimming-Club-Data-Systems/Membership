@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import { connect } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { mapDispatchToProps } from "../../reducers/MainStore";
 
-function ScrollToTop() {
+function ScrollToTop(props) {
 
   const location = useLocation();
 
@@ -11,9 +13,10 @@ function ScrollToTop() {
       left: 0,
       behavior: "auto"
     });
+    props.clearRedux();
   }, [location]);
 
   return (null);
 }
 
-export default ScrollToTop;
+export default connect(null, mapDispatchToProps)(ScrollToTop);

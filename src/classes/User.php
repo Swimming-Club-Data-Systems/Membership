@@ -33,6 +33,10 @@ class User extends Person
     $query->execute([$this->id]);
     $row = $query->fetch(PDO::FETCH_ASSOC);
 
+    if (!$row) {
+      throw new Exception("No such user");
+    }
+
     $this->permissions = [];
     try {
       // Get access permissions
