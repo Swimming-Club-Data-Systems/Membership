@@ -66,8 +66,8 @@ module.exports = (env, options) => {
   }
 
   let cssEntryPoints = {
-    "generic": "./scss/generic.scss",
-    "generic-dark-mode": "./scss/generic-dark-mode.scss",
+    // "generic": "./scss/generic.scss",
+    // "generic-dark-mode": "./scss/generic-dark-mode.scss",
     "scds": "./scss/scds.scss",
     "scds-dark-mode": "./scss/scds-dark-mode.scss",
   };

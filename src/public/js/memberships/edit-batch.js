@@ -186,7 +186,7 @@ addButton.addEventListener('click', ev => {
   document.getElementById('main-modal-title').textContent = 'Add another membership';
 
   // Set buttons
-  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" form="add-membership-form" id="modal-confirm-button" class="btn btn-success" disabled>Add Membership</button>';
+  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" form="add-membership-form" id="modal-confirm-button" class="btn btn-primary" disabled>Add Membership</button>';
 
   modal.show();
 });

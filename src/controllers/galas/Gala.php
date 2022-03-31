@@ -260,7 +260,7 @@ include "galaMenu.php";
     <h2>Entries are managed by your coach</h2>
     <p class="lead">Let them know you can enter this gala</p>
     <p>
-      <a href="<?= autoUrl("galas/" . $id . "/indicate-availability") ?>" class="btn btn-success">
+      <a href="<?= autoUrl("galas/" . $id . "/indicate-availability") ?>" class="btn btn-primary">
         Indicate availability
       </a>
     </p>
@@ -269,7 +269,7 @@ include "galaMenu.php";
     <h2>Manage events and prices</h2>
     <p class="lead">Select which events are running and enter the price for each event</p>
     <p>
-      <a href="<?= autoUrl("galas/" . $id . "/pricing-and-events") ?>" class="btn btn-success">
+      <a href="<?= autoUrl("galas/" . $id . "/pricing-and-events") ?>" class="btn btn-primary">
         Manage prices
       </a>
     </p>
@@ -277,20 +277,20 @@ include "galaMenu.php";
     <h2>Manage sessions</h2>
     <p class="lead">Add sessions <?php if ($gala['CoachEnters']) { ?>to this gala so parents can indicate availability or <?php } ?>so that you can take registers</p>
     <p>
-      <a href="<?= autoUrl("galas/" . $id . "/sessions") ?>" class="btn btn-success">
+      <a href="<?= autoUrl("galas/" . $id . "/sessions") ?>" class="btn btn-primary">
         Manage sessions
       </a>
     </p>
 
     <h2>Entry report</h2>
     <p class="lead">Export a PDF entry report that can be shared with parents</p>
-    <p><a href="<?= htmlspecialchars(autoUrl("galas/" . $id . "/team-manager-view.pdf")) ?>" class="btn btn-success">Export PDF</a></p>
+    <p><a href="<?= htmlspecialchars(autoUrl("galas/" . $id . "/team-manager-view.pdf")) ?>" class="btn btn-primary">Export PDF</a></p>
 
     <?php if (bool($gala['CoachEnters'])) { ?>
       <h2>Manage entries</h2>
       <p class="lead">Add and edit entries for all competing swimmers</p>
       <p>
-        <a href="<?= autoUrl("galas/" . $id . "/select-entries") ?>" class="btn btn-success">
+        <a href="<?= autoUrl("galas/" . $id . "/select-entries") ?>" class="btn btn-primary">
           Manage entries
         </a>
       </p>
@@ -304,7 +304,7 @@ include "galaMenu.php";
     <p>Gala timesheets give a list of each swimmer's entries to a gala along with their all-time personal bests and
       <?= date("Y") ?> personal bests.</p>
     <p>
-      <a class="btn btn-success" href="<?= autoUrl("galas/" . $id . "/timesheet") ?>">Download timesheet</a>
+      <a class="btn btn-primary" href="<?= autoUrl("galas/" . $id . "/timesheet") ?>">Download timesheet</a>
     </p>
 
     <h2>Charts</h2>

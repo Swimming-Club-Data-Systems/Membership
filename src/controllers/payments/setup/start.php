@@ -91,7 +91,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 					} else {
 						echo autoUrl($url_path . "/setup/1");
 					} ?>
-					" class="btn btn-success">Setup a Direct Debit</a>
+					" class="btn btn-primary">Setup a Direct Debit</a>
 				</p>
 				<p class="small mb-0">This won't take long.</p>
 			</div>

@@ -78,7 +78,7 @@ include BASE_PATH . 'views/header.php';
           </div>
 
           <p>
-            <button class="btn btn-success" type="submit">
+            <button class="btn btn-primary" type="submit">
               Save
             </button>
           </p>

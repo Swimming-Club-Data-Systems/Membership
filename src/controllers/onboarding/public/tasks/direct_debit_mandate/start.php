@@ -131,7 +131,7 @@ include BASE_PATH . "views/head.php";
           <?php if (getenv('STRIPE') && app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && !$good) { ?>
             <!-- STRIPE -->
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/stripe/set-up')) ?>" class="btn btn-success">Set up now</a>
+              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/stripe/set-up')) ?>" class="btn btn-primary">Set up now</a>
             </p>
 
             <p>
@@ -140,7 +140,7 @@ include BASE_PATH . "views/head.php";
           <?php } else if ($tenant->getGoCardlessAccessToken() && !$good) { ?>
             <!-- GOCARDLESS -->
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/go-cardless/set-up')) ?>" class="btn btn-success">Set up now</a>
+              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/go-cardless/set-up')) ?>" class="btn btn-primary">Set up now</a>
             </p>
 
             <p>
@@ -152,7 +152,7 @@ include BASE_PATH . "views/head.php";
 
           <?php if ($good) { ?>
             <p>
-              <button type="submit" class="btn btn-success">Confirm</button>
+              <button type="submit" class="btn btn-primary">Confirm</button>
             </p>
           <?php } ?>
 

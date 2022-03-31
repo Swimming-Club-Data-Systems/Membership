@@ -87,7 +87,7 @@ try {
         </p>
 
         <p>
-          <a href="<?= autoUrl("") ?>" class="btn btn-success">
+          <a href="<?= autoUrl("") ?>" class="btn btn-primary">
             Go to the homepage
           </a>
         </p>

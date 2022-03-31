@@ -117,7 +117,7 @@ function addNewLaunch(ev) {
   document.getElementById('main-modal-body').innerHTML = bodyContent;
 
   // Set buttons
-  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" id="modal-confirm-button" form="add-new" class="btn btn-success">Add contact</button>';
+  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" id="modal-confirm-button" form="add-new" class="btn btn-primary">Add contact</button>';
 
   // Setup confirm event listeners
   document.getElementById('add-new').addEventListener('submit', handleNew);
@@ -200,7 +200,7 @@ function editLaunch(ev) {
   document.getElementById('main-modal-body').innerHTML = bodyContent;
 
   // Set buttons
-  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" id="modal-confirm-button" class="btn btn-success" form="edit-form">Save changes</button>';
+  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="submit" id="modal-confirm-button" class="btn btn-primary" form="edit-form">Save changes</button>';
 
   document.getElementById('contact-id').value = ev.target.dataset.id;
   document.getElementById('name').value = ev.target.dataset.name;
@@ -252,7 +252,7 @@ function deleteLaunch(ev) {
   document.getElementById('main-modal-title').textContent = 'Delete emergency contact';
 
   // Set buttons
-  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button><button type="button" id="modal-confirm-button" class="btn btn-success" data-id="">Yes</button>';
+  document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">No</button><button type="button" id="modal-confirm-button" class="btn btn-primary" data-id="">Yes</button>';
 
   // Compose modal body content
   var bodyContent = `

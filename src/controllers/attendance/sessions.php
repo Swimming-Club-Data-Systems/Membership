@@ -67,7 +67,7 @@ include "attendanceMenu.php";
         </p>
       </div>
       <div class="col text-end">
-        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add-session-modal">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-session-modal">
           Add new session
         </button>
       </div>
@@ -288,7 +288,7 @@ include "attendanceMenu.php";
         <div class="row">
           <div class="col-auto text-end">
             <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" form="new-session-form" class="btn btn-success">Add session</button>
+            <button type="submit" form="new-session-form" class="btn btn-primary">Add session</button>
           </div>
         </div>
       </div>

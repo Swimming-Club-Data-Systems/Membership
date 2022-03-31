@@ -164,7 +164,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
       </ul>
 
       <p>
-        <a href="<?= autoUrl("galas") ?>" class="btn btn-success">
+        <a href="<?= autoUrl("galas") ?>" class="btn btn-primary">
           Return to galas
         </a>
       </p>

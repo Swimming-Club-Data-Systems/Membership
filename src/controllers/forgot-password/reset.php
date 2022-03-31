@@ -47,7 +47,7 @@ if ($user = $getUser->fetchColumn()) {
 					</div>
 
 					<p>
-						<button class="btn btn-success" type="submit">
+						<button class="btn btn-primary" type="submit">
 							Save password
 						</button>
 					</p>

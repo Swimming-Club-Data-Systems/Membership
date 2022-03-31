@@ -55,7 +55,7 @@ include BASE_PATH . "views/head.php";
         <form method="post" class="needs-validation" novalidate>
 
           <p>
-            <button type="submit" class="btn btn-success">Continue</button>
+            <button type="submit" class="btn btn-primary">Continue</button>
           </p>
 
         </form>

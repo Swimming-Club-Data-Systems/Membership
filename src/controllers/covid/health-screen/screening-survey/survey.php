@@ -428,7 +428,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-primary">
             Submit screening form
           </button>
         </p>

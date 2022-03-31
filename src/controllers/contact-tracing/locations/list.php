@@ -36,7 +36,7 @@ include BASE_PATH . 'views/header.php';
       <?php if (app()->user->hasPermission('Admin')) { ?>
       <div class="col text-end">
         <div class="btn-group" role="group" aria-label="Quick options">
-          <a href="<?=htmlspecialchars(autoUrl("contact-tracing/locations/new"))?>" class="btn btn-success">New</a>
+          <a href="<?=htmlspecialchars(autoUrl("contact-tracing/locations/new"))?>" class="btn btn-primary">New</a>
         </div>
       </div>
       <?php } ?>

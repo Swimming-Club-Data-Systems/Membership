@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col-auto ms-lg-auto">
         <div class="btn-group">
-          <a href="<?= htmlspecialchars(autoUrl("qualifications/$id/edit")) ?>" class="btn btn-success">Edit</a>
+          <a href="<?= htmlspecialchars(autoUrl("qualifications/$id/edit")) ?>" class="btn btn-primary">Edit</a>
           <!-- <a href="<?= htmlspecialchars(autoUrl("qualifications/$id/remove")) ?>" class="btn btn-danger" title="Remove this qualification for new additions">Remove</a> -->
         </div>
       </div>

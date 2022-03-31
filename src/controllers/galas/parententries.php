@@ -87,7 +87,7 @@ include "galaMenu.php";
       <p>If you need to make changes once your entry has been locked, you will need to contact your gala coordinator.</p>
 
       <p>
-        <a href="<?= autoUrl("galas/entergala") ?>" class="btn btn-success">Enter a gala</a>
+        <a href="<?= autoUrl("galas/entergala") ?>" class="btn btn-primary">Enter a gala</a>
       </p>
 
     <?php } ?>

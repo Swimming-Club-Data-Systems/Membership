@@ -320,7 +320,7 @@ if (!$squad) {
             <?php } ?>
 
             <p>
-              <button type="submit" class="btn btn-success">
+              <button type="submit" class="btn btn-primary">
                 Check In
               </button>
             </p>

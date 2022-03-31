@@ -110,7 +110,7 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <p>
-        <a href="<?= autoUrl("payments/cards/add") ?>" class="btn btn-success">
+        <a href="<?= autoUrl("payments/cards/add") ?>" class="btn btn-primary">
           Add a card
         </a>
       </p>

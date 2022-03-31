@@ -112,7 +112,7 @@ include BASE_PATH . 'views/header.php';
         </div>
 
         <p>
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-primary">
             Generate report
           </button>
         </p>

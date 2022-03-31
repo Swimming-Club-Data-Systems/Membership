@@ -341,7 +341,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
 
                 <p>
                 <div class="d-grid">
-                  <button id="saved-card-button" class="btn btn-success pm-can-disable" type="button" data-secret="<?= $intent->client_secret ?>">
+                  <button id="saved-card-button" class="btn btn-primary pm-can-disable" type="button" data-secret="<?= $intent->client_secret ?>">
                     Pay &pound;<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $intent->amount))->withPointMovedLeft(2)->toScale(2)) ?> now
                   </button>
                 </div>
@@ -450,7 +450,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
 
             <p class="mb-0">
             <div class="d-grid">
-              <button id="new-card-button" class="btn btn-success pm-can-disable" type="submit" data-secret="<?= $intent->client_secret ?>">
+              <button id="new-card-button" class="btn btn-primary pm-can-disable" type="submit" data-secret="<?= $intent->client_secret ?>">
                 Pay &pound;<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $intent->amount))->withPointMovedLeft(2)->toScale(2)) ?> now
               </button>
             </div>

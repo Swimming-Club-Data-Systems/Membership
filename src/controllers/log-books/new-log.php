@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
         </div>
         <div class="col text-end">
           <p class="mb-0">
-            <button type="submit" class="btn btn-success">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+            <button type="submit" class="btn btn-primary">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
           </p>
         </div>
       </div>
@@ -163,7 +163,7 @@ include BASE_PATH . 'views/header.php';
     </div>
 
     <p>
-      <button type="submit" class="btn btn-success">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+      <button type="submit" class="btn btn-primary">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
     </p>
 
   </div>

@@ -143,7 +143,7 @@ include BASE_PATH . 'views/header.php';
                 </div>
                 <div class="col-auto">
                   <div class="btn-group">
-                    <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $member['GalaID'])) ?>" class="btn btn-success">View and sign form</a>
+                    <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $member['GalaID'])) ?>" class="btn btn-primary">View and sign form</a>
                   </div>
                 </div>
               </div>

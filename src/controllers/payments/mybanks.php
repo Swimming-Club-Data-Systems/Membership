@@ -91,7 +91,7 @@ $mandateDetails->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'
     </table>
   </div>
   <p class="mb-0">
-    <a href="<?=autoUrl("payments/setup")?>" class="btn btn-success">
+    <a href="<?=autoUrl("payments/setup")?>" class="btn btn-primary">
       Setup New Direct Debit
     </a>
   </p>

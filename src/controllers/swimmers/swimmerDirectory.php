@@ -47,7 +47,7 @@ if (isset($_POST['squad'])) {
 
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
           <p class="mt-3 mb-0">
-            <a href="<?= autoUrl("members/new") ?>" class="btn btn-success">
+            <a href="<?= autoUrl("members/new") ?>" class="btn btn-primary">
               Add new member
             </a>
           </p>

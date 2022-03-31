@@ -36,7 +36,7 @@ include BASE_PATH . 'views/header.php';
       <div class="col text-end">
         <p class="mb-0">
           <a href="<?= htmlspecialchars(autoUrl("log-books")) ?>" class="btn btn-dark-l btn-outline-light-d">Log books</a>
-          <button type="submit" class="btn btn-success">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+          <button type="submit" class="btn btn-primary">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
         </p>
       </div>
     </div>
@@ -94,7 +94,7 @@ include BASE_PATH . 'views/header.php';
         </div>
 
         <p>
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-primary">
             Save password
           </button>
         </p>

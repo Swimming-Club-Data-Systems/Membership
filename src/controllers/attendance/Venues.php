@@ -34,7 +34,7 @@ include BASE_PATH . "views/header.php";
         <div class="mb-3 d-lg-none"></div>
       </div>
       <div class="col-auto">
-        <a href="<?= autoUrl("attendance/venues/new") ?>" class="btn btn-success">
+        <a href="<?= autoUrl("attendance/venues/new") ?>" class="btn btn-primary">
           New Venue
         </a>
       </div>

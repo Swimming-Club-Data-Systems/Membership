@@ -132,7 +132,7 @@ include BASE_PATH . 'views/header.php';
                 </div>
                 <?php if (!$latest || ($latest && !bool($latest['MemberAgreement']))) { ?>
                   <div class="col-auto">
-                    <a class="btn btn-success" href="<?= htmlspecialchars(autoUrl('covid/risk-awareness/members/' . $member['MemberID'] . '/new-form')) ?>">
+                    <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl('covid/risk-awareness/members/' . $member['MemberID'] . '/new-form')) ?>">
                       View and sign form
                     </a>
                   </div>

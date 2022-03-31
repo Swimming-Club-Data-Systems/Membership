@@ -138,7 +138,7 @@ include "galaMenu.php"; ?>
         </div>
 
         <p>
-          <button class="btn btn-success" type="submit" id="submit">
+          <button class="btn btn-primary" type="submit" id="submit">
             Save Changes
           </button>
         </p>

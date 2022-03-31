@@ -127,7 +127,7 @@ include "galaMenu.php";
           </div>
         </div>
         <p>
-          <button type="submit" id="submit" disabled class="btn btn-success">Submit</button>
+          <button type="submit" id="submit" disabled class="btn btn-primary">Submit</button>
         </p>
     </div>
     </form>

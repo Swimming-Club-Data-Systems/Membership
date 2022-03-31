@@ -172,7 +172,7 @@ include BASE_PATH . 'views/header.php';
                 <dd class="col-sm-9">
                   <?php if ($futureSession) { ?>
                     <span class="d-block mb-2">Booking is required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($booking['Session']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success">Manage bookings for this session</a>
+                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($booking['Session']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary">Manage bookings for this session</a>
                   <?php } else { ?>
                     <span class="d-block">Booking has closed for this session. No changes can be made.</span>
                   <?php } ?>

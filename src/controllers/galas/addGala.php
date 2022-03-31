@@ -133,7 +133,7 @@ include "galaMenu.php";
           </div>
         </div>
         <p>
-          <button class="btn btn-success" type="submit" id="submit">Add gala</button>
+          <button class="btn btn-primary" type="submit" id="submit">Add gala</button>
         </p>
       </div>
     </div>

@@ -140,7 +140,7 @@ include "galaMenu.php"; ?>
       <?php } ?>
 
       <p>
-        <a href="<?=autoUrl("galas/addgala")?>" class="btn btn-success">
+        <a href="<?=autoUrl("galas/addgala")?>" class="btn btn-primary">
           Add Gala
         </a>
       </p>

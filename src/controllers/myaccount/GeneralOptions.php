@@ -70,7 +70,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
           </div>
 
           <p class="mb-0">
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </p>
         </div>
 
@@ -146,7 +146,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
         </div>
 
         <p class="mb-0">
-          <button type="submit" class="btn btn-success">Update Details</button>
+          <button type="submit" class="btn btn-primary">Update Details</button>
         </p>
       </form>
     </div>

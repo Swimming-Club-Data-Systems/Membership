@@ -48,7 +48,7 @@ include BASE_PATH . "views/notifyMenu.php";
         </div>
 
         <p class="mb-0">
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-primary">
             Create new list
           </button>
         </p>

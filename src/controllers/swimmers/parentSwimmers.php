@@ -55,7 +55,7 @@ $getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']])
 		<?php } ?>
 
 		<p>
-			<a href="<?php echo autoUrl('myaccount/add-member'); ?>" class="btn btn-success">Link a member</a>
+			<a href="<?php echo autoUrl('myaccount/add-member'); ?>" class="btn btn-primary">Link a member</a>
 		</p>
 	</div>
 </div>

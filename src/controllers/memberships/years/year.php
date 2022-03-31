@@ -75,7 +75,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl("memberships/years/$id/edit")) ?>" class="btn btn-success">Edit</a>
+        <a href="<?= htmlspecialchars(autoUrl("memberships/years/$id/edit")) ?>" class="btn btn-primary">Edit</a>
       </div>
     </div>
   </div>

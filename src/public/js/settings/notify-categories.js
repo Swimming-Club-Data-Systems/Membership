@@ -96,7 +96,7 @@ document.getElementById('new-button').addEventListener('click', ev => {
   document.getElementById('main-modal-body').innerHTML = form;
   let footer = `
   <button type="button" class="btn btn-dark-l btn-outline-light-d" data-bs-dismiss="modal">Cancel</button>
-  <button type="submit" form="new-cat-form" class="btn btn-success">Add category</button>
+  <button type="submit" form="new-cat-form" class="btn btn-primary">Add category</button>
   `
   document.getElementById('main-modal-footer').innerHTML = footer;
 

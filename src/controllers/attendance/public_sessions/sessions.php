@@ -289,7 +289,7 @@ include BASE_PATH . 'views/header.php';
                 <dd class="col-sm-9">
                   <?php if ($bookingRequired && $futureSession) { ?>
                     <span class="d-block mb-2">Booking is required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success d-print-none">Book a place<?php if ($showAdmin) { ?> or view/edit details<?php } ?></a>
+                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">Book a place<?php if ($showAdmin) { ?> or view/edit details<?php } ?></a>
                   <?php } else if ($showAdmin && $futureSession) { ?>
                     <span class="d-block mb-2">Booking is not currently required for this session</span>
                     <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">Require pre-booking</a>

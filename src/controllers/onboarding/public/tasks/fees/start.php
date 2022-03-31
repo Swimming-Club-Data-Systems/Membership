@@ -150,7 +150,7 @@ include BASE_PATH . "views/head.php";
             <?php } ?>
 
             <p class="d-grid mb-1">
-              <button type="submit" class="btn btn-success">Pay now <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+              <button type="submit" class="btn btn-primary">Pay now <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
             </p>
             <p class="small text-muted">With SCDS Checkout</p>
 
@@ -238,7 +238,7 @@ include BASE_PATH . "views/head.php";
           <?php if (!$batch->completed && $batch->total == 0) { ?>
             <form method="post" class="needs-validation" novalidate>
               <p>
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-primary">
                   Confirm memberships
                 </button>
               </p>
@@ -258,7 +258,7 @@ include BASE_PATH . "views/head.php";
               </p>
 
               <p>
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-primary">
                   Confirm
                 </button>
               </p>
@@ -314,7 +314,7 @@ include BASE_PATH . "views/head.php";
         <!-- <form method="post" class="needs-validation" novalidate>
 
           <p>
-            <button type="submit" class="btn btn-success">Confirm</button>
+            <button type="submit" class="btn btn-primary">Confirm</button>
           </p>
 
         </form> -->

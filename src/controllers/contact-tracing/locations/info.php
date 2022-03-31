@@ -49,7 +49,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <?php if (app()->user->hasPermission('Admin')) {?>
       <div class="col text-end">
-        <a href="<?= htmlspecialchars(autoUrl("contact-tracing/locations/$id/edit")) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars(autoUrl("contact-tracing/locations/$id/edit")) ?>" class="btn btn-primary">
           Edit
         </a>
       </div>

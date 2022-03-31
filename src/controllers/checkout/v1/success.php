@@ -77,7 +77,7 @@ include BASE_PATH . 'views/head.php';
       <?php } ?>
 
       <div class="d-grid mb-3">
-        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-primary">
           <?= htmlspecialchars($returnString) ?>
         </a>
       </div>
@@ -253,7 +253,7 @@ include BASE_PATH . 'views/head.php';
       </p>
 
       <div class="d-grid mb-3">
-        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-primary">
           <?= htmlspecialchars($returnString) ?>
         </a>
       </div>

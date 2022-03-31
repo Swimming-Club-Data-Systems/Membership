@@ -267,7 +267,7 @@ if (app('request')->method == "POST") {
             <small class="form-text text-muted">If you have <a href="https://en.gravatar.com/">an image linked to your email with Gravitar</a>, we'll display it in the system</small>
           </div>
           -->
-                <p><input type="submit" class="btn btn-success" value="Save Changes"></p>
+                <p><input type="submit" class="btn btn-primary" value="Save Changes"></p>
               </form>
             </div>
 
@@ -276,7 +276,7 @@ if (app('request')->method == "POST") {
                 <h2>My Swimmers</h2>
                 <p>Swimmers linked to your account</p>
                 <?php echo mySwimmersTable(null, $userID) ?>
-                <p><a href="<?php echo autoUrl("my-account/addswimmer"); ?>" class="btn btn-success">Add a Swimmer</a></p>
+                <p><a href="<?php echo autoUrl("my-account/addswimmer"); ?>" class="btn btn-primary">Add a Swimmer</a></p>
               </div>
             <?php } ?>
           </div>
@@ -335,7 +335,7 @@ if (app('request')->method == "POST") {
                   </div>
                 <?php } ?>
                 <p class="mb-0">
-                  <a href="<?= autoUrl("emergency-contacts/new") ?>" class="btn btn-success">
+                  <a href="<?= autoUrl("emergency-contacts/new") ?>" class="btn btn-primary">
                     Add New
                   </a>
                 </p>

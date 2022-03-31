@@ -176,7 +176,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 					<?php } ?>
 
 					<p class="mb-0">
-						<button type="submit" class="btn btn-success">Save Changes</button>
+						<button type="submit" class="btn btn-primary">Save Changes</button>
 					</p>
 				</form>
 			</div>
@@ -244,7 +244,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 							</div>
 						</div>
 
-						<button class="btn btn-success" type="submit">
+						<button class="btn btn-primary" type="submit">
 							Add new CC Email
 						</button>
 					</form>

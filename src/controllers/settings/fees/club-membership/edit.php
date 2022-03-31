@@ -157,7 +157,7 @@ include BASE_PATH . 'views/header.php';
           <?= \SCDS\CSRF::write(); ?>
 
           <p>
-            <button type="submit" class="btn btn-success">Save</button>
+            <button type="submit" class="btn btn-primary">Save</button>
           </p>
 
         </form>

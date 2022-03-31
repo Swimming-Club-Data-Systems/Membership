@@ -164,7 +164,7 @@ include "galaMenu.php";
 
         <input type="hidden" value="<?= htmlspecialchars($row['EntryID']) ?>" name="entryID">
         <p>
-          <button type="submit" id="submit" class="btn btn-success">Update</button>
+          <button type="submit" id="submit" class="btn btn-primary">Update</button>
         </p>
       <?php } ?>
 

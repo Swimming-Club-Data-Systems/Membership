@@ -170,7 +170,7 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
 				</div>
 
 				<?= SCDS\CSRF::write() ?>
-				<button type="submit" class="btn btn-success">Add Member</button>
+				<button type="submit" class="btn btn-primary">Add Member</button>
 
 			</form>
 

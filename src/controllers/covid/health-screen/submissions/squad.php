@@ -130,7 +130,7 @@ include BASE_PATH . 'views/header.php';
                       <?php } ?>
                       <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'])) ?>" class="btn btn-dark-l btn-outline-light-d">View all</a>
                     <?php } ?>
-                    <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-success">New submission</a>
+                    <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-primary">New submission</a>
                   </div>
                 </div>
               </div>
@@ -188,7 +188,7 @@ include BASE_PATH . 'views/header.php';
             <div class="col-auto">
               <p class="mb-0">
                 <button type="button" class="btn btn-danger review-confirm-button" id="reject-button" data-action="reject">Reject</button>
-                <button type="button" class="btn btn-success review-confirm-button" id="approve-button" data-action="approve">Approve</button>
+                <button type="button" class="btn btn-primary review-confirm-button" id="approve-button" data-action="approve">Approve</button>
               </p>
             </div>
           </div>

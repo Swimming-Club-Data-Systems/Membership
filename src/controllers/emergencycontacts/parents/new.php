@@ -75,7 +75,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
           </div>
 
         </div>
-        <button type="submit" class="btn btn-success">Add</button>
+        <button type="submit" class="btn btn-primary">Add</button>
       </form>
 
     </div>

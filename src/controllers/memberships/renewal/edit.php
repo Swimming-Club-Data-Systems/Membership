@@ -53,7 +53,7 @@ include BASE_PATH . "views/header.php";
       </div>
       <div class="col text-lg-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id")) ?>" class="btn btn-success">Back</a>
+          <a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id")) ?>" class="btn btn-primary">Back</a>
         </p>
       </div>
     </div>
@@ -175,7 +175,7 @@ include BASE_PATH . "views/header.php";
           <?= \SCDS\CSRF::write(); ?>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Save
             </button>
           </p>

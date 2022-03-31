@@ -203,7 +203,7 @@ function registerSheetGenerator($date, $sessionId)
                                   </div>
                                   <div class="col">
                                     <div class="d-grid gap-2">
-                                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-success">
+                                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-primary">
                                         <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars($ec->getInternationalContactNumber()) ?>
                                       </a>
                                     </div>

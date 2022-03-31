@@ -64,6 +64,8 @@ $enable-negative-margins:     true;
 $enable-deprecation-messages: true !default;
 $enable-important-utilities:  true !default;
 
+$enable-cssgrid:              true;
+
 $chesterRed: #bd0000;
 $blue:    #007bff;
 $indigo:  #6610f2 !default;
@@ -78,7 +80,6 @@ $cyan:    #17a2b8 !default;
 
 $primary: $purple;
 // $primary: #c70106;
-$secondary: #3c236a;
 
 $info: #29dea4;
 
@@ -94,6 +95,8 @@ $gray-700: #495057 !default;
 $gray-800: #343a40 !default;
 $gray-900: #212529 !default;
 $black:    #000 !default;
+
+$secondary: $gray-600;
 
 $cell-bg: $gray-100;
 $cell-generic: true;
@@ -128,6 +131,10 @@ $lead-font-weight: 400;
 
 $blockquote-small-color:  $gray-600;
 $blockquote-font-size:    ($font-size-base * 1.25);
+
+$border-radius:               .2rem !default;
+$border-radius-sm:            .15rem !default;
+$border-radius-lg:            .25rem !default;
 
 // Tables
 //

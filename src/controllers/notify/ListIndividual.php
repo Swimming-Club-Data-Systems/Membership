@@ -81,7 +81,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <option value="null" selected>Select squad first</option>
             </select>
           </div>
-            <button type="button" class="btn btn-success" id="addSwimmer" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
+            <button type="button" class="btn btn-primary" id="addSwimmer" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
               Add member to list
             </button>
             <div id="status">
@@ -105,7 +105,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <option value="null" selected>Search for a user</option>
             </select>
           </div>
-            <button type="button" class="btn btn-success" id="user-add" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
+            <button type="button" class="btn btn-primary" id="user-add" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
               Add user to list
             </button>
             <div id="user-status">

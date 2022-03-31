@@ -74,7 +74,7 @@ include BASE_PATH . "views/paymentsMenu.php";
               <option value="null " selected>Please select a squad</option>
             </select>
           </div>
-          <button disabled type="button" class="btn btn-success" id="addSwimmer" data-ajax-url="<?= htmlspecialchars(autoUrl("payments/extrafees/ajax/" . $id)) ?>">
+          <button disabled type="button" class="btn btn-primary" id="addSwimmer" data-ajax-url="<?= htmlspecialchars(autoUrl("payments/extrafees/ajax/" . $id)) ?>">
             Add member to extra
           </button>
           <div id="status">

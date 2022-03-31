@@ -112,7 +112,7 @@ include BASE_PATH . "views/squadMenu.php"; ?>
             </div>
           </div>
           <p>
-            <button class="btn btn-success" type="submit">Update</button>
+            <button class="btn btn-primary" type="submit">Update</button>
           </p>
         </form>
       </div>

@@ -64,7 +64,7 @@ include BASE_PATH . "views/head.php";
         <div id="contact-box"></div>
 
         <p>
-          <button class="btn btn-success" type="button" id="add-new-button">
+          <button class="btn btn-primary" type="button" id="add-new-button">
             Add new emergency contact
           </button>
         </p>
@@ -76,7 +76,7 @@ include BASE_PATH . "views/head.php";
         <form method="post" class="needs-validation <?php if (sizeof($contactsArray) < 1) { ?>d-none<?php } ?>" novalidate id="continue-form">
 
           <p>
-            <button type="submit" class="btn btn-success">Confirm</button>
+            <button type="submit" class="btn btn-primary">Confirm</button>
           </p>
 
         </form>
@@ -102,7 +102,7 @@ include BASE_PATH . "views/head.php";
       </div>
       <div class="modal-footer" id="main-modal-footer">
         <button type="button" class="btn btn-dark-l btn-outline-light-d" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" id="modal-confirm-button" class="btn btn-success">Confirm</button>
+        <button type="button" id="modal-confirm-button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>

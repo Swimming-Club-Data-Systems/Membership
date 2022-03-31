@@ -208,7 +208,7 @@ include BASE_PATH . 'views/header.php';
                             <strong><?= htmlspecialchars($swimmer['pfn'] . " " . $swimmer['psn']) ?></strong>
                           </p>
                           <div class="d-grid mt-2">
-                            <a href="<?= htmlspecialchars($mobile->format(PhoneNumberFormat::RFC3966)) ?>" class="btn btn-success">
+                            <a href="<?= htmlspecialchars($mobile->format(PhoneNumberFormat::RFC3966)) ?>" class="btn btn-primary">
                               <?= htmlspecialchars($mobile->format(PhoneNumberFormat::NATIONAL)) ?>
                             </a>
                           </div>
@@ -219,7 +219,7 @@ include BASE_PATH . 'views/header.php';
                               <strong><?= htmlspecialchars($contactsArray[$y]->getName()) ?></strong>
                             </p>
                             <div class="d-grid mt-2">
-                              <a href="<?= htmlspecialchars($contactsArray[$y]->getRFCContactNumber()) ?>" class="btn btn-success">
+                              <a href="<?= htmlspecialchars($contactsArray[$y]->getRFCContactNumber()) ?>" class="btn btn-primary">
                                 <?= htmlspecialchars($contactsArray[$y]->getNationalContactNumber()) ?>
                               </a>
                             </div>

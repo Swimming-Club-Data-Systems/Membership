@@ -214,7 +214,7 @@ include BASE_PATH . 'views/head.php';
 
                 <p>
                 <div class="d-grid">
-                  <button id="saved-card-button" class="btn btn-success pm-can-disable" type="button" data-secret="<?= $paymentIntent->client_secret ?>">
+                  <button id="saved-card-button" class="btn btn-primary pm-can-disable" type="button" data-secret="<?= $paymentIntent->client_secret ?>">
                     Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
                   </button>
                 </div>
@@ -322,7 +322,7 @@ include BASE_PATH . 'views/head.php';
             <div id="new-card-errors" role="alert"></div>
 
             <div class="d-grid">
-              <button id="new-card-button" class="btn btn-success pm-can-disable" type="submit" data-secret="<?= $paymentIntent->client_secret ?>">
+              <button id="new-card-button" class="btn btn-primary pm-can-disable" type="submit" data-secret="<?= $paymentIntent->client_secret ?>">
                 Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
               </button>
             </div>

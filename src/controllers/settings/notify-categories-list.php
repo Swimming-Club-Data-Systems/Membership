@@ -39,7 +39,7 @@ ob_start();
 
           <div class="row">
             <div class="col-auto">
-              <button type="submit" class="btn btn-success">Save</button>
+              <button type="submit" class="btn btn-primary">Save</button>
             </div>
             <div class="col-auto ms-auto">
               <button type="button" class="btn btn-danger" data-action="delete" data-category-id="<?= htmlspecialchars($category->id) ?>">Delete category</button>

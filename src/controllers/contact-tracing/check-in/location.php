@@ -138,7 +138,7 @@ include BASE_PATH . 'views/header.php';
               </div>
 
               <p class="">
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-primary">
                   Go to register
                 </button>
               </p>
@@ -233,7 +233,7 @@ include BASE_PATH . 'views/header.php';
           </p>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Check in
             </button>
           </p>
@@ -303,7 +303,7 @@ include BASE_PATH . 'views/header.php';
           </p>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Check-in
             </button>
           </p>

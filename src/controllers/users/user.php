@@ -120,7 +120,7 @@ include BASE_PATH . "views/header.php";
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="col text-sm-end">
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit")) ?>" class="btn btn-primary">
               Edit
             </a>
           </p>
@@ -641,7 +641,7 @@ include BASE_PATH . "views/header.php";
       </div>
       <div class="modal-footer" id="main-modal-footer">
         <button type="button" class="btn btn-dark-l btn-outline-light-d" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" id="modal-confirm-button" class="btn btn-success">Confirm</button>
+        <button type="button" id="modal-confirm-button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>

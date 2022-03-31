@@ -124,7 +124,7 @@ if (isset($renewal_trap) && $renewal_trap) {
         } ?>
     </div>
     <p>
-      <a href="<?php echo autoUrl($url_path . "/new"); ?>" class="btn btn-success">
+      <a href="<?php echo autoUrl($url_path . "/new"); ?>" class="btn btn-primary">
         Add New
       </a>
     </p>

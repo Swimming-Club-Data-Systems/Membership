@@ -170,7 +170,7 @@ include "galaMenu.php";
       </div>
       <?php if ($openGalas) { ?>
         <p class="mb-4">
-          <a href="<?= autoUrl("galas/entergala") ?>" class="btn btn-success">
+          <a href="<?= autoUrl("galas/entergala") ?>" class="btn btn-primary">
             Enter a gala
           </a>
         </p>
@@ -252,7 +252,7 @@ include "galaMenu.php";
                 <span class="d-flex mb-3"><?= htmlspecialchars($gala['GalaName']) ?></span>
               </div>
               <span class="category">
-                <div class="btn btn-success">Add or edit times</div>
+                <div class="btn btn-primary">Add or edit times</div>
               </span>
             </a>
           <?php } while ($gala = $manualTimeGalas->fetch(PDO::FETCH_ASSOC)); ?>
@@ -276,7 +276,7 @@ include "galaMenu.php";
         </p>
 
         <p>
-          <a href="<?= autoUrl("galas/pay-for-entries") ?>" class="btn btn-success ">
+          <a href="<?= autoUrl("galas/pay-for-entries") ?>" class="btn btn-primary ">
             Pay now
           </a>
         </p>
@@ -292,7 +292,7 @@ include "galaMenu.php";
         </p>
 
         <p>
-          <a href="<?= autoUrl("payments/cards/add") ?>" class="btn btn-success ">
+          <a href="<?= autoUrl("payments/cards/add") ?>" class="btn btn-primary ">
             Add a card
           </a>
         </p>

@@ -157,6 +157,6 @@
     </div>
 
 	<p class="mb-0">
-		<button class="btn btn-success" type="submit">Convert</button>
+		<button class="btn btn-primary" type="submit">Convert</button>
 	</p>
 </form>

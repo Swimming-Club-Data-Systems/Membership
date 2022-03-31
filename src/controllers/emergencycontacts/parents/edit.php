@@ -86,7 +86,7 @@ if (isset($renewal_trap) && $renewal_trap) {
         </div>
 
         <p>
-          <button type="submit" class="btn btn-success">Save</button>
+          <button type="submit" class="btn btn-primary">Save</button>
           <a href="<?= htmlspecialchars(autoUrl($url_path . "/" . $id . "/delete")) ?>" class="btn btn-danger">Delete</a>
         </p>
       </form>

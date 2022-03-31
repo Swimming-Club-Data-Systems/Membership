@@ -36,7 +36,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("payments/categories/new")) ?>" class="btn btn-success">New category</a>
+          <a href="<?= htmlspecialchars(autoUrl("payments/categories/new")) ?>" class="btn btn-primary">New category</a>
         </p>
       </div>
     </div>

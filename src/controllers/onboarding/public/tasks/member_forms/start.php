@@ -73,7 +73,7 @@ include BASE_PATH . "views/head.php";
                       </div>
                       <?php if ($showButton) { ?>
                         <p class="mb-0 mt-2">
-                          <a href="<?= htmlspecialchars(autoUrl('onboarding/go/member-forms/' . $onboardingMember->id . '/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+                          <a href="<?= htmlspecialchars(autoUrl('onboarding/go/member-forms/' . $onboardingMember->id . '/start-task')) ?>" class="btn btn-primary">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
                         </p>
                     <?php }
                     } ?>

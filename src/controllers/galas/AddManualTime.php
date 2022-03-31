@@ -200,7 +200,7 @@ if ($row['CourseLength'] == 'LONG') {
 				</div>
 
 				<p>
-					<button class="btn btn-success" type="submit" <?= $locked ?>>Save</button>
+					<button class="btn btn-primary" type="submit" <?= $locked ?>>Save</button>
 				</p>
 			</form>
 		</div>

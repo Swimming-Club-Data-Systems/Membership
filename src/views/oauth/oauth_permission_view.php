@@ -43,7 +43,7 @@ include BASE_PATH . "views/head.php";
 						</p>
 						<div class="text-end">
 							<a class="btn btn-light" href="">Cancel</a>
-							<a class="btn btn-success" href="">Allow</a>
+							<a class="btn btn-primary" href="">Allow</a>
 						</div>
 	        </div>
 	      </div>

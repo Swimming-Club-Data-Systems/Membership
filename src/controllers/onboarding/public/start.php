@@ -78,7 +78,7 @@ include BASE_PATH . "views/head.php";
                 </div>
                 <?php if ($session->isCurrentTask($stage)) { ?>
                   <p class="mb-0 mt-2">
-                    <a href="<?= htmlspecialchars(autoUrl('onboarding/go/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+                    <a href="<?= htmlspecialchars(autoUrl('onboarding/go/start-task')) ?>" class="btn btn-primary">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
                   </p>
               <?php }
               } ?>
@@ -93,11 +93,11 @@ include BASE_PATH . "views/head.php";
 
           <?php if (!isset(app()->user)) { ?>
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/sign-in')) ?>" class="btn btn-success">Continue to your account</a>
+              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/sign-in')) ?>" class="btn btn-primary">Continue to your account</a>
             </p>
           <?php } else { ?>
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-success">Return to your account</a>
+              <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-primary">Return to your account</a>
             </p>
           <?php } ?>
         <?php } else { ?>

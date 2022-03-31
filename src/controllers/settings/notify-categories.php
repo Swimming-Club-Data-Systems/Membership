@@ -29,7 +29,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          <button class="btn btn-success" id="new-button">New</button>
+          <button class="btn btn-primary" id="new-button">New</button>
         </p>
 
         <div id="category-section"></div>
@@ -55,7 +55,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="modal-footer" id="main-modal-footer">
         <button type="button" class="btn btn-dark-l btn-outline-light-d" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" id="modal-confirm-button" class="btn btn-success">Confirm</button>
+        <button type="button" id="modal-confirm-button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>

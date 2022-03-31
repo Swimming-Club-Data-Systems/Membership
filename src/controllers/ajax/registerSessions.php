@@ -362,7 +362,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" 
       <div class="collapse" id="medicine-A-Z">
         <iframe src="https://api-bridge.azurewebsites.net/medicines/?uid=Y2hyaXMuaGVwcGVsbEBjaGVzdGVybGVzdHJlZXRhc2MuY28udWs=" style="border: none; height: 450px; width: 100%;" class="mb-3"></iframe>
       </div>-->
-      <p class="mb-0"><button type="submit" class="btn btn-success">Save Register</button></p></div>';
+      <p class="mb-0"><button type="submit" class="btn btn-primary">Save Register</button></p></div>';
     }
 
     if ($swimmerCount > 0) {

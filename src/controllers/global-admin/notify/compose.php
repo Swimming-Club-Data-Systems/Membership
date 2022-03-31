@@ -147,7 +147,7 @@ include BASE_PATH . "views/root/header.php";
     <?= SCDS\CSRF::write() ?>
     <?= SCDS\FormIdempotency::write() ?>
 
-    <p><button class="btn btn-success" id="submit" value="submitted" type="submit">Send the email</button></p>
+    <p><button class="btn btn-primary" id="submit" value="submitted" type="submit">Send the email</button></p>
   </form>
 </div>
 

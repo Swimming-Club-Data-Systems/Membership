@@ -87,7 +87,7 @@ include BASE_PATH . 'views/header.php';
               Password settings <i class="fa fa-cog" aria-hidden="true"></i>
             </a>
           <?php } ?>
-          <a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member . "/new")) ?>" class="btn btn-success">New <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+          <a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member . "/new")) ?>" class="btn btn-primary">New <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>
@@ -103,7 +103,7 @@ include BASE_PATH . 'views/header.php';
         <strong>Your new entry has been added to your training log.</strong>
       </p>
       <p class="mb-0">
-        <a class="btn btn-success" href="<?= htmlspecialchars("#log-" . $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage']) ?>">Jump to log</a>
+        <a class="btn btn-primary" href="<?= htmlspecialchars("#log-" . $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage']) ?>">Jump to log</a>
       </p>
     </div>
   <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage']);

@@ -151,7 +151,7 @@ include BASE_PATH . "views/root/head.php";
         </p>
 
         <p>
-          <button id="card-button" class="btn btn-success" data-secret="<?= htmlspecialchars($setupIntent->client_secret) ?>">Add payment card</button>
+          <button id="card-button" class="btn btn-primary" data-secret="<?= htmlspecialchars($setupIntent->client_secret) ?>">Add payment card</button>
         </p>
       </form>
     </div>

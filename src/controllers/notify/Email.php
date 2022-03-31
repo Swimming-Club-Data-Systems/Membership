@@ -347,7 +347,7 @@ include BASE_PATH . "views/notifyMenu.php";
     <?= SCDS\FormIdempotency::write() ?>
 
     <p>
-      <button class="btn btn-success" id="submit" value="submitted" type="submit">Send the email</button>
+      <button class="btn btn-primary" id="submit" value="submitted" type="submit">Send the email</button>
       <button class="btn btn-dark-l btn-outline-light-d" id="tinymce-preview" type="button" id="tinymce-preview">Preview message</button>
     </p>
   </form>

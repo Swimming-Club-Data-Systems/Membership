@@ -69,7 +69,7 @@ include BASE_PATH . "views/header.php";
       </div>
       <?php if ($user->hasPermission('Admin')) { ?>
         <div class="col-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id/edit")) ?>" class="btn btn-success">Edit</a>
+          <a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id/edit")) ?>" class="btn btn-primary">Edit</a>
         </div>
       <?php } ?>
     </div>
@@ -191,7 +191,7 @@ include BASE_PATH . "views/header.php";
             <p>You can only pay for this batch with <?= htmlspecialchars($payMethodStrings[$payMethods[0]]) ?>.</p>
           <?php } ?>
           <p class="d-grid mb-1">
-            <button type="submit" class="btn btn-success">Pay for memberships <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+            <button type="submit" class="btn btn-primary">Pay for memberships <i class="fa fa-chevron-right" aria-hidden="true"></i></button>
           </p>
           <p class="small text-muted">With SCDS Checkout</p>
         </form>

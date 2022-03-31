@@ -112,7 +112,7 @@ ob_start();
         <?php } ?>
 
         <p class="mb-0">
-          <button class="btn btn-success" type="submit" data-action="update">
+          <button class="btn btn-primary" type="submit" data-action="update">
             Save item
           </button>
           <button class="btn btn-danger" type="button" data-action="delete" data-id="<?= htmlspecialchars($item->id) ?>">

@@ -164,7 +164,7 @@ include BASE_PATH . 'views/header.php';
         <p>Users can switch access level by selecting their name in the main menu.</p>
 
         <p>
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-primary">
             Save changes
           </button>
         </p>

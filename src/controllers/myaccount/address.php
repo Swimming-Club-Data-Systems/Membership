@@ -109,7 +109,7 @@ include BASE_PATH . "views/header.php";
         </div>
 
     		<p class="mb-0">
-    			<button type="submit" class="btn btn-success">Update details</button>
+    			<button type="submit" class="btn btn-primary">Update details</button>
     		</p>
     	</form>
     </div>

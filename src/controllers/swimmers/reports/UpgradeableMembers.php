@@ -131,7 +131,7 @@ include BASE_PATH . 'views/header.php';
           </ul>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Save changes
             </button>
           </p>

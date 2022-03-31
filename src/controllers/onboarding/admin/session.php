@@ -190,11 +190,11 @@ include BASE_PATH . "views/header.php";
         </p>
         <?php if ($session->status != 'complete' && $session->batch) { ?>
           <p>
-            <a href="<?= htmlspecialchars(autoUrl("memberships/batches/" . $session->batch . "/edit")) ?>" class="btn btn-success">Edit fees</a>
+            <a href="<?= htmlspecialchars(autoUrl("memberships/batches/" . $session->batch . "/edit")) ?>" class="btn btn-primary">Edit fees</a>
           </p>
         <?php } else if ($session->status != 'complete') { ?>
           <p>
-            <button type="submit" name="action" value="fees" class="btn btn-success">Go to fees</button>
+            <button type="submit" name="action" value="fees" class="btn btn-primary">Go to fees</button>
           </p>
         <?php } ?>
 
@@ -205,13 +205,13 @@ include BASE_PATH . "views/header.php";
           </p>
 
           <p>
-            <button type="submit" name="action" value="send" class="btn btn-success">Send registration email</button>
+            <button type="submit" name="action" value="send" class="btn btn-primary">Send registration email</button>
           </p>
 
         <?php } else { ?>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Update
             </button>
           </p>

@@ -124,7 +124,7 @@ if ($added && $status) {
     $content .= "<p>The fee for each swim is &pound;" . number_format($galaFee,2,'.','') . "</p>";
   }
   $content .= "<p><a href=\"" . autoUrl("galas") . "\" class=\"btn
-  btn-success\">Return to Galas</a> <a href=\"" . autoUrl("galas/addgala") . "\"
+  btn-primary\">Return to Galas</a> <a href=\"" . autoUrl("galas/addgala") . "\"
   class=\"btn btn-dark-l btn-outline-light-d\">Add another gala</a></p>";
 
   if ($id != null) {

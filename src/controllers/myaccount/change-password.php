@@ -67,7 +67,7 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
 
-        <p><input type="submit" name="submit" id="submit" class="btn btn-success" value="Change password"></p>
+        <p><input type="submit" name="submit" id="submit" class="btn btn-primary" value="Change password"></p>
       </form>
     </div>
   </div>

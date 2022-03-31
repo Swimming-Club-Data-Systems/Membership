@@ -79,7 +79,7 @@ include BASE_PATH . "views/header.php";
       </div>
       <?php if ($session) { ?>
         <div class="col-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="btn btn-success">Back to onboarding</a>
+          <a href="<?= htmlspecialchars(autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="btn btn-primary">Back to onboarding</a>
         </div>
       <?php } ?>
     </div>
@@ -172,7 +172,7 @@ include BASE_PATH . "views/header.php";
           </p>
 
           <div class="d-grid gap-2">
-            <button class="btn btn-success" type="button" id="add-membership-button">
+            <button class="btn btn-primary" type="button" id="add-membership-button">
               Add a membership
             </button>
           </div>
@@ -218,7 +218,7 @@ include BASE_PATH . "views/header.php";
             </div>
 
             <div class="d-grid gap-2">
-              <button class="btn btn-success">
+              <button class="btn btn-primary">
                 Save
               </button>
             </div>
@@ -251,7 +251,7 @@ include BASE_PATH . "views/header.php";
       </div>
       <div class="modal-footer" id="main-modal-footer">
         <button type="button" class="btn btn-dark-l btn-outline-light-d" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" id="modal-confirm-button" class="btn btn-success">Confirm</button>
+        <button type="button" id="modal-confirm-button" class="btn btn-primary">Confirm</button>
       </div>
     </div>
   </div>

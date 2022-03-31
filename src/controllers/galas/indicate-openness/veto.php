@@ -42,7 +42,7 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <p>
-        <a href="<?=autoUrl("galas/entries/" . $id . "/veto/do")?>" class="btn btn-success">
+        <a href="<?=autoUrl("galas/entries/" . $id . "/veto/do")?>" class="btn btn-primary">
           Veto this entry
         </a>
       </p>

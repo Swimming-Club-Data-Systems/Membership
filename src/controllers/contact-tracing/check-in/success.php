@@ -62,7 +62,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>" class="btn btn-success">Contact tracing home</a>
+        <a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>" class="btn btn-primary">Contact tracing home</a>
       </p>
 
     </div>

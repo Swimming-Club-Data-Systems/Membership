@@ -105,7 +105,7 @@ include BASE_PATH . 'views/header.php';
       <div class="text-lg-end col-lg">
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
           <p>
-            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-primary">
               Edit basic details
             </a>
           </p>
@@ -252,7 +252,7 @@ include BASE_PATH . 'views/header.php';
       </dl>
 
       <!-- <p>
-        <button class="btn btn-success">
+        <button class="btn btn-primary">
           Edit basic details
         </button>
       </p> -->
@@ -277,7 +277,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $id)) ?>" class="btn btn-success">
+          <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $id)) ?>" class="btn btn-primary">
             View all submissions
           </a>
         </p>
@@ -391,14 +391,14 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <!-- <p>
-        <button class="btn btn-success">
+        <button class="btn btn-primary">
           Edit medical notes
         </button>
       </p> -->
 
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" class="btn btn-success">
+          <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" class="btn btn-primary">
             Edit medical notes
           </a>
         </p>
@@ -430,7 +430,7 @@ include BASE_PATH . 'views/header.php';
                   </div>
                   <div class="col">
                     <div class="d-grid gap-2">
-                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-success">
+                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-primary">
                         <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars($ec->getNationalContactNumber()) ?>
                       </a>
                     </div>
@@ -513,7 +513,7 @@ include BASE_PATH . 'views/header.php';
 
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
           <p class="mt-3">
-            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-primary">
               Edit photography preferences
             </a>
           </p>
@@ -541,7 +541,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if ($manageSquads) { ?>
         <p>
-          <button class="btn btn-success" id="new-move-button" data-member="<?= htmlspecialchars($id) ?>" data-squads-url="<?= htmlspecialchars(autoUrl("members/$id/squads.json")) ?>" data-move-url="<?= htmlspecialchars(autoUrl("members/move-squad")) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>">
+          <button class="btn btn-primary" id="new-move-button" data-member="<?= htmlspecialchars($id) ?>" data-squads-url="<?= htmlspecialchars(autoUrl("members/$id/squads.json")) ?>" data-move-url="<?= htmlspecialchars(autoUrl("members/move-squad")) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>">
             Manage squads
           </button>
         </p>
@@ -571,7 +571,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if (app()->user->hasPermissions(['Admin'])) { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("members/$id/qualifications/new")) ?>" class="btn btn-success" id="add-qualification">
+          <a href="<?= htmlspecialchars(autoUrl("members/$id/qualifications/new")) ?>" class="btn btn-primary" id="add-qualification">
             Add qualification
           </a>
         </p>
@@ -610,7 +610,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/times")) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/times")) ?>" class="btn btn-primary">
           See personal bests
         </a>
       </p>

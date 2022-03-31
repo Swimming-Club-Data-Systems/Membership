@@ -245,7 +245,7 @@ include BASE_PATH . "views/header.php";
 
 				<div>
 					<p>
-						<button type="submit" class="btn btn-success">Save</button>
+						<button type="submit" class="btn btn-primary">Save</button>
 					</p>
 				</div>
 			</form>

@@ -67,7 +67,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { 
                 </div>
               </div>
 
-              <button type="submit" class="btn btn-success">
+              <button type="submit" class="btn btn-primary">
                 Add member
               </button>
             </form>

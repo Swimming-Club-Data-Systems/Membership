@@ -397,7 +397,7 @@ function sessionManagement($squadID, $old = null)
 						</div>
 					</div>
 				</div>
-				<p class="mb-0"><button class="btn btn-success" id="newSessionAction" onclick="addSession();">Add Session</button>
+				<p class="mb-0"><button class="btn btn-primary" id="newSessionAction" onclick="addSession();">Add Session</button>
 				</p>
 
 			</div>

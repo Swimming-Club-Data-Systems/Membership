@@ -64,7 +64,7 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('qualifications/new')) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars(autoUrl('qualifications/new')) ?>" class="btn btn-primary">
           Add new qualification type
         </a>
       </p>

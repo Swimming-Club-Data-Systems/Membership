@@ -191,7 +191,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
           </div>
 
           <p>
-            <button type="submit" class="btn btn-success">
+            <button type="submit" class="btn btn-primary">
               Proceed to payment
             </button>
           </p>

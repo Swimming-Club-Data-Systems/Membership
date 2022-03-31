@@ -155,7 +155,7 @@ function loadListeners() {
       dismissButton.textContent = 'Cancel';
 
       let saveButton = document.createElement('BUTTON');
-      saveButton.classList.add('btn', 'btn-success');
+      saveButton.classList.add('btn', 'btn-primary');
       saveButton.type = 'submit';
       saveButton.setAttribute('form', 'contact-form');
       saveButton.textContent = 'Save';
@@ -252,7 +252,7 @@ function loadListeners() {
     dismissButton.textContent = 'Cancel';
 
     let saveButton = document.createElement('BUTTON');
-    saveButton.classList.add('btn', 'btn-success');
+    saveButton.classList.add('btn', 'btn-primary');
     saveButton.type = 'submit';
     saveButton.setAttribute('form', 'contact-form');
     saveButton.textContent = 'Add';

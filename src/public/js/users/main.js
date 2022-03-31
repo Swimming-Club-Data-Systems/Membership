@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
     document.getElementById('main-modal-title').textContent = 'Confirm resending registration email';
 
     // Set buttons
-    document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="button" id="modal-confirm-button" class="btn btn-success">Confirm resend</button>';
+    document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="button" id="modal-confirm-button" class="btn btn-primary">Confirm resend</button>';
 
     // Compose modal body content
     var bodyContent = '<p>Are you sure you want to resend the registration email to <span id="modal-user-name"></span>?</p>';
@@ -324,7 +324,7 @@ document.addEventListener('DOMContentLoaded', function (event) {
 
         body.appendChild(formGroup);
 
-        document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="button" id="modal-confirm-button" class="btn btn-success">Assign squad</button>';
+        document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button type="button" id="modal-confirm-button" class="btn btn-primary">Assign squad</button>';
 
         document.getElementById('modal-confirm-button').addEventListener('click', function (event) {
           let assignButton = document.getElementById('coach-squad-assign');
@@ -382,7 +382,7 @@ if (earlyPayment) {
           selectionArea.addEventListener('change', handleEarlyPaymentSelections);
         }
 
-        document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button disabled type="submit" id="modal-confirm-button" class="btn btn-success" form="trigger-early-payment-form">Confirm charge</button>';
+        document.getElementById('main-modal-footer').innerHTML = '<button type="button" class="btn btn-dark" data-bs-dismiss="modal">Cancel</button><button disabled type="submit" id="modal-confirm-button" class="btn btn-primary" form="trigger-early-payment-form">Confirm charge</button>';
 
         let form = document.getElementById('trigger-early-payment-form');
         if (form) {

@@ -24,7 +24,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <a href="<?=autoUrl("my-account/email")?>" class="btn btn-success">
+        <a href="<?=autoUrl("my-account/email")?>" class="btn btn-primary">
           Return to email settings
         </a>
       </p>

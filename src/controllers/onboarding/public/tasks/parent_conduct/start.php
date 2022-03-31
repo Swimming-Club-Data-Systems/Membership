@@ -81,7 +81,7 @@ include BASE_PATH . "views/head.php";
             </p>
 
             <p>
-              <button type="submit" class="btn btn-success">Confirm</button>
+              <button type="submit" class="btn btn-primary">Confirm</button>
             </p>
 
           <?php } else { ?>
@@ -91,7 +91,7 @@ include BASE_PATH . "views/head.php";
             </p>
 
             <p>
-              <button type="submit" class="btn btn-success">Continue</button>
+              <button type="submit" class="btn btn-primary">Continue</button>
             </p>
 
           <?php } ?>

@@ -45,7 +45,7 @@ $entriesOpen = false;
 	</div>
 	<?php if ($entriesOpen) { ?>
 	<p>
-		<a href="<?=autoUrl("galas/entergala")?>" class="btn btn-success">
+		<a href="<?=autoUrl("galas/entergala")?>" class="btn btn-primary">
 			Enter a gala
 		</a>
 	</p>

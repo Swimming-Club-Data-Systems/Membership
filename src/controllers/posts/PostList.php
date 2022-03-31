@@ -80,7 +80,7 @@ include BASE_PATH . "views/postsMenu.php"; ?>
       </div>
       <?php if (app()->user->hasPermission('Admin')) { ?>
         <div class="col-lg-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl('pages/new')) ?>" class="btn btn-success">Add page</a>
+          <a href="<?= htmlspecialchars(autoUrl('pages/new')) ?>" class="btn btn-primary">Add page</a>
         </div>
       <?php } ?>
     </div>

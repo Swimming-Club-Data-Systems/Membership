@@ -53,7 +53,7 @@ include BASE_PATH . "views/head.php";
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars('logout?redirect=' . urlencode($target)) ?>" class="btn btn-success">Continue</a>
+          <a href="<?= htmlspecialchars('logout?redirect=' . urlencode($target)) ?>" class="btn btn-primary">Continue</a>
         </p>
 
         <p>

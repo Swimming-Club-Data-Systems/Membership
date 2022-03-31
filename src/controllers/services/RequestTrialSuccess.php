@@ -23,7 +23,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <a href="<?=htmlspecialchars(autoUrl("services/request-a-trial"))?>" class="btn btn-success">Request another trial</a>
+        <a href="<?=htmlspecialchars(autoUrl("services/request-a-trial"))?>" class="btn btn-primary">Request another trial</a>
       </p>
     </div>
   </div>

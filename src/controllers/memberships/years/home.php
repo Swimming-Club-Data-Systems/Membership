@@ -37,7 +37,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl('memberships/years/new')) ?>" class="btn btn-success">New</a>
+        <a href="<?= htmlspecialchars(autoUrl('memberships/years/new')) ?>" class="btn btn-primary">New</a>
       </div>
     </div>
   </div>

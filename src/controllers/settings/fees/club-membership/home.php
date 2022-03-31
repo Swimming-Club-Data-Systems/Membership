@@ -73,7 +73,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
@@ -93,7 +93,7 @@ include BASE_PATH . 'views/header.php';
             <?= \SCDS\CSRF::write(); ?>
 
             <p>
-              <button type="submit" class="btn btn-success">Save default</button>
+              <button type="submit" class="btn btn-primary">Save default</button>
             </p>
 
           <?php } else { ?>
@@ -104,7 +104,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
@@ -133,7 +133,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
@@ -153,7 +153,7 @@ include BASE_PATH . 'views/header.php';
             <?= \SCDS\CSRF::write(); ?>
 
             <p>
-              <button type="submit" class="btn btn-success">Save default</button>
+              <button type="submit" class="btn btn-primary">Save default</button>
             </p>
 
           <?php } else { ?>
@@ -164,7 +164,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
@@ -193,7 +193,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
@@ -206,7 +206,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-primary">
                 Add new
               </a>
             </p>
