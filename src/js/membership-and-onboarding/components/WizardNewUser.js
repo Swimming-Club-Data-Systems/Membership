@@ -14,7 +14,7 @@ import TextInput from "../../components/form/TextInput";
 import { useFormikContext } from "formik";
 
 const CheckUserEmail = (props) => {
-  const { touched, values, errors, setFieldValue } = useFormikContext();
+  const { values, errors, setFieldValue, validateField } = useFormikContext();
   const { setUserExists } = props;
 
   useEffect(() => {
@@ -32,10 +32,16 @@ const CheckUserEmail = (props) => {
     if (response.data.user) {
       // Set state
       setFieldValue("firstName", response.data.user.first_name);
-      setFieldValue("lastName", response.data.user.lastName);
+      setFieldValue("lastName", response.data.user.last_name);
       setFieldValue("mobileNumber", response.data.user.mobile);
+      validateField("firstName");
+      validateField("lastName");
+      validateField("mobileNumber");
       setUserExists(true);
     } else {
+      setFieldValue("firstName", "");
+      setFieldValue("lastName", "");
+      setFieldValue("mobileNumber", "");
       setUserExists(false);
     }
   };
@@ -62,7 +68,6 @@ const WizardNewUser = () => {
   }, []);
 
   const submit = (values) => {
-    console.log(values);
     alert(JSON.stringify(values, null, 2));
   };
 
@@ -121,6 +126,21 @@ const WizardNewUser = () => {
                   type="email"
                 />
                 <CheckUserEmail setUserExists={setUserExists} />
+
+                {
+                  userExists &&
+                  <Alert variant="info">
+                    <p className="mb-0">
+                      <strong>Heads up!</strong>
+                    </p>
+                    <p>
+                      A user with this email address already exists. We&apos;ve prefilled their information and will add your selected members to their account.
+                    </p>
+                    <p className="mb-0">
+                      To create a new user, please enter a different email address.
+                    </p>
+                  </Alert>
+                }
 
                 <div className="row">
                   <div className="col">
