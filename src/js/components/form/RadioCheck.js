@@ -7,7 +7,10 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
 
   const marginBotton = mb || "mb-3";
 
-  const [{value, ...field}, meta] = useField(props);
+  const [field, meta] = useField({
+    type,
+    ...props
+  });
   const { isSubmitting } = useFormikContext();
 
   let feedback = null;
@@ -27,7 +30,6 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
         disabled={isSubmitting || disabled}
         feedback={feedback}
         feedbackType={feedbackType}
-        checked={value}
         id={v4()}
         {...field}
         {...props}

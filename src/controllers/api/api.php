@@ -54,6 +54,12 @@ $this->group('/members', function () {
   });
 });
 
+$this->group('/onboarding', function () {
+  $this->get('/check-user', function () {
+    include 'onboarding/check-user.php';
+  });
+});
+
 $this->get('/test', function () {
   echo json_encode('Yo');
 });

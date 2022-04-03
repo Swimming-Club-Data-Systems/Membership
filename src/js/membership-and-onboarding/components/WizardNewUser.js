@@ -1,27 +1,53 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Button, Alert } from "react-bootstrap";
-import Header from "../../components/Header";
-import Breadcrumb from "../../components/Breadcrumb";
+import { Alert } from "react-bootstrap";
 import * as tenantFunctions from "../../classes/Tenant";
-import Container from "../../components/Container";
 import Form from "../../components/form/Form";
 import * as yup from "yup";
-import moment from "moment";
-// import TextInput from "../../components/form/TextInput";
-// import DateInput from "../../components/form/DateInput";
+import "yup-phone";
 import Checkbox from "../../components/form/Checkbox";
-import * as Config from "./Onboarding.config";
-import OnboardingDetails from "./OnboardingDetails";
 import { mapStateToProps } from "../../reducers/Onboarding";
 import { connect } from "react-redux";
 import { mapDispatchToProps } from "../../reducers/MainStore";
 import axios from "axios";
 import Link from "../../components/Link";
+import TextInput from "../../components/form/TextInput";
+import { useFormikContext } from "formik";
+
+const CheckUserEmail = (props) => {
+  const { touched, values, errors, setFieldValue } = useFormikContext();
+  const { setUserExists } = props;
+
+  useEffect(() => {
+    if (!errors.emailAddress) {
+      getUserByEmail();
+    }
+  }, [values.emailAddress]);
+
+  const getUserByEmail = async () => {
+    const response = await axios.get("/api/onboarding/check-user", {
+      params: {
+        email: values.emailAddress,
+      }
+    });
+    if (response.data.user) {
+      // Set state
+      setFieldValue("firstName", response.data.user.first_name);
+      setFieldValue("lastName", response.data.user.lastName);
+      setFieldValue("mobileNumber", response.data.user.mobile);
+      setUserExists(true);
+    } else {
+      setUserExists(false);
+    }
+  };
+
+  return null;
+};
 
 const WizardNewUser = () => {
 
   const [members, setMembers] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [userExists, setUserExists] = useState(false);
 
   useEffect(() => {
     tenantFunctions.setTitle("New Onboarding Session");
@@ -35,6 +61,22 @@ const WizardNewUser = () => {
     })();
   }, []);
 
+  const submit = (values) => {
+    console.log(values);
+    alert(JSON.stringify(values, null, 2));
+  };
+
+  const renderMembers = members.map(member => {
+    return (
+      <Checkbox
+        label={`${member.first_name} ${member.last_name}`}
+        name="members"
+        value={`${member.id}`}
+        key={member.id}
+      />
+    );
+  });
+
   return (
     <>
 
@@ -44,7 +86,72 @@ const WizardNewUser = () => {
           {
             members.length > 0 &&
             <>
-              Members to display
+              <Form
+                initialValues={{
+                  emailAddress: "",
+                  firstName: "",
+                  lastName: "",
+                  mobileNumber: "",
+                  members: [],
+                }}
+                validationSchema={yup.object({
+                  emailAddress: yup.string().required("You must enter an email address").email("You must enter a valid email address"),
+                  firstName: yup.string().required("You must enter a first name"),
+                  lastName: yup.string().required("You must enter a last name"),
+                  mobileNumber: yup.string().required("You must enter a mobile number").phone("GB", true, "You must enter a valid mobile number"),
+                  members: yup.array().min(1, "You must select at least one member to add to this account")
+                })}
+                onSubmit={submit}
+                submitTitle="Next"
+              >
+                {/* User details first */}
+                <h2>Enter user details</h2>
+
+                <p>
+                  Enter the user&apos;s email address here to begin creating a new user. We&apos;ll check to see if an account already exists.
+                </p>
+
+                <p>
+                  For existing users, you can also start onboarding from their user page.
+                </p>
+
+                <TextInput
+                  label="User email address"
+                  name="emailAddress"
+                  type="email"
+                />
+                <CheckUserEmail setUserExists={setUserExists} />
+
+                <div className="row">
+                  <div className="col">
+                    <TextInput
+                      label="First name"
+                      name="firstName"
+                      disabled={userExists}
+                    />
+                  </div>
+
+                  <div className="col">
+                    <TextInput
+                      label="Last name"
+                      name="lastName"
+                      disabled={userExists}
+                    />
+                  </div>
+                </div>
+
+                <TextInput
+                  label="Mobile number"
+                  name="mobileNumber"
+                  disabled={userExists}
+                />
+
+                {/* Then select members */}
+                <h2>Select members</h2>
+
+                {renderMembers}
+
+              </Form>
             </>
           }
 

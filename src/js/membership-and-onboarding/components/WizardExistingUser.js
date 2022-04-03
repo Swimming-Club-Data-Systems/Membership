@@ -1,29 +1,51 @@
-import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Button } from "react-bootstrap";
-import Header from "../../components/Header";
-import Breadcrumb from "../../components/Breadcrumb";
+import React, { useEffect } from "react";
+import { Modal, Button } from "react-bootstrap";
 import * as tenantFunctions from "../../classes/Tenant";
-import Container from "../../components/Container";
-import Form from "../../components/form/Form";
-import * as yup from "yup";
-import moment from "moment";
-// import TextInput from "../../components/form/TextInput";
-// import DateInput from "../../components/form/DateInput";
-import Checkbox from "../../components/form/Checkbox";
-import * as Config from "./Onboarding.config";
-import OnboardingDetails from "./OnboardingDetails";
 import { mapStateToProps } from "../../reducers/Onboarding";
 import { connect } from "react-redux";
 import { mapDispatchToProps } from "../../reducers/MainStore";
+import { useNavigate } from "react-router-dom";
 
-const WizardExistingUser = () => {
+const WizardExistingUser = (props) => {
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     tenantFunctions.setTitle("New Onboarding Session");
   }, []);
 
+  const handleGoToUsers = () => {
+    navigate("/users", {
+      state: {
+        global_questionable_link: true
+      }
+    });
+  };
+
   return (
     <>
+
+      <Modal show={props.show} onHide={props.handleClose} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>Existing User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>
+            We&apos;re still working on building an exisiting user picker.
+          </p>
+          <p className="mb-0">
+            In the meantime, you can repeat onboarding or add additional memberships for existing users by finding their page in the user directory.
+          </p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={props.handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleGoToUsers}>
+            View Users
+          </Button>
+        </Modal.Footer>
+      </Modal>
 
     </>
   );

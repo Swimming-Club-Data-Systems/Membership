@@ -1,23 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Tab, Button } from "react-bootstrap";
-import Header from "../../components/Header";
-import Breadcrumb from "../../components/Breadcrumb";
+import { Button } from "react-bootstrap";
 import * as tenantFunctions from "../../classes/Tenant";
-import Container from "../../components/Container";
-import Form from "../../components/form/Form";
-import * as yup from "yup";
-import moment from "moment";
-// import TextInput from "../../components/form/TextInput";
-// import DateInput from "../../components/form/DateInput";
-import Checkbox from "../../components/form/Checkbox";
-import * as Config from "./Onboarding.config";
-import OnboardingDetails from "./OnboardingDetails";
 import { mapStateToProps } from "../../reducers/Onboarding";
 import { connect } from "react-redux";
 import * as OnboardingIds from "../ids/Onboarding.ids";
 import { mapDispatchToProps } from "../../reducers/MainStore";
+import WizardExistingUser from "./WizardExistingUser";
 
 const WizardSelect = (props) => {
+
+  const [showExisting, setShowExisting] = useState(false);
 
   useEffect(() => {
     tenantFunctions.setTitle("New Onboarding Session");
@@ -30,9 +22,14 @@ const WizardSelect = (props) => {
   };
 
   const goToExisting = () => {
-    props.setValues({
-      [OnboardingIds.FORM_TO_DISPLAY]: OnboardingIds.ONBOARDING_EXISTING_USER,
-    });
+    // props.setValues({
+    //   [OnboardingIds.FORM_TO_DISPLAY]: OnboardingIds.ONBOARDING_EXISTING_USER,
+    // });
+    setShowExisting(true);
+  };
+
+  const hideExisting = () => {
+    setShowExisting(false);
   };
 
   return (
@@ -69,7 +66,13 @@ const WizardSelect = (props) => {
             </p>
           </div>
         </div>
+
       </div>
+
+      <WizardExistingUser
+        show={showExisting}
+        handleClose={hideExisting}
+      />
 
     </>
   );
