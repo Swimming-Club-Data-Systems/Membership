@@ -44,6 +44,8 @@
         "stefangabos/zebra_pagination": "^2.4",
         "league/oauth2-client": "^2.6",
         "microsoft/microsoft-graph": "^1.42",
-        "phpmailer/phpmailer": "^6.5"
+        "phpmailer/phpmailer": "^6.5",
+        "illuminate/database": "^8.83",
+        "illuminate/events": "^8.83"
     }
 }
