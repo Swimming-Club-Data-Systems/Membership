@@ -4,6 +4,8 @@ $db = app()->db;
 $tenant = app()->tenant;
 $currentUser = app()->user;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
 try {
 
   if (!isset($_GET['email'])) {
@@ -21,6 +23,10 @@ try {
   ]);
   $user = $getUser->fetch(PDO::FETCH_OBJ);
 
+  // $userL = Capsule::table('users')->where('tenant_id', $tenant->getId())->where('email_address', $_GET['email'])->first();
+  $userL = App\Models\User::find(15);
+  $userL = App\Models\User::find(15);
+
   if (!$user) {
     $output = [
       'success' => true,
@@ -33,6 +39,7 @@ try {
         'first_name' => $user->firstName,
         'last_name' => $user->lastName,
         'mobile' => $user->phone,
+        'user' => $userL,
       ],
     ];
   }

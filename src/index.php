@@ -251,6 +251,8 @@ try {
   halt(500);
 }
 
+require 'illuminate-bootstrap.php';
+
 $path = realpath(BASE_PATH . '../');
 $headInfo = explode(' ', file_get_contents($path . '/.git/HEAD'));
 if ($headInfo[0] == 'ref:') {
