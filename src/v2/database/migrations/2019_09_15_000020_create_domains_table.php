@@ -15,13 +15,19 @@ class CreateDomainsTable extends Migration
      */
     public function up(): void
     {
+        if (env('DB_DISABLE_FOREIGN_KEY')) {
+            Schema::disableForeignKeyConstraints();
+        }
+
         Schema::create('domains', function (Blueprint $table) {
             $table->increments('id');
             $table->string('domain', 255)->unique();
-            $table->string('tenant_id');
+            $table->integer('tenant_id');
 
             $table->timestamps();
-            $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+            if (!env('DB_DISABLE_FOREIGN_KEY')) {
+                $table->foreign('tenant_id')->references('id')->on('tenants')->onUpdate('cascade')->onDelete('cascade');
+            }
         });
     }
 
