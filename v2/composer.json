@@ -12,8 +12,11 @@
         "inertiajs/inertia-laravel": "^0.5.4",
         "laravel/framework": "^8.75",
         "laravel/sanctum": "^2.8",
+        "laravel/scout": "^9.4",
+        "laravel/telescope": "^4.8",
         "laravel/tinker": "^2.5",
         "stancl/tenancy": "^3.5",
+        "stripe/stripe-php": "^7.123",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

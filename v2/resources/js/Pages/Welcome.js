@@ -1,9 +1,14 @@
 import React from 'react';
+import Authenticated from '@/Layouts/Authenticated';
 import { Link, Head } from '@inertiajs/inertia-react';
 
 export default function Welcome(props) {
     return (
-        <>
+        <Authenticated
+            auth={props.auth}
+            errors={props.errors}
+            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Welcome</h2>}
+        >
             <Head title="Welcome" />
             <div className="relative flex items-top justify-center min-h-screen bg-gray-100 dark:bg-gray-900 sm:items-center sm:pt-0">
                 <div className="fixed top-0 right-0 px-6 py-4 sm:block">
@@ -252,6 +257,6 @@ export default function Welcome(props) {
                     </div>
                 </div>
             </div>
-        </>
+        </Authenticated>
     );
 }
