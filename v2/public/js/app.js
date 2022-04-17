@@ -54086,6 +54086,22 @@ var map = {
 		"./resources/js/Pages/Auth/VerifyEmail.js",
 		"resources_js_Pages_Auth_VerifyEmail_js"
 	],
+	"./Central/Home": [
+		"./resources/js/Pages/Central/Home.js",
+		"resources_js_Pages_Central_Home_js"
+	],
+	"./Central/Home.js": [
+		"./resources/js/Pages/Central/Home.js",
+		"resources_js_Pages_Central_Home_js"
+	],
+	"./Central/Laravel": [
+		"./resources/js/Pages/Central/Laravel.js",
+		"resources_js_Pages_Central_Laravel_js"
+	],
+	"./Central/Laravel.js": [
+		"./resources/js/Pages/Central/Laravel.js",
+		"resources_js_Pages_Central_Laravel_js"
+	],
 	"./Dashboard": [
 		"./resources/js/Pages/Dashboard.js",
 		"resources_js_Pages_Dashboard_js"
@@ -54093,6 +54109,14 @@ var map = {
 	"./Dashboard.js": [
 		"./resources/js/Pages/Dashboard.js",
 		"resources_js_Pages_Dashboard_js"
+	],
+	"./Dev/FormComponents": [
+		"./resources/js/Pages/Dev/FormComponents.js",
+		"resources_js_Pages_Dev_FormComponents_js"
+	],
+	"./Dev/FormComponents.js": [
+		"./resources/js/Pages/Dev/FormComponents.js",
+		"resources_js_Pages_Dev_FormComponents_js"
 	],
 	"./Welcome": [
 		"./resources/js/Pages/Welcome.js",
@@ -54199,6 +54223,18 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -54229,7 +54265,7 @@ module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"P
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_js":1,"resources_js_Pages_Auth_ForgotPassword_js":1,"resources_js_Pages_Auth_Login_js":1,"resources_js_Pages_Auth_Register_js":1,"resources_js_Pages_Auth_ResetPassword_js":1,"resources_js_Pages_Auth_VerifyEmail_js":1,"resources_js_Pages_Dashboard_js":1,"resources_js_Pages_Welcome_js":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_Pages_Auth_ConfirmPassword_js":1,"resources_js_Pages_Auth_ForgotPassword_js":1,"resources_js_Pages_Auth_Login_js":1,"resources_js_Pages_Auth_Register_js":1,"resources_js_Pages_Auth_ResetPassword_js":1,"resources_js_Pages_Auth_VerifyEmail_js":1,"resources_js_Pages_Central_Home_js":1,"resources_js_Pages_Central_Laravel_js":1,"resources_js_Pages_Dashboard_js":1,"resources_js_Pages_Dev_FormComponents_js":1,"resources_js_Pages_Welcome_js":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};
