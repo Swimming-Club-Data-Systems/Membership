@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Formik, Form as FormikForm, useFormikContext } from "formik";
+import Button from "../Button";
 
 const SubmissionButtons = (props) => {
 
@@ -24,30 +25,27 @@ const SubmissionButtons = (props) => {
           There are <strong>{Object.keys(errors).length} errors</strong>
         </p>
       }
-      <div className="row">
-        <div className="col-auto ms-auto">
-          {!props.hideClear &&
-            <>
+      <div className="text-right">
+        {!props.hideClear &&
+          <>
 
-              <button
-                type="button"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                onClick={clearForm}
-                disabled={isSubmitting || !dirty}
-              >
-                {props.clearTitle || "Clear"}
-              </button>{" "}
-            </>
-          }
+            <Button
+              type="button"
+              onClick={clearForm}
+              disabled={isSubmitting || !dirty}
+              variant="secondary"
+            >
+              {props.clearTitle || "Clear"}
+            </Button>{" "}
+          </>
+        }
 
-          <button
-            type="submit"
-            className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-            disabled={!dirty || !isValid || isSubmitting}
-          >
-            {props.submitTitle || "Submit"}
-          </button>
-        </div>
+        <Button
+          type="submit"
+          disabled={!dirty || !isValid || isSubmitting}
+        >
+          {props.submitTitle || "Submit"}
+        </Button>
       </div>
     </>
   );

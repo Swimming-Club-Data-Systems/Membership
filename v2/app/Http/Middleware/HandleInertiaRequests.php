@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Support\Facades\App;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -34,6 +35,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $tenantData = [];
+
+        if (tenant()) {
+            $tenantData = [
+
+            ];
+        }
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
@@ -41,6 +50,14 @@ class HandleInertiaRequests extends Middleware
             'ziggy' => function () {
                 return (new Ziggy)->toArray();
             },
-        ]);
+            'app' => [
+                'environment' => App::environment(),
+                'debug' => env('APP_DEBUG', false),
+                'locale' => App::getLocale(),
+                'timezone' => 'Europe/London',
+                'isLocal' => App::isLocal(),
+                'isProduction' => App::isProduction(),
+            ],
+        ], $tenantData);
     }
 }

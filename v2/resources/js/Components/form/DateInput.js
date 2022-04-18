@@ -8,7 +8,7 @@ import { usePopper } from "react-popper";
 import FocusTrap from "focus-trap-react";
 import { format, isValid, parse } from "date-fns";
 
-const DateInput = ({ label, helpText, mb, disabled, ...props }) => {
+const DateInput = ({ label, help, mb, disabled, ...props }) => {
 
   const {setFieldValue} = useFormikContext();
   const [field, meta] = useField(props);
@@ -99,9 +99,9 @@ const DateInput = ({ label, helpText, mb, disabled, ...props }) => {
             </Form.Control.Feedback>
           ) : null}
 
-          {helpText &&
+          {help &&
             <Form.Text className="text-muted">
-              {helpText}
+              {help}
             </Form.Text>
           }
         </Form.Group>

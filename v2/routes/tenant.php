@@ -41,8 +41,9 @@ Route::middleware([
     })->middleware(['auth', 'verified'])->name('dashboard');
 
     Route::get('/which-tenant', function () {
-        return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+        ddd(tenant());
+        // return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
     });
 
-    require __DIR__.'/auth.php';
+    require __DIR__.'/tenant-auth.php';
 });

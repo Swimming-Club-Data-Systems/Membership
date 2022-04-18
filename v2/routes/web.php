@@ -41,4 +41,4 @@ Route::get('/dev/form-components', function () {
     return Inertia::render('Dev/FormComponents');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__.'/central-auth.php';

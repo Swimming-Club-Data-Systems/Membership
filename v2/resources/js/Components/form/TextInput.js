@@ -1,7 +1,7 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
 
-const TextInput = ({ label, helpText, mb, disabled, ...props }) => {
+const TextInput = ({ label, help, mb, disabled, type, ...props }) => {
 
   const [field, meta] = useField(props);
   const { isSubmitting } = useFormikContext();
@@ -10,14 +10,19 @@ const TextInput = ({ label, helpText, mb, disabled, ...props }) => {
   const isInvalid = meta.touched && meta.error;
   const controlId = props.id || props.name;
 
+  if (!type) {
+    type = "text";
+  }
+
   return (
     <>
       <div className={marginBotton}>
-        <label for={controlId} className="block text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={controlId} className="block text-sm font-medium text-gray-700">{label}</label>
         <input
           disabled={isSubmitting || disabled}
           className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
           id={controlId}
+          type={type}
           {...field}
           {...props}
         />
@@ -28,9 +33,9 @@ const TextInput = ({ label, helpText, mb, disabled, ...props }) => {
           </p>
         ) : null}
 
-        {helpText &&
+        {help &&
           <p className="mt-2 text-sm text-gray-500">
-            {helpText}
+            {help}
           </p>
         }
       </div>

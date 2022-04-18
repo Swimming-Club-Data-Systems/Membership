@@ -1,6 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
 import { useField, useFormikContext } from "formik";
-import { Form } from "react-bootstrap";
 import { v4 } from "uuid";
 
 const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
@@ -20,20 +19,36 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
     feedbackType = "invalid";
   }
 
+  const [id] = useState(v4());
+
+  const isValid = props.showValid && meta.touched && !meta.error;
+  const isInvalid = meta.touched && meta.error;
+
+  let checkStyles = "";
+  if (type === "checkbox") {
+    checkStyles = "rounded";
+  }
+
   return (
-    <div className={marginBotton}>
-      <Form.Check
-        type={type}
-        isValid={props.showValid && meta.touched && !meta.error}
-        isInvalid={meta.touched && meta.error}
-        label={label}
-        disabled={isSubmitting || disabled}
-        feedback={feedback}
-        feedbackType={feedbackType}
-        id={v4()}
-        {...field}
-        {...props}
-      />
+    <div className={`flex items-start ${marginBotton}`}>
+      <div className="flex items-center h-5">
+        <input
+          id={id}
+          {...field}
+          {...props}
+          disabled={isSubmitting || disabled}
+          type={type}
+          className={`focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 ${checkStyles}`}
+        />
+      </div>
+      <div className="ml-3 text-sm">
+        <label htmlFor={id} className="font-medium text-gray-700">
+          {label}
+        </label>
+        {props.help &&
+          <p className="text-gray-500">{props.help}</p>
+        }
+      </div>
     </div>
   );
 };
