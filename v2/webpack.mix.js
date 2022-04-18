@@ -1,4 +1,5 @@
 const mix = require('laravel-mix');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 /*
  |--------------------------------------------------------------------------
@@ -20,10 +21,15 @@ mix.js('resources/js/app.js', 'public/js')
     ])
     .alias({
         '@': 'resources/js',
-    });
+    })
+    .sourceMaps(true, 'eval-source-map', 'source-map');
 
 if (mix.inProduction()) {
     mix.version();
-} else {
-    mix.sourceMaps();
 }
+
+mix.disableNotifications();
+
+mix.webpackConfig({
+    plugins: [new MonacoWebpackPlugin()]
+});
