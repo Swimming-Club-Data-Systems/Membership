@@ -31,14 +31,18 @@ Route::get('/laravel', function () {
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-})->name('home');
+})->name('laravel');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth:central', 'verified'])->name('dashboard');
 
 Route::get('/dev/form-components', function () {
     return Inertia::render('Dev/FormComponents');
 });
+
+Route::get('/go', function () {
+    ddd("Hey");
+})->middleware(['auth:central', 'verified']);
 
 require __DIR__.'/central-auth.php';

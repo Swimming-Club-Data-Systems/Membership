@@ -1,7 +1,7 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
 
-const TextInput = ({ label, help, mb, disabled, type, ...props }) => {
+const TextInput = ({ label, help, mb, disabled, type, leftText, rightText, ...props }) => {
 
   const [field, meta] = useField(props);
   const { isSubmitting } = useFormikContext();

@@ -27,23 +27,32 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
     ScopeSessions::class,
 ])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
-    
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified'])->name('dashboard');
+    Route::middleware([
+        'auth',
+        'verified',
+    ])->group(function () {
+        Route::get('/', function () {
+            return Inertia::render('Dashboard');
+        })->name('dashboard');
 
-    Route::get('/which-tenant', function () {
-        ddd(tenant());
-        // return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+        Route::get('/laravel', function () {
+            return Inertia::render('Welcome', [
+                'canLogin' => Route::has('login'),
+                'canRegister' => Route::has('register'),
+                'laravelVersion' => Application::VERSION,
+                'phpVersion' => PHP_VERSION,
+            ]);
+        });
+
+        Route::get('/which-tenant', function () {
+            ddd(tenant());
+            // return 'This is your multi-tenant application. The id of the current tenant is ' . tenant('id');
+        });
+
+        Route::get('/go', function () {
+            ddd("Hey");
+        });
     });
 
-    require __DIR__.'/tenant-auth.php';
+    require __DIR__ . '/tenant-auth.php';
 });

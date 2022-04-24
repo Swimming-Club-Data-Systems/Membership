@@ -1,4 +1,12 @@
 "use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
 (self["webpackChunk"] = self["webpackChunk"] || []).push([["resources_js_Pages_Central_Home_js"],{
 
 /***/ "./resources/js/Components/ApplicationLogo.js":
@@ -7,22 +15,7 @@
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ApplicationLogo)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
-
-function ApplicationLogo(_ref) {
-  var className = _ref.className;
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("img", {
-    src: "/img/corporate/scds.png",
-    width: "50px",
-    className: "rounded"
-  });
-}
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ApplicationLogo)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ \"./node_modules/react/jsx-runtime.js\");\n\n\nfunction ApplicationLogo(_ref) {\n  var className = _ref.className;\n  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(\"img\", {\n    src: \"/img/corporate/scds.png\",\n    width: \"50px\",\n    className: \"rounded\"\n  });\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvQ29tcG9uZW50cy9BcHBsaWNhdGlvbkxvZ28uanMuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7O0FBQUE7O0FBRWUsU0FBU0MsZUFBVCxPQUF3QztBQUFBLE1BQWJDLFNBQWEsUUFBYkEsU0FBYTtBQUNuRCxzQkFDSTtBQUFLLE9BQUcsRUFBQyx5QkFBVDtBQUFtQyxTQUFLLEVBQUMsTUFBekM7QUFBZ0QsYUFBUyxFQUFDO0FBQTFELElBREo7QUFHSCIsInNvdXJjZXMiOlsid2VicGFjazovLy8uL3Jlc291cmNlcy9qcy9Db21wb25lbnRzL0FwcGxpY2F0aW9uTG9nby5qcz85OTBmIl0sInNvdXJjZXNDb250ZW50IjpbImltcG9ydCBSZWFjdCBmcm9tICdyZWFjdCc7XG5cbmV4cG9ydCBkZWZhdWx0IGZ1bmN0aW9uIEFwcGxpY2F0aW9uTG9nbyh7IGNsYXNzTmFtZSB9KSB7XG4gICAgcmV0dXJuIChcbiAgICAgICAgPGltZyBzcmM9XCIvaW1nL2NvcnBvcmF0ZS9zY2RzLnBuZ1wiIHdpZHRoPVwiNTBweFwiIGNsYXNzTmFtZT1cInJvdW5kZWRcIiAvPlxuICAgICk7XG59XG4iXSwibmFtZXMiOlsiUmVhY3QiLCJBcHBsaWNhdGlvbkxvZ28iLCJjbGFzc05hbWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./resources/js/Components/ApplicationLogo.js\n");
 
 /***/ }),
 
@@ -32,74 +25,7 @@ function ApplicationLogo(_ref) {
   \********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ Home)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ "./node_modules/@inertiajs/inertia-react/dist/index.js");
-/* harmony import */ var _Components_ApplicationLogo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/ApplicationLogo */ "./resources/js/Components/ApplicationLogo.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-
-
-
-
-
-
-function Home(props) {
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Head, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("title", {
-        children: "Membership Software for Swimming Clubs"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("meta", {
-        name: "description",
-        content: "Membership Software for Swimming Clubs by SCDS"
-      })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-      className: "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-gray-100",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-        className: "container mx-auto py-3 h-screen",
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-          className: "mb-3",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_Components_ApplicationLogo__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h1", {
-            className: "mt-2 text-indigo-100 dark:text-indigo-400 font-bold text-3xl",
-            children: "Swimming Club Data Systems"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-            className: "font-bold text-2xl",
-            children: "Membership software for swimming clubs"
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-          className: "mb-3",
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("p", {
-            className: "text-xl",
-            children: "Manage your members, subscriptions, competition entries and more."
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
-            children: ["For sales enquiries, please contact ", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("a", {
-              className: "text-indigo-100 dark:text-indigo-400",
-              href: "mailto:sales@myswimmingclub.uk",
-              children: "sales@myswimmingclub.uk"
-            }), "."]
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-          className: "mb-3",
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {
-            href: route('login'),
-            className: "text-indigo-100 dark:text-indigo-400",
-            children: "Admin log in"
-          })
-        })]
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-      className: "bg-indigo-600 dark:bg-indigo-800 text-white",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-        className: "container mx-auto py-3",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
-          children: ["Laravel v", props.laravelVersion, " (PHP v", props.phpVersion, ")"]
-        })
-      })
-    })]
-  });
-}
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Home)\n/* harmony export */ });\n/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ \"./node_modules/react/index.js\");\n/* harmony import */ var _inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @inertiajs/inertia-react */ \"./node_modules/@inertiajs/inertia-react/dist/index.js\");\n/* harmony import */ var _Components_ApplicationLogo__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/ApplicationLogo */ \"./resources/js/Components/ApplicationLogo.js\");\n/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ \"./node_modules/react/jsx-runtime.js\");\n\n\n\n\n\n\nfunction Home(props) {\n  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {\n    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Head, {\n      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"title\", {\n        children: \"Membership Software for Swimming Clubs\"\n      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"meta\", {\n        name: \"description\",\n        content: \"Membership Software for Swimming Clubs by SCDS\"\n      })]\n    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"div\", {\n      className: \"bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 text-gray-100\",\n      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(\"div\", {\n        className: \"container mx-auto py-3 h-screen\",\n        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(\"div\", {\n          className: \"mb-3\",\n          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_Components_ApplicationLogo__WEBPACK_IMPORTED_MODULE_2__[\"default\"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"h1\", {\n            className: \"mt-2 text-indigo-100 dark:text-indigo-400 font-bold text-3xl\",\n            children: \"Swimming Club Data Systems\"\n          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"p\", {\n            className: \"font-bold text-2xl\",\n            children: \"Membership software for swimming clubs\"\n          })]\n        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(\"div\", {\n          className: \"mb-3\",\n          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"p\", {\n            className: \"text-xl\",\n            children: \"Manage your members, subscriptions, competition entries and more.\"\n          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(\"p\", {\n            children: [\"For sales enquiries, please contact \", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"a\", {\n              className: \"text-indigo-100 dark:text-indigo-400\",\n              href: \"mailto:sales@myswimmingclub.uk\",\n              children: \"sales@myswimmingclub.uk\"\n            }), \".\"]\n          })]\n        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"div\", {\n          className: \"mb-3\",\n          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_inertiajs_inertia_react__WEBPACK_IMPORTED_MODULE_1__.Link, {\n            href: route('login'),\n            className: \"text-indigo-100 dark:text-indigo-400\",\n            children: \"Admin log in\"\n          })\n        })]\n      })\n    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"div\", {\n      className: \"bg-indigo-600 dark:bg-indigo-800 text-white\",\n      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(\"div\", {\n        className: \"container mx-auto py-3\",\n        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(\"p\", {\n          children: [\"Laravel v\", props.laravelVersion, \" (PHP v\", props.phpVersion, \")\"]\n        })\n      })\n    })]\n  });\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvUGFnZXMvQ2VudHJhbC9Ib21lLmpzLmpzIiwibWFwcGluZ3MiOiI7Ozs7Ozs7O0FBQUE7QUFDQTtBQUNBOzs7O0FBRWUsU0FBU0ksSUFBVCxDQUFjQyxLQUFkLEVBQXFCO0FBQ2xDLHNCQUNFO0FBQUEsNEJBQ0Usd0RBQUMsMERBQUQ7QUFBQSw4QkFDRTtBQUFBO0FBQUEsUUFERixlQUVFO0FBQU0sWUFBSSxFQUFDLGFBQVg7QUFBeUIsZUFBTyxFQUFDO0FBQWpDLFFBRkY7QUFBQSxNQURGLGVBTUU7QUFBSyxlQUFTLEVBQUMscUlBQWY7QUFBQSw2QkFDRTtBQUFLLGlCQUFTLEVBQUMsaUNBQWY7QUFBQSxnQ0FDRTtBQUFLLG1CQUFTLEVBQUMsTUFBZjtBQUFBLGtDQUNFLHVEQUFDLG1FQUFELEtBREYsZUFFRTtBQUFJLHFCQUFTLEVBQUMsOERBQWQ7QUFBQTtBQUFBLFlBRkYsZUFHRTtBQUFHLHFCQUFTLEVBQUMsb0JBQWI7QUFBQTtBQUFBLFlBSEY7QUFBQSxVQURGLGVBT0U7QUFBSyxtQkFBUyxFQUFDLE1BQWY7QUFBQSxrQ0FDRTtBQUFHLHFCQUFTLEVBQUMsU0FBYjtBQUFBO0FBQUEsWUFERixlQUVFO0FBQUEsNEVBQXVDO0FBQUcsdUJBQVMsRUFBQyxzQ0FBYjtBQUFvRCxrQkFBSSxFQUFDLGdDQUF6RDtBQUFBO0FBQUEsY0FBdkM7QUFBQSxZQUZGO0FBQUEsVUFQRixlQVlFO0FBQUssbUJBQVMsRUFBQyxNQUFmO0FBQUEsaUNBQ0UsdURBQUMsMERBQUQ7QUFBTSxnQkFBSSxFQUFFQyxLQUFLLENBQUMsT0FBRCxDQUFqQjtBQUE0QixxQkFBUyxFQUFDLHNDQUF0QztBQUFBO0FBQUE7QUFERixVQVpGO0FBQUE7QUFERixNQU5GLGVBMkJFO0FBQUssZUFBUyxFQUFDLDZDQUFmO0FBQUEsNkJBQ0U7QUFBSyxpQkFBUyxFQUFDLHdCQUFmO0FBQUEsK0JBQ0U7QUFBQSxrQ0FDWUQsS0FBSyxDQUFDRSxjQURsQixhQUN5Q0YsS0FBSyxDQUFDRyxVQUQvQztBQUFBO0FBREY7QUFERixNQTNCRjtBQUFBLElBREY7QUFxQ0QiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvUGFnZXMvQ2VudHJhbC9Ib21lLmpzP2VlZmEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IFJlYWN0IGZyb20gJ3JlYWN0JztcbmltcG9ydCB7IExpbmssIEhlYWQgfSBmcm9tICdAaW5lcnRpYWpzL2luZXJ0aWEtcmVhY3QnO1xuaW1wb3J0IEFwcGxpY2F0aW9uTG9nbyBmcm9tICdAL0NvbXBvbmVudHMvQXBwbGljYXRpb25Mb2dvJztcblxuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24gSG9tZShwcm9wcykge1xuICByZXR1cm4gKFxuICAgIDw+XG4gICAgICA8SGVhZD5cbiAgICAgICAgPHRpdGxlPk1lbWJlcnNoaXAgU29mdHdhcmUgZm9yIFN3aW1taW5nIENsdWJzPC90aXRsZT5cbiAgICAgICAgPG1ldGEgbmFtZT1cImRlc2NyaXB0aW9uXCIgY29udGVudD1cIk1lbWJlcnNoaXAgU29mdHdhcmUgZm9yIFN3aW1taW5nIENsdWJzIGJ5IFNDRFNcIiAvPlxuICAgICAgPC9IZWFkPlxuXG4gICAgICA8ZGl2IGNsYXNzTmFtZT1cImJnLWdyYWRpZW50LXRvLXIgZnJvbS1pbmRpZ28tNjAwIHZpYS1wdXJwbGUtNjAwIHRvLXBpbmstNjAwIGRhcms6ZnJvbS1pbmRpZ28tOTAwIGRhcms6dmlhLXB1cnBsZS05MDAgZGFyazp0by1waW5rLTkwMCB0ZXh0LWdyYXktMTAwXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY29udGFpbmVyIG14LWF1dG8gcHktMyBoLXNjcmVlblwiPlxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWItM1wiPlxuICAgICAgICAgICAgPEFwcGxpY2F0aW9uTG9nbyAvPlxuICAgICAgICAgICAgPGgxIGNsYXNzTmFtZT1cIm10LTIgdGV4dC1pbmRpZ28tMTAwIGRhcms6dGV4dC1pbmRpZ28tNDAwIGZvbnQtYm9sZCB0ZXh0LTN4bFwiPlN3aW1taW5nIENsdWIgRGF0YSBTeXN0ZW1zPC9oMT5cbiAgICAgICAgICAgIDxwIGNsYXNzTmFtZT1cImZvbnQtYm9sZCB0ZXh0LTJ4bFwiPk1lbWJlcnNoaXAgc29mdHdhcmUgZm9yIHN3aW1taW5nIGNsdWJzPC9wPlxuICAgICAgICAgIDwvZGl2PlxuXG4gICAgICAgICAgPGRpdiBjbGFzc05hbWU9XCJtYi0zXCI+XG4gICAgICAgICAgICA8cCBjbGFzc05hbWU9XCJ0ZXh0LXhsXCI+TWFuYWdlIHlvdXIgbWVtYmVycywgc3Vic2NyaXB0aW9ucywgY29tcGV0aXRpb24gZW50cmllcyBhbmQgbW9yZS48L3A+XG4gICAgICAgICAgICA8cD5Gb3Igc2FsZXMgZW5xdWlyaWVzLCBwbGVhc2UgY29udGFjdCA8YSBjbGFzc05hbWU9XCJ0ZXh0LWluZGlnby0xMDAgZGFyazp0ZXh0LWluZGlnby00MDBcIiBocmVmPVwibWFpbHRvOnNhbGVzQG15c3dpbW1pbmdjbHViLnVrXCI+c2FsZXNAbXlzd2ltbWluZ2NsdWIudWs8L2E+LjwvcD5cbiAgICAgICAgICA8L2Rpdj5cblxuICAgICAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWItM1wiPlxuICAgICAgICAgICAgPExpbmsgaHJlZj17cm91dGUoJ2xvZ2luJyl9IGNsYXNzTmFtZT1cInRleHQtaW5kaWdvLTEwMCBkYXJrOnRleHQtaW5kaWdvLTQwMFwiPlxuICAgICAgICAgICAgICBBZG1pbiBsb2cgaW5cbiAgICAgICAgICAgIDwvTGluaz5cbiAgICAgICAgICA8L2Rpdj5cbiAgICAgICAgPC9kaXY+XG4gICAgICA8L2Rpdj5cblxuICAgICAgPGRpdiBjbGFzc05hbWU9XCJiZy1pbmRpZ28tNjAwIGRhcms6YmctaW5kaWdvLTgwMCB0ZXh0LXdoaXRlXCI+XG4gICAgICAgIDxkaXYgY2xhc3NOYW1lPVwiY29udGFpbmVyIG14LWF1dG8gcHktM1wiPlxuICAgICAgICAgIDxwPlxuICAgICAgICAgICAgTGFyYXZlbCB2e3Byb3BzLmxhcmF2ZWxWZXJzaW9ufSAoUEhQIHZ7cHJvcHMucGhwVmVyc2lvbn0pXG4gICAgICAgICAgPC9wPlxuICAgICAgICA8L2Rpdj5cbiAgICAgIDwvZGl2PlxuICAgIDwvPlxuICApO1xufVxuIl0sIm5hbWVzIjpbIlJlYWN0IiwiTGluayIsIkhlYWQiLCJBcHBsaWNhdGlvbkxvZ28iLCJIb21lIiwicHJvcHMiLCJyb3V0ZSIsImxhcmF2ZWxWZXJzaW9uIiwicGhwVmVyc2lvbiJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./resources/js/Pages/Central/Home.js\n");
 
 /***/ })
 

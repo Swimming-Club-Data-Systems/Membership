@@ -103,6 +103,10 @@ class TenancyServiceProvider extends ServiceProvider
         $this->mapRoutes();
 
         $this->makeTenancyMiddlewareHighestPriority();
+
+        \Stancl\Tenancy\Features\TenantConfig::$storageToConfigMap = [
+            'id' => 'scout.prefix',
+        ];
     }
 
     protected function bootEvents()

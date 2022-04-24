@@ -8,3 +8,4 @@ client_secret.json
 phinx.yml
 src/cache
 .DS_Store
+v2/storage/logs/laravel.log

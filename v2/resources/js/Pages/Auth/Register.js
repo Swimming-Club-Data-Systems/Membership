@@ -4,7 +4,8 @@ import Guest from '@/Layouts/Guest';
 import Input from '@/Components/Input';
 import Label from '@/Components/Label';
 import ValidationErrors from '@/Components/ValidationErrors';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import { Head, useForm } from '@inertiajs/inertia-react';
+import Link from '@/Components/Link';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -109,7 +110,7 @@ export default function Register() {
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    <Link href={route('login')} className="underline text-sm text-gray-600 hover:text-gray-900">
+                    <Link href={route('login')}>
                         Already registered?
                     </Link>
 

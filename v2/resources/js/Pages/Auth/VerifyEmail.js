@@ -1,7 +1,8 @@
 import React from 'react';
 import Button from '@/Components/Button';
 import Guest from '@/Layouts/Guest';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import { Head, useForm } from '@inertiajs/inertia-react';
+import Link from '@/Components/Link';
 
 export default function VerifyEmail({ status }) {
     const { post, processing } = useForm();
@@ -35,7 +36,6 @@ export default function VerifyEmail({ status }) {
                         href={route('logout')}
                         method="post"
                         as="button"
-                        className="underline text-sm text-gray-600 hover:text-gray-900"
                     >
                         Log Out
                     </Link>

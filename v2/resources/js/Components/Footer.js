@@ -41,22 +41,26 @@ const Footer = (props) => {
             </div>
 
             <div>
-              <Link>Carbon Removal</Link>
+              <a href="https://climate.stripe.com/pkIT9H">Carbon Removal</a>
             </div>
 
             <div>
-              <Link>GitHub</Link>
+              <a href="https://github.com/Swimming-Club-Data-Systems" target="_blank">GitHub</a>
             </div>
           </div>
 
           <div className="space-y-4">
             <p className="text-gray-600 dark:text-slate-300 font-semibold">Related Sites</p>
             <div>
-              <Link>British Swimming</Link>
+              <a href="https://www.britishswimming.org/" target="_blank">British Swimming</a>
             </div>
 
             <div>
-              <Link>Swim England</Link>
+              <a href="https://www.swimming.org/swimengland/" target="_blank">Swim England</a>
+            </div>
+
+            <div>
+              <a href="https://www.swimming.org/swimengland/" target="_blank">swimming.org</a>
             </div>
           </div>
         </div>

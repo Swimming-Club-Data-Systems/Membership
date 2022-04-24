@@ -9,7 +9,7 @@ const Header = (props) => {
       <Container>
 
         <div className="py-3">
-          <ApplicationLogo />
+          {/* <ApplicationLogo /> */}
           <h1 className="mt-2 text-indigo-600 dark:text-indigo-400 font-bold text-3xl">{props.title}</h1>
           {props.subtitle &&
             <p className="font-bold text-2xl">{props.subtitle}</p>

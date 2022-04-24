@@ -4,6 +4,7 @@
 
 import React from "react";
 import { Formik, Form as FormikForm, useFormikContext } from "formik";
+import { usePage } from "@inertiajs/inertia-react"
 import Button from "../Button";
 
 const SubmissionButtons = (props) => {
@@ -53,6 +54,9 @@ const SubmissionButtons = (props) => {
 
 const Form = (props) => {
 
+  const { serverSideErrors } = usePage().props;
+  console.log(serverSideErrors);
+
   const {
     initialValues,
     validationSchema,
@@ -61,6 +65,7 @@ const Form = (props) => {
     hideClear,
     clearTitle,
     onClear,
+    hideDefaultButtons = false,
     ...otherProps
   } = props;
 
@@ -74,12 +79,14 @@ const Form = (props) => {
         <FormikForm {...otherProps}>
           {props.children}
 
-          <SubmissionButtons
-            submitTitle={submitTitle}
-            hideClear={hideClear}
-            clearTitle={clearTitle}
-            onClear={onClear}
-          />
+          {!hideDefaultButtons &&
+            <SubmissionButtons
+              submitTitle={submitTitle}
+              hideClear={hideClear}
+              clearTitle={clearTitle}
+              onClear={onClear}
+            />
+          }
         </FormikForm>
       </Formik>
     </>
