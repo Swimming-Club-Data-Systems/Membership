@@ -27,5 +27,10 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->environment('local') && env('MAIL_DEV_ADDRESS')) {
             Mail::alwaysTo(env('MAIL_DEV_ADDRESS'));
         }
+
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 }

@@ -1,7 +1,7 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
 
-const TextInput = ({ label, help, mb, disabled, type, leftText, rightText, ...props }) => {
+const TextInput = ({ label, help, mb, disabled, type, leftText, rightText, className = '', ...props }) => {
 
   const [field, meta] = useField(props);
   const { isSubmitting } = useFormikContext();
@@ -20,7 +20,7 @@ const TextInput = ({ label, help, mb, disabled, type, leftText, rightText, ...pr
         <label htmlFor={controlId} className="block text-sm font-medium text-gray-700">{label}</label>
         <input
           disabled={isSubmitting || disabled}
-          className="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+          className={"mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md " + className}
           id={controlId}
           type={type}
           {...field}

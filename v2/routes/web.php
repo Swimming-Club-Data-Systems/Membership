@@ -45,4 +45,4 @@ Route::get('/go', function () {
     ddd("Hey");
 })->middleware(['auth:central', 'verified']);
 
-require __DIR__.'/central-auth.php';
+require __DIR__.'/central/auth.php';

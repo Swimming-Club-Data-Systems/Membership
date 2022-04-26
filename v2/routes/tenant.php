@@ -52,7 +52,11 @@ Route::middleware([
         Route::get('/go', function () {
             ddd("Hey");
         });
+
+        Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
+                    ->name('verification.notice');
     });
 
-    require __DIR__ . '/tenant-auth.php';
+    require __DIR__ . '/tenant/auth.php';
+    require __DIR__ . '/tenant/user.php';
 });
