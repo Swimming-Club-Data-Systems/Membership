@@ -13,9 +13,9 @@ const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
  */
 
 mix
-  .js("resources/js/app.js", "public/js")
+  .js("resources/js/app.js", "public/dist/js")
   .react()
-  .postCss("resources/css/app.css", "public/css", [
+  .postCss("resources/css/app.css", "public/dist/css", [
     require("postcss-import"),
     require("tailwindcss"),
     require("autoprefixer"),

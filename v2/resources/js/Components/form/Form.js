@@ -48,9 +48,6 @@ const SubmissionButtons = (props) => {
 };
 
 const Form = (props) => {
-  const { serverSideErrors } = usePage().props;
-  console.log(serverSideErrors);
-
   const {
     initialValues,
     validationSchema,

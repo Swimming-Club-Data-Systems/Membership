@@ -7,6 +7,7 @@ import TextInput from "./form/TextInput";
 import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
+// import route from "vendor/tightenco/ziggy/src/js";
 
 const Search = (props) => {
   const handleSubmit = (values) => {
@@ -68,7 +69,7 @@ const Collection = (props) => {
   const items = props.data.map((item, idx) => {
     return (
       <li key={item.id || idx}>
-        <a href="#" className="block hover:bg-gray-50">
+        <a href={route("user.show", item.id)} className="block hover:bg-gray-50">
           <div className="px-4 py-4 sm:px-6">{props.itemRenderer(item)}</div>
         </a>
       </li>

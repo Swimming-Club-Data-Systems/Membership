@@ -22,6 +22,7 @@ const ItemContent = (props) => {
 };
 
 const Index = (props) => {
+  console.log(props)
   return (
     <Authenticated
       auth={props.auth}
@@ -35,7 +36,7 @@ const Index = (props) => {
       <Head title="Users" />
 
       <Container>
-        <Collection {...props.users} itemRenderer={ItemContent} />
+        <Collection {...props.users} itemRenderer={ItemContent} route="user.show" />
       </Container>
     </Authenticated>
   );
