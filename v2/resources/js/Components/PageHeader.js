@@ -7,10 +7,9 @@ const PageHeader = (props) => {
   return (
     <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
       <Container>
-
         <div className="py-3">
           <ApplicationLogo />
-          <div className="flex mt-3">
+          <div className="mt-3 flex">
             <div className="mr-3">
               <Link href="/members">Members</Link>
             </div>
@@ -40,10 +39,9 @@ const PageHeader = (props) => {
             </div>
           </div>
         </div>
-
       </Container>
     </div>
-  )
-}
+  );
+};
 
 export default PageHeader;

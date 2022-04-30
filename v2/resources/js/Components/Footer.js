@@ -7,7 +7,7 @@ const Footer = (props) => {
   return (
     <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
       <Container>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-16 border-b border-gray-300 dark:border-slate-200 py-5">
+        <div className="grid grid-cols-1 gap-16 border-b border-gray-300 py-5 dark:border-slate-200 md:grid-cols-3 lg:grid-cols-5">
           <div className="md:col-span-3 lg:col-span-2">
             <ApplicationLogo />
 
@@ -16,7 +16,9 @@ const Footer = (props) => {
             </p>
           </div>
           <div className="space-y-4">
-            <p className="text-gray-600 dark:text-slate-300 font-semibold">Help and Support</p>
+            <p className="font-semibold text-gray-600 dark:text-slate-300">
+              Help and Support
+            </p>
             <div>
               <Link>Documentation</Link>
             </div>
@@ -31,7 +33,9 @@ const Footer = (props) => {
           </div>
 
           <div className="space-y-4">
-            <p className="text-gray-600 dark:text-slate-300 font-semibold">Organisation</p>
+            <p className="font-semibold text-gray-600 dark:text-slate-300">
+              Organisation
+            </p>
             <div>
               <Link>Admin Login</Link>
             </div>
@@ -45,31 +49,44 @@ const Footer = (props) => {
             </div>
 
             <div>
-              <a href="https://github.com/Swimming-Club-Data-Systems" target="_blank">GitHub</a>
+              <a
+                href="https://github.com/Swimming-Club-Data-Systems"
+                target="_blank"
+              >
+                GitHub
+              </a>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-gray-600 dark:text-slate-300 font-semibold">Related Sites</p>
+            <p className="font-semibold text-gray-600 dark:text-slate-300">
+              Related Sites
+            </p>
             <div>
-              <a href="https://www.britishswimming.org/" target="_blank">British Swimming</a>
+              <a href="https://www.britishswimming.org/" target="_blank">
+                British Swimming
+              </a>
             </div>
 
             <div>
-              <a href="https://www.swimming.org/swimengland/" target="_blank">Swim England</a>
+              <a href="https://www.swimming.org/swimengland/" target="_blank">
+                Swim England
+              </a>
             </div>
 
             <div>
-              <a href="https://www.swimming.org/swimengland/" target="_blank">swimming.org</a>
+              <a href="https://www.swimming.org/swimengland/" target="_blank">
+                swimming.org
+              </a>
             </div>
           </div>
         </div>
-        <p className="py-5 text-center font-semibold text-gray-500 dark:text-slate-400 text-sm">
+        <p className="py-5 text-center text-sm font-semibold text-gray-500 dark:text-slate-400">
           &copy; Swimming Club Data Systems 2022
         </p>
       </Container>
     </div>
-  )
-}
+  );
+};
 
 export default Footer;

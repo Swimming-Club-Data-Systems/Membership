@@ -19,6 +19,8 @@
   background-color: var(--bs-primary);
 }
 
-.rdp-weeknumber, .rdp-day, .rdp-nav_button {
+.rdp-weeknumber,
+.rdp-day,
+.rdp-nav_button {
   border-radius: 0;
 }

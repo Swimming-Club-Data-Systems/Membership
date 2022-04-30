@@ -9,8 +9,7 @@ import FocusTrap from "focus-trap-react";
 import { format, isValid, parse } from "date-fns";
 
 const DateInput = ({ label, help, mb, disabled, ...props }) => {
-
-  const {setFieldValue} = useFormikContext();
+  const { setFieldValue } = useFormikContext();
   const [field, meta] = useField(props);
   const [selected, setSelected] = useState();
   const [isPopperOpen, setIsPopperOpen] = useState(false);
@@ -18,17 +17,15 @@ const DateInput = ({ label, help, mb, disabled, ...props }) => {
   const marginBotton = mb || "mb-3";
   const propMerge = {
     //...inputProps,
-    ...props
+    ...props,
   };
 
   const popperRef = useRef(null);
   const inputRef = useRef(null);
-  const [popperElement, setPopperElement] = useState(
-    null
-  );
+  const [popperElement, setPopperElement] = useState(null);
 
   const popper = usePopper(popperRef.current, popperElement, {
-    placement: "bottom-start"
+    placement: "bottom-start",
   });
 
   const closePopper = () => {
@@ -99,13 +96,8 @@ const DateInput = ({ label, help, mb, disabled, ...props }) => {
             </Form.Control.Feedback>
           ) : null}
 
-          {help &&
-            <Form.Text className="text-muted">
-              {help}
-            </Form.Text>
-          }
+          {help && <Form.Text className="text-muted">{help}</Form.Text>}
         </Form.Group>
-
 
         {isPopperOpen && (
           <FocusTrap
@@ -114,7 +106,7 @@ const DateInput = ({ label, help, mb, disabled, ...props }) => {
               initialFocus: false,
               allowOutsideClick: true,
               clickOutsideDeactivates: true,
-              onDeactivate: closePopper
+              onDeactivate: closePopper,
             }}
           >
             <div
@@ -135,7 +127,6 @@ const DateInput = ({ label, help, mb, disabled, ...props }) => {
             </div>
           </FocusTrap>
         )}
-
       </div>
     </>
   );

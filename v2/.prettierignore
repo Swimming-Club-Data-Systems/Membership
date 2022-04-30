@@ -1,2 +1,5 @@
 # Ignore artifacts:
 public
+vendor
+node_modules
+storage

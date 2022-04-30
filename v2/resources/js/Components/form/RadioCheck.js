@@ -3,12 +3,11 @@ import { useField, useFormikContext } from "formik";
 import { v4 } from "uuid";
 
 const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
-
   const marginBotton = mb || "mb-3";
 
   const [field, meta] = useField({
     type,
-    ...props
+    ...props,
   });
   const { isSubmitting } = useFormikContext();
 
@@ -31,23 +30,21 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
 
   return (
     <div className={`flex items-start ${marginBotton}`}>
-      <div className="flex items-center h-5">
+      <div className="flex h-5 items-center">
         <input
           id={id}
           {...field}
           {...props}
           disabled={isSubmitting || disabled}
           type={type}
-          className={`focus:ring-indigo-500 h-4 w-4 text-indigo-600 border-gray-300 ${checkStyles}`}
+          className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles}`}
         />
       </div>
       <div className="ml-3 text-sm">
         <label htmlFor={id} className="font-medium text-gray-700">
           {label}
         </label>
-        {props.help &&
-          <p className="text-gray-500">{props.help}</p>
-        }
+        {props.help && <p className="text-gray-500">{props.help}</p>}
       </div>
     </div>
   );
