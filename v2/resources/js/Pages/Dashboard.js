@@ -2,17 +2,9 @@ import React from "react";
 import Authenticated from "@/Layouts/Tenant/Authenticated";
 import { Head } from "@inertiajs/inertia-react";
 
-export default function Dashboard(props) {
+const Dashboard = (props) => {
   return (
-    <Authenticated
-      auth={props.auth}
-      errors={props.errors}
-      header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800">
-          Dashboard
-        </h2>
-      }
-    >
+    <>
       <Head title="Dashboard" />
 
       <div className="py-12">
@@ -25,6 +17,12 @@ export default function Dashboard(props) {
           </div>
         </div>
       </div>
-    </Authenticated>
+    </>
   );
-}
+};
+
+Dashboard.layout = (page) => (
+  <Authenticated children={page} title="Dashboard" />
+);
+
+export default Dashboard;

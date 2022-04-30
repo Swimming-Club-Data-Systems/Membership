@@ -32,10 +32,17 @@ const TextInput = ({
         >
           {label}
         </label>
+
+        {meta.touched && meta.error && (
+          <div className="my-1 border-l-4 border-red-600 py-1 pl-2">
+            <p className="font-bold text-red-600">{meta.error}</p>
+          </div>
+        )}
+
         <input
           disabled={isSubmitting || disabled}
           className={
-            "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm " +
+            "mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 " +
             className
           }
           id={controlId}
@@ -43,8 +50,6 @@ const TextInput = ({
           {...field}
           {...props}
         />
-
-        {meta.touched && meta.error ? <p>{meta.error}</p> : null}
 
         {help && <p className="mt-2 text-sm text-gray-500">{help}</p>}
       </div>
