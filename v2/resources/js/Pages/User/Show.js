@@ -9,6 +9,8 @@ const Show = (props) => {
       <Head title="Users" />
 
       <Container>
+        {props.auth.user.id === props.user.id && <p>It's you!</p>}
+
         <pre>{JSON.stringify(props.user, null, 2)}</pre>
       </Container>
     </>

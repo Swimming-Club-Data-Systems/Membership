@@ -36,6 +36,7 @@ const Button = ({
         className
       }
       disabled={props.disabled}
+      {...props}
     >
       {children}
     </button>

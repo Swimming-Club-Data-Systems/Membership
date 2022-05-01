@@ -21,9 +21,9 @@ const navigation = [
   { name: "Admin", href: "/admin" },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
+  { name: "Your Profile", href: route("myaccount.index") },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign out", href: route("logout") },
 ];
 
 function classNames(...classes) {

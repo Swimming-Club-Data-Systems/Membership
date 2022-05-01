@@ -74,7 +74,7 @@ const Collection = (props) => {
       <li key={item.id || idx}>
         <Link
           href={route("user.show", item.id)}
-          className="block hover:bg-gray-50 group"
+          className="group block hover:bg-gray-50"
         >
           <div className="px-4 py-4 sm:px-6">{props.itemRenderer(item)}</div>
         </Link>
@@ -87,7 +87,7 @@ const Collection = (props) => {
       <Search />
 
       {props.data.length > 0 && (
-        <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+        <div className="overflow-hidden rounded-lg bg-white shadow">
           <ul role="list" className=" divide-y divide-gray-200">
             {items}
           </ul>

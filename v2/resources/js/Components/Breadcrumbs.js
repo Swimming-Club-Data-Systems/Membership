@@ -1,60 +1,54 @@
 import React from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Link as InertiaLink, usePage } from "@inertiajs/inertia-react";
-
-const Link = (props) => {
-  return (
-    <InertiaLink
-      {...props}
-      className="text-gray-700 hover:text-gray-800"
-    />
-  )
-}
+import { Link, usePage } from "@inertiajs/inertia-react";
 
 const Breadcrumbs = (props) => {
-  let itemList = [];
-
   const { url } = usePage();
-
-  itemList.push("home");
-
-  if (props.crumbs) {
-    props.crumbs.forEach((item) => {
-      itemList.push("separator");
-      itemList.push(item);
-    });
-  }
-
-  const crumbs = itemList.map((item, idx) => {
-    let render;
-    switch (item) {
-      case "separator":
-        render = <ChevronRightIcon className="h-4" />;
-        break;
-      case "home":
-        render = (
-          <Link href="/">
-            <HomeIcon className="h-4" />
-          </Link>
-        );
-        break; 
-      default:
-        if (item.href === url || item.href === window.location.href) {
-          render = <span aria-current="page" className="pointer-events-none">{item.name}</span>;
-        } else {
-          render = <Link href={item.href}>{item.name}</Link>;
-        }
-        break;
-    }
-
-    return <li key={idx}>{render}</li>;
-  });
 
   if (props.crumbs) {
     return (
-      <nav aria-label="breadcrumb">
-        <ol className="mb-3 flex items-center space-x-2 text-gray-700">
-          {crumbs}
+      <nav
+        className="flex border-b border-gray-200 bg-white"
+        aria-label="Breadcrumb"
+      >
+        <ol
+          role="list"
+          className="mx-auto flex w-full space-x-4 px-4 sm:px-6 lg:px-8"
+        >
+          <li className="flex">
+            <div className="flex items-center">
+              <Link href="/" className="text-gray-400 hover:text-gray-500">
+                <HomeIcon
+                  className="h-5 w-5 flex-shrink-0"
+                  aria-hidden="true"
+                />
+                <span className="sr-only">Home</span>
+              </Link>
+            </div>
+          </li>
+          {props.crumbs.map((page) => (
+            <li key={page.name} className="flex">
+              <div className="flex items-center">
+                <svg
+                  className="h-full w-6 flex-shrink-0 text-gray-200"
+                  viewBox="0 0 24 44"
+                  preserveAspectRatio="none"
+                  fill="currentColor"
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
+                >
+                  <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
+                </svg>
+                <Link
+                  href={page.href}
+                  className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
+                  aria-current={(page.href === url || page.href === window.location.href) ? "page" : undefined}
+                >
+                  {page.name}
+                </Link>
+              </div>
+            </li>
+          ))}
         </ol>
       </nav>
     );
