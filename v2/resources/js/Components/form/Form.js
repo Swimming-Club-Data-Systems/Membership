@@ -105,8 +105,6 @@ const Form = (props) => {
     ...otherProps
   } = props;
 
-  console.log(usePage().props);
-
   const onSubmitHandler = (values, formikBag) => {
     formikBag.setStatus({});
     if (onSubmit) {
@@ -120,6 +118,7 @@ const Form = (props) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={onSubmitHandler}
+        enableReinitialize
       >
         <FormikForm {...otherProps}>
           <HandleServerErrors />

@@ -8,7 +8,7 @@ import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
 import { Link, usePage } from "@inertiajs/inertia-react";
-// import route from "vendor/tightenco/ziggy/src/js";
+import Card from "./Card";
 
 const Search = (props) => {
   const { url } = usePage();
@@ -44,27 +44,33 @@ const Search = (props) => {
   };
 
   return (
-    <Form
-      onSubmit={handleSubmit}
-      initialValues={{
-        search: "",
-      }}
-      validationSchema={yup.object().shape({
-        search: yup.string().nullable().required(""),
-      })}
-      hideDefaultButtons
-    >
-      <SetSearchValue />
+    <div className="px-4 sm:px-6 lg:px-0">
+      <Form
+        onSubmit={handleSubmit}
+        initialValues={{
+          search: "",
+        }}
+        validationSchema={yup.object().shape({
+          search: yup.string().nullable().required(""),
+        })}
+        hideDefaultButtons
+      >
+        <SetSearchValue />
 
-      <div className="flex items-end">
-        <div className="grow">
-          <TextInput name="search" label="Search" className="rounded-r-none" />
+        <div className="flex items-end">
+          <div className="grow">
+            <TextInput
+              name="search"
+              label="Search"
+              className="rounded-r-none"
+            />
+          </div>
+          <div className="flex-none pb-3">
+            <SearchButton />
+          </div>
         </div>
-        <div className="flex-none pb-3">
-          <SearchButton />
-        </div>
-      </div>
-    </Form>
+      </Form>
+    </div>
   );
 };
 
@@ -87,8 +93,8 @@ const Collection = (props) => {
       <Search />
 
       {props.data.length > 0 && (
-        <div className="overflow-hidden rounded-lg bg-white shadow">
-          <ul role="list" className=" divide-y divide-gray-200">
+        <div className="overflow-hidden bg-white shadow lg:rounded-lg">
+          <ul role="list" className="divide-y divide-gray-200">
             {items}
           </ul>
           <Pagination collection={props} />
@@ -96,7 +102,7 @@ const Collection = (props) => {
       )}
 
       {props.data.length === 0 && (
-        <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:rounded-lg sm:p-6 sm:pb-4">
+        <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:p-6 sm:pb-4 lg:rounded-lg">
           <div className="sm:flex sm:items-start">
             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
               <ExclamationIcon

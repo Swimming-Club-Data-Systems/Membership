@@ -1,19 +1,12 @@
 import React, { Fragment, useState } from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import Dropdown from "@/Components/Dropdown";
-import NavLink from "@/Components/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
 import { usePage, Link } from "@inertiajs/inertia-react";
 import Footer from "@/Components/Footer";
 import Container from "@/Components/Container";
 import PageHeader from "@/Components/PageHeader";
 import { Dialog, Transition, Disclosure } from "@headlessui/react";
 import {
-  CalendarIcon,
-  ChartBarIcon,
-  FolderIcon,
   HomeIcon,
-  InboxIcon,
   MenuIcon,
   UsersIcon,
   XIcon,
@@ -24,15 +17,7 @@ import {
   CogIcon,
 } from "@heroicons/react/outline";
 import Breadcrumbs from "@/Components/Breadcrumbs";
-
-// const navigation = [
-//   { name: "Dashboard", href: "#", icon: HomeIcon, current: true },
-//   { name: "Team", href: "#", icon: UsersIcon, current: false },
-//   { name: "Projects", href: "#", icon: FolderIcon, current: false },
-//   { name: "Calendar", href: "#", icon: CalendarIcon, current: false },
-//   { name: "Documents", href: "#", icon: InboxIcon, current: false },
-//   { name: "Reports", href: "#", icon: ChartBarIcon, current: false },
-// ];
+import InternalContainer from "@/Components/InternalContainer";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -73,7 +58,7 @@ const Layout = (props) => {
           href={item.href}
           className={classNames(
             current
-              ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white"
+              ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-white"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white",
             "group flex items-center rounded-md px-2 py-2 text-base font-medium"
           )}
@@ -101,7 +86,7 @@ const Layout = (props) => {
               <Disclosure.Button
                 className={classNames(
                   current
-                    ? "bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-white"
+                    ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-white"
                     : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white",
                   "group flex w-full items-center rounded-md py-2 px-2 text-left text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 )}
@@ -189,7 +174,7 @@ const Layout = (props) => {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-gray-800">
+              <div className="relative flex w-full max-w-xs flex-1 flex-col bg-white dark:bg-slate-800">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -254,14 +239,14 @@ const Layout = (props) => {
         {/* Static sidebar for desktop */}
         <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
           {/* Sidebar component, swap this element with another sidebar if you like */}
-          <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-gray-100 dark:bg-gray-800">
+          <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-gray-100 dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
                 <ApplicationLogo />
               </div>
               <nav className="mt-5 flex-1 space-y-1 px-2">{navContents()}</nav>
             </div>
-            <div className="flex flex-shrink-0 bg-gray-200 p-4 dark:bg-gray-700">
+            <div className="flex flex-shrink-0 bg-gray-200 p-4 dark:bg-slate-700">
               <Link
                 href={route("myaccount.index")}
                 className="group block w-full flex-shrink-0"
@@ -285,7 +270,7 @@ const Layout = (props) => {
             </div>
           </div>
         </div>
-        <div className="flex flex-1 flex-col lg:pl-64">
+        <div className="flex min-h-screen flex-1 flex-col lg:pl-64">
           <div className="sticky top-0 z-10 bg-gray-100 pl-1 pt-1 sm:pl-3 sm:pt-3 lg:hidden">
             <button
               type="button"
@@ -298,38 +283,31 @@ const Layout = (props) => {
           </div>
           {/* HEADER START */}
           <Breadcrumbs crumbs={props.crumbs} />
-          <div className="border-b border-gray-200 bg-white px-4 py-4 sm:px-6 lg:px-8">
-            <div className="md:flex md:items-center md:justify-between">
-              <div className="min-w-0 flex-1">
-                <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
-                  {props.title}
-                </h2>
+          <div className="border-b border-gray-200 bg-white py-4">
+            <InternalContainer>
+              <div className="md:flex md:items-center md:justify-between">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
+                    {props.title}
+                  </h2>
+                </div>
+                {props.titleButtons && (
+                  <div className="mt-4 flex md:mt-0 md:ml-4">
+                    {props.titleButtons}
+                  </div>
+                )}
               </div>
-              <div className="mt-4 flex md:mt-0 md:ml-4">
-                <button
-                  type="button"
-                  className="inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="ml-3 inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                >
-                  Publish
-                </button>
-              </div>
-            </div>
+            </InternalContainer>
           </div>
           {/* HEADER END */}
           <main className="flex-1">
             <div className="py-6">
-              <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                {props.children}
-              </div>
+              <Container>{props.children}</Container>
             </div>
-            <Footer />
           </main>
+        </div>
+        <div className="flex flex-1 flex-col lg:pl-64">
+          <Footer />
         </div>
       </div>
     </>

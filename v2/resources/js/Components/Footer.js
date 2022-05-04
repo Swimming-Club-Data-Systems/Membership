@@ -1,12 +1,12 @@
 import { Link } from "@inertiajs/inertia-react";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
-import Container from "./Container";
+import InternalContainer from "./InternalContainer";
 
 const Footer = (props) => {
   return (
     <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
-      <Container>
+      <InternalContainer>
         <div className="grid grid-cols-1 gap-16 border-b border-gray-300 py-5 dark:border-slate-200 md:grid-cols-3 lg:grid-cols-5">
           <div className="md:col-span-3 lg:col-span-2">
             <ApplicationLogo />
@@ -84,7 +84,7 @@ const Footer = (props) => {
         <p className="py-5 text-center text-sm font-semibold text-gray-500 dark:text-slate-400">
           &copy; Swimming Club Data Systems 2022
         </p>
-      </Container>
+      </InternalContainer>
     </div>
   );
 };

@@ -2,10 +2,8 @@ import React from "react";
 
 const Card = (props) => {
   return (
-    <div
-      className={`rounded-lg bg-white px-4 py-3 shadow sm:px-6 ${props.className}`}
-    >
-      {props.children}
+    <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+      <div className="px-4 py-5 sm:p-6">{props.children}</div>
     </div>
   );
 };

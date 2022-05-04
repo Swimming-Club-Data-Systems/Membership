@@ -8,15 +8,14 @@ import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
 
 const Index = (props) => {
-  const onSubmit = (values) => {
-    Inertia.put(route("myaccount.update"), values);
+  const onSubmit = (values, formikBag) => {
+    Inertia.put(route("myaccount.update"), values, {onSuccess: (arg) => console.log(arg)});
+    // formikBag.
   };
 
   return (
     <>
       <Head title="My Account" />
-
-      {/* <pre>{JSON.stringify(props.user, null, 2)}</pre> */}
 
       <Form
         initialValues={{
