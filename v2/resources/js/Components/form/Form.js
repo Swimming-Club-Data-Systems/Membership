@@ -2,7 +2,7 @@
  * Form component
  */
 
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   Formik,
   Form as FormikForm,
@@ -13,9 +13,13 @@ import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
 
-const SubmissionButtons = (props) => {
+const FormSpecialContext = React.createContext({});
+
+export const SubmissionButtons = (props) => {
   const { isSubmitting, dirty, isValid, errors, handleReset } =
     useFormikContext();
+
+  const formSpecialContext = useContext(FormSpecialContext);
 
   const clearForm = () => {
     if (props.onClear) {
@@ -32,7 +36,7 @@ const SubmissionButtons = (props) => {
         </p>
       )}
       <div className="text-right">
-        {!props.hideClear && (
+        {!formSpecialContext.hideClear && (
           <>
             <Button
               type="button"
@@ -40,13 +44,13 @@ const SubmissionButtons = (props) => {
               disabled={isSubmitting || !dirty}
               variant="secondary"
             >
-              {props.clearTitle || "Clear"}
+              {formSpecialContext.clearTitle || "Clear"}
             </Button>{" "}
           </>
         )}
 
         <Button type="submit" disabled={!dirty || !isValid || isSubmitting}>
-          {props.submitTitle || "Submit"}
+          {formSpecialContext.submitTitle || "Submit"}
         </Button>
       </div>
     </>
@@ -113,7 +117,13 @@ const Form = (props) => {
   };
 
   return (
-    <>
+    <FormSpecialContext.Provider
+      value={{
+        hideClear: hideClear,
+        clearTitle: clearTitle,
+        submitTitle: submitTitle,
+      }}
+    >
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -137,7 +147,7 @@ const Form = (props) => {
           )}
         </FormikForm>
       </Formik>
-    </>
+    </FormSpecialContext.Provider>
   );
 };
 

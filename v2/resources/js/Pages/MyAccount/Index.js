@@ -2,14 +2,16 @@ import React from "react";
 import Authenticated from "@/Layouts/Tenant/Authenticated";
 import { Head, usePage } from "@inertiajs/inertia-react";
 import Card from "@/Components/Card";
-import Form from "@/Components/form/Form";
+import Form, { SubmissionButtons } from "@/Components/form/Form";
 import TextInput from "@/Components/form/TextInput";
 import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
 
 const Index = (props) => {
   const onSubmit = (values, formikBag) => {
-    Inertia.put(route("myaccount.update"), values, {onSuccess: (arg) => console.log(arg)});
+    Inertia.put(route("myaccount.update"), values, {
+      onSuccess: (arg) => console.log(arg),
+    });
     // formikBag.
   };
 
@@ -39,18 +41,17 @@ const Index = (props) => {
         })}
         submitTitle="Save"
         onSubmit={onSubmit}
+        hideDefaultButtons
       >
-        <div className="grid grid-cols-2 gap-4">
-          {/* <div> */}
-          <TextInput name="first_name" label="First name" />
-          {/* </div> */}
+        <Card footer={<SubmissionButtons />}>
+          <div className="grid grid-cols-2 gap-4">
+            <TextInput name="first_name" label="First name" />
 
-          {/* <div> */}
-          <TextInput name="last_name" label="Last name" />
-          {/* </div> */}
-        </div>
+            <TextInput name="last_name" label="Last name" />
+          </div>
 
-        <TextInput name="email" label="Email address" type="email" />
+          <TextInput name="email" label="Email address" type="email" />
+        </Card>
       </Form>
     </>
   );
