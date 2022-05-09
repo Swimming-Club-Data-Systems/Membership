@@ -14,6 +14,7 @@ class ProfileController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $user->phone;
         return Inertia::render('MyAccount/Index', [
             'user' => $user,
         ]);
@@ -27,6 +28,7 @@ class ProfileController extends Controller
             'first_name' => ['required', 'max:255'],
             'last_name' => ['required', 'max:255'],
             'email' => ['required', 'email:rfc,dns', Rule::unique('users')->ignore($user->id), 'max:255'],
+            'phone' => ['required', 'max:255'],
         ]);
 
         $user->fill([
@@ -35,9 +37,17 @@ class ProfileController extends Controller
             'email' => $attributes['email'],
         ]);
 
+        $user->phone()->updateOrCreate(
+            [
+                'user_id' => $user->id
+            ],
+            [
+                'number' => $attributes['phone']
+            ]
+        );
+
         $user->save();
 
         return Redirect::route("myaccount.index");
     }
-
 }

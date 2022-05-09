@@ -27,6 +27,7 @@ class UserController extends Controller
     public function show($id)
     {
         $user = User::findOrFail($id);
+        $user->phone?->number;
         return Inertia::render('User/Show', [
             'user' => $user,
         ]);

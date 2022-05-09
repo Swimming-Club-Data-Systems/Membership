@@ -6,6 +6,7 @@ import Form, { SubmissionButtons } from "@/Components/form/Form";
 import TextInput from "@/Components/form/TextInput";
 import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
+import "yup-phone";
 
 const Index = (props) => {
   const onSubmit = (values, formikBag) => {
@@ -24,6 +25,7 @@ const Index = (props) => {
           first_name: props.user.first_name,
           last_name: props.user.last_name,
           email: props.user.email,
+          phone: props.user.phone?.number,
         }}
         validationSchema={yup.object().shape({
           first_name: yup
@@ -38,6 +40,10 @@ const Index = (props) => {
             .string()
             .email("Please enter a valid email address")
             .required("An email address is required"),
+          phone: yup
+            .string()
+            .phone(undefined, undefined, "Please enter a valid phone number")
+            .required("A phone number is required"),
         })}
         submitTitle="Save"
         onSubmit={onSubmit}
@@ -51,6 +57,8 @@ const Index = (props) => {
           </div>
 
           <TextInput name="email" label="Email address" type="email" />
+
+          <TextInput name="phone" label="Phone number" type="tel" />
         </Card>
       </Form>
     </>
