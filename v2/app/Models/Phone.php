@@ -50,4 +50,60 @@ class Phone extends Model
             },
         );
     }
+
+    /**
+     * Modify the phone number when set.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function linkFormat(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->toUrl(),
+        );
+    }
+
+    /**
+     * Modify the phone number when set.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function localOrNational(): Attribute
+    {
+        return new Attribute(
+            get: fn () => $this->toString(),
+        );
+    }
+
+    /**
+     * Return the number as local if UK, international otherwise
+     * 
+     * @return string
+     */
+    public function toString(): string
+    {
+        $number = PhoneNumber::parse($this->number);
+        if ($number->getRegionCode() == "GB") {
+            return $number->format(PhoneNumberFormat::NATIONAL);
+        }
+        return $number->format(PhoneNumberFormat::INTERNATIONAL);
+    }
+
+    /**
+     * Return the RFC3966 tel: format of this number
+     * 
+     * @return string
+     */
+    public function toUrl(): string
+    {
+        $number = PhoneNumber::parse($this->number);
+        return $number->format(PhoneNumberFormat::RFC3966);
+    }
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['link_format', 'local_or_national'];
 }
