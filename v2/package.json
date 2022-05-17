@@ -34,6 +34,7 @@
   "dependencies": {
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
     "@heroicons/react": "^1.0.6",
+    "@prettier/plugin-php": "^0.18.4",
     "date-fns": "^2.28.0",
     "formik": "^2.2.9",
     "monaco-editor": "^0.33.0",

@@ -15,6 +15,7 @@
     "guzzlehttp/guzzle": "^7.0.1",
     "inertiajs/inertia-laravel": "^0.5.4",
     "laravel/framework": "^9.0",
+    "laravel/passport": "^10.4",
     "laravel/sanctum": "^2.8",
     "laravel/scout": "^9.4",
     "laravel/telescope": "^4.8",

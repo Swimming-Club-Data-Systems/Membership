@@ -44,6 +44,10 @@ return [
             'driver' => 'session',
             'provider' => 'central_users',
         ],
+        'api' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -98,6 +102,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'central_users' => [
+            'provider' => 'central_users',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,
