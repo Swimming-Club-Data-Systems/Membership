@@ -17,6 +17,7 @@ const LoginPage = React.lazy(() => import("./login/LoginPage"));
 const FindAccount = React.lazy(() => import("./login/FindAccount"));
 const ResetPassword = React.lazy(() => import("./login/ResetPassword"));
 const AboutReactApp = React.lazy(() => import("./pages/AboutReactApp"));
+const CheckoutPage = React.lazy(() => import("./payments/checkout/Checkout"));
 
 const rootElement = document.getElementById("root");
 render(
@@ -37,6 +38,7 @@ render(
               <Route index element={<Welcome />} />
               <Route path="about" element={<AboutReactApp />} />
               <Route path="404" element={<NotFound />} />
+              <Route path="payments/checkout/v2/:id" element={<CheckoutPage />} />
             </Route>
             <Route
               path="*"

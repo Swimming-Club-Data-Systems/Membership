@@ -39,6 +39,14 @@ export function getLogoUrl(filename) {
   return getDetail("club_logo_path") + filename;
 }
 
+export function getStripe() {
+  return getDetail("stripe_publishable_key");
+}
+
+export function getStripeAccountId() {
+  return getDetail("stripe_account_id");
+}
+
 function getDetail(key) {
   const state = store.getState();
   return state["SKIPCLEAR/Tenant"][key];

@@ -63,6 +63,8 @@ try {
       'name' => $tenant->getName(),
       'swim_england_code' => $tenant->getCode(),
       'club_logo_path' => $logoPath,
+      'stripe_publishable_key' => getenv('STRIPE_PUBLISHABLE'),
+      'stripe_account_id' => $tenant->getStripeAccount(),
     ]
   ];
 

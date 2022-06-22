@@ -34,12 +34,12 @@ $publicKeyCredentialRequestOptions = $server->generatePublicKeyCredentialRequest
     $allowedCredentials,
 );
 
-$publicKeyCredentialRequestOptionsJson = json_encode($publicKeyCredentialRequestOptions);
-$publicKeyCredentialRequestOptions = json_decode($publicKeyCredentialRequestOptionsJson, true);
+// $publicKeyCredentialRequestOptionsJson = json_encode($publicKeyCredentialRequestOptions);
+// $publicKeyCredentialRequestOptions = json_decode($publicKeyCredentialRequestOptionsJson, true);
 
-if (isset($post->mediation) && $post->mediation == "conditional") {
-    $publicKeyCredentialRequestOptions['mediation'] = "conditional";
-}
+// if (isset($post->mediation) && $post->mediation == "conditional") {
+//     $publicKeyCredentialRequestOptions['mediation'] = "conditional";
+// }
 
 $creationJson = json_encode($publicKeyCredentialRequestOptions);
 

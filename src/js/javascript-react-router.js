@@ -17,6 +17,7 @@ const NotifySuccess = React.lazy(() => import("./notify/forms/Composer"));
 const AboutReactApp = React.lazy(() => import("./pages/AboutReactApp"));
 const JuniorLeagueMembers = React.lazy(() => import("./admin/forms/JuniorLeagueMembers"));
 const WebAuthn = React.lazy(() => import("./my-account/webauthn/WebAuthn"));
+const CheckoutPage = React.lazy(() => import("./payments/checkout/Checkout"));
 
 const rootElement = document.getElementById("root");
 render(
@@ -33,6 +34,7 @@ render(
             <Route path="about" element={<AboutReactApp />} />
             <Route path="admin/reports/junior-league-report" element={<IsAuthorised permissions={["Admin"]}><JuniorLeagueMembers /></IsAuthorised>} />
             <Route path="my-account/passkeys" element={<WebAuthn />} />
+            <Route path="payments/checkout/v2/:id" element={<CheckoutPage />} />
             <Route
               path="*"
               element={<NotFound />}

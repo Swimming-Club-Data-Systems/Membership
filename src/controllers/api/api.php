@@ -76,6 +76,12 @@ $this->group('/my-account', function() {
   });
 });
 
+$this->group('/payments', function () {
+  $this->get('/checkout', function () {
+    include 'payments/checkout.php';
+  });
+});
+
 $this->get('/test', function() {
   echo json_encode('Yo');
 });

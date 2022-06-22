@@ -53,6 +53,8 @@ class Session
 
     $id = \Ramsey\Uuid\Uuid::uuid4();
 
+    $version = isset($data['version']) ? $data['version'] : "v1";
+
     // Parse data and insert into db
     $add = $db->prepare("INSERT INTO `checkoutSessions` (`id`, `user`, `amount`, `currency`, `state`, `allowed_types`, `created`, `version`, `total_details`, `metadata`, `Tenant`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $add->execute([
@@ -61,9 +63,9 @@ class Session
       $data['amount'] ?? 0,
       $data['currency'] ?? 'gbp',
       $data['state'] ?? 'open',
-      json_encode($data['allowed_types'] ?? ['card']),
+      json_encode($data['allowed_types'] ?? []),
       $data['created'] ?? (new DateTime('now', new DateTimeZone('UTC')))->format('Y-m-d H:i:s'),
-      'v1',
+      $version,
       json_encode($data['total_details'] ?? []),
       json_encode($data['metadata'] ?? []),
       $tenant,
@@ -182,7 +184,7 @@ class Session
       $this->amount,
       $this->currency,
       $this->state,
-      json_encode($this->allowedTypes),
+      json_encode([]),
       $this->created->format('Y-m-d H:i:s'),
       $this->succeeded,
       $this->intent,
@@ -210,7 +212,7 @@ class Session
           'amount' => $this->amount,
           'customer' => $customer,
           'currency' => $this->currency,
-          'payment_method_types' => (array) $this->allowedTypes,
+          // 'payment_method_types' => (array) $this->allowedTypes,
           'metadata' => [
             'payment_category' => 'checkout_v1',
             'checkout_id' => $this->id,
@@ -241,9 +243,12 @@ class Session
       'amount' => $this->amount,
       'customer' => $customer,
       'currency' => $this->currency,
-      'payment_method_types' => (array) $this->allowedTypes,
+      'automatic_payment_methods' => [
+        'enabled' => true
+      ],
+      // 'payment_method_types' => (array) $this->allowedTypes,
       'confirm' => false,
-      'setup_future_usage' => 'off_session',
+      'setup_future_usage' => 'on_session',
       'metadata' => [
         'payment_category' => 'checkout_v1',
         'checkout_id' => $this->id,

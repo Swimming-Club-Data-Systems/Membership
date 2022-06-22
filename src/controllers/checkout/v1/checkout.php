@@ -175,6 +175,10 @@ include BASE_PATH . 'views/head.php';
     </div>
     <div class="col-lg-7 order-lg-1">
 
+      <div id="payment-element" class="mb-3">
+        <!-- Elements will create form elements here -->
+      </div>
+
       <div id="payment-request-card">
         <div class="mb-3">
           <form>

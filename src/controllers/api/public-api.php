@@ -70,6 +70,12 @@ $this->group('/utilities', function () {
   });
 });
 
+$this->group('/payments', function () {
+  $this->get('/checkout', function () {
+    include 'payments/checkout.php';
+  });
+});
+
 $this->any(['/', '/*'], function () {
   include 'catch-all.php';
 });
