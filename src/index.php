@@ -371,11 +371,9 @@ $route->use(function () {
   // Make req available
   $req = app('request');
 
-  header("Feature-Policy: fullscreen 'self' https://youtube.com");
+  header("Permissions-Policy: fullscreen 'self' https://youtube.com");
   header("Referrer-Policy: strict-origin-when-cross-origin");
-  if (!getenv('IS_DEV')) {
-    header("Content-Security-Policy: block-all-mixed-content");
-  }
+  header("Content-Security-Policy: block-all-mixed-content");
   // Prevent framing of the membership system
   header("X-Frame-Options: DENY");
   // Prevent MIME sniffing

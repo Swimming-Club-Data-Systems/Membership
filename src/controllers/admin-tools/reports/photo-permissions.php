@@ -24,7 +24,7 @@ fputcsv($output, [
   'Squad',
   'Website',
   'Social',
-  'Noticeboard.',
+  'Print Media/Newspapers.',
   'Filming for training',
   'Pro Photography',
 ]);

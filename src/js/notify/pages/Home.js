@@ -2,17 +2,26 @@ import React from "react";
 import Header from "../../components/Header";
 import * as tenantFunctions from "../../classes/Tenant";
 import * as userFunctions from "../../classes/User";
+import Breadcrumb from "../../components/Breadcrumb";
 import { Link } from "react-router-dom";
 
 const Home = () => {
 
   tenantFunctions.setTitle("Notify");
 
+  const crumbs = [
+    {
+      to: "/notify",
+      title: "Notify",
+      name: "Notify",
+    },
+  ];
+
   return (
 
     <>
 
-      <Header title="Notify" subtitle="Notify is our GDPR Compliant email system for contacting parents and users." />
+      <Header breadcrumbs={<Breadcrumb crumbs={crumbs} />} title="Notify" subtitle="Notify is our GDPR Compliant email system for contacting parents and users."/>
 
       <div className="container-xl">
         <div className="row">

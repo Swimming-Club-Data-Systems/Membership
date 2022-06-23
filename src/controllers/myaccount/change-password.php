@@ -23,12 +23,17 @@ include BASE_PATH . "views/header.php";
 
       <h1>Change your password</h1>
       <p class="lead">
-        You should change your password regularly to keep you account safe and secure.
+        A strong password is key to keeping your account secure.
       </p>
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
         echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
         unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
       } ?>
+
+      <div class="alert alert-info">
+        <p class="mb-0"><strong>We plan to get rid of passwords!</strong></p>
+        <p class="mb-0">We've introduced support for passkeys (FIDO2 auth). These allow you to log in with something you have rather than something you remember. Support is widely rolling out to browsers and operating systems throughout 2022.</p>
+      </div>
 
       <form class=" needs-validation" method="post" action="<?= htmlspecialchars(autoUrl("my-account/password")) ?>" novalidate>
         <?= SCDS\CSRF::write() ?>

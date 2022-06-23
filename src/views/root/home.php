@@ -64,7 +64,6 @@ include BASE_PATH . "views/root/header.php";
           <li>A white-label experience for card payments</li>
           <li>An optional white-label experience for direct-debit payments</li>
           <li>Automated billing - no need to set up plans for each family or member</li>
-          <li>Stripe Partner</li>
         </ul>
 
         <div class="mb-5 d-md-none"></div>

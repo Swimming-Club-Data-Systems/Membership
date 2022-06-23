@@ -26,19 +26,9 @@ include BASE_PATH . "views/header.php";
         </a>
       </p>
 
-      <h2>COVID-19 Contact Tracing</h2>
-      <p class="lead">
-        Check in online if you've been asked to fill out a contact tracing form
-      </p>
-      <p class="mb-5">
-        <a class="btn btn-lg btn-primary" href="<?= htmlspecialchars(autoUrl('covid/contact-tracing')) ?>">
-          Check In
-        </a>
-      </p>
-
       <h2>Not got an account?</h2>
       <p class="lead">
-        Your club will create your account.
+        Your club will create your account for you.
       </p>
       <p class="mb-5">
         If you've just joined, the person handling your application will be in touch soon.

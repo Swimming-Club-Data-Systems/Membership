@@ -23,6 +23,9 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'A
   ]);
 }
 
+session_destroy();
+setcookie(COOKIE_PREFIX . 'TenantSessionId', "", 0, "/", app('request')->hostname('request')->hostname, $secure, false);
+
 if (isset($_GET['redirect'])) {
   header("location: " . $_GET['redirect']);
 } else {

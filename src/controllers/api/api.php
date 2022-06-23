@@ -34,6 +34,48 @@ $this->group('/react', function() {
   });
 });
 
+$this->group('/utilities', function() {
+  $this->post('/pwned-password-check', function() {
+    include 'utilities/pwned-password-check.php';
+  });
+});
+
+$this->group('/admin', function() {
+  $this->group('/reports', function() {
+    $this->get('/league-members-report', function() {
+      include 'admin/reports/league-members-report.php';
+    });
+  });
+});
+
+$this->group('/my-account', function() {
+  $this->group('/webauthn', function() {
+    $this->post('/challenge', function() {
+      include 'my-account/webauthn/challenge.php';
+    });
+
+    $this->post('/register', function() {
+      include 'my-account/webauthn/register.php';
+    });
+
+    $this->post('/delete', function() {
+      include 'my-account/webauthn/delete.php';
+    });
+
+    $this->post('/auth-challenge', function() {
+      include 'my-account/webauthn/auth-challenge.php';
+    });
+
+    $this->post('/auth-verify', function() {
+      include 'my-account/webauthn/auth-verify.php';
+    });
+
+    $this->get('/authenticators', function() {
+      include 'my-account/webauthn/authenticators.php';
+    });
+  });
+});
+
 $this->get('/test', function() {
   echo json_encode('Yo');
 });

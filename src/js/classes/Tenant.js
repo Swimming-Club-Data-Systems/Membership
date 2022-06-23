@@ -35,6 +35,10 @@ export function isVerified() {
   return getDetail("is_verified");
 }
 
+export function getLogoUrl(filename) {
+  return getDetail("club_logo_path") + filename;
+}
+
 function getDetail(key) {
   const state = store.getState();
   return state["SKIPCLEAR/Tenant"][key];

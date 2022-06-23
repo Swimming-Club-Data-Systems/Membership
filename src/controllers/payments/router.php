@@ -174,6 +174,14 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") {
 			include 'admin/history/FinanceReport.pdf.php';
 		});
 
+		$this->get('/{year}:int/{month}:int/payment-item-report.csv', function ($year, $month) {
+			include 'admin/history/PaymentItemReport.csv.php';
+		});
+
+		$this->get('/{year}:int/{month}:int/payment-item-report.json', function ($year, $month) {
+			include 'admin/history/PaymentItemReportOutput.json.php';
+		});
+
 		$this->get('/{type}/{year}:int/{month}:int', function ($type, $year, $month) {
 
 			include 'admin/history/feestatus.php';

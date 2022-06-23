@@ -100,7 +100,7 @@ const AboutReactApp = () => {
                   User
                 </dt>
                 <dd className="col-sm-9 mb-0">
-                  {userFunctions.getId()}
+                  {userFunctions.getId() || "You are not logged in"}
                 </dd>
               </dl>
             </Card>

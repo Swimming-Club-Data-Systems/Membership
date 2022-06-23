@@ -28,7 +28,13 @@ if (!isset($_GET['code'])) {
   // Fetch the authorization URL from the provider; this returns the
   // urlAuthorize option and generates and applies any necessary parameters
   // (e.g. state).
-  $authorizationUrl = $provider->getAuthorizationUrl();
+  $options = [];
+
+  if (isset($_GET['email'])) {
+    $options["login_hint"] = $_GET['email'];
+  }
+
+  $authorizationUrl = $provider->getAuthorizationUrl($options);
 
   // Get the state generated for you and store it to the session.
   $_SESSION['oauth2state'] = $provider->getState();

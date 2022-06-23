@@ -29,6 +29,7 @@ include BASE_PATH . 'views/header.php';
         <li><a href="<?= htmlspecialchars(autoUrl("members/reports/upgradeable")) ?>">Upgradeable to Category 2</a></li>
         <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/no-email-subscription")) ?>">Users not opted in to receive notify emails</a></li>
         <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/adult-members")) ?>">Adult Members</a></li>
+        <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/junior-league-report")) ?>">List of members valid for Junior or Arena League</a></li>
       </ul>
 
       <h2>Finance reports</h2>

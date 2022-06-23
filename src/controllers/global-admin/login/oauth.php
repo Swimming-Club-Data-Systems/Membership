@@ -3,6 +3,10 @@
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 
+if (!getenv('ADMIN_OAUTH_CLIENT_ID')) {
+  halt(404);
+}
+
 $db = app()->db;
 
 $provider = new \League\OAuth2\Client\Provider\GenericProvider([

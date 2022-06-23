@@ -44,6 +44,9 @@
         "stefangabos/zebra_pagination": "^2.4",
         "league/oauth2-client": "^2.6",
         "microsoft/microsoft-graph": "^1.42",
-        "phpmailer/phpmailer": "^6.5"
+        "phpmailer/phpmailer": "^6.5",
+        "web-auth/webauthn-lib": "^3.3",
+        "nyholm/psr7": "^1.5",
+        "nyholm/psr7-server": "^1.0"
     }
 }

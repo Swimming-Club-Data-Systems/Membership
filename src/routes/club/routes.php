@@ -300,32 +300,32 @@ $this->any(['/logout', '/logout.php'], function () {
   include BASE_PATH . 'controllers/logout.php';
 });
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) {
-  $this->group('/2fa', function () {
-    $this->get('/', function () {
-      include BASE_PATH . 'views/TwoFactorCodeInput.php';
-    });
+// if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) {
+//   $this->group('/2fa', function () {
+//     $this->get('/', function () {
+//       include BASE_PATH . 'views/TwoFactorCodeInput.php';
+//     });
 
-    $this->post('/', function () {
-      include BASE_PATH . 'controllers/2fa/SubmitCode.php';
-    });
+//     $this->post('/', function () {
+//       include BASE_PATH . 'controllers/2fa/SubmitCode.php';
+//     });
 
-    $this->get('/exit', function () {
-      $_SESSION = [];
-      unset($_SESSION);
-      header("Location: " . autoUrl("login"));
-    });
+//     $this->get('/exit', function () {
+//       $_SESSION = [];
+//       unset($_SESSION);
+//       header("Location: " . autoUrl("login"));
+//     });
 
-    $this->get('/resend', function () {
-      include BASE_PATH . 'controllers/2fa/ResendCode.php';
-    });
-  });
+//     $this->get('/resend', function () {
+//       include BASE_PATH . 'controllers/2fa/ResendCode.php';
+//     });
+//   });
 
-  $this->get(['/', '/*'], function () {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR'] = true;
-    header("Location: " . autoUrl("2fa"));
-  });
-}
+//   $this->get(['/', '/*'], function () {
+//     $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR'] = true;
+//     header("Location: " . autoUrl("2fa"));
+//   });
+// }
 
 $this->group('/oauth2', function () {
 
@@ -343,31 +343,31 @@ $this->group('/oauth2', function () {
 });
 
 if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
-  $this->post('/login', function () {
-    include BASE_PATH . 'controllers/login-go.php';
-  });
+  // $this->post('/login', function () {
+  //   include BASE_PATH . 'controllers/login-go.php';
+  // });
 
   // Home
-  $this->get('/', function () {
-    include BASE_PATH . "views/Welcome.php";
-  });
+  // $this->get('/', function () {
+  //   include BASE_PATH . "views/Welcome.php";
+  // });
 
   // $this->get('/login', function () {
   //   http_response_code(303);
   //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId()), false));
   // });
 
-  $this->get('/login', function () {
-    include BASE_PATH . 'views/Login.php';
-  });
+  // $this->get('/login', function () {
+  //   include BASE_PATH . 'views/Login.php';
+  // });
 
   $this->get('/login/oauth', function () {
     include BASE_PATH . 'controllers/oauth-login.php';
   });
 
-  $this->group('/about', function () {
-    include BASE_PATH . 'controllers/about/router.php';
-  });
+  // $this->group('/about', function () {
+  //   include BASE_PATH . 'controllers/about/router.php';
+  // });
 
   // // Register
   // $this->get(['/register', '/register/family', '/register/family/{fam}:int/{acs}:key'], function ($fam = null, $acs = null) {
@@ -389,26 +389,26 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   // });
 
   // Locked Out Password Reset
-  $this->get('/resetpassword', function () {
+  // $this->get('/resetpassword', function () {
 
-    include BASE_PATH . 'controllers/forgot-password/request.php';
-  });
+  //   include BASE_PATH . 'controllers/forgot-password/request.php';
+  // });
 
-  $this->post('/resetpassword', function () {
+  // $this->post('/resetpassword', function () {
 
-    include BASE_PATH . 'controllers/forgot-password/request-action.php';
-  });
+  //   include BASE_PATH . 'controllers/forgot-password/request-action.php';
+  // });
 
   // Password Reset via Link
-  $this->get('/resetpassword/auth/{token}', function ($token) {
+  // $this->get('/resetpassword/auth/{token}', function ($token) {
 
-    include BASE_PATH . 'controllers/forgot-password/reset.php';
-  });
+  //   include BASE_PATH . 'controllers/forgot-password/reset.php';
+  // });
 
-  $this->post('/resetpassword/auth/{token}', function ($token) {
+  // $this->post('/resetpassword/auth/{token}', function ($token) {
 
-    include BASE_PATH . 'controllers/forgot-password/reset-action.php';
-  });
+  //   include BASE_PATH . 'controllers/forgot-password/reset-action.php';
+  // });
 
   $this->group('/payments/webhooks', function () {
 
@@ -420,12 +420,10 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   });
 
   $this->group('/webhooks', function () {
-
     include BASE_PATH . 'controllers/webhooks/router.php';
   });
 
   $this->get('/notify', function () {
-
     include BASE_PATH . 'controllers/notify/Help.php';
   });
 
@@ -454,10 +452,19 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId() . '&target=' . urlencode(app('request')->path)), false));
   // });
 
-  $this->any(['/', '/*'], function () {
-    http_response_code(303);
-    header("Location: " . autoUrl('login?target=' . urlencode(app('request')->path)));
+  $this->group('/api', function () {
+    include BASE_PATH . 'controllers/api/public-api.php';
   });
+
+  // Global Catch All 404
+  $this->get(['/', '/*'], function () {
+    include BASE_PATH . 'views/react-public-base.php';
+  });
+
+  // $this->any(['/', '/*'], function () {
+  //   http_response_code(303);
+  //   header("Location: " . autoUrl('login?target=' . urlencode(app('request')->path)));
+  // });
 } else if (user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
   $this->group('/renewal', function () {
     include BASE_PATH . 'controllers/renewal/router.php';

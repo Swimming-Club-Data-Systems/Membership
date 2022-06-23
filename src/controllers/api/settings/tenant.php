@@ -35,12 +35,19 @@ try {
     'REQUIRE_SQUAD_REP_FOR_APPROVAL' => 'bool',
     'DISPLAY_NAME_FORMAT' => 'string',
     'DEFAULT_GALA_PROCESSING_FEE' => 'int',
+    'LOGO_DIR' => 'string',
   ];
 
   foreach ($keys as $key => $type) {
     $var = $tenant->getkey($key);
     settype($var, $type);
     $tenantKeyData[mb_strtolower($key)] = $var;
+  }
+
+  $logoPath = null;
+  $logoDir = $tenant->getKey('LOGO_DIR');
+  if ($logoDir) {
+    $logoPath = getUploadedAssetUrl($logoDir);
   }
 
   $output = [
@@ -55,6 +62,7 @@ try {
       'hostname' => $tenant->getDomain(),
       'name' => $tenant->getName(),
       'swim_england_code' => $tenant->getCode(),
+      'club_logo_path' => $logoPath,
     ]
   ];
 

@@ -35,6 +35,14 @@
       "external": false
     },
     {
+      "id": "passkeys",
+      "name": "Manage Passkeys",
+      "title": "Manage Passkeys",
+      "link": "my-account/passkeys",
+      "target": "_self",
+      "external": false
+    },
+    {
       "id": "password",
       "name": "Change Password",
       "title": "Change Password",

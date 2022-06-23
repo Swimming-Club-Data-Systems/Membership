@@ -67,7 +67,9 @@ Chester-le-Street ASC is a non profit unincorporated association.
 
   <?php include 'colour.php'; ?>
 
-  <meta property="og:title" content="<?= $pagetitle ?>" />
+  <?php if (isset($pagetitle)) { ?>
+    <meta property="og:title" content="<?= $pagetitle ?>" />
+  <?php } ?>
 
   <!-- Generic icon first -->
   <?php if ($logos = $tenant->getKey('LOGO_DIR')) { ?>

@@ -6,8 +6,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import store from "../reducers/store";
 import SuspenseFallback from "../views/SuspenseFallback";
+import { Outlet } from "react-router-dom";
 
-const AppWrapper = (props) => {
+const AppWrapper = () => {
 
   const [header, setHeader] = useState(null);
   const [footer, setFooter] = useState(null);
@@ -87,7 +88,7 @@ const AppWrapper = (props) => {
           ? <>
             <div dangerouslySetInnerHTML={{ __html: header }} />
             <div className="have-full-height focus-highlight">
-              {props.children}
+              <Outlet />
             </div>
             <div dangerouslySetInnerHTML={{ __html: footer }} />
           </>

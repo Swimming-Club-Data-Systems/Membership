@@ -40,8 +40,11 @@ include BASE_PATH . "views/paymentsMenu.php";
 			All Direct Debit payments requested in <?= htmlspecialchars(date("F Y", $date)) ?>
 		</p>
 		<h2>Payout Reports</h2>
-		<p class="lead">For GoCardless payouts made in <?= htmlspecialchars(date("F Y", $date)) ?>.</p>
+		<h3>For <em>GoCardless payouts</em> made in <?= htmlspecialchars(date("F Y", $date)) ?> <span class="badge bg-warning">Legacy</span></h3>
 		<p>View payments linked to <?= htmlspecialchars(date("F Y", $date)) ?> payouts from GoCardless to your club's bank account in <a href="<?= htmlspecialchars($url . "/report.csv") ?>">CSV</a>, <a href="<?= htmlspecialchars($url . "/report.json") ?>">JSON</a> or <a href="<?= htmlspecialchars($url . "/report.pdf") ?>">PDF</a> formats.</p>
+
+		<h3>For <em>Stripe payments</em> made in <?= htmlspecialchars(date("F Y", $date)) ?></h3>
+		<p>View payments in <a href="<?= htmlspecialchars($url . "/payment-item-report.csv") ?>">CSV</a> or <a href="<?= htmlspecialchars($url . "/payment-item-report.json") ?>">JSON</a> formats.</p>
 
 		<h2>Payment Report</h2>
 		<p>Click on a description for a statement detailing the fees which went into this charge.
