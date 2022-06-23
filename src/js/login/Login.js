@@ -39,11 +39,14 @@ const Login = (props) => {
   const [error, setError] = useState(null);
   const [username, setUsername] = useState("");
   const [hasWebauthn, setHasWebauthn] = useState(false);
+  const [ssoUrl, setSsoUrl] = useState(null);
   const [selectedTraditional, setSelectedTraditional] = useState(null);
   const collapsePasskeyRef = useRef();
   const [collapsePasskey, setCollapsePasskey] = useState(null);
   const collapsePasswordRef = useRef();
   const [collapsePassword, setCollapsePassword] = useState(null);
+  const collapseSsoRef = useRef();
+  const [collapseSso, setCollapseSso] = useState(null);
 
   const webAuthnError = {
     type: "danger",
@@ -57,6 +60,12 @@ const Login = (props) => {
       collapsePasskey.hide();
     }
 
+    if (field === "sso") {
+      collapseSso.show();
+    } else {
+      collapseSso.hide();
+    }
+
     if (field === "password") {
       collapsePassword.show();
     } else {
@@ -67,6 +76,7 @@ const Login = (props) => {
   useEffect(() => {
     setCollapsePasskey(new Collapse(collapsePasskeyRef.current, { toggle: false }));
     setCollapsePassword(new Collapse(collapsePasswordRef.current, { toggle: false }));
+    setCollapseSso(new Collapse(collapseSsoRef.current, { toggle: false }));
   }, []);
 
   useEffect(() => {
@@ -89,7 +99,13 @@ const Login = (props) => {
     });
 
     setHasWebauthn(data.has_webauthn);
-    show(data.has_webauthn ? "passkey" : "password");
+    if (data.is_sso) {
+      setSsoUrl(data.sso_url);
+      show("sso");
+    } else {
+      setSsoUrl(null);
+      show(data.has_webauthn ? "passkey" : "password");
+    }
 
     return data.has_webauthn;
   };
@@ -253,6 +269,12 @@ const Login = (props) => {
                     <Form.Control.Feedback type="invalid">{errors.emailAddress}</Form.Control.Feedback>
                   }
                 </Form.Group>
+              </div>
+
+              <div className="collapse" ref={collapseSsoRef}>
+                <div className="mb-5">
+                  <Button href={ssoUrl} size="lg" type="button">Login</Button>
+                </div>
               </div>
 
               <div className="collapse" ref={collapsePasskeyRef}>
