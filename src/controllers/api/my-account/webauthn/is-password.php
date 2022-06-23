@@ -13,6 +13,10 @@ $getCount->execute([
   $tenant->getId(),
 ]);
 
+$ssoUrl = null;
+
 echo json_encode([
   "has_webauthn" => $getCount->fetchColumn() > 0,
+  "is_sso" => $tenant->getBooleanKey("TENANT_ENABLE_STAFF_OAUTH") && str_ends_with($email, $tenant->getKey("TENANT_OAUTH_EMAIL_DOMAIN")),
+  "sso_url" => autoUrl("login/oauth?email=" . urlencode($email)),
 ]);
