@@ -214,7 +214,7 @@ class Session
           'currency' => $this->currency,
           // 'payment_method_types' => (array) $this->allowedTypes,
           'metadata' => [
-            'payment_category' => 'checkout_v1',
+            'payment_category' => 'checkout_' . $this->version,
             'checkout_id' => $this->id,
           ]
         ],
@@ -250,7 +250,7 @@ class Session
       'confirm' => false,
       'setup_future_usage' => 'on_session',
       'metadata' => [
-        'payment_category' => 'checkout_v1',
+        'payment_category' => 'checkout_' . $this->version,
         'checkout_id' => $this->id,
       ]
     ], [

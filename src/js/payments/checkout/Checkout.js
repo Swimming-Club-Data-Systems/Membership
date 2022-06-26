@@ -321,10 +321,6 @@ const AboutPayment = () => {
       <div className="mb-5">
         <ItemList />
       </div>
-
-      <p className="text-muted">
-        Provided by Swimming Club Data Systems and its service partners.
-      </p>
     </>
   );
 
@@ -337,6 +333,14 @@ const CheckoutPage = () => {
 
   const onSuccess = () => setSuccess(true);
 
+  const renderLegal = () => {
+    return (
+      <p className="text-muted">
+        Provided by Swimming Club Data Systems and its service partners.
+      </p>
+    );
+  };
+
   return (
     <div className="container py-5">
       {!success &&
@@ -346,10 +350,16 @@ const CheckoutPage = () => {
           <div className="row justify-content-around">
             <div className="col-lg-5">
               <AboutPayment />
+              <div className="d-none d-lg-block">
+                {renderLegal()}
+              </div>
             </div>
             <div className="col-lg-5">
               <CheckoutForm onSuccess={onSuccess} />
             </div>
+          </div>
+          <div className="d-lg-none">
+            {renderLegal()}
           </div>
         </Checkout>
       }

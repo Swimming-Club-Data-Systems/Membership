@@ -50,6 +50,10 @@ $this->post('/checkout_v1', function () {
 	require 'checkout_v1.php';
 });
 
+$this->post('/checkout_v2', function () {
+	require 'checkout_v2.php';
+});
+
 /*$this->any('/timeupdatenew', function() {
 	$db = app()->db;;
 	require 'getTimesNew.php';

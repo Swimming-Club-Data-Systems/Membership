@@ -60,7 +60,8 @@ $payingEntries = [];
 $checkoutSession = \SCDS\Checkout\Session::new([
   'user' => app()->user->getId(),
   'amount' => 1500,
-  'version' => 'v2',
+  // 'version' => 'v2',
+  // 'currency' => 'eur',
 ]);
 
 if ($entry != null) {
