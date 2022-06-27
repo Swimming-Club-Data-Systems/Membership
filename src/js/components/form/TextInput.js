@@ -1,37 +1,68 @@
 import React from "react";
 import { useField, useFormikContext } from "formik";
-import { Form } from "react-bootstrap";
+import { ExclamationCircleIcon } from "@heroicons/react/solid";
 
-const TextInput = ({ label, helpText, mb, disabled, ...props }) => {
-
+const TextInput = ({
+  label,
+  help,
+  mb,
+  disabled,
+  type,
+  leftText,
+  rightText,
+  className = "",
+  ...props
+}) => {
   const [field, meta] = useField(props);
   const { isSubmitting } = useFormikContext();
   const marginBotton = mb || "mb-3";
+  const isValid = props.showValid && meta.touched && !meta.error;
+  const isInvalid = meta.touched && meta.error;
+  const controlId = props.id || props.name;
+
+  if (!type) {
+    type = "text";
+  }
+
+  let errorClasses = "";
+  if (isInvalid) {
+    errorClasses =
+      "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500";
+  }
 
   return (
     <>
-      <Form.Group className={marginBotton} controlId={props.id || props.name}>
-        <Form.Label>{label}</Form.Label>
-        <Form.Control
-          isValid={meta.touched && !meta.error}
-          isInvalid={meta.touched && meta.error}
-          disabled={isSubmitting || disabled}
-          {...field}
-          {...props}
-        />
+      <div className={marginBotton}>
+        <label
+          htmlFor={controlId}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
 
-        {meta.touched && meta.error ? (
-          <Form.Control.Feedback type="invalid">
-            {meta.error}
-          </Form.Control.Feedback>
-        ) : null}
+        <div className="relative mt-1 rounded-md shadow-sm">
+          <input
+            disabled={isSubmitting || disabled}
+            className={`mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
+            id={controlId}
+            type={type}
+            {...field}
+            {...props}
+          />
+          {isInvalid && (
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              <ExclamationCircleIcon
+                className="h-5 w-5 text-red-500"
+                aria-hidden="true"
+              />
+            </div>
+          )}
+        </div>
 
-        {helpText &&
-          <Form.Text className="text-muted">
-            {helpText}
-          </Form.Text>
-        }
-      </Form.Group>
+        {help && <p className="mt-2 text-sm text-gray-500">{help}</p>}
+
+        {isInvalid && <p className="mt-2 text-sm text-red-600">{meta.error}</p>}
+      </div>
     </>
   );
 };

@@ -1,0 +1,26 @@
+:root {
+  --rdp-cell-size: 40px;
+  --rdp-accent-color: var(--bs-primary);
+  --rdp-background-color: #e7edff;
+  /* Switch to dark colors for dark themes */
+  --rdp-accent-color-dark: var(--bs-primary);
+  --rdp-background-color-dark: #180270;
+  /* Outline border for focused elements */
+  --rdp-outline: 2px solid var(--rdp-accent-color);
+  /* Outline border for focused and selected elements */
+  --rdp-outline-selected: 2px solid rgba(0, 0, 0, 0.75);
+}
+
+.rdp {
+  margin: 0;
+}
+
+.rdp-head {
+  background-color: var(--bs-primary);
+}
+
+.rdp-weeknumber,
+.rdp-day,
+.rdp-nav_button {
+  border-radius: 0;
+}
