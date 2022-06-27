@@ -1,6 +1,9 @@
 import React from "react";
-import { Link, Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/inertia-react";
+import Link from "@/Components/Link";
 import ApplicationLogo from "@/Components/ApplicationLogo";
+import Container from "@/Components/Container";
+import Alert from "@/Components/Alert";
 
 export default function Home(props) {
   return (
@@ -14,18 +17,22 @@ export default function Home(props) {
       </Head>
 
       <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 text-gray-100 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900">
-        <div className="container mx-auto h-screen py-3">
-          <div className="mb-3">
-            <ApplicationLogo />
-            <h1 className="mt-2 text-3xl font-bold text-indigo-100 dark:text-indigo-400">
-              Swimming Club Data Systems
-            </h1>
-            <p className="text-2xl font-bold">
-              Membership software for swimming clubs
-            </p>
-          </div>
+        <div className="mx-auto py-3">
+          <Container>
+            <div className="mb-3">
+              <ApplicationLogo />
+              <h1 className="mt-2 text-3xl font-bold text-indigo-100 dark:text-indigo-400">
+                Swimming Club Data Systems
+              </h1>
+              <p className="text-2xl font-bold">
+                Membership software for swimming clubs
+              </p>
+            </div>
+          </Container>
+        </div>
 
-          <div className="mb-3">
+        <Container>
+          <div className="mb-3 pb-3">
             <p className="text-xl">
               Manage your members, subscriptions, competition entries and more.
             </p>
@@ -40,25 +47,25 @@ export default function Home(props) {
               .
             </p>
           </div>
-
-          <div className="mb-3">
-            <Link
-              href={route("login")}
-              className="text-indigo-100 dark:text-indigo-400"
-            >
-              Admin log in
-            </Link>
-          </div>
-        </div>
+        </Container>
       </div>
 
-      <div className="bg-indigo-600 text-white dark:bg-indigo-800">
-        <div className="container mx-auto py-3">
-          <p>
-            Laravel v{props.laravelVersion} (PHP v{props.phpVersion})
-          </p>
+      <Container>
+        <Alert variant="warning" title="Attention">
+          This is a development build of the new Membership System. It is not
+          for production use.
+        </Alert>
+      </Container>
+
+      <Container>
+        <p className="mb-3">
+          This is Laravel v{props.laravelVersion} (PHP v{props.phpVersion})
+        </p>
+
+        <div className="mb-3">
+          <Link href={route("login")}>Admin log in</Link>
         </div>
-      </div>
+      </Container>
     </>
   );
 }

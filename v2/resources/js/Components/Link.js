@@ -1,13 +1,12 @@
 import React from "react";
 import { Link as InertiaLink } from "@inertiajs/inertia-react";
 
-const Link = (props) => {
+const Link = ({className, ...props}) => {
   return (
     <InertiaLink
-      className={
-        `text-indigo-600 hover:text-indigo-700 hover:underline ` +
-        props.className
-      }
+      className={`text-indigo-600 hover:text-indigo-700 hover:underline ${
+        className || ""
+      }`}
       {...props}
     />
   );

@@ -49,7 +49,7 @@ export const SubmissionButtons = (props) => {
           </>
         )}
 
-        <Button type="submit" disabled={!dirty || !isValid || isSubmitting}>
+        <Button className={formSpecialContext.submitClass} type="submit" disabled={!dirty || !isValid || isSubmitting}>
           {formSpecialContext.submitTitle || "Submit"}
         </Button>
       </div>
@@ -102,6 +102,7 @@ const Form = (props) => {
     validationSchema,
     onSubmit,
     submitTitle,
+    submitClass,
     hideClear,
     clearTitle,
     onClear,
@@ -122,6 +123,7 @@ const Form = (props) => {
         hideClear: hideClear,
         clearTitle: clearTitle,
         submitTitle: submitTitle,
+        submitClass: submitClass,
       }}
     >
       <Formik

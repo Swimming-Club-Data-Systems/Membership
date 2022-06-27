@@ -35,6 +35,7 @@ class AuthServiceProvider extends ServiceProvider
                 $router->forAuthorization();
                 $router->forAccessTokens();
             }, ['middleware' => [
+                'web',
                 InitializeTenancyByDomain::class,
                 PreventAccessFromCentralDomains::class,
                 ScopeSessions::class,
