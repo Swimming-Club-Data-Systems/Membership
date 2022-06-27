@@ -31,6 +31,10 @@ export function getName() {
   return getFirstName() + " " + getLastName();
 }
 
+export function getGravitar() {
+  return getDetail("gravitar");
+}
+
 export function hasPermission(permission) {
   const permissions = getDetail("permissions");
   if (permissions) {

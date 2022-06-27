@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/inertia-react";
+import {Link} from "react-router-dom";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import InternalContainer from "./InternalContainer";
@@ -20,15 +20,15 @@ const Footer = (props) => {
               Help and Support
             </p>
             <div>
-              <Link>Documentation</Link>
+              <Link to="">Documentation</Link>
             </div>
 
             <div>
-              <Link>Report mail abuse</Link>
+              <Link to="">Report mail abuse</Link>
             </div>
 
             <div>
-              <Link>What's new?</Link>
+              <Link to="">What's new?</Link>
             </div>
           </div>
 
@@ -37,11 +37,11 @@ const Footer = (props) => {
               Organisation
             </p>
             <div>
-              <Link>Admin Login</Link>
+              <Link to="">Admin Login</Link>
             </div>
 
             <div>
-              <Link>About Us</Link>
+              <Link to="">About Us</Link>
             </div>
 
             <div>

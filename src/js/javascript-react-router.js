@@ -5,9 +5,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SuspenseFallback from "./views/SuspenseFallback";
 import ScrollToTop from "./components/global/ScrollToTop";
 import store from "./reducers/store";
-import AppWrapper from "./views/AppWrapper";
+import Authenticated from "./layouts/Tenant/Authenticated";
 import NotFound from "./views/NotFound";
 import IsAuthorised from "./components/IsAuthorised";
+import AppWrapper from "./views/AppWrapper";
 
 const NotifyHome = React.lazy(() => import("./notify/pages/Home"));
 const NotifyComposer = React.lazy(() => import("./notify/forms/Composer"));
@@ -27,6 +28,7 @@ render(
       <Suspense fallback={<SuspenseFallback />}>
         <Routes>
           <Route path="/" element={<AppWrapper />}>
+            <Route index element={<NotFound />} />
             <Route path="suspense" element={<SuspenseFallback />} />
             <Route path="notify" element={<NotifyHome />} />
             <Route path="notify/new" element={<NotifyComposer />} />

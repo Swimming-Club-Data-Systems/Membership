@@ -9,7 +9,7 @@ import {
   useFormikContext,
   ErrorMessage,
 } from "formik";
-import { usePage } from "@inertiajs/inertia-react";
+// import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
 
@@ -58,7 +58,8 @@ export const SubmissionButtons = (props) => {
 };
 
 const HandleServerErrors = () => {
-  const { errors } = usePage().props;
+  // const { errors } = usePage().props;
+  const errors = null;
   const { setStatus, setSubmitting } = useFormikContext();
 
   useEffect(() => {

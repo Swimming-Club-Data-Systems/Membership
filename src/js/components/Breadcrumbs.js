@@ -1,9 +1,10 @@
 import React from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, useLocation } from "react-router-dom";
 
 const Breadcrumbs = (props) => {
-  const { url } = usePage();
+  const { pathname } = useLocation();
+  const url = pathname;
 
   if (props.crumbs) {
     return (
@@ -17,7 +18,7 @@ const Breadcrumbs = (props) => {
         >
           <li className="flex">
             <div className="flex items-center">
-              <Link href="/" className="text-gray-400 hover:text-gray-500">
+              <Link to="/" className="text-gray-400 hover:text-gray-500">
                 <HomeIcon
                   className="h-5 w-5 flex-shrink-0"
                   aria-hidden="true"
@@ -40,9 +41,10 @@ const Breadcrumbs = (props) => {
                   <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                 </svg>
                 <Link
-                  href={page.href}
+                  to={page.to}
                   className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
-                  aria-current={(page.href === url || page.href === window.location.href) ? "page" : undefined}
+                  aria-current={(page.to === url || page.to === window.location.href) ? "page" : undefined}
+                  state={{global_questionable_link: true}}
                 >
                   {page.name}
                 </Link>

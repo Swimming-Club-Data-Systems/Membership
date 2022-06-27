@@ -38,6 +38,7 @@ try {
         'email' => $user->getEmail(),
         'mobile' => $user->getMobile(),
         'permissions' => $user->getPermissions(),
+        'gravitar' => "https://www.gravatar.com/avatar/" . md5(strtolower(trim($user->getEmail()))) . "?d=mp",
       ],
     ];
   } else {

@@ -1,20 +1,20 @@
 import React, { useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationIcon } from "@heroicons/react/outline";
-import { Inertia } from "@inertiajs/inertia";
 import Form from "./form/Form";
 import TextInput from "./form/TextInput";
 import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, useLocation } from "react-router-dom";
 import Card from "./Card";
 
 const Search = (props) => {
-  const { url } = usePage();
+  const { location: { pathname } } = useLocation();
+  const url = pathname;
 
   const handleSubmit = (values) => {
-    Inertia.get(url, values);
+    // Inertia.get(url, values);
   };
 
   const SetSearchValue = () => {
@@ -79,7 +79,7 @@ const Collection = (props) => {
     return (
       <li key={item.id || idx}>
         <Link
-          href={route("user.show", item.id)}
+          to={route("user.show", item.id)}
           className="group block hover:bg-gray-50"
         >
           <div className="px-4 py-4 sm:px-6">{props.itemRenderer(item)}</div>

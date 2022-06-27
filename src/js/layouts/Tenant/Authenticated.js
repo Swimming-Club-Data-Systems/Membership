@@ -1,9 +1,9 @@
 import React, { Fragment, useState } from "react";
-import ApplicationLogo from "@/Components/ApplicationLogo";
-import { usePage, Link } from "@inertiajs/inertia-react";
-import Footer from "@/Components/Footer";
-import Container from "@/Components/Container";
-import PageHeader from "@/Components/PageHeader";
+import ApplicationLogo from "../../components/ApplicationLogo";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import Footer from "../../components/Footer";
+import Container from "../../components/Container";
+import PageHeader from "../../components/PageHeader";
 import { Dialog, Transition, Disclosure } from "@headlessui/react";
 import {
   HomeIcon,
@@ -16,8 +16,10 @@ import {
   MailIcon,
   CogIcon,
 } from "@heroicons/react/outline";
-import Breadcrumbs from "@/Components/Breadcrumbs";
-import InternalContainer from "@/Components/InternalContainer";
+import Breadcrumbs from "../../components/Breadcrumbs";
+import InternalContainer from "../../components/InternalContainer";
+import * as User from "../../classes/User";
+import Logo from "../../components/Logo";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -45,8 +47,8 @@ function classNames(...classes) {
 
 const Layout = (props) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { url } = usePage();
-  const { auth } = usePage().props;
+  const { pathname } = useLocation();
+  const url = pathname;
 
   const navContents = () => {
     return navigation.map((item) => {
@@ -55,7 +57,7 @@ const Layout = (props) => {
       return !item.children ? (
         <Link
           key={item.name}
-          href={item.href}
+          to={item.href}
           className={classNames(
             current
               ? "bg-gray-100 text-gray-900 dark:bg-slate-900 dark:text-white"
@@ -79,7 +81,7 @@ const Layout = (props) => {
           as="div"
           key={item.name}
           className="space-y-1"
-          // defaultOpen={current}
+        // defaultOpen={current}
         >
           {({ open }) => (
             <>
@@ -120,7 +122,7 @@ const Layout = (props) => {
                   <Disclosure.Button
                     key={subItem.name}
                     as={Link}
-                    href={subItem.href}
+                    to={subItem.href}
                     className={classNames(
                       "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white",
                       "group flex w-full items-center rounded-md py-2 pl-12 pr-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -200,26 +202,26 @@ const Layout = (props) => {
                 </Transition.Child>
                 <div className="h-0 flex-1 overflow-y-auto pt-5 pb-4">
                   <div className="flex flex-shrink-0 items-center px-4">
-                    <ApplicationLogo />
+                    <Logo />
                   </div>
                   <nav className="mt-5 space-y-1 px-2">{navContents()}</nav>
                 </div>
                 <div className="flex flex-shrink-0 bg-gray-700 p-4">
                   <Link
-                    href={route("myaccount.index")}
+                    to="/my-account"
                     className="group block flex-shrink-0"
                   >
                     <div className="flex items-center">
                       <div>
                         <img
                           className="inline-block h-10 w-10 rounded-full"
-                          src={auth.user.gravitar_url}
+                          src={User.getGravitar()}
                           alt=""
                         />
                       </div>
                       <div className="ml-3">
                         <p className="text-base font-medium text-white">
-                          {`${auth.user.first_name} ${auth.user.last_name}`}
+                          {User.getName()}
                         </p>
                         <p className="text-sm font-medium text-gray-400 group-hover:text-gray-300">
                           View profile
@@ -242,25 +244,25 @@ const Layout = (props) => {
           <div className="flex min-h-0 flex-1 flex-col border-r border-gray-200 bg-gray-100 dark:border-slate-700 dark:bg-slate-800">
             <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
               <div className="flex flex-shrink-0 items-center px-4">
-                <ApplicationLogo />
+                <Logo />
               </div>
               <nav className="mt-5 flex-1 space-y-1 px-2">{navContents()}</nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-200 p-4 dark:bg-slate-700">
               <Link
-                href={route("myaccount.index")}
+                to="/my-account"
                 className="group block w-full flex-shrink-0"
               >
                 <div className="flex items-center">
                   <div>
                     <img
                       className="inline-block h-9 w-9 rounded-full"
-                      src={auth.user.gravitar_url}
+                      src={User.getGravitar()}
                       alt=""
                     />
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{`${auth.user.first_name} ${auth.user.last_name}`}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{User.getName()}</p>
                     <p className="text-grey-700 text-xs font-medium group-hover:text-gray-800 dark:text-gray-300 dark:group-hover:text-gray-200">
                       View profile
                     </p>
@@ -283,26 +285,30 @@ const Layout = (props) => {
           </div>
           {/* HEADER START */}
           <Breadcrumbs crumbs={props.crumbs} />
-          <div className="border-b border-gray-200 bg-white py-4">
-            <InternalContainer>
-              <div className="md:flex md:items-center md:justify-between">
-                <div className="min-w-0 flex-1">
-                  <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
-                    {props.title}
-                  </h2>
-                </div>
-                {props.titleButtons && (
-                  <div className="mt-4 flex md:mt-0 md:ml-4">
-                    {props.titleButtons}
+          {(props.title || props.titleButtons) &&
+            <div className="border-b border-gray-200 bg-white py-4">
+              <InternalContainer>
+                <div className="md:flex md:items-center md:justify-between">
+                  <div className="min-w-0 flex-1">
+                    <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl">
+                      {props.title}
+                    </h2>
                   </div>
-                )}
-              </div>
-            </InternalContainer>
-          </div>
+                  {props.titleButtons && (
+                    <div className="mt-4 flex md:mt-0 md:ml-4">
+                      {props.titleButtons}
+                    </div>
+                  )}
+                </div>
+              </InternalContainer>
+            </div>
+          }
           {/* HEADER END */}
           <main className="flex-1">
             <div className="py-6">
-              <Container>{props.children}</Container>
+              <Container>
+                {props.children}
+              </Container>
             </div>
           </main>
         </div>
@@ -314,28 +320,28 @@ const Layout = (props) => {
   );
 };
 
-const AuthenticatedOld = ({ children, ...otherProps }) => {
-  const { auth, errors } = usePage().props;
+// const AuthenticatedOld = ({ children, ...otherProps }) => {
+//   const { auth, errors } = {}; //usePage().props;
 
-  const [showingNavigationDropdown, setShowingNavigationDropdown] =
-    useState(false);
+//   const [showingNavigationDropdown, setShowingNavigationDropdown] =
+//     useState(false);
 
-  return (
-    <>
-      <PageHeader
-        title={otherProps.title}
-        subtitle={otherProps.subtitle}
-        header={otherProps.header}
-        crumbs={otherProps.crumbs}
-      />
-      <div className="min-h-screen bg-gray-100">
-        <Container>
-          <main>{children}</main>
-        </Container>
-      </div>
-      <Footer />
-    </>
-  );
-};
+//   return (
+//     <>
+//       <PageHeader
+//         title={otherProps.title}
+//         subtitle={otherProps.subtitle}
+//         header={otherProps.header}
+//         crumbs={otherProps.crumbs}
+//       />
+//       <div className="min-h-screen bg-gray-100">
+//         <Container>
+//           <main>{children}</main>
+//         </Container>
+//       </div>
+//       <Footer />
+//     </>
+//   );
+// };
 
 export default Layout;

@@ -1,10 +1,10 @@
 import React from "react";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "react-router-dom";
 
 export default function NavLink({ href, active, children, ...otherProps }) {
   return (
     <Link
-      href={href}
+      to={href}
       className={
         active
           ? "mb-2 flex w-full rounded bg-gray-100 p-2"

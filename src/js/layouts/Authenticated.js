@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import ApplicationLogo from "@/Components/ApplicationLogo";
-import Dropdown from "@/Components/Dropdown";
-import NavLink from "@/Components/NavLink";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink";
-import { Link } from "@inertiajs/inertia-react";
-import Footer from "@/Components/Footer";
-import Container from "@/Components/Container";
+import ApplicationLogo from "../components/ApplicationLogo";
+import Dropdown from "../components/Dropdown";
+import NavLink from "../components/NavLink";
+import ResponsiveNavLink from "../components/ResponsiveNavLink";
+// import { Link } from "@inertiajs/inertia-react";
+import Footer from "../components/Footer";
+import Container from "../components/Container";
 
 export default function Authenticated({ auth, children }) {
   const [showingNavigationDropdown, setShowingNavigationDropdown] =

@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "react-router-dom";
 
 const Pagination = ({ collection }) => {
   const {
@@ -48,7 +48,7 @@ const Pagination = ({ collection }) => {
     return (
       <Link
         key={idx}
-        href={link.url}
+        to={link.url}
         disabled={!link.url}
         {...aria}
         className={`relative inline-flex items-center border px-4 py-2 text-sm font-medium first-of-type:rounded-l-md last-of-type:rounded-r-md ${linkClass} ${disabled}`}
@@ -63,7 +63,7 @@ const Pagination = ({ collection }) => {
       <div className="flex flex-1 justify-between sm:hidden">
         {prev_page_url && (
           <Link
-            href={prev_page_url}
+            to={prev_page_url}
             className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Previous
@@ -71,7 +71,7 @@ const Pagination = ({ collection }) => {
         )}
         {next_page_url && (
           <Link
-            href={next_page_url}
+            to={next_page_url}
             className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Next

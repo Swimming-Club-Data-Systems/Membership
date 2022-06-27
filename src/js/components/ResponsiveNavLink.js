@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "react-router-dom";
 
 export default function ResponsiveNavLink({
   method = "get",
@@ -12,7 +12,7 @@ export default function ResponsiveNavLink({
     <Link
       method={method}
       as={as}
-      href={href}
+      to={href}
       className={`flex w-full items-start border-l-4 py-2 pl-3 pr-4 ${
         active
           ? "border-indigo-400 bg-indigo-50 text-indigo-700 focus:border-indigo-700 focus:bg-indigo-100 focus:text-indigo-800 focus:outline-none"

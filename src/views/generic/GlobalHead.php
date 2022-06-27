@@ -40,7 +40,7 @@ https://myswimmingclub.co.uk
 Chester-le-Street ASC is a non profit unincorporated association.
 
 -->
-<html lang="en-gb">
+<html lang="en-gb" <?php if (defined("USE_TAILWIND") && USE_TAILWIND) { ?>class="h-full bg-gray-100"<?php } ?>>
 
 <head>
   <meta charset="utf-8">

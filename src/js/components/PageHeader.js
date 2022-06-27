@@ -1,4 +1,4 @@
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, useLocation } from "react-router-dom";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import Container from "./Container";
@@ -21,9 +21,9 @@ const navigation = [
   { name: "Admin", href: "/admin" },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: route("myaccount.index") },
+  { name: "Your Profile", href: "myaccount.index" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: route("logout") },
+  { name: "Sign out", href: "logout" },
 ];
 
 function classNames(...classes) {
@@ -31,8 +31,9 @@ function classNames(...classes) {
 }
 
 const PageHeader = (props) => {
-  const { url } = usePage();
-  const { auth } = usePage().props;
+  const { location: { pathname } } = useLocation();
+  const url = pathname;
+  const auth = null;
 
   const user = {
     name: `${auth.user.first_name} ${auth.user.last_name}`,
@@ -69,7 +70,7 @@ const PageHeader = (props) => {
                           return (
                             <Link
                               key={item.name}
-                              href={item.href}
+                              to={item.href}
                               className={classNames(
                                 current
                                   ? "bg-gray-900 text-white"
@@ -243,31 +244,31 @@ const BasicPageHeader = (props) => {
           <ApplicationLogo />
           <div className="mt-3 flex">
             <div className="mr-3">
-              <Link href="/members">Members</Link>
+              <Link to="/members">Members</Link>
             </div>
             <div className="mr-3">
-              <Link href="/squads">Squads</Link>
+              <Link to="/squads">Squads</Link>
             </div>
             <div className="mr-3">
-              <Link href="/registers">Registers</Link>
+              <Link to="/registers">Registers</Link>
             </div>
             <div className="mr-3">
-              <Link href="/users">Users</Link>
+              <Link to="/users">Users</Link>
             </div>
             <div className="mr-3">
-              <Link href="/Payments">Payments</Link>
+              <Link to="/Payments">Payments</Link>
             </div>
             <div className="mr-3">
-              <Link href="/notify">Notify</Link>
+              <Link to="/notify">Notify</Link>
             </div>
             <div className="mr-3">
-              <Link href="/galas">Galas</Link>
+              <Link to="/galas">Galas</Link>
             </div>
             <div className="mr-3">
-              <Link href="/admin">Admin</Link>
+              <Link to="/admin">Admin</Link>
             </div>
             <div className="mr-3">
-              <Link href="/account">Account</Link>
+              <Link to="/account">Account</Link>
             </div>
           </div>
         </div>

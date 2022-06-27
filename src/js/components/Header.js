@@ -1,28 +1,24 @@
+import { Link } from "react-router-dom";
 import React from "react";
+import ApplicationLogo from "./ApplicationLogo";
+import Container from "./Container";
 
-class Header extends React.Component {
-
-  render() {
-
-    return (
-      <div className="bg-light mt-n3 py-3 mb-3">
-        <div className="container-xl">
-
-          {
-            this.props.breadcrumbs
-          }
-
-          <h1>{this.props.title}</h1>
-
-          {
-            this.props.subtitle &&
-            <p className="lead mb-0">{this.props.subtitle}</p>
-          }
-          
+const Header = (props) => {
+  return (
+    <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
+      <Container>
+        <div className="py-3">
+          {/* <ApplicationLogo /> */}
+          <h1 className="mt-2 text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+            {props.title}
+          </h1>
+          {props.subtitle && (
+            <p className="text-2xl font-bold">{props.subtitle}</p>
+          )}
         </div>
-      </div>
-    );
-  }
-}
+      </Container>
+    </div>
+  );
+};
 
 export default Header;
