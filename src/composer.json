@@ -47,6 +47,9 @@
         "phpmailer/phpmailer": "^6.5",
         "web-auth/webauthn-lib": "^3.3",
         "nyholm/psr7": "^1.5",
-        "nyholm/psr7-server": "^1.0"
+        "nyholm/psr7-server": "^1.0",
+        "illuminate/database": "^8.83",
+        "illuminate/queue": "^8.83",
+        "illuminate/events": "^8.83"
     }
 }

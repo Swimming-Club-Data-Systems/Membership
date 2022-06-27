@@ -1,8 +1,9 @@
+// eslint-disable-next-line no-undef
 module.exports = {
-  parser: 'sugarss',
+  // parser: "sugarss",
   plugins: {
-    'postcss-import': {},
-    'postcss-preset-env': {},
-    'cssnano': {}
+    "postcss-import": {},
+    tailwindcss: {},
+    autoprefixer: {},
   }
-}
+};

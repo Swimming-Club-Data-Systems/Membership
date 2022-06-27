@@ -3,6 +3,7 @@ const path = require("path");
 const fs = require("fs");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const tailwindcss = require("tailwindcss");
 // const postcssPresetEnv = require("postcss-preset-env");
 
 // const ExtractTextPlugin = require("extract-text-webpack-plugin");
@@ -66,6 +67,7 @@ module.exports = (env, options) => {
   }
 
   let cssEntryPoints = {
+    "main": "./css/main.css",
     "generic": "./scss/generic.scss",
     "generic-dark-mode": "./scss/generic-dark-mode.scss",
     "scds": "./scss/scds.scss",
@@ -144,6 +146,14 @@ module.exports = (env, options) => {
                 implementation: require("sass"),
               },
             }]
+        },
+        {
+          test: /\.(css)$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            "css-loader",
+            "postcss-loader",
+          ]
         },
       ],
     },

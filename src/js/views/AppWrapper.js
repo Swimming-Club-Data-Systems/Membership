@@ -86,11 +86,11 @@ const AppWrapper = () => {
       {
         hasTenantInfo && hasUserInfo && header && footer
           ? <>
-            <div dangerouslySetInnerHTML={{ __html: header }} />
-            <div className="have-full-height focus-highlight">
-              <Outlet />
-            </div>
-            <div dangerouslySetInnerHTML={{ __html: footer }} />
+            {/* <div dangerouslySetInnerHTML={{ __html: header }} /> */}
+            {/* <div className="have-full-height focus-highlight"> */}
+            <Outlet />
+            {/* </div> */}
+            {/* <div dangerouslySetInnerHTML={{ __html: footer }} /> */}
           </>
           :
           <SuspenseFallback />

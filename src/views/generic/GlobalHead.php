@@ -2,11 +2,19 @@
 
 $tenant = app()->tenant;
 
-$stylesheet = autoUrl(getCompiledAsset('generic.css'), false);
-$stylesheetDarkMode = autoUrl(getCompiledAsset('generic-dark-mode.css'), false);
+$stylesheet = null;
+$stylesheetDarkMode = null;
+if (!defined("USE_TAILWIND") || !USE_TAILWIND) {
+  $stylesheet = autoUrl(getCompiledAsset('generic.css'), false);
+  $stylesheetDarkMode = autoUrl(getCompiledAsset('generic-dark-mode.css'), false);
+} else {
+  $stylesheet = autoUrl(getCompiledAsset('main.css'), false);
+}
 
 header('Link: <' . $stylesheet . '>; rel=preload; as=style', false);
-header('Link: <' . $stylesheetDarkMode . '>; rel=preload; as=style', false);
+if ($stylesheetDarkMode) {
+  header('Link: <' . $stylesheetDarkMode . '>; rel=preload; as=style', false);
+}
 // header('Link: <' . autoUrl("public/css/colour.css") . '>; rel=preload; as=style', false);
 
 $container_class;
@@ -104,7 +112,7 @@ Chester-le-Street ASC is a non profit unincorporated association.
   <?php } ?>
   <!-- <link rel="mask-icon" href="https://www.chesterlestreetasc.co.uk/wp-content/themes/chester/img/chesterIcon.svg"
     color="#bd0000"> -->
-  <script src="https://www.google.com/recaptcha/api.js"></script>
+  <!-- <script src="https://www.google.com/recaptcha/api.js"></script> -->
 
   <!--[if lt IE 9]>
       <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>

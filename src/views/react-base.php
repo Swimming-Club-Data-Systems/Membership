@@ -1,5 +1,7 @@
 <?php
 
+define("USE_TAILWIND", true);
+
 include BASE_PATH . "views/head.php";
 
 ?>
