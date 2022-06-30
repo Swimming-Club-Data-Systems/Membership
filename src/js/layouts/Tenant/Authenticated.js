@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import ApplicationLogo from "../../components/ApplicationLogo";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Footer from "../../components/Footer";
 import Container from "../../components/Container";
 import PageHeader from "../../components/PageHeader";
@@ -20,6 +20,7 @@ import Breadcrumbs from "../../components/Breadcrumbs";
 import InternalContainer from "../../components/InternalContainer";
 import * as User from "../../classes/User";
 import Logo from "../../components/Logo";
+import BaseLink from "../../components/BaseLink";
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: HomeIcon },
@@ -55,7 +56,7 @@ const Layout = (props) => {
       const current =
         (url.startsWith(item.href) && item.href !== "/") || url === item.href;
       return !item.children ? (
-        <Link
+        <BaseLink
           key={item.name}
           to={item.href}
           className={classNames(
@@ -75,7 +76,7 @@ const Layout = (props) => {
             aria-hidden="true"
           />
           {item.name}
-        </Link>
+        </BaseLink>
       ) : (
         <Disclosure
           as="div"
@@ -121,7 +122,7 @@ const Layout = (props) => {
                 {item.children.map((subItem) => (
                   <Disclosure.Button
                     key={subItem.name}
-                    as={Link}
+                    as={BaseLink}
                     to={subItem.href}
                     className={classNames(
                       "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white",
@@ -207,7 +208,7 @@ const Layout = (props) => {
                   <nav className="mt-5 space-y-1 px-2">{navContents()}</nav>
                 </div>
                 <div className="flex flex-shrink-0 bg-gray-700 p-4">
-                  <Link
+                  <BaseLink
                     to="/my-account"
                     className="group block flex-shrink-0"
                   >
@@ -228,7 +229,7 @@ const Layout = (props) => {
                         </p>
                       </div>
                     </div>
-                  </Link>
+                  </BaseLink>
                 </div>
               </div>
             </Transition.Child>
@@ -249,7 +250,7 @@ const Layout = (props) => {
               <nav className="mt-5 flex-1 space-y-1 px-2">{navContents()}</nav>
             </div>
             <div className="flex flex-shrink-0 bg-gray-200 p-4 dark:bg-slate-700">
-              <Link
+              <BaseLink
                 to="/my-account"
                 className="group block w-full flex-shrink-0"
               >
@@ -268,7 +269,7 @@ const Layout = (props) => {
                     </p>
                   </div>
                 </div>
-              </Link>
+              </BaseLink>
             </div>
           </div>
         </div>

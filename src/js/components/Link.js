@@ -1,9 +1,9 @@
 import React from "react";
-import { Link as RouterLink } from "react-router-dom";
+import BaseLink from "./BaseLink";
 
 const Link = ({className, ...props}) => {
   return (
-    <RouterLink
+    <BaseLink
       className={`text-indigo-600 hover:text-indigo-700 hover:underline ${
         className || ""
       }`}

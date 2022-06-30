@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import React from "react";
-import ApplicationLogo from "./ApplicationLogo";
 import Container from "./Container";
 
 const Header = (props) => {

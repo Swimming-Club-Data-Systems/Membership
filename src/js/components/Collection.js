@@ -6,7 +6,8 @@ import TextInput from "./form/TextInput";
 import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import BaseLink from "./BaseLink";
 import Card from "./Card";
 
 const Search = (props) => {
@@ -78,12 +79,12 @@ const Collection = (props) => {
   const items = props.data.map((item, idx) => {
     return (
       <li key={item.id || idx}>
-        <Link
-          to={route("user.show", item.id)}
+        <BaseLink
+          to="/"
           className="group block hover:bg-gray-50"
         >
           <div className="px-4 py-4 sm:px-6">{props.itemRenderer(item)}</div>
-        </Link>
+        </BaseLink>
       </li>
     );
   });

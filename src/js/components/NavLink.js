@@ -1,9 +1,9 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import BaseLink from "./BaseLink";
 
 export default function NavLink({ href, active, children, ...otherProps }) {
   return (
-    <Link
+    <BaseLink
       to={href}
       className={
         active
@@ -13,6 +13,6 @@ export default function NavLink({ href, active, children, ...otherProps }) {
       {...otherProps}
     >
       {children}
-    </Link>
+    </BaseLink>
   );
 }

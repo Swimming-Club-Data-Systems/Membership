@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import BaseLink from "./BaseLink";
 
 export default function ResponsiveNavLink({
   method = "get",
@@ -9,7 +9,7 @@ export default function ResponsiveNavLink({
   children,
 }) {
   return (
-    <Link
+    <BaseLink
       method={method}
       as={as}
       to={href}
@@ -20,6 +20,6 @@ export default function ResponsiveNavLink({
       } text-base font-medium transition duration-150 ease-in-out focus:outline-none`}
     >
       {children}
-    </Link>
+    </BaseLink>
   );
 }

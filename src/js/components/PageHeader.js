@@ -1,8 +1,9 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import Container from "./Container";
 import Breadcrumbs from "./Breadcrumbs";
+import BaseLink from "./BaseLink";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";
@@ -68,7 +69,7 @@ const PageHeader = (props) => {
                             (url.startsWith(item.href) && item.href !== "/") ||
                             url === item.href;
                           return (
-                            <Link
+                            <BaseLink
                               key={item.name}
                               to={item.href}
                               className={classNames(
@@ -80,7 +81,7 @@ const PageHeader = (props) => {
                               aria-current={current ? "page" : undefined}
                             >
                               {item.name}
-                            </Link>
+                            </BaseLink>
                           );
                         })}
                       </div>
@@ -244,31 +245,31 @@ const BasicPageHeader = (props) => {
           <ApplicationLogo />
           <div className="mt-3 flex">
             <div className="mr-3">
-              <Link to="/members">Members</Link>
+              <BaseLink to="/members">Members</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/squads">Squads</Link>
+              <BaseLink to="/squads">Squads</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/registers">Registers</Link>
+              <BaseLink to="/registers">Registers</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/users">Users</Link>
+              <BaseLink to="/users">Users</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/Payments">Payments</Link>
+              <BaseLink to="/Payments">Payments</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/notify">Notify</Link>
+              <BaseLink to="/notify">Notify</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/galas">Galas</Link>
+              <BaseLink to="/galas">Galas</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/admin">Admin</Link>
+              <BaseLink to="/admin">Admin</BaseLink>
             </div>
             <div className="mr-3">
-              <Link to="/account">Account</Link>
+              <BaseLink to="/account">Account</BaseLink>
             </div>
           </div>
         </div>

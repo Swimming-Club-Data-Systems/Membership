@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Link } from "react-router-dom";
+import BaseLink from "./BaseLink";
 
 const Pagination = ({ collection }) => {
   const {
@@ -46,7 +46,7 @@ const Pagination = ({ collection }) => {
     }
 
     return (
-      <Link
+      <BaseLink
         key={idx}
         to={link.url}
         disabled={!link.url}
@@ -54,7 +54,7 @@ const Pagination = ({ collection }) => {
         className={`relative inline-flex items-center border px-4 py-2 text-sm font-medium first-of-type:rounded-l-md last-of-type:rounded-r-md ${linkClass} ${disabled}`}
       >
         {label}
-      </Link>
+      </BaseLink>
     );
   });
 
@@ -62,20 +62,20 @@ const Pagination = ({ collection }) => {
     <div className="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6">
       <div className="flex flex-1 justify-between sm:hidden">
         {prev_page_url && (
-          <Link
+          <BaseLink
             to={prev_page_url}
             className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Previous
-          </Link>
+          </BaseLink>
         )}
         {next_page_url && (
-          <Link
+          <BaseLink
             to={next_page_url}
             className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             Next
-          </Link>
+          </BaseLink>
         )}
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">

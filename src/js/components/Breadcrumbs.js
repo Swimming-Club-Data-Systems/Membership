@@ -1,6 +1,7 @@
 import React from "react";
-import { HomeIcon, ChevronRightIcon } from "@heroicons/react/solid";
-import { Link, useLocation } from "react-router-dom";
+import { HomeIcon } from "@heroicons/react/solid";
+import { useLocation } from "react-router-dom";
+import BaseLink from "./BaseLink";
 
 const Breadcrumbs = (props) => {
   const { pathname } = useLocation();
@@ -18,13 +19,13 @@ const Breadcrumbs = (props) => {
         >
           <li className="flex">
             <div className="flex items-center">
-              <Link to="/" className="text-gray-400 hover:text-gray-500">
+              <BaseLink to="/" className="text-gray-400 hover:text-gray-500">
                 <HomeIcon
                   className="h-5 w-5 flex-shrink-0"
                   aria-hidden="true"
                 />
                 <span className="sr-only">Home</span>
-              </Link>
+              </BaseLink>
             </div>
           </li>
           {props.crumbs.map((page) => (
@@ -40,14 +41,13 @@ const Breadcrumbs = (props) => {
                 >
                   <path d="M.293 0l22 22-22 22h1.414l22-22-22-22H.293z" />
                 </svg>
-                <Link
+                <BaseLink
                   to={page.to}
                   className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                   aria-current={(page.to === url || page.to === window.location.href) ? "page" : undefined}
-                  state={{global_questionable_link: true}}
                 >
                   {page.name}
-                </Link>
+                </BaseLink>
               </div>
             </li>
           ))}
