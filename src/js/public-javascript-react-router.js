@@ -27,14 +27,14 @@ render(
         <ScrollToTop />
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
-            <Route path="/login" element={<PublicAppFooter />}>
-              <Route element={<LoginPageWrapper />}>
-                <Route index element={<LoginPage />} />
-                <Route path="forgot-password" element={<FindAccount />} />
-                <Route path="reset-password" element={<ResetPassword />} />
-              </Route>
-            </Route>
             <Route path="/" element={<PublicAppWrapper />}>
+              <Route path="login">
+                <Route element={<LoginPageWrapper />}>
+                  <Route index element={<LoginPage />} />
+                  <Route path="forgot-password" element={<FindAccount />} />
+                  <Route path="reset-password" element={<ResetPassword />} />
+                </Route>
+              </Route>
               <Route index element={<Welcome />} />
               <Route path="about" element={<AboutReactApp />} />
               <Route path="404" element={<NotFound />} />

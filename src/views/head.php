@@ -21,7 +21,7 @@ include $cvp . '/GlobalHead.php';
 
 ?>
 
-<body class="<?= $bg ?> <?php if (defined("USE_TAILWIND") && USE_TAILWIND) { ?>h-full bg-gray-100<?php } ?> account--body <?php if (isset($pageHead['body-class'])) {
+<body class="<?= $bg ?> <?php if (defined("USE_TAILWIND") && USE_TAILWIND) { ?>font-sans antialiased min-h-full bg-gray-100 text-gray-600 text-sm<?php } ?> account--body <?php if (isset($pageHead['body-class'])) {
                                         foreach ($pageHead['body-class'] as $item) { ?> <?= $item ?> <?php }
                                                                                                   } ?>" <?php if (isset($pageHead['body'])) {
                                                                                                           foreach ($pageHead['body'] as $item) { ?> <?= $item ?> <?php }

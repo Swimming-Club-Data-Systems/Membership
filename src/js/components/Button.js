@@ -28,6 +28,10 @@ const Button = ({
       break;
   }
 
+  if (props.fullWidth) {
+    className += " w-full";
+  }
+
   return (
     <button
       type={type}

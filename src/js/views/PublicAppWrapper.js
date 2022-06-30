@@ -7,27 +7,11 @@ import axios from "axios";
 import store from "../reducers/store";
 import SuspenseFallback from "./SuspenseFallback";
 import { Outlet } from "react-router-dom";
+import Footer from "../components/Footer";
 
 const PublicAppWrapper = () => {
 
-  const [header, setHeader] = useState(null);
-  const [footer, setFooter] = useState(null);
   const [hasTenantInfo, setHasTenantInfo] = useState(false);
-
-  useEffect(
-    () => {
-      axios.get("/api/react/header-footer")
-        .then(response => {
-          let data = response.data;
-          setHeader(data.header);
-          setFooter(data.footer);
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    },
-    []
-  );
 
   useEffect(
     () => {
@@ -58,13 +42,10 @@ const PublicAppWrapper = () => {
 
     <>
       {
-        hasTenantInfo && header && footer
+        hasTenantInfo
           ? <>
-            <div dangerouslySetInnerHTML={{ __html: header }} />
-            <div className="have-full-height focus-highlight">
-              <Outlet />
-            </div>
-            <div dangerouslySetInnerHTML={{ __html: footer }} />
+            <Outlet />
+            <Footer />
           </>
           :
           <SuspenseFallback />

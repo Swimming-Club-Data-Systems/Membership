@@ -3,22 +3,17 @@ import React, { useState, useEffect, useRef } from "react";
 import * as tenantFunctions from "../classes/Tenant";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { Form } from "react-bootstrap";
-import { Button } from "react-bootstrap";
-import { Alert } from "react-bootstrap";
-import { Link, useLocation, useSearchParams } from "react-router-dom";
+import Button from "../components/Button";
+import Alert from "../components/Alert";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { connect } from "react-redux";
 import { mapStateToProps, mapDispatchToProps } from "../reducers/Login";
 import axios from "axios";
 // import { useLogin } from "@web-auth/webauthn-helper";
 import useLogin from "./useLogin";
-import { Collapse } from "bootstrap";
-
-const schema = yup.object().shape({
-  emailAddress: yup.string().email("Your email address must be valid").required("You must provide an email address"),
-  password: yup.string().required("You must provide a password"),
-  rememberMe: yup.bool(),
-});
+import BaseTextInput from "../components/form/base/BaseTextInput";
+import Checkbox from "../components/form/base/BaseRadioCheck";
+import Link from "../components/Link";
 
 const Login = (props) => {
 
@@ -39,14 +34,23 @@ const Login = (props) => {
   const [error, setError] = useState(null);
   const [username, setUsername] = useState("");
   const [hasWebauthn, setHasWebauthn] = useState(false);
+  const [userExists, setUserExists] = useState(false);
   const [ssoUrl, setSsoUrl] = useState(null);
   const [selectedTraditional, setSelectedTraditional] = useState(null);
-  const collapsePasskeyRef = useRef();
-  const [collapsePasskey, setCollapsePasskey] = useState(null);
-  const collapsePasswordRef = useRef();
-  const [collapsePassword, setCollapsePassword] = useState(null);
-  const collapseSsoRef = useRef();
-  const [collapseSso, setCollapseSso] = useState(null);
+  const [showPasskey, setShowPasskey] = useState(null);
+  const [showPassword, setShowPassword] = useState(null);
+  const [showSso, setShowSso] = useState(null);
+
+  const schemaItems = {
+    emailAddress: yup.string().email("Your email address must be valid").required("You must provide an email address"),
+  };
+
+  if (showPassword) {
+    schemaItems.password = yup.string().required("You must provide a password");
+    schemaItems.rememberMe = yup.bool();
+  }
+
+  const schema = yup.object().shape(schemaItems);
 
   const webAuthnError = {
     type: "danger",
@@ -54,30 +58,10 @@ const Login = (props) => {
   };
 
   const show = (field) => {
-    if (field === "passkey") {
-      collapsePasskey.show();
-    } else {
-      collapsePasskey.hide();
-    }
-
-    if (field === "sso") {
-      collapseSso.show();
-    } else {
-      collapseSso.hide();
-    }
-
-    if (field === "password") {
-      collapsePassword.show();
-    } else {
-      collapsePassword.hide();
-    }
+    setShowPasskey(field === "passkey");
+    setShowPassword(field === "password");
+    setShowSso(field === "sso");
   };
-
-  useEffect(() => {
-    setCollapsePasskey(new Collapse(collapsePasskeyRef.current, { toggle: false }));
-    setCollapsePassword(new Collapse(collapsePasswordRef.current, { toggle: false }));
-    setCollapseSso(new Collapse(collapseSsoRef.current, { toggle: false }));
-  }, []);
 
   useEffect(() => {
     if (selectedTraditional !== null) {
@@ -91,13 +75,20 @@ const Login = (props) => {
       return false;
     }
 
+    const email = value || username;
+
+    // Validate
+    const isValidEmail = yup.string().email();
+    if (!isValidEmail.validateSync(email)) return;
+
     // Check for tokens first!
     const { data } = await axios.get("/api/auth/login/has-webauthn", {
       params: {
-        email: value || username,
+        email: email,
       }
     });
 
+    setUserExists(data.user_exists);
     setHasWebauthn(data.has_webauthn);
     if (data.is_sso) {
       setSsoUrl(data.sso_url);
@@ -172,35 +163,40 @@ const Login = (props) => {
   const onSubmit = async (values, { setSubmitting }) => {
     setSubmitting(true);
 
-    try {
+    if (ssoUrl) {
+      window.location.href = ssoUrl;
+      return;
+    } else {
+      try {
 
-      const response = await axios.post("/api/auth/login/login", {
-        email_address: values.emailAddress,
-        password: values.password,
-      });
-
-      if (response.data.success) {
-        props.setType("twoFactor");
-        props.setLoginDetails({
-          ...response.data,
-          remember_me: values.rememberMe
+        const response = await axios.post("/api/auth/login/login", {
+          email_address: values.emailAddress,
+          password: values.password,
         });
-      } else {
-        // There was an error
+
+        if (response.data.success) {
+          props.setType("twoFactor");
+          props.setLoginDetails({
+            ...response.data,
+            remember_me: values.rememberMe
+          });
+        } else {
+          // There was an error
+          setError({
+            type: "danger",
+            message: response.data.message,
+          });
+        }
+
+      } catch (error) {
         setError({
           type: "danger",
-          message: response.data.message,
+          message: error.message,
         });
       }
 
-    } catch (error) {
-      setError({
-        type: "danger",
-        message: error.message,
-      });
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   };
 
   const renderSwitchModeButton = () => {
@@ -215,153 +211,171 @@ const Login = (props) => {
 
     <>
 
-      {
-        error &&
-        <div className="alert alert-danger">{error.message}</div>
-      }
+      <div>
 
-      {
-        location.state && location.state.successfulReset &&
-        <Alert variant="success">
-          <p className="mb-0">
-            <strong>Your password was reset successfully</strong>
-          </p>
-        </Alert>
-      }
+        {
+          location.state && location.state.successfulReset &&
+          <Alert variant="success" title="Success">
+            <p>
+              <strong>Your password was reset successfully</strong>
+            </p>
+          </Alert>
+        }
 
-      <Formik
-        validationSchema={schema}
-        onSubmit={onSubmit}
-        initialValues={{
-          emailAddress: props.emailAddress || searchParams.get("email") || "",
-          password: "",
-          rememberMe: props.rememberMe || true,
-        }}
-      >
-        {({
-          handleSubmit,
-          handleChange,
-          handleBlur,
-          values,
-          touched,
-          isValid,
-          errors,
-          isSubmitting,
-          dirty,
-        }) => {
-          const showTraditional = (!hasWebauthn && touched.emailAddress && !errors.emailAddress) || selectedTraditional;
-          return (
-            <Form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
-              <div className="mb-3">
-                <Form.Group controlId="emailAddress">
-                  <Form.Label>Email address</Form.Label>
-                  <Form.Control
+        {supportsWebauthn &&
+          <div className="mb-6">
+            <div>
+              <p className="text-sm font-medium text-gray-700">Sign in with</p>
+
+              <div className="mt-1 grid grid-cols-1 gap-3">
+                <Button
+                  variant="secondary"
+                  onClick={handleLogin}
+                  fullWidth
+                >
+                  Passkey
+                </Button>
+              </div>
+            </div>
+
+            <div className="mt-6 relative">
+              <div className="absolute inset-0 flex items-center" aria-hidden="true">
+                <div className="w-full border-t border-gray-300" />
+              </div>
+              <div className="relative flex justify-center text-sm">
+                <span className="px-2 bg-white text-gray-500">Or continue with</span>
+              </div>
+            </div>
+          </div>
+        }
+
+        <div>
+          {
+            error &&
+            <Alert variant="error" title="Error">
+              <p>{error.message}</p>
+            </Alert>
+          }
+
+          <Formik
+            validationSchema={schema}
+            onSubmit={onSubmit}
+            initialValues={{
+              emailAddress: props.emailAddress || searchParams.get("email") || "",
+              password: "",
+              rememberMe: props.rememberMe || true,
+            }}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              isValid,
+              errors,
+              isSubmitting,
+              dirty,
+            }) => {
+              const showTraditional = (!hasWebauthn && touched.emailAddress && !errors.emailAddress) || selectedTraditional;
+              return (
+                <form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
+                  <BaseTextInput
+                    label="Email address"
                     type="text"
                     name="emailAddress"
                     value={values.emailAddress}
                     onChange={async (e) => { handleChange(e); setUsername(e.target.value); await checkWebauthn(e.target.value); }}
-                    isValid={touched.emailAddress && !errors.emailAddress}
-                    isInvalid={touched.emailAddress && errors.emailAddress}
-                    size="lg"
+                    // isValid={touched.emailAddress && !errors.emailAddress}
+                    error={touched.emailAddress && errors.emailAddress}
+                    // size="lg"
                     autoComplete="username webauthn"
                   />
-                  {errors.emailAddress &&
-                    <Form.Control.Feedback type="invalid">{errors.emailAddress}</Form.Control.Feedback>
+
+                  {(!errors.emailAddress && userExists) &&
+                    <>
+                      {showPassword &&
+                        <BaseTextInput
+                          label="Password"
+                          type="password"
+                          name="password"
+                          value={values.password}
+                          onChange={handleChange}
+                          // isValid={touched.password && !errors.password}
+                          error={touched.password && errors.password}
+                          // size="lg"
+                          autoComplete="current-password"
+                        />
+                      }
+
+                      {showSso &&
+                        <div className="mb-5">
+                          <Button fullWidth size="lg" type="submit">Login</Button>
+                        </div>
+                      }
+
+                      {showPasskey &&
+                        <div className="mb-5">
+
+                          <div className="row justify-content-between align-items-center">
+                            <div className="col-sm-auto">
+                              <Button fullWidth size="lg" type="button" onClick={handleLogin} disabled={false}>Login with passkey</Button>
+                              <div className="mb-2 d-sm-none"></div>
+                            </div>
+
+                            <div className="col-sm-auto">
+                              {renderSwitchModeButton()}
+                            </div>
+                          </div>
+
+                        </div>
+                      }
+
+                      {showPassword &&
+                        <>
+                          <Checkbox
+                            type="checkbox"
+                            name="rememberMe"
+                            label="Keep me logged in"
+                            onChange={handleChange}
+                            checked={values.rememberMe}
+                            error={touched.rememberMe && errors.rememberMe}
+                          />
+
+                          {showTraditional &&
+                            <div className="mb-5">
+                              <div className="row justify-content-between align-items-center">
+                                <div className="col-sm-auto">
+                                  <Button fullWidth size="lg" type="submit" disabled={!dirty || !isValid || isSubmitting}>Login</Button>
+                                  <div className="mb-2 d-sm-none"></div>
+                                </div>
+
+                                <div className="col-sm-auto">
+                                  {renderSwitchModeButton()}
+                                </div>
+                              </div>
+                            </div>
+                          }
+                        </>
+                      }
+                    </>
                   }
-                </Form.Group>
-              </div>
 
-              <div className="collapse" ref={collapseSsoRef}>
-                <div className="mb-5">
-                  <Button href={ssoUrl} size="lg" type="button">Login</Button>
-                </div>
-              </div>
-
-              <div className="collapse" ref={collapsePasskeyRef}>
-                {
-                  // (supportsWebauthn && !showTraditional && hasWebauthn) &&
-                  <div className="mb-5">
-
-                    <div className="row justify-content-between align-items-center">
-                      <div className="col-sm-auto">
-                        <Button size="lg" type="button" onClick={handleLogin} disabled={false}>Login with passkey</Button>
-                        <div className="mb-2 d-sm-none"></div>
-                      </div>
-
-                      <div className="col-sm-auto">
-                        {renderSwitchModeButton()}
-                      </div>
-                    </div>
-
-                  </div>
-                }
-              </div>
-
-              <div className="collapse" ref={collapsePasswordRef}>
-                <div className="mb-3">
-                  <Form.Group controlId="password">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="password"
-                      value={values.password}
-                      onChange={handleChange}
-                      isValid={touched.password && !errors.password}
-                      isInvalid={touched.password && errors.password}
-                      size="lg"
-                      autoComplete="current-password"
-                    />
-                    {errors.password &&
-                      <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                    }
-                  </Form.Group>
-                </div>
-
-                <Form.Group className="mb-3">
-                  <Form.Check
-                    name="rememberMe"
-                    label="Keep me logged in"
-                    onChange={handleChange}
-                    checked={values.rememberMe}
-                    isInvalid={!!errors.rememberMe}
-                    feedback={errors.rememberMe}
-                    feedbackType="invalid"
-                    id="rememberMe"
-                  />
-                </Form.Group>
-
-                {
-                  showTraditional &&
-                  <div className="mb-5">
-                    <div className="row justify-content-between align-items-center">
-                      <div className="col-sm-auto">
-                        <Button size="lg" type="submit" disabled={!dirty || !isValid || isSubmitting}>Login</Button>
-                        <div className="mb-2 d-sm-none"></div>
-                      </div>
-
-                      <div className="col-sm-auto">
-                        {renderSwitchModeButton()}
-                      </div>
-                    </div>
-                  </div>
-                }
-              </div>
-
-              <div className="mb-5">
-                <p>
-                  New member? Your club will create an account for you and send you a link to get started.
-                </p>
-                <span>
-                  <Link to="/login/forgot-password" className="btn btn-dark">
-                    Forgot password?
-                  </Link>
-                </span>
-              </div>
-            </Form>
-          );
-        }
-        }
-      </Formik>
+                  <p className="mb-4">
+                    New member? Your club will create an account for you and send you a link to get started.
+                  </p>
+                  <p>
+                    <Link to="/login/forgot-password">
+                      Reset password
+                    </Link>
+                  </p>
+                </form>
+              );
+            }
+            }
+          </Formik>
+        </div >
+      </div >
 
     </>
   );

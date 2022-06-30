@@ -11,6 +11,7 @@ import Breadcrumb from "../../components/Breadcrumb";
 import { Alert, Card, ListGroup } from "react-bootstrap";
 import axios from "axios";
 import moment from "moment";
+import Authenticated from "../../layouts/Tenant/Authenticated";
 
 const renderMembers = (members) => {
   return (
@@ -152,8 +153,11 @@ const JuniorLeagueMembers = () => {
   ];
 
   return (
-    <>
-      <Header breadcrumbs={<Breadcrumb crumbs={crumbs} />} title="Junior League Members" subtitle="Get a list of members valid for Junior or Arena League" />
+    <Authenticated
+      title="Junior League Members"
+      crumbs={crumbs}
+    >
+      {/* <Header breadcrumbs={<Breadcrumb crumbs={crumbs} />} title="Junior League Members" subtitle="Get a list of members valid for Junior or Arena League" /> */}
 
       <div className="container-xl">
         <div className="row">
@@ -292,7 +296,7 @@ const JuniorLeagueMembers = () => {
           </div>
         </div>
       </div>
-    </>
+    </Authenticated>
   );
 
 };

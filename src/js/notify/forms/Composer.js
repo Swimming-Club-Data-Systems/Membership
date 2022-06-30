@@ -19,7 +19,7 @@ import Dropdown from "../components/Dropdown";
 import * as tenantFunctions from "../../classes/Tenant";
 import Loader from "../../components/Loader.js";
 import Breadcrumb from "../../components/Breadcrumb.js";
-// import exports from "enhanced-resolve";
+import Authenticated from "../../layouts/Tenant/Authenticated";
 
 export class Composer extends React.Component {
 
@@ -490,297 +490,304 @@ export class Composer extends React.Component {
 
     return (
 
-      <div>
+      <Authenticated
+        title="Notify Composer"
+        crumbs={[{ to: "/notify", name: "Notify" }, { to: "/notify/new", name: "Composer" }]}
+      >
 
-        {
-          this.state.emailSent &&
-          <Navigate to="/notify/new/success" />
-        }
+        <div>
 
-        <Header breadcrumbs={<Breadcrumb crumbs={crumbs} />} title="Send a new email" subtitle="Send emails to targeted groups"/>
+          {
+            this.state.emailSent &&
+            <Navigate to="/notify/new/success" />
+          }
 
-        <Loader loaded={this.state.loaded}>
+          <Header breadcrumbs={<Breadcrumb crumbs={crumbs} />} title="Send a new email" subtitle="Send emails to targeted groups" />
 
-          {this.state.loaded &&
-            <>
+          <Loader loaded={this.state.loaded}>
 
-              <Form className="container-xl" onSubmit={this.handleSubmit} validated={this.state.validated} noValidate>
-                <ToRow groups={this.getGroupList()} numTos={this.getToListCount()} validated={this.state.validated} handleClick={this.handlePillClick} handleShowTo={this.handleShowTo} />
-                <DropdownRow name="from" options={this.state.possibleFroms} label="Send as" formValue={this.state.from} handleChange={this.handleChange} />
-                <DropdownRow name="replyTo" options={this.state.possibleReplyTos} label="Send replies to" formValue={this.state.replyTo} handleChange={this.handleChange} />
-                <DropdownRow name="category" options={this.state.possibleCategories} label="Subscription category" formValue={this.state.category} handleChange={this.handleChange} />
-                <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required />
-                <Tabs id="tabs" activeKey={this.state.tabKey} onSelect={(k) => this.setState({ tabKey: k })} className="mb-3">
-                  <Tab eventKey="editor" title="Editor">
-                    <div className="mb-3">
-                      <Editor
-                        tinymceScriptSrc="/js/tinymce/5/tinymce.min.js"
-                        onInit={(evt, editor) => this.editor.current = editor}
-                        onEditorChange={(value) => { this.setState({ editorValue: value }); }}
-                        // initialValue={this.state.editorValue}
-                        init={{
-                          skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : ""),
-                          relative_urls: false,
-                          remove_script_host: false,
-                          document_base_url: document.documentURI,
-                          selector: "#message",
-                          images_upload_url: "/notify/new/image-upload",
-                          automatic_uploads: true,
-                          images_upload_credentials: true,
-                          branding: false,
-                          plugins: [
-                            "autolink lists link image charmap print preview anchor",
-                            "searchreplace visualblocks code autoresize insertdatetime media table",
-                            "paste help wordcount"
-                          ],
-                          statusbar: false,
-                          paste_as_text: true,
-                          toolbar: "insert | undo redo |  formatselect | bold italic underline | bullist numlist outdent indent | removeformat | help",
-                          content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default"),
-                          fontsize_formats: "12pt",
-                          font_formats: "Default=system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",\"Liberation Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\";",
-                          style_formats: [
-                            {
-                              title: "Headings", items: [
-                                { title: "Heading 1", format: "h1" },
-                                { title: "Heading 2", format: "h2" },
-                                { title: "Heading 3", format: "h3" },
-                                { title: "Heading 4", format: "h4" },
-                                { title: "Heading 5", format: "h5" },
-                                { title: "Heading 6", format: "h6" }
-                              ]
+            {this.state.loaded &&
+              <>
+
+                <Form className="container-xl" onSubmit={this.handleSubmit} validated={this.state.validated} noValidate>
+                  <ToRow groups={this.getGroupList()} numTos={this.getToListCount()} validated={this.state.validated} handleClick={this.handlePillClick} handleShowTo={this.handleShowTo} />
+                  <DropdownRow name="from" options={this.state.possibleFroms} label="Send as" formValue={this.state.from} handleChange={this.handleChange} />
+                  <DropdownRow name="replyTo" options={this.state.possibleReplyTos} label="Send replies to" formValue={this.state.replyTo} handleChange={this.handleChange} />
+                  <DropdownRow name="category" options={this.state.possibleCategories} label="Subscription category" formValue={this.state.category} handleChange={this.handleChange} />
+                  <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required />
+                  <Tabs id="tabs" activeKey={this.state.tabKey} onSelect={(k) => this.setState({ tabKey: k })} className="mb-3">
+                    <Tab eventKey="editor" title="Editor">
+                      <div className="mb-3">
+                        <Editor
+                          tinymceScriptSrc="/js/tinymce/5/tinymce.min.js"
+                          onInit={(evt, editor) => this.editor.current = editor}
+                          onEditorChange={(value) => { this.setState({ editorValue: value }); }}
+                          // initialValue={this.state.editorValue}
+                          init={{
+                            skin: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "oxide-dark" : ""),
+                            relative_urls: false,
+                            remove_script_host: false,
+                            document_base_url: document.documentURI,
+                            selector: "#message",
+                            images_upload_url: "/notify/new/image-upload",
+                            automatic_uploads: true,
+                            images_upload_credentials: true,
+                            branding: false,
+                            plugins: [
+                              "autolink lists link image charmap print preview anchor",
+                              "searchreplace visualblocks code autoresize insertdatetime media table",
+                              "paste help wordcount"
+                            ],
+                            statusbar: false,
+                            paste_as_text: true,
+                            toolbar: "insert | undo redo |  formatselect | bold italic underline | bullist numlist outdent indent | removeformat | help",
+                            content_css: (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "default"),
+                            fontsize_formats: "12pt",
+                            font_formats: "Default=system-ui,-apple-system,\"Segoe UI\",Roboto,\"Helvetica Neue\",Arial,\"Noto Sans\",\"Liberation Sans\",sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\",\"Segoe UI Symbol\",\"Noto Color Emoji\";",
+                            style_formats: [
+                              {
+                                title: "Headings", items: [
+                                  { title: "Heading 1", format: "h1" },
+                                  { title: "Heading 2", format: "h2" },
+                                  { title: "Heading 3", format: "h3" },
+                                  { title: "Heading 4", format: "h4" },
+                                  { title: "Heading 5", format: "h5" },
+                                  { title: "Heading 6", format: "h6" }
+                                ]
+                              },
+                              {
+                                title: "Inline", items: [
+                                  { title: "Bold", format: "bold" },
+                                  { title: "Italic", format: "italic" },
+                                  { title: "Underline", format: "underline" },
+                                  { title: "Strikethrough", format: "strikethrough" },
+                                  { title: "Superscript", format: "superscript" },
+                                  { title: "Subscript", format: "subscript" },
+                                  { title: "Code", format: "code" }
+                                ]
+                              },
+                              {
+                                title: "Blocks", items: [
+                                  { title: "Paragraph", format: "p" },
+                                  { title: "Blockquote", format: "blockquote" },
+                                  { title: "Div", format: "div" },
+                                  { title: "Pre", format: "pre" }
+                                ]
+                              }
+                            ],
+                            menu: {
+                              edit: { title: "Edit", items: "undo redo | cut copy paste | selectall | searchreplace" },
+                              view: { title: "View", items: "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen" },
+                              insert: { title: "Insert", items: "image link template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime" },
+                              format: { title: "Format", items: "bold italic underline strikethrough superscript subscript codeformat | formats blockformats | removeformat" },
+                              tools: { title: "Tools", items: "spellchecker spellcheckerlanguage | code wordcount" },
+                              table: { title: "Table", items: "inserttable | cell row column | tableprops deletetable" },
+                              help: { title: "Help", items: "help" }
                             },
-                            {
-                              title: "Inline", items: [
-                                { title: "Bold", format: "bold" },
-                                { title: "Italic", format: "italic" },
-                                { title: "Underline", format: "underline" },
-                                { title: "Strikethrough", format: "strikethrough" },
-                                { title: "Superscript", format: "superscript" },
-                                { title: "Subscript", format: "subscript" },
-                                { title: "Code", format: "code" }
-                              ]
-                            },
-                            {
-                              title: "Blocks", items: [
-                                { title: "Paragraph", format: "p" },
-                                { title: "Blockquote", format: "blockquote" },
-                                { title: "Div", format: "div" },
-                                { title: "Pre", format: "pre" }
-                              ]
-                            }
-                          ],
-                          menu: {
-                            edit: { title: "Edit", items: "undo redo | cut copy paste | selectall | searchreplace" },
-                            view: { title: "View", items: "code | visualaid visualchars visualblocks | spellchecker | preview fullscreen" },
-                            insert: { title: "Insert", items: "image link template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime" },
-                            format: { title: "Format", items: "bold italic underline strikethrough superscript subscript codeformat | formats blockformats | removeformat" },
-                            tools: { title: "Tools", items: "spellchecker spellcheckerlanguage | code wordcount" },
-                            table: { title: "Table", items: "inserttable | cell row column | tableprops deletetable" },
-                            help: { title: "Help", items: "help" }
-                          },
 
-                          //toolbar: "link",
-                        }}
-                      />
-                    </div>
+                            //toolbar: "link",
+                          }}
+                        />
+                      </div>
+
+                      <p>
+                        <Button type="submit" variant="success" onSubmit={this.handleSubmit}>Send the email</Button> <Button variant="dark" onClick={() => { this.setState({ tabKey: "preview" }); }}>Preview message</Button>
+                      </p>
+                    </Tab>
+                    <Tab eventKey="attachments" title="Attachments">
+                      <Dropzone action="/notify/file-uploads" uuid={this.state.emailUuid} date={this.state.date} maxTotalFileSize={this.state.dzMaxTotalFileSize} maxFileSize={this.state.dzMaxFileSize} setAttachments={this.setAttachments} attachments={this.state.attachments} canSubmitAttachments={this.state.canSubmitAttachments} setCanSubmitAttachments={this.setCanSubmitAttachments} />
+                    </Tab>
+                    <Tab eventKey="preview" title="Preview">
+                      <div className="mb-3">
+                        {this.renderPreview()}
+                      </div>
+                    </Tab>
+                    <Tab eventKey="advanced" title="Advanced">
+                      <div className="mb-3">
+                        {this.state.canForceSend &&
+                          <Form.Check
+                            type="checkbox"
+                            id="force-send"
+                            label="Force send this email"
+                            checked={this.state.forceSend}
+                            onChange={this.handleForceSendChange}
+                            name="forceSend"
+                          />
+                        }
+
+                        <Form.Check
+                          type="checkbox"
+                          id="send-to-coaches"
+                          label="Send to coaches of included squads"
+                          checked={this.state.sendToCoaches}
+                          onChange={this.handleChange}
+                          name="sendToCoaches"
+                        />
+                      </div>
+
+                      <p>
+                        <Button type="button" variant="primary" onClick={this.handleSettingsOpen}>
+                          <i className="fa fa-cog" aria-hidden="true"></i> Change Settings
+                        </Button>{" "}
+                        <Button type="button" variant="info" onClick={this.handleDemoOpen}>
+                          Developer Info
+                        </Button>
+                      </p>
+                    </Tab>
+                  </Tabs>
+                </Form>
+
+                <Modal show={this.state.showTo} onHide={this.handleCloseTo} centered fullscreen>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Add recipients</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body className="p-0">
+                    <Accordion defaultActiveKey="0" flush>
+                      {
+                        squads.length > 0 &&
+                        <Accordion.Item eventKey="0">
+                          <Accordion.Header>Squads</Accordion.Header>
+                          <Accordion.Body>
+                            <Row>
+                              {squads}
+                            </Row>
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      }
+                      {
+                        targetedLists.length > 0 &&
+                        <Accordion.Item eventKey="1">
+                          <Accordion.Header>Targeted Lists</Accordion.Header>
+                          <Accordion.Body>
+                            <Row>
+                              {targetedLists}
+                            </Row>
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      }
+                      {
+                        galaEntrants.length > 0 &&
+                        <Accordion.Item eventKey="2">
+                          <Accordion.Header>Gala Entrants</Accordion.Header>
+                          <Accordion.Body>
+                            <Row>
+                              {galaEntrants}
+                            </Row>
+                          </Accordion.Body>
+                        </Accordion.Item>
+                      }
+                    </Accordion>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="primary" onClick={this.handleCloseTo}>
+                      Save and close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show={this.state.showForceSendWarning} onHide={this.handleForceSendClose} centered>
+                  <Modal.Header closeButton className="bg-danger text-white">
+                    <Modal.Title>Are you sure?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <p>
+                      <strong>Force sending an email overrides the subscription options of your members.</strong>
+                    </p>
 
                     <p>
-                      <Button type="submit" variant="success" onSubmit={this.handleSubmit}>Send the email</Button> <Button variant="dark" onClick={() => { this.setState({ tabKey: "preview" }); }}>Preview message</Button>
+                      Under the General Data Protection Regulation, you may only override these preferences in specific cases.
                     </p>
-                  </Tab>
-                  <Tab eventKey="attachments" title="Attachments">
-                    <Dropzone action="/notify/file-uploads" uuid={this.state.emailUuid} date={this.state.date} maxTotalFileSize={this.state.dzMaxTotalFileSize} maxFileSize={this.state.dzMaxFileSize} setAttachments={this.setAttachments} attachments={this.state.attachments} canSubmitAttachments={this.state.canSubmitAttachments} setCanSubmitAttachments={this.setCanSubmitAttachments} />
-                  </Tab>
-                  <Tab eventKey="preview" title="Preview">
+
+                    <p className="mb-0">
+                      SCDS may periodically review your organisation&apos;s use of the Force Send functionality.
+                    </p>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="dark" onClick={this.handleForceSendClose}>
+                      Don&apos;t force send
+                    </Button>
+                    <Button variant="danger" onClick={this.handleForceSendConfirm}>
+                      I understand
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show={this.state.showDemoSubmission} onHide={this.handleDemoClose} centered>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Submission Demo</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+
+                    <h2>Email preview</h2>
+
                     <div className="mb-3">
                       {this.renderPreview()}
                     </div>
-                  </Tab>
-                  <Tab eventKey="advanced" title="Advanced">
-                    <div className="mb-3">
-                      {this.state.canForceSend &&
-                        <Form.Check
-                          type="checkbox"
-                          id="force-send"
-                          label="Force send this email"
-                          checked={this.state.forceSend}
-                          onChange={this.handleForceSendChange}
-                          name="forceSend"
-                        />
-                      }
 
-                      <Form.Check
-                        type="checkbox"
-                        id="send-to-coaches"
-                        label="Send to coaches of included squads"
-                        checked={this.state.sendToCoaches}
-                        onChange={this.handleChange}
-                        name="sendToCoaches"
-                      />
-                    </div>
+                    <h2>For Developers: React Component State</h2>
 
-                    <p>
-                      <Button type="button" variant="primary" onClick={this.handleSettingsOpen}>
-                        <i className="fa fa-cog" aria-hidden="true"></i> Change Settings
-                      </Button>{" "}
-                      <Button type="button" variant="info" onClick={this.handleDemoOpen}>
-                        Developer Info
-                      </Button>
+                    <pre>{JSON.stringify(this.state, undefined, 2)}</pre>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="primary" onClick={this.handleDemoClose}>
+                      Close
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+
+                <Modal show={this.state.showConfirmSendDialog} onHide={this.handleConfirmSendClose} centered>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Confirm send?</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+
+                    <p className="mb-0">
+                      Are you sure you want to send your email? Emails can&apos;t be unsent.
                     </p>
-                  </Tab>
-                </Tabs>
-              </Form>
 
-              <Modal show={this.state.showTo} onHide={this.handleCloseTo} centered fullscreen>
-                <Modal.Header closeButton>
-                  <Modal.Title>Add recipients</Modal.Title>
-                </Modal.Header>
-                <Modal.Body className="p-0">
-                  <Accordion defaultActiveKey="0" flush>
-                    {
-                      squads.length > 0 &&
-                      <Accordion.Item eventKey="0">
-                        <Accordion.Header>Squads</Accordion.Header>
-                        <Accordion.Body>
-                          <Row>
-                            {squads}
-                          </Row>
-                        </Accordion.Body>
-                      </Accordion.Item>
-                    }
-                    {
-                      targetedLists.length > 0 &&
-                      <Accordion.Item eventKey="1">
-                        <Accordion.Header>Targeted Lists</Accordion.Header>
-                        <Accordion.Body>
-                          <Row>
-                            {targetedLists}
-                          </Row>
-                        </Accordion.Body>
-                      </Accordion.Item>
-                    }
-                    {
-                      galaEntrants.length > 0 &&
-                      <Accordion.Item eventKey="2">
-                        <Accordion.Header>Gala Entrants</Accordion.Header>
-                        <Accordion.Body>
-                          <Row>
-                            {galaEntrants}
-                          </Row>
-                        </Accordion.Body>
-                      </Accordion.Item>
-                    }
-                  </Accordion>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="primary" onClick={this.handleCloseTo}>
-                    Save and close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="dark" onClick={this.handleConfirmSendClose}>
+                      Cancel
+                    </Button>
+                    <Button variant="primary" onClick={this.handleConfirmSend} disabled={this.state.disableSendConfirm}>
+                      Confirm
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
 
-              <Modal show={this.state.showForceSendWarning} onHide={this.handleForceSendClose} centered>
-                <Modal.Header closeButton className="bg-danger text-white">
-                  <Modal.Title>Are you sure?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <p>
-                    <strong>Force sending an email overrides the subscription options of your members.</strong>
-                  </p>
+                <Modal show={this.state.showUserSettingsDialog} onHide={this.handleSettingsClose} centered>
+                  <Modal.Header closeButton>
+                    <Modal.Title>Change your Notify Settings</Modal.Title>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <Form onSubmit={this.handleSettingsSave}>
+                      <Form.Group className="mb-3" controlId="replyEmailAddress">
+                        <Form.Label>Reply-to email address</Form.Label>
+                        <Form.Control type="email" placeholder="name@example.com" name="replyEmailAddress" value={this.state.settings.replyEmailAddress} onChange={this.handleSettingsChange} />
+                      </Form.Group>
+                      <Dropdown name="defaultSendAs" label="Default send email as" formValue={this.state.settings.defaultSendAs} handleChange={this.handleSettingsChange} options={this.state.possibleFroms} />
+                      {
+                        this.state.possibleReplyTos.length > 1 &&
+                        <Dropdown name="defaultReplyTo" label="Default reply-to address" formValue={this.state.settings.defaultReplyTo} handleChange={this.handleSettingsChange} options={this.state.possibleReplyTos} />
+                      }
+                    </Form>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="dark" onClick={this.handleSettingsClose}>
+                      Close
+                    </Button>
+                    <Button variant="primary" type="submit" onClick={this.handleSettingsSave} disabled={this.state.disableSettingsSave}>
+                      Save
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
+              </>
+            }
+          </Loader>
+        </div>
 
-                  <p>
-                    Under the General Data Protection Regulation, you may only override these preferences in specific cases.
-                  </p>
-
-                  <p className="mb-0">
-                    SCDS may periodically review your organisation&apos;s use of the Force Send functionality.
-                  </p>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="dark" onClick={this.handleForceSendClose}>
-                    Don&apos;t force send
-                  </Button>
-                  <Button variant="danger" onClick={this.handleForceSendConfirm}>
-                    I understand
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-              <Modal show={this.state.showDemoSubmission} onHide={this.handleDemoClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Submission Demo</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-
-                  <h2>Email preview</h2>
-
-                  <div className="mb-3">
-                    {this.renderPreview()}
-                  </div>
-
-                  <h2>For Developers: React Component State</h2>
-
-                  <pre>{JSON.stringify(this.state, undefined, 2)}</pre>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="primary" onClick={this.handleDemoClose}>
-                    Close
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-              <Modal show={this.state.showConfirmSendDialog} onHide={this.handleConfirmSendClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Confirm send?</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-
-                  <p className="mb-0">
-                    Are you sure you want to send your email? Emails can&apos;t be unsent.
-                  </p>
-
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="dark" onClick={this.handleConfirmSendClose}>
-                    Cancel
-                  </Button>
-                  <Button variant="primary" onClick={this.handleConfirmSend} disabled={this.state.disableSendConfirm}>
-                    Confirm
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-
-              <Modal show={this.state.showUserSettingsDialog} onHide={this.handleSettingsClose} centered>
-                <Modal.Header closeButton>
-                  <Modal.Title>Change your Notify Settings</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                  <Form onSubmit={this.handleSettingsSave}>
-                    <Form.Group className="mb-3" controlId="replyEmailAddress">
-                      <Form.Label>Reply-to email address</Form.Label>
-                      <Form.Control type="email" placeholder="name@example.com" name="replyEmailAddress" value={this.state.settings.replyEmailAddress} onChange={this.handleSettingsChange} />
-                    </Form.Group>
-                    <Dropdown name="defaultSendAs" label="Default send email as" formValue={this.state.settings.defaultSendAs} handleChange={this.handleSettingsChange} options={this.state.possibleFroms} />
-                    {
-                      this.state.possibleReplyTos.length > 1 &&
-                      <Dropdown name="defaultReplyTo" label="Default reply-to address" formValue={this.state.settings.defaultReplyTo} handleChange={this.handleSettingsChange} options={this.state.possibleReplyTos} />
-                    }
-                  </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="dark" onClick={this.handleSettingsClose}>
-                    Close
-                  </Button>
-                  <Button variant="primary" type="submit" onClick={this.handleSettingsSave} disabled={this.state.disableSettingsSave}>
-                    Save
-                  </Button>
-                </Modal.Footer>
-              </Modal>
-            </>
-          }
-        </Loader>
-      </div>
+      </Authenticated>
     );
   }
 }
