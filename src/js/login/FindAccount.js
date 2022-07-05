@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import * as tenantFunctions from "../classes/Tenant";
 import { Formik } from "formik";
 import * as yup from "yup";
-import { Alert, Form } from "react-bootstrap";
-import { Button } from "react-bootstrap";
+import Alert from "../components/Alert";
 import { connect } from "react-redux";
 import { mapStateToProps, mapDispatchToProps } from "../reducers/Login";
 import axios from "axios";
+import BaseTextInput from "../components/form/base/BaseTextInput";
+import Button from "../components/Button";
 
 const schema = yup.object().shape({
   emailAddress: yup.string().email("Your email address must be valid").required("You must provide an email address"),
@@ -57,11 +58,8 @@ const FindAccount = (props) => {
     <>
       {success &&
         <>
-          <Alert variant="success">
-            <p className="mb-0">
-              <strong>We&apos;ve found your account</strong>
-            </p>
-            <p className="mb-0">
+          <Alert variant="success" title="We've found your account" className="mb-4">
+            <p>
               We&apos;re sending you an email with instructions detailing how to reset your password.
             </p>
           </Alert>
@@ -72,7 +70,7 @@ const FindAccount = (props) => {
         <>
           {
             error &&
-            <div className="alert alert-danger">{error.message}</div>
+            <Alert variant="error" title="Error" className="mb-4">{error.message}</Alert>
           }
 
           <Formik
@@ -95,29 +93,20 @@ const FindAccount = (props) => {
               isSubmitting,
               dirty,
             }) => (
-              <Form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
-                <div className="mb-3">
-                  <Form.Group controlId="emailAddress">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control
-                      type="email"
-                      name="emailAddress"
-                      value={values.emailAddress}
-                      onChange={handleChange}
-                      isValid={touched.emailAddress && !errors.emailAddress}
-                      isInvalid={touched.emailAddress && errors.emailAddress}
-                      size="lg"
-                    />
-                    {errors.emailAddress &&
-                      <Form.Control.Feedback type="invalid">{errors.emailAddress}</Form.Control.Feedback>
-                    }
-                  </Form.Group>
-                </div>
+              <form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
+                <BaseTextInput
+                  label="Email address"
+                  type="email"
+                  name="emailAddress"
+                  value={values.emailAddress}
+                  onChange={handleChange}
+                  error={touched.emailAddress && errors.emailAddress}
+                />
 
-                <p className="mb-5">
-                  <Button size="lg" type="submit" disabled={!dirty || !isValid || isSubmitting}>Reset password</Button>
+                <p>
+                  <Button type="submit" disabled={!dirty || !isValid || isSubmitting}>Reset password</Button>
                 </p>
-              </Form>
+              </form>
             )}
           </Formik>
         </>

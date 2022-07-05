@@ -215,10 +215,17 @@ const Login = (props) => {
 
         {
           location.state && location.state.successfulReset &&
-          <Alert variant="success" title="Success">
+          <Alert variant="success" title="Success" className="mb-4">
             <p>
               <strong>Your password was reset successfully</strong>
             </p>
+          </Alert>
+        }
+
+        {
+          error &&
+          <Alert variant="error" title="Error" className="mb-4">
+            <p>{error.message}</p>
           </Alert>
         }
 
@@ -250,13 +257,6 @@ const Login = (props) => {
         }
 
         <div>
-          {
-            error &&
-            <Alert variant="error" title="Error">
-              <p>{error.message}</p>
-            </Alert>
-          }
-
           <Formik
             validationSchema={schema}
             onSubmit={onSubmit}

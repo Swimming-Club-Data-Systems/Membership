@@ -4,13 +4,14 @@ import * as tenantFunctions from "../classes/Tenant";
 import { Formik } from "formik";
 import * as yup from "yup";
 import { Alert, Form } from "react-bootstrap";
-import { Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { mapStateToProps, mapDispatchToProps } from "../reducers/Login";
 import axios from "axios";
 import { isPwned } from "../classes/Passwords";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Loader from "../components/Loader";
+import BaseTextInput from "../components/form/base/BaseTextInput";
+import Button from "../components/Button";
 
 const schema = yup.object().shape({
   password: yup.string().required("You must provide a password").min(8, "Your password must be at least 8 characters").matches(/(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}/, "Your password must contain at least one lower case letter, one upper case letter and one number").test(
@@ -24,6 +25,7 @@ const schema = yup.object().shape({
 const ResetPassword = (props) => {
 
   const [error, setError] = useState(null);
+  const [user, setUser] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [searchParams] = useSearchParams();
@@ -39,6 +41,11 @@ const ResetPassword = (props) => {
         token: searchParams.get("auth-code"),
       });
       setIsValid(response.data.success);
+
+      if (response.data.success) {
+        setUser(response.data.user);
+        console.log(response.data.user);
+      }
 
       setLoaded(true);
 
@@ -122,49 +129,40 @@ const ResetPassword = (props) => {
               isSubmitting,
               dirty,
             }) => (
-              <Form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
-                <div className="mb-3">
-                  <Form.Group controlId="password">
-                    <Form.Label>New password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="password"
-                      value={values.password}
-                      onChange={handleChange}
-                      isValid={touched.password && !errors.password}
-                      isInvalid={touched.password && errors.password}
-                      size="lg"
-                      autoComplete="new-password"
-                    />
-                    {errors.password &&
-                      <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                    }
-                  </Form.Group>
-                </div>
+              <form noValidate onSubmit={handleSubmit} onBlur={handleBlur}>
 
-                <div className="mb-3">
-                  <Form.Group controlId="confirmPassword">
-                    <Form.Label>Confirm password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      name="confirmPassword"
-                      value={values.confirmPassword}
-                      onChange={handleChange}
-                      isValid={touched.confirmPassword && !errors.confirmPassword}
-                      isInvalid={touched.confirmPassword && errors.confirmPassword}
-                      size="lg"
-                      autoComplete="new-password"
-                    />
-                    {errors.confirmPassword &&
-                      <Form.Control.Feedback type="invalid">{errors.confirmPassword}</Form.Control.Feedback>
-                    }
-                  </Form.Group>
-                </div>
+                <p className="mb-4">
+                  Hi {user.first_name}! To get back into your account you&apos;ll need to create a new and strong password.
+                </p>
+
+                <BaseTextInput
+                  label="Password"
+                  type="password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  // isValid={touched.password && !errors.password}
+                  error={touched.password && errors.password}
+                  // size="lg"
+                  autoComplete="new-password"
+                />
+
+                <BaseTextInput
+                  label="Confirm password"
+                  type="password"
+                  name="confirmPassword"
+                  value={values.confirmPassword}
+                  onChange={handleChange}
+                  // isValid={touched.password && !errors.password}
+                  error={touched.confirmPassword && errors.confirmPassword}
+                  // size="lg"
+                  autoComplete="new-password"
+                />
 
                 <p className="mb-5">
                   <Button size="lg" type="submit" disabled={!dirty || !isValid || isSubmitting}>Change password</Button>
                 </p>
-              </Form>
+              </form>
             )}
           </Formik>
         </>

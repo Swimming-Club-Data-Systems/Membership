@@ -1,6 +1,7 @@
 import React from "react";
 import * as tenantFunctions from "../../classes/Tenant";
-import { Link } from "react-router-dom";
+import InternalContainer from "../../components/InternalContainer";
+import Link from "../../components/Link";
 
 const Welcome = () => {
 
@@ -10,36 +11,52 @@ const Welcome = () => {
 
     <>
 
-      <div className="container-xl">
+      <InternalContainer>
 
+        <div className="py-5">
 
-        <h1 className="mb-5">Welcome to the {tenantFunctions.getName()} Membership System</h1>
-
-        <div className="row">
-          <div className="col-lg-8">
-
-            <h2>Already registered?</h2>
-            <p className="lead">
-              Log in to your account now
+          <div className="px-5 py-6 rounded-md bg-white shadow">
+            <h1 className="text-indigo-600 font-bold text-3xl">
+              Welcome to the {tenantFunctions.getName()} Membership System
+            </h1>
+            <p className="font-semibold text-2xl mb-4">
+              Manage your members, payments and competition entries.
             </p>
-            <p className="mb-5">
-              <Link className="btn btn-lg btn-primary" to="/login">
-                Login
+
+            <p>
+              <Link to="/login">
+                Log in to your account
               </Link>
             </p>
-
-            <h2>Not got an account?</h2>
-            <p className="lead">
-              Your club will create your account for you.
-            </p>
-            <p className="mb-5">
-              If you&apos;ve just joined, the person handling your application will be in touch with you soon.
-            </p>
-
-
           </div>
+
+          <div className="px-5 py-6 rounded-md bg-white shadow my-5">
+            <h2 className="font-semibold text-2xl mb-4">
+              Just joined? Not got an account?
+            </h2>
+
+            <p className="mb-4">
+              If you&apos;re a member, the club will create your account for you.
+            </p>
+
+            <p>
+              If you&apos;ve just joined, the person handling your application and membership will be in touch with you soon with details about the next steps, which include setting up your club account.
+            </p>
+          </div>
+
+          <div className="px-5 py-6 rounded-md bg-white shadow my-5">
+            <h2 className="font-semibold text-2xl mb-4">
+              Get SCDS Membership Software for your own club
+            </h2>
+
+            <p>
+              FOLLOW A LINK
+            </p>
+          </div>
+
         </div>
-      </div>
+
+      </InternalContainer>
 
     </>
   );

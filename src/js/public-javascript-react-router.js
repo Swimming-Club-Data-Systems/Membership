@@ -10,6 +10,7 @@ import { PublicNotFound } from "./views/PublicNotFound";
 import NotFound from "./views/NotFound";
 import PublicAppFooter from "./views/PublicAppFooter";
 import { GlobalErrorBoundary } from "./views/GlobalErrorBoundary";
+import PublicAppPage from "./views/PublicAppPage";
 
 const Welcome = React.lazy(() => import("./pages/public/Welcome"));
 const LoginPageWrapper = React.lazy(() => import("./login/LoginPageWrapper"));
@@ -28,17 +29,22 @@ render(
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
             <Route path="/" element={<PublicAppWrapper />}>
-              <Route path="login">
+              <Route path="/login">
                 <Route element={<LoginPageWrapper />}>
                   <Route index element={<LoginPage />} />
                   <Route path="forgot-password" element={<FindAccount />} />
                   <Route path="reset-password" element={<ResetPassword />} />
                 </Route>
               </Route>
-              <Route index element={<Welcome />} />
-              <Route path="about" element={<AboutReactApp />} />
-              <Route path="404" element={<NotFound />} />
-              <Route path="payments/checkout/v2/:id" element={<CheckoutPage />} />
+              <Route path="/" element={<PublicAppPage />}>
+                <Route index element={<Welcome />} />
+                <Route path="about" element={<AboutReactApp />} />
+                <Route path="timetable" element={<NotFound redirect={true} />} />
+                <Route path="timeconverter" element={<NotFound redirect={true} />} />
+                <Route path="log-books" element={<NotFound redirect={true} />} />
+                <Route path="404" element={<NotFound />} />
+                <Route path="payments/checkout/v2/:id" element={<CheckoutPage />} />
+              </Route>
             </Route>
             <Route
               path="*"

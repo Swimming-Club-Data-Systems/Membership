@@ -4,14 +4,14 @@ import Card from "../components/Card";
 import Authenticated from "../layouts/Tenant/Authenticated";
 import { ExclamationIcon } from "@heroicons/react/solid";
 
-const NotFound = () => {
+const NotFound = ({redirect}) => {
 
   const location = useLocation();
 
   useEffect(() => {
     document.title = "Error 404";
 
-    if (location.state && location.state.global_questionable_link) {
+    if (location.state && location.state.global_questionable_link || redirect) {
       // Link does not exist in React Router but may exist in legacy app so redirect to current url
       window.location.replace(location.pathname);
     }

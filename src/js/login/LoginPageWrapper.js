@@ -4,13 +4,13 @@ import * as tenantFunctions from "../classes/Tenant";
 import { connect } from "react-redux";
 import Logo from "../components/Logo";
 import { mapStateToProps, mapDispatchToProps } from "../reducers/Login";
-import { Link, Outlet } from "react-router-dom";
-import ApplicationLogo from "../components/ApplicationLogo";
+import { Outlet } from "react-router-dom";
+import Link from "../components/Link";
 
 const titles = {
   login: {
-    heading: "Login",
-    subheading: "Sign in to " + tenantFunctions.getName(),
+    heading: "Sign in to your account",
+    subheading: "Sign in to your account",
   },
   twoFactor: {
     heading: "Confirm it's you",
@@ -24,20 +24,29 @@ const titles = {
 
 const LoginPageWrapper = (props) => {
 
+  console.log(props);
+
   return (
     <>
-      <div className="bg-gray-50 min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="bg-gray-50 min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div>
             <div className="flex justify-center">
-              <ApplicationLogo />
+              <Logo />
             </div>
-            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
+            <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">{titles[props.login_page_type].heading}</h2>
             <p className="mt-2 text-center text-sm text-gray-600">
-              Or{' '}
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                find out how to join us
-              </a>
+              Or{" "}
+              {props.login_page_type === "login" &&
+                <Link to="/join-us">
+                  find out how to join us
+                </Link>
+              }
+              {props.login_page_type !== "login" &&
+                <Link to="/login">
+                  sign in to your account
+                </Link>
+              }
             </p>
           </div>
 
