@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState } from "react";
 import { Button, ListGroup } from "react-bootstrap";
 import * as Financials from "../../classes/Financials";
-import { Collapse } from "bootstrap";
+// import { Collapse } from "bootstrap";
 import { PaymentContext } from "./Checkout";
 
 const ItemList = (props) => {

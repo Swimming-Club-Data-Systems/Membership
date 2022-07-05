@@ -9,7 +9,9 @@ const Footer = (props) => {
       <InternalContainer>
         <div className="grid grid-cols-1 gap-16 border-b border-gray-300 py-5 dark:border-slate-200 md:grid-cols-3 lg:grid-cols-5">
           <div className="md:col-span-3 lg:col-span-2">
-            <ApplicationLogo />
+            <a href="https://myswimmingclub.uk" title="SCDS Website" target="_blank" rel="noreferrer noopener">
+              <ApplicationLogo />
+            </a>
 
             <p className="pt-5">
               Helping swimming clubs across the UK run efficiently.

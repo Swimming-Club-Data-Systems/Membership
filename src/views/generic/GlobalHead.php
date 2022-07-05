@@ -8,7 +8,7 @@ if (!defined("USE_TAILWIND") || !USE_TAILWIND) {
   $stylesheet = autoUrl(getCompiledAsset('generic.css'), false);
   $stylesheetDarkMode = autoUrl(getCompiledAsset('generic-dark-mode.css'), false);
 } else {
-  $stylesheet = autoUrl(getCompiledAsset('main.css'), false);
+  $stylesheet = autoUrl(getCompiledAsset('tw-main.css'), false);
 }
 
 header('Link: <' . $stylesheet . '>; rel=preload; as=style', false);

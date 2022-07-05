@@ -1,8 +1,11 @@
 import React from "react";
 
 export default function ApplicationLogo({ className }) {
+  
+  let classes = "h-12";
   if (className) {
-    className = className + " rounded"
+    classes = className;
   }
-  return <img src="/img/corporate/scds.svg" width="50px" className={className} />;
+
+  return <img src="/img/corporate/scds.svg" className={classes} />;
 }

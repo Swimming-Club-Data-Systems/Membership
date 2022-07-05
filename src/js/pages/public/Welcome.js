@@ -16,7 +16,7 @@ const Welcome = () => {
         <div className="py-5">
 
           <div className="px-5 py-6 rounded-md bg-white shadow">
-            <h1 className="text-indigo-600 font-bold text-3xl">
+            <h1 className="font-extrabold text-gray-900 text-3xl">
               Welcome to the {tenantFunctions.getName()} Membership System
             </h1>
             <p className="font-semibold text-2xl mb-4">
@@ -31,7 +31,7 @@ const Welcome = () => {
           </div>
 
           <div className="px-5 py-6 rounded-md bg-white shadow my-5">
-            <h2 className="font-semibold text-2xl mb-4">
+            <h2 className="font-semibold text-gray-900 text-2xl mb-4">
               Just joined? Not got an account?
             </h2>
 
@@ -45,7 +45,7 @@ const Welcome = () => {
           </div>
 
           <div className="px-5 py-6 rounded-md bg-white shadow my-5">
-            <h2 className="font-semibold text-2xl mb-4">
+            <h2 className="font-semibold text-gray-900 text-2xl mb-4">
               Get SCDS Membership Software for your own club
             </h2>
 

@@ -67,7 +67,7 @@ module.exports = (env, options) => {
   }
 
   let cssEntryPoints = {
-    "main": "./css/main.css",
+    "tw-main": "./css/main.css",
     "generic": "./scss/generic.scss",
     "generic-dark-mode": "./scss/generic-dark-mode.scss",
     "scds": "./scss/scds.scss",
