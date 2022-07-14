@@ -1,5 +1,3 @@
-# CLS ASC Membership - PHP Version
-
 *-config.php*
 config.php
 "sendgrid.env"
@@ -8,3 +6,19 @@ client_secret.json
 phinx.yml
 src/cache
 .DS_Store
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+.env
+.env.backup
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
