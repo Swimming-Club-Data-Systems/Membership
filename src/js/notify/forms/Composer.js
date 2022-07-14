@@ -7,7 +7,8 @@ import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import Form from "react-bootstrap/Form";
+import Form from "../../components/form/Form";
+import TextInput from "../../components/form/TextInput";
 import { Editor } from "@tinymce/tinymce-react";
 import axios from "axios";
 import Dropzone from "../components/Dropzone";
@@ -509,12 +510,23 @@ export class Composer extends React.Component {
             {this.state.loaded &&
               <>
 
-                <Form className="container-xl" onSubmit={this.handleSubmit} validated={this.state.validated} noValidate>
+                <Form
+                  onSubmit={this.handleSubmit}
+                  initialValues={{
+                    to: [],
+                    from: "",
+                    replyTo: "",
+                    category: "",
+                    subject: "",
+                    message: "",
+                  }}
+                >
                   <ToRow groups={this.getGroupList()} numTos={this.getToListCount()} validated={this.state.validated} handleClick={this.handlePillClick} handleShowTo={this.handleShowTo} />
                   <DropdownRow name="from" options={this.state.possibleFroms} label="Send as" formValue={this.state.from} handleChange={this.handleChange} />
                   <DropdownRow name="replyTo" options={this.state.possibleReplyTos} label="Send replies to" formValue={this.state.replyTo} handleChange={this.handleChange} />
                   <DropdownRow name="category" options={this.state.possibleCategories} label="Subscription category" formValue={this.state.category} handleChange={this.handleChange} />
-                  <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required />
+                  <TextInput name="subject" label="Subject" />
+                  {/* <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required /> */}
                   <Tabs id="tabs" activeKey={this.state.tabKey} onSelect={(k) => this.setState({ tabKey: k })} className="mb-3">
                     <Tab eventKey="editor" title="Editor">
                       <div className="mb-3">

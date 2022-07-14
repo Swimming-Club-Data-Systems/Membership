@@ -50,6 +50,11 @@
         "nyholm/psr7-server": "^1.0",
         "illuminate/database": "^8.83",
         "illuminate/queue": "^8.83",
-        "illuminate/events": "^8.83"
+        "illuminate/events": "^8.83",
+        "illuminate/pagination": "^8.83",
+        "illuminate/routing": "^8.83",
+        "illuminate/session": "^8.83",
+        "illuminate/validation": "^8.83",
+        "illuminate/mail": "^8.83"
     }
 }
