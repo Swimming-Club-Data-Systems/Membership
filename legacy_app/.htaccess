@@ -1,0 +1,32 @@
+RewriteEngine On
+RewriteCond %{HTTP_HOST} ^chesterlestreetasc\.co.uk [NC]
+RewriteCond %{SERVER_PORT} 80
+RewriteRule ^(.*)$ https://account.chesterlestreetasc.co.uk/$1 [R,L]
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^/?(.*) https://account.chesterlestreetasc.co.uk/$1 [R,L]
+
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.php?path=$1 [NC,L,QSA]
+
+ErrorDocument 400 /errors/400.html
+ErrorDocument 401 /errors/401.html
+ErrorDocument 403 /errors/403.html
+ErrorDocument 404 /errors/404.html
+ErrorDocument 408 /errors/408.html
+ErrorDocument 500 /errors/500.html
+ErrorDocument 501 /errors/501.html
+ErrorDocument 502 /errors/502.html
+ErrorDocument 503 /errors/503.html
+ErrorDocument 504 /errors/504.html
+
+<IfModule mod_headers.c>
+  # Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
+</IfModule>
