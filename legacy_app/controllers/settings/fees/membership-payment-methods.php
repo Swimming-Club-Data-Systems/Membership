@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $fluidContainer = true;
 
@@ -33,14 +33,14 @@ include BASE_PATH . 'views/header.php';
         <h1>Payment Methods for Club and Swim England Membership Fees</h1>
         <p class="lead">Select available payment methods for annual membership fees</p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) { ?>
           <div class="alert alert-success">Changes saved successfully</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) { ?>
           <div class="alert alert-danger">Changes could not be saved</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']);
         } ?>
 
         <form method="post">
@@ -55,14 +55,14 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <div class="form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CARD" name="MEMBERSHIP_FEE_PM_CARD" <?php if ($tenant->getBooleanKey('MEMBERSHIP_FEE_PM_CARD') && $tenant->getStripeAccount()) { ?>checked<?php } ?> <?php if (!$tenant->getStripeAccount()) { ?>disabled<?php } ?>>
+              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CARD" name="MEMBERSHIP_FEE_PM_CARD" <?php if (config('MEMBERSHIP_FEE_PM_CARD') && $tenant->getStripeAccount()) { ?>checked<?php } ?> <?php if (!$tenant->getStripeAccount()) { ?>disabled<?php } ?>>
               <label class="form-check-label" for="MEMBERSHIP_FEE_PM_CARD">Credit/debit card payments</label>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_DD" name="MEMBERSHIP_FEE_PM_DD" <?php if ($tenant->getBooleanKey('MEMBERSHIP_FEE_PM_DD') && ($tenant->getStripeAccount() || $tenant->getGoCardlessAccessToken()) && $tenant->getKey('USE_DIRECT_DEBIT')) { ?>checked<?php } ?> <?php if (!$tenant->getStripeAccount() && !$tenant->getGoCardlessAccessToken()) { ?>disabled<?php } ?>>
+              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_DD" name="MEMBERSHIP_FEE_PM_DD" <?php if (config('MEMBERSHIP_FEE_PM_DD') && ($tenant->getStripeAccount() || $tenant->getGoCardlessAccessToken()) && config('USE_DIRECT_DEBIT')) { ?>checked<?php } ?> <?php if (!$tenant->getStripeAccount() && !$tenant->getGoCardlessAccessToken()) { ?>disabled<?php } ?>>
               <label class="form-check-label" for="MEMBERSHIP_FEE_PM_DD">Direct debit</label>
             </div>
           </div>
@@ -73,21 +73,21 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <div class="form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_BACS" name="MEMBERSHIP_FEE_PM_BACS" <?php if ($tenant->getBooleanKey('MEMBERSHIP_FEE_PM_BACS')) { ?>checked<?php } ?> disabled>
+              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_BACS" name="MEMBERSHIP_FEE_PM_BACS" <?php if (config('MEMBERSHIP_FEE_PM_BACS')) { ?>checked<?php } ?> disabled>
               <label class="form-check-label" for="MEMBERSHIP_FEE_PM_BACS">Bank transfer</label>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CASH" name="MEMBERSHIP_FEE_PM_CASH" <?php if ($tenant->getBooleanKey('MEMBERSHIP_FEE_PM_CASH')) { ?>checked<?php } ?> disabled>
+              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CASH" name="MEMBERSHIP_FEE_PM_CASH" <?php if (config('MEMBERSHIP_FEE_PM_CASH')) { ?>checked<?php } ?> disabled>
               <label class="form-check-label" for="MEMBERSHIP_FEE_PM_CASH">Cash</label>
             </div>
           </div>
 
           <div class="mb-3">
             <div class="form-switch mb-2">
-              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CHEQUE" name="MEMBERSHIP_FEE_PM_CHEQUE" <?php if ($tenant->getBooleanKey('MEMBERSHIP_FEE_PM_CHEQUE')) { ?>checked<?php } ?> disabled>
+              <input class="form-check-input" type="checkbox" id="MEMBERSHIP_FEE_PM_CHEQUE" name="MEMBERSHIP_FEE_PM_CHEQUE" <?php if (config('MEMBERSHIP_FEE_PM_CHEQUE')) { ?>checked<?php } ?> disabled>
               <label class="form-check-label" for="MEMBERSHIP_FEE_PM_CHEQUE">Cheque</label>
             </div>
           </div>

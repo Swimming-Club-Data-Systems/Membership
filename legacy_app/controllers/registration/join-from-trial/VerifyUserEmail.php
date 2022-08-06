@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinParents WHERE Hash = ? AND Invited = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash'], true]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash'], true]);
 
 if ($query->fetchColumn() != 1) {
   halt(404);
@@ -28,29 +28,29 @@ include BASE_PATH . 'views/header.php';
 
         <p class="text-truncate">
           It was sent to
-          <?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['email-addr'])?>
+          <?=htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['email-addr'])?>
         </p>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-VerifyEmail-Error'] === true) { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-VerifyEmail-Error'] === true) { ?>
           <div class="alert alert-warning">
             The verification code was incorrect. Please try again.
           </div>
         <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-VerifyEmail-Error']); } ?>
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-VerifyEmail-Error']); } ?>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['EmailConfirmationResent'] === true) { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['EmailConfirmationResent'] === true) { ?>
           <div class="alert alert-success">
             Your verification code was resent.
           </div>
         <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['EmailConfirmationResent']); } ?>
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['EmailConfirmationResent']); } ?>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['EmailModified'] === true) { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['EmailModified'] === true) { ?>
           <div class="alert alert-success">
             We sent a verification code to your new email address.
           </div>
         <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['EmailModified']); } ?>
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['EmailModified']); } ?>
 
         <div class="mb-3">
           <label class="form-label" for="verify-code">Verification Code</label>

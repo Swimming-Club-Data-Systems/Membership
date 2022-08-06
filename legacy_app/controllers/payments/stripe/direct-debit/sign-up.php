@@ -2,11 +2,11 @@
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getUserEmail = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ?");
-$getUserEmail->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getUserEmail->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $user = $getUserEmail->fetch(PDO::FETCH_ASSOC);
 
 // UPDATING
@@ -83,7 +83,7 @@ if (isset($renewal_trap) && $renewal_trap) {
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDError']) { ?>
         <div class="alert alert-error">
           <p class="mb-0">
             <strong>We've encountered a problem setting up your direct debit</strong>
@@ -96,7 +96,7 @@ if (isset($renewal_trap) && $renewal_trap) {
             Please try again.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDError']);
       } ?>
 
       <h2>To begin, you will need</h2>

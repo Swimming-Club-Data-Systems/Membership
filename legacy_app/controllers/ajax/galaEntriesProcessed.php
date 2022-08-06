@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant->getId();
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant()->getId();
 
 $verifyEntryId = $db->prepare("SELECT COUNT(*) FROM galaEntries INNER JOIN galas ON galas.GalaID = galaEntries.GalaID WHERE galaEntries.EntryID = ? AND galas.Tenant = ?");
 $update = $db->prepare("UPDATE galaEntries SET EntryProcessed = ? WHERE EntryID = ?");
 $markPaid = $db->prepare("UPDATE galaEntries SET Charged = ? WHERE EntryID = ?");
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $access == "Galas") {
 	if ((isset($_POST["processedID"])) && (isset($_POST["clickedItemChecked"])) && (isset($_POST["verify"]))) {
 

@@ -27,7 +27,7 @@ class User extends Person
 
   public function revalidate()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     // Get the user
     $query = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ?");
     $query->execute([$this->id]);
@@ -52,11 +52,11 @@ class User extends Person
     if ($row) {
       $defaultAccessLevel = $this->getUserOption('DefaultAccessLevel');
 
-      if (isset(app()->tenant)) {
+      if (tenant()) {
         if ($defaultAccessLevel && in_array($defaultAccessLevel, $this->permissions)) {
           $this->accessLevel = $defaultAccessLevel;
-        } else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && in_array($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'], $this->permissions)) {
-          $this->accessLevel = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+        } else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && in_array($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'], $this->permissions)) {
+          $this->accessLevel = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
         } else if (in_array('Admin', $this->permissions) && !$defaultAccessLevel) {
           $this->accessLevel = 'Admin';
         } else {
@@ -72,10 +72,10 @@ class User extends Person
 
       if ($this->setSession) {
         // Set legacy user details
-        $_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] = $this->forename;
-        $_SESSION['TENANT-' . app()->tenant->getId()]['Surname'] = $this->surname;
-        $_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'] = $this->emailAddress;
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] = $this->accessLevel;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] = $this->forename;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname'] = $this->surname;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress'] = $this->emailAddress;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] = $this->accessLevel;
       }
     } else {
       throw new Exception();
@@ -129,7 +129,7 @@ class User extends Person
 
   private function getUserOptions()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     try {
       $getOptions = $db->prepare("SELECT `Option`, `Value` FROM userOptions WHERE User = ? LIMIT 100");
@@ -164,7 +164,7 @@ class User extends Person
 
   public function setUserOption($option, $value)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     if ($value == "") {
       $value = null;
@@ -225,7 +225,7 @@ class User extends Person
 
   public function grantPermission($permission)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     try {
       $setPerm = $db->prepare("INSERT INTO `permissions` (`Permission`, `User`) VALUES (?, ?)");
       $setPerm->execute([
@@ -240,7 +240,7 @@ class User extends Person
 
   public function revokePermission($permission)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     try {
       $deletePerm = $db->prepare("DELETE FROM `permissions` WHERE `Permission` = ? AND `User` = ?");
       $deletePerm->execute([
@@ -267,13 +267,13 @@ class User extends Person
 
   public function getStripeCustomerID()
   {
-    if (!app()->tenant->getStripeAccount() || !getenv('STRIPE')) {
+    if (!tenant()->getLegacyTenant()->getStripeAccount() || !getenv('STRIPE')) {
       return null;
     }
 
     \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCustomer = $db->prepare("SELECT `CustomerID` FROM `stripeCustomers` WHERE `User` = ?");
     $getCustomer->execute([$this->id]);
 
@@ -288,13 +288,13 @@ class User extends Person
 
   public function getStripeCustomer()
   {
-    if (!app()->tenant->getStripeAccount() || !getenv('STRIPE')) {
+    if (!tenant()->getLegacyTenant()->getStripeAccount() || !getenv('STRIPE')) {
       return null;
     }
 
     \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $checkIfCustomer = $db->prepare("SELECT COUNT(*) FROM stripeCustomers WHERE User = ?");
     $checkIfCustomer->execute([$this->id]);
 
@@ -307,7 +307,7 @@ class User extends Person
         'email' => $this->getEmail(),
         'phone' => $this->getMobile()
       ], [
-        'stripe_account' => app()->tenant->getStripeAccount()
+        'stripe_account' => tenant()->getLegacyTenant()->getStripeAccount()
       ]);
 
       // YOUR CODE: Save the customer ID and other info in a database for later.
@@ -323,7 +323,7 @@ class User extends Person
       $customer = \Stripe\Customer::retrieve(
         $getCustID->fetchColumn(),
         [
-          'stripe_account' => app()->tenant->getStripeAccount()
+          'stripe_account' => tenant()->getLegacyTenant()->getStripeAccount()
         ]
       );
 
@@ -338,7 +338,7 @@ class User extends Person
             'phone' => $this->getMobile()
           ],
           [
-            'stripe_account' => app()->tenant->getStripeAccount()
+            'stripe_account' => tenant()->getLegacyTenant()->getStripeAccount()
           ]
         );
       }

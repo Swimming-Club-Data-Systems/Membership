@@ -2,8 +2,8 @@
 
 $pagetitle = "Squad Rep Home";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $today = (new DateTime('now', new DateTimeZone('Europe/London')))->format("y-m-d");
 $getGalas = $db->prepare("SELECT GalaName, GalaID, GalaVenue FROM galas WHERE GalaDate >= ? AND Tenant = ? ORDER BY GalaDate ASC");
@@ -14,9 +14,9 @@ $getGalas->execute([
 $gala = $getGalas->fetch(PDO::FETCH_ASSOC);
 
 $squads = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $squads = $db->prepare("SELECT SquadName, SquadID, SquadCoach FROM squadReps INNER JOIN squads ON squadReps.Squad = squads.SquadID WHERE squadReps.User = ? ORDER BY squads.SquadFee DESC, squads.SquadName ASC");
-  $squads->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $squads->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } else {
   $squads = $db->prepare("SELECT SquadName, SquadID, SquadCoach FROM squads WHERE Tenant = ? ORDER BY squads.SquadFee DESC, squads.SquadName ASC");
   $squads->execute([

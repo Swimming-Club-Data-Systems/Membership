@@ -8,7 +8,7 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-xl">
 
-  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("galas"))?>">Galas</a></li>

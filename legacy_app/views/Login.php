@@ -10,22 +10,22 @@ $pagetitle = "Login";
 $errorState = null;
 $username = '';
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-  $errorState = $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+  $errorState = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EnteredUsername'])) {
-  $username = $_SESSION['TENANT-' . app()->tenant->getId()]['EnteredUsername'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EnteredUsername'])) {
+  $username = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EnteredUsername'];
 }
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 include BASE_PATH . "views/head.php";
 
 ?>
 
 <div class="container min-vh-100 mb-n3 overflow-auto">
-  <!-- <h1 class="mb-5">Sign in using your <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Account</h1> -->
+  <!-- <h1 class="mb-5">Sign in using your <?= htmlspecialchars(config('CLUB_NAME')) ?> Account</h1> -->
   <div class="row justify-content-center py-3">
     <div class="col-lg-8 col-md-10">
 
@@ -36,7 +36,7 @@ include BASE_PATH . "views/head.php";
       <div class="row align-items-center">
         <div class="col order-2 order-md-1">
           <h1 class="">Login</h1>
-          <p class="">Sign in to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+          <p class="">Sign in to <?= htmlspecialchars(config('CLUB_NAME')) ?></p>
         </div>
         <div class="col-12 col-md-auto order-1 order-md-2">
           <?php if ($logos) { ?>
@@ -59,19 +59,19 @@ include BASE_PATH . "views/head.php";
         <div class="alert alert-danger">
           <strong>Your details were incorrect</strong> <br>
           Please try again
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage'])) {
-            echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage'];
-            unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage']);
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage'])) {
+            echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage'];
+            unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage']);
           } ?>
         </div>
       <?php } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorAccountLocked']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorAccountLocked']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorAccountLocked']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorAccountLocked']) { ?>
         <div class="alert alert-danger">
           <strong>Your account has been locked due to a number of failed login attempts</strong> <br>
           Please <a href="<?= htmlspecialchars(autoUrl("resetpassword")) ?>" class="alert-link">reset your password</a> in order to continue
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorAccountLocked']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorAccountLocked']);
       } ?>
 
       <form method="post" action="<?= htmlspecialchars(autoUrl("login")) ?>" name="loginform" id="loginform" class="needs-validation" novalidate>
@@ -115,7 +115,7 @@ include BASE_PATH . "views/head.php";
       </form>
 
       <p>
-        Need help? <a href="<?= htmlspecialchars(autoUrl('about')) ?>">Get support from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></a>.
+        Need help? <a href="<?= htmlspecialchars(autoUrl('about')) ?>">Get support from <?= htmlspecialchars(config('CLUB_NAME')) ?></a>.
       </p>
 
     </div>
@@ -128,6 +128,6 @@ $footer = new \SCDS\Footer();
 $footer->addJs("public/js/NeedsValidation.js");
 $footer->render();
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 
 ?>

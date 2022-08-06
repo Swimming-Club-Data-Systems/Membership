@@ -8,4 +8,8 @@ use Stancl\Tenancy\Database\Concerns\HasDomains;
 class Tenant extends BaseTenant
 {
     use HasDomains;
+
+    public function getLegacyTenant() {
+      return new \stdClass();
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserId'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserId'];
 $pagetitle = "Extra Fees";
 
 include BASE_PATH . "views/header.php";

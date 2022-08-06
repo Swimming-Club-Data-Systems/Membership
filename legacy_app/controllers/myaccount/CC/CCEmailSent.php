@@ -1,7 +1,7 @@
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent'])) {
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailSent']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailSent'])) {
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailSent']);
 }
 
 $pagetitle = "Confirmation email sent";

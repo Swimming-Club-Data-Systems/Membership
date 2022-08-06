@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'COVID Return to Competition Screening';
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
@@ -11,7 +11,7 @@ $showSquadOpts = false;
 // Show if this user is a squad rep
 $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
 $getRepCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $rep = $getRepCount->fetchColumn() > 0;
 $showSquadOpts = $rep;
@@ -19,7 +19,7 @@ $showSquadOpts = $rep;
 if ($rep) {
   $squads = $db->prepare("SELECT SquadName, SquadID FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad WHERE squadReps.User = ? ORDER BY SquadFee DESC, SquadName ASC;");
   $squads->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   ]);
 }
 
@@ -34,7 +34,7 @@ if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->has
 
   $getGalas = $db->prepare("SELECT GalaName, GalaID FROM galas WHERE Tenant = ? AND GalaDate >= ? ORDER BY GalaDate ASC, GalaName ASC");
   $getGalas->execute([
-    app()->tenant->getId(),
+    tenant()->getLegacyTenant()->getId(),
     $date->format('Y-m-d'),
   ]);
   $gala = $getGalas->fetch(PDO::FETCH_ASSOC);
@@ -42,7 +42,7 @@ if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->has
 
 $getMembers = $db->prepare("SELECT MForename, MSurname, members.MemberID, GalaName, galas.GalaID FROM galaEntries INNER JOIN members ON members.MemberID = galaEntries.MemberID INNER JOIN galas ON galas.GalaID = galaEntries.GalaID WHERE UserID = ? AND GalaDate >= ? ORDER BY MForename ASC, MSurname ASC;");
 $getMembers->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   $date->format('Y-m-d'),
 ]);
 $member = $getMembers->fetch(PDO::FETCH_ASSOC);

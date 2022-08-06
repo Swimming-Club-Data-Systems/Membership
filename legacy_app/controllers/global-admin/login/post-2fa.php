@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 if (!isset($_SESSION['SCDS-SU-Login2FA']) || isset($_SESSION['SCDS-SuperUser'])) {
   halt(404);

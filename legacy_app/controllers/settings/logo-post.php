@@ -33,7 +33,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 try {
   $uuid = Uuid::uuid4();
 
-  $tenant = app()->tenant;
+  $tenant = tenant()->getLegacyTenant();
   $url = 'logos/' . $uuid->toString() . '/';
   $relative = 'public/' . $url;
   $filePath = $tenant->getFilePath() . $relative;
@@ -105,9 +105,9 @@ try {
 
   $tenant->setKey('LOGO_DIR', 'X-S3:' . $s3FilePath);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-SAVED'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-SAVED'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-ERROR'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-ERROR'] = true;
   reportError($e);
 }
 

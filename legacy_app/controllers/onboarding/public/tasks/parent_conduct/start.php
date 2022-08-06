@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$parentCode = app()->tenant->getKey('ParentCodeOfConduct');
+$parentCode = config('ParentCodeOfConduct');
 
 $pagetitle = 'Parent/Guardian Code of Conduct - Onboarding';
 
@@ -45,7 +45,7 @@ include BASE_PATH . "views/head.php";
         <h1 class="text-center">Parent/Guardian Code of Conduct</h1>
 
         <p class="lead mb-5 text-center">
-          Read and agree to the <?= htmlspecialchars(app()->tenant->getName()) ?> Parent/Guardian Code of Conduct.
+          Read and agree to the <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> Parent/Guardian Code of Conduct.
         </p>
 
         <form method="post" class="needs-validation" novalidate>

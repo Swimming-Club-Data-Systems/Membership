@@ -4,8 +4,8 @@ if (!app()->user->hasPermission('Admin')) halt(404);
 
 $session = \SCDS\Onboarding\Session::retrieve($id);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getYear = $db->prepare("SELECT `Name`, `StartDate`, `EndDate` FROM `membershipYear` WHERE `ID` = ? AND `Tenant` = ?");
 $getYear->execute([

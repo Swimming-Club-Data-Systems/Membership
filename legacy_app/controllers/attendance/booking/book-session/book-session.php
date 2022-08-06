@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 include 'my-members/my-members.php';

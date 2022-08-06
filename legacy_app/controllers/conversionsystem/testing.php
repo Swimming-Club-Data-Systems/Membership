@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Time'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time'])) {
   $fluidContainer = true;
 }
 
@@ -10,7 +10,7 @@ include BASE_PATH . "views/header.php";
 
 <div class="bg-light mt-n3 py-3 mb-3">
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Time'])) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time'])) { ?>
     <div class="container-fluid">
     <?php } else { ?>
       <div class="container-xl">
@@ -46,27 +46,27 @@ include BASE_PATH . "views/header.php";
       </div>
     </div>
 
-    <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Time'])) { ?>
+    <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time'])) { ?>
       <div class="container-fluid">
       <?php } else { ?>
         <div class="container-xl">
         <?php } ?>
         <div class="row">
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Time'])) { ?>
-            <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Error']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time'])) { ?>
+            <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Error']) { ?>
               <div class="col-lg-4">
                 <table class="table table-sm table-striped table-light">
                   <thead class="">
                     <tr>
                       <th scope="col">Pool Length</th>
-                      <th scope="col">Time (<?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Event']) ?>)</th>
+                      <th scope="col">Time (<?= htmlentities($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Event']) ?>)</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20m-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-20m-fail']) { ?>
                       <tr>
                         <td>20m</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20m'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-20m'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -75,10 +75,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-25m-fail']) { ?>
                       <tr>
                         <td>25m</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-25m'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -87,10 +87,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-33m-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-33m-fail']) { ?>
                       <tr>
                         <td>33 1/3m</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-33m'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-33m'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -99,10 +99,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-50m-fail']) { ?>
                       <tr>
                         <td>50m</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-50m'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -111,10 +111,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20y-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-20y-fail']) { ?>
                       <tr>
                         <td>20y</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20y'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-20y'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -123,10 +123,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25y-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-25y-fail']) { ?>
                       <tr>
                         <td>25y</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25y'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-25y'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -135,10 +135,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-27y-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-27y-fail']) { ?>
                       <tr>
                         <td>27 1/2y</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-27y'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-27y'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -147,10 +147,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-33y-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-33y-fail']) { ?>
                       <tr>
                         <td>33 1/3y</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-33y'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-33y'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -159,10 +159,10 @@ include BASE_PATH . "views/header.php";
                       </tr>
                     <?php } ?>
 
-                    <?php if (!$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-36y-fail']) { ?>
+                    <?php if (!$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-36y-fail']) { ?>
                       <tr>
                         <td>36 2/3y</td>
-                        <td class="font-monospace"><?= $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-36y'] ?></td>
+                        <td class="font-monospace"><?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Conv-36y'] ?></td>
                       </tr>
                     <?php } else { ?>
                       <tr>
@@ -186,7 +186,7 @@ include BASE_PATH . "views/header.php";
           <div class="col">
             <!-- consider order-lg-first -->
             <div class="cell">
-              <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Error']) { ?>
+              <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Time']['Error']) { ?>
                 <div class="alert alert-warning">
                   An error occured during calculation
                 </div>

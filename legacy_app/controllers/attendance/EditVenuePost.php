@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $data = $db->prepare("SELECT `VenueName`, `Location` FROM sessionsVenues WHERE VenueID = ? AND Tenant = ?");
 $data->execute([
@@ -26,13 +26,13 @@ if ($_POST['name'] != "" && $_POST['name'] != null && $_POST['address'] != "" &&
       $tenant->getId()
     ]);
     $db->commit();
-    $_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueSuccess'] = true;
   } catch (Exception $e) {
     $db->rollback();
     halt(500);
   }
 } else {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueError'] = [
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueError'] = [
     "Status"      => true,
     "Data"        => $_POST
   ];

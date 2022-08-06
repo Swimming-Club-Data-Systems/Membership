@@ -13,7 +13,7 @@ if ($currentUser == null && false) {
   $navTextColour = 'navbar-dark';
   $clubLinkColour = 'btn-light';
 
-  if (app()->tenant->getKey('SYSTEM_COLOUR') && getContrastColor(app()->tenant->getKey('SYSTEM_COLOUR'))) {
+  if (config('SYSTEM_COLOUR') && getContrastColor(config('SYSTEM_COLOUR'))) {
     $clubLogoColour = 'text-dark';
     $navTextColour = 'navbar-light';
     $clubLinkColour = 'btn-dark';
@@ -27,7 +27,7 @@ if ($currentUser == null && false) {
       <h1 class="mb-0">
         <a href="<?= autoUrl("") ?>" class="<?= $clubLogoColour ?>">
           <strong>
-            <?= mb_strtoupper(htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))) ?>
+            <?= mb_strtoupper(htmlspecialchars(config('CLUB_NAME'))) ?>
           </strong>
         </a>
       </h1>
@@ -73,7 +73,7 @@ if ($currentUser == null && false) {
               }
               ?>
               <?php foreach ($permissions as $permission) {
-                $disabled = $permission == $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+                $disabled = $permission == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
               ?>
                 <a href="<?= htmlspecialchars(autoUrl("account-switch?type=" . urlencode($permission) . "&redirect=" . urlencode($url))) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <?php if ($disabled) { ?>user-select-none disabled<?php } ?>">
                   <?= htmlspecialchars($permission) ?> <?php if ($disabled) { ?><span>Current mode <i class="text-primary fa fa-check-circle fa-fw" aria-hidden="true"></i></span><?php } ?>

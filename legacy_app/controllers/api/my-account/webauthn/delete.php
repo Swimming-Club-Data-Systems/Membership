@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $post = json_decode(file_get_contents('php://input'));
 
 $find = $db->prepare("SELECT COUNT(*) FROM `userCredentials` WHERE `id` = ? AND `user_id` = ?");

@@ -1,12 +1,12 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 try {
   $getMandatesCount = $db->prepare("SELECT COUNT(*) FROM `paymentMandates` WHERE `MandateID` = ? AND `UserID` = ? AND `InUse` = ?");
   $getMandatesCount->execute([
     $id,
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     true
   ]);
 
@@ -19,7 +19,7 @@ try {
 
 try {
   $updateDefault = $db->prepare("UPDATE `paymentPreferredMandate` SET `MandateID` = ? WHERE `UserID` = ?");
-  $updateDefault->execute([$id, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $updateDefault->execute([$id, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   header("Location: " . autoUrl("payments/mandates"));
 } catch (Exception $e) {
   halt(500);

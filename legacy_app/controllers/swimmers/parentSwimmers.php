@@ -1,14 +1,14 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $pagetitle = "My Members";
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 include BASE_PATH . "views/header.php";
 
 $getSwimmers = $db->prepare("SELECT MemberID id, MForename `first`, MSurname `last` FROM members WHERE members.UserID = ? ORDER BY `first` ASC, `last` ASC");
-$getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getSwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 
 ?>
 

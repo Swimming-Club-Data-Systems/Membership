@@ -2,11 +2,11 @@
 
 require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 define("PAYMENT_EMAILS", [
   "Email" => "noreply@" . getenv('EMAIL_DOMAIN'),
-  "Name" => app()->tenant->getKey('CLUB_SHORT_NAME') . " Payments"
+  "Name" => config('CLUB_SHORT_NAME') . " Payments"
 ]);
 
 //$token = "testsecret";
@@ -16,12 +16,12 @@ $raw_payload = file_get_contents('php://input');
 $headers = getallheaders();
 $provided_signature = $headers["Webhook-Signature"];
 
-$calculated_signature = hash_hmac("sha256", $raw_payload, app()->tenant->getKey('GOCARDLESS_WEBHOOK_KEY'));
+$calculated_signature = hash_hmac("sha256", $raw_payload, config('GOCARDLESS_WEBHOOK_KEY'));
 
 if ($provided_signature == $calculated_signature) {
   $payload = json_decode($raw_payload, true);
 
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   // Check if $event["id"] has been done before
   $getCount = $db->prepare("SELECT COUNT(*) FROM paymentWebhookOps WHERE EventID = ?");
@@ -63,7 +63,7 @@ if ($provided_signature == $calculated_signature) {
 }
 
 function process_payout_event($event) {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $payout = $event["links"]["payout"];
   createOrUpdatePayout($payout, true);
   echo $payout . ' processed';
@@ -71,8 +71,8 @@ function process_payout_event($event) {
 
 function process_mandate_event($event) {
 	
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 	include BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
   switch ($event["action"]) {
     case "created":
@@ -189,7 +189,7 @@ function process_mandate_event($event) {
 
           if (bool($user['Active'])) {
             $message = "<h1>Hello " . htmlspecialchars($user['Forename'] . " " . $user['Surname']) . ".</h1>
-            <p>Your Direct Debit Mandate for " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " has been cancelled.</p>";
+            <p>Your Direct Debit Mandate for " . htmlspecialchars(config('CLUB_NAME')) . " has been cancelled.</p>";
 
             if ($oldMandate != null) {
               $message .= '<p>The cancelled mandate was on ' . htmlspecialchars($oldMandate['AccountHolderName']) . '\'s account with ' . htmlspecialchars(getBankName($oldMandate['BankName'])) . '. Account number ending in &middot;&middot;&middot;&middot;&middot;&middot;' . htmlspecialchars($oldMandate['AccountNumEnd']) . '. Our internal reference for the mandate was ' . htmlspecialchars($oldMandate['Mandate']) . '.</p>';
@@ -200,7 +200,7 @@ function process_mandate_event($event) {
             }
 
             $message .= "<p>Go to " . htmlspecialchars(autoUrl("")) . " to make any changes to your account and direct debit options.</p>
-            <p>Thank you, <br>" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . "";
+            <p>Thank you, <br>" . htmlspecialchars(config('CLUB_NAME')) . "";
             notifySend(
               $user['EmailAddress'],
               "Your Direct Debit Mandate has been Cancelled",
@@ -262,9 +262,9 @@ function process_mandate_event($event) {
       if (bool($user['Active'])) {
         if ($row == null) {
           $message = "<h1>Hello " . htmlspecialchars($user['Forename'] . " " . $user['Surname']) . ".</h1>
-          <p>Your Direct Debit Mandate for " . app()->tenant->getKey('CLUB_NAME') . " has expired. As this was your only mandate with us, you must set up a new direct debit as soon as possible at " . autoUrl("payments") . ".</p>
+          <p>Your Direct Debit Mandate for " . config('CLUB_NAME') . " has expired. As this was your only mandate with us, you must set up a new direct debit as soon as possible at " . autoUrl("payments") . ".</p>
           <p>If you have left the club you can ignore this email.</p>
-          <p>Thank you, <br>" . app()->tenant->getKey('CLUB_NAME') . "";
+          <p>Thank you, <br>" . config('CLUB_NAME') . "";
           notifySend($user['EmailAddress'], "Your Direct Debit Mandate has
           Expired", $message, $user['Forename'] . " " . $user['Surname'],
           $user['EmailAddress'],PAYMENT_EMAILS);
@@ -273,9 +273,9 @@ function process_mandate_event($event) {
           $setNewDefault = $db->prepare("INSERT INTO paymentPreferredMandate (UserID, MandateID) VALUES (?, ?)");
           $setNewDefault->execute([$userID, $mandateID]);
           $message = "<h1>Hello " . $user['Forename'] . " " . $user['Surname'] . ".</h1>
-          <p>Your Direct Debit Mandate for " . app()->tenant->getKey('CLUB_NAME') . " has expired. As you had more than one direct debit set up, we've switched your default direct debit to the next available one in our list. You may want to check the details about this before we take any payments from you in order to ensure your're happy with us taking funds from that account.</p>
+          <p>Your Direct Debit Mandate for " . config('CLUB_NAME') . " has expired. As you had more than one direct debit set up, we've switched your default direct debit to the next available one in our list. You may want to check the details about this before we take any payments from you in order to ensure your're happy with us taking funds from that account.</p>
           <p>Go to " . autoUrl("payments") . " to make any changes.</p>
-          <p>Thank you, <br>" . app()->tenant->getKey('CLUB_NAME') . "";
+          <p>Thank you, <br>" . config('CLUB_NAME') . "";
           notifySend($user['EmailAddress'], "Your Direct Debit Mandate has
           Expired", $message, $user['Forename'] . " " . $user['Surname'],
           $user['EmailAddress'], PAYMENT_EMAILS);
@@ -291,7 +291,7 @@ function process_mandate_event($event) {
 
 function process_payment_event($event) {
 	
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 	include BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
   switch ($event["action"]) {
   	case "created":

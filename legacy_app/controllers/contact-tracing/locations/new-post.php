@@ -5,8 +5,8 @@ use Brick\Postcode\PostcodeFormatter;
 
 $PostcodeFormatter = new PostcodeFormatter();
 
-$tenant = app()->tenant;
-$db = app()->db;
+$tenant = tenant()->getLegacyTenant();
+$db = DB::connection()->getPdo();
 
 try {
   if (!SCDS\CSRF::verify()) {
@@ -63,12 +63,12 @@ try {
     $tenant->getId()
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationSuccess'] = true;
   header("location: " . autoUrl("contact-tracing/locations/" . $id));
 
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationError'] = $e->getMessage();
   header("location: " . autoUrl("contact-tracing/locations/new"));
 }

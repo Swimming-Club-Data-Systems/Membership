@@ -2,8 +2,8 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $termsDocuments = $db->prepare("SELECT Title, ID FROM posts WHERE Tenant = ? AND `Type` = 'terms_conditions' ORDER BY Title ASC");
 $termsDocuments->execute([
@@ -18,9 +18,9 @@ $welcomeDocuments->execute([
 $welcomeDocuments = $welcomeDocuments->fetchAll(PDO::FETCH_ASSOC);
 
 
-$terms = app()->tenant->getKey('TermsAndConditions');
-$privacy = app()->tenant->getKey('PrivacyPolicy');
-$welcome = app()->tenant->getKey('WelcomeLetter');
+$terms = config('TermsAndConditions');
+$privacy = config('PrivacyPolicy');
+$welcome = config('WelcomeLetter');
 
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
@@ -55,14 +55,14 @@ include BASE_PATH . 'views/header.php';
       <main>
         <h1>Terms and Privacy Settings</h1>
         <form method="post">
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) { ?>
             <div class="alert alert-success">All changes saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']);
           } ?>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) { ?>
             <div class="alert alert-danger">Changes were not saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']);
           } ?>
 
           <div class="mb-3">

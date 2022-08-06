@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $id = hexdec($id);
 $hash_test = hash('sha256', $id);
@@ -35,11 +35,11 @@ include BASE_PATH . "views/header.php";?>
 	<h1>Successfully Unsubscribed</h1>
 	<p>You will no longer receive emails from this list.</p>
 	<p>
-		For further help and support with emails from <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, visit
+		For further help and support with emails from <?=htmlspecialchars(config('CLUB_NAME'))?>, visit
 		our <a href="<?=autoUrl("notify")?>">Notify Help Centre</a>.
 	</p>
 	<p>
-		Notify by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+		Notify by <?=htmlspecialchars(config('CLUB_NAME'))?>
 	</p>
 </div>
 

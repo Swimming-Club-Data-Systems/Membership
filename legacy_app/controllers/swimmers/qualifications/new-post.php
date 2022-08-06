@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $member = null;
@@ -62,7 +62,7 @@ try {
     $notes,
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess'] = true;
 
   http_response_code(302);
   header('location: ' . autoUrl("members/$id#qualifications"));
@@ -74,7 +74,7 @@ try {
     $message = 'A database error occurred';
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['FormError'] = $message;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'] = $message;
 
   http_response_code(302);
   header('location: ' . autoUrl("members/$id/qualifications/new"));

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -37,13 +37,13 @@ try {
   ]);
 
   // Success
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignListSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListSuccess'] = true;
   header("Location: " . autoUrl("users/" . $id . "/targeted-lists"));
 } catch (Exception $e) {
   // Error
   
   reportError($e);
   
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignListError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListError'] = true;
   header("Location: " . autoUrl("users/" . $id . "/targeted-lists/add"));
 }

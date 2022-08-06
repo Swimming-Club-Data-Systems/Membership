@@ -23,7 +23,7 @@ include BASE_PATH . 'views/header.php';
       <p>In some months, additional charges may be added to your account to cover the cost of gala entries and club membership.</p>
 
       <div class="mb-3">
-        <?= myMonthlyFeeTable(null, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) ?>
+        <?= myMonthlyFeeTable(null, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) ?>
       </div>
 
       <p>Contact your club if you have any questions about these fees.</p>

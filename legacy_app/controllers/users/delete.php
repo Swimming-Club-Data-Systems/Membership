@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $db->beginTransaction();
 
@@ -32,7 +32,7 @@ try {
   // Get user info to verify password
   $getCurrentUser = $db->prepare("SELECT `Password`, Forename, Surname, EmailAddress FROM users WHERE UserID = ?");
   $getCurrentUser->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
   $currentUser = $getCurrentUser->fetch(PDO::FETCH_ASSOC);
 

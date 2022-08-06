@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 // $user = $id;
 
 // $object = MembershipFees::getByUser($user);
@@ -10,9 +10,9 @@ $tenant = app()->tenant;
 
 // pre($object->getFormattedTotal());
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $info = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent' && isset($id) && $id != null) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent' && isset($id) && $id != null) {
   $user = $id;
   $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
   $userInfo->execute([
@@ -31,7 +31,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent' && 
 
 $month = (new DateTime('now', new DateTimeZone('Europe/London')))->format('m');
 
-$discounts = json_decode(app()->tenant->getKey('MembershipDiscounts'), true);
+$discounts = json_decode(config('MembershipDiscounts'), true);
 $clubDiscount = $swimEnglandDiscount = 0;
 if ($discounts != null && isset($discounts['CLUB'][$month])) {
   $clubDiscount = $discounts['CLUB'][$month];
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-xl">
 
-    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("users") ?>">Users</a></li>
@@ -77,7 +77,7 @@ include BASE_PATH . 'views/header.php';
 
     <div class="row">
       <div class="col-lg-8">
-        <h1>Membership fees<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?> for <?= htmlspecialchars($info['Forename']) ?><?php } ?></h1>
+        <h1>Membership fees<?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?> for <?= htmlspecialchars($info['Forename']) ?><?php } ?></h1>
         <p class="lead mb-0">Club and Swim England membership fees are paid yearly and are due on 1 January.</p>
       </div>
     </div>
@@ -138,7 +138,7 @@ include BASE_PATH . 'views/header.php';
           <thead class="">
             <tr class="">
               <th>
-                <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership
+                <?= htmlspecialchars(config('NGB_NAME')) ?> Membership
               </th>
               <th>
               </th>

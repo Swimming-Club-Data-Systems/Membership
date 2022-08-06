@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 
 $vars = [
@@ -30,7 +30,7 @@ $vars = [
 try {
   foreach ($vars as $key => $value) {
     if (getenv($key) == null) {
-      $v = app()->tenant->getKey($key);
+      $v = config($key);
       if ($v != null) {
         if (!defined($key)) {
           define($key, $v);

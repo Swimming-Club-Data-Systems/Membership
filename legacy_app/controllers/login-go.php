@@ -4,8 +4,8 @@ use GeoIp2\Database\Reader;
 
 $headerSent = false;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $incrementFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = WrongPassCount + 1 WHERE UserID = ?");
 $resetFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = 0 WHERE UserID = ?");
@@ -57,7 +57,7 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
     if ($verified) {
       // Do 2FA
       if (bool(getUserOption($userID, "hasGoogleAuth2FA"))) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE'] = true;
       } else {
         $code = random_int(100000, 999999);
 
@@ -71,21 +71,21 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
           <p>Hello. Confirm your login by entering the following code in your web browser.</p>
           <p><strong>' . htmlspecialchars($code) . '</strong></p>
           <p>The login was from IP address ' . htmlspecialchars(getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
-          <p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+          <p>Kind Regards, <br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
         $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
         if (notifySend(null, "Verification Code - Requested at " . $date->format("H:i:s \o\\n d/m/Y"), $message, $forename . " " . $surname, $email)) {
-          $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_CODE'] = $code;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_CODE'] = $code;
         } else {
           halt(500);
         }
       }
-      $_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'] = $userID;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID'] = $userID;
       if (isset($_POST['RememberMe']) && bool($_POST['RememberMe'])) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserRememberMe'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserRememberMe'] = true;
       }
-      $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR'] = true;
       // reportError([
       //   '1',
       //   autoUrl("2fa?target=" . urlencode($_POST['target'])),
@@ -101,23 +101,23 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
       $incrementFailedLoginCount->execute([$userID]);
 
       // Set error state
-      $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = true;
-      $_SESSION['TENANT-' . app()->tenant->getId()]['EnteredUsername'] = $username;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EnteredUsername'] = $username;
     }
   } else {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = true;
-    $_SESSION['TENANT-' . app()->tenant->getId()]['EnteredUsername'] = $username;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EnteredUsername'] = $username;
   }
 } else {
   if (!$security_status) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = true;
-    $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage'] = "We were unable to verify the integrity of your login attempt. The site you entered your email address and password on may have been attempting to capture your login details. Try reseting your password urgently.";
-    $_SESSION['TENANT-' . app()->tenant->getId()]['InfoSec'] = [$_POST['LoginSecurityValue'], $_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec']];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage'] = "We were unable to verify the integrity of your login attempt. The site you entered your email address and password on may have been attempting to capture your login details. Try reseting your password urgently.";
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InfoSec'] = [$_POST['LoginSecurityValue'], $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoginSec']];
   }
 }
-$_SESSION['TENANT-' . app()->tenant->getId()]['InfoSec'] = [$_POST['LoginSecurityValue'], $_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec']];
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec']);
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] && $_POST['target'] == "" || isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorAccountLocked']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorAccountLocked'] && $_POST['target'] == "") {
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InfoSec'] = [$_POST['LoginSecurityValue'], $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoginSec']];
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoginSec']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] && $_POST['target'] == "" || isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorAccountLocked']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorAccountLocked'] && $_POST['target'] == "") {
   // reportError([
   //   '2',
   //   autoUrl("login")

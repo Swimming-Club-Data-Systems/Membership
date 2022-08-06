@@ -159,7 +159,7 @@ ob_start(); ?>
   </p>
 
   <p>
-    Payments are handled by Stripe and GoCardless on behalf of <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>. You can also download reports from the Stripe Dashboard at <a href="https://dashboard.stripe.com/">dashboard.stripe.com</a> and from within the GoCardless user interface at <a href="https://manage.gocardless.com/">manage.gocardless.com</a>.
+    Payments are handled by Stripe and GoCardless on behalf of <?= htmlspecialchars(config('CLUB_NAME')) ?>. You can also download reports from the Stripe Dashboard at <a href="https://dashboard.stripe.com/">dashboard.stripe.com</a> and from within the GoCardless user interface at <a href="https://manage.gocardless.com/">manage.gocardless.com</a>.
   </p>
 
   <p>
@@ -172,7 +172,7 @@ ob_start(); ?>
   </p>
 
   <p>
-    &copy; Swimming Club Data Systems <?= date("Y", strtotime($data->date_produced)) ?>. Produced for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+    &copy; Swimming Club Data Systems <?= date("Y", strtotime($data->date_produced)) ?>. Produced for <?= htmlspecialchars(config('CLUB_NAME')) ?>.
   </p>
 
   <?php $landscape = true;

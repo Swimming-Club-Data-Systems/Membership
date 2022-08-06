@@ -11,8 +11,8 @@
  * TODO: Extend to cover Stripe card payments
  */
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $searchDate = $year . "-" . $month . "-" . "%";
 $getPayments = $db->prepare("SELECT * FROM (SELECT 'StripeDD' AS Provider, 'Payments' AS Type, paymentsPending.Amount, paymentsPending.Type AS DebitCredit, CONCAT(users.Forename, ' ', users.Surname) AS `User`, paymentsPending.Name, MetadataJSON AS Info, payments.Status AS `Status`, payments.stripeFailureCode AS `StripeFailureCode`, paymentsPending.Date AS `Date`, payments.StripeFee AS `Fees`, payments.stripePaymentIntent AS `ID`, payments.StripeFee AS TransFee, paymentCategories.Name AS CatName, paymentCategories.Description AS CatDesc, paymentCategories.ID AS CatID FROM (((`paymentsPending` INNER JOIN `payments` ON paymentsPending.Payment = payments.PaymentID) INNER JOIN `users` ON users.UserID = payments.UserID) LEFT JOIN paymentCategories ON paymentCategories.ID = paymentsPending.Category) WHERE payments.stripePaymentIntent IS NOT NULL AND payments.Date LIKE :searchDate AND users.Tenant = :tenant UNION ALL SELECT 'Stripe' AS Provider, 'Payments' AS Type, stripePaymentItems.Amount, 'Payment' AS DebitCredit, CONCAT(users.Forename, ' ', users.Surname) AS `User`, CONCAT(stripePaymentItems.Name, ' ', stripePaymentItems.Description) AS `Name`, NULL AS Info, stripePayments.Paid AS `Status`, NULL AS `StripeFailureCode`, stripePayments.DateTime AS `Date`, stripePaymentItems.AmountRefunded AS `Fees`, stripePayments.Intent AS `ID`, stripePayments.Fees AS TransFee, paymentCategories.Name AS CatName, paymentCategories.Description AS CatDesc, paymentCategories.ID AS CatID FROM (((`stripePaymentItems` INNER JOIN `stripePayments` ON stripePaymentItems.Payment = stripePayments.ID) INNER JOIN `users` ON users.UserID = stripePayments.User) LEFT JOIN paymentCategories ON paymentCategories.ID = stripePaymentItems.Category) WHERE stripePayments.DateTime LIKE :searchDate AND users.Tenant = :tenant AND stripePayments.Paid UNION ALL SELECT 'Stripe' AS Provider, 'Payouts' AS Type, Amount, NULL AS DebitCredit, NULL AS `User`, ID AS `Name`, NULL AS Info, NULL AS `Status`, NULL AS `StripeFailureCode`, ArrivalDate AS `Date`, NULL AS `Fees`, NULL AS `ID`, NULL AS TransFee, NULL AS CatName, NULL AS CatDesc, NULL AS CatID FROM stripePayouts WHERE ArrivalDate LIKE :searchDate AND stripePayouts.Tenant = :tenant) AS UnitedTable ORDER BY UnitedTable.Date ASC, UnitedTable.User ASC");
@@ -36,7 +36,7 @@ $types = [];
 $doneStripeCardFees = [];
 
 // output the column headings
-//$array += ['about' => app()->tenant->getKey('CLUB_NAME') . ' Finance Report'];
+//$array += ['about' => config('CLUB_NAME') . ' Finance Report'];
 while ($row = $getPayments->fetch(PDO::FETCH_ASSOC)) {
   if ($row['Type'] == 'Payments') {
     $date = new DateTime($row['Date']);
@@ -198,7 +198,7 @@ while ($row = $getPayments->fetch(PDO::FETCH_ASSOC)) {
 }
 
 $output = [
-  'about' => app()->tenant->getKey('CLUB_NAME') . ' Payment Item Report',
+  'about' => config('CLUB_NAME') . ' Payment Item Report',
   'producer' => 'Swimming Club Data Systems - Membership Software',
   'month' => $month,
   'year' => $year,

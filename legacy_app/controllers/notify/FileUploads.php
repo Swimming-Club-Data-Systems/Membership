@@ -14,8 +14,8 @@ if (isset($_POST['notify_date'])) {
   $date = (new DateTime('now', new DateTimeZone('Europe/London')))->format('Y/m/d');
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $json = ['status' => 200];
 

@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Swimmers-FamilyMode'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Swimmers-FamilyMode'])) {
 	header("Location: " . autoUrl("members/new"));
 	die();
 }

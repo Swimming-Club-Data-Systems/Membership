@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$termsId = app()->tenant->getKey('TermsAndConditions');
+$termsId = config('TermsAndConditions');
 
 $pagetitle = 'Terms and Conditions of Membership Agreement - Onboarding';
 
@@ -45,7 +45,7 @@ include BASE_PATH . "views/head.php";
         <h1 class="text-center">Terms and Conditions of Membership Agreement</h1>
 
         <p class="lead mb-5 text-center">
-          Read and agree to the terms and conditions of <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> membership.
+          Read and agree to the terms and conditions of <?= htmlspecialchars(config('CLUB_NAME')) ?> membership.
         </p>
 
         <form method="post" class="needs-validation" novalidate>

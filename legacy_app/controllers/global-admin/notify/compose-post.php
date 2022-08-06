@@ -2,7 +2,7 @@
 
 $_SESSION['SCDS-Notify']['NotifyPostData'] = $_POST;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $db->beginTransaction();
 

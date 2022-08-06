@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $member = null;
@@ -15,7 +15,7 @@ try {
 
 $user = $member->getUser();
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && (!$user || $user->getId() != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && (!$user || $user->getId() != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
   halt(404);
 }
 

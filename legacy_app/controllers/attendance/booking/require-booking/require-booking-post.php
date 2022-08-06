@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!$user->hasPermission('Admin') && !$user->hasPermission('Coach')) {
@@ -91,7 +91,7 @@ try {
 
     // Ensure register is clear
 
-    // $_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingSuccess'] = $message;
+    // $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequireBookingSuccess'] = $message;
     http_response_code(302);
     header("location: " . autoUrl('sessions/booking/book?session=' . $session['SessionID'] . '&date=' . $date->format('Y-m-d')));
   } catch (Exception $e) {
@@ -101,7 +101,7 @@ try {
       $message = 'A database error occurred';
     }
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError'] = $message;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequireBookingError'] = $message;
     http_response_code(302);
     header("location: " . autoUrl('sessions/booking/book?session=' . $session['SessionID'] . '&date=' . $date->format('Y-m-d')));
   }

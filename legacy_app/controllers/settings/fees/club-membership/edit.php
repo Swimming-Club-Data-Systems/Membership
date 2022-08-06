@@ -3,8 +3,8 @@
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getClass = $db->prepare("SELECT `ID`, `Name`, `Description`, `Fees`, `Type` FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ?");
 $getClass->execute([
@@ -20,7 +20,7 @@ if (!$class) {
 $type = 'Club Membership';
 switch ($class['Type']) {
   case 'national_governing_body':
-    $type = htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ' Membership';
+    $type = htmlspecialchars(config('NGB_NAME')) . ' Membership';
     break;
   case 'other':
     $type = 'Other (Arbitrary) Membership';

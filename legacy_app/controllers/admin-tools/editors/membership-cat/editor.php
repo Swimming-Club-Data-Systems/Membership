@@ -5,10 +5,10 @@ if (isset($_GET['squad'])) {
   $noSquad = false;
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$leavers = app()->tenant->getKey('LeaversSquad');
+$leavers = config('LeaversSquad');
 if ($leavers == null) {
   $leavers = 0;
 }
@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-fluid">
   <h1>Membership category editor</h1>
-  <p class="lead">Quickly modify <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> categories for members.</p>
+  <p class="lead">Quickly modify <?= htmlspecialchars(config('NGB_NAME')) ?> categories for members.</p>
 
   <form method="post" id="cat-form">
     <div class="cell">

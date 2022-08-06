@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $day = (new DateTime('now', new DateTimeZone('Europe/London')))->format("w");
 $time = (new DateTime('-15 minutes', new DateTimeZone('Europe/London')))->format("H:i:s");

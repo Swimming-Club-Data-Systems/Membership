@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 function insertWeekStart($week) {
-	$db = app()->db;
-	$tenant = app()->tenant;
+	$db = DB::connection()->getPdo();
+	$tenant = tenant()->getLegacyTenant();
 	
 	$insert = $db->prepare("INSERT INTO sessionsWeek (WeekDateBeginning, Tenant) VALUES (?, ?)");
 	$insert->execute([

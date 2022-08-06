@@ -6,17 +6,17 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-$privacy = app()->tenant->getKey('PrivacyPolicy');
+$privacy = config('PrivacyPolicy');
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
 $search  = array("\n##### ", "\n#### ", "\n### ", "\n## ", "\n# ");
@@ -77,10 +77,10 @@ include BASE_PATH . "views/head.php";
 
           <h2>Data Protection Statement</h2>
           <p>
-            I understand that, in compliance with the UK Data Protection Act (which incorporates the pre-Brexit General Data Protection Regulation), all efforts will be made to ensure that information is accurate, kept up to date and secure, and that it is used only in connection with the purposes of <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>. Information will be disclosed only to those members of the club for whom it is appropriate, and relevant officers of the Amateur Swimming Association (Swim England) or British Swimming. Information will not be kept once a person has left the club.
+            I understand that, in compliance with the UK Data Protection Act (which incorporates the pre-Brexit General Data Protection Regulation), all efforts will be made to ensure that information is accurate, kept up to date and secure, and that it is used only in connection with the purposes of <?= htmlspecialchars(config('CLUB_NAME')) ?>. Information will be disclosed only to those members of the club for whom it is appropriate, and relevant officers of the Amateur Swimming Association (Swim England) or British Swimming. Information will not be kept once a person has left the club.
           </p>
 
-          <h2><?= htmlspecialchars(app()->tenant->getName()) ?> Privacy Policy</h2>
+          <h2><?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> Privacy Policy</h2>
           <?php if ($privacyPolicy != null) { ?>
             <?= $Extra->text($privacyPolicy) ?>
           <?php } else { ?>
@@ -91,7 +91,7 @@ include BASE_PATH . "views/head.php";
 
           <h2>myswimmingclub.uk (SCDS) Privacy Policy</h2>
           <p>
-            Use of your <?= htmlspecialchars(app()->tenant->getName()) ?> account is also subject to the terms of service and privacy policies of Swimming Club Data Systems. SCDS provides this platform on behalf of your club. Your club remains the data controller. SCDS is a data processor.
+            Use of your <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> account is also subject to the terms of service and privacy policies of Swimming Club Data Systems. SCDS provides this platform on behalf of your club. Your club remains the data controller. SCDS is a data processor.
           </p>
 
           <div class="mb-3">

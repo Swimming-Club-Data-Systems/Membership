@@ -7,9 +7,9 @@ use PragmaRX\Google2FA\Google2FA;
 
 $ga2fa = new Google2FA();
 
-if (filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "hasGoogleAuth2FA"), FILTER_VALIDATE_BOOLEAN)) {
+if (filter_var(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], "hasGoogleAuth2FA"), FILTER_VALIDATE_BOOLEAN)) {
   $setup = true;
-  $secretKey = getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "GoogleAuth2FASecret");
+  $secretKey = getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], "GoogleAuth2FASecret");
 }
 
 $use_white_background = true;

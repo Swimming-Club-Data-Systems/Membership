@@ -1,12 +1,12 @@
 <?php
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 	$this->get('/', function() {
-		$db = app()->db;
+		$db = DB::connection()->getPdo();
 		
 		$query = $db->prepare("SELECT COUNT(*) FROM `members` WHERE UserID = ?");
 		try {
-			$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+			$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 		} catch (PDOException $e) {
 			halt(500);
 		}
@@ -14,7 +14,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
 
 		$query = $db->prepare("SELECT COUNT(*) FROM `members` WHERE UserID = ? AND RR = ?");
 		try {
-			$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 1]);
+			$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 1]);
 		} catch (PDOException $e) {
 			halt(500);
 		}

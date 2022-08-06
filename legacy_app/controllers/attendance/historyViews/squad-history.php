@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
 $startWeek = new DateTime('monday -1 week', new DateTimeZone('UTC'));

@@ -52,7 +52,7 @@ class Invoice
 
   public static function get($id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getInvoice = $db->prepare("SELECT tenantPaymentInvoices.ID, `Reference`, tenantPaymentInvoices.Customer, `PaymentIntent`, `Date`, `SupplyDate`, `Company`, tenantPaymentInvoices.Currency, `PaymentTerms`, `HowToPay`, `PurchaseOrderNumber`, `AmountPaidCash`, `PaidDate`, `Paid`, `Amount`, `Status`, `Shipping`, `PaymentMethod`, `BillingDetails`, `Type`, `TypeData`, tenantPaymentInvoices.Created, tenantPaymentInvoices.Updated FROM `tenantPaymentInvoices` LEFT JOIN `tenantPaymentIntents` ON tenantPaymentInvoices.PaymentIntent = tenantPaymentIntents.IntentID LEFT JOIN `tenantPaymentMethods` ON tenantPaymentMethods.MethodID = tenantPaymentIntents.PaymentMethod WHERE tenantPaymentInvoices.ID = ?");
     $getInvoice->execute([
       $id

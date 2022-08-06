@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinSwimmers WHERE ID = ? AND Tenant = ?");
 $query->execute([
@@ -43,5 +43,5 @@ $email_parent = '<p>Hello ' . $detail['F'] . ' ' . $detail['L'] . '</p>
 
 notifySend(null, 'Your Trial Appointment', $email_parent, $detail['F'] . ' ' . $detail['L'], $detail['Email']);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['TrialAppointmentUpdated'] = true;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialAppointmentUpdated'] = true;
 header("Location: " . currentUrl());

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $admin = app()->user->hasPermissions(['Admin', 'Coach']);
 
@@ -168,7 +168,7 @@ try {
   if ($adminMode) {
     $update = $db->prepare("UPDATE `members` SET `ASANumber` = ?, `NGBCategory` = ?, `ClubCategory` = ?, `Country` = ?, `ASAPaid` = ?, `ClubPaid` = ? WHERE MemberID = ?");
 
-    $asaNumber = mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) . $id;
+    $asaNumber = mb_strtoupper(config('ASA_CLUB_CODE')) . $id;
     if (isset($_POST['asa']) && mb_strlen(trim($_POST['asa']))) {
       $asaNumber = mb_strtoupper(trim($_POST['asa']));
     }
@@ -234,11 +234,11 @@ try {
   AuditLog::new('Members-Edited', 'Edited ' . $row['MForename'] . ' ' . $row['MSurname'] . ' (#' . $id . ')');
   $db->commit();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessState'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessState'] = true;
 } catch (Exception $e) {
   $db->rollBack();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = $e->getMessage();
 }
 
 http_response_code(302);

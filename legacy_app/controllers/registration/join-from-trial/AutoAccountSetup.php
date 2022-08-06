@@ -7,12 +7,12 @@
 
 // First check if an account for this email already exists
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 try {
 
   $checkExists = $db->prepare("SELECT COUNT(*) FROM users WHERE EmailAddress = ?");
-  $checkExists->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['email-addr']]);
+  $checkExists->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['email-addr']]);
 
   $userID = null;
 
@@ -21,14 +21,14 @@ try {
     try {
       $addUser = $db->prepare("INSERT INTO users (Password, AccessLevel, EmailAddress, EmailComms, Forename, Surname, Mobile, MobileComms, RR) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
       $addUser->execute([
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['password-hash'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['password-hash'],
         'Parent',
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['email-addr'],
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['allow-email'],
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['forename'],
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['surname'],
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['mobile'],
-        $_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['allow-sms'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['email-addr'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['allow-email'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['forename'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['surname'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['mobile'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['allow-sms'],
         false
       ]);
 
@@ -38,13 +38,13 @@ try {
     }
   } else {
     $getUser = $db->prepare("SELECT UserID FROM users WHERE EmailAddress = ?");
-    $getUser->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-UserDetails']['email-addr']]);
+    $getUser->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-UserDetails']['email-addr']]);
     $userID = $getUser->fetchColumn();
   }
 
   // Get swimmers from trial request
   $getSwimmers = $db->prepare("SELECT First, Last, DoB, SquadRecommendation, Sex FROM joinSwimmers WHERE Parent = ? AND SquadRecommendation IS NOT NULL");
-  $getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash']]);
+  $getSwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash']]);
 
   $swimmers = $getSwimmers->fetchAll(PDO::FETCH_ASSOC);
 
@@ -76,5 +76,5 @@ try {
 }
 
 // Go to the medical form for swimmers who are RR
-$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] = 'MedicalForm';
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] = 'MedicalForm';
 header("Location: " . autoUrl("register/ac/medical-form"));

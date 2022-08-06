@@ -1,16 +1,16 @@
 <?php
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $entries = $db->prepare("SELECT EntryID, GalaName, ClosingDate, GalaVenue, MForename, MSurname, EntryProcessed Processed, Charged, Refunded, Locked, Vetoable, FeeToPay, RequiresApproval, Approved FROM ((galaEntries INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) INNER JOIN members ON galaEntries.MemberID = members.MemberID) WHERE GalaDate >= CURDATE() AND members.UserID = ?");
-$entries->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$entries->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $entry = $entries->fetch(PDO::FETCH_ASSOC);
 
 $timesheets = $db->prepare("SELECT DISTINCT `galas`.`GalaID`, `GalaName`, `GalaVenue` FROM ((`galas` INNER JOIN `galaEntries` ON `galas`.`GalaID` = `galaEntries`.`GalaID`) INNER JOIN members ON galaEntries.MemberID = members.MemberID) WHERE `GalaDate` >= CURDATE() AND members.UserID = ? ORDER BY `GalaDate` ASC");
-$timesheets->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$timesheets->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $timesheet = $timesheets->fetch(PDO::FETCH_ASSOC);
 
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
@@ -32,7 +32,7 @@ include "galaMenu.php";
     <h1>My Gala Entries</h1>
     <p class="lead">Manage your gala entries</p>
 
-    <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['VetoTrue']) && $_SESSION['TENANT-' . app()->tenant->getId()]['VetoTrue']) { ?>
+    <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VetoTrue']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VetoTrue']) { ?>
       <div class="alert alert-success">
         <p class="mb-0">
           <strong>Your gala entry has been vetoed</strong>
@@ -41,7 +41,7 @@ include "galaMenu.php";
           All swims withdrawn.
         </p>
       </div>
-    <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['VetoTrue']);
+    <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VetoTrue']);
     } ?>
 
     <?php if ($entry) { ?>

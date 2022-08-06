@@ -1,7 +1,7 @@
 <?php
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'])) {
 	$this->get('/simulate/exit', function () {
 
 		include 'ExitSimulation.php';
@@ -114,7 +114,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Galas") {
 		include BASE_PATH . 'controllers/payments/parent/MembershipFees.php';
 	});
 
-	if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
+	if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'])) {
 		$this->get('/simulate/{id}:int', function ($id) {
 
 			include 'EnterSimulation.php';
@@ -126,7 +126,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Galas") {
 	});
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') {
 
 	/**
 	 * DELETION

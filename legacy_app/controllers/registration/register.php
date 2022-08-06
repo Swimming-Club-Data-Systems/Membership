@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 
-$privacy = app()->tenant->getKey('PrivacyPolicy');
+$privacy = config('PrivacyPolicy');
 
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
@@ -27,7 +27,7 @@ $fam_keys = null;
   "KEY" => null
 ];*/
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMode'] = $mode;
 
   $use_white_background = true;
   $pagetitle = "Register";
@@ -37,9 +37,9 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
 ?>
 <div class="pb-3">
   <div class="container-xl">
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'])) {
-        echo $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'];
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify']);
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'])) {
+        echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'];
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify']);
       }  else { ?>
       <!--<div class="alert alert-warning">
         <p class="mb-0">
@@ -63,9 +63,9 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
       <h1>User Registration</h1>
       <p>We need a few details before we start.</p>
       <hr>
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-        echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+        echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
       } ?>
 
       <div class="row">
@@ -103,7 +103,7 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
                   <label class="form-label" for="forename">First Name</label>
                   <input class="form-control" type="text" name="forename"
                   id="forename" placeholder="First" required
-                  value="<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationForename'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationForename'])?><?php } ?>" autocomplete="given-name">
+                  value="<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationForename'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationForename'])?><?php } ?>" autocomplete="given-name">
                   <div class="invalid-feedback">
                     You must provide a first name
                   </div>
@@ -117,7 +117,7 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
                   <label class="form-label" for="surname">Last Name</label>
                   <input class="form-control" type="text" name="surname"
                   id="surname" placeholder="Last" required
-                  value="<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSurname'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSurname'])?><?php } ?>" autocomplete="family-name">
+                  value="<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSurname'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSurname'])?><?php } ?>" autocomplete="family-name">
                   <div class="invalid-feedback">
                     You must provide a surname
                   </div>
@@ -129,9 +129,9 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
 
             <div class="mb-3">
               <label class="form-label" for="email">Email Address</label>
-              <input class="form-control mb-0 text-lowercase" type="email" name="email" id="email-address" placeholder="yourname@example.com" required value="<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmail'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmail'])?><?php } ?>" autocomplete="email">
+              <input class="form-control mb-0 text-lowercase" type="email" name="email" id="email-address" placeholder="yourname@example.com" required value="<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmail'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmail'])?><?php } ?>" autocomplete="email">
               <small id="emailHelp" class="form-text text-muted">
-                Your email address will only be used inside <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> and SCDS.
+                Your email address will only be used inside <?=htmlspecialchars(config('CLUB_NAME'))?> and SCDS.
               </small>
               <div class="invalid-feedback">
                 You must provide a valid email address
@@ -143,7 +143,7 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
           <div class="col-md-10 col-lg-8">
             <div class="mb-3">
               <label class="form-label" for="mobile">Mobile Number</label>
-              <input class="form-control" type="tel" pattern="\+{0,1}[0-9]*" name="mobile" id="mobile" placeholder="01234 567890" required value="<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMobile'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMobile'])?><?php } ?>" autocomplete="tel">
+              <input class="form-control" type="tel" pattern="\+{0,1}[0-9]*" name="mobile" id="mobile" placeholder="01234 567890" required value="<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMobile'])) { ?><?=htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMobile'])?><?php } ?>" autocomplete="tel">
               <small id="mobileHelp" class="form-text text-muted">If you don't have a mobile, use your landline number.</small>
               <div class="invalid-feedback">
                 You must provide a valid UK phone number
@@ -186,13 +186,13 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
         <?php
 
         $email = $sms = "";
-        if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmailAuth'])) {
+        if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmailAuth'])) {
           $email = " checked ";
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmailAuth']);
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmailAuth']);
         }
-        if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSmsAuth'])) {
+        if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSmsAuth'])) {
           $sms = " checked ";
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSmsAuth']);
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSmsAuth']);
         } ?>
 
         <div class="row">
@@ -232,10 +232,10 @@ $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] = $mode;
                 YOUR CLUB HAS NOT SET UP A PRIVACY POLICY. PLEASE DO NOT PROCEED.
               </p>
               <p>
-                In accordance with European Law, <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, Swim England and British Swimming are Data Controllers for the purposes of the General Data Protection Regulation.
+                In accordance with European Law, <?=htmlspecialchars(config('CLUB_NAME'))?>, Swim England and British Swimming are Data Controllers for the purposes of the General Data Protection Regulation.
               </p>
               <p>
-                By proceeding you agree to our <a href="https://www.chesterlestreetasc.co.uk/policies/privacy/" target="_blank">Privacy Policy (this is an example policy)</a> and the use of your data by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>. Please note that you have also agreed to our use of you and/or your swimmer's data as part of your registration with the club and with British Swimming and Swim England.
+                By proceeding you agree to our <a href="https://www.chesterlestreetasc.co.uk/policies/privacy/" target="_blank">Privacy Policy (this is an example policy)</a> and the use of your data by <?=htmlspecialchars(config('CLUB_NAME'))?>. Please note that you have also agreed to our use of you and/or your swimmer's data as part of your registration with the club and with British Swimming and Swim England.
               </p>
               <p>
                 We will be unable to provide this service for technical reasons if you do not consent to the use of this data.
@@ -271,8 +271,8 @@ document.getElementById("submit").disabled = true;
 $footer->addJS("js/NeedsValidation.js");
 $footer->render();
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationUsername']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationForename']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSurname']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmail']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMobile']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationUsername']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationForename']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSurname']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmail']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMobile']);

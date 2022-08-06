@@ -2,8 +2,8 @@
 
 if (!app()->user->hasPermission('Admin')) halt(404);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Get renewals
 $getCount = $db->prepare("SELECT COUNT(*) FROM renewalv2 WHERE Tenant = ?");

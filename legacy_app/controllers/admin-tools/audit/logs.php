@@ -1,7 +1,7 @@
 <?php
 
-$tenant = app()->tenant;
-$db = app()->db;
+$tenant = tenant()->getLegacyTenant();
+$db = DB::connection()->getPdo();
 
 $pagination = new \SCDS\Pagination();
 

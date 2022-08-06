@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Get users for list
 $getUsers = $db->prepare("SELECT Forename, Surname, UserID FROM users WHERE Tenant = ? ORDER BY Forename ASC, Surname ASC");
@@ -10,7 +10,7 @@ $getUsers->execute([
 ]);
 $userDetails = $getUsers->fetch(PDO::FETCH_ASSOC);
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $list = $db->prepare("SELECT * FROM `targetedLists` WHERE `ID` = ? AND Tenant = ?");
 $list->execute([

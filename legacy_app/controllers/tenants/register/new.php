@@ -40,7 +40,7 @@ if (($handle = fopen(BASE_PATH . "includes/regions/clubs.csv", "r")) !== FALSE) 
   fclose($handle);
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 // Create tenant if not exists
 $getCount = $db->prepare("SELECT COUNT(*) FROM tenants WHERE Code = ?");

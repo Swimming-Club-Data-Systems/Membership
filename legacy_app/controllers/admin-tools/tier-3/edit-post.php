@@ -8,8 +8,8 @@ try {
     throw new Exception('Invalid CSRF token');
   }
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $getSquads = $db->prepare("SELECT SquadName, SquadID, SquadFee FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC;");
   $getSquads->execute([
@@ -39,13 +39,13 @@ try {
 
   $tenant->setKey('TIER3_SQUAD_FEES', $json);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['FormSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormSuccess'] = true;
 } catch (PDOException $e) {
 
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['FormError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'] = $e->getMessage();
 }
 
 http_response_code(302);

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 if (bool(getenv('IS_DEV'))) {
   $this->group('/dev', function () {
@@ -15,7 +15,7 @@ $this->get('/emergency-message.json', function () {
 
 $this->post('/check-login.json', function () {
   header("content-type: application/json");
-  echo json_encode(['signed_in' => isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])]);
+  echo json_encode(['signed_in' => isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])]);
 });
 
 $this->get('/robots.txt', function () {
@@ -42,10 +42,10 @@ $this->group('/webhooks', function () {
 });
 
 $this->any(['/', '/*'], function () {
-  $domain = app()->tenant->getDomain();
+  $domain = tenant()->getLegacyTenant()->getDomain();
   if (!$domain) {
-    $domain = app()->tenant->getUUID() . '.' . getenv('MAIN_DOMAIN');
+    $domain = tenant()->getLegacyTenant()->getUUID() . '.' . getenv('MAIN_DOMAIN');
   }
   http_response_code(303);
-  header("Location: " . 'https://' . rtrim($domain, '/') . '/' . ltrim(str_replace(app()->tenant->getCodeID(), '', $_SERVER['REQUEST_URI']), '/'));
+  header("Location: " . 'https://' . rtrim($domain, '/') . '/' . ltrim(str_replace(tenant()->getLegacyTenant()->getCodeID(), '', $_SERVER['REQUEST_URI']), '/'));
 });

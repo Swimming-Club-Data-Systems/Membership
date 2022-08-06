@@ -1,7 +1,7 @@
 <?php
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
 $this->get('/', function () {
 	require 'squadList.php';

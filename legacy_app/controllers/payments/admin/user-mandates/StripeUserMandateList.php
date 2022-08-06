@@ -5,14 +5,14 @@
  * Displays list of users and their primary mandate
  */
 
-if (!app()->tenant->getStripeAccount() || !app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) {
+if (!tenant()->getLegacyTenant()->getStripeAccount() || !config('USE_STRIPE_DIRECT_DEBIT')) {
   http_response_code(302);
   header('location: ' . autoUrl('payments/user-mandates/go-cardless'));
   return;
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMandates = $db->prepare("SELECT Forename, Surname, users.UserID FROM (users INNER JOIN `permissions` ON users.UserID = `permissions`.`User`) WHERE users.Tenant = ? AND `permissions`.`Permission` = 'Parent' ORDER BY Surname ASC, Forename ASC");
 $getMandates->execute([

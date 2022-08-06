@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 use Respect\Validation\Validator as v;
 
@@ -9,7 +9,7 @@ $errorState = false;
 $errorMessage = "";
 
 
-$leavers = app()->tenant->getKey('LeaversSquad');
+$leavers = config('LeaversSquad');
 
 $newSquad = $_POST['newSquad'];
 $movingDate = $_POST['movingDate'];
@@ -98,7 +98,7 @@ if (!$errorState) {
 				if ($email_info['SquadTimetable'] != "" && $email_info['SquadTimetable'] != null) {
 					$message .= '<p>You can get the <a href="' . $email_info['SquadTimetable'] . '" target="_blank">timetable for ' . $squad . ' Squad on our website</a>.</p>';
 				}
-				if (app()->tenant->isCLS()) {
+				if (tenant()->getLegacyTenant()->isCLS()) {
 					$message .= '<p><strong>We have attached the Code of Conduct agreement (PDF) for ' . $squad . ' Squad to this email. You must print it off, sign it and return it to any squad coach or member of club staff before your first session in ' . $squad . ' Squad.</strong></p>';
 				}
 				if ($email_info['SquadCoC'] != "" && $email_info['SquadCoC'] != null) {
@@ -109,7 +109,7 @@ if (!$errorState) {
 					$message .= '<p>You must abide by the above code of conduct if you take your place in this squad as per the Membership Terms and Conditions. This new code of conduct may be different to that for your current squad, so please read it carefully.</p>';
 				}
 				$message .= '<hr><p>If you do not think ' . $swimmer . ' will be able to take up their place in ' . $squad . ' Squad, please reply to this email as soon as possible. We must however warn you that we may not be able keep ' . $swimmer . ' in their current squad if it would prevent us from moving up swimmers in our lower squads.</p>';
-				$message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+				$message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 				$message .= '<p class="small text-muted">* Discounts may apply if you have multiple swimmers.</p>';
 
 				try {
@@ -130,10 +130,10 @@ if (!$errorState) {
 					$mailObject->showName($name['Forename'] . ' ' . $name['Surname']);
 
 					$email = new \SendGrid\Mail\Mail();
-					$email->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), app()->tenant->getKey('CLUB_NAME'));
-					$email->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), app()->tenant->getKey('CLUB_NAME'));
-					if (app()->tenant->getKey('CLUB_EMAIL')) {
-						$email->setReplyTo(app()->tenant->getKey('CLUB_EMAIL'), app()->tenant->getKey('CLUB_NAME') . ' Team');
+					$email->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), config('CLUB_NAME'));
+					$email->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), config('CLUB_NAME'));
+					if (config('CLUB_EMAIL')) {
+						$email->setReplyTo(config('CLUB_EMAIL'), config('CLUB_NAME') . ' Team');
 					}
 					$email->setSubject($subject);
 					$email->addTo($name['EmailAddress'], $name['Forename'] . ' ' . $name['Surname']);
@@ -177,7 +177,7 @@ if (!$errorState) {
 }
 
 if ($errorState) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = '
 	<div class="alert alert-danger">
 	<strong>An error occured and we could not add the squad move</strong>
 	<ul class="mb-0">' . $errorMessage . '

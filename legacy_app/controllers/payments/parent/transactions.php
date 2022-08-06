@@ -2,7 +2,7 @@
 
 // require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Statement History";
 
 $use_white_background = true;

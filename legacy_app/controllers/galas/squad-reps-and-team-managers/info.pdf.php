@@ -7,8 +7,8 @@ $data = json_decode($output);
 
 $squads = null;
 
-$leavers = app()->tenant->getKey('LeaversSquad');
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+$leavers = config('LeaversSquad');
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $squads = $db->prepare("SELECT SquadName `name`, SquadID `id` FROM squads WHERE `SquadID` != ? ORDER BY SquadFee DESC, `name` ASC");
   $squads->execute([
     $leavers
@@ -16,7 +16,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
 } else {
   $squads = $db->prepare("SELECT SquadName `name`, SquadID `id` FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad WHERE squadReps.User = ? AND SquadID != ? ORDER BY SquadFee DESC, `name` ASC");
   $squads->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $leavers
   ]);
 }
@@ -111,11 +111,11 @@ ob_start(); ?>
   </p>
 
   <div class="avoid-page-break-inside">
-    <?php if (app()->tenant->isCLS()) { ?>
+    <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
       <p>&copy; Chester-le-Street ASC <?= date("Y") ?></p>
     <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?= date("Y") ?></p>
-      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(config('CLUB_NAME')) ?></p>
     <?php } ?>
   </div>
 

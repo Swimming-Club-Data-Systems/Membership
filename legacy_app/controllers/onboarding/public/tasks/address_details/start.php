@@ -6,9 +6,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 

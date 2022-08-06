@@ -4,8 +4,8 @@
 
 $user = $id;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getUser = $db->prepare("SELECT Forename, Surname FROM users WHERE UserID = ? AND Tenant = ?");
 $getUser->execute([

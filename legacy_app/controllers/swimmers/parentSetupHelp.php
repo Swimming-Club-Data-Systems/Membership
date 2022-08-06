@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $sql = $db->prepare("SELECT * FROM `members` WHERE members.Tenant = ? AND `MemberID` = ?");
 $sql->execute([
@@ -15,11 +15,11 @@ if ($row == null) {
 	halt(404);
 }
 $swimEnglandText = "Swim England Number";
-if (mb_stripos($row['ASANumber'], app()->tenant->getKey('ASA_CLUB_CODE')) > -1) {
+if (mb_stripos($row['ASANumber'], config('ASA_CLUB_CODE')) > -1) {
 	$swimEnglandText = "Temporary Membership Number";
 }
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']);
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][0]['text'] = autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']);
 
 $pagetitle = htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . " Registration Information";
 
@@ -62,17 +62,17 @@ include BASE_PATH . "views/swimmersMenu.php";
     </ol>
   </nav>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus']) && $_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus']) { ?>
   <div class="alert alert-success d-print-none">
     <p class="mb-0">We've sent an email to that address.</p>
   </div>
-  <?php } else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus']) && !$_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus']) { ?>
+  <?php } else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus']) && !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus']) { ?>
   <div class="alert alert-danger d-print-none">
     <p class="mb-0">We were unable to send an email to that address.</p>
   </div>
   <?php }
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus'])) {
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailStatus']);
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus'])) {
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailStatus']);
   } ?>
 
 	<div class="alert alert-danger d-print-none">
@@ -115,11 +115,11 @@ include BASE_PATH . "views/swimmersMenu.php";
   </div>
 
   <div class="py-3 mb-3 text-end font-monospace">
-    <?=htmlspecialchars(app()->tenant->getCode())?> MEMBER ID: <?= htmlspecialchars($id) ?>
+    <?=htmlspecialchars(tenant()->getLegacyTenant()->getCode())?> MEMBER ID: <?= htmlspecialchars($id) ?>
   </div>
 
   <div class="mb-3 p-5 bg-primary text-white">
-    <span class="h3 mb-0"><?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></span>
+    <span class="h3 mb-0"><?=htmlspecialchars(config('CLUB_NAME'))?></span>
     <h1 class="h2 mb-4">Online Membership System</h1>
     <p class="mb-0">
       <strong>
@@ -129,11 +129,11 @@ include BASE_PATH . "views/swimmersMenu.php";
   </div>
 
   <p>
-    Here at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, we provide a number of online services to
+    Here at <?=htmlspecialchars(config('CLUB_NAME'))?>, we provide a number of online services to
     manage our members. Our services allow you to manage your swimmers, enter competitions, stay up to date by email and make payments by Direct Debit or credit/debit card.
   </p>
 
-  <?php if (!app()->tenant->isCLS()) { ?>
+  <?php if (!tenant()->getLegacyTenant()->isCLS()) { ?>
   <p>
     <em>Some services may not be provided by your club.</em>
   </p>
@@ -184,7 +184,7 @@ include BASE_PATH . "views/swimmersMenu.php";
   </p>
 
   <p>
-    You'll be directed to a page and asked to enter your swimmer's <?=$swimEnglandText?> and <?=htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key as below.
+    You'll be directed to a page and asked to enter your swimmer's <?=$swimEnglandText?> and <?=htmlspecialchars(config('CLUB_SHORT_NAME'))?> Access Key as below.
   </p>
 
   <div class="mb-3">
@@ -195,7 +195,7 @@ include BASE_PATH . "views/swimmersMenu.php";
           <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars($row['ASANumber'])?></span></td>
         </tr>
         <tr>
-          <th scope="row" class="ps-0"><?=htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key</th>
+          <th scope="row" class="ps-0"><?=htmlspecialchars(config('CLUB_SHORT_NAME'))?> Access Key</th>
           <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars($row['AccessKey'])?></span></td>
         </tr>
       </tbody>
@@ -212,23 +212,23 @@ include BASE_PATH . "views/swimmersMenu.php";
       may need to verify your identity.
     </p>
 
-    <?php if (mb_stripos($row['ASANumber'], app()->tenant->getKey('ASA_CLUB_CODE')) > -1) { ?>
+    <?php if (mb_stripos($row['ASANumber'], config('ASA_CLUB_CODE')) > -1) { ?>
     <p>
       At the time you were given this form we did not yet have a Swim England registration number for
       <?=htmlspecialchars($row['MForename'])?>. We have given you a temporary number which starts with <span
-        class="font-monospace"><?=htmlspecialchars(app()->tenant->getKey('ASA_CLUB_CODE'))?></span> which you can use to add your swimmer to your
+        class="font-monospace"><?=htmlspecialchars(config('ASA_CLUB_CODE'))?></span> which you can use to add your swimmer to your
       account.
     </p>
     <?php } ?>
 
     <p>
       If you’d like more information about how we use data, contact
-      <?=htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL'))?>.
+      <?=htmlspecialchars(config('CLUB_EMAIL'))?>.
     </p>
 
-    <?php if (!app()->tenant->isCLS()) { ?>
+    <?php if (!tenant()->getLegacyTenant()->isCLS()) { ?>
     <p>
-      The membership system is provided to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> by
+      The membership system is provided to <?=htmlspecialchars(config('CLUB_NAME'))?> by
       <a href="https://wwww.myswimmingclub.uk/">Swimming Club Data Systems</a>.
     </p>
     <?php } ?>

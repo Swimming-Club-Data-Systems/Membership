@@ -21,24 +21,24 @@ include BASE_PATH . 'views/header.php';
       <p class="lead">You can set your reply-to address here.</p>
       <p>Your reply-to address is where replies will to emails sent using notify will be sent if you select <strong>My reply-to email address</strong> when sending.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SetReplySuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['SetReplySuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplySuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplySuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0"><strong>We've saved your reply to email</strong></p>
           <p class="mb-0">If your email address is not valid, it may mean your emails are not sent.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SetReplySuccess']); } ?>
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplySuccess']); } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SetReplyFalse']) && $_SESSION['TENANT-' . app()->tenant->getId()]['SetReplyFalse']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplyFalse']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplyFalse']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>Your email address was not valid</strong></p>
           <p class="mb-0">Please try again.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SetReplyFalse']); } ?>
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetReplyFalse']); } ?>
 
       <form method="post">
         <div class="mb-3">
           <label class="form-label" for="reply">Reply-To email address</label>
-          <input type="email" class="form-control" id="reply" name="reply" placeholder="Enter email" value="<?=htmlspecialchars(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress'))?>">
+          <input type="email" class="form-control" id="reply" name="reply" placeholder="Enter email" value="<?=htmlspecialchars(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NotifyReplyAddress'))?>">
         </div>
 
         <p>

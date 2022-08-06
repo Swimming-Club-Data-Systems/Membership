@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMember = $db->prepare("SELECT MForename fn, MSurname sn, members.UserID FROM members WHERE members.MemberID = ? AND members.Tenant = ?");
 $getMember->execute([
@@ -14,7 +14,7 @@ if ($memberInfo == null) {
   halt(404);
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -28,23 +28,23 @@ $dateObject->setTimezone(new DateTimeZone('Europe/London'));
 $date = $dateObject->format("Y-m-d");
 $time = $dateObject->format("H:i");
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['title'])) {
-  $title = $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['title'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['title'])) {
+  $title = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['title'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['entry'])) {
-  $entry = $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['entry'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['entry'])) {
+  $entry = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['entry'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['content-type'])) {
-  $contentType = $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['content-type'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['content-type'])) {
+  $contentType = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['content-type'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['date'])) {
-  $date = $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['date'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['date'])) {
+  $date = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['date'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['time'])) {
-  $time = $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']['time'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['time'])) {
+  $time = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']['time'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent'])) {
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent'])) {
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent']);
 }
 
 include BASE_PATH . 'views/header.php';
@@ -56,7 +56,7 @@ include BASE_PATH . 'views/header.php';
   <div class="bg-light mt-n3 py-3 mb-3">
     <div class="container-xl">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) { ?>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Log book</a></li>
@@ -97,11 +97,11 @@ include BASE_PATH . 'views/header.php';
     <div class="row">
       <div class="col-lg-8">
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddLogErrorMessage'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogErrorMessage'])) { ?>
           <div class="alert alert-danger">
-            <?= $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogErrorMessage'] ?>
+            <?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogErrorMessage'] ?>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddLogErrorMessage']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogErrorMessage']);
         } ?>
 
         <h2>Log entry</h2>

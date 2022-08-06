@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Check gala
 $getGalas = $db->prepare("SELECT COUNT(*) FROM galas INNER JOIN galaEntries ON galas.GalaID = galaEntries.GalaID WHERE galaEntries.EntryID = ? AND galas.Tenant = ?");
@@ -16,7 +16,7 @@ if ($getGalas->fetchColumn() == 0) {
 // Get entry from post data and check if user is a rep for the swimmer's squad
 // Non-Parents have auto permission
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $getSquad = $db->prepare("SELECT SquadID FROM galaEntries INNER JOIN members ON members.MemberID = galaEntries.MemberID WHERE EntryID = ?");
   $getSquad->execute([
     $_POST['entry']
@@ -29,7 +29,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
   $getRepPermission = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE `Squad` = ? AND `User` = ?");
   $getRepPermission->execute([
     (int) $squad,
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
   if ($getRepPermission->fetchColumn() == 0) {
     halt(404);

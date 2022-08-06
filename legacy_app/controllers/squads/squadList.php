@@ -1,8 +1,8 @@
 <?php
 
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = $db->prepare("SELECT SquadID, SquadName, SquadFee, SquadCoach FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
 $squads->execute([
@@ -11,7 +11,7 @@ $squads->execute([
 
 $getCoaches = $db->prepare("SELECT Forename fn, Surname sn FROM coaches INNER JOIN users ON coaches.User = users.UserID WHERE coaches.Squad = ? ORDER BY coaches.Type ASC, Forename ASC, Surname ASC");
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 $pagetitle = "Squads";
 include BASE_PATH . "views/header.php";
 
@@ -29,9 +29,9 @@ include BASE_PATH . "views/header.php";
 		<h1>Squads</h1>
 		<p class="lead">Information about our squads and training groups</p>
 
-		<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['DeleteSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['DeleteSuccess']) { ?>
+		<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteSuccess']) { ?>
 			<div class="alert alert-success">We've deleted that squad. That action cannot be undone.</div>
-		<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['DeleteSuccess']);
+		<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteSuccess']);
 		} ?>
 
 		<?php if ($row = $squads->fetch(PDO::FETCH_ASSOC)) { ?>

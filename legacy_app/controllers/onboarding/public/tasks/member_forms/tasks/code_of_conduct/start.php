@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $session = \SCDS\Onboarding\Session::retrieve($_SESSION['OnboardingSessionId']);
 
@@ -8,9 +8,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -22,7 +22,7 @@ $onboardingMember = \SCDS\Onboarding\Member::retrieveById($id);
 $member = $onboardingMember->getMember();
 
 // Work out which forms we need to fill out
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getSquads = $db->prepare("SELECT SquadID, SquadName, SquadCoC FROM squads INNER JOIN squadMembers ON squadMembers.Squad = squads.SquadID WHERE squadMembers.Member = ?");
 $getSquads->execute([

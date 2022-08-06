@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $user = app()->user;
 if (!$user->hasPermissions(['Admin'])) halt(404);

@@ -25,8 +25,8 @@ class Member
 
   public static function retrieve($member, $session, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     $get = $db->prepare("SELECT * FROM `onboardingMembers` INNER JOIN members ON members.MemberID = onboardingMembers.member WHERE `member` = ? AND `session` = ? AND `Tenant` = ?");
     $get->execute([
@@ -51,7 +51,7 @@ class Member
 
   public static function retrieveById($id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $get = $db->prepare("SELECT `member`, `session` FROM onboardingMembers WHERE `id` = ?");
     $get->execute([
       $id
@@ -68,7 +68,7 @@ class Member
 
   private function loadMembers()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname FROM members INNER JOIN onboardingMembers ON members.MemberID = onboardingMembers.member WHERE `session` = ? AND `UserID` = ? ORDER BY MemberID ASC");
     $getMembers->execute([
       $this->id,
@@ -138,7 +138,7 @@ class Member
 
     $stages->$task->completed = true;
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $update = $db->prepare("UPDATE `onboardingMembers` SET `stages` = ? WHERE `id` = ?");
     $update->execute([
       json_encode($stages),

@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // $dataInit = autoUrl('apis', false);
 $dataInit = 'https://production-apis.tenant-services.membership.myswimmingclub.uk';
@@ -29,7 +29,7 @@ if (!app()->user) {
 // Check if authenticated
 $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
 $getRepCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 
@@ -106,16 +106,16 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>An error occurred</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']['message']) ?>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']);
       } ?>
 
       <form action="<?= htmlspecialchars(autoUrl('contact-tracing/sign-out/' . $id)) ?>" method="get">

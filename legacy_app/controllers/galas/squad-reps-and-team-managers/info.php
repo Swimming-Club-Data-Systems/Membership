@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $noSquad = false;
 $doNotHalt = true;
@@ -9,12 +9,12 @@ require 'info.json.php';
 $data = json_decode($output);
 
 $squads = null;
-$leavers = app()->tenant->getKey('LeaversSquad');
+$leavers = config('LeaversSquad');
 if ($leavers == null) {
   $leavers = 0;
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $squads = $db->prepare("SELECT SquadName `name`, SquadID `id` FROM squads WHERE Tenant = ? AND `SquadID` != ? ORDER BY SquadFee DESC, `name` ASC");
   $squads->execute([
     $tenant->getId(),
@@ -24,7 +24,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
   $squads = $db->prepare("SELECT SquadName `name`, SquadID `id` FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad WHERE Tenant = ? AND squadReps.User = ? AND SquadID != ? ORDER BY SquadFee DESC, `name` ASC");
   $squads->execute([
     $tenant->getId(),
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $leavers
   ]);
 }
@@ -95,7 +95,7 @@ include BASE_PATH . 'views/header.php';
             <?php if ($noSquad) { ?>
               <option selected>Select a squad</option>
             <?php } ?>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") { ?>
               <option value="all" <?php if ("all" == $squad) { ?>selected<?php } ?>>
                 All squads
               </option>

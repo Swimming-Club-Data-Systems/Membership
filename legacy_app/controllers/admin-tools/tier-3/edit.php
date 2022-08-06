@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getSquads = $db->prepare("SELECT SquadName, SquadID, SquadFee FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC;");
 $getSquads->execute([
@@ -16,7 +16,7 @@ $pagetitle = "Tier 3 Billing";
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 $dateToday = clone $date;
 
-$fees = $tenant->getKey('TIER3_SQUAD_FEES');
+$fees = config('TIER3_SQUAD_FEES');
 if ($fees) {
   $fees = json_decode($fees, true);
   $date = new DateTime($fees['eighteen_by'], new DateTimeZone('Europe/London'));
@@ -40,25 +40,25 @@ include BASE_PATH . 'views/header.php';
       <h1>Tier 3 Billing</h1>
       <p class="lead">Tier 3 Squad Fees.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FormSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormSuccess'])) { ?>
         <div class="alert alert-success">
           Saved
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>An error occurred</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) ?>
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']);
       } ?>
 
       <?php if ($fees) { ?>

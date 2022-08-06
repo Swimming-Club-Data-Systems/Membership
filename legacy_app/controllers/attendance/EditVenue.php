@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $data = $db->prepare("SELECT `VenueName`, `Location` FROM sessionsVenues WHERE VenueID = ? AND Tenant = ?");
 $data->execute([
@@ -36,7 +36,7 @@ include BASE_PATH . "views/header.php";
           Edit <?= htmlspecialchars($venue['VenueName']) ?>
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars(config('CLUB_NAME')) ?>
         </p>
         <!-- <div class="mb-3 d-lg-none"></div> -->
       </div>
@@ -48,7 +48,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueError']['Status']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueError']['Status']) { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
             <strong>
@@ -61,7 +61,7 @@ include BASE_PATH . "views/header.php";
         </div>
       <?php } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -71,7 +71,7 @@ include BASE_PATH . "views/header.php";
         </div>
       <?php } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -113,9 +113,9 @@ include BASE_PATH . "views/header.php";
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueError']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueSuccess']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueSuccess']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueError']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditVenueSuccess']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueSuccess']);
 
 $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");

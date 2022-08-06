@@ -1,14 +1,14 @@
 <?php
 
 // Verify user has access
-\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $id);
+\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $id);
 
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // GET THE GALA
 $getGala = $db->prepare("SELECT GalaName `name`, GalaVenue venue FROM galas WHERE GalaID = ? AND Tenant = ?");

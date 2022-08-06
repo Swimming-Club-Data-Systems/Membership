@@ -1,24 +1,24 @@
 <?php
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
-$_SESSION['TENANT-' . app()->tenant->getId()] = null;
-unset($_SESSION['TENANT-' . app()->tenant->getId()]);
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()] = null;
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]);
 
 $secure = true;
 if (app('request')->protocol == 'http') {
   $secure = false;
 }
 
-setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', "", 0, "/", app('request')->hostname('request')->hostname, $secure, false);
+setcookie(COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin', "", 0, "/", app('request')->hostname('request')->hostname, $secure, false);
 
-if (isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'])) {
+if (isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin'])) {
   // Unset the hash.
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $unset = $db->prepare("UPDATE userLogins SET HashActive = ? WHERE Hash = ? AND UserID = ?");
   $unset->execute([
     0,
-    $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'],
+    $_COOKIE[COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin'],
     $user
   ]);
 }

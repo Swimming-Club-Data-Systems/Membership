@@ -4,10 +4,10 @@ if (!isset($_POST["action"])) {
 	halt(404);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 $count = 0;
 
 // A function is used to produce the View/Edit and Add Sections Stuff
@@ -18,8 +18,8 @@ $user = app()->user;
 function sessionManagement($squadID, $old = null)
 {
 	ob_start();
-	$db = app()->db;
-	$tenant = app()->tenant;
+	$db = DB::connection()->getPdo();
+	$tenant = tenant()->getLegacyTenant();
 	$output = $content = $modals = "";
 
 	$date = new DateTime('now', new DateTimeZone('Europe/London'));

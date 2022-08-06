@@ -8,7 +8,7 @@ class Server
 {
   public static function get()
   {
-    $tenant = app()->tenant;
+    $tenant = tenant()->getLegacyTenant();
 
     $rpEntity = new PublicKeyCredentialRpEntity(
       $tenant->getName(),

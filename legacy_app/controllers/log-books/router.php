@@ -4,9 +4,9 @@
  * Router for new emergency log-book feature
  */
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
   // Logged in access to log books
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
     // Log books for parents/users
     $this->get('/', function() {
       include 'members.php';
@@ -42,7 +42,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_S
       include 'edit-log-post.php';
     });
 
-  } else if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas') {
+  } else if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas') {
     // Access for others
 
     // Log books welcome
@@ -95,10 +95,10 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_S
 } else {
   // Public access to log-books
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) {
 
     $this->get('/', function() {
-      $member = $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member'];
+      $member = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member'];
       include 'member-logs.php';
     });
 
@@ -113,7 +113,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_S
 
     $this->group('/members/{member}:int/new', function($member) {
       $this->get('/', function($member) {
-        if ($member == $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member']) {
+        if ($member == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member']) {
           include 'new-log.php';
         } else {
           halt(404);
@@ -121,7 +121,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_S
       });
 
       $this->post('/', function($member) {
-        if ($member == $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member']) {
+        if ($member == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member']) {
           include 'new-log-post.php';
         } else {
           halt(404);

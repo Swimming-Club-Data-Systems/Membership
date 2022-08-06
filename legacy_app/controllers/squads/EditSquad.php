@@ -1,8 +1,8 @@
 <?php
 
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $codesOfConduct = $db->prepare("SELECT Title, ID FROM posts WHERE Tenant = ? AND`Type` = 'conduct_code' ORDER BY Title ASC");
 $codesOfConduct->execute([
@@ -53,14 +53,14 @@ include BASE_PATH . "views/squadMenu.php"; ?>
       <div class="">
         <form method="post" class="needs-validation" novalidate>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError']) { ?>
             <div class="alert alert-danger">A database error occured. We did not save the changes.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError']);
           } ?>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess']) { ?>
             <div class="alert alert-success">All changes saved</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess']);
           } ?>
 
           <div class="mb-3">

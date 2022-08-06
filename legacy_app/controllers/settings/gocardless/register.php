@@ -1,9 +1,9 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
-if ($at = app()->tenant->getGoCardlessAccessToken()) {
+if ($at = tenant()->getLegacyTenant()->getGoCardlessAccessToken()) {
   // Already go it, halt
   halt(404);
 }

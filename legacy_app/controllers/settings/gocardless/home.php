@@ -25,7 +25,7 @@ include BASE_PATH . 'views/header.php';
           Manage your GoCardless connection
         </p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GC-Reg-Success'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Reg-Success'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>We've connected your GoCardless Account</strong>
@@ -34,10 +34,10 @@ include BASE_PATH . 'views/header.php';
               See x about getting started
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['GC-Reg-Success']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Reg-Success']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GC-Reg-Error'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Reg-Error'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>We were unable to connect your GoCardless Account</strong>
@@ -46,10 +46,10 @@ include BASE_PATH . 'views/header.php';
               <a href="<?= htmlspecialchars(autoUrl("settings/direct-debit/register")) ?>" class="alert-link">Try again now</a> or try again later.
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['GC-Reg-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Reg-Error']);
         } ?>
 
-        <?php if ($at = app()->tenant->getGoCardlessAccessToken()) { ?>
+        <?php if ($at = tenant()->getLegacyTenant()->getGoCardlessAccessToken()) { ?>
 
           <p>
             Your GoCardless account is currently connected.

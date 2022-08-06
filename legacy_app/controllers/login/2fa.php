@@ -3,7 +3,7 @@
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $response = [
   'next' => 'error',
@@ -38,7 +38,7 @@ try {
     throw new Error('clubNotFound');
   }
 
-  app()->tenant = $club;
+  tenant()->getLegacyTenant() = $club;
 
   if ($body->action == 'resend') {
 

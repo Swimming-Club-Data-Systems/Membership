@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $json = [];
@@ -48,7 +48,7 @@ try {
     $rep = $getCountRep->fetchColumn() > 0;
 
     if (!$rep && !$user->hasPermission('Admin') && !$user->hasPermission('Coach') && !$user->hasPermission('Galas')) {
-      if ($member['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+      if ($member['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
         throw new Exception('Not found');
       }
     }
@@ -124,7 +124,7 @@ try {
     $rep = $getCountRep->fetchColumn() > 0;
 
     if (!$rep && !$user->hasPermission('Admin') && !$user->hasPermission('Coach') && !$user->hasPermission('Galas')) {
-      if ($member['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+      if ($member['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
         throw new Exception('Not found');
       }
     }

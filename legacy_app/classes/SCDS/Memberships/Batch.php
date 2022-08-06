@@ -10,13 +10,13 @@ class Batch
 
   public static function getPaymentMethods($batchId)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     // Get batch
     $getBatch = $db->prepare("SELECT membershipBatch.ID id, DueDate due, Total total, PaymentTypes payMethods, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
     $getBatch->execute([
       $batchId,
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
 
     // membershipYear.ID yearId, Total total, membershipYear.Name yearName, membershipYear.StartDate yearStart, membershipYear.EndDate yearEnd
@@ -34,12 +34,12 @@ class Batch
       $can = false;
       if ($payMethods[$i] == 'card') {
         // Check can pay card
-        $can = getenv('STRIPE') && app()->tenant->getStripeAccount();
+        $can = getenv('STRIPE') && tenant()->getLegacyTenant()->getStripeAccount();
       } else if ($payMethods[$i] == 'dd') {
         // Check can pay by direct debit
         $stripeDD = false;
         $goCardlessDD = false;
-        if (app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) {
+        if (config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && config('USE_STRIPE_DIRECT_DEBIT')) {
           // Get DD details
           // Get mandates
           $getMandates = $db->prepare("SELECT ID, Mandate, Last4, SortCode, `Address`, Reference, `URL`, `Status` FROM stripeMandates WHERE Customer = ? AND (`Status` = 'accepted' OR `Status` = 'pending') ORDER BY CreationTime DESC");
@@ -49,7 +49,7 @@ class Batch
           $mandate = $getMandates->fetch(\PDO::FETCH_ASSOC);
 
           if ($mandate) $stripeDD = true;
-        } else if (app()->tenant->getGoCardlessAccessToken()) {
+        } else if (tenant()->getLegacyTenant()->getGoCardlessAccessToken()) {
           $goCardlessDD = userHasMandates($user->getId());
         }
 
@@ -64,14 +64,14 @@ class Batch
 
   public static function goToCheckout($batchId, $method)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $object = new stdClass();
 
     $getBatch = $db->prepare("SELECT membershipBatch.ID id, DueDate due, Total total, PaymentTypes payMethods, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
     $getBatch->execute([
       $batchId,
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
 
     // membershipYear.ID yearId, Total total, membershipYear.Name yearName, membershipYear.StartDate yearStart, membershipYear.EndDate yearEnd
@@ -129,7 +129,7 @@ class Batch
     // Reload batch data
     $getBatch->execute([
       $batchId,
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
     $batch = $getBatch->fetch(\PDO::FETCH_OBJ);
 
@@ -249,7 +249,7 @@ class Batch
 
   public static function completeBatch($batchId, $paymentInfo)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     // Update the batch to say it is paid
     $updateBatch = $db->prepare("UPDATE membershipBatch SET Completed = ?, PaymentDetails = ? WHERE ID = ?");
@@ -302,8 +302,8 @@ class Batch
 
   public static function completeDirectDebitBatch($batchId)
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     // Get batch items
     $getBatchItems = $db->prepare("SELECT membershipBatchItems.ID, membershipBatchItems.Batch, membershipBatchItems.Membership, membershipBatchItems.Member, membershipBatchItems.Amount, membershipBatchItems.Notes, members.MForename, members.MSurname, clubMembershipClasses.Name, membershipBatchItems.Year, membershipYear.StartDate, membershipYear.EndDate, membershipBatch.User, clubMembershipClasses.Type FROM ((((membershipBatchItems INNER JOIN members ON members.MemberID = membershipBatchItems.Member) INNER JOIN clubMembershipClasses ON clubMembershipClasses.ID = membershipBatchItems.Membership) INNER JOIN membershipBatch ON membershipBatch.ID = membershipBatchItems.Batch) INNER JOIN membershipYear ON membershipYear.ID = membershipBatchItems.Year) WHERE membershipBatch.ID = ? AND members.Tenant = ?");

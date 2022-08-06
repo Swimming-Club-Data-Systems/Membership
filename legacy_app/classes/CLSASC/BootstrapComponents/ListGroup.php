@@ -28,7 +28,7 @@ class ListGroup {
     $output .= '<div class="list-group ' . $listGroupClass . '">';
 
     foreach ($this->items->links as $link) {
-      if ((!isset($link->exclude) && !isset($link->include)) || (isset($link->exclude) && !in_array($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'], $link->exclude)) || (isset($link->include) && in_array($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'], $link->include))) {
+      if ((!isset($link->exclude) && !isset($link->include)) || (isset($link->exclude) && !in_array($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'], $link->exclude)) || (isset($link->include) && in_array($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'], $link->include))) {
         $active = '';
         if ($link->id == $current) {
           $active = ' active ';

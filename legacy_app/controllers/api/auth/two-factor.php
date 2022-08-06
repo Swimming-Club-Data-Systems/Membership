@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $resetFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = 0 WHERE UserID = ?");
 
@@ -17,25 +17,25 @@ try {
 
   $json = json_decode(file_get_contents('php://input'));
 
-  if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'])) {
+  if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID'])) {
     throw new Exception("Invalid request: No user login attempt");
   }
 
-  $user = $_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'];
+  $user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID'];
 
   $secret = getUserOption($user, "GoogleAuth2FASecret");
 
   $auth_via_google_authenticator = false;
   try {
-    $auth_via_google_authenticator = isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] && $ga2fa->verifyKey($secret, $json->auth_code);
+    $auth_via_google_authenticator = isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE'] && $ga2fa->verifyKey($secret, $json->auth_code);
   } catch (Exception $e) {
     $auth_via_google_authenticator = false;
   }
 
-  if ((((isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_CODE'])) && $json->auth_code == $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_CODE'])) || $auth_via_google_authenticator) {
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']);
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_CODE']);
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']);
+  if ((((isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_CODE'])) && $json->auth_code == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_CODE'])) || $auth_via_google_authenticator) {
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_CODE']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']);
 
     if ($auth_via_google_authenticator) {
       // Do work to prevent replay attacks etc.
@@ -47,7 +47,7 @@ try {
   }
 
   if (isset($json->remember_me) && $json->remember_me) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_REMEMBER_ME'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME'] = true;
   }
 
   $target = autoUrl("");
@@ -60,7 +60,7 @@ try {
 
   $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode($target));
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $user;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $user;
 
   $event = 'UserLogin-2FA-Email';
   if ($auth_via_google_authenticator) {

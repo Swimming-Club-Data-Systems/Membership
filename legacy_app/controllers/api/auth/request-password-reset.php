@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $output = [];
 
@@ -43,7 +43,7 @@ try {
     ';
 
     notifySend(null, $subject, $sContent, $row['Forename'] . " " . $row['Surname'], $row['EmailAddress'], ["Email" =>
-    "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME') . " Account Help"]);
+    "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => config('CLUB_NAME') . " Account Help"]);
   } else {
     throw new Exception("We couldn't find a matching account");
   }

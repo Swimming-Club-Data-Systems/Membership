@@ -2,7 +2,7 @@
 
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $incrementFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = WrongPassCount + 1 WHERE UserID = ?");
 $resetFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = 0 WHERE UserID = ?");
@@ -36,7 +36,7 @@ try {
     throw new Error('clubNotFound');
   }
 
-  app()->tenant = $club;
+  tenant()->getLegacyTenant() = $club;
 
   // Try finding user
   $email = mb_strtolower(trim($body->email));

@@ -2,7 +2,7 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getSubscription = $db->prepare("SELECT tenantPaymentSubscriptions.ID, PaymentMethod, Memo, Footer, StartDate, EndDate, Active, tenants.Name, tenants.ID Tenant FROM tenantPaymentSubscriptions INNER JOIN tenantStripeCustomers ON tenantStripeCustomers.CustomerID = tenantPaymentSubscriptions.Customer INNER JOIN tenants ON tenants.ID = tenantStripeCustomers.Tenant WHERE tenantPaymentSubscriptions.ID = ?");
 $getSubscription->execute([

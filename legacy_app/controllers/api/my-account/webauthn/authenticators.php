@@ -2,7 +2,7 @@
 
 use Webauthn\PublicKeyCredentialSource;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $sources = [];
 

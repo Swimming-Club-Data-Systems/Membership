@@ -6,8 +6,8 @@ if (!app()->user->hasPermission('Admin')) halt(404);
 
 if (!\SCDS\CSRF::verify()) halt(403);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $stages = SCDS\Onboarding\Session::getDefaultRenewalStages();
 $stageNames = SCDS\Onboarding\Session::stagesOrder();

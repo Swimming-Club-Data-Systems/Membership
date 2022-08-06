@@ -14,7 +14,7 @@
   		<a class="nav-link" href="<?php echo autoUrl("notify")?>">Home</a>
   		<a class="nav-link" href="<?php echo autoUrl("notify/newemail")?>">New Message</a>
       <a class="nav-link" href="<?php echo autoUrl("notify/lists")?>">Targeted Lists</a>
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
       <a class="nav-link" href="<?php echo autoUrl("notify/sms")?>">SMS Lists</a>
       <?php } ?>
   		<a class="nav-link" href="<?php echo autoUrl("notify/email")?>">Pending Messages</a>

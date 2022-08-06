@@ -1,8 +1,8 @@
 <?php
 
 use Respect\Validation\Validator as v;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMemberAttendance = $db->prepare("SELECT AttendanceBoolean FROM `sessionsAttendance` WHERE `WeekID` = ? AND `SessionID` = ? AND `MemberID` = ?");
 
@@ -17,7 +17,7 @@ if (isset($_REQUEST["date"]) && v::date()->validate($_REQUEST["date"])) {
 }
 $date = new DateTime($dateString, new DateTimeZone('Europe/London'));
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Coach") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Committee" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Coach") {
   if ((isset($_REQUEST["squadID"]) && v::intVal()->validate($_REQUEST["squadID"])) || isset($preload) && $preload && $getSessions) {
     // get the squadID parameter from URL
     $squadID = $session = null;

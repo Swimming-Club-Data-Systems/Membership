@@ -2,7 +2,7 @@
 
 $pagetitle = "Payment Cards - Payments - SCDS";
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = app()->adminCurrentTenant;
 $user = app()->adminCurrentUser;
 
@@ -12,7 +12,7 @@ $getPaymentMethods->execute([
 ]);
 $paymentMethod = $getPaymentMethods->fetch(PDO::FETCH_ASSOC);
 
-$default = $tenant->getKey('DEFAULT_PAYMENT_MANDATE');
+$default = config('DEFAULT_PAYMENT_MANDATE');
 
 include BASE_PATH . "views/root/head.php";
 

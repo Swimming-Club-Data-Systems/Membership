@@ -1,11 +1,11 @@
 <?php
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 if ($access != "Admin" && $access != "Coach" && $access != "Galas") {
   halt(404);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $swimmers = $db->prepare("SELECT members.MemberID, members.MForename, members.MSurname, members.ASANumber, members.AccessKey FROM members WHERE members.Tenant = ? ORDER BY `members`.`MForename` , `members`.`MSurname` ASC");
 $swimmers->execute([
@@ -67,7 +67,7 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
                   <?php } ?></td>
                 <?php if ($row['ASANumber'] == null) {
                   $memID = $row['MemberID'];
-                  $asaN = $tenant->getKey('ASA_CLUB_CODE') . $memID;
+                  $asaN = config('ASA_CLUB_CODE') . $memID;
                 ?><td><span class="font-monospace"><?= htmlspecialchars($asaN) ?></span></td><?php
                                                                                     $updateASA->execute([$asaN, $memID]);
                                                                                   } else { ?>

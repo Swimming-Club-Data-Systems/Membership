@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $url_path = "emergency-contacts";
 if ($renewal_trap) {
 	$url_path = "renewal/emergencycontacts";
 }
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $contact = new EmergencyContact();
 $contact->connect($db);
@@ -37,6 +37,6 @@ try {
 	}
 	
 } catch (Exception $e) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['PhoneError'] = true;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PhoneError'] = true;
 	header("Location: " . autoUrl($url_path . "/edit/" . $id));
 }

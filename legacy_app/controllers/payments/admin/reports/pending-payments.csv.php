@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getInfo = $db->prepare("SELECT Forename fn, Surname sn, EmailAddress email, paymentsPending.Name, paymentsPending.Date, Amount, Currency, paymentsPending.Type, paymentsPending.MetadataJSON FROM users INNER JOIN paymentsPending ON users.UserID = paymentsPending.UserID WHERE users.Active AND users.Tenant = ? AND paymentsPending.Status = 'Pending' ORDER BY sn ASC, fn ASC, paymentsPending.Date ASC;");
 $getInfo->execute([

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $getMember = $db->prepare("SELECT MemberID, UserID, MForename, MSurname, DateOfBirth FROM members WHERE MemberID = ? AND Tenant = ?");
@@ -24,7 +24,7 @@ $getCountRep->execute([
 $rep = $getCountRep->fetchColumn() > 0;
 
 if (!$rep && !$user->hasPermission('Admin') && !$user->hasPermission('Coach') && !$user->hasPermission('Galas')) {
-  if ($member['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+  if ($member['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
     halt(404);
   }
 }
@@ -39,7 +39,7 @@ try {
     throw new Exception('No member declaration given.');
   }
 
-  if (app()->tenant->getKey('ASA_CLUB_CODE') == 'UOSZ' && !isset($_POST['uosswpc-member-declaration'])) {
+  if (config('ASA_CLUB_CODE') == 'UOSZ' && !isset($_POST['uosswpc-member-declaration'])) {
     throw new Exception('No member declaration given to UoSSWPC agreement.');
   }
 

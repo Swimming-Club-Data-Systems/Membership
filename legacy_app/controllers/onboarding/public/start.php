@@ -6,9 +6,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -88,7 +88,7 @@ include BASE_PATH . "views/head.php";
 
         <?php if ($session->isCurrentTask('done')) { ?>
           <p>
-            You're all set. Welcome to <?= htmlspecialchars(app()->tenant->getName()) ?>.
+            You're all set. Welcome to <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>.
           </p>
 
           <?php if (!isset(app()->user)) { ?>

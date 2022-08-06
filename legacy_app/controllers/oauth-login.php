@@ -3,21 +3,21 @@
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-if (!$tenant->getKey('TENANT_ENABLE_STAFF_OAUTH')) {
+if (!config('TENANT_ENABLE_STAFF_OAUTH')) {
   halt(404);
 }
 
 $resetFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = 0 WHERE UserID = ?");
 
 $provider = new \League\OAuth2\Client\Provider\GenericProvider([
-  'clientId'                => $tenant->getKey('TENANT_OAUTH_CLIENT_ID'),    // The client ID assigned to you by the provider
-  'clientSecret'            => $tenant->getKey('TENANT_OAUTH_CLIENT_SECRET'),    // The client password assigned to you by the provider
+  'clientId'                => config('TENANT_OAUTH_CLIENT_ID'),    // The client ID assigned to you by the provider
+  'clientSecret'            => config('TENANT_OAUTH_CLIENT_SECRET'),    // The client password assigned to you by the provider
   'redirectUri'             => autoUrl('login/oauth'),
-  'urlAuthorize'            => $tenant->getKey('TENANT_OAUTH_URL_AUTHORIZE'),
-  'urlAccessToken'          => $tenant->getKey('TENANT_OAUTH_URL_ACCESS_TOKEN'),
+  'urlAuthorize'            => config('TENANT_OAUTH_URL_AUTHORIZE'),
+  'urlAccessToken'          => config('TENANT_OAUTH_URL_ACCESS_TOKEN'),
   'urlResourceOwnerDetails' => '',
   'scopes'                  => 'openid profile offline_access user.read'
 ]);

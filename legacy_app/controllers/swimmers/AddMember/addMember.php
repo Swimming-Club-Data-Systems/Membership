@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getClasses = $db->prepare("SELECT `ID`, `Name` FROM `clubMembershipClasses` WHERE `Tenant` = ? AND `Type` = 'club' ORDER BY `Name` ASC");
 $getClasses->execute([
@@ -54,9 +54,9 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
 	<div class="row">
 		<div class="col col-md-8">
 			<?php
-			if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) { ?>
-				<?= $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] ?>
-			<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+			if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) { ?>
+				<?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] ?>
+			<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 			} ?>
 			<form method="post" class="needs-validation" novalidate>
 				<div class="row g-2">
@@ -95,18 +95,18 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
 				<div class="row g-2">
 					<div class="col-sm-6">
 						<div class="mb-3">
-							<label class="form-label" for="asa"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Registration Number</label>
-							<input type="test" class="form-control" id="asa" name="asa" aria-describedby="asaHelp" placeholder="<?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Registration Numer">
-							<small id="asaHelp" class="form-text text-muted">If a new member does not yet have a <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> registration number, leave this blank.</small>
+							<label class="form-label" for="asa"><?= htmlspecialchars(config('NGB_NAME')) ?> Registration Number</label>
+							<input type="test" class="form-control" id="asa" name="asa" aria-describedby="asaHelp" placeholder="<?= htmlspecialchars(config('NGB_NAME')) ?> Registration Numer">
+							<small id="asaHelp" class="form-text text-muted">If a new member does not yet have a <?= htmlspecialchars(config('NGB_NAME')) ?> registration number, leave this blank.</small>
 						</div>
 					</div>
 					<div class="col-sm-6">
 						<div class="mb-3">
-							<label class="form-label" for="ngb-cat"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Category</label>
+							<label class="form-label" for="ngb-cat"><?= htmlspecialchars(config('NGB_NAME')) ?> Membership Category</label>
 							<select class="form-select overflow-hidden" id="ngb-cat" name="ngb-cat" placeholder="Select" required>
-								<option value="none">No <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership</option>
+								<option value="none">No <?= htmlspecialchars(config('NGB_NAME')) ?> membership</option>
 								<?php do { ?>
-									<option value="<?= htmlspecialchars($ngbCategory['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_NGB_MEMBERSHIP_CLASS') == $ngbCategory['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($ngbCategory['Name']) ?></option>
+									<option value="<?= htmlspecialchars($ngbCategory['ID']) ?>" <?php if (config('DEFAULT_NGB_MEMBERSHIP_CLASS') == $ngbCategory['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($ngbCategory['Name']) ?></option>
 								<?php } while ($ngbCategory = $getNGBCategories->fetch(PDO::FETCH_ASSOC)); ?>
 							</select>
 						</div>
@@ -116,9 +116,9 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
 				<div class="mb-3">
 					<div class="form-check">
 						<input class="form-check-input" type="checkbox" id="clubpays" name="clubpays" value="1" aria-describedby="cphelp">
-						<label class="form-check-label" for="clubpays">Club pays <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership fees?</label>
+						<label class="form-check-label" for="clubpays">Club pays <?= htmlspecialchars(config('NGB_NAME')) ?> Membership fees?</label>
 					</div>
-					<small id="cphelp" class="form-text text-muted">Tick the box if this swimmer will not pay any <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees.</small>
+					<small id="cphelp" class="form-text text-muted">Tick the box if this swimmer will not pay any <?= htmlspecialchars(config('NGB_NAME')) ?> fees.</small>
 				</div>
 
 				<div class="mb-3">
@@ -156,7 +156,7 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
 					<select class="form-select" id="membership-class" name="membership-class" required>
 						<option value="" selected disabled>Choose a club membership class</option>
 						<?php do { ?>
-							<option value="<?= htmlspecialchars($class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
+							<option value="<?= htmlspecialchars($class['ID']) ?>" <?php if (config('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
 						<?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
 					</select>
 				</div>

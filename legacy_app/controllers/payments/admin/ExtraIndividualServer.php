@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 if ($_POST['response'] == "getSwimmers") {
   $swimmers = $db->prepare("SELECT members.MemberID, RelationID, MForename, MSurname FROM ((`extrasRelations` INNER JOIN `members` ON members.MemberID = extrasRelations.MemberID) INNER JOIN `extras` ON extras.ExtraID = extrasRelations.ExtraID) WHERE `extrasRelations`.`ExtraID` = ? AND extras.Tenant = ? AND members.Active");

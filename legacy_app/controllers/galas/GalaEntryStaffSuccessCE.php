@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getSwimmer = $db->prepare("SELECT MForename, MSurname FROM members WHERE MemberID = ? AND Tenant = ?");
 $getSwimmer->execute([
@@ -40,7 +40,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-md-8">
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']) { ?>
         <p>
           Your selection has been saved. Use the coach entry system to choose swims.
         </p>
@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
           An error occurred which meant your choices were not saved.
         </p>
       <?php }
-      unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']); ?>
+      unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']); ?>
 
       <div class="cell">
         <h3>Make another entry for <?= htmlspecialchars($row['MForename']) ?></h3>

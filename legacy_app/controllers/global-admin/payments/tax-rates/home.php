@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getTaxRates = $db->query("SELECT `ID`, `Name`, `Type`, `Region`, `Rate`, `InclusiveExclusive` FROM `tenantPaymentTaxRates` ORDER BY `Name` ASC;");
 $taxRate = $getTaxRates->fetch(PDO::FETCH_ASSOC);

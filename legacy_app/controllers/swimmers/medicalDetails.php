@@ -1,20 +1,20 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $yes = $no = "";
 
 $getMed;
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 	$getMed = $db->prepare("SELECT MForename, MSurname, Conditions, Allergies,
   Medication, `GPName`, `GPAddress`, `GPPhone`, `WithholdConsent` FROM `members` LEFT JOIN `memberMedical` ON members.MemberID =
   memberMedical.MemberID WHERE members.Tenant = ? AND members.MemberID = ? AND members.UserID = ?");
 	$getMed->execute([
 		$tenant->getId(),
 		$id,
-		$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 	]);
 } else {
 	$getMed = $db->prepare("SELECT MForename, MSurname, Conditions, Allergies,
@@ -90,9 +90,9 @@ include BASE_PATH . "views/header.php";
 		<div class="col-lg-8 order-2 order-lg-1">
 
 			<form method="post" action="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" name="med" id="med">
-				<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-					echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-					unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+				<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+					echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+					unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 				} ?>
 
 				<div class="mb-2">
@@ -181,7 +181,7 @@ include BASE_PATH . "views/header.php";
 				<?php if ($member->getAge() < 18 && $user) { ?>
 					<h2>Consent for emergency medical treatment</h2>
 					<p>
-						It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars($member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars(app()->tenant->getName()) ?>.
+						It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars($member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>.
 					</p>
 
 					<p>

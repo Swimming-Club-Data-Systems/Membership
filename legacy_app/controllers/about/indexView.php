@@ -1,6 +1,6 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 $pagetitle = "About this software";
 include BASE_PATH . "views/header.php";
@@ -11,7 +11,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-md-8">
       <h1>About this system</h1>
-      <p class="lead">This software is licenced to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> by Swimming Club Data Systems.</p>
+      <p class="lead">This software is licenced to <?= htmlspecialchars(config('CLUB_NAME')) ?> by Swimming Club Data Systems.</p>
 
       <p>You can use this software by subscribing to the <a href="https://myswimmingclub.uk/" target="_blank">Swimming Club Data Systems Software as a Service Package</a>.</p>
 
@@ -25,12 +25,12 @@ include BASE_PATH . "views/header.php";
 
       <div class="card card-body mb-3">
         <h3 class="card-title">
-          Contact <?= htmlspecialchars(app()->tenant->getName()) ?> in the first instance
+          Contact <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> in the first instance
         </h3>
 
         <dl class="row mb-0">
           <dt class="col-sm-3">Email</dt>
-          <dd class="col-sm-9 text-truncate mb-0"><a href="mailto:<?= htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) ?>"><?= htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) ?></a></dd>
+          <dd class="col-sm-9 text-truncate mb-0"><a href="mailto:<?= htmlspecialchars(config('CLUB_EMAIL')) ?>"><?= htmlspecialchars(config('CLUB_EMAIL')) ?></a></dd>
         </dl>
       </div>
 
@@ -97,7 +97,7 @@ include BASE_PATH . "views/header.php";
       <p>Notify is our E-Mail mailing list solution. Administrators can send emails to selected groups of parents for each squad. The system is GDPR compliant and users can opt in or out of receiving emails at any time.</p>
 
       <h3>Direct Debit Payments</h3>
-      <p>This application has been integrated with GoCardless and their APIs to allow <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> to bill members by Direct Debit. The GoCardless client library which is included in this software is copyright of GoCardless.</p>
+      <p>This application has been integrated with GoCardless and their APIs to allow <?= htmlspecialchars(config('CLUB_NAME')) ?> to bill members by Direct Debit. The GoCardless client library which is included in this software is copyright of GoCardless.</p>
 
       <h2>Legal</h2>
       This product includes GeoLite2 data created by MaxMind, available from <a href="https://www.maxmind.com">https://www.maxmind.com</a>.

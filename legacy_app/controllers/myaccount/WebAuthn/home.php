@@ -2,13 +2,13 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $pagetitle = "Security Keys";
 include BASE_PATH . "views/header.php";
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 ?>
 <div class="container-fluid">
   <div class="row justify-content-between">
@@ -25,7 +25,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
   </div>
 </div>
 
-<div id="relying-party-info" data-name="<?= htmlspecialchars(app()->tenant->getName()) ?>"></div>
+<div id="relying-party-info" data-name="<?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>"></div>
 <div id="user-info" data-display-name="<?= htmlspecialchars($user->getFullName()) ?>" data-id="<?= htmlspecialchars($user->getId()) ?>" data-name="<?= htmlspecialchars($user->getEmail()) ?>"></div>
 
 <script>

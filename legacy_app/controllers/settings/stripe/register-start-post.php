@@ -6,7 +6,7 @@ if (!\SCDS\CSRF::verify()) {
   halt(403);
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = Tenant::fromUUID($_GET['tenant']);
 
 if ($at = $tenant->getStripeAccount()) {

@@ -1,8 +1,8 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $pagetitle = 'Error - Onboarding';
 

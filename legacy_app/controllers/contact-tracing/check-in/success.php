@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -72,8 +72,8 @@ include BASE_PATH . 'views/header.php';
 
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess'])) {
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess'])) {
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess']);
 }
 
 $footer = new \SCDS\Footer();

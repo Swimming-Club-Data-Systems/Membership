@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 use Respect\Validation\Validator as v;
 
 $status = true;
@@ -128,7 +128,7 @@ if ($added && $status) {
   class=\"btn btn-dark-l btn-outline-light-d\">Add another gala</a></p>";
 
   if ($id != null) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaAddedSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaAddedSuccess'] = true;
     AuditLog::new('Galas-Added', 'Added ' . $galaName . ', #' . $id);
     if (bool($coachDoesEntries)) {
       header("Location: " . autoUrl("galas/" . $id . "/sessions"));
@@ -140,7 +140,7 @@ if ($added && $status) {
   }
 }
 else {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = '
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = '
   <div class="alert alert-danger">
   <p class="mb-0">
   <strong>We were unable to add this gala</strong>

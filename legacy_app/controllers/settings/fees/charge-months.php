@@ -1,12 +1,12 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $fluidContainer = true;
 
-//app()->tenant->setKey('SquadFeeMonths', '');
+//tenant()->getLegacyTenant()->setKey('SquadFeeMonths', '');
 
-$squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
+$squadFeeMonths = json_decode(config('SquadFeeMonths'), true);
 
 $pagetitle = "Squad Fee Payment Months";
 
@@ -38,14 +38,14 @@ include BASE_PATH . 'views/header.php';
 
         <p>In selected months, we won't charge squad fees to parents. Other charges, such as extra fees will still be charged.</p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) { ?>
           <div class="alert alert-success">Changes saved successfully</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) { ?>
           <div class="alert alert-danger">Changes could not be saved</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']);
         } ?>
 
         <form method="post">

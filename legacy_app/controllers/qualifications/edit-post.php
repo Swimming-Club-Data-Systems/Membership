@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $user = app()->user;
 if (!$user->hasPermissions(['Admin'])) halt(404);
@@ -21,8 +21,8 @@ if (!$qualification) {
 
 $expiry = json_decode($qualification['DefaultExpiry']);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -61,14 +61,14 @@ try {
     $id,
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['EditQualificationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditQualificationSuccess'] = true;
 
   http_response_code(302);
   header('location: ' . autoUrl('qualifications/' . $id));
 
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['EditQualificationError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditQualificationError'] = true;
 
   http_response_code(302);
   header('location: ' . autoUrl("qualifications/$id/edit"));

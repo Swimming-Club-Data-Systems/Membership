@@ -2,8 +2,8 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $pagetitle = "Club Logo";
 
@@ -22,17 +22,17 @@ include BASE_PATH . 'views/header.php';
     <main class="col-md-9">
       <h1>Upload club logo</h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-SAVED']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-SAVED']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-SAVED']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-SAVED']) { ?>
         <div class="alert alert-success">New logo saved.</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-SAVED']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-SAVED']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-ERROR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-ERROR']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-ERROR']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-ERROR']) { ?>
         <div class="alert alert-danger">Your new logo could not be saved.</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['LOGO-ERROR']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LOGO-ERROR']);
       } ?>
 
-      <?php if ($logos = $tenant->getKey('LOGO_DIR')) { ?>
+      <?php if ($logos = config('LOGO_DIR')) { ?>
         <p>You currently have the below image set as your logo:</p>
         <div class="card card-body mb-3">
           <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-150.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-150@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-150@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?> logo" class="img-fluid mx-auto">

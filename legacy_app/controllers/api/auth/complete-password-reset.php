@@ -2,8 +2,8 @@
 
 use Respect\Validation\Validator as v;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $output = [];
 

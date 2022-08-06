@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $currentUser = app()->user;
 
 use Brick\Postcode\PostcodeFormatter;
@@ -22,10 +22,10 @@ try {
     }
     $addr = json_encode($addr);
     $currentUser->setUserOption('MAIN_ADDRESS', $addr);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate'] = true;
   }
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate'] = false;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate'] = false;
 }
 
 header("Location: " . autoUrl("my-account/address"));

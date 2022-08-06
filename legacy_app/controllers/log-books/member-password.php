@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMember = $db->prepare("SELECT MForename fn, MSurname sn, ASANumber se, UserID `uid` FROM members WHERE MemberID = ? AND Tenant = ?");
 $getMember->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member'],
   $tenant->getId()
 ]);
 $member = $getMember->fetch(PDO::FETCH_ASSOC);
@@ -49,21 +49,21 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassError'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>We could not update your password.</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassError']) ?>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassError']);
       } ?>
 
       <p>You can change your password quickly and easily on this page.</p>
 
-      <p>Usual <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> password policies apply - Use 8 characters or more, with at least one lowercase letter, at least one uppercase letter and at least one number</p>
+      <p>Usual <?= htmlspecialchars(config('CLUB_NAME')) ?> password policies apply - Use 8 characters or more, with at least one lowercase letter, at least one uppercase letter and at least one number</p>
 
       <form method="post" class="needs-validation" novalidate>
         <?php if (isset($_GET['return'])) { ?>

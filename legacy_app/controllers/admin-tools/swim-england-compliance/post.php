@@ -2,7 +2,7 @@
 
 // Update values
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 if (isset($_POST['facebook'])) {
   $tenant->setKey('FACEBOOK_PAGE', trim($_POST['facebook']));

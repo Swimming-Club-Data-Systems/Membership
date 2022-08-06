@@ -32,7 +32,7 @@ class InvoiceItem
 
   public static function get($id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getItem = $db->prepare("SELECT * FROM tenantPaymentInvoiceItems WHERE ID = ?");
     $getItem->execute([
       $id,
@@ -47,7 +47,7 @@ class InvoiceItem
 
   public static function getFromInvoice($id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getItem = $db->prepare("SELECT * FROM tenantPaymentInvoiceItems WHERE Invoice = ?");
     $getItem->execute([
       $id,

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $movingMembers = $db->prepare("SELECT DISTINCT MemberID, MForename, MSurname FROM members INNER JOIN squadMoves ON squadMoves.Member = members.MemberID WHERE members.Tenant = ?");
 $movingMembers->execute([

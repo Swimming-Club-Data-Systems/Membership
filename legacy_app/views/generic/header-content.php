@@ -2,16 +2,16 @@
 
 use Respect\Validation\Exceptions\FloatValException;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$logos = $tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $clubLogoColour = 'text-white logo-text-shadow';
 $navTextColour = 'navbar-dark';
 $clubLinkColour = 'btn-light';
 
-if (app()->tenant->getKey('SYSTEM_COLOUR') && getContrastColor(app()->tenant->getKey('SYSTEM_COLOUR'))) {
+if (config('SYSTEM_COLOUR') && getContrastColor(config('SYSTEM_COLOUR'))) {
   $clubLogoColour = 'text-dark';
   $navTextColour = 'navbar-light';
   $clubLinkColour = 'btn-dark';
@@ -42,7 +42,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
   <?php } ?>
 
-  <?php if (app()->tenant->getBooleanKey('PAYMENT_OVERDUE') && app()->user && app()->user->hasPermission('Admin')) { ?>
+  <?php if (config('PAYMENT_OVERDUE') && app()->user && app()->user->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
       <div class="<?= $container_class ?>">
         <small><strong>PAYMENT TO SCDS IS OVERDUE</strong> THIS TENANT MAY SOON BE SUSPENDED</small>
@@ -50,7 +50,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
   <?php } ?>
 
-  <?php if (app()->tenant->getBooleanKey('PAYMENT_METHOD_INVALID') && app()->user && app()->user->hasPermission('Admin')) { ?>
+  <?php if (config('PAYMENT_METHOD_INVALID') && app()->user && app()->user->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
       <div class="<?= $container_class ?>">
         <small><strong>PAYMENT METHOD MISSING OR UNUSABLE</strong> CORRECT YOUR PAYMENT INFORMATION FOR SCDS AS SOON AS POSSIBLE. FAILURE TO DO SO MAY RESULT IN TENANT SUSPENSION.</small>
@@ -60,14 +60,14 @@ if (isset($fluidContainer) && $fluidContainer == true) {
 
   <div class="d-print-none">
 
-    <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') != 'NONE' && app()->tenant->getKey('EMERGENCY_MESSAGE')) {
+    <?php if (config('EMERGENCY_MESSAGE_TYPE') != 'NONE' && config('EMERGENCY_MESSAGE')) {
       $markdown = new ParsedownExtra();
     ?>
 
-      <div class="top-alert <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'DANGER') { ?>top-alert-danger<?php } ?> <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'WARN') { ?>top-alert-warning<?php } ?> <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') { ?>top-alert-success<?php } ?>">
+      <div class="top-alert <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'DANGER') { ?>top-alert-danger<?php } ?> <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'WARN') { ?>top-alert-warning<?php } ?> <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') { ?>top-alert-success<?php } ?>">
         <div class="<?= $container_class ?>">
           <?php try { ?>
-            <?= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE')) ?>
+            <?= $markdown->text(config('EMERGENCY_MESSAGE')) ?>
           <?php } catch (Exception $e) { ?>
             <p>An emergency message has been set but cannot be rendered.</p>
           <?php } ?>
@@ -91,7 +91,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
                 today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
           </p>
           <p class="mb-0">
-            If JavaScript is not supported by your browser, <?= app()->tenant->getKey('CLUB_NAME') ?>
+            If JavaScript is not supported by your browser, <?= config('CLUB_NAME') ?>
             recommends you <strong><a class="text-dark" href="https://www.firefox.com">install Firefox by
                 Mozilla</a></strong>.
           </p>
@@ -111,7 +111,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
             It looks like you're using Internet Explorer which we no longer support so we recommend you upgrade to a new browser which we do support as soon as possible. <strong><a class="text-dark" href="http://browsehappy.com/" target="_blank">Upgrade your browser today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install Firefox by Mozilla</a></strong>. Firefox has great protections for your privacy with built in features including tracking protection.
+            <?= htmlspecialchars(config('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install Firefox by Mozilla</a></strong>. Firefox has great protections for your privacy with built in features including tracking protection.
           </p>
         </div>
       </div>
@@ -132,13 +132,13 @@ if (isset($fluidContainer) && $fluidContainer == true) {
       </div>
     <?php } ?>
 
-    <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) { ?>
+    <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'])) { ?>
       <div class="bg-dark text-white py-2 d-print-none">
         <div class="<?= $container_class ?>">
           <p class="mb-0">
             <strong>
               You are in user simulation mode simulating <?=
-                                                          $_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']['SimUserName'] ?>
+                                                          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['SimUserName'] ?>
             </strong>
           </p>
           <p class="mb-0">
@@ -158,8 +158,8 @@ if (isset($fluidContainer) && $fluidContainer == true) {
       $edit_link = autoUrl("people/me");
     }
 
-    if (isset($allow_edit) && $allow_edit && (($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent" &&
-      $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Coach" && $edit_link != null) || $page_is_mine)) { ?>
+    if (isset($allow_edit) && $allow_edit && (($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent" &&
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Coach" && $edit_link != null) || $page_is_mine)) { ?>
       <div class="bg-dark box-shadow py-2 d-print-none">
         <div class="<?= $container_class ?>">
           <p class="mb-0">
@@ -178,24 +178,24 @@ if (isset($fluidContainer) && $fluidContainer == true) {
             <div class="col-auto">
               <h1 class="mb-0">
                 <a href="<?= htmlspecialchars(autoUrl("")) ?>" class="<?= $clubLogoColour ?> text-light-d text-decoration-none fw-bold">
-                  <?php if ($tenant->getKey('LOGO_DIR') && $tenant->getKey('SHOW_LOGO')) { ?>
+                  <?php if (config('LOGO_DIR') && config('SHOW_LOGO')) { ?>
                     <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
                   <?php } else { ?>
-                    <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+                    <?= htmlspecialchars(config('CLUB_NAME')) ?>
                   <?php } ?>
                 </a>
               </h1>
             </div>
-            <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
+            <?php if (config('CLUB_WEBSITE')) { ?>
               <div class="col-auto">
-                <a href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" class="btn <?= $clubLinkColour ?> btn-outline-light-d text-decoration-none">Club website <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a href="<?= htmlspecialchars(config('CLUB_WEBSITE')) ?>" class="btn <?= $clubLinkColour ?> btn-outline-light-d text-decoration-none">Club website <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </div>
             <?php } ?>
           </div>
         </div>
       </div>
 
-      <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) || !user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) { ?>
+      <?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) || !user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) { ?>
         <div>
           <div class="<?= $container_class ?>">
             <div class="">
@@ -204,17 +204,17 @@ if (isset($fluidContainer) && $fluidContainer == true) {
         d-print-none justify-content-between px-0" role="navigation">
 
                   <a class="navbar-brand align-items-center d-lg-none" href="<?= htmlspecialchars(autoUrl("")) ?>">
-                    <?php if ($tenant->getKey('LOGO_DIR')) { ?>
+                    <?php if (config('LOGO_DIR')) { ?>
                       <span class="d-md-none">
                         <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'icon-114x114.png')) ?>" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid rounded me-1 bg-white" style="height: 38px">
                       </span>
                     <?php } ?>
 
                     <span class="">
-                      <?php if (app()->tenant->getKey('CLUB_SHORT_NAME')) { ?>
-                        <?= htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME')) ?> Membership
+                      <?php if (config('CLUB_SHORT_NAME')) { ?>
+                        <?= htmlspecialchars(config('CLUB_SHORT_NAME')) ?> Membership
                       <?php } else { ?>
-                        <?= htmlspecialchars(app()->tenant->getKey('ASA_CLUB_CODE')) ?> Club Membership
+                        <?= htmlspecialchars(config('ASA_CLUB_CODE')) ?> Club Membership
                       <?php } ?>
                     </span>
                   </a>
@@ -241,9 +241,9 @@ if (isset($fluidContainer) && $fluidContainer == true) {
 
   <div class="d-none d-print-block">
     <?php
-    $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+    $addr = json_decode(config('CLUB_ADDRESS'));
     $logoPath = null;
-    if ($logos = app()->tenant->getKey('LOGO_DIR')) {
+    if ($logos = config('LOGO_DIR')) {
       $logoPath = ($logos . 'logo-1024.png');
     }
     ?>
@@ -254,13 +254,13 @@ if (isset($fluidContainer) && $fluidContainer == true) {
           <?php if ($logoPath) { ?>
             <img src="<?= htmlspecialchars(getUploadedAssetUrl($logoPath)) ?>" class="">
           <?php } else { ?>
-            <h1 class="primary"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></h1>
+            <h1 class="primary"><?= htmlspecialchars(config('CLUB_NAME')) ?></h1>
           <?php } ?>
         </div>
         <div class="col text-end">
           <!-- <p class="mb-0"> -->
           <address>
-            <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
+            <strong><?= htmlspecialchars(config('CLUB_NAME')) ?></strong><br>
             <?php
             for ($i = 0; $i < sizeof($addr); $i++) { ?>
               <?= htmlspecialchars($addr[$i]) ?><br>

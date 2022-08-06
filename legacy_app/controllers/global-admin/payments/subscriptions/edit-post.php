@@ -2,7 +2,7 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $db->beginTransaction();
 

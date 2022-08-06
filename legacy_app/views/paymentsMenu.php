@@ -1,5 +1,5 @@
 <?php if (!isset($renewal_trap) || !$renewal_trap) {
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']; ?>
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']; ?>
 
 <!--
 <div class="bg-light" style="margin:-1rem 0 1rem 0;">

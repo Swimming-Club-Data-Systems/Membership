@@ -9,8 +9,8 @@ $disabled = false;
 
 try {
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $search = '%' . trim($_POST["search"]) . '%';
 

@@ -2,7 +2,7 @@
 
 $pagetitle = "Set up a Direct Debit Instruction - Payments - SCDS";
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = app()->adminCurrentTenant;
 $user = app()->adminCurrentUser;
 

@@ -1,10 +1,10 @@
 <?php
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'])) {
   halt(404);
 }
 
-handleCompletedGalaPayments($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'], true);
+handleCompletedGalaPayments($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'], true);

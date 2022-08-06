@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $pagetitle = "Password Reset";
 include BASE_PATH . "views/header.php";

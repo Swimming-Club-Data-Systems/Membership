@@ -10,8 +10,8 @@ try {
     halt(403);
   }
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $query = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE
   UserID = ? AND Tenant = ?");
@@ -21,7 +21,7 @@ try {
   ]);
   $userInfo = $query->fetch(PDO::FETCH_ASSOC);
   $query->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $tenant->getId()
   ]);
   $curUserInfo = $query->fetch(PDO::FETCH_ASSOC);
@@ -47,17 +47,17 @@ try {
   $myName = $curUserInfo['Forename'] . ' ' . $curUserInfo['Surname'];
 
   $from = "noreply@" . getenv('EMAIL_DOMAIN');
-  $fromName = app()->tenant->getKey('CLUB_NAME');
+  $fromName = config('CLUB_NAME');
   if ($_POST['from'] == "current-user") {
     $fromName = $myName;
   }
 
-  $replyAddress = getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress');
+  $replyAddress = getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NotifyReplyAddress');
   $replyName = $myName;
 
   if (!($replyAddress && isset($_POST['ReplyToMe']) && bool($_POST['ReplyToMe']))) {
-    $replyAddress = app()->tenant->getKey('CLUB_EMAIL');
-    $replyName = app()->tenant->getKey('CLUB_NAME');
+    $replyAddress = config('CLUB_EMAIL');
+    $replyName = config('CLUB_NAME');
   }
 
   $cc = $bcc = null;
@@ -77,20 +77,20 @@ try {
         // reportError($_FILES['file-upload']['error'][$i]);
         if ($_FILES['file-upload']['error'][$i] == 2) {
           // Too large
-          $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError'] = true;
         } else {
-          $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
         }
         throw new Exception();
       } else if (false) {
         // Probably not a text file
         reportError($_FILES['file-upload']['type'][$i]);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
         throw new Exception();
       } else if ($_FILES['file-upload']['size'][$i] > 3145728) {
         // Too large, stop
         // reportError($_FILES['file-upload']['size'][$i]);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError'] = true;
         throw new Exception();
       } else if ($_FILES['file-upload']['size'][$i] > 0) {
         // Store uploaded files in filestore, if exists
@@ -104,7 +104,7 @@ try {
       } else {
         // File upload error (no size)
         reportError($_FILES);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
         throw new Exception();
       }
     }
@@ -112,7 +112,7 @@ try {
 
   if ($collectiveSize > 10485760) {
     // Collectively too large attachments
-    $_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError'] = true;
     throw new Exception();
   }
 
@@ -198,7 +198,7 @@ try {
     // If the message was sent, show the message ID.
     $messageId = $result->get('MessageId');
     // echo ("Email sent! Message ID: $messageId" . "\n");
-    $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess'] = true;
   } catch (Aws\Ses\Exception\SesException $error) {
     // If the message was not sent, show a message explaining what went wrong.
     // pre($error->getAwsErrorMessage());
@@ -209,12 +209,12 @@ try {
 
   AuditLog::new('Notify-SentIndividual', 'Sent to ' . $name);
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess'] = false;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent'] = $_POST;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess'] = false;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent'] = $_POST;
   reportError($e);
 } finally {
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) && !$_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']) && !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']) {
     // Return to composer
     if (isset($returnToSwimmer) && $returnToSwimmer) {
       header("location: " . autoUrl("members/" . $id . "/contact-parent"));

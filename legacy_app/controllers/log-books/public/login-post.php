@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -20,7 +20,7 @@ try {
       $tenant->getId()
     ]);
     if ($getCount->fetchColumn() > 1) {
-      throw new Exception('Your Swim England number is not unique in the ' . app()->tenant->getKey('CLUB_NAME') . ' database. We cannot log you in with ambiguous details.');
+      throw new Exception('Your Swim England number is not unique in the ' . config('CLUB_NAME') . ' database. We cannot log you in with ambiguous details.');
     } 
 
     $getMember = $db->prepare("SELECT MemberID, ASANumber, PWHash, PWWrong FROM members WHERE ASANumber = ? AND Tenant = ?");
@@ -54,11 +54,11 @@ try {
       $member['MemberID']
     ]);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'] = true;
-    $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member'] = $member['MemberID'];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member'] = $member['MemberID'];
 
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL'])) {
-      unset($_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL']);
+    if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TARGET_URL'])) {
+      unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TARGET_URL']);
     }
 
     http_response_code(303);
@@ -75,8 +75,8 @@ try {
 
   // Invalid attempt
   // Return and report error to user
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-SE-ID'] = $_POST['swim-england'];
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-SE-ID'] = $_POST['swim-england'];
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoginError'] = $e->getMessage();
 
   http_response_code(303);
   header("location: " . autoUrl("log-books/login"));

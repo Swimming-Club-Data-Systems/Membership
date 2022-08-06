@@ -4,17 +4,17 @@ if (!SCDS\CSRF::verify()) {
   halt(403);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
   $getMed = $db->prepare("SELECT MForename, MSurname, Conditions, Allergies,
   Medication FROM `members` LEFT JOIN `memberMedical` ON members.MemberID =
   memberMedical.MemberID WHERE members.Tenant = ? AND members.MemberID = ? AND members.UserID = ?");
   $getMed->execute([
     $tenant->getId(),
     $id,
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
 } else {
   $getMed = $db->prepare("SELECT MForename, MSurname, Conditions, Allergies,
@@ -116,7 +116,7 @@ try {
   }
   header("Location: " . autoUrl("members/" . $id . "/medical"));
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = "
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = "
 	<div class=\"alert alert-danger\">
 	<strong>An error occured when we tried to update our records</strong>
 	<p class=\"mb-0\">Please try again.</p></div>";

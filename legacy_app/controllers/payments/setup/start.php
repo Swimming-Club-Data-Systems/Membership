@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $use_white_background = true;
 
@@ -9,7 +9,7 @@ if (isset($renewal_trap) && $renewal_trap) {
 	$url_path = "renewal/payments";
 }
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $sql = $db->prepare("SELECT COUNT(*) FROM `paymentSchedule` WHERE `UserID` = ?;");
 $sql->execute([$user]);
 $scheduleExists = $sql->fetchColumn();
@@ -22,7 +22,7 @@ if ($scheduleExists > 0) {
 // Get count mandates
 $getCount = $db->prepare("SELECT COUNT(*) FROM paymentMandates WHERE UserID = ? AND InUse = 1");
 $getCount->execute([
-	$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 $mandateCount = $getCount->fetchColumn();
 
@@ -47,7 +47,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 	<div class="row">
 		<div class="col-lg-8">
 			<div class="mb-3">
-				<h1>Setup a Direct Debit to pay <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></h1>
+				<h1>Setup a Direct Debit to pay <?=htmlspecialchars(config('CLUB_NAME'))?></h1>
 				<p class="lead">
 					Direct Debit is the easiest way to pay your club fees.
 				</p>
@@ -107,7 +107,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 			</p>
 			<p>
 				The Direct Debit Guarantee applies to payments made to
-				<?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+				<?=htmlspecialchars(config('CLUB_NAME'))?>
 			</p>
 			<ul>
 				<li>
@@ -116,21 +116,21 @@ include BASE_PATH . "views/paymentsMenu.php";
 				</li>
 				<li>
 					If there are any changes to the amount, date or frequency of your
-					Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working
+					Direct Debit <?=htmlspecialchars(config('CLUB_NAME'))?> will notify you three working
 					days in advance of your account being debited or as otherwise
-					agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment,
+					agreed. If you request <?=htmlspecialchars(config('CLUB_NAME'))?> to collect a payment,
 					confirmation of the amount and date will be given to you at the time
 					of the request
 				</li>
 				<li>
 					If an error is made in the payment of your Direct Debit, by
-					<?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are
+					<?=htmlspecialchars(config('CLUB_NAME'))?> or your bank or building society, you are
 					entitled to a full and immediate refund of the amount paid from your
 					bank or building society
 					<ul>
 						<li>
 							If you receive a refund you are not entitled to, you must pay it
-							back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+							back when <?=htmlspecialchars(config('CLUB_NAME'))?> asks you to
 						</li>
 					</ul>
 				</li>
@@ -141,7 +141,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 				</li>
 			</ul>
 			<p class="mb-0">Payments are handled by GoCardless on behalf of
-			<?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+			<?=htmlspecialchars(config('CLUB_NAME'))?>.</p>
 		</div>
 	</div>
 	</div>

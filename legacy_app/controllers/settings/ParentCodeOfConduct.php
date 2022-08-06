@@ -2,15 +2,15 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $codesOfConduct = $db->prepare("SELECT Title, ID FROM posts WHERE Tenant = ? AND `Type` = 'conduct_code' ORDER BY Title ASC");
 $codesOfConduct->execute([
   $tenant->getId()
 ]);
 
-$parentCode = app()->tenant->getKey('ParentCodeOfConduct');
+$parentCode = config('ParentCodeOfConduct');
 
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
@@ -50,13 +50,13 @@ include BASE_PATH . 'views/header.php';
         <form method="post">
           <h2>Choose a code of conduct</h2>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) { ?>
           <div class="alert alert-success">Parent code of conduct saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']); } ?>
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']); } ?>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) { ?>
           <div class="alert alert-danger">Changes were not saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']); } ?>
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']); } ?>
 
           <div class="mb-3">
             <label class="form-label" for="CodeOfConduct">Squad Code of Conduct</label>

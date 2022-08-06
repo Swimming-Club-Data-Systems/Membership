@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $club = null;
 if (isset($_GET['club']) && mb_strlen((string) $_GET['club']) > 0) {
@@ -10,7 +10,7 @@ if (isset($_GET['club']) && mb_strlen((string) $_GET['club']) > 0) {
   }
 }
 
-app()->tenant = $club;
+tenant()->getLegacyTenant() = $club;
 
 if (!$club || !isset($_SESSION['PassAuth-TENANT-' . $club->getId()]['User'])) {
   http_response_code(303);

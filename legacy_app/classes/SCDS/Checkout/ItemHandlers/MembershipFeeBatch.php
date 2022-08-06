@@ -8,8 +8,8 @@ class MembershipFeeBatch
   public static function paid($item, $stripePayment, $intentId)
   {
 
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
     \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
     // Get batch item

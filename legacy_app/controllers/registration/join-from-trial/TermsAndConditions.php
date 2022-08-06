@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinParents WHERE Hash = ? AND Invited = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash'], true]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash'], true]);
 
 if ($query->fetchColumn() != 1) {
   halt(404);
@@ -19,10 +19,10 @@ try {
 }
 
 $query = $db->prepare("SELECT ID, First, Last, DoB FROM joinSwimmers WHERE Parent = ? AND SquadSuggestion IS NOT NULL ORDER BY First ASC, Last ASC");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash']]);
 $swimmers = $query->fetchAll();
 
-$selected = $_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-Selected'];
+$selected = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-Selected'];
 
 $pagetitle = "Membership Terms";
 $use_white_background = true;
@@ -46,7 +46,7 @@ include BASE_PATH . 'views/header.php';
           form.
         </p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-ErrorNames'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-ErrorNames'])) { ?>
           <div class="alert alert-warning">
             <p class="mb-0">
               All swimmers must agree to the terms and conditions. The following
@@ -54,7 +54,7 @@ include BASE_PATH . 'views/header.php';
             </p>
             <ul class="mb-0">
             <?php
-            foreach ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-ErrorNames'] as $name) {
+            foreach ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-ErrorNames'] as $name) {
               ?><li><?=$name?></li><?php
             }
             ?>
@@ -62,7 +62,7 @@ include BASE_PATH . 'views/header.php';
             You must agree to the Terms and Conditions in order to join the club
           </div>
         <?php }
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-ErrorNames']); ?>
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-ErrorNames']); ?>
 
         <div class="alert alert-info">
           <p class="mb-0">
@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
         <p>
 					The Member, and the Parent or Guardian (in the case of a person under
 					the age of 18 years), hereby acknowledges that they have read the Club
-					Rules and the Policies and Procedures Documentation of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>,
+					Rules and the Policies and Procedures Documentation of <?=htmlspecialchars(config('CLUB_NAME'))?>,
 					copies of which can be obtained from <a
 					href="https://www.chesterlestreetasc.co.uk/policies"
 					target="_blank">our website</a>. I confirm my understanding and
@@ -116,7 +116,7 @@ include BASE_PATH . 'views/header.php';
 							<input type="checkbox" value="1" class="form-check-input" name="<?=$id?>" id="<?=$id?>" <?=$selected[$id]?> required>
 							<label class="form-check-label" for="<?=$id?>">
 								I, <?=$swimmer['First']?> <?=$swimmer['Last']?>
-								agree to the Terms and Conditions of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> as outlined
+								agree to the Terms and Conditions of <?=htmlspecialchars(config('CLUB_NAME'))?> as outlined
 								above
 							</label>
               <div class="invalid-feedback">

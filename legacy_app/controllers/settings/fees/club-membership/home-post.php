@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -43,9 +43,9 @@ try {
     $tenant->setKey('DEFAULT_NGB_MEMBERSHIP_CLASS', $_POST['default-ngb-class']);
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error'] = true;
 }
 
 http_response_code(302);

@@ -2,21 +2,21 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $currentUser = app()->user;
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 $getExtraEmails = null;
 try {
 	$getExtraEmails = $db->prepare("SELECT ID, `Name`, EmailAddress, Verified FROM notifyAdditionalEmails WHERE UserID = ?");
-	$getExtraEmails->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+	$getExtraEmails->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } catch (Exception $e) {
 }
 
 $sql = "SELECT `EmailAddress`, `EmailComms` FROM `users` WHERE `UserID` = ?";
 try {
 	$query = $db->prepare($sql);
-	$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+	$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } catch (Exception $e) {
 	halt(500);
 }
@@ -30,17 +30,17 @@ if ($row['EmailComms']) {
 }
 
 $emailChecked_security;
-if (isSubscribed($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'Security')) {
+if (isSubscribed($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'Security')) {
 	$emailChecked_security = " checked ";
 }
 
 $emailChecked_payments;
-if (isSubscribed($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'Payments')) {
+if (isSubscribed($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'Payments')) {
 	$emailChecked_payments = " checked ";
 }
 
 $emailChecked_new_member;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" && isSubscribed($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NewMember')) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" && isSubscribed($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NewMember')) {
 	$emailChecked_new_member = " checked ";
 }
 
@@ -54,7 +54,7 @@ $email = $row['EmailAddress'];
 
 $pagetitle = "Email Options";
 include BASE_PATH . "views/header.php";
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 ?>
 <div class="container-fluid">
 	<div class="row justify-content-between">
@@ -68,25 +68,25 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 			<h1>Manage Email Options</h1>
 			<p class="lead">Manage your email address and email options.</p>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) { ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) { ?>
 				<div class="alert alert-success">
 					<p class="mb-0">
 						<strong>We've successfully updated your email options</strong>
 					</p>
 				</div>
-			<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']);
+			<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']);
 			} ?>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError'])) { ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateError'])) { ?>
 				<div class="alert alert-success">
 					<p class="mb-0">
-						<?= $_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError'] ?>
+						<?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateError'] ?>
 					</p>
 				</div>
-			<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError']);
+			<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateError']);
 			} ?>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate']) && $_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate']) { ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate']) { ?>
 				<div class="alert alert-success">
 					<p class="mb-0">
 						<strong>Just one more step to update your email address</strong>
@@ -96,8 +96,8 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 						follow that link to confirm your new email address.
 					</p>
 				</div>
-			<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate']);
-			} else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate'])) { ?>
+			<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate']);
+			} else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate'])) { ?>
 				<div class="alert alert-danger">
 					<p class="mb-0">
 						<strong>The email address provided is not valid</strong>
@@ -106,15 +106,15 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 						Please try again
 					</p>
 				</div>
-			<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate']);
+			<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate']);
 			} ?>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'])) { ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateNew'])) { ?>
 				<div class="alert alert-info">
 					<p class="mb-0">
 						<strong>Once verified, your account email
 							address will change to
-							<?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></strong>
+							<?= htmlentities($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateNew']) ?></strong>
 					</p>
 				</div>
 			<?php } ?>
@@ -124,8 +124,8 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 					<div class="mb-3">
 						<label class="form-label" for="EmailAddress">Your email address</label>
 						<input type="email" class="form-control" id="EmailAddress" name="EmailAddress" placeholder="name@example.com" value="<?= htmlentities($email) ?>">
-						<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'])) { ?>
-							<small class="form-text">Once verified, your account email address will change to <?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></small>
+						<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateNew'])) { ?>
+							<small class="form-text">Once verified, your account email address will change to <?= htmlentities($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateNew']) ?></small>
 						<?php } ?>
 					</div>
 
@@ -212,16 +212,16 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 
 					<form id="cc" method="post" action="<?= autoUrl("my-account/email/cc/new") ?>" class="needs-validation" novalidate>
 
-						<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailError']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailError'])) { ?>
+						<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailError']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailError'])) { ?>
 							<div class="alert alert-warning">
 								<p class="mb-0"><strong>There was a problem with the information you supplied.</strong></p>
 								<p class="mb-0">Please try again.</p>
 							</div>
-						<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailError']);
+						<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailError']);
 						} ?>
 
-						<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['DeleteCCSuccess'])) {
-							unset($_SESSION['TENANT-' . app()->tenant->getId()]['DeleteCCSuccess']); ?>
+						<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteCCSuccess'])) {
+							unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteCCSuccess']); ?>
 							<div class="alert alert-success">
 								<p class="mb-0">
 									<strong>We've deleted that additional email</strong>

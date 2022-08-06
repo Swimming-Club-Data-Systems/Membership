@@ -1,12 +1,12 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $fluidContainer = true;
 
 $pagetitle = "Multiple Squad Fees";
 
-$option = app()->tenant->getKey('FeesWithMultipleSquads');
+$option = config('FeesWithMultipleSquads');
 
 if (!$option) {
   $option = 'Full';
@@ -38,13 +38,13 @@ include BASE_PATH . 'views/header.php';
         <h1>Multiple Squad Fees</h1>
         <p class="lead">Fee settings for members in multiple squads</p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) { ?>
         <div class="alert alert-success">Changes saved successfully</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']); } ?>
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']); } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) { ?>
         <div class="alert alert-danger">Changes could not be saved</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']); } ?>
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']); } ?>
 
         <form method="post">
 

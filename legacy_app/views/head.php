@@ -11,9 +11,9 @@ if (isset($customBackground) && $customBackground) {
   $bg = $customBackground;
 }
 
-// if (isset(app()->tenant) && app()->tenant->isCLS() && $currentUser != null && $currentUser->getUserBooleanOption('UsesGenericTheme')) {
+// if (tenant() && tenant()->getLegacyTenant()->isCLS() && $currentUser != null && $currentUser->getUserBooleanOption('UsesGenericTheme')) {
 //   $cvp = 'generic';
-// } else if (isset(app()->tenant) && app()->tenant->isCLS()) {
+// } else if (tenant() && tenant()->getLegacyTenant()->isCLS()) {
 //   $cvp = 'chester';
 // }
 

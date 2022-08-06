@@ -3,10 +3,10 @@
 if (isset($_POST['leavers-squad'])) {
   try {
     
-    app()->tenant->setKey('LeaversSquad', $_POST['leavers-squad']);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED'] = true;
+    tenant()->getLegacyTenant()->setKey('LeaversSquad', $_POST['leavers-squad']);
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED'] = true;
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR'] = true;
   }
 }
 

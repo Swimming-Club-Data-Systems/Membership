@@ -3,7 +3,7 @@
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 $stripe = new \Stripe\StripeClient(getenv('STRIPE'));

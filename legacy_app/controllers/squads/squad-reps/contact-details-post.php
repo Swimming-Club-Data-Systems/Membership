@@ -1,10 +1,10 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getSquadCount = $db->prepare("SELECT COUNT(*) FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad AND squadReps.User = ?");
 $getSquadCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 $count = $getSquadCount->fetchColumn();
 
@@ -14,7 +14,7 @@ if ($count == 0) {
 
 $squads = $db->prepare("SELECT squads.SquadName, squads.SquadID, squadReps.ContactDescription FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad AND squadReps.User = ?");
 $squads->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 
 $setDesc = $db->prepare("UPDATE squadReps SET ContactDescription = ? WHERE User = ? AND Squad = ?");
@@ -27,7 +27,7 @@ while ($squad = $squads->fetch(PDO::FETCH_ASSOC)) {
     }
     $setDesc->execute([
       $details, 
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       $squad['SquadID'],
     ]);
   }

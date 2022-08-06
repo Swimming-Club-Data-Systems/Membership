@@ -8,8 +8,8 @@ if (!SCDS\FormIdempotency::verify()) {
 	halt(404);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $disabled = "";
 
@@ -82,7 +82,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 
 		$hasNoSDD = !$mandate || (getUserOption($entry['user'], 'GalaDirectDebitOptOut'));
 
-		$hasNoDD = ($hasNoSDD && $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT'));
+		$hasNoDD = ($hasNoSDD && config('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !config('USE_STRIPE_DIRECT_DEBIT'));
 
 		if ($amount > 0 && $amount <= 15000 && !$hasNoDD) {
 			$count = 0;
@@ -137,7 +137,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 					$entry['EntryID']
 				]);
 
-				$message = '<p>We\'ve charged <strong>&pound;' . $amountString . '</strong> to your account for ' . htmlspecialchars($entry['MForename']) .  '\'s entry into ' . htmlspecialchars($gala['name']) . '.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . '.</p>';
+				$message = '<p>We\'ve charged <strong>&pound;' . $amountString . '</strong> to your account for ' . htmlspecialchars($entry['MForename']) .  '\'s entry into ' . htmlspecialchars($gala['name']) . '.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(config('CLUB_NAME')) . '.</p>';
 
 				$message .= '<p>You entered the following events;</p>';
 				$message .= $swimsList;
@@ -146,7 +146,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 					$message .= '<p>Your entry fee includes a processing fee of ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['ProcessingFee']), 'gbp')) . '.</p>';
 				}
 
-				$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+				$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
 				$notify->execute([
 					$entry['UserID'],
@@ -160,15 +160,15 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 			} catch (Exception $e) {
 				// A problem occured
 				$db->rollBack();
-				$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'] = true;
+				$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure'] = true;
 			}
 		} else if ($amount > 15000) {
-			$_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']] = true;
+			$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'][$entry['EntryID']] = true;
 		}
 	}
 }
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'])) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersSuccess'] = true;
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure'])) {
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersSuccess'] = true;
 }
 header("Location: " . autoUrl("payments/galas/" . $id));

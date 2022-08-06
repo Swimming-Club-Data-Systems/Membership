@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -46,7 +46,7 @@ try {
   header("location: " . autoUrl("settings/fees/membership-fees/$id"));
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error'] = true;
   http_response_code(302);
   header("location: " . autoUrl("settings/fees/membership-fees/new?type=" . $_POST['membership-type']));
 }

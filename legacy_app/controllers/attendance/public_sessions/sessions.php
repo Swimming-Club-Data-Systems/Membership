@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
 $startWeek = new DateTime('monday -1 week', new DateTimeZone('UTC'));
@@ -97,7 +97,7 @@ foreach ($sundays as $session) {
 $sessions = $otherDays;
 
 $showAdmin = false;
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
   if (app()->user->hasPermissions(['Admin', 'Coach'])) $showAdmin = true;
 }
 

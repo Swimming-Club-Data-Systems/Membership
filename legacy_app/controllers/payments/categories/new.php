@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $pagetitle = "New Category";
 
@@ -25,16 +25,16 @@ include BASE_PATH . 'views/header.php';
     <div class="col-lg-8">
       <form method="post" class="needs-validation" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategoryError'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategoryError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategoryError']);
         } ?>
 
         <div class="mb-3">

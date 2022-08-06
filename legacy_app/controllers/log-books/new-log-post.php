@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMember = $db->prepare("SELECT MForename fn, MSurname sn, members.UserID FROM members WHERE members.MemberID = ? AND members.Tenant = ?");
 $getMember->execute([
@@ -14,7 +14,7 @@ if ($memberInfo == null) {
   halt(404);
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -52,8 +52,8 @@ if (sizeof($errors) > 0) {
   }
   $errorMessage .= "</ul>";
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogErrorMessage'] = $errorMessage;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent'] = $_POST;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogErrorMessage'] = $errorMessage;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent'] = $_POST;
 
   http_response_code(303);
   header("location: " . autoUrl("log-books/members/" . $id . "/new"));
@@ -84,7 +84,7 @@ if (sizeof($errors) > 0) {
 
     $logId = $db->lastInsertId();
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage'] = $logId;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogSuccessMessage'] = $logId;
 
     http_response_code(302);
     // Temp redirect until log pages are added
@@ -96,8 +96,8 @@ if (sizeof($errors) > 0) {
     $errorMessage .= "<li>" . $e->getMessage() . "</li>";
     $errorMessage .= "</ul>";
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogErrorMessage'] = $errorMessage;
-    $_SESSION['TENANT-' . app()->tenant->getId()]['LogEntryOldContent'] = $_POST;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogErrorMessage'] = $errorMessage;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogEntryOldContent'] = $_POST;
 
     http_response_code(303);
     header("location: " . autoUrl("log-books/members/" . $id . "/new"));

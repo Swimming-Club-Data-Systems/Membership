@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getSquads = $db->prepare("SELECT SquadName squad, SquadID id FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, squad ASC");
 $getSquads->execute([

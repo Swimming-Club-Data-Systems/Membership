@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $json = [];

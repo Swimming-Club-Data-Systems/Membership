@@ -1,16 +1,16 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Enter a Gala";
 
 $swimmerCount = 0;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $count = $db->prepare("SELECT COUNT(*) FROM `members` WHERE `members`.`UserID` = ?");
   $count->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
   $swimmerCount = $count->fetchColumn();
 } else if (isset($swimmer)) {
@@ -23,9 +23,9 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
 }
 
 $mySwimmers = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $mySwimmers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM `members` WHERE `members`.`UserID` = ? ORDER BY fn ASC, sn ASC");
-  $mySwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $mySwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } else if (isset($swimmer)) {
   $mySwimmers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM `members` WHERE `members`.`MemberID` = ? AND Tenant = ?");
   $mySwimmers->execute([
@@ -60,7 +60,7 @@ include "galaMenu.php";
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-xl">
 
-    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Swimmers</a></li>

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = null;
 
@@ -10,11 +10,11 @@ $markdown = new ParsedownExtra();
 // Safe mode is disabled during the transition to markdown
 // $markdown->setSafeMode(true);
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $sql = "SELECT COUNT(*) FROM `members` WHERE `UserID` = ?";
 	try {
 		$query = $db->prepare($sql);
-		$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+		$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
     if ($query->fetchColumn() == 0) {
       halt(404);
     }
@@ -47,7 +47,7 @@ ob_start();?>
 <html>
   <head>
   <meta charset='utf-8'>
-  <?php if (app()->tenant->isCLS()) { ?>
+  <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i" rel="stylesheet" type="text/css">
   <?php } else { ?>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i" rel="stylesheet" type="text/css">

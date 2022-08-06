@@ -21,7 +21,7 @@ if (app()->user->hasPermission('Admin')) {
 }
 
 $this->get('/', function () {
-	if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+	if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 		header("Location: " . autoUrl(""));
 	} else {
 		include 'PostList.php';

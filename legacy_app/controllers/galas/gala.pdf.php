@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galas = $db->prepare("SELECT GalaName, ClosingDate, GalaDate, GalaVenue, CourseLength, CoachEnters FROM galas WHERE Tenant = ? AND GalaID = ?");
 $galas->execute([
@@ -19,15 +19,15 @@ $numEntries->execute([$id]);
 $numEntries = $numEntries->fetchColumn();
 
 $amountPaid = $amountLeftToPay = $amountRefunded = $total = 0;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $amountPaidQuery = $db->prepare("SELECT SUM(FeeToPay) FROM galaEntries INNER JOIN members ON members.MemberID = galaEntries.MemberID WHERE GalaID = ? AND Charged = ? AND members.UserID = ?");
-  $amountPaidQuery->execute([$id, 1, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $amountPaidQuery->execute([$id, 1, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $amountPaid = $amountPaidQuery->fetchColumn();
-  $amountPaidQuery->execute([$id, 0, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $amountPaidQuery->execute([$id, 0, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $amountLeftToPay = $amountPaidQuery->fetchColumn();
   $total = $amountPaid + $amountLeftToPay;
   $amountRefunded = $db->prepare("SELECT SUM(AmountRefunded) FROM galaEntries INNER JOIN members ON members.MemberID = galaEntries.MemberID WHERE GalaID = ? AND members.UserID = ?");
-  $amountRefunded->execute([$id, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $amountRefunded->execute([$id, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $amountRefunded = $amountRefunded->fetchColumn();
 } else {
   $amountPaidQuery = $db->prepare("SELECT SUM(FeeToPay) FROM galaEntries WHERE GalaID = ? AND Charged = ?");
@@ -42,9 +42,9 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
 }
 
 $entries = $db->prepare("SELECT * FROM galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID WHERE GalaID = ?");
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
   $entries = $db->prepare("SELECT * FROM galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID WHERE GalaID = ? AND UserID = ?");
-  $entries->execute([$id, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $entries->execute([$id, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } else {
   $entries->execute([$id]);
 }
@@ -188,7 +188,7 @@ ob_start(); ?>
 
   <h2 id="about">Gala Reports</h2>
 
-  <p>&copy; Swimming Club Data Systems <?= date("Y") ?>. Produced for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.</p>
+  <p>&copy; Swimming Club Data Systems <?= date("Y") ?>. Produced for <?= htmlspecialchars(config('CLUB_NAME')) ?>.</p>
 
   <?php include BASE_PATH . 'helperclasses/PDFStyles/PageNumbers.php'; ?>
 </body>

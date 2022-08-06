@@ -6,9 +6,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -49,7 +49,7 @@ include BASE_PATH . "views/head.php";
         <!-- If has members under 18 -->
         <h2>Do you want to join us as a parent member?</h2>
 
-        <h2>Can you volunteer to help <?= htmlspecialchars(app()->tenant->getName()) ?></h2>
+        <h2>Can you volunteer to help <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?></h2>
         <!-- For each member we can add volunteering info -->
 
         <form method="post" class="needs-validation" novalidate>

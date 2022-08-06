@@ -6,7 +6,7 @@ if (!$tenant) halt(404);
 
 if (!\SCDS\CSRF::verify()) halt(403);
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $set = $db->prepare("UPDATE tenants SET Domain = ? WHERE UniqueID = ?");
 $set->execute([

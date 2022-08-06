@@ -33,8 +33,8 @@ class TickSheet
     // New empty object
     $object = new TickSheet();
 
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
 
     

@@ -1,8 +1,8 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $query = $db->prepare("SELECT * FROM galas WHERE galas.GalaID = ? AND Tenant = ?");
 $query->execute([
@@ -22,13 +22,13 @@ $lastDayOfYear = new DateTime('last day of December ' . $dateOfGala->format('Y')
 $noTimeSheet = false;
 
 $toHash = $info['GalaID'];
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
-  $toHash .= $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
+  $toHash .= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 }
 $hash = hash('sha256', $toHash);
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
-  $uid = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
+  $uid = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
   $query = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID =
   members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE
@@ -107,7 +107,7 @@ ob_start(); ?>
     <h1 class="mb-0">
       <?= htmlspecialchars($info['GalaName']) ?>
     </h1>
-    <p class="lead mb-0">Gala Timesheet Report<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?> for <?= htmlspecialchars(getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) ?><?php } ?></p>
+    <p class="lead mb-0">Gala Timesheet Report<?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?> for <?= htmlspecialchars(getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) ?><?php } ?></p>
     <p class="lead mb-0"><?= htmlspecialchars($info['GalaVenue']) . " - " . date("d/m/Y", strtotime($info['GalaDate'])) ?></p>
   </div>
 
@@ -127,11 +127,11 @@ ob_start(); ?>
   </p>
 
   <div class="avoid-page-break-inside">
-    <?php if (app()->tenant->isCLS()) { ?>
+    <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
       <p>&copy; Chester-le-Street ASC <?= date("Y") ?></p>
     <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?= date("Y") ?></p>
-      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(config('CLUB_NAME')) ?></p>
     <?php } ?>
   </div>
 

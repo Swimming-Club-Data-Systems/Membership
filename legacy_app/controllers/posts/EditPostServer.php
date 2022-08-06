@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT COUNT(*) FROM `posts` WHERE `ID` = ? AND Tenant = ?");
 $query->execute([
@@ -32,6 +32,6 @@ try {
 }
 
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['PostStatus'] = "Successfully updated";
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PostStatus'] = "Successfully updated";
 
 header("Location: " . autoUrl("pages/" . $id));

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getInfo = $db->prepare("SELECT members.MemberID, MForename fn, MSurname sn, members.UserID, trainingLogs.Title, trainingLogs.Content, trainingLogs.ContentType, trainingLogs.DateTime FROM trainingLogs INNER JOIN members ON trainingLogs.Member = members.MemberID WHERE trainingLogs.ID = ? AND members.Tenant = ?");
 $getInfo->execute([
@@ -14,11 +14,11 @@ if ($info == null) {
   halt(404);
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $info['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $info['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-Member'] != $info['MemberID']) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-Member'] != $info['MemberID']) {
   halt(404);
 }
 
@@ -56,7 +56,7 @@ if (sizeof($errors) > 0) {
   }
   $errorMessage .= "</ul>";
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['EditLogErrorMessage'] = $errorMessage;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditLogErrorMessage'] = $errorMessage;
 
   http_response_code(303);
   header("location: " . autoUrl("log-books/logs/" . $id . "/edit"));
@@ -85,7 +85,7 @@ if (sizeof($errors) > 0) {
       $id
     ]);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['EditLogSuccessMessage'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditLogSuccessMessage'] = true;
 
     http_response_code(303);
     // Temp redirect until log pages are added
@@ -96,7 +96,7 @@ if (sizeof($errors) > 0) {
     $errorMessage .= "<li>" . $e->getMessage() . "</li>";
     $errorMessage .= "</ul>";
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['EditLogErrorMessage'] = $errorMessage;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditLogErrorMessage'] = $errorMessage;
 
     http_response_code(303);
     header("location: " . autoUrl("log-books/logs/" . $id . "/edit"));

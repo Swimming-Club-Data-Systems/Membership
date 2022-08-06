@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 if ($_POST['response'] == "getSwimmers") {
   $swimmers = $db->prepare("SELECT combined.MForename, combined.MSurname, combined.SquadName, combined.ID FROM (SELECT MForename, MSurname, 'Member' AS SquadName, targetedListMembers.ID FROM (`targetedListMembers` INNER JOIN `members` ON members.MemberID = targetedListMembers.ReferenceID) WHERE `targetedListMembers`.`ListID` = :list AND targetedListMembers.ReferenceType = 'Member' AND members.Tenant = :tenant UNION SELECT Forename AS MForename, Surname AS MSurname, 'User' AS SquadName, targetedListMembers.ID FROM (`targetedListMembers` INNER JOIN `users` ON users.UserID = targetedListMembers.ReferenceID) WHERE `targetedListMembers`.`ListID` = :list AND targetedListMembers.ReferenceType = 'User' AND users.Tenant = :tenant) AS combined ORDER BY combined.ID ASC ");

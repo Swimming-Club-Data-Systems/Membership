@@ -8,7 +8,7 @@ try {
     'id' => $_GET['session_id'],
     'expand' => ['setup_intent'],
   ], [
-    'stripe_account' => app()->tenant->getStripeAccount()
+    'stripe_account' => tenant()->getLegacyTenant()->getStripeAccount()
   ]);
   $intent = $session->setup_intent;
 
@@ -16,9 +16,9 @@ try {
     throw new Exception('SetupIntent has not succeeded!');
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDSuccess'] = true;
   if (isset($renewal_trap) && $renewal_trap) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['RegRenewalDDSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegRenewalDDSuccess'] = true;
     header("location: " . autoUrl("renewal/go"));
   } else {
     header("location: " . autoUrl("payments/direct-debit"));
@@ -26,7 +26,7 @@ try {
 
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDError'] = true;
   if (isset($renewal_trap) && $renewal_trap) {
     header("location: " . autoUrl("renewal/payments/direct-debit/set-up"));
   } else {

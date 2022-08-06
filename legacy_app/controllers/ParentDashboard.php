@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $obj = null;
-if (app()->tenant->isCLS()) {
+if (tenant()->getLegacyTenant()->isCLS()) {
   $file = getCachedFile(CACHE_DIR . 'CLS-ASC-News.json', 'https://chesterlestreetasc.co.uk/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
   $obj = json_decode($file);
 }
@@ -24,7 +24,7 @@ $swimmers = [];
 try {
   $query = $db->prepare("SELECT `MemberID` FROM `members` WHERE `members`.`UserID` = ? ORDER BY `MForename` ASC,
 	`MSurname` ASC");
-  $query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $swimmerIds = $query->fetchAll(PDO::FETCH_COLUMN);
   foreach ($swimmerIds as $id) {
     $swimmers[] = new \Member($id);
@@ -40,7 +40,7 @@ try {
 	`galaEntries`.`GalaID`) WHERE `members`.`UserID` = ? AND `GalaDate` >=
 	CURDATE() ORDER BY `GalaDate` ASC, `MForename` ASC, `MSurname` ASC';
   $query = $db->prepare($sql);
-  $query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } catch (Exception $e) {
   halt(500);
 }
@@ -49,7 +49,7 @@ $galas = $query->fetchAll(PDO::FETCH_ASSOC);
 
 $getCountNewMandates = $db->prepare("SELECT COUNT(*) FROM stripeMandates INNER JOIN stripeCustomers ON stripeMandates.Customer = stripeCustomers.CustomerID WHERE stripeCustomers.User = ? AND stripeMandates.MandateStatus != 'inactive';");
 $getCountNewMandates->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 $hasStripeMandate = $getCountNewMandates->fetchColumn() > 0;
 
@@ -59,14 +59,14 @@ $getLocations->execute([
 ]);
 $showCovid = $getLocations->fetchColumn() > 0;
 
-if ($showCovid && $tenant->getBooleanKey('HIDE_CONTACT_TRACING_FROM_PARENTS')) {
+if ($showCovid && config('HIDE_CONTACT_TRACING_FROM_PARENTS')) {
   // Hide covid banners
   $showCovid = false;
 
   // Show if this user is a squad rep
   $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
   $getRepCount->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   ]);
   $showCovid = $getRepCount->fetchColumn() > 0;
 }
@@ -80,7 +80,7 @@ $getOnboarding->execute([
 ]);
 $onboardingId = $getOnboarding->fetchColumn();
 
-$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
+$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']))[0]);
 
 $pagetitle = "Home";
 include BASE_PATH . "views/header.php";
@@ -168,7 +168,7 @@ include BASE_PATH . "views/header.php";
         <a href="<?= autoUrl('covid/risk-awareness') ?>">
           <span class="mb-3">
             <span class="title mb-0">
-              <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
+              <?php if (mb_strtoupper(config('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
             </span>
             <span>
               Declare that you understand the risks of returning to training
@@ -182,7 +182,7 @@ include BASE_PATH . "views/header.php";
       </div>
     </div>
 
-    <?php if (!isSubscribed($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'Notify')) { ?>
+    <?php if (!isSubscribed($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'Notify')) { ?>
       <aside class="row mb-4">
         <div class="col-lg-6">
           <div class="cell bg-tenant-brand tenant-colour">
@@ -192,7 +192,7 @@ include BASE_PATH . "views/header.php";
 
             <p>
               <strong>
-                You're missing out on email updates from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+                You're missing out on email updates from <?= htmlspecialchars(config('CLUB_NAME')) ?>
               </strong>
             </p>
             <p>
@@ -232,7 +232,7 @@ include BASE_PATH . "views/header.php";
       </div>
     <?php } ?>
 
-    <?php if (false && app()->tenant->getGoCardlessAccessToken() && !userHasMandates($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) { ?>
+    <?php if (false && tenant()->getLegacyTenant()->getGoCardlessAccessToken() && !userHasMandates($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) { ?>
       <div class="mb-4">
         <h2 class="mb-4">Want to set up a Direct Debit?</h2>
         <div class="news-grid">
@@ -316,7 +316,7 @@ include BASE_PATH . "views/header.php";
       </div>
     </div>
 
-    <?php if (app()->tenant->isCLS()) { ?>
+    <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
       <div class="mb-4">
         <h2 class="mb-4">Club News</h2>
         <div class="news-grid">
@@ -366,7 +366,7 @@ include BASE_PATH . "views/header.php";
       </div>
     <?php } ?>
 
-    <?php if (app()->tenant->getKey('ASA_DISTRICT') == 'E' && $asa_ne != null) { ?>
+    <?php if (config('ASA_DISTRICT') == 'E' && $asa_ne != null) { ?>
       <div class="mb-4">
         <h2 class="mb-4">Swim England North East News</h2>
         <div class="news-grid">

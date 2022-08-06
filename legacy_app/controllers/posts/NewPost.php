@@ -17,7 +17,7 @@ include BASE_PATH . "views/postsMenu.php";
 					<h1>New Post</h1>
 					<div class="mb-3">
 						<label class="form-label" for="title">Title</label>
-						<input type="text" class="form-control" name="title" id="title" placeholder="Post Title" autocomplete="off" <?php if ($people) { ?>value="<?= getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) ?>" readonly <?php } ?>>
+						<input type="text" class="form-control" name="title" id="title" placeholder="Post Title" autocomplete="off" <?php if ($people) { ?>value="<?= getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) ?>" readonly <?php } ?>>
 					</div>
 
 					<div class="mb-3 mb-0">

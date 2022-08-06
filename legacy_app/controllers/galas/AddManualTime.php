@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $swimsArray = ['25Free', '50Free', '100Free', '200Free', '400Free', '800Free', '1500Free', '25Back', '50Back', '100Back', '200Back', '25Breast', '50Breast', '100Breast', '200Breast', '25Fly', '50Fly', '100Fly', '200Fly', '100IM', '150IM', '200IM', '400IM',];
 $swimsTextArray = ['25&nbsp;Free', '50&nbsp;Free', '100&nbsp;Free', '200&nbsp;Free', '400&nbsp;Free', '800&nbsp;Free', '1500&nbsp;Free', '25&nbsp;Back', '50&nbsp;Back', '100&nbsp;Back', '200&nbsp;Back', '25&nbsp;Breast', '50&nbsp;Breast', '100&nbsp;Breast', '200&nbsp;Breast', '25&nbsp;Fly', '50&nbsp;Fly', '100&nbsp;Fly', '200&nbsp;Fly', '100&nbsp;IM', '150&nbsp;IM', '200&nbsp;IM', '400&nbsp;IM',];
@@ -17,7 +17,7 @@ $row = $sql->fetch(PDO::FETCH_ASSOC);
 
 $locked = "";
 $processed = false;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && bool($row['EntryProcessed'])) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && bool($row['EntryProcessed'])) {
 	$locked = " disabled ";
 	$processed = true;
 }
@@ -26,7 +26,7 @@ if ($row == null) {
 	halt(404);
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $row['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $row['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
 	halt(404);
 }
 
@@ -83,11 +83,11 @@ if ($row['CourseLength'] == 'LONG') {
 					<p class="mb-0">
 						As a result you are no longer able to edit your entry times. Please speak to your gala coordinator if you need to make changes.
 					</p>
-					<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'])) { ?>
+					<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError'])) { ?>
 						<p class="mb-0 mt-3">
-							<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
+							<?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError']) ?>
 						</p>
-					<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']);
+					<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError']);
 					} ?>
 				</div>
 			<?php } else if (bool($row['EntryProcessed'])) { ?>
@@ -98,17 +98,17 @@ if ($row['CourseLength'] == 'LONG') {
 					<p class="mb-0">
 						You may make changes, but any changes you make may not necessarily be submitted to the gala host.
 					</p>
-					<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'])) { ?>
+					<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError'])) { ?>
 						<p class="mb-0 mt-3">
-							<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
+							<?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError']) ?>
 						</p>
-					<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']);
+					<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError']);
 					} ?>
 				</div>
 			<?php } ?>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'])) {
-				if ($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess']) { ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess'])) {
+				if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess']) { ?>
 					<div class="alert alert-success">
 						<p class="mb-0">
 							<strong>
@@ -128,7 +128,7 @@ if ($row['CourseLength'] == 'LONG') {
 						</p>
 					</div>
 			<?php }
-				unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess']);
+				unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess']);
 			} ?>
 
 			<p>

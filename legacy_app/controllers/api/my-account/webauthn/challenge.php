@@ -10,7 +10,7 @@ use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\Server;
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $server = WebAuthnImplementation\Server::get();
@@ -44,8 +44,8 @@ $publicKeyCredentialCreationOptions = $server->generatePublicKeyCredentialCreati
 
 $creationJson = json_encode($publicKeyCredentialCreationOptions);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialCreationOptions'] = $creationJson;
-$_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'] = $post->passkey_name;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialCreationOptions'] = $creationJson;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialName'] = $post->passkey_name;
 
 header("content-type: application/json");
 echo $creationJson;

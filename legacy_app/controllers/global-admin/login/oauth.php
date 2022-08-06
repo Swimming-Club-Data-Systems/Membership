@@ -7,7 +7,7 @@ if (!getenv('ADMIN_OAUTH_CLIENT_ID')) {
   halt(404);
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $provider = new \League\OAuth2\Client\Provider\GenericProvider([
   'clientId'                => getenv('ADMIN_OAUTH_CLIENT_ID'),    // The client ID assigned to you by the provider

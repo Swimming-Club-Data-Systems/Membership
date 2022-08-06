@@ -2,7 +2,7 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $currentUser = app()->user;
 
 $address = null;
@@ -13,7 +13,7 @@ if ($json != null) {
 
 $pagetitle = "My Address";
 include BASE_PATH . "views/header.php";
-  $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+  $userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 ?>
 <div class="container-fluid">
   <div class="row justify-content-between">
@@ -27,22 +27,22 @@ include BASE_PATH . "views/header.php";
       <h1>My Address</h1>
       <p class="lead">Add or edit an address</p>
 
-    	<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) { ?>
+    	<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) { ?>
     		<div class="alert alert-success">
     			<p class="mb-0">
     				<strong>We've successfully updated your address</strong>
     			</p>
     		</div>
-    	<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']);
+    	<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']);
     	} ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) && !$_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) && !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) { ?>
     		<div class="alert alert-danger">
     			<p class="mb-0">
     				<strong>Please check your details and try again</strong>
     			</p>
     		</div>
-    	<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']);
+    	<?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']);
     	} ?>
 
       <?php if (isset($address->streetAndNumber)) { ?>

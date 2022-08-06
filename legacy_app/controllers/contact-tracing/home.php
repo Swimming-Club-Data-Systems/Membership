@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'Contact Tracing';
 
 // Show if this user is a squad rep
 $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
 $getRepCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 

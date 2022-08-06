@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $security_status = true;
 if ($_POST['SessionSecurity'] != session_id()) {

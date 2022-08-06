@@ -4,12 +4,12 @@ if (!app()->user->hasPermission('Admin')) {
   halt(404);
 }
 
-if (!app()->tenant->getStripeAccount()) {
+if (!tenant()->getLegacyTenant()->getStripeAccount()) {
   halt(404);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $start = $page = 0;
 

@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $output = [
   "success" => true,
@@ -46,7 +46,7 @@ try {
 
   $getMembers = $db->prepare("SELECT MForename, MSurname, DateOfBirth, Gender, ASANumber, clubMembershipClasses.Name NGBCat, GenderIdentity, GenderPronouns, GenderDisplay FROM members INNER JOIN clubMembershipClasses ON members.NGBCategory = clubMembershipClasses.ID WHERE members.Active AND members.Tenant = ? AND DateOfBirth >= ? AND DateOfBirth <= ? ORDER BY MForename ASC, MSurname ASC");
   $getMembers->execute([
-    app()->tenant->getId(),
+    tenant()->getLegacyTenant()->getId(),
     $startDate->format("Y-m-d"),
     $endDate->format("Y-m-d"),
   ]);

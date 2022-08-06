@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinParents WHERE Hash = ? AND Tenant = ?");
 $query->execute([
@@ -34,7 +34,7 @@ include BASE_PATH . 'views/header.php';
 
       <p>
         If some children of a parent have been offered a place but won't be
-        joining <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, please press <em>Reject Squad Place</em> on each
+        joining <?=htmlspecialchars(config('CLUB_NAME'))?>, please press <em>Reject Squad Place</em> on each
         swimmer so that they aren't added to the membership system.
       </p>
 

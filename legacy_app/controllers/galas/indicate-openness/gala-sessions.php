@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends` FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -46,22 +46,22 @@ include BASE_PATH . 'views/header.php';
 <div class="container-xl">
   <div class="row">
     <div class="col-lg-8">
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaAddedSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['GalaAddedSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaAddedSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaAddedSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0"><strong>We've successfully added this gala</strong></p>
           <p class="mb-0">Please now provide information about sessions at this gala</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaAddedSuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaAddedSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']) && $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']) { ?>
         <div class="alert alert-success">Saved</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']) { ?>
         <div class="alert alert-danger">Changes were not saved</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']);
       } ?>
 
       <?php if ($nowDate > $galaDate) { ?>

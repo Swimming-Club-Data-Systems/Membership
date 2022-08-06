@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squadKey = generateRandomString(8);
 
@@ -22,7 +22,7 @@ if (isset($_POST['squadName']) && isset($_POST['squadFee'])) {
   } catch (PDOException $e) {
     throw new Exception('A database error occurred');
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['SquadAddError'] = [
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SquadAddError'] = [
       'status' => true,
       'message' => $e->getMessage(),
     ];

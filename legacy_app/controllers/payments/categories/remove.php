@@ -1,7 +1,7 @@
 <?php
 
-$tenant = app()->tenant;
-$db = app()->db;
+$tenant = tenant()->getLegacyTenant();
+$db = DB::connection()->getPdo();
 
 $get = $db->prepare("SELECT `ID`, `Name`, `Description` FROM paymentCategories WHERE UniqueID = ? AND Tenant = ?");
 $get->execute([
@@ -23,11 +23,11 @@ try {
     $category['ID'],
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess'] = $category['Name'];
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['HideCategorySuccess'] = $category['Name'];
   header("location: " . autoUrl('payments/categories/'));
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategoryError'] = $e->getMessage();
   header("location: " . autoUrl('payments/categories/' . $id));
 }

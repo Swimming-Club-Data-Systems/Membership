@@ -27,8 +27,8 @@ class AuditLog
       }
 
       $user = app()->user->getId();
-      if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']['RealUser'])) {
-        $user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']['RealUser'];
+      if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['RealUser'])) {
+        $user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['RealUser'];
       }
     }
 

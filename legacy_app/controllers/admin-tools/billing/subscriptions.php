@@ -1,6 +1,6 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 $stripe = new \Stripe\StripeClient(
   getenv('STRIPE')
 );

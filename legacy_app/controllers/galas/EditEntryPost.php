@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $swimsArray = ['25Free','50Free','100Free','200Free','400Free','800Free','1500Free','25Back','50Back','100Back','200Back','25Breast','50Breast','100Breast','200Breast','25Fly','50Fly','100Fly','200Fly','100IM','150IM','200IM','400IM',];
 $swimsTextArray = ['25&nbsp;Free','50&nbsp;Free','100&nbsp;Free','200&nbsp;Free','400&nbsp;Free','800&nbsp;Free','1500&nbsp;Free','25&nbsp;Back','50&nbsp;Back','100&nbsp;Back','200&nbsp;Back','25&nbsp;Breast','50&nbsp;Breast','100&nbsp;Breast','200&nbsp;Breast','25&nbsp;Fly','50&nbsp;Fly','100&nbsp;Fly','200&nbsp;Fly','100&nbsp;IM','150&nbsp;IM','200&nbsp;IM','400&nbsp;IM',];
@@ -10,12 +10,12 @@ $entriesArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 
 $sql = null;
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
   $sql = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE galas.Tenant = ? AND `EntryID` = ? AND members.UserID = ? ORDER BY `galas`.`GalaDate` DESC;");
   $sql->execute([
     $tenant->getId(),
     $id,
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
 } else {
   $sql = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE galas.Tenant = ? AND `EntryID` = ? ORDER BY `galas`.`GalaDate` DESC;");
@@ -35,7 +35,7 @@ $galaData = new GalaPrices($db, $row["GalaID"]);
 $closingDate = new DateTime($row['ClosingDate'], new DateTimeZone('Europe/London'));
 $theDate = new DateTime('now', new DateTimeZone('Europe/London'));
 
-if (bool($row['Charged']) || bool($row['EntryProcessed']) || ($closingDate < $theDate && ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas')) || (bool($row['Locked']) && ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas'))) {
+if (bool($row['Charged']) || bool($row['EntryProcessed']) || ($closingDate < $theDate && ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas')) || (bool($row['Locked']) && ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas'))) {
   halt(404);
 }
 
@@ -68,7 +68,7 @@ try {
 
   $subject = "Your Updated " . $row['GalaName'] . " Entry";
   $message = "";
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
     $message .= "<p><strong>Changes have been made to this gala entry by a member of staff. This is a courtesy email for you.</strong></p>";
   }
   $message .= "<p>Here are the swims selected for " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "'s updated " . htmlspecialchars($row['GalaName']) . " entry.</p>";
@@ -77,13 +77,13 @@ try {
   if ($row['ProcessingFee'] > 0) {
     $message .= "<p>Your entry includes a processing fee of <strong>&pound;" . htmlspecialchars(MoneyHelpers::intToDecimal($row['ProcessingFee'])) . "</strong>.</p>";
   }
-  $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
+  $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(config('CLUB_NAME')) . ' gala team as soon as possible.</p>';
   $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
   `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 1, 'Galas')";
   $db->prepare($notify)->execute([$row['UserID'], $subject, $message]);
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError'] = true;
 }
 
 header("Location: " . autoUrl("galas/entries/" . $id));

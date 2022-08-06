@@ -3,8 +3,8 @@
 if (!\SCDS\CSRF::verify()) halt(403);
 
 // Find user
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $db->beginTransaction();
 

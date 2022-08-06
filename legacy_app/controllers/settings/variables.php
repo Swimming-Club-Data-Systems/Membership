@@ -2,7 +2,7 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $vars = [
   'CLUB_NAME' => null,
@@ -44,7 +44,7 @@ foreach ($vars as $key => $value) {
     $vars[$key] = getenv($key);
     $disabled[$key] = ' disabled ';
   } else {
-    $vars[$key] = app()->tenant->getKey($key);
+    $vars[$key] = config($key);
     $disabled[$key] = '';
   }
 }
@@ -108,14 +108,14 @@ include BASE_PATH . 'views/header.php';
         <p>If you cannot edit a variable, it is because it has been set as an environment variable at a server level. Contact your administrator if you need to change these.</p>
         <form method="post" class="needs-validation" novalidate>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']) { ?>
             <div class="alert alert-success">System variables saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED']);
           } ?>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']) { ?>
             <div class="alert alert-danger">Changes were not saved.</div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR']);
           } ?>
 
           <h2 id="emergency-message">Emergency Message</h2>
@@ -170,7 +170,7 @@ include BASE_PATH . 'views/header.php';
             <label class="form-label" for="CLUB_INFO">Select club</label>
             <select class="form-select" name="CLUB_INFO" id="CLUB_INFO">
               <?php foreach ($clubs as $club) { ?>
-                <option <?php if ($club['Code'] == app()->tenant->getKey('ASA_CLUB_CODE')) { ?>selected<?php } ?> value="<?= htmlspecialchars($club['Code']) ?>">
+                <option <?php if ($club['Code'] == config('ASA_CLUB_CODE')) { ?>selected<?php } ?> value="<?= htmlspecialchars($club['Code']) ?>">
                   <?= htmlspecialchars($club['Name']) ?> (<?= htmlspecialchars($club['Code']) ?>)
                 </option>
               <?php } ?>

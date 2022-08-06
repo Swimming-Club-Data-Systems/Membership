@@ -5,27 +5,27 @@ $data = [
   'message' => null
 ];
 
-if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') != 'NONE' && app()->tenant->getKey('EMERGENCY_MESSAGE')) {
+if (config('EMERGENCY_MESSAGE_TYPE') != 'NONE' && config('EMERGENCY_MESSAGE')) {
   $markdown = new ParsedownExtra();
   $message = "";
 
   $message .= '<div class="py-3 ';
 
-  if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') {
+  if (config('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') {
     $message .= 'bg-success text-white';
   }
 
-  if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'DANGER') {
+  if (config('EMERGENCY_MESSAGE_TYPE') == 'DANGER') {
     $message .= 'bg-danger text-white';
   }
 
-  if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'WARN') {
+  if (config('EMERGENCY_MESSAGE_TYPE') == 'WARN') {
     $message .= 'bg-warning text-body';
   }
 
   $message .= '"><div class="container emergency-message">';
   try {
-    $message .= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE'));
+    $message .= $markdown->text(config('EMERGENCY_MESSAGE'));
   } catch (Exception $e) {
     $message .= '<p>An emergency message has been set but cannot be rendered.</p>';
   }
@@ -37,7 +37,7 @@ if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') != 'NONE' && app()->tenant->
   ];
 }
 
-header("cache-control: max-age=3600");
-header("access-control-allow-origin: " . $_SERVER['HTTP_ORIGIN']);
-header("content-type: application/json");
-echo json_encode($data);
+return response()->json($data)->withHeaders([
+  'cache-control' => 'max-age=3600',
+  'access-control-allow-origin' => $request->header('origin'),
+]);

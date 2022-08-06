@@ -2,10 +2,10 @@
 
 use Brick\Math\RoundingMode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Payments Administration";
 
 // require 'GoCardlessSetup.php';
@@ -75,7 +75,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
     <h1>Payment Administration</h1>
     <p class="lead">Control Direct Debit Payments</p>
 
-    <?php if ($tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+    <?php if (config('GOCARDLESS_ACCESS_TOKEN') && !config('USE_STRIPE_DIRECT_DEBIT')) { ?>
     <div class="alert alert-info">
       <p class="mb-0">
         <strong>Plan your migration to Stripe for your Direct Debit payments</strong>
@@ -205,7 +205,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
             </span>
           </a>
 
-          <?php if (app()->tenant->getStripeAccount()) { ?>
+          <?php if (tenant()->getLegacyTenant()->getStripeAccount()) { ?>
             <a href="<?= htmlspecialchars(autoUrl('payments/disputes')) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
@@ -238,7 +238,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
         </div>
       </div>
 
-      <?php if (app()->tenant->getStripeAccount()) { ?>
+      <?php if (tenant()->getLegacyTenant()->getStripeAccount()) { ?>
         <div class="mb-4">
           <h2 class="mb-4">Card Transactions</h2>
           <div class="mb-4">

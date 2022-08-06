@@ -8,8 +8,8 @@
  */
 
 $user = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // reportError($_POST);
 
@@ -143,7 +143,7 @@ try {
 
     $message .= '<p><a href="' . htmlspecialchars(autoUrl('payments/card-transactions/' . $item->paymentId)) . '">View your up to date receipt online</a>.</p>';
 
-    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
     $notify->execute([
 

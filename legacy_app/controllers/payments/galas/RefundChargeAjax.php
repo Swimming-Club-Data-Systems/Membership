@@ -18,8 +18,8 @@ $requestData = [
   'refundAmount' => $refundAmount
 ];
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMandates = $db->prepare("SELECT ID, Mandate, Last4, SortCode, `Address`, Reference, `URL`, `Status` FROM stripeMandates WHERE Customer = ? AND (`Status` = 'accepted' OR `Status` = 'pending') ORDER BY CreationTime DESC LIMIT 1");
 
@@ -102,7 +102,7 @@ try {
 
   $hasNoSDD = !$mandate || (getUserOption($entryData['user'], 'GalaDirectDebitOptOut'));
 
-  $hasNoDD = ($hasNoSDD && $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT'));
+  $hasNoDD = ($hasNoSDD && config('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !config('USE_STRIPE_DIRECT_DEBIT'));
 
   $swimsList = '<ul>';
   foreach ($swimsArray as $colTitle => $text) {
@@ -242,7 +242,7 @@ try {
       $message .= '<p>As you don\'t pay your club fees by direct debit or have opted out of paying for galas by direct debit, you\'ll need to collect this refund from the treasurer or gala coordinator.</p>';
     }
 
-    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
     $notify->execute([
 

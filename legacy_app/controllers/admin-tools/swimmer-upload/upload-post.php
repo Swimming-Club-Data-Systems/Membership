@@ -7,8 +7,8 @@ if (!\SCDS\CSRF::verify()) {
   halt(404);
 }
 
-$db = app()->db;
-$tenant = app()->tenant->getId();
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant()->getId();
 
 $findSquadId = $db->prepare("SELECT SquadID FROM squads WHERE SquadName = ? AND Tenant = ?");
 $findNGBCategory = $db->prepare("SELECT `ID` FROM `clubMembershipClasses` WHERE `Name` LIKE ? AND `Tenant` = ?");
@@ -20,13 +20,13 @@ if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
 
   if (bool($_FILES['file-upload']['error'])) {
     // Error
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
   } else if ($_FILES['file-upload']['type'] != 'text/csv' && $_FILES['file-upload']['type'] != 'application/vnd.ms-excel') {
     // Probably not a CSV
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
   } else if ($_FILES['file-upload']['size'] > 30000) {
     // Too large, stop
-    $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError'] = true;
   } else {
     $failedSwimmers = [];
     try {
@@ -81,7 +81,7 @@ if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
 
           if ($asa == 0) {
             $setTempASA->execute([
-              app()->tenant->getKey('ASA_CLUB_CODE') . $id,
+              config('ASA_CLUB_CODE') . $id,
               $id
             ]);
           }
@@ -92,19 +92,19 @@ if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
       }
 
       $db->commit();
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess'] = true;
     } catch (Exception $e) {
       $db->rollBack();
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
     }
 
     if (sizeof($failedSwimmers) > 0) {
-      $_SESSION['TENANT-' . app()->tenant->getId()]['FailedSwimmers'] = $failedSwimmers;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FailedSwimmers'] = $failedSwimmers;
     }
 
   }
 } else {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
 }
 
 header("Location: " . autoUrl("admin/member-upload"));

@@ -14,20 +14,20 @@ include BASE_PATH . "views/header.php";
     <div class="col-md-9">
       <?php
 
-      if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PasswordUpdate']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PasswordUpdate']) { ?>
+      if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PasswordUpdate']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PasswordUpdate']) { ?>
         <div class="alert alert-success">
           <strong>You've successfully changed your password</strong>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PasswordUpdate']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PasswordUpdate']);
       } ?>
 
       <h1>Change your password</h1>
       <p class="lead">
         A strong password is key to keeping your account secure.
       </p>
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-        echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+        echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
       } ?>
 
       <div class="alert alert-info">

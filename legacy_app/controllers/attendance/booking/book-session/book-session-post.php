@@ -13,8 +13,8 @@ $json = [
 
 // Check details for this session
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 try {
@@ -292,8 +292,8 @@ try {
 
       $mail = new PHPMailer\PHPMailer\PHPMailer(true);
 
-      $mail->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), app()->tenant->getKey('CLUB_NAME'));
-      $mail->addReplyTo(app()->tenant->getKey('CLUB_EMAIL'), app()->tenant->getKey('CLUB_NAME')  . ' Enquiries');
+      $mail->setFrom("noreply@" . getenv('EMAIL_DOMAIN'), config('CLUB_NAME'));
+      $mail->addReplyTo(config('CLUB_EMAIL'), config('CLUB_NAME')  . ' Enquiries');
       $mail->Subject = $subject;
       $mail->addAddress($emailAddress, $username);
 

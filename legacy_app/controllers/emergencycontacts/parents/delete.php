@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $url_path = "emergencycontacts";
 if ($renewal_trap) {
 	$url_path = "renewal/emergencycontacts";
 }
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $contact = new EmergencyContact();
 $contact->connect($db);

@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $session = \SCDS\Onboarding\Session::retrieve($_SESSION['OnboardingSessionId']);
 
@@ -8,9 +8,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -173,7 +173,7 @@ include BASE_PATH . "views/head.php";
           <?php if ($member->getAge() < 18) { ?>
             <h2>Consent for emergency medical treatment</h2>
             <p>
-              It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars($member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars(app()->tenant->getName()) ?>.
+              It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars($member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>.
             </p>
 
             <p>

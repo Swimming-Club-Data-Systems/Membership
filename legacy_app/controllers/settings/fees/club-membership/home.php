@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getClasses = $db->prepare("SELECT `ID`, `Name`, `Description` FROM `clubMembershipClasses` WHERE `Tenant` = ? AND `Type` = ? ORDER BY `Name` ASC");
 $getClasses->execute([
@@ -40,14 +40,14 @@ include BASE_PATH . 'views/header.php';
         <h1>Membership Options</h1>
         <p class="lead">Set amounts for club, NGB and other membership fees</p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']) { ?>
           <div class="alert alert-success">Changes saved successfully</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) { ?>
           <div class="alert alert-danger">Changes could not be saved</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']);
         } ?>
 
         <p>
@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
               <select class="form-select" id="default-class" name="default-class">
                 <option selected disabled>Open this select menu</option>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
+                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if (config('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
                 <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
               </select>
             </div>
@@ -110,7 +110,7 @@ include BASE_PATH . 'views/header.php';
             </p>
           <?php } ?>
 
-          <h2><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Classes</h2>
+          <h2><?= htmlspecialchars(config('NGB_NAME')) ?> Membership Classes</h2>
 
           <?php
 
@@ -141,11 +141,11 @@ include BASE_PATH . 'views/header.php';
             <?php $getClasses->execute(); ?>
             <?php $class = $getClasses->fetch(PDO::FETCH_ASSOC); ?>
             <div class="mb-3">
-              <label class="form-label" for="default-ngb-class">Select default <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership class</label>
+              <label class="form-label" for="default-ngb-class">Select default <?= htmlspecialchars(config('NGB_NAME')) ?> membership class</label>
               <select class="form-select" id="default-ngb-class" name="default-ngb-class">
                 <option selected disabled>Select a default</option>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_NGB_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
+                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if (config('DEFAULT_NGB_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
                 <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
               </select>
             </div>

@@ -4,10 +4,10 @@
 
 $pagetitle = 'More Details - Payment Confirmation';
 
-$ids = $_SESSION['TENANT-' . app()->tenant->getId()]['PaymentConfSearch']['id'];
+$ids = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PaymentConfSearch']['id'];
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getPayments = $db->prepare("SELECT `Date`, `Name`, `Amount`, `Currency`, `Forename`, `Surname` FROM payments INNER JOIN users ON payments.UserID = users.UserID WHERE PaymentID = ? AND `Type` = 'Payment' AND users.Tenant = ?");
 

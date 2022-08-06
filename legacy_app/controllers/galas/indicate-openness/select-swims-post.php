@@ -34,8 +34,8 @@ if (isset($_POST['lock-entry']) && $_POST['lock-entry']) {
   $locked = true;
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends`, CoachEnters, GalaFee fee, GalaFeeConstant gfc, HyTek, ProcessingFee FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -158,7 +158,7 @@ try {
       $subject = 'Entries into ' . $gala['name'];
     }
 
-    $message = '<p>' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . app()->tenant->getId()]['Surname']) . ' has entered ';
+    $message = '<p>' . htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname']) . ' has entered ';
     for ($i = 0; $i < sizeof($entries); $i++) {
       $message .= htmlspecialchars($entries[$i]['forename']);
       if ($i < sizeof($entries) - 2) {
@@ -220,11 +220,11 @@ try {
   }
 
   $db->commit();
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus'] = true;
 } catch (Exception $e) {
   reportError($e);
   $db->rollBack();
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
 }
 
 header("Location: " . autoUrl("galas/" . $id . "/select-entries"));

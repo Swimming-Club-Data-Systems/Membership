@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $sql = $db->prepare("SELECT * FROM galas WHERE galas.GalaID = ? AND Tenant = ?");
 $sql->execute([
@@ -19,9 +19,9 @@ if ($info = null) {
 
 $sql = null;
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 	$sql = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE galas.GalaID = ? AND members.UserID = ? ORDER BY members.MForename ASC, members.MSurname ASC;");
-	$sql->execute([$id, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+	$sql->execute([$id, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } else {
 	$sql = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE galas.GalaID = ? ORDER BY members.MForename ASC, members.MSurname ASC;");
 	$sql->execute([$id]);
@@ -39,7 +39,7 @@ if ($noTimeSheet) {
 	include "galaMenu.php"; ?>
 	<div class="container-xl">
 		<h1>There is no Time Sheet available for the gala you requested</h1>
-		<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+		<?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 		?><p class="lead">This may be because your swimmers have not entered this gala.</p>
 		<?php } else {
 		?><p class="lead">There are no entries yet for this gala.</p>
@@ -56,7 +56,7 @@ if ($noTimeSheet) {
 	// create a file pointer connected to the output stream
 	$output = fopen('php://output', 'w');
 
-	fputcsv($output, array(app()->tenant->getKey('CLUB_NAME') . ' Gala Time Sheet'));
+	fputcsv($output, array(config('CLUB_NAME') . ' Gala Time Sheet'));
 	fputcsv($output, array($info['GalaName'] . " - " . $info['GalaVenue'] . " - " . date("d/m/Y", strtotime($info['GalaDate']))));
 	fputcsv($output, array('Time Sheet Report Generated on ' . date("d/m/Y, H:i")));
 	fputcsv($output, array(''));

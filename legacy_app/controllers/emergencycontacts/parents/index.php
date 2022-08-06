@@ -4,7 +4,7 @@ use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 if (isset($renewal_trap) && $renewal_trap) {
   header("Location: " . autoUrl("renewal/go"));
@@ -12,13 +12,13 @@ if (isset($renewal_trap) && $renewal_trap) {
 }
 
 $sql = $db->prepare("SELECT * FROM `users` WHERE `UserID` = ?");
-$sql->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$sql->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $row = $sql->fetch(PDO::FETCH_ASSOC);
 
 $mobile = PhoneNumber::parse($row['Mobile']);
 
 $contacts = new EmergencyContacts($db);
-$contacts->byParent($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+$contacts->byParent($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
 
 $contactsArray = $contacts->getContacts();
 
@@ -64,9 +64,9 @@ if (isset($renewal_trap) && $renewal_trap) {
         We'll use these emergency contacts for all swimmers connected to your account if we can't reach you on your
         phone number. You can change your phone number in <a href="<?= htmlspecialchars(autoUrl("my-account")) ?>">My Account</a>.
       </p>
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess'])) {
-        echo $_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess'];
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess']);
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewSuccess'])) {
+        echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewSuccess'];
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewSuccess']);
       } ?>
       <ul class="list-group mb-3">
         <li class="list-group-item">

@@ -1,7 +1,7 @@
 <?php
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
 // View a Swimmer
 $this->get('/{id}:int', function ($id) {
@@ -23,7 +23,7 @@ if ($access == "Parent") {
 	});
 
 
-	// $leavers = app()->tenant->getKey('LeaversSquad');
+	// $leavers = config('LeaversSquad');
 
 	// if ($leavers != null) {
 	// 	// Swimmer is leaving
@@ -217,7 +217,7 @@ $this->post('/{id}:int/medical', function ($id) {
 	include 'medicalDetailsPost.php';
 });
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") {
 	$this->get('/{swimmer}:int/agreement-to-code-of-conduct/{squad}:int', function ($swimmer, $squad) {
 		include 'MarkCodeOfConductCompleted.php';
 	});
@@ -227,7 +227,7 @@ $this->group('/{swimmer}:int/times', function () {
 	include 'times/router.php';
 });
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') {
 	$this->post('/delete', function () {
 		include 'delete.php';
 	});

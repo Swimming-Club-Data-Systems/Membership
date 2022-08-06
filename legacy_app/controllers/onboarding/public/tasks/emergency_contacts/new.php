@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $contact = new EmergencyContact();
 $contact->connect($db);
@@ -30,7 +30,7 @@ if (isset($_POST['name']) && $_POST['name'] != "" && isset($_POST['num']) && $_P
     }
     $contact->add();
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess'] = '
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewSuccess'] = '
 		<div class="alert alert-success">
 			<p class="mb-0">
 				<strong>

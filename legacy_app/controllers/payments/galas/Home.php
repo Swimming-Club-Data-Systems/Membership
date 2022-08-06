@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Gala Payments";
 
 $earliestEndDate = new DateTime('first day of last month', new DateTimeZone('Europe/London'));

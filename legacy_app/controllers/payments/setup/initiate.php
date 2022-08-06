@@ -1,18 +1,18 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $url_path = "payments";
 if (isset($renewal_trap) && $renewal_trap) {
 	$url_path = "renewal/payments";
 }
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $scheduleExists = false;
 try {
   $getPaySchdeule = $db->prepare("SELECT * FROM `paymentSchedule` WHERE `UserID` = ?");
-  $getPaySchdeule->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $getPaySchdeule->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $scheduleExists = $getPaySchdeule->fetch(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
   halt(500);
@@ -22,10 +22,10 @@ if ($scheduleExists == null) {
   header("Location: " . autoUrl($url_path . "/setup/0"));
 } else {
   $getDetails = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE UserID = ?");
-  $getDetails->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $getDetails->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $row = $getDetails->fetch(PDO::FETCH_ASSOC);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Token'] = hash('sha256', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . "-" . rand(1000,9999));
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token'] = hash('sha256', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] . "-" . rand(1000,9999));
 
   $addr = null;
   $currentUser = app()->user;
@@ -60,7 +60,7 @@ if ($scheduleExists == null) {
         // This will be shown on the payment pages
         "description" => "Club fee payments",
         // Not the access token
-        "session_token" => $_SESSION['TENANT-' . app()->tenant->getId()]['Token'],
+        "session_token" => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token'],
         "success_redirect_url" => autoUrl($url_path . "/setup/3"),
         // Optionally, prefill customer details on the payment page
         "prefilled_customer" => $prefilledCustomer
@@ -69,7 +69,7 @@ if ($scheduleExists == null) {
 
     // Hold on to this ID - you'll need it when you
     // "confirm" the redirect flow later
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GC_REDIRECTFLOW_ID'] = $redirectFlow->id;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC_REDIRECTFLOW_ID'] = $redirectFlow->id;
 
     header("Location: " . $redirectFlow->redirect_url);
   } catch (Exception $e) {

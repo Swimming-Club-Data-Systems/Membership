@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $admin = app()->user->hasPermissions(['Admin', 'Coach']);
 
@@ -91,25 +91,25 @@ include BASE_PATH . "views/swimmersMenu.php";
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessState'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessState'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>Changes saved successfully</strong>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessState']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessState']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>An error occured trying to save your changes</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']) ?>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
       } ?>
 
       <form id="edit-form" method="post" class="needs-validation" novalidate>
@@ -158,7 +158,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
         <div class="mb-3">
           <p class="mb-2">
-            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="<?php if ($isMemberUser) { ?>Please select the sex you compete under, even if this is not the same as your gender identity. You can select your gender identity (for use internally at <?= htmlspecialchars(app()->tenant->getName()) ?>) below.<?php } else { ?>Select the sex <?= htmlspecialchars($row['MForename']) ?> competes under, even if this is not the same as their gender identity. They can select their gender identity (for use internally at <?= htmlspecialchars(app()->tenant->getName()) ?>) if they visit this page themselves.<?php } ?>" data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="<?php if ($isMemberUser) { ?>Please select the sex you compete under, even if this is not the same as your gender identity. You can select your gender identity (for use internally at <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>) below.<?php } else { ?>Select the sex <?= htmlspecialchars($row['MForename']) ?> competes under, even if this is not the same as their gender identity. They can select their gender identity (for use internally at <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>) if they visit this page themselves.<?php } ?>" data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
           </p>
           <div class="form-check">
             <input type="radio" id="sex-m" name="sex" class="form-check-input" value="Male" <?php if ($row['Gender'] == 'Male') { ?>checked<?php } ?>>
@@ -273,15 +273,15 @@ include BASE_PATH . "views/swimmersMenu.php";
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label class="form-label" for="asa"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Registration Number</label>
+                <label class="form-label" for="asa"><?= htmlspecialchars(config('NGB_NAME')) ?> Registration Number</label>
                 <input type="text" name="asa" id="asa" class="form-control" value="<?= htmlspecialchars($row['ASANumber']) ?>">
               </div>
             </div>
             <div class="col">
               <div class="mb-3">
-                <label class="form-label" for="ngb-cat"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Category</label>
+                <label class="form-label" for="ngb-cat"><?= htmlspecialchars(config('NGB_NAME')) ?> Membership Category</label>
                 <select class="form-select overflow-hidden" id="ngb-cat" name="ngb-cat" placeholder="Select" required>
-                  <option value="none">No <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership</option>
+                  <option value="none">No <?= htmlspecialchars(config('NGB_NAME')) ?> membership</option>
                   <?php do {
                     $selected = '';
                     if ($row['NGBCategory'] == $ngbCategory['ID']) {
@@ -326,7 +326,7 @@ include BASE_PATH . "views/swimmersMenu.php";
             <div class="col-lg">
               <div class="mb-3">
                 <p class="mb-2">
-                  Club pays <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees?
+                  Club pays <?= htmlspecialchars(config('NGB_NAME')) ?> fees?
                 </p>
                 <div class="form-check">
                   <input type="radio" id="sep-no" name="sep" class="form-check-input" <?php if (!bool($row['ASAPaid'])) { ?>checked<?php } ?> value="0">

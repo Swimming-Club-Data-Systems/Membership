@@ -4,8 +4,8 @@ if (!app()->user->hasPermission('Admin')) halt(404);
 
 if (!\SCDS\CSRF::verify()) halt(403);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Get membership years
 $today = new DateTime('now', new DateTimeZone('Europe/London'));

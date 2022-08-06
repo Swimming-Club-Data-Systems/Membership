@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
@@ -126,25 +126,25 @@ include BASE_PATH . 'views/header.php';
     <div class="col-lg-8">
       <form class="needs-validation" method="post" action="<?= htmlspecialchars(autoUrl('sessions/booking/edit')) ?>" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequireBookingError'])) { ?>
           <div class="alert alert-warning">
             <p class="mb-0">
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequireBookingError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequireBookingError']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EditRequireBookingSuccess'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditRequireBookingSuccess'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>Changes saved successfully</strong>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['EditRequireBookingSuccess']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditRequireBookingSuccess']);
         } ?>
 
         <?php if ($bookingClosed) { ?>

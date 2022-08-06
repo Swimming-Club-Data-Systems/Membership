@@ -1,10 +1,10 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $canPayByCard = false;
-if (getenv('STRIPE') && $tenant->getStripeAccount() && $tenant->getBooleanKey('GALA_CARD_PAYMENTS_ALLOWED')) {
+if (getenv('STRIPE') && $tenant->getStripeAccount() && config('GALA_CARD_PAYMENTS_ALLOWED')) {
   $canPayByCard = true;
 }
 
@@ -15,8 +15,8 @@ $swimsTimeArray = ['25FreeTime', '50FreeTime', '100FreeTime', '200FreeTime', '40
 $entryList = "";
 $get = $db->prepare("SELECT * FROM (galaEntries INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE galaEntries.MemberID = ? AND galaEntries.GalaID = ? AND galas.Tenant = ?");
 $get->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Swimmer'],
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Gala'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['Swimmer'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['Gala'],
   $tenant->getId()
 ]);
 $row = $get->fetch(PDO::FETCH_ASSOC);
@@ -29,8 +29,8 @@ for ($y = 0; $y < sizeof($swimsArray); $y++) {
 
 $get = $db->prepare("SELECT members.MForename, members.MSurname, galas.GalaName, galas.GalaFee, galas.GalaFeeConstant, users.EmailAddress, users.Forename, users.Surname, FeeToPay, EntryID FROM (((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) INNER JOIN users ON members.UserID = users.UserID) WHERE galaEntries.MemberID = ? AND galaEntries.GalaID = ? AND galas.Tenant = ?");
 $get->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Swimmer'],
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Gala'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['Swimmer'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['Gala'],
   $tenant->getId()
 ]);
 $row = $get->fetch(PDO::FETCH_ASSOC);
@@ -94,7 +94,7 @@ include BASE_PATH . "views/header.php";
         What do you need to do now?
       </p>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['HyTek']) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['HyTek']) { ?>
         <div class="cell">
           <h3>Provide entry times</h3>
           <p>
@@ -165,7 +165,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['HyTek']) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']['HyTek']) { ?>
         <h2 id="why">Why do I have to provide times?</h2>
         <p>
           There are two main providers of software for running galas in the UK: SPORTSYSTEMS Meet Manager and HyTek Meet Manager.
@@ -191,8 +191,8 @@ include BASE_PATH . "views/header.php";
 
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry'])) {
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry'])) {
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry']);
 }
 
 $footer = new \SCDS\Footer();

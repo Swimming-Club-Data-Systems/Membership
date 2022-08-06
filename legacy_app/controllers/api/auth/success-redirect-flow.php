@@ -2,8 +2,8 @@
 
 // Try finding user
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $output = [
   'success' => false,
@@ -12,13 +12,13 @@ $output = [
 
 try {
 
-  if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED'])) {
+  if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_USER_CONFIRMED'])) {
     throw new Exception("Not ready, no user");
   }
 
   $login = new \CLSASC\Membership\Login($db);
-  $login->setUser($_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED']);
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_REMEMBER_ME']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_REMEMBER_ME'])) {
+  $login->setUser($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_USER_CONFIRMED']);
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME'])) {
     $login->stayLoggedIn();
   }
   $currentUser = app()->user;

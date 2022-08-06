@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -33,7 +33,7 @@ if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->has
 } else {
   $userSquads = $db->prepare("SELECT SquadName, SquadID FROM squadReps INNER JOIN squads ON squadReps.Squad = squads.SquadID WHERE User = ? AND Squad = ? ORDER BY SquadFee DESC, SquadName ASC");
   $userSquads->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $_GET['squad'],
   ]);
 }
@@ -110,16 +110,16 @@ if (!$squad) {
     <div class="row">
       <div class="col-lg-8">
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>An error occurred</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']['message']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError']);
         } ?>
 
         <form method="post" action="<?= htmlspecialchars(autoUrl('contact-tracing/check-in/' . $id . '/squad-register')) ?>">

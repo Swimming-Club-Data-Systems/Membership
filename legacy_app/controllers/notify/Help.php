@@ -10,7 +10,7 @@ include BASE_PATH . "views/header.php";
 <div class="container-xl">
 	<div class="row">
 		<div class="col-lg-8 mb-5">
-			<h1>Notify from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></h1>
+			<h1>Notify from <?= htmlspecialchars(config('CLUB_NAME')) ?></h1>
 			<p class="lead">
 				Notify is the SCDS member mailing
 				list solution.
@@ -18,7 +18,7 @@ include BASE_PATH . "views/header.php";
 
 			<div class="alert alert-info">
 				<p class="mb-0">
-					<strong>Unwanted emails from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> or SCDS?</strong>
+					<strong>Unwanted emails from <?= htmlspecialchars(config('CLUB_NAME')) ?> or SCDS?</strong>
 				</p>
 				<p class="mb-0">
 					<a class="alert-link" href="https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u" target="_blank" title="Report email abuse">Report mail abuse</a> and we'll investigate.

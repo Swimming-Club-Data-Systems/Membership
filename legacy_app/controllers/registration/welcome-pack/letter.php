@@ -1,16 +1,16 @@
 <?php
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
-  $id = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
+  $id = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 }
 
 if (!isset($id)) {
   halt(404);
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-$welcome = app()->tenant->getKey('WelcomeLetter');
+$welcome = config('WelcomeLetter');
 
 if ($welcome == null) {
   halt(404);
@@ -32,7 +32,7 @@ $swimmers = $swimmers->fetchAll(PDO::FETCH_ASSOC);
 
 $email_info = $user->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = app()->tenant->getKey('CLUB_NAME') . " Welcome Letter";
+$pagetitle = config('CLUB_NAME') . " Welcome Letter";
 
 ob_start();?>
 
@@ -88,7 +88,7 @@ ob_start();?>
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+        Welcome to <?=htmlspecialchars(config('CLUB_NAME'))?>
       </h1>
 
       <p class="mb-0">

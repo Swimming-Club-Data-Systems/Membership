@@ -4,8 +4,8 @@ use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile, RR FROM users WHERE Tenant = ? AND UserID = ? AND Active");
 $userInfo->execute([
@@ -113,11 +113,11 @@ include BASE_PATH . "views/header.php";
           <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
           <small><?= htmlspecialchars($accessLevel) ?></small>
         </h1>
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
           <div class="mb-3 d-md-none"></div>
         <?php } ?>
       </div>
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="col text-sm-end">
           <p class="mb-0">
             <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit")) ?>" class="btn btn-success">
@@ -134,28 +134,28 @@ include BASE_PATH . "views/header.php";
 
 <div class="container-fluid">
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Error']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Error']) { ?>
     <div class="alert alert-danger">
       <strong>We were not able to update the user's email address because it was not valid</strong>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Error']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Error']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Success']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Success']) { ?>
     <div class="alert alert-success">
       <strong>We've updated the user's email address</strong>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Success']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['User-Update-Email-Success']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']) { ?>
     <div class="alert alert-success">
       <strong>We've sent your email to <?= htmlspecialchars($info['Forename']) ?></strong>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationSuccess']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationSuccess']) { ?>
     <div class="alert alert-success">
       <p class="mb-0">
         <strong>We've successfully created this user.</strong>
@@ -164,7 +164,7 @@ include BASE_PATH . "views/header.php";
         This user will be log in using the password you have created or by following the self-service password reset process.
       </p>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationSuccess']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationSuccess']);
   } ?>
 
   <div class="row justify-content-between">
@@ -187,7 +187,7 @@ include BASE_PATH . "views/header.php";
               Residential address
             </a>
           <?php } ?>
-          <?php if ($userObj->hasPermission('Coach') && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+          <?php if ($userObj->hasPermission('Coach') && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
             <a href="#squads" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
               Squads
             </a>
@@ -203,7 +203,7 @@ include BASE_PATH . "views/header.php";
               Current Memberships
             </a>
           <?php } ?>
-          <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+          <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
             <a href="#squad-rep-settings" class="list-group-item list-group-item-action">
               Squad rep settings
             </a>
@@ -300,7 +300,7 @@ include BASE_PATH . "views/header.php";
         <hr>
       <?php } ?>
 
-      <?php if ($userObj->hasPermission('Coach') && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+      <?php if ($userObj->hasPermission('Coach') && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="mb-4" id="coach-squad" data-squad-list="<?= htmlspecialchars(json_encode(false)) ?>">
           <h2 id="squads">
             Squads
@@ -356,7 +356,7 @@ include BASE_PATH . "views/header.php";
                 </div>
               </div>
 
-              <?php if ($tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+              <?php if (config('GOCARDLESS_ACCESS_TOKEN') && !config('USE_STRIPE_DIRECT_DEBIT')) { ?>
                 <div class="alert alert-info">
                   <p class="mb-0">
                     <strong>Plan your migration to Stripe for your Direct Debit payments</strong>
@@ -406,7 +406,7 @@ include BASE_PATH . "views/header.php";
             </div>
 
             <div class="col-md-6 col-lg-4">
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
                 <div class="card position-sticky top-3">
                   <div class="card-header">
                     Payment links
@@ -415,7 +415,7 @@ include BASE_PATH . "views/header.php";
                     <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/membership-fees")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Annual membership fees <span class="fa fa-chevron-right"></span></a>
                     <a href="<?= autoUrl("users/" . $id . "/pending-fees") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Pending payments <span class="fa fa-chevron-right"></span></a>
                     <a href="<?= autoUrl("payments/history/users/" . $id) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Previous bills <span class="fa fa-chevron-right"></span></a>
-                    <?php if ($tenant->getKey('GOCARDLESS_ACCESS_TOKEN')) { ?>
+                    <?php if (config('GOCARDLESS_ACCESS_TOKEN')) { ?>
                       <a href="<?= autoUrl("users/" . $id . "/mandates") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">GoCardless direct debit mandates <span class="fa fa-chevron-right"></span></a>
                     <?php } ?>
                     <?php if (stripeSetUpDirectDebit()) { ?>
@@ -510,7 +510,7 @@ include BASE_PATH . "views/header.php";
 
       <?php } ?>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="row">
           <div class="col-12">
             <div class="mb-4">

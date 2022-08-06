@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $user = app()->user;
 if (!$user->hasPermissions(['Admin'])) halt(404);
@@ -72,22 +72,22 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>New qualification type added successfully</strong>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EditQualificationSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditQualificationSuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>Changes saved successfully</strong>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['EditQualificationSuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EditQualificationSuccess']);
       } ?>
 
       <?php if ($qualification['Description']) { ?>

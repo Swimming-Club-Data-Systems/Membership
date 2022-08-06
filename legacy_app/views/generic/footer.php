@@ -18,7 +18,7 @@ $script = autoUrl(getCompiledAsset('main.js'), false);
 
 ?>
 <script rel="preload" src="<?= htmlspecialchars($script) ?>"></script>
-<?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
+<?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
   <script src="<?= htmlspecialchars(autoUrl("js/app.js", false)) ?>"></script>
 <?php } ?>
 

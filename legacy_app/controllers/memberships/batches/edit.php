@@ -1,12 +1,12 @@
 <?php
 
 $user = app()->user;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
 $getBatch->execute([
   $id,
-  app()->tenant->getId(),
+  tenant()->getLegacyTenant()->getId(),
 ]);
 
 $batch = $getBatch->fetch(PDO::FETCH_OBJ);

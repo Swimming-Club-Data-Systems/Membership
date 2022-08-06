@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $getClubs = $db->query("SELECT `ID`, `Name`, `Code`, `Verified`, `Domain`, `UniqueID` FROM tenants WHERE `Verified` ORDER BY `Name` ASC");
 $club = $getClubs->fetch(PDO::FETCH_ASSOC);
 

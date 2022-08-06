@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $disabled = "";
 
@@ -137,7 +137,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 				$message .= '<p>As you don\'t pay your club fees by direct debit or have opted out of paying for galas by direct debit, you\'ll need to collect this refund from the treasurer or gala coordinator.</p>';
 			}
 
-			$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+			$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
 			$notify->execute([
 				$entry['UserID'],
@@ -151,15 +151,15 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 		} catch (Exception $e) {
 			// A problem occured
 			$db->rollBack();
-			$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'] = true;
+			$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure'] = true;
 		}
 	} else if ($amount > $amountRefundable) {
-		$_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']] = true;
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'][$entry['EntryID']] = true;
 	}
 }
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'])) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersSuccess'] = true;
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure'])) {
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersSuccess'] = true;
 }
 
 header("Location: " . currentUrl());

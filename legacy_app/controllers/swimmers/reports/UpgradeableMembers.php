@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $date = new DateTime('-9 years last day of December', new DateTimeZone('Europe/London'));
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
       <?php if ($member) { ?>
         <form method="post">
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSaveError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSaveError']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSaveError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSaveError']) { ?>
             <div class="alert alert-danger">
               <p class="mb-0">
                 <strong>An error has occurred</strong>
@@ -67,10 +67,10 @@ include BASE_PATH . 'views/header.php';
                 We were unable to save your Swim England Membership Category changes for these members.
               </p>
             </div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSaveError']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSaveError']);
           } ?>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSavedSuccessfully']) && $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSavedSuccessfully']) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSavedSuccessfully']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSavedSuccessfully']) { ?>
             <div class="alert alert-success">
               <p class="mb-0">
                 <strong>Changes saved successfully</strong>
@@ -79,7 +79,7 @@ include BASE_PATH . 'views/header.php';
                 Remember that members will not pay their new Swim England fee until their next registration/renewal.
               </p>
             </div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSavedSuccessfully']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSavedSuccessfully']);
           } ?>
 
           <p>

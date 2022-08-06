@@ -42,7 +42,7 @@ class Renewal
 
   private function create($user, $members, $renewalId)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $this->user = $user;
 
@@ -199,7 +199,7 @@ class Renewal
 
   public function update()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getRenewal = $db->prepare("SELECT renewalPeriods.ID PID, renewalPeriods.Opens, renewalPeriods.Closes, renewalPeriods.Name, renewalPeriods.Year, renewalData.ID, renewalData.User, renewalData.Document, renewalData.PaymentIntent, renewalData.PaymentDD FROM renewalData LEFT JOIN renewalPeriods ON renewalPeriods.ID = renewalData.Renewal WHERE renewalData.ID = ?");
     $getRenewal->execute([
       $this->id,
@@ -268,7 +268,7 @@ class Renewal
     $json = json_encode($jsonArray);
 
     // Check if we're updating or adding a new one
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCount = $db->prepare("SELECT COUNT(*) FROM renewalData WHERE ID = ?");
     $getCount->execute([
       $this->id,

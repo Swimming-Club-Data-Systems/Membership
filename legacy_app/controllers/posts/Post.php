@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = null;
 
@@ -10,11 +10,11 @@ $markdown = new ParsedownExtra();
 // Safe mode is disabled during the transition to markdown
 // $markdown->setSafeMode(true);
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
 	$sql = "SELECT COUNT(*) FROM `members` WHERE `UserID` = ?";
 	try {
 		$query = $db->prepare($sql);
-		$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+		$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 		if ($query->fetchColumn() == 0) {
 			halt(404);
 		}

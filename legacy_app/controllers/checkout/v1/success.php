@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $checkoutSession = \SCDS\Checkout\Session::retrieve($id);
 
@@ -44,10 +44,10 @@ include BASE_PATH . 'views/head.php';
       <div class="col-auto">
         <div class="h1 mb-0">
           <a href="<?= htmlspecialchars($returnUrl) ?>" class="text-decoration-none">
-            <?php if ($tenant->getKey('LOGO_DIR')) { ?>
+            <?php if (config('LOGO_DIR')) { ?>
               <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
             <?php } else { ?>
-              <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+              <?= htmlspecialchars(config('CLUB_NAME')) ?>
             <?php } ?>
           </a>
         </div>
@@ -56,7 +56,7 @@ include BASE_PATH . 'views/head.php';
     </div>
 
     <h1 class="mb-0">
-      <span class="text-muted small">You paid <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
+      <span class="text-muted small">You paid <?= htmlspecialchars(config('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
     </h1>
 
   </div>

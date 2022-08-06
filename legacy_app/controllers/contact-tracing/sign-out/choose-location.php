@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'Sign Out - Contact Tracing';
 
 $getLocations = $db->prepare("SELECT `ID`, `Name` FROM `covidLocations` WHERE `Tenant` = ? ORDER BY `Name` ASC");
@@ -12,7 +12,7 @@ $getLocations->execute([
 // Check if authenticated
 $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
 $getRepCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 

@@ -51,8 +51,8 @@ class TrainingVenue
    */
   public function revalidate()
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $this->tenant = $tenant->getId();
 

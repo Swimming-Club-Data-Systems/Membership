@@ -2,10 +2,10 @@
 
 use CLSASC\EquivalentTime\EquivalentTime;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 $sex = "";
 if ($_REQUEST["sex"] == "m") {
   $sex = " AND `Gender` = 'Male' ";
@@ -120,7 +120,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
       href=\"https://www.swimmingresults.org/biogs/biogs_details.php?tiref=" .
         htmlspecialchars($row['ASANumber']) . "\" target=\"_blank\" title=\"Click to see times\">" .
         htmlspecialchars($row['ASANumber']) . " <i class=\"fa fa-external-link\"
-      aria-hidden=\"true\"></i></a><span class=\"d-none d-print-inline\">" . htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ": " .
+      aria-hidden=\"true\"></i></a><span class=\"d-none d-print-inline\">" . htmlspecialchars(config('NGB_NAME')) . ": " .
         htmlspecialchars($row['ASANumber']) . "</span><br>
       <span class=\"small\">" . htmlspecialchars($row['Name']) . "<br>
       " . htmlspecialchars($row['GalaName']) . "<br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "\">Edit Entry</a><br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "/manual-time\">Set Manual Times</a></span>";

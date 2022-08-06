@@ -2,8 +2,8 @@
 
 $id = isset($_GET['id']) ? $_GET['id'] : null;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $checkoutSession = \SCDS\Checkout\Session::retrieve($id);
 
@@ -68,7 +68,7 @@ echo json_encode([
   "redirect_url" => $redirect,
   "payment_request_items" => $paymentRequestItems,
   "client_secret" => $paymentIntent->client_secret,
-  "org_name" => $tenant->getKey('CLUB_NAME'),
+  "org_name" => config('CLUB_NAME'),
   "amount" => $paymentIntent->amount,
   "currency" => $paymentIntent->currency,
   "stripe_account_id" => $tenant->getStripeAccount(),

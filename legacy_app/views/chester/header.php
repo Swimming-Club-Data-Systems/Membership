@@ -1,14 +1,14 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 require 'GlobalHead.php';
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AlphaBeta'])) {
   if (rand() < 0.5) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'] = false;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AlphaBeta'] = false;
   } else {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AlphaBeta'] = true;
   }
 }
 
@@ -18,7 +18,7 @@ if (isset($customBackground) && $customBackground) {
 }
 ?>
 
-<?php if (false /*$_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta']*/) { ?>
+<?php if (false /*$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AlphaBeta']*/) { ?>
   <style>
     h1 {
       background: #bd0000;
@@ -58,7 +58,7 @@ if (isset($customBackground) && $customBackground) {
 
   <div class="d-print-none">
 
-    <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') != 'NONE' && app()->tenant->getKey('EMERGENCY_MESSAGE')) {
+    <?php if (config('EMERGENCY_MESSAGE_TYPE') != 'NONE' && config('EMERGENCY_MESSAGE')) {
       $markdown = new ParsedownExtra();
     ?>
       <style>
@@ -84,10 +84,10 @@ if (isset($customBackground) && $customBackground) {
         }
       </style>
 
-      <div class="py-3 <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'DANGER') { ?>bg-danger text-white<?php } ?> <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'WARN') { ?>bg-warning text-body<?php } ?> <?php if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') { ?>bg-success text-white<?php } ?>">
+      <div class="py-3 <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'DANGER') { ?>bg-danger text-white<?php } ?> <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'WARN') { ?>bg-warning text-body<?php } ?> <?php if (config('EMERGENCY_MESSAGE_TYPE') == 'SUCCESS') { ?>bg-success text-white<?php } ?>">
         <div class="<?= $container_class ?> emergency-message">
           <?php try { ?>
-            <?= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE')) ?>
+            <?= $markdown->text(config('EMERGENCY_MESSAGE')) ?>
           <?php } catch (Exception $e) { ?>
             <p>An emergency message has been set but cannot be rendered.</p>
           <?php } ?>
@@ -95,13 +95,13 @@ if (isset($customBackground) && $customBackground) {
       </div>
     <?php } ?>
 
-    <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) { ?>
+    <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'])) { ?>
       <div class="bg-secondary text-white box-shadow py-2 d-print-none">
         <div class="<?= $container_class ?>">
           <p class="mb-0">
             <strong>
               You are in User Simulation Mode simulating <?=
-                                                          $_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']['SimUserName'] ?>
+                                                          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['SimUserName'] ?>
             </strong>
           </p>
           <p class="mb-0">
@@ -129,7 +129,7 @@ if (isset($customBackground) && $customBackground) {
                 today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
           </p>
           <p class="mb-0">
-            If JavaScript is not supported by your browser, <?= app()->tenant->getKey('CLUB_NAME') ?>
+            If JavaScript is not supported by your browser, <?= config('CLUB_NAME') ?>
             recommends you <strong><a class="text-dark" href="https://www.firefox.com">install Firefox by
                 Mozilla</a></strong>.
           </p>
@@ -168,7 +168,7 @@ if (isset($customBackground) && $customBackground) {
             browser which we do support as soon as possible. <strong><a class="text-dark" href="http://browsehappy.com/" target="_blank">Upgrade your browser today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install
+            <?= htmlspecialchars(config('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install
                 Firefox by Mozilla</a></strong>. Firefox has great protections for your privacy with built in features
             including tracking protection.
           </p>
@@ -182,8 +182,8 @@ if (isset($customBackground) && $customBackground) {
       $edit_link = autoUrl("posts/" . $allow_edit_id . "/edit");
     }
 
-    if (isset($allow_edit) && $allow_edit && (($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent" &&
-      $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Coach" && $edit_link != null) || $page_is_mine)) { ?>
+    if (isset($allow_edit) && $allow_edit && (($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent" &&
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Coach" && $edit_link != null) || $page_is_mine)) { ?>
       <div class="bg-dark text-white box-shadow py-2 d-print-none">
         <div class="<?= $container_class ?>">
           <p class="mb-0">
@@ -216,7 +216,7 @@ if (isset($customBackground) && $customBackground) {
         <span class="d-flex" id="top-bar-visible">
         </span>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) { ?>
           <span class="d-none" id="top-bar-login-status">1</span>
         <?php } else { ?>
           <span class="d-none" id="top-bar-login-status">0</span>
@@ -279,15 +279,15 @@ if (isset($customBackground) && $customBackground) {
       </div>
     </div>
 
-    <?php if (true || !isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
-      <div class="bg-primary <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) && user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) { ?>d-lg-none<?php } ?>">
+    <?php if (true || !isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
+      <div class="bg-primary <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) && user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) { ?>d-lg-none<?php } ?>">
         <div class="<?= $container_class ?>">
         <?php } ?>
-        <nav class="navbar <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?><?php } ?>  navbar-expand-lg navbar-dark bg-primary
+        <nav class="navbar <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?><?php } ?>  navbar-expand-lg navbar-dark bg-primary
     d-print-none justify-content-between px-0" <?php if (isset($use_website_menu) && $use_website_menu) { ?>id="club-menu" <?php } ?> role="navigation" style="font-size: .8rem;">
 
           <a class="navbar-brand d-lg-none" href="<?= autoUrl("") ?>">
-            <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
+            <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) { ?>
               <img src="<?php echo autoUrl("img/chesterIcon.svg", false); ?>" width="20" height="20"> My Membership
             <?php } else { ?>
               <img src="<?php echo autoUrl("img/chesterIcon.svg", false); ?>" width="20" height="20"> Club Membership
@@ -299,7 +299,7 @@ if (isset($customBackground) && $customBackground) {
 
           <?php include BASE_PATH . 'views/menus/main.php'; ?>
 
-          <?php if (true || !isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
+          <?php if (true || !isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
         </div>
 
       </div>
@@ -312,7 +312,7 @@ if (isset($customBackground) && $customBackground) {
   </div>
 
 
-  <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
+  <?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
     <div class="have-full-height focus-highlight" style="min-height:70vh">
     <?php } else { ?>
       <div class="have-full-height focus-highlight">

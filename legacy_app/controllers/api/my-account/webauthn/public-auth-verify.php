@@ -4,7 +4,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions'])) {
   throw new Exception("Missing session value");
 }
 
@@ -21,7 +21,7 @@ $creator = new ServerRequestCreator(
 
 $serverRequest = $creator->fromGlobals();
 
-$publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
+$publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions']);
 
 $userEntity = $userEntityRepository->findWebauthnUserByUserHandle(base64_decode(json_decode(file_get_contents('php://input'))->response->userHandle));
 
@@ -38,16 +38,16 @@ try {
 
   $userId = $publicKeyCredentialSource->getUserHandle();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_REMEMBER_ME'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME'] = true;
 
   $target = autoUrl("");
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL'])) {
-    $target = autoUrl(trim($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL'], "/"));
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestTargetURL'])) {
+    $target = autoUrl(trim($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestTargetURL'], "/"));
   }
 
   $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode($target));
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $userId;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $userId;
 
   $event = 'UserLogin-WebAuthn';
   AuditLog::new($event, 'Signed in from ' . getUserIp(), $userId);
@@ -67,5 +67,5 @@ try {
   ]);
 }
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestTargetURL']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions']);

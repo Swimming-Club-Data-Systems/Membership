@@ -2,8 +2,8 @@
 
 use GeoIp2\Database\Reader;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $incrementFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = WrongPassCount + 1 WHERE UserID = ?");
 $resetFailedLoginCount = $db->prepare("UPDATE users SET WrongPassCount = 0 WHERE UserID = ?");
@@ -41,7 +41,7 @@ try {
 
       // Do 2FA
       if ($hasTotp) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE'] = true;
 
         $output = [
           'success' => true,
@@ -57,21 +57,21 @@ try {
           <p>Hello. Confirm your login by entering the following code in your web browser.</p>
           <p><strong>' . htmlspecialchars($code) . '</strong></p>
           <p>The login was from IP address ' . htmlspecialchars(getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
-          <p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+          <p>Kind Regards, <br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
 
         $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
         if (notifySend(null, "Verification Code - Requested at " . $date->format("H:i:s \o\\n d/m/Y"), $message, $forename . " " . $surname, $email)) {
-          $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_CODE'] = $code;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_CODE'] = $code;
         } else {
           throw new Exception("Unable to send verification code email");
         }
       }
-      $_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'] = $userID;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID'] = $userID;
       if (isset($_POST['RememberMe']) && bool($_POST['RememberMe'])) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserRememberMe'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserRememberMe'] = true;
       }
-      $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR'] = true;
 
       $output = [
         'success' => true,

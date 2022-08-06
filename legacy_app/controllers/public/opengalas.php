@@ -2,8 +2,8 @@
 
 header("Access-Control-Allow-Origin: " . $_SERVER['HTTP_ORIGIN']);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
 

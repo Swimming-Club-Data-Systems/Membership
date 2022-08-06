@@ -15,13 +15,13 @@ try {
     if (!isset($_POST[$value]) || !bool($_POST[$value])) {
       $hide = 0;
     }
-    app()->tenant->setKey($value, $hide);
+    tenant()->getLegacyTenant()->setKey($value, $hide);
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success'] = true;
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error'] = true;
 }
 
 http_response_code(302);

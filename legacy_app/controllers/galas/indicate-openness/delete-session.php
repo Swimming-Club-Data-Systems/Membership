@@ -1,8 +1,8 @@
 <?php
 
 try {
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   // Check gala
   $getGala = $db->prepare("SELECT COUNT(*) FROM galas WHERE GalaID = ? AND Tenant = ?");

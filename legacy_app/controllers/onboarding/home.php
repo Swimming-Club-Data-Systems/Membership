@@ -1,7 +1,7 @@
 <?php
 
 $user = app()->user;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $pagetitle = "Onboarding";
 include BASE_PATH . "views/header.php";

@@ -22,7 +22,7 @@ $this->get('/security-keys', function () {
 	require 'WebAuthn/home.php';
 });
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
 	// Add swimmer
 	$this->get('/add-member', function () {
 		require 'add-swimmer.php';
@@ -50,7 +50,7 @@ $this->group('/email', function () {
 
 	$this->group('/cc', function () {
 
-		if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent'])) {
+		if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailSent']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['VerifyEmailSent'])) {
 			$this->get('/new', function () {
 				include 'CC/CCEmailSent.php';
 			});

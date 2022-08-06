@@ -4,8 +4,8 @@
 //   halt(404);
 // }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $allowedTypes = ['assign', 'revoke'];
 

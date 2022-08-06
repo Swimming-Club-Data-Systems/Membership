@@ -17,7 +17,7 @@ if (isset($_GET['acs'])) {
   $acs = $_GET['acs'];
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
   <div class="container-fluid">
 
     <div class="row justify-content-between">
@@ -28,19 +28,19 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { 
         ?>
       </div>
       <div class="col-md-9">
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSwimmerSuccessState'])) {
-          echo $_SESSION['TENANT-' . app()->tenant->getId()]['AddSwimmerSuccessState'];
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSwimmerSuccessState']);
-        } else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-          echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSwimmerSuccessState'])) {
+          echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSwimmerSuccessState'];
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSwimmerSuccessState']);
+        } else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+          echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
         } else { ?>
           <div class="">
             <h1>Add a member</h1>
             <p>We need a few details to find a member in our database.</p>
-            <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-              echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-              unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+            <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+              echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+              unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
             } ?>
             <?php if ($id != null && $acs != null) { ?>
               <div class="alert alert-success">

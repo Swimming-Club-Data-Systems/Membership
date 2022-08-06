@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = app()->adminCurrentTenant;
 
 if (isset($_POST['default-mandate']) && \SCDS\CSRF::verify()) {

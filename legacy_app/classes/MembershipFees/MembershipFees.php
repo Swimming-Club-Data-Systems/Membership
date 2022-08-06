@@ -18,7 +18,7 @@ class MembershipFees
 
   public static function getByUser($user, $partial = false)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     // Get classes (Club Memberships)
     $getClasses = $db->prepare("SELECT DISTINCT `ID` FROM clubMembershipClasses INNER JOIN members ON members.ClubCategory = clubMembershipClasses.ID WHERE members.UserID = ? AND members.Active");

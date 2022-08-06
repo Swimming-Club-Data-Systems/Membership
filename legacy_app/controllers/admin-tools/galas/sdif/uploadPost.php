@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $checkForExistingGala = $db->prepare("SELECT `Meet` FROM `meetsWithResults` WHERE Tenant = ? AND `Name` = ? AND `City` = ? AND (`Start` = ? OR `End` = ?) AND `Course` = ?");
 $checkForExistingResult = $db->prepare("SELECT COUNT(*) FROM `meetResults` WHERE `Member` = ? AND `Date` = ? AND `IntTime` = ? AND `ChronologicalOrder` = ? AND `Round` = ? AND `Stroke` = ? AND `Distance` = ? AND `Course` = ?");
@@ -38,20 +38,20 @@ if (!$formInvalid) {
           // reportError($_FILES['file-upload']['error'][$i]);
           if ($_FILES['file-upload']['error'][$i] == 2) {
             // Too large
-            $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError'] = true;
+            $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError'] = true;
           } else {
-            $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+            $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
           }
           throw new Exception();
         } else if ($_FILES['file-upload']['type'][$i] != 'text/plain' && $_FILES['file-upload']['type'][$i] != 'application/octet-stream') {
           // Probably not a text file
           reportError($_FILES['file-upload']['type'][$i]);
-          $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
           throw new Exception();
         } else if ($_FILES['file-upload']['size'][$i] > 3000000) {
           // Too large, stop
           // reportError($_FILES['file-upload']['size'][$i]);
-          $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError'] = true;
           throw new Exception();
         } else {
           $filePointer = fopen($_FILES['file-upload']['tmp_name'][$i], 'r');
@@ -224,19 +224,19 @@ if (!$formInvalid) {
           fclose($filePointer);
         }
       } else {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
         throw new Exception();
       }
     }
     $db->commit();
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess'] = true;
   } catch (Exception | Error $e) {
     $db->rollBack();
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError'] = true;
     reportError($e);
   }
 } else if ($formInvalid) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['FormError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'] = true;
 }
 
 header("Location: " . autoUrl("admin/galas/sdif/upload"));

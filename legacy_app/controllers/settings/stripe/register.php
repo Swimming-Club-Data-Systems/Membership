@@ -1,9 +1,9 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
-if ($at = app()->tenant->getStripeAccount()) {
+if ($at = tenant()->getLegacyTenant()->getStripeAccount()) {
   // Already go it, halt
   halt(404);
 }

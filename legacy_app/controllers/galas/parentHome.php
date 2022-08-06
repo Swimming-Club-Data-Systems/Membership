@@ -1,9 +1,9 @@
 <?php
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
 $nowDay = $now->format('Y-m-d');
@@ -17,14 +17,14 @@ $gala = $galas->fetch(PDO::FETCH_ASSOC);
 $entriesOpen = false;
 
 $entries = $db->prepare("SELECT EntryID, GalaName, ClosingDate, GalaVenue, MForename, MSurname, EntryProcessed Processed, Charged, Refunded, FeeToPay, Locked, Vetoable, RequiresApproval, Approved FROM ((galaEntries INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) INNER JOIN members ON galaEntries.MemberID = members.MemberID) WHERE GalaDate >= ? AND members.UserID = ?");
-$entries->execute([$nowDay, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$entries->execute([$nowDay, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $entry = $entries->fetch(PDO::FETCH_ASSOC);
 
 $manualTimeGalas = $db->prepare("SELECT EntryID, GalaName, ClosingDate, GalaVenue, MForename, MSurname, EntryProcessed Processed, Charged, Refunded, FeeToPay, Locked, Vetoable FROM ((galaEntries INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) INNER JOIN members ON galaEntries.MemberID = members.MemberID) WHERE GalaDate >= ? AND members.UserID = ? AND galas.HyTek = 1;");
-$manualTimeGalas->execute([$nowDay, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$manualTimeGalas->execute([$nowDay, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 
 $timesheets = $db->prepare("SELECT DISTINCT `galas`.`GalaID`, `GalaName`, `GalaVenue` FROM ((`galas` INNER JOIN `galaEntries` ON `galas`.`GalaID` = `galaEntries`.`GalaID`) INNER JOIN members ON galaEntries.MemberID = members.MemberID) WHERE `GalaDate` >= ? AND members.UserID = ? ORDER BY `GalaDate` ASC");
-$timesheets->execute([$nowDay, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$timesheets->execute([$nowDay, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $timesheet = $timesheets->fetch(PDO::FETCH_ASSOC);
 
 $canPayByCard = false;
@@ -86,7 +86,7 @@ $countEntriesCount = [];
 $countEntriesColours = [];
 foreach ($swimsArray as $col => $name) {
   $getCount = $db->prepare("SELECT COUNT(*) FROM galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID WHERE members.UserID = ? AND `" . $col . "` = 1");
-  $getCount->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $getCount->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $count = $getCount->fetchColumn();
   if ($count > 0) {
     $countEntries[$col]['Name'] = $name;

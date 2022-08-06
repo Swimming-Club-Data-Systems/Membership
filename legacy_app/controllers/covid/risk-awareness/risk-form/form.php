@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 $getMember = $db->prepare("SELECT MemberID, UserID, MForename, MSurname, DateOfBirth FROM members WHERE MemberID = ? AND Tenant = ?");
@@ -17,7 +17,7 @@ if (!$member) {
 }
 
 if (!$user->hasPermission('Admin') && !$user->hasPermission('Coach') && !$user->hasPermission('Galas')) {
-  if ($member['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+  if ($member['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
     halt(404);
   }
 }
@@ -55,14 +55,14 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>COVID-19 Risk Awareness Declaration<?php } ?> <small class="text-muted"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
+          <?php if (mb_strtoupper(config('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>COVID-19 Risk Awareness Declaration<?php } ?> <small class="text-muted"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
         </h1>
         <p class="lead mb-0">
           Confirm your awareness of risk before returning to training.
         </p>
       </div>
       <div class="col text-end">
-        <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) != 'UOSZ') { ?>
+        <?php if (mb_strtoupper(config('ASA_CLUB_CODE')) != 'UOSZ') { ?>
           <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
         <?php } ?>
       </div>
@@ -135,7 +135,7 @@ include BASE_PATH . 'views/header.php';
           </div>
         </div>
 
-        <?php if (app()->tenant->getKey('ASA_CLUB_CODE') == 'UOSZ') { ?>
+        <?php if (config('ASA_CLUB_CODE') == 'UOSZ') { ?>
           <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" id="uosswpc-member-declaration" name="uosswpc-member-declaration" required value="1">
             <label class="form-check-label" for="uosswpc-member-declaration">I <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong>, accept that I am swimming at my own risk and won't hold the club accountable if I catch coronavirus (COVID-19).<br><span class="badge bg-light">Signed <?= $today->format("j F Y") ?></span></label>

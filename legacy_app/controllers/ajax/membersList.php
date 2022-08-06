@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 $count = 0;
 $selection = "";
 $sql = "";
@@ -116,13 +116,13 @@ $row = $query->fetch(PDO::FETCH_ASSOC);
           </div>
           <div class="col text-sm-end">
             <p class="mb-0">
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas') { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas') { ?>
                 <strong>Born:</strong> <?= $DOB ?> (<em>Age <?= htmlspecialchars($age) ?></em>)
               <?php } else { ?>
                 <strong>Age:</strong> <?= htmlspecialchars($age) ?>
               <?php } ?>
             </p>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas') { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas') { ?>
               <p class="mb-0">
                 <strong>Attendance:</strong> <?= getAttendanceByID(null, $row['MemberID'], 4) ?>%
               </p>

@@ -19,7 +19,7 @@ unset($_SESSION['StripeSetupIntentSuccess']);
 
 $pagetitle = "Card Setup Successful - Payments - SCDS";
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = app()->adminCurrentTenant;
 $user = app()->adminCurrentUser;
 

@@ -1,5 +1,5 @@
 <?php
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
 $this->get('/all-galas', function () {
 	include 'list.php';
@@ -102,7 +102,7 @@ if ($access == "Parent") {
 
 	// Enter a gala
 	$this->group(['/entergala'], function () {
-		if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry'])) {
+		if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry'])) {
 			$this->get('/', function () {
 				include 'GalaEntrySuccess.php';
 			});
@@ -150,7 +150,7 @@ if ($access == "Parent") {
 		include 'indicate-openness/veto-do.php';
 	});
 
-	if (getenv('STRIPE') && app()->tenant->getStripeAccount() && app()->tenant->getBooleanKey('GALA_CARD_PAYMENTS_ALLOWED')) {
+	if (getenv('STRIPE') && tenant()->getLegacyTenant()->getStripeAccount() && config('GALA_CARD_PAYMENTS_ALLOWED')) {
 		$this->group('/pay-for-entries', function () {
 			$this->get('/', function () {
 				include 'pay/welcome.php';
@@ -339,7 +339,7 @@ if ($access == "Galas" || $access == "Admin" || $access == "Coach") {
 	});
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
 	$this->get('/{id}:int/indicate-availability', function ($id) {
 		include 'indicate-openness/session-select.php';
 	});

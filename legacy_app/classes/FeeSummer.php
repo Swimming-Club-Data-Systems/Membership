@@ -35,12 +35,12 @@ class FeeSummer
   public function __construct(int $feeMonth)
   {
 
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $squadFeeMonths = [];
     try {
-      $squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
+      $squadFeeMonths = json_decode(config('SquadFeeMonths'), true);
     } catch (Exception | Error $e) {
       // Do nothing
     }
@@ -53,7 +53,7 @@ class FeeSummer
   {
 
     // Prepare queries
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $dateObject = new DateTime('now', new DateTimeZone('Europe/London'));
     $date = $dateObject->format("Y-m-d");
 
@@ -157,7 +157,7 @@ class FeeSummer
           $numMembers++;
         }
 
-        if ($paying && app()->tenant->isCLS()) {
+        if ($paying && tenant()->getLegacyTenant()->isCLS()) {
           $memberFees = [
             'fee' => $memberTotal,
             'member' => $member['MForename'] . " " . $member['MSurname']
@@ -167,7 +167,7 @@ class FeeSummer
       }
 
       // If is CLS handle discounts
-      if (app()->tenant->isCLS()) {
+      if (tenant()->getLegacyTenant()->isCLS()) {
         usort($discountMembers, function ($item1, $item2) {
           return $item2['fee'] <=> $item1['fee'];
         });
@@ -321,8 +321,8 @@ class FeeSummer
 
   public function sumAll()
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $users = [];
 
@@ -345,7 +345,7 @@ class FeeSummer
 
   public function persistData()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $track = $db->prepare("INSERT INTO `individualFeeTrack` (`MonthID`, `MemberID`, `UserID`, `Description`, `Amount`, `Type`, `PaymentID`) VALUES (?, ?, ?, ?, ?, ?, ?)");
 

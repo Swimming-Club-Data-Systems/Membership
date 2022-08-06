@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userName = $db->prepare("SELECT Forename, Surname FROM users WHERE UserID = ? AND Tenant = ?");
 $userName->execute([

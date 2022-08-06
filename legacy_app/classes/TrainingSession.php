@@ -57,7 +57,7 @@ class TrainingSession
 
     $getSessions = app()->db->prepare("SELECT SessionID FROM sessions WHERE Tenant = :tenant AND DisplayFrom <= :today AND DisplayUntil >= :today AND SessionDay = :sday ORDER BY StartTime ASC, EndTime ASC;");
     $getSessions->execute([
-      'tenant' => app()->tenant->getId(),
+      'tenant' => tenant()->getLegacyTenant()->getId(),
       'today' => $today->format("Y-m-d"),
       'sday' => $today->format('w'),
     ]);
@@ -74,8 +74,8 @@ class TrainingSession
    */
   public function revalidate()
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $this->tenant = $tenant->getId();
 
@@ -169,7 +169,7 @@ class TrainingSession
    */
   public function handleRegisterSetup($dateString = 'now')
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $weekId = $this->getWeekId($dateString);
 
@@ -187,7 +187,7 @@ class TrainingSession
     $getBookingCount->execute([
       $this->id,
       $bookingDate->format('Y-m-d'),
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
 
     if ($getRecordCount->fetchColumn() == 0 && $getBookingCount->fetchColumn() == 0) {
@@ -232,7 +232,7 @@ class TrainingSession
 
     $weekId = $this->getWeekId($dateString);
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getMembers = $db->prepare("SELECT MForename fn, MSurname sn, members.MemberID id, members.UserID `uid`, sessionsAttendance.AttendanceBoolean tick, members.OtherNotes notes, members.DateOfBirth dob, members.GenderDisplay show_gender, members.GenderIdentity gender_identity, members.GenderPronouns gender_pronouns FROM sessionsAttendance INNER JOIN members ON members.MemberID = sessionsAttendance.MemberID WHERE sessionsAttendance.WeekID = ? AND sessionsAttendance.SessionID = ? ORDER BY fn ASC, sn ASC;");
     $getMembers->execute([
       $weekId,
@@ -342,7 +342,7 @@ class TrainingSession
    */
   public function getWeekId($dateString = 'now')
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $date = new DateTime($dateString, new DateTimeZone('Europe/London'));
 
@@ -354,7 +354,7 @@ class TrainingSession
     $getWeekId = $db->prepare("SELECT WeekID FROM sessionsWeek WHERE WeekDateBeginning = ? AND Tenant = ?");
     $getWeekId->execute([
       $date->format("Y-m-d"),
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
     $weekId = $getWeekId->fetchColumn();
 
@@ -373,14 +373,14 @@ class TrainingSession
       throw new Exception('Both null');
     }
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     if ($member && !$user) {
       // Get user
       $getUser = $db->prepare("SELECT UserID FROM members WHERE MemberID = ? AND Tenant = ?");
       $getUser->execute([
         $member,
-        app()->tenant->getId(),
+        tenant()->getLegacyTenant()->getId(),
       ]);
       $user = $getUser->fetchColumn();
     }
@@ -431,7 +431,7 @@ class TrainingSession
    */
   public static function weekId($dateString = 'now')
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $date = new DateTime($dateString, new DateTimeZone('Europe/London'));
 
@@ -443,7 +443,7 @@ class TrainingSession
     $getWeekId = $db->prepare("SELECT WeekID FROM sessionsWeek WHERE WeekDateBeginning = ? AND Tenant = ?");
     $getWeekId->execute([
       $date->format("Y-m-d"),
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
     $weekId = $getWeekId->fetchColumn();
 

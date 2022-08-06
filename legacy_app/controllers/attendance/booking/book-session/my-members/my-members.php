@@ -3,8 +3,8 @@
 function getMySessionBookingMembers($session, $date)
 {
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
   $user = app()->user;
 
   // Get bookable members

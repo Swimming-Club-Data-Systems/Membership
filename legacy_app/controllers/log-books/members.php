@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMembers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM members WHERE members.UserID = ? ORDER BY fn ASC, sn ASC");
 $getMembers->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 

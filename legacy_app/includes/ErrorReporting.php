@@ -6,8 +6,8 @@ function reportError($e)
   if (getenv('ERROR_REPORTING_EMAIL') != null) {
     try {
       $emailMessage = '<p>This is an error report</p>';
-      if (isset(app()->tenant) && isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
-        $emailMessage .= '<p>The active user was ' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . app()->tenant->getId()]['Surname']) . ' (User ID #' . $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . ')</p>';
+      if (tenant() && isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
+        $emailMessage .= '<p>The active user was ' . htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname']) . ' (User ID #' . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] . ')</p>';
       }
 
       $emailMessage .= '<p><strong>Path:</strong> ' . htmlspecialchars(app('request')->path) . '</p>';

@@ -122,7 +122,7 @@ mb_http_output('UTF-8');
 
 /*
 if (!(sizeof($_SESSION) > 0)) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL'] = app('request')->curl;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TARGET_URL'] = app('request')->curl;
 }
 */
 
@@ -203,7 +203,7 @@ function halt(int $statusCode, $throwException = true)
     } else if ($statusCode == 403) {
       require "views/403.php";
     } else if ($statusCode == 404) {
-      if (isset(app()->tenant)) {
+      if (tenant()) {
         require "views/404.php";
       } else {
         require "views/root/errors/404.php";
@@ -225,7 +225,7 @@ function halt(int $statusCode, $throwException = true)
       // Show last report 500 error
       require 'views/LastResort500.php';
     } else {
-      if (isset(app()->tenant)) {
+      if (tenant()) {
         require "views/500.php";
       } else {
         require "views/root/errors/500.php";
@@ -473,7 +473,7 @@ if (getenv('MAIN_DOMAIN') && getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
       });
     } else {
       app()->club = $clubObject->getCodeID();
-      app()->tenant = $clubObject;
+      tenant()->getLegacyTenant() = $clubObject;
 
       // pre($clubObject);
 
@@ -501,7 +501,7 @@ if (getenv('MAIN_DOMAIN') && getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
         });
       } else {
         app()->club = $club;
-        app()->tenant = $clubObject;
+        tenant()->getLegacyTenant() = $clubObject;
 
         include BASE_PATH . 'routes/club/webhook-routes.php';
       }
@@ -522,7 +522,7 @@ if (getenv('MAIN_DOMAIN') && getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
         });
       } else {
         app()->club = $club;
-        app()->tenant = $clubObject;
+        tenant()->getLegacyTenant() = $clubObject;
 
         include BASE_PATH . 'routes/club/webhook-routes.php';
       }

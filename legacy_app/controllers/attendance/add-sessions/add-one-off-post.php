@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!$user->hasPermissions(['Admin', 'Committee', 'Coach'])) {
@@ -10,7 +10,7 @@ if (!$user->hasPermissions(['Admin', 'Committee', 'Coach'])) {
 
 if (!\SCDS\CSRF::verify()) {
   http_response_code(302);
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError'] = 'We could not validate your CSRF token. Please try again.';
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError'] = 'We could not validate your CSRF token. Please try again.';
   header('location: ' . autoUrl('attendance/sessions/new'));
   return;
 }
@@ -95,7 +95,7 @@ if ($endTime == null) {
 
 if ($error) {
   http_response_code(302);
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError'] = $errors;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError'] = $errors;
   header('location: ' . autoUrl('attendance/sessions/new'));
   return;
 }

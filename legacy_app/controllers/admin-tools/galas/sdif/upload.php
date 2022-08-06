@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getRecentGalas = $db->prepare("SELECT `GalaName`, `GalaID` FROM `galas` WHERE Tenant = ? AND `GalaDate` >= ? AND `GalaDate` <= ?");
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
@@ -35,36 +35,36 @@ include BASE_PATH . 'views/header.php';
       <h1>SDIF Upload</h1>
       <p class="lead">Upload times for your members quickly using an SDIF (*.sd3) file.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0"><strong>Results have been uploaded</strong>.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>We could not verify the integrity of the submitted form</strong>. Please try again.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>There was a problem with the file uploaded</strong>. Please try again.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>The file you uploaded was too large</strong>. The maximum file size is 300000 bytes.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']);
       } ?>
 
       <p>This software will carry out checks to ensure it does not add duplicate records.</p>

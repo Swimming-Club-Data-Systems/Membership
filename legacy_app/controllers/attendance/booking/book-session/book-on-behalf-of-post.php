@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
@@ -270,15 +270,15 @@ if (!$bookingClosed) {
           }
         }
 
-        $_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfSuccess'] = true;
       }
     } catch (Exception $e) {
-      $_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfError'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfError'] = true;
     }
   }
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfSuccess'])) {
   $url = 'https://production-apis.tenant-services.membership.myswimmingclub.uk/attendance/send-booking-page-change-message';
   if (bool(getenv("IS_DEV"))) {
     $url = 'https://apis.tenant-services.membership.myswimmingclub.uk/attendance/send-booking-page-change-message';

@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $invoice = TenantPayments\Invoice::get($id);
 if (!$invoice) halt(404);

@@ -9,7 +9,7 @@ if (!$name) {
 }
 
 $use_white_background = true;
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = htmlspecialchars($name) . "'s Transaction History";
 
 include BASE_PATH . "views/header.php";

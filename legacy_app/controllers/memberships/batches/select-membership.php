@@ -5,13 +5,13 @@ if (!isset($_POST['id']) || !isset($_POST['member'])) halt(404);
 $id = $_POST['id'];
 
 $user = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
 $getBatch->execute([
   $id,
-  app()->tenant->getId(),
+  tenant()->getLegacyTenant()->getId(),
 ]);
 
 $batch = $getBatch->fetch(PDO::FETCH_OBJ);

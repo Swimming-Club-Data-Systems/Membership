@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -11,7 +11,7 @@ $userInfo->execute([
 $info = $userInfo->fetch(PDO::FETCH_ASSOC);
 
 
-$leavers = app()->tenant->getKey('LeaversSquad');
+$leavers = config('LeaversSquad');
 if ($leavers == null) {
   $leavers = 0;
 }
@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
         Assign a squad to <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
       </h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
@@ -58,7 +58,7 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadError']);
       } ?>
 
       <?php if ($squad != null) { ?>

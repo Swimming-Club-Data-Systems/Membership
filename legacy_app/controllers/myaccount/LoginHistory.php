@@ -2,7 +2,7 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $page = null;
 if (isset($_GET['page'])) {
@@ -27,7 +27,7 @@ if ($page == 1 && $null != null) {
 $sql = "SELECT `ID` FROM `userLogins` WHERE `UserID` = ?";
 try {
 	$query = $db->prepare($sql);
-	$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+	$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } catch (PDOException $e) {
 	halt(500);
 }
@@ -41,7 +41,7 @@ if ($start > $numLogins) {
 $sql = "SELECT `Time`, `IPAddress`, `GeoLocation`, `Browser`, `Platform`, `Mobile` FROM `userLogins` WHERE `UserID` = :user ORDER BY `Time` DESC LIMIT :start, 10";
 try {
 	$query = $db->prepare($sql);
-  $query->bindParam('user', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], PDO::PARAM_INT);
+  $query->bindParam('user', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], PDO::PARAM_INT);
   $query->bindParam('start', $start, PDO::PARAM_INT);
 	$query->execute();
 } catch (PDOException $e) {

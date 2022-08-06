@@ -49,15 +49,15 @@ class Login
     $getUserDetails->execute([$this->user]);
     $details = $getUserDetails->fetch(\PDO::FETCH_ASSOC);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'] = $details['EmailAddress'];
-    $_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] = $details['Forename'];
-    $_SESSION['TENANT-' . app()->tenant->getId()]['Surname'] = $details['Surname'];
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] = $details['UserID'];
-    $_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] = 1;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress'] = $details['EmailAddress'];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] = $details['Forename'];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname'] = $details['Surname'];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] = $details['UserID'];
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'] = 1;
 
-    $currentUser = new \User($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], true);
+    $currentUser = new \User($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], true);
 
-    $hash = hash('sha512', time() . $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . random_bytes(64));
+    $hash = hash('sha512', time() . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] . random_bytes(64));
 
     $geo_string = "Location Information Unavailable";
 
@@ -110,7 +110,7 @@ class Login
     $dbDate = $date->format('Y-m-d H:i:s');
 
     $login_details = [
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       getUserIp(),
       $geo_string,
       $browser,
@@ -137,8 +137,8 @@ class Login
       'TopUAL'  => null
     ]);
 
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec'])) {
-      unset($_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec']);
+    if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoginSec'])) {
+      unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoginSec']);
     }
 
     $secure = true;
@@ -146,16 +146,16 @@ class Login
       $secure = false;
     }
     if (!$this->reLogin) {
-      $cookiePath = '/' . app()->tenant->getCodeId();
+      $cookiePath = '/' . tenant()->getLegacyTenant()->getCodeId();
       if (getenv('MAIN_DOMAIN')) {
         $cookiePath = '/';
       }
-      setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', $hash, time() + 60 * 60 * 24 * 120, $cookiePath, app('request')->hostname, $secure, false);
+      setcookie(COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin', $hash, time() + 60 * 60 * 24 * 120, $cookiePath, app('request')->hostname, $secure, false);
     }
 
     // Test if we've seen a login from here before
     $login_before_data = [
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       getUserIp(),
       ucwords(app('request')->browser()),
       ucwords(app('request')->platform())
@@ -168,11 +168,11 @@ class Login
     if ($login_before_count == 1 && !$this->noUserWarning && !$this->reLogin) {
 
       $subject = "New Account Login";
-      $message = '<p>Somebody just logged into your ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Account from ' . $browser . ', using a device running ' . $browser_details->os->toString() . ' we believe was located in ' . $geo_string . '*.</p><p>We haven\'t seen a login from this location and device before.</p><p>If this was you then you can ignore this email. If this was not you, please <a href="' . autoUrl("") . '">log in to your account</a> and <a href="' . autoUrl("myaccount/password") . '">change your password</a> as soon as possible.</p><p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p><p class="text-muted small">* We\'ve estimated your location from your public IP Address. The location given may not be where you live.</p>';
+      $message = '<p>Somebody just logged into your ' . htmlspecialchars(config('CLUB_NAME')) . ' Account from ' . $browser . ', using a device running ' . $browser_details->os->toString() . ' we believe was located in ' . $geo_string . '*.</p><p>We haven\'t seen a login from this location and device before.</p><p>If this was you then you can ignore this email. If this was not you, please <a href="' . autoUrl("") . '">log in to your account</a> and <a href="' . autoUrl("myaccount/password") . '">change your password</a> as soon as possible.</p><p>Kind Regards, <br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p><p class="text-muted small">* We\'ve estimated your location from your public IP Address. The location given may not be where you live.</p>';
       $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
       `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 0, 'Security')";
       try {
-        $this->db->prepare($notify)->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $subject, $message]);
+        $this->db->prepare($notify)->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $subject, $message]);
       } catch (\Exception $e) {
         halt(500);
       }

@@ -34,8 +34,8 @@ class Squad {
    * Refetch stored information from the database
    */
   public function revalidate() {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $this->tenant = $tenant->getId();
 
@@ -112,7 +112,7 @@ class Squad {
    * @return string code of conduct md
    */
   public function getCodeOfConductMarkdown() {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getContent = $db->prepare("SELECT Content FROM posts WHERE ID = ?");
     $getContent->execute([
       $this->codeOfConduct
@@ -141,7 +141,7 @@ class Squad {
    * @return Coach[] array of coaches
    */
   public function getCoaches() {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCoaches = $db->prepare("SELECT coaches.User, Forename fn, Surname sn, coaches.Type code FROM coaches INNER JOIN users ON coaches.User = users.UserID WHERE coaches.Squad = ? ORDER BY coaches.Type ASC, Forename ASC, Surname ASC");
     $getCoaches->execute([
       $this->id
@@ -156,7 +156,7 @@ class Squad {
   }
 
   public function getMembers() {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getMembers = $db->prepare("SELECT MemberID FROM members INNER JOIN squadMembers ON squadMembers.Member = members.MemberID WHERE squadMembers.Squad = ? ORDER BY MForename, MSurname");
     $getMembers->execute([
       $this->id

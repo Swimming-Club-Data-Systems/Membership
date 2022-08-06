@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -38,11 +38,11 @@ try {
     throw new Exception('Unknown database error');
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewCategorySuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategorySuccess'] = true;
   header("location: " . autoUrl('payments/categories/' . $uniqueId));
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategoryError'] = $e->getMessage();
   header("location: " . autoUrl('payments/categories/new'));
 }

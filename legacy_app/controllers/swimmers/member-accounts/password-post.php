@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMember = $db->prepare("SELECT MForename fn, MSurname sn, ASANumber se, UserID `uid` FROM members WHERE MemberID = ? AND Tenant = ?");
 $getMember->execute([
@@ -14,7 +14,7 @@ if ($member == null) {
   halt(404);
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $member['uid'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $member['uid'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -40,7 +40,7 @@ try {
       $id
     ]);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassSuccess'] = true;
 
     http_response_code(303);
     if (isset($_POST['return'])) {
@@ -55,7 +55,7 @@ try {
 
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassError'] = $e->getMessage();
   http_response_code(303);
   header("location: " . autoUrl("members/" . $id . "/password"));
 

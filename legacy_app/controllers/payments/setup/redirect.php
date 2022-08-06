@@ -1,8 +1,8 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $url_path = "payments";
 if ($renewal_trap) {
@@ -10,7 +10,7 @@ if ($renewal_trap) {
 }
 
 $selectSchedule = $db->prepare("SELECT COUNT(*) FROM `paymentSchedule` WHERE `UserID` = ?");
-$selectSchedule->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$selectSchedule->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 
 if ($selectSchedule->fetchColumn() == 0) {
   header("Location: " . autoUrl("payments/setup/0"));
@@ -21,7 +21,7 @@ if ($selectSchedule->fetchColumn() == 0) {
     $redirectFlowId = $_REQUEST['redirect_flow_id'];
     $redirectFlow = $client->redirectFlows()->complete(
       $redirectFlowId, //The redirect flow ID from above.
-      ["params" => ["session_token" => $_SESSION['TENANT-' . app()->tenant->getId()]['Token']]]
+      ["params" => ["session_token" => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token']]]
     );
 
     $mandate = $redirectFlow->links->mandate;
@@ -36,7 +36,7 @@ if ($selectSchedule->fetchColumn() == 0) {
     // So all good so far, disable any old direct debits and cancel
     $getMandates = $db->prepare("SELECT Mandate, MandateID FROM paymentMandates WHERE UserID = ? AND InUse = 1");
     $getMandates->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
     ]);
     $setOutOfUse = $db->prepare("UPDATE paymentMandates SET InUse = 0 WHERE MandateID = ?");
     while ($oldMandate = $getMandates->fetch(PDO::FETCH_ASSOC)) {
@@ -57,12 +57,12 @@ if ($selectSchedule->fetchColumn() == 0) {
     // Delete old preferred mandates if existing
     $deletePref = $db->prepare("DELETE FROM paymentPreferredMandate WHERE UserID = ?");
     $deletePref->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
     ]);
 
     $insertToMandates = $db->prepare("INSERT INTO `paymentMandates` (`UserID`, `Name`, `Mandate`, `Customer`, `BankAccount`, `BankName`, `AccountHolderName`, `AccountNumEnd`, `InUse`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $insertToMandates->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       'Mandate',
       $mandate,
       $customer,
@@ -78,23 +78,23 @@ if ($selectSchedule->fetchColumn() == 0) {
     // Set as preferred mandate
     $setPref = $db->prepare("INSERT INTO paymentPreferredMandate (UserID, MandateID) VALUES (?, ?)");
     $setPref->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       $mandateDbId
     ]);
 
     $db->commit();
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GC-Setup-Status'] = 'success';
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Setup-Status'] = 'success';
     header("Location: " . autoUrl($url_path . "/setup/4"));
   } catch (\GoCardlessPro\Core\Exception\ApiException | \GoCardlessPro\Core\Exception\MalformedResponseException $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GC-Setup-Status'] = $e->getType();
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Setup-Status'] = $e->getType();
     $db->rollBack();
     header("Location: " . autoUrl($url_path . "/setup/4"));
   } catch (\GoCardlessPro\Core\Exception\ApiConnectionException $e) {
     $db->rollBack();
     reportError($e);
     
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GC-Setup-Status'] = $e->getType();
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC-Setup-Status'] = $e->getType();
     header("Location: " . autoUrl($url_path . "/setup/4"));
   } catch (Exception $e) {
     $db->rollBack();

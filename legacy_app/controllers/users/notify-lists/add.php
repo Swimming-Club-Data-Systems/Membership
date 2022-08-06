@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -43,7 +43,7 @@ include BASE_PATH . "views/header.php";
         Assign targeted list permissions to <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
       </h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignListError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignListError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
@@ -52,7 +52,7 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignListError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListError']);
       } ?>
 
       <?php if ($list != null) { ?>

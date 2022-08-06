@@ -20,41 +20,41 @@ include BASE_PATH . 'views/header.php';
       <h1>Member upload</h1>
       <p class="lead">Batch upload members from a <span class="font-monospace">CSV</span> file.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0"><strong>Members have been uploaded</strong>. Check below for any errors.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FailedSwimmers'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FailedSwimmers'])) { ?>
         <div class="alert alert-warning">
           <p>We've uploaded most of your members but the following could not be uploaded as their squad could not be found;</p>
           <ul class="mb-0">
-            <?php foreach ($_SESSION['TENANT-' . app()->tenant->getId()]['FailedSwimmers'] as $s) { ?>
+            <?php foreach ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FailedSwimmers'] as $s) { ?>
               <li><?= htmlspecialchars($s) ?></li>
             <?php } ?>
           </ul>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['FailedSwimmers']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FailedSwimmers']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>There was a problem with the file uploaded</strong>. Please try again.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>The file you uploaded was too large</strong>. The maximum file size is 30000 bytes.</p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']);
       } ?>
 
       <p>Your CSV file should contain the following columns in the order shown without any column headers (titles etc);</p>

@@ -5,8 +5,8 @@ use Brick\Postcode\PostcodeFormatter;
 
 $PostcodeFormatter = new PostcodeFormatter();
 
-$tenant = app()->tenant;
-$db = app()->db;
+$tenant = tenant()->getLegacyTenant();
+$db = DB::connection()->getPdo();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -70,11 +70,11 @@ try {
     $id,
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationSuccess'] = true;
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationError'] = $e->getMessage();
 }
 
 header("location: " . autoUrl("contact-tracing/locations/" . $id));

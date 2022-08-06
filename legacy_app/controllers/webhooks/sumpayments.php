@@ -8,12 +8,12 @@ header("content-type: application/json");
 use Brick\Math\BigDecimal;
 use Brick\Math\RoundingMode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squadFeeMonths = [];
 try {
-  $squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
+  $squadFeeMonths = json_decode(config('SquadFeeMonths'), true);
 } catch (Exception | Error $e) {
   // Do nothing
 }
@@ -23,7 +23,7 @@ if (isset($squadFeeMonths[$date->format("m")])) {
   $squadFeeRequired = !bool($squadFeeMonths[$date->format("m")]);
 }
 
-if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
+if (config('ENABLE_BILLING_SYSTEM')) {
   // Prepare things
   $getUserMembers = $db->prepare("SELECT members.MemberID, members.MForename, members.MSurname, members.DateOfBirth FROM members WHERE UserID = ?");
 
@@ -31,7 +31,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
   $tier3Date = new DateTime('now', new DateTimeZone('Europe/London'));
   $dateToday = clone $date;
 
-  $tier3 = $tenant->getKey('TIER3_SQUAD_FEES');
+  $tier3 = config('TIER3_SQUAD_FEES');
   if ($tier3) {
     $tier3 = json_decode($tier3, true);
     $tier3Date = new DateTime($tier3['eighteen_by'], new DateTimeZone('Europe/London'));
@@ -108,7 +108,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
       $currentTotalCharged = 0;
       $maxWeeklyThreshold = PHP_INT_MAX;
 
-      $max = (int) $tenant->getKey('STRIPE_MAX_WEEKLY_BACS_THRESHOLD');
+      $max = (int) config('STRIPE_MAX_WEEKLY_BACS_THRESHOLD');
 
       if ($max > 0) {
         $maxWeeklyThreshold = $max;
@@ -203,7 +203,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
               $numMembers++;
             }
 
-            if ($paying && app()->tenant->isCLS()) {
+            if ($paying && tenant()->getLegacyTenant()->isCLS()) {
               $memberFees = [
                 'fee' => $memberTotal,
                 'member' => $member['MForename'] . " " . $member['MSurname']
@@ -213,7 +213,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
           }
 
           // If is CLS handle discounts
-          if (app()->tenant->isCLS()) {
+          if (tenant()->getLegacyTenant()->isCLS()) {
             usort($discountMembers, function ($item1, $item2) {
               return $item2['fee'] <=> $item1['fee'];
             });

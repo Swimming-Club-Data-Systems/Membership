@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT * FROM `newUsers` WHERE `AuthCode` = ? AND `ID` = ? AND `Type` = ?");
 $query->execute([$auth, $id, 'EmailUpdate']);
@@ -39,19 +39,19 @@ if ($found) {
 
 	$subject = "Your Email Address has been Changed";
 	$message = '
-	<p>Your ' . app()->tenant->getKey('CLUB_NAME') . ' Account Email Address has been changed from ' . $oldEmail . ' to ' . $newEmail . '.</p>
+	<p>Your ' . config('CLUB_NAME') . ' Account Email Address has been changed from ' . $oldEmail . ' to ' . $newEmail . '.</p>
 	<p>If this was you then you, then please ignore this email. If it was not you, please head to ' . autoUrl("") . ' and reset your password urgently.</p>
-	<p>Kind Regards, <br>The ' . app()->tenant->getKey('CLUB_NAME') . ' Team</p>
+	<p>Kind Regards, <br>The ' . config('CLUB_NAME') . ' Team</p>
 	';
 	$to = "";
 	$name = getUserName($user);
 	$from = [
 		"Email" => "noreply@" . getenv('EMAIL_DOMAIN'),
-		"Name" => app()->tenant->getKey('CLUB_NAME') . " Secretary"
+		"Name" => config('CLUB_NAME') . " Secretary"
 	];
 	notifySend($to, $subject, $message, $name, $oldEmail, $from);
 
-	$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'] = '
   <div class="alert alert-success mb-0">
     <p class="mb-0">
       <strong>
@@ -69,7 +69,7 @@ if ($found) {
 
 } else {
 
-	$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'] = '
 	<div class="alert alert-warning mb-0">
     <p class="mb-0">
       <strong>

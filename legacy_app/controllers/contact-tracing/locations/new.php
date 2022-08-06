@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'New Location - Contact Tracing';
 
 include BASE_PATH . 'views/header.php';
@@ -40,16 +40,16 @@ include BASE_PATH . 'views/header.php';
     <div class="col-lg-8">
       <form method="post" class="needs-validation" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationError'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>An error occurred</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationError']);
         } ?>
 
         <div class="mb-3">

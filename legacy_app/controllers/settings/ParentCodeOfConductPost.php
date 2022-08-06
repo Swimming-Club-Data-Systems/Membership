@@ -3,10 +3,10 @@
 if (isset($_POST['CodeOfConduct'])) {
   try {
     
-    app()->tenant->setKey('ParentCodeOfConduct', $_POST['CodeOfConduct']);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED'] = true;
+    tenant()->getLegacyTenant()->setKey('ParentCodeOfConduct', $_POST['CodeOfConduct']);
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-SAVED'] = true;
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PCC-ERROR'] = true;
   }
 }
 

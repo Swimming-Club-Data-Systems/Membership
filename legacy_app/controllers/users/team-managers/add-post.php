@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -36,11 +36,11 @@ try {
   ]);
 
   // Success
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignGalaSuccess'] = true;
   header("Location: " . autoUrl("users/" . $id . "/team-manager"));
 } catch (Exception $e) {
   // Success
   reportError($e);
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignGalaError'] = true;
   header("Location: " . autoUrl("users/" . $id . "/team-manager/add"));
 }

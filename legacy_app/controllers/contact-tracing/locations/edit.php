@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
     <div class="col-lg-8">
       <form method="post" class="needs-validation" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationSuccess'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationSuccess'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>Success</strong>
@@ -67,10 +67,10 @@ include BASE_PATH . 'views/header.php';
               We've added your new location
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationSuccess']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewLocationSuccess']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationSuccess'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationSuccess'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>Success</strong>
@@ -79,19 +79,19 @@ include BASE_PATH . 'views/header.php';
               We've updated the details for this location
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationSuccess']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationSuccess']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationError'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateLocationError']);
         } ?>
 
         <div class="mb-3">

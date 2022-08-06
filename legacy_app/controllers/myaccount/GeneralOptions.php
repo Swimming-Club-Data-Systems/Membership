@@ -2,7 +2,7 @@
 
 $fluidContainer = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $currentUser = app()->user;
 
 $twofaChecked;
@@ -26,13 +26,13 @@ if ($currentUser->getUserBooleanOption('EnableBeta')) {
 }
 
 $notGalaDDChecked;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent" && $currentUser->getUserBooleanOption('GalaDirectDebitOptOut')) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent" && $currentUser->getUserBooleanOption('GalaDirectDebitOptOut')) {
   $notGalaDDChecked = " checked ";
 }
 
 $pagetitle = "General Account Options";
 include BASE_PATH . "views/header.php";
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 ?>
 <div class="container-fluid">
   <div class="row justify-content-between">
@@ -46,13 +46,13 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
       <h1>Advanced Account Options</h1>
       <p class="lead">Manage cookies and 2FA.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>We've successfully updated your general options</strong>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate']);
       } ?>
 
       <form method="post">
@@ -74,7 +74,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
           </p>
         </div>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
           <div class="cell">
             <h2>
               Advanced Payment Options
@@ -94,13 +94,13 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
             Account Security
           </h2>
 
-          <?php if (filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "Is2FA"), FILTER_VALIDATE_BOOLEAN) || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") { ?>
+          <?php if (filter_var(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], "Is2FA"), FILTER_VALIDATE_BOOLEAN) || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") { ?>
 
             <p>
               You can use an time-based one-time password generator such as iCloud Keychain (Safari 15 onwards), Google Authenticator or Microsoft Authenticator to get your Two-Factor Authentication codes. You can always still get codes by email as a backup if you don't have your device on you.
             </p>
 
-            <?php if (!filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "hasGoogleAuth2FA"), FILTER_VALIDATE_BOOLEAN)) { ?>
+            <?php if (!filter_var(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], "hasGoogleAuth2FA"), FILTER_VALIDATE_BOOLEAN)) { ?>
               <p>
                 <a href="<?= autoUrl("my-account/googleauthenticator") ?>" class="btn btn-primary">
                   Use an authenticator app
@@ -133,7 +133,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
             <br><small>Export a copy</small>
           </h2>
           <p>
-            Under the General Data Protection Regulation, you can request for free to download all personal data held about you by <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+            Under the General Data Protection Regulation, you can request for free to download all personal data held about you by <?= htmlspecialchars(config('CLUB_NAME')) ?>.
           </p>
           <p>
             <a href="<?= autoUrl("my-account/general/download-personal-data") ?>" class="btn btn-primary">

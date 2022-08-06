@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getProducts = $db->prepare("SELECT `ID`, `Name`, `Description`, `Updated` FROM `tenantPaymentProducts` WHERE `ID` = ?;");
 $getProducts->execute([

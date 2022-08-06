@@ -2,8 +2,8 @@
 
 $pagetitle = "Bulk Editors";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMembers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM members WHERE Tenant = ? AND Active ORDER BY fn ASC, sn ASC");
 $getMembers->execute([

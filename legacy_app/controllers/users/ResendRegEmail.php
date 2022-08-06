@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Instantiate variables to go in JSON
 $alertContent;
@@ -32,12 +32,12 @@ if ($info != null) {
   ]);
 
   try {
-    $subject = "Complete your registration at " . app()->tenant->getKey('CLUB_NAME');
+    $subject = "Complete your registration at " . config('CLUB_NAME');
     $message = "<p>Hello " . htmlspecialchars($info['Forename']) . ", </p>";
-    $message .= "<p>We've pre-registered you for a " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " account. To continue, <a href=\"" . htmlspecialchars(autoUrl("assisted-registration/" . $_POST['user'] . "/" . $password)) . "\">please follow this link</a></p>";
+    $message .= "<p>We've pre-registered you for a " . htmlspecialchars(config('CLUB_NAME')) . " account. To continue, <a href=\"" . htmlspecialchars(autoUrl("assisted-registration/" . $_POST['user'] . "/" . $password)) . "\">please follow this link</a></p>";
     $message .= "<p>As part of the registration process, we'll ask you to set a password, let us know your communication preferences and fill in important information about you and/or your members.</p>";
 
-    if (!app()->tenant->isCLS()) {
+    if (!tenant()->getLegacyTenant()->isCLS()) {
       $message .= '<p>Please note that your club may not provide all services included in the membership software.</p>';
     }
 

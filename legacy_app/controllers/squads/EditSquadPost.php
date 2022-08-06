@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getKey = $db->prepare("SELECT SquadKey FROM squads WHERE SquadID = ? AND Tenant = ?");
 $getKey->execute([
@@ -11,10 +11,10 @@ $getKey->execute([
 $squadDeleteKey = $getKey->fetchColumn();
 
 if (mb_strlen(trim($_POST['squadName'])) == 0) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError'] = true;
 }
 if ($_POST['squadFee'] < 0) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateError'] = true;
 }
 
 if ($_POST['squadDeleteDanger'] ==  $squadDeleteKey) {
@@ -26,13 +26,13 @@ if ($_POST['squadDeleteDanger'] ==  $squadDeleteKey) {
       $tenant->getId()
     ]);
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError'] = true;
   }
 
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError']) {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError']) {
     header("Location: " . autoUrl("squads/" . $id . "/edit"));
   } else {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['DeleteSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DeleteSuccess'] = true;
     header("Location: " . autoUrl("squads"));
   }
 } else {
@@ -48,9 +48,9 @@ if ($_POST['squadDeleteDanger'] ==  $squadDeleteKey) {
       $id,
       $tenant->getId()
     ]);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateSuccess'] = true;
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateDatabaseError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UpdateDatabaseError'] = true;
   }
   header("Location: " . autoUrl("squads/" . $id . "/edit"));
 }

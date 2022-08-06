@@ -3,8 +3,8 @@
 if (!app()->user->hasPermission('Admin')) halt(404);
 
 $user = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $pagination = new \SCDS\Pagination();
 $pagination->records_per_page(10);

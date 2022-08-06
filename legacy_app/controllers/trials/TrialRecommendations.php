@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $currentUser = app()->user;
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinSwimmers WHERE ID = ? AND Tenant = ?");
@@ -43,10 +43,10 @@ $query->execute([
   $tenant->getId()
 ]);
 
-$value = $_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-FC'];
+$value = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-FC'];
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-AddAnother'])) {
-  $value = $_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-AddAnother'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-AddAnother'])) {
+  $value = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-AddAnother'];
 }
 
 include BASE_PATH . 'views/header.php';
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
         also mark them as being ineligible to join.
       </p>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['TrialRecommendationsUpdated'] === true) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialRecommendationsUpdated'] === true) { ?>
         <div class="alert alert-success">
           <strong>Successfully updated the recommendations</strong>
         </div>
@@ -108,7 +108,7 @@ include BASE_PATH . 'views/header.php';
 
         <p>
             Press <em>Mark ineligible</em> if the swimmer will not be offered a
-            place at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.
+            place at <?=htmlspecialchars(config('CLUB_NAME'))?>.
         </p>
       </form>
     </div>
@@ -185,7 +185,7 @@ include BASE_PATH . 'views/header.php';
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['TrialRecommendationsUpdated']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialRecommendationsUpdated']);
 $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");
 $footer->render();

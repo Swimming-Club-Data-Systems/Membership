@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $sql = $db->prepare("SELECT * FROM `renewals` WHERE `ID` = ? AND Tenant = ?;");
 $sql->execute([

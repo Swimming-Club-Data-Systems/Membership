@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 use function GuzzleHttp\json_decode;
 use function GuzzleHttp\json_encode;

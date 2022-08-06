@@ -14,7 +14,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
 
   public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $find = $db->prepare("SELECT `credential` FROM `userCredentials` WHERE `credential_id` = ?");
     $find->execute([
@@ -33,7 +33,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
    */
   public function findAllForUserEntity(PublicKeyCredentialUserEntity $publicKeyCredentialUserEntity): array
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $sources = [];
 
@@ -51,7 +51,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
 
   public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     // Check for existing!
 

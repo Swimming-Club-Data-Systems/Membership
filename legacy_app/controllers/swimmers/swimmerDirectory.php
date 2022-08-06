@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = $db->prepare("SELECT SquadName name, SquadID id FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
 $squads->execute([
@@ -45,7 +45,7 @@ if (isset($_POST['squad'])) {
           View all members or view members by squad.
         </p>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
           <p class="mt-3 mb-0">
             <a href="<?= autoUrl("members/new") ?>" class="btn btn-success">
               Add new member

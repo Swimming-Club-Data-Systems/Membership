@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -42,7 +42,7 @@ include BASE_PATH . "views/header.php";
         <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Squad Rep Settings</small>
       </h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -51,10 +51,10 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -63,10 +63,10 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
@@ -75,7 +75,7 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveSquadError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveSquadError']);
       } ?>
 
       <?php if ($squad != null) { ?>

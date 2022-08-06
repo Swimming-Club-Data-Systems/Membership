@@ -1,16 +1,16 @@
 <?php
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
-  $id = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
+  $id = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 }
 
 if (!isset($id)) {
   halt(404);
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-$welcome = app()->tenant->getKey('WelcomeLetter');
+$welcome = config('WelcomeLetter');
 
 $user = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE UserID = ?");
 $user->execute([$id]);
@@ -26,7 +26,7 @@ $swimmerExtras = $db->prepare("SELECT ExtraName `name`, ExtraFee `fee` FROM extr
 $userExtras = $db->prepare("SELECT MForename fn, MSurname sn, ExtraName `name`, ExtraFee `fee` FROM ((extrasRelations INNER JOIN extras ON extras.ExtraID = extrasRelations.ExtraID) INNER JOIN members ON members.MemberID = extrasRelations.MemberID) WHERE members.UserID = ?");
 $userExtras->execute([$id]);
 
-$pagetitle = app()->tenant->getKey('CLUB_NAME') . " Welcome Pack";
+$pagetitle = config('CLUB_NAME') . " Welcome Pack";
 
 $userObj = new \User($id);
 $json = $userObj->getUserOption('MAIN_ADDRESS');
@@ -89,7 +89,7 @@ ob_start();?>
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+        Welcome to <?=htmlspecialchars(config('CLUB_NAME'))?>
       </h1>
       <p class="lead">
         Your Welcome Pack
@@ -154,7 +154,7 @@ ob_start();?>
 
     <?php if ($welcome != null) { ?>
     <div class="page-break"></div>
-    <h1>Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></h1>
+    <h1>Welcome to <?=htmlspecialchars(config('CLUB_NAME'))?></h1>
     <?=pdfStringReplace(getPostContent($welcome))?>
     <?php } ?>
 
@@ -208,12 +208,12 @@ ob_start();?>
 
     <p class="lead">You will pay squad fees on a monthly basis.</p>
 
-    <?php if (app()->tenant->isCLS() && sizeof($swimmers) > 2) { ?>
+    <?php if (tenant()->getLegacyTenant()->isCLS() && sizeof($swimmers) > 2) { ?>
     <p>As you have <?=sizeof($swimmers)?> swimmers, you qualify for a reduction on your squad fees.</p>
-    <?php } else if (app()->tenant->isCLS()) { ?>
-    <p>If you ever have three or more swimmers while at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, you'll qualify for a discount on your monthly fees.</p>
+    <?php } else if (tenant()->getLegacyTenant()->isCLS()) { ?>
+    <p>If you ever have three or more swimmers while at <?=htmlspecialchars(config('CLUB_NAME'))?>, you'll qualify for a discount on your monthly fees.</p>
     <?php } ?>
-    <?php if (app()->tenant->isCLS()) { ?>
+    <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
     <p>Reductions are applied as follows;</p>
     <p>If you have 3 swimmers, we'll order your swimmers by monthly fee and give you a reduction of 20% on your lowest cost swimmer.</p>
     <p>If you have 4 or more swimmers, we'll order your swimmers by monthly fee and give you a reduction of 20% on your third lowest cost swimmer and 40% on all further swimmers.</p>
@@ -263,7 +263,7 @@ ob_start();?>
           </td>
         </tr>
         <?php } ?>
-        <?php if (app()->tenant->isCLS()) { ?>
+        <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
         <tr>
           <td></td>
           <td>
@@ -367,11 +367,11 @@ ob_start();?>
 
     <div class="page-break"></div>
 
-    <?php if (app()->tenant->getGoCardlessAccessToken() != null) { ?>
+    <?php if (tenant()->getLegacyTenant()->getGoCardlessAccessToken() != null) { ?>
 
     <h1>Direct Debit Payments</h1>
 
-    <p class="lead">Squad fees at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> are paid by Direct Debit.</p>
+    <p class="lead">Squad fees at <?=htmlspecialchars(config('CLUB_NAME'))?> are paid by Direct Debit.</p>
 
     <p>You must register for Direct Debit payments by signing into your club account and following the instructions shown.</p>
     <p>
@@ -379,7 +379,7 @@ ob_start();?>
     </p>
 
     <p>
-      Full help and support for payments by Direct Debit is available on the Membership System Support Website at <a href="https://www.chesterlestreetasc.co.uk/support/onlinemembership/">https://www.chesterlestreetasc.co.uk/support/onlinemembership/</a>. Help and Support Documentation is provided by Chester-le-Street ASC<?php if (!(app()->tenant->isCLS())) { ?> to all clubs and users that use this service. If you need somebody to help you, please contact your own club in the first instance<?php } ?>.
+      Full help and support for payments by Direct Debit is available on the Membership System Support Website at <a href="https://www.chesterlestreetasc.co.uk/support/onlinemembership/">https://www.chesterlestreetasc.co.uk/support/onlinemembership/</a>. Help and Support Documentation is provided by Chester-le-Street ASC<?php if (!(tenant()->getLegacyTenant()->isCLS())) { ?> to all clubs and users that use this service. If you need somebody to help you, please contact your own club in the first instance<?php } ?>.
     </p>
 
     <div class="row" id="payment-dd-guarantee">
@@ -390,21 +390,21 @@ ob_start();?>
         <img src="<?=BASE_PATH?>public/img/directdebit/directdebit@3x.png" style="height:1cm;" class="mb-3" alt="Direct Debit Logo">
       </div>
     </div>
-    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(config('CLUB_NAME'))?></p>
 
     <ul>
       <li>
         This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits
       </li>
       <li>
-        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
+        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(config('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(config('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
       </li>
       <li>
-        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
+        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(config('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
       </li>
         <ul>
           <li>
-            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(config('CLUB_NAME'))?> asks you to
           </li>
         </ul>
       <li>
@@ -412,7 +412,7 @@ ob_start();?>
       </li>
     </ul>
 
-    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(config('CLUB_NAME'))?>.</p>
 
     <div class="page-break"></div>
 

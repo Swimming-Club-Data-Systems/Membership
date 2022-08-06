@@ -6,9 +6,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -19,12 +19,12 @@ if (!$session->batch) {
   $session->completeTask('fees');
 } else {
 
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
   $getBatch->execute([
     $session->batch,
-    app()->tenant->getId(),
+    tenant()->getLegacyTenant()->getId(),
   ]);
 
   $batch = $getBatch->fetch(PDO::FETCH_OBJ);

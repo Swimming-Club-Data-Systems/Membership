@@ -2,7 +2,7 @@
 $pagetitle = "Notify Composer";
 $use_white_background = true;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $fromEmail = '@' . getenv('EMAIL_DOMAIN');
 

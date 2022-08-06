@@ -2,8 +2,8 @@
 
 // require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $searchDate = $year . "-" . $month . "-" . "%";
 $getPayments = $db->prepare("SELECT * FROM `payments` INNER JOIN `users` ON users.UserID = payments.UserID WHERE `Date` LIKE ? AND users.Tenant = ? ORDER BY Forename ASC, Surname ASC");
@@ -16,7 +16,7 @@ $date = strtotime($year . "-" . $month . "-01");
 
 $use_white_background = true;
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = htmlspecialchars(date("F Y", $date)) . " Payments";
 
 $url = autoUrl("payments/history/" . $year . "/" . $month);

@@ -1,6 +1,6 @@
 <?php
 
-if (!user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+if (!user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
   halt(404);
 }
 
@@ -15,7 +15,7 @@ include BASE_PATH . "views/renewalTitleBar.php";
   <div class="row">
     <div class="col-lg-8">
       <h1>
-        Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+        Welcome to <?=htmlspecialchars(config('CLUB_NAME'))?>
       </h1>
       <p class="lead">
         We now need to run through some forms to complete the registration process. You will need your swimmers with you as you continue.
@@ -28,7 +28,7 @@ include BASE_PATH . "views/renewalTitleBar.php";
         <li>Provide us with emergency contact details,</li>
         <li>Agree to all relevent Codes of Conduct,</li>
         <li>Agree to the Terms and Conditions of Membership,</li>
-        <li>Setup a Direct Debit for payments to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> and finally</li>
+        <li>Setup a Direct Debit for payments to <?=htmlspecialchars(config('CLUB_NAME'))?> and finally</li>
         <li>Pay your registration fees, which consist of Club and Swim England Fees.</li>
       </ul>
 

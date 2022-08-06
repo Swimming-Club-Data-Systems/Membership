@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $swimmer = $db->prepare("SELECT MForename, MSurname, UserID FROM members WHERE Tenant = ? AND MemberID = ?");
 $swimmer->execute([
@@ -14,7 +14,7 @@ if ($swimmer == null) {
   halt(404);
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $swimmer['UserID'] !== $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $swimmer['UserID'] !== $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
 	halt(404);
 }
 

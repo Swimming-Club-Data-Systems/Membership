@@ -3,8 +3,8 @@
 use SCDS\CSRF;
 
 $user = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $session = \SCDS\Onboarding\Session::retrieve($id);
 
@@ -34,7 +34,7 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars(app()->tenant->getName()) ?> Onboarding
+          <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> Onboarding
         </h1>
         <p class="lead mb-0">
           Onboarding is the replacement for assisted registration.

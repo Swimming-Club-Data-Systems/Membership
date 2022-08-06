@@ -28,8 +28,8 @@ class Renewal
 
   public static function retrieve($renewal, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     $get = $db->prepare("SELECT * FROM `renewalv2` WHERE renewalv2.id = ? AND renewalv2.Tenant = ?");
     $get->execute([
@@ -73,8 +73,8 @@ class Renewal
   public function generateSessions()
   {
     // Check if sessions exist
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $db->beginTransaction();
 
@@ -102,8 +102,8 @@ class Renewal
 
   public function generateSession($user)
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     // If we aren't in a DB transaction, USE ONE!
     $thisControlsTransaction = !bool($db->inTransaction());
@@ -384,7 +384,7 @@ class Renewal
 
   public function isCreated()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCount = $db->prepare("SELECT COUNT(*) FROM `onboardingSessions` WHERE `type` = ? AND `renewal` = ?");
     $getCount->execute([
       'renewal',

@@ -5,8 +5,8 @@ if (!app()->user->hasPermission('Admin')) halt(404);
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Exceptions\NegativeException;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 if (!isset($_GET['user'])) halt(404);
 
@@ -72,7 +72,7 @@ try {
   // $message = '<p>There are membership fees for you to review in your club account.</p>';
   // $message .= '<p>Please <a href="' . htmlspecialchars(autoUrl("memberships/batches/$batchId")) . '">visit the membership system</a> to review the fees and pay ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($total), 'GBP')) . '.</p>';
   // $message .= '<p>' . htmlspecialchars(autoUrl("memberships/batches/$batchId")) . '</p>';
-  // notifySend(null, 'New Memberships', $message, $info['Forename'] . ' ' . $info['Surname'], $info['EmailAddress'], ['Name' => app()->tenant->getName() . ' Membership Secretary']);
+  // notifySend(null, 'New Memberships', $message, $info['Forename'] . ' ' . $info['Surname'], $info['EmailAddress'], ['Name' => tenant()->getLegacyTenant()->getName() . ' Membership Secretary']);
 
   http_response_code(302);
   header("location: " . autoUrl("memberships/batches/$batchId/edit"));

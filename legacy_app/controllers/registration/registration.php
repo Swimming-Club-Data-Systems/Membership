@@ -9,7 +9,7 @@ use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $captcha = trim($_POST['g-recaptcha-response']);
 $captchaStatus = null;
@@ -30,7 +30,7 @@ $context  = stream_context_create($opts);
 $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
 $result = json_decode($response);
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] == "Family-Manual") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMode'] == "Family-Manual") {
   $sql = "SELECT * FROM `familyIdentifiers` WHERE `ID` = ? AND `ACS` = ?";
 
   $fid = trim(str_replace(["FAM", "fam"], "", $_POST['fam-reg-num']));
@@ -46,11 +46,11 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] == "Family
   $row = $query->fetch(PDO::FETCH_ASSOC);
 
   if (!$row) {
-  	$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationFamNum'] = htmlentities($fid);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationFamKey'] = htmlentities($acs);
+  	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationFamNum'] = htmlentities($fid);
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationFamKey'] = htmlentities($acs);
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['FamilyIdentifier'] = $fid;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FamilyIdentifier'] = $fid;
 }
 
 // Registration Form Handler
@@ -141,8 +141,8 @@ $account = [
   "MobileComms"       => $smsAuth
 ];
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FamilyIdentifier'])) {
-  $account["FamilyIdentifier"] = $_SESSION['TENANT-' . app()->tenant->getId()]['FamilyIdentifier'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FamilyIdentifier'])) {
+  $account["FamilyIdentifier"] = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FamilyIdentifier'];
   $account["RequiresRegistraion"] = true;
 }
 
@@ -163,7 +163,7 @@ if ($status) {
   $to = $email;
   $sContent = '
   <p class="small">Hello ' . htmlspecialchars($forename) . '</p>
-  <p>Thanks for signing up for your ' . app()->tenant->getKey('CLUB_NAME') . ' Account.</p>
+  <p>Thanks for signing up for your ' . config('CLUB_NAME') . ' Account.</p>
   <p>We need you to verify your email address by following this link - <a
   href="' . autoUrl($verifyLink) . '" target="_blank">' .
   autoUrl($verifyLink) . '</a></p>
@@ -183,7 +183,7 @@ if ($status) {
     "description": "Login to your accounts",
     "publisher": {
       "@type": "Organization",
-      "name": "' . app()->tenant->getKey('CLUB_NAME') . '",
+      "name": "' . config('CLUB_NAME') . '",
       "url": "https://www.chesterlestreetasc.co.uk",
       "url/googlePlus": "https://plus.google.com/110024389189196283575"
     }
@@ -192,9 +192,9 @@ if ($status) {
   </script>
   ';
 
-  notifySend($to, $subject, $sContent, $forename . " " . $surname, $email, ["Email" => "registration@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME')]);
+  notifySend($to, $subject, $sContent, $forename . " " . $surname, $email, ["Email" => "registration@" . getenv('EMAIL_DOMAIN'), "Name" => config('CLUB_NAME')]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'] = '
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'] = '
   <div class="alert alert-success mb-0">
     <p class="mb-0">
       <strong>
@@ -212,19 +212,19 @@ if ($status) {
 
   header("Location: " . autoUrl("register"));
 } else {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationUsername'] = $username;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationForename'] = $forename;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSurname'] = $surname;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmail'] = $email;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMobile'] = $mobile;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationUsername'] = $username;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationForename'] = $forename;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSurname'] = $surname;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmail'] = $email;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationMobile'] = $mobile;
   if ($emailAuth == 1) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationEmailAuth'] = " checked ";
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationEmailAuth'] = " checked ";
   }
   if ($smsAuth == 1) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationSmsAuth'] = " checked ";
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationSmsAuth'] = " checked ";
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = '
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = '
   <div class="alert alert-warning">
   <p><strong>Something wasn\'t right</strong></p>
   <ul class="mb-0">' . $statusMessage . '</ul></div>';

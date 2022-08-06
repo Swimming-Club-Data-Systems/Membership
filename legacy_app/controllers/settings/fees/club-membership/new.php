@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $fluidContainer = true;
 
@@ -9,7 +9,7 @@ if (!isset($_GET['type']) || !in_array($_GET['type'], ['club', 'national_governi
 $type = 'Club Membership';
 switch ($_GET['type']) {
   case 'national_governing_body':
-    $type = htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ' Membership';
+    $type = htmlspecialchars(config('NGB_NAME')) . ' Membership';
     break;
   case 'other':
     $type = 'Other (Arbitrary) Membership';
@@ -45,9 +45,9 @@ include BASE_PATH . 'views/header.php';
         <h1>New <?= htmlspecialchars($type) ?> Fee Class</h1>
         <p class="lead">Set amounts for membership fees</p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']) { ?>
           <div class="alert alert-danger">Your new membership class could not be saved</div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error']);
         } ?>
 
         <form method="post" class="needs-validation" novalidate>

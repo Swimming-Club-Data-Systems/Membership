@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
@@ -36,7 +36,7 @@ $rowArrayText = ["Freestyle", null, null, null, null, null, 2, "Backstroke",  nu
 
 try {
   $entries = $db->prepare("SELECT *, galaEntries.ProcessingFee pFee FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE members.UserID = ? AND (NOT RequiresApproval OR (RequiresApproval AND Approved)) AND NOT Charged AND FeeToPay > 0 AND galas.GalaDate >= ?");
-  $entries->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $date->format("Y-m-d")]);
+  $entries->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $date->format("Y-m-d")]);
 } catch (Exception $e) {
   pre($e);
 }
@@ -69,7 +69,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
     <div class="row">
       <div class="col-lg-8">
         <h1>Pay for gala entries</h1>
-        <p class="lead mb-0">You can pay for gala entries by <?php if (app()->tenant->getBooleanKey('USE_DIRECT_DEBIT')) { ?>direct debit or by <?php } ?>credit or debit card.</p>
+        <p class="lead mb-0">You can pay for gala entries by <?php if (config('USE_DIRECT_DEBIT')) { ?>direct debit or by <?php } ?>credit or debit card.</p>
       </div>
     </div>
   </div>
@@ -87,11 +87,11 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
         </p>
       </div>
 
-      <?php if (bool($notByDirectDebit) || !app()->tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) { ?>
+      <?php if (bool($notByDirectDebit) || !config('ENABLE_BILLING_SYSTEM')) { ?>
         <p>
           You must pay for your entries by card or any other accepted method.
         </p>
-      <?php } else if (!app()->tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) { ?>
+      <?php } else if (!config('ENABLE_BILLING_SYSTEM')) { ?>
         <p>
           You must pay for your entries by card or any other accepted method.
         </p>

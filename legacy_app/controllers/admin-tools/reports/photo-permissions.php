@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getInfo = $db->prepare("SELECT MForename, MSurname, SquadName, DateOfBirth, Website, Social, Noticeboard, FilmTraining, ProPhoto FROM (((members INNER JOIN squadMembers ON members.MemberID = squadMembers.Member) INNER JOIN squads ON squads.SquadID = squadMembers.Squad) LEFT JOIN memberPhotography ON members.MemberID = memberPhotography.MemberID) WHERE members.Tenant = ? ORDER BY SquadFee DESC, SquadName ASC, MSurname ASC, MSurname ASC;");
 $getInfo->execute([

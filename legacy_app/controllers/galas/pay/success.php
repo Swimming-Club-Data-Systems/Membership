@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $swimsArray = [
   '25Free' => '25&nbsp;Free',
@@ -34,22 +34,22 @@ $rowArrayText = ["Freestyle", null, null, null, null, null, 2, "Backstroke",  nu
 
 $getEntry = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE EntryID = ? AND members.UserID = ?");
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo']) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo']) {
   halt(404);
 }
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentSuccess']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentSuccess']) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentSuccess']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentSuccess']) {
   halt(404);
 }
 
 $getEntriesByPI = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE StripePayment = ?");
 $getEntriesByPI->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo']
 ]);
 
 $getIntent = $db->prepare("SELECT Intent FROM stripePayments WHERE ID = ?");
 $getIntent->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo']
 ]);
 $intentId = $getIntent->fetchColumn();
 if ($intentId == null) {
@@ -176,9 +176,9 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntries']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentSuccess']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntries']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentSuccess']);
 
 $footer = new \SCDS\Footer();
 $footer->render();

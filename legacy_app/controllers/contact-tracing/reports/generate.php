@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
   if (!isset($_GET['location']) || !isset($_GET['from-date']) || !isset($_GET['from-time']) || !isset($_GET['to-date']) || !isset($_GET['to-time'])) {

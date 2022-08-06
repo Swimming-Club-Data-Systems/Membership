@@ -5,8 +5,8 @@ $pagetitle = "Galas";
 $now = new DateTime('now', new DateTimeZone('Europe/London'));
 $nowDay = $now->format('Y-m-d');
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galas = $db->prepare("SELECT GalaID, GalaName, ClosingDate, GalaDate, GalaVenue, CourseLength FROM galas WHERE Tenant = ? AND GalaDate >= ?");
 $galas->execute([
@@ -67,7 +67,7 @@ $countEntriesCount = [];
 $countEntriesColours = [];
 foreach ($swimsArray as $col => $name) {
   $getCount = null;
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
     $getCount = $db->prepare("SELECT COUNT(*) FROM galaEntries INNER JOIN galas ON galas.GalaID = galaEntries.GalaID WHERE `" . $col . "` = 1 AND galas.Tenant = ?");
     $getCount->execute([$tenant->getId()]);
   } else {
@@ -108,7 +108,7 @@ include "galaMenu.php"; ?>
 <div class="front-page" style="margin-bottom: -1rem;">
   <div class="container-xl">
     <h1>Galas</h1>
-    <p class="lead">Gala Entry Management at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p class="lead">Gala Entry Management at <?=htmlspecialchars(config('CLUB_NAME'))?></p>
 
       <h2 class="mb-4">
         Upcoming Galas

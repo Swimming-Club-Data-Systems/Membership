@@ -112,12 +112,12 @@ class CreateMail
     <div style=\"background:#ffffff;\">
       <table style=\"width:100%;border:0px;text-align:left;padding:0px 0px 0px 0px;background:#ffffff;\"><tr><td align=\"center\">
         <table style=\"width:100%;max-width:700px;border:0px;text-align:center;background:#ffffff;padding:0px 0px 0px 0px;\"><tr><td>";
-    if (isset(app()->tenant) && $logos = app()->tenant->getKey('LOGO_DIR')) {
+    if (tenant() && $logos = config('LOGO_DIR')) {
       $head .= "<img src=\"" . getUploadedAssetUrl($logos . 'logo-75.png') . "\" srcset=\"" .
         getUploadedAssetUrl($logos . 'logo-75@2x.png') . " 2x, " .
-        getUploadedAssetUrl($logos . 'logo-75@3x.png') . " 3x\" style=\"max-width:100%;max-height:75px;\" alt=\"" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " Logo\">";
-    } else if (isset(app()->tenant)) {
-      $head .= htmlspecialchars(app()->tenant->getKey('CLUB_NAME'));
+        getUploadedAssetUrl($logos . 'logo-75@3x.png') . " 3x\" style=\"max-width:100%;max-height:75px;\" alt=\"" . htmlspecialchars(config('CLUB_NAME')) . " Logo\">";
+    } else if (tenant()) {
+      $head .= htmlspecialchars(config('CLUB_NAME'));
     } else {
       $head .= "<img src=\"" . autoUrl('public/img/corporate/icons/apple-touch-icon-152x152.png') . "\" alt=\"SCDS Membership Logo\">";
     }
@@ -134,10 +134,10 @@ class CreateMail
     <table style=\"width:100%;max-width:700px;border:0px;background:#f8fcff;padding:0px 0px;\"><tr><td>
     <div
     class=\"bottom text-center\">";
-    if (isset(app()->tenant)) {
+    if (tenant()) {
       $foot .= "
-      <p class=\"small\" align=\"center\"><strong>" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . "</strong><br>";
-      $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+      <p class=\"small\" align=\"center\"><strong>" . htmlspecialchars(config('CLUB_NAME')) . "</strong><br>";
+      $addr = json_decode(config('CLUB_ADDRESS'));
       if ($addr) {
         for ($i = 0; $i < sizeof($addr); $i++) {
           $foot .= htmlspecialchars($addr[$i]) . '<br>';
@@ -150,11 +150,11 @@ class CreateMail
       $foot .= "<p class=\"small\" align=\"center\">SCDS Membership Software<br>Newcastle-upon-Tyne and Sheffield</p><p class=\"small\" align=\"center\">For support call <a href=\"tel:+441912494320\">+44 191 249 4320</a> or email <a href=\"mailto:support@myswimmingclub.uk\">support@myswimmingclub.uk</a>";
     }
     $foot .= "</p>";
-    if (isset(app()->tenant)) {
+    if (tenant()) {
       $foot .= "
-    <p class=\"small\" align=\"center\">This email was sent via the " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " Membership System.</p>";
+    <p class=\"small\" align=\"center\">This email was sent via the " . htmlspecialchars(config('CLUB_NAME')) . " Membership System.</p>";
       $foot .= "<p class=\"small\" align=\"center\">Have questions? Contact us at <a
-    href=\"mailto:" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a>.</p>
+    href=\"mailto:" . htmlspecialchars(config('CLUB_EMAIL')) . "\">" . htmlspecialchars(config('CLUB_EMAIL')) . "</a>.</p>
     <p class=\"small\" align=\"center\">To control your email options, go to <a href=\"" .
         autoUrl("myaccount/email") . "\">My Account</a>.</p>
     <p class=\"small\" align=\"center\">Unwanted email? <a href=\"https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u\" target=\"_blank\" title=\"Report email abuse\">Report email abuse</a>.</p>";
@@ -162,7 +162,7 @@ class CreateMail
         $foot .= '<p class="small" align="center"><a href="-unsub_link-">Click to Unsubscribe</a></p>';
       }
       $foot .= "
-    <p class=\"small\" align=\"center\">&copy; " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " " . date("Y") . ", Design &copy; SCDS</p>";
+    <p class=\"small\" align=\"center\">&copy; " . htmlspecialchars(config('CLUB_NAME')) . " " . date("Y") . ", Design &copy; SCDS</p>";
     }
     $foot .= "
       </div>
@@ -185,10 +185,10 @@ class CreateMail
       $head .= "Hello " . htmlspecialchars($this->name) . ",\r\n\r\n";
     }
 
-    if (isset(app()->tenant)) {
-      $foot = "\r\n\n\n " . app()->tenant->getKey('CLUB_NAME') . "\r\n\r\n";
-      $foot .= app()->tenant->getKey('CLUB_NAME') . "\r\n";
-      $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+    if (tenant()) {
+      $foot = "\r\n\n\n " . config('CLUB_NAME') . "\r\n\r\n";
+      $foot .= config('CLUB_NAME') . "\r\n";
+      $addr = json_decode(config('CLUB_ADDRESS'));
       if ($addr) {
         for ($i = 0; $i < sizeof($addr); $i++) {
           $foot .= $addr[$i] . "\r\n";
@@ -197,14 +197,14 @@ class CreateMail
           }
         }
       }
-      $foot .= "\r\nThis email was sent automatically by the " . app()->tenant->getKey('CLUB_NAME') . " Membership System.\r\n\r\n";
-      $foot .= "Have questions? Contact us at " . app()->tenant->getKey('CLUB_EMAIL') . ".\r\n\r\n";
+      $foot .= "\r\nThis email was sent automatically by the " . config('CLUB_NAME') . " Membership System.\r\n\r\n";
+      $foot .= "Have questions? Contact us at " . config('CLUB_EMAIL') . ".\r\n\r\n";
       $foot .= "To control your email options go to My Account at " . autoUrl("myaccount") . ".\r\n\r\n";
       $foot .= "Report email abuse at https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u.\r\n\r\n";
       if ($this->allowUnsubscribe) {
         $foot .= "Unsubscribe at -unsub_link-\r\n\r\n";
       }
-      $foot .= "Content copyright " . date("Y") . " " . app()->tenant->getKey('CLUB_NAME') . ", Design copyright SCDS";
+      $foot .= "Content copyright " . date("Y") . " " . config('CLUB_NAME') . ", Design copyright SCDS";
     } else {
       $foot = "Copyright SCDS. Membership MT.";
     }

@@ -1,6 +1,6 @@
 <?php
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Notify is unavailable for your account";
 
 http_response_code(403);
@@ -35,7 +35,7 @@ include BASE_PATH . "views/notifyMenu.php";
       <p class="mt-2"><a href="mailto:support@myswimmingclub.uk" title="Support Hotline">Email</a> or <a href="tel:+441912494320">call SCDS on +44 191 249 4320</a> for help and support if the issue persists.</p>
 
       <p class="small">
-        Provided by Swimming Club Data Systems to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+        Provided by Swimming Club Data Systems to <?= htmlspecialchars(config('CLUB_NAME')) ?>.
       </p>
     </div>
 
@@ -58,6 +58,6 @@ include BASE_PATH . "views/notifyMenu.php";
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivSuccess']);
 $footer = new \SCDS\Footer();
 $footer->render();

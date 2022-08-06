@@ -1,7 +1,7 @@
 <?php
 
 $this->get(['/request-a-trial', '/request-a-trial/{headless}'], function($headless = false) {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-Success'] === true) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-Success'] === true) {
     include 'RequestTrialSuccess.php';
   } else {
     include 'RequestTrialForm.php';

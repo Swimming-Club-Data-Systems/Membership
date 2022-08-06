@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 
@@ -90,9 +90,9 @@ try {
       $subject .= 'credit/refund on account';
     }
     $message .= '<p>Hi ' . htmlspecialchars($user['Forename']) . ', </p>';
-    $message .= '<p>We\'ve manually added a ' . $typeString . ' of <strong>&pound;' . $amountString . '</strong> to your next ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' direct debit payment for <strong>' . htmlspecialchars($description) .  '</strong>.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . '.</p>';
+    $message .= '<p>We\'ve manually added a ' . $typeString . ' of <strong>&pound;' . $amountString . '</strong> to your next ' . htmlspecialchars(config('CLUB_NAME')) . ' direct debit payment for <strong>' . htmlspecialchars($description) .  '</strong>.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(config('CLUB_NAME')) . '.</p>';
 
-    $message .= '<p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Payments Team</p>';
+    $message .= '<p>Kind Regards, <br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Payments Team</p>';
 
     $notify = $db->prepare("INSERT INTO notify (UserID, `Status`, `Subject`, `Message`, EmailType) VALUES (?, ?, ?, ?, ?)");
 
@@ -111,12 +111,12 @@ try {
 
   AuditLog::new('Payments-Invoices-Added', 'Created payment item #' . $id);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage'] = 'We\'ve added the ' . $typeString . ' to ' . $user['Forename'] . '\'s account to pay in their next bill.';
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentSuccessMessage'] = 'We\'ve added the ' . $typeString . ' to ' . $user['Forename'] . '\'s account to pay in their next bill.';
 } catch (PDOException $e) {
   reportError($e);
   $db->rollBack();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage'] = 'A database error occurred. Please try again. If the error occurs again, please try again later.';
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentErrorMessage'] = 'A database error occurred. Please try again. If the error occurs again, please try again later.';
 } catch (Exception $e) {
   reportError($e);
   if ($db->inTransaction()) {
@@ -127,7 +127,7 @@ try {
     }
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentErrorMessage'] = $e->getMessage();
 }
 
 header('Location: ' . autoUrl('payments/invoice-payments/new'));

@@ -12,8 +12,8 @@ class CSRF {
   public static function write() {
     // If the token is not set, define it
     $csrfName = 'CSRF';
-    if (isset(app()->tenant)) {
-      $csrfName = 'CSRF-T' . app()->tenant->getId();
+    if (tenant()) {
+      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
     }
 
     self::getValue();
@@ -28,8 +28,8 @@ class CSRF {
    */
   public static function getValue() {
     $csrfName = 'CSRF';
-    if (isset(app()->tenant)) {
-      $csrfName = 'CSRF-T' . app()->tenant->getId();
+    if (tenant()) {
+      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
     }
 
     if (!isset($_SESSION[$csrfName]) || $_SESSION[$csrfName] == null) {
@@ -46,8 +46,8 @@ class CSRF {
    */
   public static function verify($throwException = false) {
     $csrfName = 'CSRF';
-    if (isset(app()->tenant)) {
-      $csrfName = 'CSRF-T' . app()->tenant->getId();
+    if (tenant()) {
+      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
     }
 
     if (isset($_SESSION[$csrfName]) && isset($_POST['SCDS-GLOBAL-CSRF']) && $_SESSION[$csrfName] == $_POST['SCDS-GLOBAL-CSRF']) {
@@ -67,8 +67,8 @@ class CSRF {
    */
   public static function verifyCode($code, $throwException = false) {
     $csrfName = 'CSRF';
-    if (isset(app()->tenant)) {
-      $csrfName = 'CSRF-T' . app()->tenant->getId();
+    if (tenant()) {
+      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
     }
     
     if (isset($_SESSION[$csrfName]) && $_SESSION[$csrfName] == $code) {

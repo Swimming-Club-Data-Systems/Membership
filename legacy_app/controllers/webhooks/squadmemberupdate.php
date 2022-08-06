@@ -7,8 +7,8 @@
  */
 
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Add renewal members to database
 $date = new DateTime('now', new DateTimeZone('Europe/London'));

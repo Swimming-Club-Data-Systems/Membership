@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 // GET THE GALA
 $getGala = $db->prepare("SELECT GalaName `name` FROM galas WHERE GalaID = ?");

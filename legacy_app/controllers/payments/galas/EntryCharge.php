@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $disabled = "";
 
@@ -91,15 +91,15 @@ include BASE_PATH . 'views/header.php';
 	<div class="row">
 		<div class="col-md-8">
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersSuccess'])) {
-				unset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersSuccess']); ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersSuccess'])) {
+				unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersSuccess']); ?>
 				<div class="alert alert-success">
 					<strong>We've successfully charged the parents</strong>
 				</div>
 			<?php } ?>
 
-			<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'])) {
-				unset($_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure']); ?>
+			<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure'])) {
+				unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ChargeUsersFailure']); ?>
 				<div class="alert alert-warning">
 					<strong>An error occurred.</strong> Please try again later.
 				</div>
@@ -153,7 +153,7 @@ include BASE_PATH . 'views/header.php';
 
 							$hasNoSDD = !$mandate || (getUserOption($entry['user'], 'GalaDirectDebitOptOut'));
 
-							$hasNoDD = ($hasNoSDD && $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT'));
+							$hasNoDD = ($hasNoSDD && config('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !config('USE_STRIPE_DIRECT_DEBIT'));
 
 							?>
 							<?php $notReady = !$entry['Processed']; ?>
@@ -219,8 +219,8 @@ include BASE_PATH . 'views/header.php';
 											</p>
 										<?php } ?>
 
-										<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']]) && $_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']]) {
-											unset($_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']]); ?>
+										<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'][$entry['EntryID']]) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'][$entry['EntryID']]) {
+											unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'][$entry['EntryID']]); ?>
 											<div class="alert alert-danger">
 												<strong>Refund failed!</strong> You have attempted to refund more than the user has paid.
 											</div>
@@ -283,8 +283,8 @@ include BASE_PATH . 'views/header.php';
 	</div>
 </div>
 
-<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'])) {
-	unset($_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount']);
+<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount'])) {
+	unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OverhighChargeAmount']);
 } ?>
 
 <?php

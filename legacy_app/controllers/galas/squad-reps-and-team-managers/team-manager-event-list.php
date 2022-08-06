@@ -1,15 +1,15 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getGalas = null;
 $date = new DateTime('-1 day', new DateTimeZone('Europe/London'));
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $getGalas = $db->prepare("SELECT GalaID id, GalaName `name`, GalaVenue venue, GalaDate endDate FROM teamManagers INNER JOIN galas ON teamManagers.Gala = galas.GalaID WHERE teamManagers.User = ? AND galas.GalaDate >= ? AND galas.Tenant = ? ORDER BY GalaDate ASC");
   $getGalas->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $date->format("Y-m-d"),
     $tenant->getId()
   ]);
@@ -33,7 +33,7 @@ include BASE_PATH . 'views/header.php';
       <div class="col-md-8">
         <h1>Team manager dashboard</h1>
         <p class="lead">Welcome to the team manager dashboard where you can see your current and upcoming galas.</p>
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
         <p>For data protection reasons, you will lose access to each event after it finishes.</p>
         <?php } ?>
       </div>
@@ -59,7 +59,7 @@ include BASE_PATH . 'views/header.php';
         </a>
       <?php } while ($gala = $getGalas->fetch(PDO::FETCH_ASSOC)); ?>
     </div>
-    <?php } else if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+    <?php } else if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
     <div class="alert alert-warning">
       <p class="mb-0">
         <strong>You have not been assigned as a team manager for any upcoming galas.</strong>

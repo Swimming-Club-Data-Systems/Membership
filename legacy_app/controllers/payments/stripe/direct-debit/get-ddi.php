@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Get mandates
 $getMandates = $db->prepare("SELECT `URL` FROM stripeMandates WHERE Customer = ? AND ID = ?");

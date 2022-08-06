@@ -4,8 +4,8 @@
  * API for tenant settings
  */
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $output = [];
 
@@ -39,13 +39,13 @@ try {
   ];
 
   foreach ($keys as $key => $type) {
-    $var = $tenant->getkey($key);
+    $var = config($key);
     settype($var, $type);
     $tenantKeyData[mb_strtolower($key)] = $var;
   }
 
   $logoPath = null;
-  $logoDir = $tenant->getKey('LOGO_DIR');
+  $logoDir = config('LOGO_DIR');
   if ($logoDir) {
     $logoPath = getUploadedAssetUrl($logoDir);
   }

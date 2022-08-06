@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $currentUser = null;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_SESSION['SCDS-SuperUser'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && isset($_SESSION['SCDS-SuperUser'])) {
   try {
     // Sign in from super user
     $getSuperUser = $db->prepare("SELECT Email FROM superUsers WHERE ID = ?");
@@ -35,16 +35,16 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($
   } catch (Exception $e) {
     // Ignore
   }
-} else if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'SUPERUSER-AutoLogin'])) {
+} else if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'SUPERUSER-AutoLogin'])) {
   // Ignore for now
 }
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin']) && $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'] != "") {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin']) && $_COOKIE[COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin'] != "") {
   $sql = "SELECT users.UserID, `Time` FROM `userLogins` INNER JOIN users ON users.UserID = userLogins.UserID WHERE users.Tenant = ? AND `Hash` = ? AND `Time` >= ? AND `HashActive` = ?";
 
   $data = [
     $tenant->getId(),
-    $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'],
+    $_COOKIE[COOKIE_PREFIX . 'TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin'],
     date('Y-m-d H:i:s', strtotime("120 days ago")),
     1
   ];
@@ -74,12 +74,12 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($
       // halt(403);
     }
 
-    $hash = hash('sha512', time() . $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . random_bytes(64));
+    $hash = hash('sha512', time() . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] . random_bytes(64));
 
     $sql = "UPDATE `userLogins` SET `Hash` = ? WHERE `Hash` = ?";
     try {
       $query = $db->prepare($sql);
-      $query->execute([$hash, $_COOKIE['TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin']]);
+      $query->execute([$hash, $_COOKIE['TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . 'AutoLogin']]);
     } catch (PDOException $e) {
       halt(500);
     }
@@ -90,21 +90,21 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($
     if (app('request')->protocol == 'http' && bool(getenv('IS_DEV'))) {
       $secure = false;
     }
-    $cookiePath = '/' . app()->tenant->getCodeId();
+    $cookiePath = '/' . tenant()->getLegacyTenant()->getCodeId();
     if (getenv('MAIN_DOMAIN')) {
       $cookiePath = '';
     }
-    setcookie('TENANT-' . app()->tenant->getId() . '-' . "AutoLogin", $hash, $expiry_time, $cookiePath, app('request')->hostname, $secure, false);
+    setcookie('TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . "AutoLogin", $hash, $expiry_time, $cookiePath, app('request')->hostname, $secure, false);
   }
-} else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
-  app()->user = new User($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], true);
+} else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
+  app()->user = new User($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], true);
 }
 
 // Log urls
 if (isset(app()->user) && app()->user) {
   try {
     // pre(app()->request);
-    $path = substr(app()->request->path, strlen('/' . app()->tenant->getCodeId()), strlen(app()->request->path) - strlen('/' . app()->tenant->getCodeId()));
+    $path = substr(app()->request->path, strlen('/' . tenant()->getLegacyTenant()->getCodeId()), strlen(app()->request->path) - strlen('/' . tenant()->getLegacyTenant()->getCodeId()));
     if (substr($path, 0, 7) !== "/public" && substr($path, 0, 8) !== "/uploads" && substr($path, 0, 6) !== "/sw.js") {
       AuditLog::new('HTTP_REQUEST', app()->request->method . ' - ' . app()->request->curl);
     }
@@ -113,8 +113,8 @@ if (isset(app()->user) && app()->user) {
   }
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] && !isset($_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'])) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'] = filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "DisableTrackers"), FILTER_VALIDATE_BOOLEAN);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'] && !isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DisableTrackers'])) {
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['DisableTrackers'] = filter_var(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], "DisableTrackers"), FILTER_VALIDATE_BOOLEAN);
 }
 
 if (bool(getenv('IS_DEV'))) {
@@ -131,7 +131,7 @@ if (isset($_SESSION['OnboardingSessionId'])) {
 
 $this->get('/auth/cookie/redirect', function () {
   //$target = urldecode($target);
-  setcookie('TENANT-' . app()->tenant->getId() . '-' . "SeenAccount", true, 0, "/", app('request')->hostname, true, false);
+  setcookie('TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . "SeenAccount", true, 0, "/", app('request')->hostname, true, false);
   header("Location: https://www.chesterlestreetasc.co.uk");
 });
 
@@ -159,7 +159,7 @@ $this->get('/emergency-message.json', function () {
 
 $this->post('/check-login.json', function () {
   header("content-type: application/json");
-  echo json_encode(['signed_in' => isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])]);
+  echo json_encode(['signed_in' => isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])]);
 });
 
 $this->get('/public/css/colour.css', function () {
@@ -300,7 +300,7 @@ $this->any(['/logout', '/logout.php'], function () {
   include BASE_PATH . 'controllers/logout.php';
 });
 
-// if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR']) {
+// if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR']) {
 //   $this->group('/2fa', function () {
 //     $this->get('/', function () {
 //       include BASE_PATH . 'views/TwoFactorCodeInput.php';
@@ -322,7 +322,7 @@ $this->any(['/logout', '/logout.php'], function () {
 //   });
 
 //   $this->get(['/', '/*'], function () {
-//     $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR'] = true;
+//     $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR'] = true;
 //     header("Location: " . autoUrl("2fa"));
 //   });
 // }
@@ -342,7 +342,7 @@ $this->group('/oauth2', function () {
   });
 });
 
-if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+if (empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
   // $this->post('/login', function () {
   //   include BASE_PATH . 'controllers/login-go.php';
   // });
@@ -354,7 +354,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
 
   // $this->get('/login', function () {
   //   http_response_code(303);
-  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId()), false));
+  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(tenant()->getLegacyTenant()->getCodeId()), false));
   // });
 
   // $this->get('/login', function () {
@@ -449,7 +449,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   // Global Catch All send to login
   // $this->any(['/', '/*'], function () {
   //   http_response_code(303);
-  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId() . '&target=' . urlencode(app('request')->path)), false));
+  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(tenant()->getLegacyTenant()->getCodeId() . '&target=' . urlencode(app('request')->path)), false));
   // });
 
   $this->group('/api', function () {
@@ -465,7 +465,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   //   http_response_code(303);
   //   header("Location: " . autoUrl('login?target=' . urlencode(app('request')->path)));
   // });
-} else if (user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+} else if (user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
   $this->group('/renewal', function () {
     include BASE_PATH . 'controllers/renewal/router.php';
   });
@@ -488,7 +488,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
 } else {
   // Home
 
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
     $this->get('/', function () {
 
       include BASE_PATH . 'controllers/ParentDashboard.php';
@@ -554,7 +554,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
     include BASE_PATH . 'controllers/onboarding/router.php';
   });
 
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") {
     $this->group('/trials', function () {
       include BASE_PATH . 'controllers/trials/router.php';
     });
@@ -658,7 +658,7 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
     include BASE_PATH . 'controllers/tenant-services/routes.php';
   });
 
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") {
     $this->group('/settings', function () {
       include BASE_PATH . 'controllers/settings/router.php';
     });

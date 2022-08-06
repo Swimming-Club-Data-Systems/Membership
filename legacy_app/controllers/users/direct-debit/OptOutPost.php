@@ -1,6 +1,6 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 $checkUser = $db->prepare("SELECT COUNT(*) FROM users WHERE UserID = ? AND Tenant = ?");
 $checkUser->execute([
@@ -15,11 +15,11 @@ if ($checkUser->fetchColumn() == 0) {
 try {
 
   if (!\SCDS\FormIdempotency::verify() || !\SCDS\CSRF::verify()) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorInvalidRequest'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorInvalidRequest'] = true;
   } else {
     try {
       // Get renewal
-      $db = app()->db;
+      $db = DB::connection()->getPdo();
       
       include 'GetRenewal.php';
 
@@ -28,10 +28,10 @@ try {
         $renewal,
         $person
       ]);
-      $_SESSION['TENANT-' . app()->tenant->getId()]['Successful'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Successful'] = true;
     } catch (Exception $e) {
       // Catches halt
-      $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorNoReg'] = true;
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorNoReg'] = true;
     }
   }
 } catch (Exception $e) {

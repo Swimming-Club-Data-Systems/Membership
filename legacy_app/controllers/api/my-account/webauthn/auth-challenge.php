@@ -29,8 +29,8 @@ $publicKeyCredentialRequestOptions = $server->generatePublicKeyCredentialRequest
 
 $creationJson = json_encode($publicKeyCredentialRequestOptions);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestUsername'] = $post->username;
-$_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions'] = $creationJson;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestUsername'] = $post->username;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions'] = $creationJson;
 
 header("content-type: application/json");
 echo $creationJson;

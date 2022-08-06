@@ -6,8 +6,8 @@ set_time_limit(0);
 try {
   require BASE_PATH . 'controllers/payments/GoCardlessSetupClient.php';
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
@@ -31,7 +31,7 @@ try {
       $subject = 'Payment Retry (' . $retry['PMKey'] . ')';
       $message = '
       <p>We\'re now retrying payment ' . $retry['PMKey'] . '. The money should leave your account within the next few days, if enough money is available.</p>';
-      $message .= '<p>Kind regards,<br>The ' . app()->tenant->getKey('CLUB_NAME') . ' Team</p>';
+      $message .= '<p>Kind regards,<br>The ' . config('CLUB_NAME') . ' Team</p>';
       $email->execute([$retry['UserID'], 'Queued', $subject, $message, 1, 'Payments']);
 
     } catch (Exception $e) {
@@ -42,7 +42,7 @@ try {
       $message = '
       <p>We attempted to retry payment ' . $retry['PMKey'] . ' but an error occured before we were able to complete the retry request.</p>
       <p>Please contact the treasurer as soon as possible.</p>';
-      $message .= '<p>Kind regards,<br>The ' . app()->tenant->getKey('CLUB_NAME') . ' Team</p>';
+      $message .= '<p>Kind regards,<br>The ' . config('CLUB_NAME') . ' Team</p>';
       $email->execute([$retry['UserID'], 'Queued', $subject, $message, 1, 'Payments']);
     }
   }

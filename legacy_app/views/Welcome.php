@@ -10,11 +10,11 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-md-10 col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
         <p class="lead">By proceeding to use this progressive web app you agree to our use of cookies.</p>
       <?php } ?>
 
-      <h1 class="mb-5">Welcome to the <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership System</h1>
+      <h1 class="mb-5">Welcome to the <?= htmlspecialchars(config('CLUB_NAME')) ?> Membership System</h1>
 
       <h2>Already registered?</h2>
       <p class="lead">

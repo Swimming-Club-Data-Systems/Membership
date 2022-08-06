@@ -1,7 +1,7 @@
 <?php
 
 $user = app()->user;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $today = new DateTime('now', new DateTimeZone('Europe/London'));
 

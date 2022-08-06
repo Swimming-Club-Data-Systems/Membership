@@ -3,8 +3,8 @@
 use SCDS\CSRF;
 
 $user = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $session = \SCDS\Onboarding\Session::retrieve($id);
 
@@ -79,18 +79,18 @@ include BASE_PATH . "views/header.php";
         <div class="mb-3">
           <label for="start-date" class="form-label">Start Date</label>
           <input type="date" class="form-control" id="start-date" name="start-date" value="<?= htmlspecialchars($session->start->format('Y-m-d')) ?>" required aria-describedby="start-help" <?php if ($session->renewal) { ?>disabled<?php } ?>>
-          <div id="start-help" class="form-text">This is the date the member started at the club.<?php if (app()->tenant->getBooleanKey('USE_DIRECT_DEBIT')) { ?> If you're charging for feees before the first Direct Debit, this should be the date payment is calculated from.<?php } ?></div>
+          <div id="start-help" class="form-text">This is the date the member started at the club.<?php if (config('USE_DIRECT_DEBIT')) { ?> If you're charging for feees before the first Direct Debit, this should be the date payment is calculated from.<?php } ?></div>
         </div>
 
         <div class="mb-3">
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="charge-fees" id="charge-fees-yes" <?php if ($session->chargeOutstanding) { ?>checked<?php } ?> value="1" data-toggle="pro-rata-box" <?php if (!app()->tenant->getBooleanKey('USE_DIRECT_DEBIT') || $session->renewal || true) { ?>disabled<?php } ?>>
+            <input class="form-check-input" type="radio" name="charge-fees" id="charge-fees-yes" <?php if ($session->chargeOutstanding) { ?>checked<?php } ?> value="1" data-toggle="pro-rata-box" <?php if (!config('USE_DIRECT_DEBIT') || $session->renewal || true) { ?>disabled<?php } ?>>
             <label class="form-check-label" for="charge-fees-yes">
               Charge fees up to first Direct Debit date
             </label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="radio" name="charge-fees" id="charge-fees-no" <?php if (!$session->chargeOutstanding) { ?>checked<?php } ?> value="0" data-toggle="pro-rata-box" <?php if (!app()->tenant->getBooleanKey('USE_DIRECT_DEBIT') || $session->renewal || true) { ?>disabled<?php } ?>>
+            <input class="form-check-input" type="radio" name="charge-fees" id="charge-fees-no" <?php if (!$session->chargeOutstanding) { ?>checked<?php } ?> value="0" data-toggle="pro-rata-box" <?php if (!config('USE_DIRECT_DEBIT') || $session->renewal || true) { ?>disabled<?php } ?>>
             <label class="form-check-label" for="charge-fees-no">
               Ignore missed fees
             </label>
@@ -100,13 +100,13 @@ include BASE_PATH . "views/header.php";
         <div class="collapse <?php if ($session->chargeOutstanding) { ?>show<?php } ?>" id="pro-rata-box">
           <div class="mb-3">
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="charge-pro-rata" id="charge-pro-rata-yes" <?php if ($session->chargeProRata) { ?>checked<?php } ?> <?php if (!app()->tenant->getBooleanKey('USE_DIRECT_DEBIT')) { ?>disabled<?php } ?>>
+              <input class="form-check-input" type="radio" name="charge-pro-rata" id="charge-pro-rata-yes" <?php if ($session->chargeProRata) { ?>checked<?php } ?> <?php if (!config('USE_DIRECT_DEBIT')) { ?>disabled<?php } ?>>
               <label class="form-check-label" for="charge-pro-rata-yes">
                 Charge pro-rata amount
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" name="charge-pro-rata" id="charge-pro-rata-no" <?php if (!$session->chargeProRata) { ?>checked<?php } ?> <?php if (!app()->tenant->getBooleanKey('USE_DIRECT_DEBIT')) { ?>disabled<?php } ?>>
+              <input class="form-check-input" type="radio" name="charge-pro-rata" id="charge-pro-rata-no" <?php if (!$session->chargeProRata) { ?>checked<?php } ?> <?php if (!config('USE_DIRECT_DEBIT')) { ?>disabled<?php } ?>>
               <label class="form-check-label" for="charge-pro-rata-no">
                 Charge for full months
               </label>

@@ -1,12 +1,12 @@
 <?php
 
 $user = app()->user;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
 $getBatch->execute([
   $id,
-  app()->tenant->getId(),
+  tenant()->getLegacyTenant()->getId(),
 ]);
 
 $batch = $getBatch->fetch(PDO::FETCH_OBJ);
@@ -47,7 +47,7 @@ if ($sessionId) $session = \SCDS\Onboarding\Session::retrieve($sessionId);
 $message = '<p>There are membership fees for you to review in your club account.</p>';
 $message .= '<p>Please <a href="' . htmlspecialchars(autoUrl("memberships/batches/$id")) . '">visit the membership system</a> to review the fees and pay ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) . '.</p>';
 $message .= '<p>' . htmlspecialchars(autoUrl("memberships/batches/$id")) . '</p>';
-notifySend(null, 'New Memberships', $message, $batchUser->getFullName(), $batchUser->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
+notifySend(null, 'New Memberships', $message, $batchUser->getFullName(), $batchUser->getEmail(), ['Name' => tenant()->getLegacyTenant()->getName() . ' Membership Secretary']);
 
 $_SESSION['SentEmail'] = true;
 

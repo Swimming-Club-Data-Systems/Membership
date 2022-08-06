@@ -2,29 +2,29 @@
 $pagetitle = "Notify Composer";
 $use_white_background = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` WHERE `Tenant` = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
   $squads->execute([
     $tenant->getId()
   ]);
 } else {
   $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` INNER JOIN squadReps ON squadReps.Squad = squads.SquadID WHERE squadReps.User = ? AND `Tenant` = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
-  $squads->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $tenant->getId()]);
+  $squads->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $tenant->getId()]);
 }
 
 $lists = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` WHERE `Tenant` = ? ORDER BY `Name` ASC;");
   $lists->execute([
     $tenant->getId()
   ]);
 } else {
   $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` INNER JOIN listSenders ON listSenders.List = targetedLists.ID WHERE listSenders.User = ? AND `Tenant` = ? ORDER BY `Name` ASC;");
-  $lists->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $tenant->getId()]);
+  $lists->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $tenant->getId()]);
 }
 
 $galas = $db->prepare("SELECT GalaName, GalaID FROM `galas` WHERE GalaDate >= ? AND `Tenant` = ? ORDER BY `GalaName` ASC;");
@@ -33,7 +33,7 @@ $galas->execute([$date->format('Y-m-d'), $tenant->getId()]);
 
 $query = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE
 UserID = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $curUserInfo = $query->fetch(PDO::FETCH_ASSOC);
 
 $senderNames = explode(' ', $curUserInfo['Forename'] . ' ' . $curUserInfo['Surname']);
@@ -57,7 +57,7 @@ if ($renewal) {
   $pendingRenewal = true;
 }
 
-if (!app()->tenant->isCLS()) {
+if (!tenant()->getLegacyTenant()->isCLS()) {
   $fromEmail .= '.' . urlencode(mb_strtolower(str_replace(' ', '', getenv('CLUB_CODE'))));
 }
 
@@ -65,15 +65,15 @@ $fromEmail .= '@' . getenv('EMAIL_DOMAIN');
 
 function fieldChecked($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name]) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name])) {
     return ' checked ';
   }
 }
 
 function fieldValue($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
-    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name])) {
+    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name]) . '"';
   }
 }
 
@@ -136,8 +136,8 @@ $group = [
 ];
 $possibleTos['galas'] = $group;
 
-$clubName = app()->tenant->getKey('CLUB_NAME');
-$clubEmail = app()->tenant->getKey('CLUB_EMAIL');
+$clubName = config('CLUB_NAME');
+$clubEmail = config('CLUB_EMAIL');
 $userName = app()->user->getForename() . ' ' . app()->user->getSurname();
 
 $replyAddress = app()->user->getUserOption('NotifyReplyAddress');

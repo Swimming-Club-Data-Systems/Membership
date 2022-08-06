@@ -2,7 +2,7 @@
 
 $pagetitle = "Two Factor Authentication";
 
-$do_random_2FA = filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'], "IsSpotCheck2FA"), FILTER_VALIDATE_BOOLEAN);
+$do_random_2FA = filter_var(getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID'], "IsSpotCheck2FA"), FILTER_VALIDATE_BOOLEAN);
 
 $errorState = false;
 
@@ -11,11 +11,11 @@ if (isset($_GET['target'])) {
   $target = $_GET['target'];
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-  $errorState = $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+  $errorState = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
 }
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 include BASE_PATH . "views/head.php";
 
@@ -32,7 +32,7 @@ include BASE_PATH . "views/head.php";
       <div class="row align-items-center">
         <div class="col order-2 order-md-1">
           <h1>Enter your authentication code</h1>
-          <p class="">To continue signing in to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+          <p class="">To continue signing in to <?= htmlspecialchars(config('CLUB_NAME')) ?></p>
         </div>
         <div class="col-12 col-md-auto order-1 order-md-2">
           <?php if ($logos) { ?>
@@ -45,7 +45,7 @@ include BASE_PATH . "views/head.php";
       </div>
       <div class="mb-4 d-md-none"></div>
       <div class="mb-5 d-none d-md-block"></div>
-      <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) || $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] !== true) { ?>
+      <?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']) || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE'] !== true) { ?>
         <p class="lead mb-5">
           We've just sent you an authentication code by email. Please type this code below.
         </p>
@@ -67,14 +67,14 @@ include BASE_PATH . "views/head.php";
         <div class="alert alert-danger">
           <strong>Your authentication code was incorrect</strong> <br>
           Please try again
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage'])) {
-            echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage'];
-            unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStateLSVMessage']);
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage'])) {
+            echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage'];
+            unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStateLSVMessage']);
           } ?>
         </div>
       <?php } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_RESEND']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_RESEND']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_RESEND']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_RESEND']) { ?>
         <div class="alert alert-success">
           <p class="mb-0"><strong>We have successfully sent your email</strong></p>
           <p class="mb-0">Please now check your inbox. It may take a moment to receive the email.</p>
@@ -93,7 +93,7 @@ include BASE_PATH . "views/head.php";
 
         <div class="mb-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" name="RememberMe" id="RememberMe" <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserRememberMe']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserRememberMe'])) { ?>checked<?php } ?> aria-describedby="RememberMeHelp" value="1">
+            <input class="form-check-input" type="checkbox" name="RememberMe" id="RememberMe" <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserRememberMe']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserRememberMe'])) { ?>checked<?php } ?> aria-describedby="RememberMeHelp" value="1">
             <label class="form-check-label" for="RememberMe">Keep me logged in</label>
             <small id="RememberMeHelp" class="form-text text-muted">
               Untick this box if you are using a public or shared computer
@@ -101,7 +101,7 @@ include BASE_PATH . "views/head.php";
           </div>
         </div>
 
-        <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) || $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] !== true) { ?>
+        <?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']) || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE'] !== true) { ?>
           <div class="mb-3">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" name="setup-time-based-codes" id="setup-time-based-codes" aria-describedby="setup-time-based-codes-help">
@@ -119,7 +119,7 @@ include BASE_PATH . "views/head.php";
       </form>
 
       <p class="mb-5">
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_GOOGLE']) { ?>
           <a href="<?= htmlspecialchars(autoUrl("2fa/resend?target=" . urlencode($target))) ?>" class="btn btn-dark">Get code by email</a>
         <?php } else { ?>
           <a href="<?= htmlspecialchars(autoUrl("2fa/resend?target=" . urlencode($target))) ?>" class="btn btn-dark">Resend Email</a>
@@ -127,7 +127,7 @@ include BASE_PATH . "views/head.php";
       </p>
 
       <p>
-        Need help? <a href="<?= htmlspecialchars(autoUrl('about')) ?>">Get support from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></a>.
+        Need help? <a href="<?= htmlspecialchars(autoUrl('about')) ?>">Get support from <?= htmlspecialchars(config('CLUB_NAME')) ?></a>.
       </p>
     </div>
   </div>
@@ -139,7 +139,7 @@ $footer = new \SCDS\Footer();
 $footer->addJs("public/js/NeedsValidation.js");
 $footer->render();
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_RESEND']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TWO_FACTOR_RESEND']);
 
 ?>

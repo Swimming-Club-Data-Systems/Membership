@@ -1,11 +1,11 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // require 'GoCardlessSetup.php';
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $pagetitle = "Payments and Direct Debits";
 
 // Get mandates
@@ -18,7 +18,7 @@ if ($stripeCusomer) {
 }
 $mandate = $getMandates->fetch(PDO::FETCH_ASSOC);
 
-$balance = getAccountBalance($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+$balance = getAccountBalance($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
 
 $use_white_background = true;
 include BASE_PATH . "views/header.php";
@@ -50,7 +50,7 @@ include BASE_PATH . "views/paymentsMenu.php";
     <div class="row align-items-center">
       <div class="col-md-6 col-lg-8">
         <h1>Payments</h1>
-        <p class="lead mb-0">Manage your payments to <?= htmlspecialchars(app()->tenant->getName()) ?></p>
+        <p class="lead mb-0">Manage your payments to <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?></p>
       </div>
     </div>
   </div>
@@ -73,7 +73,7 @@ include BASE_PATH . "views/paymentsMenu.php";
       </div>
     </div>
     <div class="col-md-4">
-      <?php if ($tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+      <?php if (config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || config('USE_STRIPE_DIRECT_DEBIT')) { ?>
         <div class="cell">
           <h2 class="">
             My Bank Account
@@ -104,10 +104,10 @@ include BASE_PATH . "views/paymentsMenu.php";
           </div>
         </div>
       <?php } ?>
-      <?php if ($tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && userHasMandates($user)) { ?>
+      <?php if (config('GOCARDLESS_ACCESS_TOKEN') && userHasMandates($user)) { ?>
         <div class="cell">
           <h2 class="mb-3">
-            My Bank Account<?php if ($tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?> (Legacy)<?php } ?>
+            My Bank Account<?php if (config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || config('USE_STRIPE_DIRECT_DEBIT')) { ?> (Legacy)<?php } ?>
           </h2>
           <?php
           $name = mb_strtoupper(bankDetails($user, "account_holder_name"));
@@ -124,7 +124,7 @@ include BASE_PATH . "views/paymentsMenu.php";
           <?php } ?>
           <p class="mb-0"><?= htmlspecialchars($name) ?><abbr title="<?= htmlspecialchars(strtoupper(bankDetails($user, "bank_name"))) ?>"><?= htmlspecialchars(getBankName(bankDetails($user, "bank_name"))) ?></abbr></p>
           <p class="font-monospace">&middot;&middot;&middot;&middot;&middot;&middot;<?= htmlspecialchars(strtoupper(bankDetails($user, "account_number_end"))) ?></p>
-          <p><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> does not store your bank details.</p>
+          <p><?= htmlspecialchars(config('CLUB_NAME')) ?> does not store your bank details.</p>
           <p class="mb-0">
           <div class="d-grid gap-2">
             <?php if (userHasMandates($user)) { ?>

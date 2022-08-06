@@ -8,8 +8,8 @@ use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -29,14 +29,14 @@ function getUUID()
 }
 
 $getGuests = $getMembers = null;
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
   $getGuests = $db->prepare("SELECT ID, GuestName, GuestPhone FROM covidVisitors WHERE Inputter = ?");
   $getGuests->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   ]);
   $getMembers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID `id` FROM members WHERE `UserID` = ? ORDER BY fn ASC, sn ASC");
   $getMembers->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   ]);
 }
 
@@ -91,12 +91,12 @@ try {
   $userMobile = null;
 
   // Add user if logged in
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
 
     // Get user name and phone number
     $getUser = $db->prepare("SELECT Forename, Surname, Mobile FROM users WHERE UserID = ?");
     $getUser->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     ]);
 
     $user = $getUser->fetch(PDO::FETCH_ASSOC);
@@ -106,7 +106,7 @@ try {
         getUUID(),
         $id,
         $time,
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
         'user',
         $user['Forename'] . ' ' . $user['Surname'],
         $user['Mobile'],
@@ -166,20 +166,20 @@ try {
       'guest',
       $guest['name'],
       $guest['phone'],
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       $tenant->getId(),
     ]);
   }
 
   $db->commit();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess'] = true;
   header("location: " . autoUrl('contact-tracing/check-in/' . $id . '/success'));
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $db->rollBack();
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError'] = [
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError'] = [
     'post' => $_POST,
     'message' => $e->getMessage(),
   ];

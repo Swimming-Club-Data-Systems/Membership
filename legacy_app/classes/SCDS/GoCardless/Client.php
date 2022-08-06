@@ -10,7 +10,10 @@ class Client
    */
   public static function get()
   {
-    $at = app()->tenant->getKey('GOCARDLESS_ACCESS_TOKEN');
+    $at = config('GOCARDLESS_ACCESS_TOKEN');
+    return;
+
+    if (!$at) throw new \Exception('No access token');
 
     $client = null;
 

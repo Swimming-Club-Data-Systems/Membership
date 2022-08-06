@@ -5,8 +5,8 @@ set_time_limit(0);
 
 try {
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
   require BASE_PATH . 'controllers/payments/GoCardlessSetupClient.php';
 
 
@@ -140,7 +140,7 @@ try {
       $message_content = '';
       if (!$mandateInfo) {
         $message_content .= '<table style="margin: 0 0 1rem 0; padding: 1rem; border-radius: 0.25rem; border: 1px solid rgba(0, 0, 0, 0.125);background-color: #f8f9fa;"><tr><td><p><strong>Warning: You do not have a direct debit mandate set up with us.</strong>';
-        if (app()->tenant->isCLS()) {
+        if (tenant()->getLegacyTenant()->isCLS()) {
           $message_content .= ' If you are paying us manually, a £3 surcharge applies to your monthly fee. Login to <a href="' . autoUrl("payments") . '">the Membership System</a> to set up a direct debit before next month\'s bill.</p>';
           $message_content .= '<p class="mb-0" style="margin-bottom: 0;">If you expected to pay us by direct debit this month, please contact the treasurer as soon as possible - Your swimmers could be suspended if you fail to pay squad fees.';
         }

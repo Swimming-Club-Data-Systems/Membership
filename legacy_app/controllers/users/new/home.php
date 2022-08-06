@@ -7,15 +7,15 @@ use Brick\PhoneNumber\PhoneNumberFormat;
 
 function valueOrString($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name])) {
-    return $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name];
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']['fields'][$name])) {
+    return $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']['fields'][$name];
   }
   return '';
 }
 
 function checked($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name]) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['message'][$name])) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']['fields'][$name]) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']['message'][$name])) {
     return 'checked';
   }
   return '';
@@ -55,13 +55,13 @@ include BASE_PATH . 'views/header.php';
         We've removed the ability for users to create their own account. Instead, you can now provision users here.
       </p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>We could not add the user</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['message']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']['message']) ?>
           </p>
         </div>
       <?php } ?>
@@ -186,7 +186,7 @@ include BASE_PATH . 'views/header.php';
 
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError'])) unset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError'])) unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError']);
 
 $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");

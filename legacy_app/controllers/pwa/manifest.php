@@ -5,16 +5,16 @@ header('Content-Type: application/manifest+json');
 $icons = [];
 
 $clubName = 'My Club';
-if (mb_strlen(app()->tenant->getKey('CLUB_SHORT_NAME')) > 0 && mb_strlen(app()->tenant->getKey('CLUB_SHORT_NAME')) < 14) {
-  $clubName = app()->tenant->getKey('CLUB_SHORT_NAME');
+if (mb_strlen(config('CLUB_SHORT_NAME')) > 0 && mb_strlen(config('CLUB_SHORT_NAME')) < 14) {
+  $clubName = config('CLUB_SHORT_NAME');
 }
 
 $themeColour = "#bd0000";
-if (app()->tenant->getKey('SYSTEM_COLOUR')) {
-  $themeColour = app()->tenant->getKey('SYSTEM_COLOUR');
+if (config('SYSTEM_COLOUR')) {
+  $themeColour = config('SYSTEM_COLOUR');
 }
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 if ($logos) {
   $icons[] = [
@@ -62,7 +62,7 @@ if ($logos) {
     'sizes' => '32x32',
     'type' => 'image/png'
   ];
-} else if (app()->tenant->isCLS()) { 
+} else if (tenant()->getLegacyTenant()->isCLS()) { 
   $icons[] = [
     'src' => getUploadedAssetUrl('public/img/touchicons/apple-touch-icon-precomposed.png'),
     'sizes' => '57x57',
@@ -157,12 +157,12 @@ if ($logos) {
 }
 
 $data = [
-  'name' => app()->tenant->getKey('CLUB_NAME') . ' Membership',
+  'name' => config('CLUB_NAME') . ' Membership',
   'short_name' => $clubName,
   'start_url' => getUploadedAssetUrl(""),
   'display' => 'minimal-ui',
   'background_color' => '#fff',
-  'description' => 'My ' . app()->tenant->getKey('CLUB_NAME') . ' Membership',
+  'description' => 'My ' . config('CLUB_NAME') . ' Membership',
   'icons' => $icons,
   'theme_color' => $themeColour,
   'lang' => 'en-GB',

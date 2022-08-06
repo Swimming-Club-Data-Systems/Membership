@@ -1,8 +1,8 @@
 <?php
 
 $currentUser = app()->user;
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 use Respect\Validation\Validator as v;
 
@@ -10,7 +10,7 @@ $target = $_POST['report_url'];
 $email = mb_strtolower(trim($_POST['email-address']));
 $userMessage = mb_strimwidth($_POST['Message'], 0, 10000);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['ErrorReportStatus'] = false;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorReportStatus'] = false;
 
 if (v::url()->validate($target) && \SCDS\CSRF::verify()) {
 
@@ -47,8 +47,8 @@ if (v::url()->validate($target) && \SCDS\CSRF::verify()) {
 
 	notifySend("", "Website Error Report", $message, "Website Admin Team", "support@myswimmingclub.uk", ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => 'User Error Report - SCDS']);
 
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ErrorReportStatus'] = true;
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ErrorReportTarget'] = $target;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorReportStatus'] = true;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorReportTarget'] = $target;
 
 	header("Location: " . autoUrl("reportanissue"));
 } else if (!\SCDS\CSRF::verify()) {

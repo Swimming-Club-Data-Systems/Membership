@@ -1,16 +1,16 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinParents WHERE Hash = ? AND Invited = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash'], true]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash'], true]);
 
 if ($query->fetchColumn() != 1) {
   halt(404);
 }
 
 $query = $db->prepare("SELECT First, Last FROM joinParents WHERE Hash = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash']]);
 $parent_name = $query->fetch(PDO::FETCH_ASSOC);
 
 $parent_name = $parent_name['First'] . ' ' . $parent_name['Last'];
@@ -26,17 +26,17 @@ try {
 
 $parent = false;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected'])) {
   // We've just arrived on the conduct form page, so do the parent first.
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['Current'] = "Parent";
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['URL'] = "me";
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['Current'] = "Parent";
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['URL'] = "me";
   $parent = true;
   header("Location: " . autoUrl("register/ac/code-of-conduct/me"));
 } else {
-  if ($name != $_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['URL']) {
-    header("Location: " . autoUrl("register/ac/code-of-conduct/" . $_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['URL']));
+  if ($name != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['URL']) {
+    header("Location: " . autoUrl("register/ac/code-of-conduct/" . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['URL']));
   }
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['Current'] == "Parent") {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['Current'] == "Parent") {
     $parent = true;
   }
 }
@@ -47,7 +47,7 @@ if ($parent) {
 } else {
 
   $query = $db->prepare("SELECT ID, First, Last, DoB, SquadSuggestion FROM joinSwimmers WHERE ID = ?");
-  $query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-CC-Expected']['Current']]);
+  $query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-CC-Expected']['Current']]);
   $swimmer = $query->fetch();
 
   $name = $swimmer['First'] . ' ' . $swimmer['Last'];
@@ -107,7 +107,7 @@ include BASE_PATH . 'views/header.php';
             </p>
           </div>
 
-          <h2><?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> Squad Code of Conduct</h2>
+          <h2><?=htmlspecialchars(config('CLUB_NAME'))?> Squad Code of Conduct</h2>
     			<?php if ($CoCID != null) { ?>
     				<div id="code_of_conduct">
     					<?= getPostContent($CoCID) ?>
@@ -274,7 +274,7 @@ include BASE_PATH . 'views/header.php';
           <div class="form-check">
             <input type="checkbox" value="1" class="form-check-input" name="agreement" id="agreement" required>
             <label class="form-check-label" for="agreement">
-              I, <?=$name?> agree to the Code of Conduct of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> as
+              I, <?=$name?> agree to the Code of Conduct of <?=htmlspecialchars(config('CLUB_NAME'))?> as
               outlined above
             </label>
             <div class="invalid-feedback">

@@ -38,8 +38,8 @@ class Member extends Person
   {
     $this->id = $id;
 
-    $db = app()->db;
-    $this->tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    $this->tenant = tenant()->getLegacyTenant()->getId();
 
     $getInfo = $db->prepare("SELECT * FROM members WHERE MemberID = ? AND Tenant = ?");
     $getInfo->execute([
@@ -160,7 +160,7 @@ class Member extends Person
       return 'NO MEMBERSHIP';
     }
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCatName = $db->prepare("SELECT `Name` FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ?");
     $getCatName->execute([
       $this->getGoverningBodyCategoryID(),
@@ -201,7 +201,7 @@ class Member extends Person
     $contacts = [];
 
     if ($this->user) {
-      $db = app()->db;
+      $db = DB::connection()->getPdo();
       $getECs = $db->prepare("SELECT Forename, Surname, Mobile FROM users WHERE UserID = ?");
       $getECs->execute([
         $this->user
@@ -277,7 +277,7 @@ class Member extends Person
   }
 
   public function getPhotoPermissions() {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getPerms = $db->prepare("SELECT Website, Social, Noticeboard, FilmTraining, ProPhoto FROM memberPhotography WHERE MemberID = ?");
     $getPerms->execute([
       $this->id
@@ -285,11 +285,11 @@ class Member extends Person
     $perm = $getPerms->fetch(PDO::FETCH_ASSOC);
     $allows = $disallowed = [];
     $cats = [
-      'Website' => $this->getForename() . '\'s photograph to be used on the ' . app()->tenant->getName() . ' website.',
-      'Social' => $this->getForename() . '\'s photograph to be used on ' . app()->tenant->getName() . ' social media platform/s.',
-      'Noticeboard' => $this->getForename() . '\'s photograph to be used within other printed publications such as newspaper articles about ' . app()->tenant->getName() . '.',
-      'FilmTraining' => $this->getForename() . ' to be filmed by ' . app()->tenant->getName() . ' for training purposes.',
-      'ProPhoto' => $this->getForename() . '\'s photograph to be taken by a professional photographer employed by ' . app()->tenant->getName() . 'as the official photographer at competitions, galas and other organisational events.',
+      'Website' => $this->getForename() . '\'s photograph to be used on the ' . tenant()->getLegacyTenant()->getName() . ' website.',
+      'Social' => $this->getForename() . '\'s photograph to be used on ' . tenant()->getLegacyTenant()->getName() . ' social media platform/s.',
+      'Noticeboard' => $this->getForename() . '\'s photograph to be used within other printed publications such as newspaper articles about ' . tenant()->getLegacyTenant()->getName() . '.',
+      'FilmTraining' => $this->getForename() . ' to be filmed by ' . tenant()->getLegacyTenant()->getName() . ' for training purposes.',
+      'ProPhoto' => $this->getForename() . '\'s photograph to be taken by a professional photographer employed by ' . tenant()->getLegacyTenant()->getName() . 'as the official photographer at competitions, galas and other organisational events.',
     ];
 
     foreach ($cats as $cat => $description) {
@@ -316,7 +316,7 @@ class Member extends Person
   }
 
   public function getClubCategory() {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getCat = $db->prepare("SELECT `Name` FROM clubMembershipClasses WHERE ID = ? AND Tenant = ?");
     $getCat->execute([
       $this->clubCategory,

@@ -18,7 +18,7 @@ class MembershipFeeClass
 
   private function __construct($user, $class, $name, $description, $fees, $type, $partial = false)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     // Assign values
     $this->user = $user;
@@ -59,8 +59,8 @@ class MembershipFeeClass
 
   public static function get($class, $user, $partial = false)
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     // Get the class
     $getClass = $db->prepare("SELECT `Name`, `Description`, `Fees`, `Type` FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ?");

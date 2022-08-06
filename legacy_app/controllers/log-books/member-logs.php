@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $start = 0;
 $page = 0;
@@ -24,7 +24,7 @@ if ($memberInfo == null) {
   halt(404);
 }
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $memberInfo['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -51,7 +51,7 @@ include BASE_PATH . 'views/header.php';
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-xl">
 
-    <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
+    <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item active" aria-current="page">Log book</li>
@@ -78,7 +78,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-end">
         <div class="btn-group" role="group" aria-label="Quick options">
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) { ?>
             <a href="<?= htmlspecialchars(autoUrl("log-books/settings")) ?>" class="btn btn-dark-l btn-outline-light-d">
               Settings <i class="fa fa-cog" aria-hidden="true"></i>
             </a>
@@ -97,25 +97,25 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-xl">
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage'])) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogSuccessMessage'])) { ?>
     <div class="alert alert-success">
       <p>
         <strong>Your new entry has been added to your training log.</strong>
       </p>
       <p class="mb-0">
-        <a class="btn btn-success" href="<?= htmlspecialchars("#log-" . $_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage']) ?>">Jump to log</a>
+        <a class="btn btn-success" href="<?= htmlspecialchars("#log-" . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogSuccessMessage']) ?>">Jump to log</a>
       </p>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddLogSuccessMessage']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddLogSuccessMessage']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassSuccess'])) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassSuccess'])) { ?>
     <div class="alert alert-success">
       <p class="mb-0">
-        <strong><?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>We've saved your new password.<?php } else { ?>Member password updated.<?php } ?></strong>
+        <strong><?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) { ?>We've saved your new password.<?php } else { ?>Member password updated.<?php } ?></strong>
       </p>
     </div>
-  <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassSuccess']);
+  <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SetMemberPassSuccess']);
   } ?>
 
   <div class="row">
@@ -223,7 +223,7 @@ include BASE_PATH . 'views/header.php';
     <div class="col">
       <div class="position-sticky top-3">
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
           <div class="cell">
             <h2>Member access</h2>
             <p class="lead">
@@ -241,7 +241,7 @@ include BASE_PATH . 'views/header.php';
           </div>
         <?php } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoggedIn'])) { ?>
           <div class="cell">
             <h2>My account</h2>
             <p class="lead">

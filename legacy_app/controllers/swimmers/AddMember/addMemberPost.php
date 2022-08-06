@@ -4,8 +4,8 @@ if (!SCDS\CSRF::verify()) {
 	halt(403);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = $db->prepare("SELECT SquadName, SquadID FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
 $squads->execute([
@@ -108,7 +108,7 @@ if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POS
 		// If squad, add to squad
 
 		if ($getASA) {
-			$swimEnglandTemp = app()->tenant->getKey('ASA_CLUB_CODE') . $last_id;
+			$swimEnglandTemp = config('ASA_CLUB_CODE') . $last_id;
 			$addTempSwimEnglandCode = $db->prepare("UPDATE `members` SET `ASANumber` = ? WHERE `MemberID` = ?");
 			$addTempSwimEnglandCode->execute([$swimEnglandTemp, $last_id]);
 		}
@@ -138,11 +138,11 @@ if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POS
 			$getAdmins = $db->prepare("SELECT `UserID` FROM `users` INNER JOIN `permissions` ON users.UserID = `permissions`.`User` WHERE Tenant = ? AND `Permission` = 'Admin' AND `UserID` != ?");
 			$getAdmins->execute([
 				$tenant->getId(),
-				$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+				$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 			]);
 			$notify = $db->prepare("INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`, `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 0, 'NewMember')");
 			$subject = "New Club Member";
-			$message = '<p>' . htmlentities(getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) . ' has added a new member, <a href="' . htmlspecialchars(autoUrl('members/' . $last_id)) . '" target="_blank">' . htmlentities($forename . ' ' . $surname) . '</a> to our online membership system.</p><p>We have sent you this email (because you\'re an admin) to ensure you\'re aware of this.</p>';
+			$message = '<p>' . htmlentities(getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) . ' has added a new member, <a href="' . htmlspecialchars(autoUrl('members/' . $last_id)) . '" target="_blank">' . htmlentities($forename . ' ' . $surname) . '</a> to our online membership system.</p><p>We have sent you this email (because you\'re an admin) to ensure you\'re aware of this.</p>';
 			while ($row = $getAdmins->fetch(PDO::FETCH_ASSOC)) {
 				try {
 					$notify->execute([$row['UserID'], $subject, $message]);
@@ -159,10 +159,10 @@ if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POS
 }
 
 if ($action) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['SwimmerAdded'] = true;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SwimmerAdded'] = true;
 	header("Location: " . autoUrl("members/" . $last_id));
 } else {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = '
 	<div class="alert alert-danger">
 		<p class="mb-0">
 			<strong>We were not able to add the new swimmer</strong>

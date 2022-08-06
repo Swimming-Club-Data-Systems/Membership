@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinSwimmers WHERE ID = ? AND Tenant = ?");
 $query->execute([
@@ -45,10 +45,10 @@ $swimmer['TrialEnd'] == "" || $swimmer['TrialStart'] == null) {
 $pagetitle = "Trial Request - " . htmlspecialchars($swimmer['First'] . ' ' . $swimmer['Last']);
 $use_white_background = true;
 
-$value = $_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-FC'];
+$value = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-FC'];
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrintial-AddAnother'])) {
-  $value = $_SESSION['TENANT-' . app()->tenant->getId()]['RequestTrial-AddAnother'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrintial-AddAnother'])) {
+  $value = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RequestTrial-AddAnother'];
 }
 
 include BASE_PATH . 'views/header.php';
@@ -60,7 +60,7 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-md-6">
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['TrialAppointmentUpdated'] === true) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialAppointmentUpdated'] === true) { ?>
         <div class="alert alert-success">
           <strong>The appointment time was successfully updated.</strong>
         </div>
@@ -131,7 +131,7 @@ include BASE_PATH . 'views/header.php';
         </dd>
         <?php } ?>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
         <dt class="col-md-4">Date of Birth</dt>
         <dd class="col-md-8">
           <?=date("j F Y", strtotime($swimmer['DoB']))?>
@@ -157,7 +157,7 @@ include BASE_PATH . 'views/header.php';
         </dd>
         <?php } ?>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
         <?php if ($swimmer['Medical'] != null && $swimmer['Medical'] != "") { ?>
         <dt class="col-md-4">Medical Info</dt>
         <dd class="col-md-8">
@@ -180,7 +180,7 @@ include BASE_PATH . 'views/header.php';
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['TrialAppointmentUpdated']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialAppointmentUpdated']);
 $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");
 $footer->render();

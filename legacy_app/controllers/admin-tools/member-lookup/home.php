@@ -4,7 +4,7 @@ $member = $times = $error = null;
 
 if (isset($_GET['member-id'])) {
   try {
-    $client = new \RankingsDB\RankingsClient(app()->tenant->getKey('GLOBAL_PERSONAL_KEY'), (int) app()->tenant->getKey('GLOBAL_PERSONAL_KEY_ID_NUMBER'));
+    $client = new \RankingsDB\RankingsClient(config('GLOBAL_PERSONAL_KEY'), (int) config('GLOBAL_PERSONAL_KEY_ID_NUMBER'));
     $member = $client->getMemberDetails((int) $_GET['member-id']);
 
     $options = new \RankingsDB\GetTimesBuilder($member->MemberID());
@@ -12,7 +12,7 @@ if (isset($_GET['member-id'])) {
   } catch (\RankingsDb\exceptions\ConnectionException $e) {
     $error = 'Unable to connect to the rankings.';
   } catch (\RankingsDb\exceptions\MemberNotFound $e) {
-    $error = 'We could not find a member with ' . app()->tenant->getKey('NGB_NAME') . ' number ' . trim($_GET['member-id']) . '.';
+    $error = 'We could not find a member with ' . config('NGB_NAME') . ' number ' . trim($_GET['member-id']) . '.';
   } catch (\RankingsDb\exceptions\InvalidPersonalKey $e) {
     $error = 'The personal key provided is invalid.';
   } catch (Exception $e) {
@@ -41,7 +41,7 @@ include BASE_PATH . 'views/header.php';
       <h1>Member lookup</h1>
       <p class="lead">Search for an SE Member.</p>
 
-      <?php if (app()->tenant->getKey('GLOBAL_PERSONAL_KEY') && (int) app()->tenant->getKey('GLOBAL_PERSONAL_KEY_ID_NUMBER')) { ?>
+      <?php if (config('GLOBAL_PERSONAL_KEY') && (int) config('GLOBAL_PERSONAL_KEY_ID_NUMBER')) { ?>
 
         <form method="get">
 

@@ -3,10 +3,10 @@
 header("content-type: application/json");
 
 try {
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Coach') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Admin' && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Coach') {
     throw new Exception('Incorrect permissions');
   }
 
@@ -59,11 +59,11 @@ try {
           $message .= 'joining ' . $join->getName();
         }
         $message .= ') has been cancelled.</p>';
-        if (!$tenant->getBooleanKey('HIDE_MOVE_FEE_INFO')) {
+        if (!config('HIDE_MOVE_FEE_INFO')) {
           $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         }
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
     } catch (Exception $e) {

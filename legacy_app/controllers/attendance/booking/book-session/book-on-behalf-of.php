@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
@@ -144,7 +144,7 @@ include BASE_PATH . 'views/header.php';
         <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
       </p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfSuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>Members booked successfully</strong>
@@ -153,9 +153,9 @@ include BASE_PATH . 'views/header.php';
             We'll send an email to members to let them know you have booked them a place on their behalf.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess']); } ?>
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfSuccess']); } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfError'])) { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
             <strong>We could not book all members a place</strong>
@@ -164,7 +164,7 @@ include BASE_PATH . 'views/header.php';
             Check the list below.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfError']); } ?>
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['BookOnBehalfOfError']); } ?>
 
       <?php if ($bookingClosed) { ?>
         <div class="alert alert-warning">

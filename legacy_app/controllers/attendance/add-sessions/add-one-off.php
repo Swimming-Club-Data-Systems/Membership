@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!$user->hasPermission('Admin') && !$user->hasPermission('Committee') && !$user->hasPermission('Coach')) {
@@ -73,16 +73,16 @@ include BASE_PATH . 'views/header.php';
 
       <form method="post" class="needs-validation" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>An error occurred:</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError']);
         } ?>
 
         <div class="mb-3">

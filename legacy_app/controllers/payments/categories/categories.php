@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $pagetitle = "Categories";
 
@@ -49,16 +49,16 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['HideCategorySuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>Category hidden successfully</strong>
           </p>
           <p class="mb-0">
-            <em><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess']) ?></em> will no longer be shown as an option for future payments.
+            <em><?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['HideCategorySuccess']) ?></em> will no longer be shown as an option for future payments.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['HideCategorySuccess']);
       } ?>
 
       <?php if ($category = $categories->fetch(PDO::FETCH_ASSOC)) { ?>

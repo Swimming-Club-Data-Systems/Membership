@@ -2,8 +2,8 @@
 
 class MembershipClassInfo {
   public static function getName($id) {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $getName = $db->prepare("SELECT `Name` FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ?");
     $getName->execute([
@@ -19,8 +19,8 @@ class MembershipClassInfo {
   }
 
   public static function getFee($id) {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $getFees = $db->prepare("SELECT `Fees` FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ?");
     $getFees->execute([

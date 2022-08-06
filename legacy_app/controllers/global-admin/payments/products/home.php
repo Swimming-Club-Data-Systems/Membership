@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getProducts = $db->query("SELECT `ID`, `Name`, `Description`, `Updated` FROM `tenantPaymentProducts` ORDER BY `Name` ASC;");
 $product = $getProducts->fetch(PDO::FETCH_ASSOC);

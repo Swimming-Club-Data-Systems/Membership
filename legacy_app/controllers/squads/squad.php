@@ -10,8 +10,8 @@ $search  = array("\n##### ", "\n#### ", "\n### ", "\n## ", "\n# ");
 $replace = array("\n###### ", "\n##### ", "\n#### ", "\n### ", "\n## ");
 //echo $Extra->text('# Header {.sth}'); # prints: <h1 class="sth">Header</h1>
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squad = null;
 try {
@@ -36,7 +36,7 @@ if ($codeOfConduct) {
 $canAccessSquadInfo = false;
 $isAllowed = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ? AND Squad = ?");
 $isAllowed->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   $id
 ]);
 if ($isAllowed->fetchColumn() > 0) {
@@ -45,7 +45,7 @@ if ($isAllowed->fetchColumn() > 0) {
 }
 
 $swimmers = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent' || $canAccessSquadInfo) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent' || $canAccessSquadInfo) {
   $swimmers = $db->prepare("SELECT MemberID id, MForename first, MSurname last, DateOfBirth dob, Forename fn, Surname sn, EmailAddress email, Mobile mob, members.UserID `user` FROM ((members INNER JOIN squadMembers ON squadMembers.Member = members.MemberID) LEFT JOIN users ON members.UserID = users.UserID) WHERE squadMembers.Squad = ? ORDER BY first ASC, last ASC");
   $swimmers->execute([$id]);
 }
@@ -150,7 +150,7 @@ include BASE_PATH . 'views/header.php';
           This squad has <?= htmlspecialchars($numSwimmers) ?> members
         </p>
       </div>
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="col text-sm-end">
           <a href="<?= htmlspecialchars(autoUrl("squads/" . $id . "/edit")) ?>" class="btn btn-dark-l btn-outline-light-d">Edit squad</a>
         </div>
@@ -193,7 +193,7 @@ include BASE_PATH . 'views/header.php';
         </dd>
       </dl>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
         <?php $members = $squad->getMembers(); ?>
         <h2><?= htmlspecialchars($squad->getName()) ?> Members</h2>
         <?php if (sizeof($members) > 0) { ?>
@@ -264,7 +264,7 @@ include BASE_PATH . 'views/header.php';
         <?php } ?>
       <?php } ?>
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent" && $numSwimmers > 0) { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent" && $numSwimmers > 0) { ?>
         <h2>Sex Split</h2>
         <canvas class="mb-3" id="sexSplit" data-data="<?= htmlspecialchars(json_encode($pie)) ?>"></canvas>
 
@@ -286,7 +286,7 @@ include BASE_PATH . 'views/header.php';
 <?php
 
 $footer = new \SCDS\Footer();
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") {
   // $footer->addJS("js/Chart.min.js");
   if ($numSwimmers > 0) {
     $footer->addJS("js/squads/squad-charts.js");

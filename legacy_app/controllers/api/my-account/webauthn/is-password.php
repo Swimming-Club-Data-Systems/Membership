@@ -2,8 +2,8 @@
 
 // Checks if username has WebAuthn creds
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $email = isset($_GET['email']) ? $_GET['email'] : "";
 
@@ -24,6 +24,6 @@ $ssoUrl = null;
 echo json_encode([
   "user_exists" => $getUserCount->fetchColumn() > 0,
   "has_webauthn" => $getCount->fetchColumn() > 0,
-  "is_sso" => $tenant->getBooleanKey("TENANT_ENABLE_STAFF_OAUTH") && str_ends_with($email, $tenant->getKey("TENANT_OAUTH_EMAIL_DOMAIN")),
+  "is_sso" => config("TENANT_ENABLE_STAFF_OAUTH") && str_ends_with($email, config("TENANT_OAUTH_EMAIL_DOMAIN")),
   "sso_url" => autoUrl("login/oauth?email=" . urlencode($email)),
 ]);

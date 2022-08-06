@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getInvoices = $db->prepare("SELECT tenantPaymentInvoices.ID, tenants.Name FROM `tenantPaymentInvoices` INNER JOIN tenantStripeCustomers ON tenantPaymentInvoices.Customer = tenantStripeCustomers.CustomerID INNER JOIN tenants ON tenantStripeCustomers.Tenant = tenants.ID ORDER BY `Name` ASC;");
 $getInvoices->execute([

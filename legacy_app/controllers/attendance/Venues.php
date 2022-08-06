@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $venues = $db->prepare("SELECT `VenueID`, `VenueName`, `Location` FROM sessionsVenues WHERE Tenant = ? ORDER BY VenueName ASC");
 $venues->execute([
@@ -29,7 +29,7 @@ include BASE_PATH . "views/header.php";
           Venues
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars(config('CLUB_NAME')) ?>
         </p>
         <div class="mb-3 d-lg-none"></div>
       </div>

@@ -45,7 +45,7 @@ class Item
 
   public static function retrieve($id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $get = $db->prepare("SELECT * FROM `checkoutItems` WHERE `id` = ?");
     $get->execute([
@@ -76,7 +76,7 @@ class Item
 
   public function save()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $save = $db->prepare("UPDATE `checkoutItems` SET `name` = ?, `description` = ?, `amount` = ?, `currency` = ?, `tax_amount` = ?, `tax_data` = ?, `sub_items` = ?, `type` = ?, `attributes` = ?, `metadata` = ? WHERE `id` = ?");
     $save->execute([

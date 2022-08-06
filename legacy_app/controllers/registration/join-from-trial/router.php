@@ -11,7 +11,7 @@ $this->get('/', function() {
  */
 
  /*
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] == 'UserDetails') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] == 'UserDetails') {
   $this->get('/user-details', function() {
     include 'CollectUserDetails.php';
   });
@@ -21,7 +21,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] ==
   });
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] == 'VerifyEmail') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] == 'VerifyEmail') {
   $this->get('/verify-email', function() {
     include 'VerifyUserEmail.php';
   });
@@ -39,7 +39,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] ==
   });
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] == 'TermsConditions') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] == 'TermsConditions') {
   $this->get('/terms-and-conditions', function() {
     include 'TermsAndConditions.php';
   });
@@ -49,7 +49,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] ==
   });
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] == 'CodeOfConduct') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] == 'CodeOfConduct') {
   $this->get(['/code-of-conduct', '/code-of-conduct/{name}'], function($name = null) {
     include 'ConductAgreement.php';
   });
@@ -59,7 +59,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] ==
   });
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] == 'AutoAccountSetup' || true) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] == 'AutoAccountSetup' || true) {
   $this->get('/setup-account', function() {
     include 'AutoAccountSetup.php';
   });

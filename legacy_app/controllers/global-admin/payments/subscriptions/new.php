@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $getTenants = $db->query("SELECT `Name`, `ID` FROM `tenants` WHERE `Verified` ORDER BY `Name` ASC");
 
 $getProducts = $db->query("SELECT `ID`, `Name`, `Description`, `Updated` FROM `tenantPaymentProducts` ORDER BY `Name` ASC;");

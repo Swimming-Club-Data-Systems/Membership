@@ -4,10 +4,10 @@
  * TEAM MANAGER HOME PAGE FOR A GALA
  */
 
-\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $id);
+\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $id);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaInfo = $db->prepare("SELECT GalaName FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaInfo->execute([

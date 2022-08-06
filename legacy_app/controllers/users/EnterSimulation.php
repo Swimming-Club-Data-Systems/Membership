@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
 	$query = $db->prepare("SELECT * FROM `users` WHERE Tenant = ? AND `UserID` = ? AND Active");
@@ -19,18 +19,18 @@ if (!$info) {
 	halt(404);
 }
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'] = [
-	'RealUser'    => $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'] = [
+	'RealUser'    => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 	'SimUser'     => $info['UserID'],
 	'SimUserName' => \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])
 ];
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['Username'] =     $info['Username'];
-$_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'] = $info['EmailAddress'];
-$_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] =     $info['Forename'];
-$_SESSION['TENANT-' . app()->tenant->getId()]['Surname'] =      $info['Surname'];
-$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] =       $info['UserID'];
-$_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] =     1;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Username'] =     $info['Username'];
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress'] = $info['EmailAddress'];
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] =     $info['Forename'];
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname'] =      $info['Surname'];
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] =       $info['UserID'];
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'] =     1;
 
 $userObject = new \User($id, true);
 

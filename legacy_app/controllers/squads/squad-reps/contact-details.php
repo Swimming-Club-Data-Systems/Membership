@@ -1,16 +1,16 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getSquadCount = $db->prepare("SELECT COUNT(*) FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad AND squadReps.User = ?");
 $getSquadCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 $count = $getSquadCount->fetchColumn();
 
 $squads = $db->prepare("SELECT squads.SquadName, squads.SquadID, squadReps.ContactDescription FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad AND squadReps.User = ?");
 $squads->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 
 if ($count == 0) {

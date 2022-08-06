@@ -5,8 +5,8 @@ if (is_null($user)) {
   halt(400);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE
 UserID = ? AND Tenant = ?");
@@ -16,7 +16,7 @@ $query->execute([
 ]);
 $userInfo = $query->fetchAll(PDO::FETCH_ASSOC);
 $query->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
   $tenant->getId()
 ]);
 $curUserInfo = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -43,7 +43,7 @@ $email = $userInfo['EmailAddress'];
 $myName = $curUserInfo['Forename'] . ' ' . $curUserInfo['Surname'];
 
 $replyMe = false;
-if (getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress')) {
+if (getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NotifyReplyAddress')) {
   $replyMe = true;
 }
 
@@ -54,17 +54,17 @@ if (!$replyMe) {
 } else {
   $reply = "1";
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['from'])) {
-  $from = $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['from'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['from'])) {
+  $from = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['from'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['ReplyToMe'])) {
-  $reply = $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['ReplyToMe'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['ReplyToMe'])) {
+  $reply = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['ReplyToMe'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['subject'])) {
-  $subject = $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['subject'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['subject'])) {
+  $subject = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['subject'];
 }
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['message'])) {
-  $content = $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivPostContent']['message'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['message'])) {
+  $content = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyIndivPostContent']['message'];
 }
 
 $pagetitle = "Email " . htmlspecialchars($name);
@@ -102,44 +102,44 @@ include BASE_PATH . "views/notifyMenu.php";
 
 <div class="container-xl">
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) { ?>
     <div class="alert alert-success">
       <p class="mb-0"><strong>Results have been uploaded</strong>.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>We could not verify the integrity of the submitted form</strong>. Please try again.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>There was a problem with the file uploaded</strong>. Please try again.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>A file you uploaded was too large</strong>. The maximum size for an individual file is 300000 bytes.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>The files you uploaded were collectively too large</strong>. Attachments may not exceed a total of 10 megabytes in size.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']);
   } ?>
 
   <form method="post" onkeypress="return event.keyCode != 13;" class="needs-validation" novalidate id="notify-form" enctype="multipart/form-data">
@@ -154,7 +154,7 @@ include BASE_PATH . "views/notifyMenu.php";
           <label class="form-label" for="from">Send message as</label>
           <div class="form-check">
             <input type="radio" id="from-club" name="from" class="form-check-input" value="club-sending-account" <?php if ($from == "club-sending-account") { ?>checked<?php } ?> required>
-            <label class="form-check-label" for="from-club"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></label>
+            <label class="form-check-label" for="from-club"><?= htmlspecialchars(config('CLUB_NAME')) ?></label>
           </div>
           <div class="form-check">
             <input type="radio" id="from-user" name="from" class="form-check-input" value="current-user" <?php if ($from == "current-user") { ?>checked<?php } ?>>

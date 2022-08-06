@@ -4,7 +4,7 @@
  * API for user settings
  */
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $user = null;
 
 if (app()->user) {

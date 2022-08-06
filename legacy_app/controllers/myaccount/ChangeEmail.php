@@ -5,12 +5,12 @@
 <div class="container-xl">
 <div class="mb-3 p-3 bg-white rounded shadow">
 <h1>Change your email address</h1>
-<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-  echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+  echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 } ?>
 <form method="post" action="password">
-	<p class="mb-0">Your email address is currently <?= $_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'] ?></p>
+	<p class="mb-0">Your email address is currently <?= $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress'] ?></p>
    <hr>
    <div class="mb-3">
       <label class="form-label" for="newemail">New Email Address</label>

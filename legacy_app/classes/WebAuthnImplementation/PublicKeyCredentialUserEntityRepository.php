@@ -13,8 +13,8 @@ final class PublicKeyCredentialUserEntityRepository
   }
 
   public function findWebauthnUserByUsername(string $username): ?PublicKeyCredentialUserEntity {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $getUser = $db->prepare("SELECT EmailAddress, Forename, Surname, UserID FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active");
     $getUser->execute([
@@ -29,8 +29,8 @@ final class PublicKeyCredentialUserEntityRepository
   }
 
   public function findWebauthnUserByUserHandle($userHandle): ?PublicKeyCredentialUserEntity {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $getUser = $db->prepare("SELECT EmailAddress, Forename, Surname, UserID FROM users WHERE UserID = ? AND Tenant = ? AND Active");
     $getUser->execute([

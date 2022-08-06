@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -57,39 +57,39 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Success']) && $_SESSION['TENANT-' . app()->tenant->getId()]['Success']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Success']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Success']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">User details updated.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Success']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Success']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['InvalidEmail']) && $_SESSION['TENANT-' . app()->tenant->getId()]['InvalidEmail']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidEmail']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidEmail']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">The email you entered is invalid.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['InvalidEmail']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidEmail']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UsedEmail']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UsedEmail']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UsedEmail']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UsedEmail']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">The email you entered is already in use by another account.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UsedEmail']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UsedEmail']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['InvalidPhone']) && $_SESSION['TENANT-' . app()->tenant->getId()]['InvalidPhone']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidPhone']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidPhone']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">The phone number you entered is invalid.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['InvalidPhone']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['InvalidPhone']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GeneralError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['GeneralError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GeneralError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GeneralError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">An unspecified error occurred. Please try again.</p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['GeneralError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GeneralError']);
       } ?>
 
       <form method="post" id="main-form" class="needs-validation" novalidate>

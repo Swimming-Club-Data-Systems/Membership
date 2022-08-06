@@ -7,8 +7,8 @@ $valid = true;
 $message = 'Email address is allowed.';
 
 try {
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $get = $db->prepare("SELECT COUNT(*) FROM users WHERE EmailAddress = ? AND UserID != ?");
   $get->execute([

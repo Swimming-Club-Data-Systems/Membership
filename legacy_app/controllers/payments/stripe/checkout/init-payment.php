@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 function generatePaymentResponse($intent) {
   if ($intent->status == 'requires_source_action' &&
@@ -27,7 +27,7 @@ function generatePaymentResponse($intent) {
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
 $getCustID = $db->prepare("SELECT CustomerID FROM stripeCustomers WHERE User = ?");
-$getCustID->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getCustID->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $customer = \Stripe\Customer::retrieve($getCustID->fetchColumn());
 
 $intent = \Stripe\PaymentIntent::create([

@@ -1,14 +1,14 @@
 <?php
 
 use Respect\Validation\Validator as v;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $currentUser = app()->user;
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 $sql = "SELECT `EmailAddress`, `EmailComms` FROM `users` WHERE `UserID` = ?";
 try {
 	$query = $db->prepare($sql);
-	$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+	$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } catch (Exception $e) {
 	halt(404);
 }
@@ -23,14 +23,14 @@ if ($_POST['EmailComms']) {
 
 if ($email_comms != $row['EmailComms']) {
 	$email_comms_update = true;
-	$_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate'] = true;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate'] = true;
 	$emailCommsDb = (int) $email_comms;
   $sql = "UPDATE `users` SET `EmailComms` = ? WHERE `UserID` = ?";
   try {
-  	$db->prepare($sql)->execute([$emailCommsDb, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  	$db->prepare($sql)->execute([$emailCommsDb, $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   } catch (Exception $e) {
 		// Could not update settings
-		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError'] = '<p class="mb-0"><strong>We were unable to change your email subscription preferences</strong></p><p class="mb-0">Please try again. If the issue persists, please contact support referencing <span class="font-monospace">Email Preferences Update Error</span></p>';
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateError'] = '<p class="mb-0"><strong>We were unable to change your email subscription preferences</strong></p><p class="mb-0">Please try again. If the issue persists, please contact support referencing <span class="font-monospace">Email Preferences Update Error</span></p>';
   }
 }
 
@@ -54,7 +54,7 @@ if (mb_strtolower($_POST['EmailAddress']) != mb_strtolower($row['EmailAddress'])
 		$authCode = hash('sha256', random_bytes(64) . time());
 
 		$user_details = [
-			'User'		   => $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+			'User'		   => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 			'OldEmail'   => $row['EmailAddress'],
 			'NewEmail'	 => mb_strtolower($_POST['EmailAddress'])
 		];
@@ -66,11 +66,11 @@ if (mb_strtolower($_POST['EmailAddress']) != mb_strtolower($row['EmailAddress'])
 		} catch (Exception $e) {
 			// Could not add to db
 			reportError($e);
-			$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError'] = '<p class="mb-0"><strong>We were unable to add your new email address to our awaiting confirmation list</strong></p><p class="mb-0">Please try again. If the issue persists, please contact support referencing <span class="font-monospace">Email Address Update Error</span></p>';
+			$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateError'] = '<p class="mb-0"><strong>We were unable to add your new email address to our awaiting confirmation list</strong></p><p class="mb-0">Please try again. If the issue persists, please contact support referencing <span class="font-monospace">Email Address Update Error</span></p>';
 		}
 		$id = $db->lastInsertId();
 
-		$name = getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+		$name = getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
 
 		$verifyLink = "email/auth/" . $id . "/" . $authCode;
 	  // PHP Email
@@ -84,13 +84,13 @@ if (mb_strtolower($_POST['EmailAddress']) != mb_strtolower($row['EmailAddress'])
 	  <p>You will need to use your email address, ' . $email . ' to sign in.</p>
 	  <p>If you did not make a change to your email address, please ignore this email and consider reseting your password.</p>
 	  <p>For help, send an email to <a
-	  href="mailto:' . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . '">' . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . '</a>/</p>
+	  href="mailto:' . htmlspecialchars(config('CLUB_EMAIL')) . '">' . htmlspecialchars(config('CLUB_EMAIL')) . '</a>/</p>
 	  ';
-	  notifySend($to, $subject, $sContent, $name, mb_strtolower($_POST['EmailAddress']), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME') . " Security"]);
-		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate'] = true;
-		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'] = mb_strtolower($_POST['EmailAddress']);
+	  notifySend($to, $subject, $sContent, $name, mb_strtolower($_POST['EmailAddress']), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => config('CLUB_NAME') . " Security"]);
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate'] = true;
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdateNew'] = mb_strtolower($_POST['EmailAddress']);
 	} else {
-		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate'] = false;
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailUpdate'] = false;
 	}
 }
 

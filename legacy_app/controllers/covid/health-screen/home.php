@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'COVID Health Screening';
 
 $squads = null;
@@ -9,7 +9,7 @@ $showSquadOpts = false;
 // Show if this user is a squad rep
 $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps WHERE User = ?");
 $getRepCount->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $rep = $getRepCount->fetchColumn() > 0;
 $showSquadOpts = $rep;
@@ -17,7 +17,7 @@ $showSquadOpts = $rep;
 if ($rep) {
   $squads = $db->prepare("SELECT SquadName, SquadID FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad WHERE squadReps.User = ? ORDER BY SquadFee DESC, SquadName ASC;");
   $squads->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
   ]);
 }
 
@@ -32,7 +32,7 @@ if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->has
 
 $getMembers = $db->prepare("SELECT MForename, MSurname, MemberID FROM members WHERE UserID = ? ORDER BY MForename ASC, MSurname ASC;");
 $getMembers->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 

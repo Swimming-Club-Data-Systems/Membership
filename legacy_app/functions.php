@@ -29,7 +29,7 @@ function bool($var)
  */
 function verifyUser($user, $password)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   $username = trim($user);
   $password = trim($password);
@@ -89,8 +89,8 @@ function notifySend($to, $subject, $emailMessage, $name = null, $emailaddress = 
   if (!isset($from['Email'])) {
     $from['Email'] = "noreply@" . getenv('EMAIL_DOMAIN');
   }
-  if (!isset($from['Name']) && isset(app()->tenant)) {
-    $from['Name'] = app()->tenant->getKey('CLUB_NAME');
+  if (!isset($from['Name']) && tenant()) {
+    $from['Name'] = config('CLUB_NAME');
   } else if (!isset($from['Name'])) {
     $from['Name'] = 'SCDS Membership MT';
   }
@@ -137,8 +137,8 @@ function notifySend($to, $subject, $emailMessage, $name = null, $emailaddress = 
   if ($client) {
     if (isset($from['ReplyTo'])) {
       $mail->addReplyTo($from['ReplyTo']['Email'], $from['ReplyTo']['Name']);
-    } else if (isset(app()->tenant)) {
-      $mail->addReplyTo(app()->tenant->getKey('CLUB_EMAIL'), app()->tenant->getKey('CLUB_NAME'));
+    } else if (tenant()) {
+      $mail->addReplyTo(config('CLUB_EMAIL'), config('CLUB_NAME'));
     }
     $mail->setFrom($from['Email'], $from['Name']);
     $mail->Subject = $subject;
@@ -192,11 +192,11 @@ function notifySend($to, $subject, $emailMessage, $name = null, $emailaddress = 
 
 function getAttendanceByID($id, $weeks = "all")
 {
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
-  $hideAttendance = !bool($tenant->getKey('HIDE_MEMBER_ATTENDANCE'));
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent' || $hideAttendance) {
+  $hideAttendance = !bool(config('HIDE_MEMBER_ATTENDANCE'));
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent' || $hideAttendance) {
 
     try {
       $fromDate = new DateTime('1970-01-01', new DateTimeZone('Europe/London'));
@@ -218,7 +218,7 @@ function getAttendanceByID($id, $weeks = "all")
 
 function mySwimmersTable($userID)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   // Get the information about the swimmer
   $swimmers = $db->prepare("SELECT members.MemberID, members.MForename, members.MSurname,
   members.ASAPaid, members.ClubPaid, users.Forename, users.Surname, users.EmailAddress,
@@ -339,8 +339,8 @@ function autoUrl($relative, $includeClub = true)
     $rootUrl = 'https://' . app('request')->hostname . '/';
   }
 
-  if ($includeClub && isset(app()->tenant) && app()->tenant->getDomain()) {
-    $rootUrl = 'https://' . app()->tenant->getDomain() . '/';
+  if ($includeClub && tenant() && tenant()->getLegacyTenant()->getDomain()) {
+    $rootUrl = 'https://' . tenant()->getLegacyTenant()->getDomain() . '/';
   }
 
   return rtrim($rootUrl . $relative, '/');
@@ -359,8 +359,8 @@ function webhookUrl($relative, $includeClub = true)
   // Returns an absolute URL
   $rootUrl = getenv('ROOT_URL');
 
-  if (isset(app()->tenant)) {
-    $club = app()->tenant;
+  if (tenant()) {
+    $club = tenant()->getLegacyTenant();
     if ($club && $includeClub) {
       if ($club->getCode()) {
         $rootUrl .= mb_strtolower($club->getCode()) . '/';
@@ -375,7 +375,7 @@ function webhookUrl($relative, $includeClub = true)
 
 function monthlyFeeCost($user, $format = "decimal")
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   $getUserMembers = $db->prepare("SELECT members.MemberID, members.MForename, members.MSurname FROM members WHERE UserID = ?");
 
@@ -427,7 +427,7 @@ function monthlyFeeCost($user, $format = "decimal")
   }
 
   // If is CLS handle discounts
-  if (app()->tenant->isCLS()) {
+  if (tenant()->getLegacyTenant()->isCLS()) {
     usort($discountMembers, function ($item1, $item2) {
       return $item2['fee'] <=> $item1['fee'];
     });
@@ -474,7 +474,7 @@ function monthlyFeeCost($user, $format = "decimal")
 
 function monthlyExtraCost($userID, $format = "decimal")
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $query = $db->prepare("SELECT extras.ExtraName, extras.ExtraFee FROM ((members
   INNER JOIN `extrasRelations` ON members.MemberID = extrasRelations.MemberID)
   INNER JOIN `extras` ON extras.ExtraID = extrasRelations.ExtraID) WHERE
@@ -498,7 +498,7 @@ function monthlyExtraCost($userID, $format = "decimal")
 
 function swimmers($userID, $fees = false)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $getSwimmers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM members WHERE members.UserID = ?");
   $getSwimmers->execute([
     $userID,
@@ -534,7 +534,7 @@ function swimmers($userID, $fees = false)
 
 function paymentHistory($user, $type = null)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT * FROM `payments` WHERE `UserID` = ? ORDER BY `PaymentID` DESC LIMIT 0, 5;");
   $sql->execute([$user]);
   $row = $sql->fetch(PDO::FETCH_ASSOC);
@@ -577,7 +577,7 @@ function paymentHistory($user, $type = null)
 
 function feesToPay($user)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT * FROM `paymentsPending` WHERE `UserID` = ? AND `PMkey` IS NULL AND `Status` = 'Pending' ORDER BY `Date` DESC LIMIT 0, 30;");
   $sql->execute([$user]);
   $row = $sql->fetch(PDO::FETCH_ASSOC);
@@ -620,7 +620,7 @@ function feesToPay($user)
 
 function getBillingDate($user)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT * FROM `paymentSchedule` WHERE `UserID` = ?;");
   $sql->execute([$user]);
   $row = $sql->fetch(PDO::FETCH_ASSOC);
@@ -644,7 +644,7 @@ function getBillingDate($user)
 
 function userHasMandates($user)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT COUNT(*) FROM `paymentPreferredMandate` WHERE `UserID` = ?");
   $sql->execute([$user]);
   return $sql->fetchColumn() > 0;
@@ -652,7 +652,7 @@ function userHasMandates($user)
 
 function paymentExists($payment)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT COUNT(*) FROM `payments` WHERE `PMkey` = ?;");
   $sql->execute([$payment]);
   if ($sql->fetchColumn() == 1) {
@@ -664,7 +664,7 @@ function paymentExists($payment)
 
 function mandateExists($mandate)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT COUNT(*) FROM `paymentMandates` WHERE `Mandate` = ?");
   $sql->execute([$mandate]);
 
@@ -678,7 +678,7 @@ function mandateExists($mandate)
 function updatePaymentStatus($PMkey)
 {
   $client = null;
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
   $client = SCDS\GoCardless\Client::get();
   $sql2bool = $payment = $status = null;
@@ -711,7 +711,7 @@ function updatePaymentStatus($PMkey)
       $sql2bool = false;
     }
   } else if ($status == "failed") {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     try {
       $query = $db->prepare("SELECT payments.UserID, Name, Amount, Forename, Surname FROM payments INNER JOIN users ON payments.UserID = users.UserID WHERE PMkey = ?");
       $query->execute([$PMkey]);
@@ -754,7 +754,7 @@ function updatePaymentStatus($PMkey)
           $message .= '<p>We have retried this payment request three times and it has still not succeeded. As a result, you will need to contact the club treasurer to take further action. Failure to pay may lead to the suspension or termination of your membership.</p>';
         }
 
-        $message .= '<p>Kind regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
         $query = $db->prepare("INSERT INTO notify (UserID, Status, Subject, Message, ForceSend, EmailType) VALUES (?, ?, ?, ?, ?, ?)");
         $query->execute([$details['UserID'], 'Queued', $subject, $message, 1, 'Payments']);
       }
@@ -766,7 +766,7 @@ function updatePaymentStatus($PMkey)
       echo "Failure in event process";
     }
   } else if ($status == "customer_approval_denied") {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     try {
       $query = $db->prepare("SELECT payments.UserID, Name, Amount, Forename, Surname FROM payments INNER JOIN users ON payments.UserID = users.UserID WHERE PMkey = ?");
       $query->execute([$PMkey]);
@@ -775,7 +775,7 @@ function updatePaymentStatus($PMkey)
       $subject = "Payment Failed for " . $details['Name'];
       $message = '
       <p>Your Direct Debit payment of £' . number_format($details['Amount'] / 100, 2, '.', '') . ', ' . $details['Name'] . ' has failed because customer approval was denied. This means your bank requires two people two authorise a direct debit mandate on your account and that this authorisation has not been given. You will be contacted by the treasurer to arrange payment.</p>
-      <p>Kind regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+      <p>Kind regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
       $query = $db->prepare("INSERT INTO notify (UserID, Status, Subject, Message, ForceSend, EmailType) VALUES (?, ?, ?, ?, ?, ?)");
       $query->execute([$details['UserID'], 'Queued', $subject, $message, 1, 'Payments']);
 
@@ -785,7 +785,7 @@ function updatePaymentStatus($PMkey)
       $sql2bool = false;
     }
   } else if ($status == "charged_back") {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     try {
       $query = $db->prepare("SELECT payments.UserID, Name, Amount, Forename, Surname FROM payments INNER JOIN users ON payments.UserID = users.UserID WHERE PMkey = ?");
       $query->execute([$PMkey]);
@@ -795,7 +795,7 @@ function updatePaymentStatus($PMkey)
       $message = '
       <p>Your Direct Debit payment of �' . number_format($details['Amount'] / 100, 2, '.', '') . ', ' . $details['Name'] . ' has been charged back to us. You will be contacted by the treasurer to arrange payment of any outstanding amount.</p>
       <p>Please note that fraudulently charging back a Direct Debit payment is a criminal offence, covered by the 2006 Fraud Act. We recommend that if your are unsure about the amount we are charging you, you should try and contact us first.</p>
-      <p>Kind regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+      <p>Kind regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
       $query = $db->prepare("INSERT INTO notify (UserID, Status, Subject, Message, ForceSend, EmailType) VALUES (?, ?, ?, ?, ?, ?)");
       $query->execute([$details['UserID'], 'Queued', $subject, $message, 1, 'Payments']);
 
@@ -879,7 +879,7 @@ function paymentStatusString($status, $stripeFailureCode = null)
 
 function bankDetails($user, $detail)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT * FROM `paymentPreferredMandate` INNER JOIN `paymentMandates` ON paymentPreferredMandate.MandateID = paymentMandates.mandateID WHERE paymentPreferredMandate.UserID = ?;");
   $sql->execute([$user]);
 
@@ -909,7 +909,7 @@ function bankDetails($user, $detail)
 
 function getUserName($user)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT `Forename`, `Surname` FROM `users` WHERE `UserID` = ?;");
   $sql->execute([$user]);
   $row = $sql->fetch(PDO::FETCH_ASSOC);
@@ -921,7 +921,7 @@ function getUserName($user)
 
 function getSwimmerName($swimmer)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = $db->prepare("SELECT `MForename`, `MSurname` FROM `members` WHERE `MemberID` = ?;");
   $row = $sql->fetch(PDO::FETCH_ASSOC);
   if ($row != null) {
@@ -932,7 +932,7 @@ function getSwimmerName($swimmer)
 
 function setupPhotoPermissions($id)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   try {
     $sql = $db->prepare("SELECT COUNT(*) FROM `memberPhotography` WHERE `MemberID` = ?;");
     $sql->execute([$id]);
@@ -949,7 +949,7 @@ function setupPhotoPermissions($id)
 
 function setupMedicalInfo($id)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   try {
     $sql = $db->prepare("SELECT * FROM `memberMedical` WHERE `MemberID` = ?;");
     $sql->execute([$id]);
@@ -1080,7 +1080,7 @@ function getTimes($asa)
 
 function user_needs_registration($user)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   // Check for legacy system
   try {
@@ -1114,7 +1114,7 @@ function user_needs_registration($user)
 
 function getPostContent($id)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = "SELECT `Content` FROM `posts` WHERE `ID` = ?";
   try {
     $query = $db->prepare($sql);
@@ -1137,7 +1137,7 @@ function getPostContent($id)
 
 function isSubscribed($user, $email_type)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $sql = "SELECT `Subscribed` FROM `users` LEFT JOIN `notifyOptions` ON `users`.`UserID` = `notifyOptions`.`UserID` WHERE (`users`.`UserID` = :user AND `EmailType` = :type) OR (`users`.`UserID` = :user AND `EmailType` IS NULL)";
   $array = [
     'user' => $user,
@@ -1178,8 +1178,8 @@ function isSubscribed($user, $email_type)
 
 function isAbsolutelySubscribed($user, $type)
 {
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $get = $db->prepare("SELECT Subscribed FROM notifyOptions INNER JOIN users ON users.UserID = notifyOptions.UserID WHERE notifyOptions.UserID = ? AND Tenant = ? AND EmailType = ?");
   $get->execute([
@@ -1197,9 +1197,9 @@ function isAbsolutelySubscribed($user, $type)
 
 function updateSubscription($post, $list, $user = null)
 {
-  $db = app()->db;
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
-    $user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+  $db = DB::connection()->getPdo();
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
+    $user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
   }
   $email = 0;
   $email_update = false;
@@ -1209,7 +1209,7 @@ function updateSubscription($post, $list, $user = null)
 
   if ($email != isSubscribed($user, $list)) {
     $email_update = true;
-    $_SESSION['TENANT-' . app()->tenant->getId()]['OptionsUpdate'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['OptionsUpdate'] = true;
   }
 
   $sql = "SELECT COUNT(*) FROM `notifyOptions` WHERE `UserID` = ? AND `EmailType` = ?";
@@ -1242,7 +1242,7 @@ function updateSubscription($post, $list, $user = null)
 
 function getUserOption($userID, $option)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $query = $db->prepare("SELECT `Value` FROM userOptions WHERE User = ? AND `Option` = ?");
   $query->execute([$userID, $option]);
   $result = $query->fetchColumn();
@@ -1259,7 +1259,7 @@ function setUserOption($userID, $option, $value)
     $value = null;
   }
   try {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $query = $db->prepare("SELECT COUNT(*) FROM userOptions WHERE User = ? AND `Option` = ?");
     $query->execute([$userID, $option]);
     $result = $query->fetchColumn();
@@ -1280,11 +1280,11 @@ function setUserOption($userID, $option, $value)
 $count = 0;
 
 /*
-if ( (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) || empty($_SESSION['TENANT-' . app()->tenant->getId()]['Username'])) && ($preventLoginRedirect != true)) {
+if ( (empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) || empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Username'])) && ($preventLoginRedirect != true)) {
   // Allow access to main page
   header("Location: " . autoUrl("login.php"));
 }
-elseif (((!empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) || (!empty($_SESSION['TENANT-' . app()->tenant->getId()]['Username']))) && ($preventLoginRedirect == true)) {
+elseif (((!empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) || (!empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Username']))) && ($preventLoginRedirect == true)) {
   // Don't show login etc if logged in
   header("Location: " . autoUrl(""));
 }
@@ -1364,7 +1364,7 @@ function getCardBrand($brand)
 
 function createOrUpdatePayout($payout, $update = false)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
   $client = SCDS\GoCardless\Client::get();
@@ -1386,7 +1386,7 @@ function createOrUpdatePayout($payout, $update = false)
         $payout->deducted_fees,
         $payout->currency,
         $payout->arrival_date,
-        app()->tenant->getId(),
+        tenant()->getLegacyTenant()->getId(),
       ]);
     } catch (Exception $e) {
       reportError($e);
@@ -1414,7 +1414,7 @@ function createOrUpdatePayout($payout, $update = false)
 
 function getSwimmerParent($member)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $query = $db->prepare("SELECT UserID FROM members WHERE MemberID = ?");
   $query->execute([$member]);
   return $query->fetchColumn();
@@ -1423,14 +1423,14 @@ function getSwimmerParent($member)
 function stripeDirectDebit($absolute = false)
 {
   if ($absolute) {
-    return getenv('STRIPE') && app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT');
+    return getenv('STRIPE') && config('USE_STRIPE_DIRECT_DEBIT');
   }
-  return getenv('STRIPE') && app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT');
+  return getenv('STRIPE') && config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || config('USE_STRIPE_DIRECT_DEBIT');
 }
 
 function stripeSetUpDirectDebit()
 {
-  return getenv('STRIPE') && app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP');
+  return getenv('STRIPE') && config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP');
 }
 
 function getWalletName($name)
@@ -1513,7 +1513,7 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
       'expand' => ['customer', 'payment_method']
     ],
     [
-      'stripe_account' => app()->tenant->getStripeAccount()
+      'stripe_account' => tenant()->getLegacyTenant()->getStripeAccount()
     ]
   );
 
@@ -1530,13 +1530,13 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
   // If on session, go to success page
   // Webhook handles fulfillment
   if ($onSession && $intent->status == 'succeeded') {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo'] = $databaseId;
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent']);
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['PaidEntries']);
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID']);
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewCard']);
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo'] = $databaseId;
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PaidEntries']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewCard']);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentSuccess'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentSuccess'] = true;
 
     header("Location: " . autoUrl("galas/pay-for-entries/success"));
     return true;
@@ -1557,7 +1557,7 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
   ]);
   $userId = $getUser->fetchColumn();
   if ($userId == null) {
-    $userId = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+    $userId = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
   }
 
   if (isset($intent->charges->data[0]->payment_method_details->card->wallet)) {
@@ -1710,8 +1710,8 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
       $body = $e->getJsonBody();
       $err  = $body['error']['message'];
       if ($onSession) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['PayCardError'] = true;
-        $_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage'] = $err;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardError'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardErrorMessage'] = $err;
         header("Location: " . autoUrl("galas/pay-for-entries/checkout"));
       } else {
         reportError($e);
@@ -1783,7 +1783,7 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
       }
 
       if ($onSession) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['CompletedEntryInfo'] = $databaseId;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CompletedEntryInfo'] = $databaseId;
       }
 
       $message = "<p>Here is your payment receipt for your gala entries.</p>";
@@ -1868,7 +1868,7 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
       $sendingEmail = "noreply@" . getenv('EMAIL_DOMAIN');
       notifySend(null, 'Payment Receipt', $message, $name, $email, [
         "Email" => $sendingEmail,
-        "Name" => app()->tenant->getKey('CLUB_NAME'),
+        "Name" => config('CLUB_NAME'),
         "Unsub" => [
           "Allowed" => false,
           "User" => $userId,
@@ -1885,12 +1885,12 @@ function handleCompletedGalaPayments($paymentIntent, $onSession = false)
       $db->commit();
 
       if ($onSession) {
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent']);
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['PaidEntries']);
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID']);
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewCard']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PaidEntries']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewCard']);
 
-        $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentSuccess'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentSuccess'] = true;
 
         header("Location: " . autoUrl("galas/pay-for-entries/success"));
       } else {

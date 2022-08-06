@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 use function GuzzleHttp\json_encode;
 
@@ -17,7 +17,7 @@ try {
   } catch (Exception $e) {
     throw new Exception('No such member under this tenant');
   }
-  $tenant = app()->tenant;
+  $tenant = tenant()->getLegacyTenant();
 
   // Handle move logic
   if ($_POST['event'] == 'move') {
@@ -109,7 +109,7 @@ try {
         $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars($member->getForename()) . ' will be moving to ' . htmlspecialchars($join->getName()) . ' and leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
       $statusMessage = 'We\'ve scheduled the squad move for ' . $member->getForename() . '.';
@@ -199,7 +199,7 @@ try {
         $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars($member->getForename()) . ' will be joining ' . htmlspecialchars($join->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
       $statusMessage = 'We\'ve scheduled ' . $member->getForename() . ' joining their new squad.';
@@ -284,7 +284,7 @@ try {
         $subject = $member->getFullName() . ' is leaving ' . $leave->getName();
         $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re writing to let you know that ' . htmlspecialchars($member->getForename()) . ' will be leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(config('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
 

@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Get mandates
 $getMandates = $db->prepare("SELECT ID, Mandate, Last4, SortCode, `Address`, Reference, `URL`, `Status` FROM stripeMandates WHERE Customer = ? AND (`Status` = 'accepted' OR `Status` = 'pending') ORDER BY CreationTime DESC");
@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>We've set up your new direct debit</strong>
@@ -62,7 +62,7 @@ include BASE_PATH . "views/header.php";
             At busy times, your mandate may take a few minutes to appear in our systems.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeDDSuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeDDSuccess']);
       } ?>
 
       <?php if ($mandate) {

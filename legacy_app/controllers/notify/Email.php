@@ -2,29 +2,29 @@
 $pagetitle = "Notify Composer";
 $use_white_background = true;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` WHERE `Tenant` = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
   $squads->execute([
     $tenant->getId()
   ]);
 } else {
   $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` INNER JOIN squadReps ON squadReps.Squad = squads.SquadID WHERE squadReps.User = ? AND `Tenant` = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
-  $squads->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $tenant->getId()]);
+  $squads->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $tenant->getId()]);
 }
 
 $lists = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` WHERE `Tenant` = ? ORDER BY `Name` ASC;");
   $lists->execute([
     $tenant->getId()
   ]);
 } else {
   $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` INNER JOIN listSenders ON listSenders.List = targetedLists.ID WHERE listSenders.User = ? AND `Tenant` = ? ORDER BY `Name` ASC;");
-  $lists->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $tenant->getId()]);
+  $lists->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $tenant->getId()]);
 }
 
 $galas = $db->prepare("SELECT GalaName, GalaID FROM `galas` WHERE GalaDate >= ? AND `Tenant` = ? ORDER BY `GalaName` ASC;");
@@ -33,7 +33,7 @@ $galas->execute([$date->format('Y-m-d'), $tenant->getId()]);
 
 $query = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WHERE
 UserID = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $curUserInfo = $query->fetch(PDO::FETCH_ASSOC);
 
 $senderNames = explode(' ', $curUserInfo['Forename'] . ' ' . $curUserInfo['Surname']);
@@ -57,7 +57,7 @@ if ($renewal) {
   $pendingRenewal = true;
 }
 
-if (!app()->tenant->isCLS()) {
+if (!tenant()->getLegacyTenant()->isCLS()) {
   $fromEmail .= '.' . urlencode(mb_strtolower(str_replace(' ', '', getenv('CLUB_CODE'))));
 }
 
@@ -65,15 +65,15 @@ $fromEmail .= '@' . getenv('EMAIL_DOMAIN');
 
 function fieldChecked($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name]) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name])) {
     return ' checked ';
   }
 }
 
 function fieldValue($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
-    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name])) {
+    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'][$name]) . '"';
   }
 }
 
@@ -109,45 +109,45 @@ include BASE_PATH . "views/notifyMenu.php";
     </p>
   </div>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']) { ?>
     <div class="alert alert-success">
       <p class="mb-0"><strong>Results have been uploaded</strong>.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadSuccess']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadSuccess']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>An integrity or idempotency error has occurred</strong></p>
       <p class="mb-0">We were unable to verify that you submitted the form. Please try again.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>There was a problem with the file uploaded</strong>. Please try again.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['UploadError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UploadError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>A file you uploaded was too large</strong>. The maximum size for an individual file is 300000 bytes.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['TooLargeError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TooLargeError']);
   } ?>
 
-  <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']) { ?>
+  <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']) { ?>
     <div class="alert alert-danger">
       <p class="mb-0"><strong>The files you uploaded were collectively too large</strong>. Attachments may not exceed a total of 10 megabytes in size.</p>
     </div>
   <?php
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError']);
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError']);
   } ?>
 
   <form method="post" id="notify-form" onkeypress="return event.keyCode != 13;" enctype="multipart/form-data" novalidate>
@@ -203,7 +203,7 @@ include BASE_PATH . "views/notifyMenu.php";
       </div>
     </div>
 
-    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
       <div class="mb-3">
         <label>To members entered in the following galas...</label>
         <div class="row">
@@ -226,11 +226,11 @@ include BASE_PATH . "views/notifyMenu.php";
         <div class="mb-3">
           <label class="form-label" for="from">Send message as</label>
           <div class="form-check">
-            <input type="radio" id="from-club" name="from" class="form-check-input" value="club-sending-account" <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>checked<?php } ?> required>
-            <label class="form-check-label" for="from-club"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></label>
+            <input type="radio" id="from-club" name="from" class="form-check-input" value="club-sending-account" <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>checked<?php } ?> required>
+            <label class="form-check-label" for="from-club"><?= htmlspecialchars(config('CLUB_NAME')) ?></label>
           </div>
           <div class="form-check">
-            <input type="radio" id="from-user" name="from" class="form-check-input" value="current-user" <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>checked<?php } ?>>
+            <input type="radio" id="from-user" name="from" class="form-check-input" value="current-user" <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>checked<?php } ?>>
             <label class="form-check-label" for="from-user"><?= htmlspecialchars($curUserInfo['Forename'] . ' ' . $curUserInfo['Surname']) ?></label>
           </div>
           <div class="invalid-feedback">
@@ -247,7 +247,7 @@ include BASE_PATH . "views/notifyMenu.php";
             <label class="form-check-label" for="ReplyTo-Club">Main club address</label>
           </div>
           <div class="form-check">
-            <input type="radio" id="ReplyTo-Me" name="ReplyToMe" class="form-check-input" value="1" <?php if (!getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress')) { ?>disabled<?php } ?>>
+            <input type="radio" id="ReplyTo-Me" name="ReplyToMe" class="form-check-input" value="1" <?php if (!getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NotifyReplyAddress')) { ?>disabled<?php } ?>>
             <label class="form-check-label" for="ReplyTo-Me">My reply-to email address</label>
           </div>
           <small class="form-text text-muted">
@@ -276,7 +276,7 @@ include BASE_PATH . "views/notifyMenu.php";
           <span class="font-monospace">User Name</span>,".
         </em>
       </p>
-      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars(autoUrl("public/css/tinymce.css")) ?>" data-document-base-url="<?= htmlspecialchars(autoUrl("notify/new/")) ?>" data-images-upload-url="<?= htmlspecialchars(autoUrl("notify/new/image-upload")) ?>" required><?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message'])) { ?><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message']) ?><?php } ?></textarea>
+      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars(autoUrl("public/css/tinymce.css")) ?>" data-document-base-url="<?= htmlspecialchars(autoUrl("notify/new/")) ?>" data-images-upload-url="<?= htmlspecialchars(autoUrl("notify/new/image-upload")) ?>" required><?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData']['message'])) { ?><?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData']['message']) ?><?php } ?></textarea>
     </div>
 
     <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
@@ -306,7 +306,7 @@ include BASE_PATH . "views/notifyMenu.php";
     </div>
     <p class="d-none text-danger mt-n2" id="file-warning-message"></p>
 
-    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas") { ?>
+    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas") { ?>
 
       <div class="mb-3">
         <div class="form-check">
@@ -339,7 +339,7 @@ include BASE_PATH . "views/notifyMenu.php";
         <?php } ?>
       </select>
       <small id="subscription-category-help" class="form-text text-muted">
-        Emails will only be sent to those in selected groups who have opted in to receive messages in the above category.<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas") { ?> <strong>Force Send</strong> will override this.<?php } ?> Additonial Recipients excluded.
+        Emails will only be sent to those in selected groups who have opted in to receive messages in the above category.<?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas") { ?> <strong>Force Send</strong> will override this.<?php } ?> Additonial Recipients excluded.
       </small>
     </div>
 

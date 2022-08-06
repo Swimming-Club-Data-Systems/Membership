@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 use Respect\Validation\Validator as v;
 
@@ -34,7 +34,7 @@ if (trim($_POST['email-addr']) != $parent['Email'] && v::email()->validate($_POS
   $query->execute([trim($_POST['email-addr']), $hash]);
 } else if (!v::email()->validate($_POST['email-addr'])) {
   // cannot send email
-  $_SESSION['TENANT-' . app()->tenant->getId()]['EmailInvalid'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailInvalid'] = true;
 }
 
 $query = $db->prepare("SELECT ID, First, Last, SquadSuggestion, SquadName, SquadFee FROM joinSwimmers INNER JOIN squads ON squads.SquadID = joinSwimmers.SquadSuggestion WHERE Parent = ? AND SquadSuggestion IS NOT NULL AND joinSwimmers.Tenant = ? ORDER BY First ASC, Last ASC");
@@ -70,6 +70,6 @@ if (sizeof($swimmers) > 2) {
 $email .= '
 <p>If you wish to complete registration and join the club, <a href="' . autoUrl("register/ac/" . $parent['Hash']) . '">please click here</a>.</p>';
 
-notifySend(null, 'Join ' . app()->tenant->getKey('CLUB_NAME'), $email, $parent['First'] . ' ' . $parent['Last'], $_POST['email-addr']);
+notifySend(null, 'Join ' . config('CLUB_NAME'), $email, $parent['First'] . ' ' . $parent['Last'], $_POST['email-addr']);
 
 header("Location: " . currentUrl());

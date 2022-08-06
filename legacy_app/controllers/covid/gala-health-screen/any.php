@@ -1,21 +1,21 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $pagetitle = 'COVID Return to Competition Screening';
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
 $getGalas = $db->prepare("SELECT GalaName, GalaID FROM galas WHERE Tenant = ? AND GalaDate >= ? ORDER BY GalaDate ASC, GalaName ASC");
 $getGalas->execute([
-  app()->tenant->getId(),
+  tenant()->getLegacyTenant()->getId(),
   $date->format('Y-m-d'),
 ]);
 $gala = $getGalas->fetch(PDO::FETCH_ASSOC);
 
 $getMembers = $db->prepare("SELECT MForename, MSurname, members.MemberID FROM members WHERE UserID = ? ORDER BY MForename ASC, MSurname ASC;");
 $getMembers->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 ]);
 $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 
@@ -61,7 +61,7 @@ include BASE_PATH . 'views/header.php';
 
             <?php
             $getMembers->execute([
-              $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+              $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
             ]);
             ?>
 

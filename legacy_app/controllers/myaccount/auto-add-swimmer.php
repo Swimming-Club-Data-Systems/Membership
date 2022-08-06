@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 use Respect\Validation\Validator as v;
 
 // Registration Form Handler
 
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 $asaNumber = trim($asa);
 $accessKey = trim($acs);
 
@@ -42,7 +42,7 @@ if ($row['UserID'] != null) {
   $message = "
   <h1>Hello " . htmlspecialchars($oldUser['Forename']) . "</h1>
   <p>Your swimmer, " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . " has been removed from your account.</p>
-  <p>If this was not you, contact <a  href=\"mailto:" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
+  <p>If this was not you, contact <a  href=\"mailto:" . htmlspecialchars(config('CLUB_EMAIL')) . "\">" . htmlspecialchars(config('CLUB_EMAIL')) . "</a> as soon as possible</p>";
   notifySend($oldUser['EmailAddress'], $row['MForename'] . " has been
   removed", $message, $oldUser['Forename'] . " " . $oldUser['Surname'],
   $oldUser['EmailAddress']);
@@ -77,15 +77,15 @@ with your account.</p>
 <ul>
   <li>" . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "</li>
   <li>Swim England Number: " .htmlspecialchars($row['ASANumber']) . "</li>
-  <li>" . htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME')) . " Member ID: " . htmlspecialchars($row['MemberID']) . "</li>
+  <li>" . htmlspecialchars(config('CLUB_SHORT_NAME')) . " Member ID: " . htmlspecialchars($row['MemberID']) . "</li>
 </ul>
-<p>If this was not you, contact <a href=\"mailto:"  . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">
-"  . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
+<p>If this was not you, contact <a href=\"mailto:"  . htmlspecialchars(config('CLUB_EMAIL')) . "\">
+"  . htmlspecialchars(config('CLUB_EMAIL')) . "</a> as soon as possible</p>";
 notifySend($row['EmailAddress'], "You've added " . $row['MForename'] . "
 to your account", $message, $row['Forename'] . " " . $row['Surname'],
 $row['EmailAddress']);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['AddSwimmerSuccessState'] = "
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSwimmerSuccessState'] = "
 <div class=\"alert alert-success\">
 <p class=\"mb-0\"><strong>We were able to successfully add your swimmer</strong></p>
 <p>We've sent an email confirming this to you.</p>

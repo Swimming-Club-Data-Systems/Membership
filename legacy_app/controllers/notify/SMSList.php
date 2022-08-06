@@ -2,8 +2,8 @@
 
 $pagetitle = "SMS Lists";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = $db->prepare("SELECT SquadName `name`, SquadID id FROM `squads` WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
 $squads->execute([

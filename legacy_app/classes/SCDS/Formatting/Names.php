@@ -8,12 +8,12 @@ class Names
   {
 
     $style = 'FL';
-    if (app()->tenant && app()->tenant->getKey('DISPLAY_NAME_FORMAT')) {
-      $style = app()->tenant->getKey('DISPLAY_NAME_FORMAT');
+    if (tenant()->getLegacyTenant() && config('DISPLAY_NAME_FORMAT')) {
+      $style = config('DISPLAY_NAME_FORMAT');
     }
 
     if (app()->user && app()->user->getUserOption('DISPLAY_NAME_FORMAT')) {
-      $style = app()->tenant->getUserOption('DISPLAY_NAME_FORMAT');
+      $style = tenant()->getLegacyTenant()->getUserOption('DISPLAY_NAME_FORMAT');
     }
 
     if ($style == 'L,F') {

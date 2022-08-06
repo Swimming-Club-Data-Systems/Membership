@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Verify swimmer
 $query = $db->prepare("SELECT COUNT(*) FROM joinSwimmers WHERE ID = ? AND Tenant = ?");
@@ -46,5 +46,5 @@ if ($squad == "null") {
   ]);
 }
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['TrialRecommendationsUpdated'] = true;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TrialRecommendationsUpdated'] = true;
 header("Location: " . currentUrl());

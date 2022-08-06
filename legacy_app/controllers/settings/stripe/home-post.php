@@ -1,9 +1,9 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
-$at = app()->tenant->getStripeAccount();
+$at = tenant()->getLegacyTenant()->getStripeAccount();
 
 $stripeAccount = \Stripe\Account::retrieve($at);
 $supportsDirectDebit = isset($stripeAccount->capabilities->bacs_debit_payments) && $stripeAccount->capabilities->bacs_debit_payments == 'active';
@@ -22,7 +22,7 @@ if ($tenant->getStripeAccount()) {
     $tenant->setKey('ALLOW_DIRECT_DEBIT_OPT_OUT', (int) false);
   }
 
-  if (!$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT') && $supportsDirectDebit) {
+  if (!config('USE_STRIPE_DIRECT_DEBIT') && $supportsDirectDebit) {
 
     if (isset($_POST['ALLOW_STRIPE_DIRECT_DEBIT_SET_UP'])) {
       $tenant->setKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP', (int) bool($_POST['ALLOW_STRIPE_DIRECT_DEBIT_SET_UP']));

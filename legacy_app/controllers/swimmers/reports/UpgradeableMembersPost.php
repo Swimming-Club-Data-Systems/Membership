@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $checkCategory = $db->prepare("SELECT COUNT(*) FROM `clubMembershipClasses` WHERE `Type` = ? AND `ID` = ? AND `Tenant` = ?");
 
@@ -55,10 +55,10 @@ try {
 
   $db->commit();
   if ($changed) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSavedSuccessfully'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSavedSuccessfully'] = true;
   }
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSaveError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CatChangesSaveError'] = true;
   $db->rollBack();
 }
 

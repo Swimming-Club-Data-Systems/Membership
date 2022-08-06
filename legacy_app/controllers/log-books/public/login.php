@@ -2,8 +2,8 @@
 $pagetitle = "Member Login - Log Books";
 
 $username = "";
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-SE-ID'])) {
-  $username = $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-SE-ID'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-SE-ID'])) {
+  $username = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-SE-ID'];
 }
 
 $use_white_background = true;
@@ -17,16 +17,16 @@ include BASE_PATH . "views/header.php";
   <div class="row justify-content-between">
     <div class="col-md-8 col-lg-5">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoginError'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>We could not log you in</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoginError']) ?>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LogBooks-MemberLoginError']);
       } ?>
 
       <form method="post" action="<?= autoUrl("log-books/login") ?>" name="loginform" id="loginform" class="needs-validation" novalidate>
@@ -56,13 +56,13 @@ include BASE_PATH . "views/header.php";
             </small>
           </div>
         </div>
-        <input type="hidden" name="target" value="<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL']) ?>">
+        <input type="hidden" name="target" value="<?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['TARGET_URL']) ?>">
         <?= SCDS\CSRF::write() ?>
         <input type="hidden" name="SessionSecurity" value="<?= htmlspecialchars(session_id()) ?>">
         <p class="mb-5"><input type="submit" name="login" id="login" value="Login" class="btn btn-lg btn-primary"></p>
       </form>
 
-      <?php if (app()->tenant->isCLS()) { ?>
+      <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
         <p class="small mb-0">
           Support Helpline: <a class="" href="mailto:support@chesterlestreetasc.co.uk">support@chesterlestreetasc.co.uk</a>
         </p>
@@ -86,7 +86,7 @@ include BASE_PATH . "views/header.php";
 
       <!--
       <p class="small mb-5">
-        Unauthorised access to or misuse of this system is prohibited and constitutes an offence under the Computer Misuse Act 1990. If you disclose any information obtained through this system without authority then <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> or Swimming Club Data Systems may take legal action against you.
+        Unauthorised access to or misuse of this system is prohibited and constitutes an offence under the Computer Misuse Act 1990. If you disclose any information obtained through this system without authority then <?= htmlspecialchars(config('CLUB_NAME')) ?> or Swimming Club Data Systems may take legal action against you.
       </p>
       -->
 
@@ -115,6 +115,6 @@ $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");
 $footer->render();
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 
 ?>

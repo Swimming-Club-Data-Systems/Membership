@@ -7,8 +7,8 @@ if (!SCDS\CSRF::verify()) {
 $pagetitle = "Password Reset";
 include BASE_PATH . "views/header.php";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userDetails = mb_strtolower(trim($_POST['email-address']));
 $captcha = trim($_POST['g-recaptcha-response']);
@@ -80,7 +80,7 @@ if (!$result->success) { ?>
 
     if (notifySend(null, $subject, $sContent, $row['Forename'] . " " .
       $row['Surname'], $row['EmailAddress'], ["Email" =>
-    "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME') . " Account Help"])) {
+    "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => config('CLUB_NAME') . " Account Help"])) {
   ?>
       <div class="container-fluid">
         <div class="row justify-content-center">

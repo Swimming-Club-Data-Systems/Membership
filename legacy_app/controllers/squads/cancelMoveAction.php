@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 use Respect\Validation\Validator as v;
 
@@ -32,7 +32,7 @@ if ($email_info) {
 	$subject = "Squad Move For " . $swimmer . " Cancelled";
 	$message = '<p>The squad move for ' . $swimmer . ' to ' . $squad . ' Squad has been cancelled.</p>';
   $message = '<p>They will instead remain in their current squad.</p>';
-	$message .= '<p>Kind Regards,<br>The ' . app()->tenant->getKey('CLUB_NAME') . ' Team</p>';
+	$message .= '<p>Kind Regards,<br>The ' . config('CLUB_NAME') . ' Team</p>';
 
 	try {
 		$notify_query->execute([

@@ -20,25 +20,25 @@ $number = setNumberIfUnset(isset($number));
 
 try {
 	$text = "0";
-	if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["text"])) {
-		$text = $_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["text"];
+	if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["text"])) {
+		$text = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["text"];
 	} 
 
 	$size = "300";
-	if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["size"])) {
-		$size = $_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["size"];
+	if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["size"])) {
+		$size = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["size"];
 	}
 	if (isset($size_url) && $size_url > 0) {
 		$size = $size_url;
 	}
 
 	$margin = 10;
-	if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["text"])) {
-		$margin = $_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["text"];
+	if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["text"])) {
+		$margin = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["text"];
 	}
 
 	$ec = false;
-	if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["error"]) && $_SESSION['TENANT-' . app()->tenant->getId()]['qr'][$number]["error"] == "true") {
+	if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["error"]) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][$number]["error"] == "true") {
 		$ec = true;
 	}
 

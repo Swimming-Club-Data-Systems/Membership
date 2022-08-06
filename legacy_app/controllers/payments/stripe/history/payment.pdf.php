@@ -98,7 +98,7 @@ function paymentIntentStatus($value)
   }
 }
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $payment = $db->prepare("SELECT * FROM ((stripePayments LEFT JOIN stripePaymentItems ON stripePaymentItems.Payment = stripePayments.ID) INNER JOIN users ON stripePayments.User = users.UserID) WHERE stripePayments.ID = ?");
 $payment->execute([$id]);
@@ -108,7 +108,7 @@ $paymentItems->execute([$id]);
 
 $pm = $payment->fetch(PDO::FETCH_ASSOC);
 
-if ($pm == null || ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Admin' && $pm['User'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+if ($pm == null || ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Admin' && $pm['User'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
   halt(404);
 }
 
@@ -159,7 +159,7 @@ ob_start(); ?>
 
       <p>
         For help contact us via<br>
-        <?= htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) ?>
+        <?= htmlspecialchars(config('CLUB_EMAIL')) ?>
       </p>
     </div>
   </div>
@@ -176,7 +176,7 @@ ob_start(); ?>
   </div>
 
   <p>
-    Thank you for your payment to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+    Thank you for your payment to <?= htmlspecialchars(config('CLUB_NAME')) ?>.
   </p>
 
   <p>

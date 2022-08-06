@@ -4,7 +4,7 @@
  * New single member view and edit page
  */
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
@@ -18,12 +18,12 @@ try {
 
 $user = $member->getUser();
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && (!$user || $user->getId() != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && (!$user || $user->getId() != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
   halt(404);
 }
 
 $manageSquads = false;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Coach') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Coach') {
   $manageSquads = true;
 }
 
@@ -103,14 +103,14 @@ include BASE_PATH . 'views/header.php';
         <div class="mb-3 d-lg-none"></div>
       </div>
       <div class="text-lg-end col-lg">
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
           <p>
             <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
               Edit basic details
             </a>
           </p>
         <?php } ?>
-        <?php if ($user && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+        <?php if ($user && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
           <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Quick actions
@@ -119,7 +119,7 @@ include BASE_PATH . 'views/header.php';
               <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/enter-gala")) ?>">Enter a gala</a>
               <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("users/" . $user->getId())) ?>">View linked user</a>
               <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/contact-parent")) ?>">Email user/parent/guardian</a>
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas') { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Galas') { ?>
                 <button class="dropdown-item" id="new-move-dropdown" type="button">New squad move</button>
                 <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/parenthelp")) ?>">Print access key</a>
               <?php } ?>
@@ -203,7 +203,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership #
+            <?= htmlspecialchars(config('NGB_NAME')) ?> Membership #
           </dt>
           <dd>
             <a href="<?= htmlspecialchars('https://www.swimmingresults.org/biogs/biogs_details.php?tiref=' . $member->getSwimEnglandNumber()) ?>">
@@ -214,7 +214,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership
+            <?= htmlspecialchars(config('NGB_NAME')) ?> Membership
           </dt>
           <dd>
             <?= htmlspecialchars($member->getGoverningBodyCategoryName()) ?>
@@ -396,7 +396,7 @@ include BASE_PATH . 'views/header.php';
         </button>
       </p> -->
 
-      <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+      <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
         <p>
           <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" class="btn btn-success">
             Edit medical notes
@@ -511,7 +511,7 @@ include BASE_PATH . 'views/header.php';
           <?php } ?>
         </div>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
           <p class="mt-3">
             <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
               Edit photography preferences
@@ -558,13 +558,13 @@ include BASE_PATH . 'views/header.php';
 
       <h2 id="qualifications">Qualifications</h2>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>New qualification added successfully</strong>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess']);
       } ?>
 
       <div id="qualifications-box" data-qualifications-url="<?= htmlspecialchars(autoUrl("members/$id/qualifications/current")) ?>"></div>
@@ -584,7 +584,7 @@ include BASE_PATH . 'views/header.php';
       <?php if ($extra = $extraFees->fetch(PDO::FETCH_ASSOC)) { ?>
         <div class="list-group">
           <?php do { ?>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') { ?>
               <div class="list-group-item">
                 <?= htmlspecialchars($extra['ExtraName']) ?> <em><?php if ($extra['Type'] == 'Refund') { ?>(Credit) <?php } ?>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $extra['ExtraFee'])->toScale(2) ?>/month</em>
               </div>
@@ -667,11 +667,11 @@ include BASE_PATH . 'views/header.php';
         </div>
       </dl>
 
-      <h3><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership</h3>
+      <h3><?= htmlspecialchars(config('NGB_NAME')) ?> Membership</h3>
       <dl class="row">
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Type
+            <?= htmlspecialchars(config('NGB_NAME')) ?> Membership Type
           </dt>
           <dd>
             <?= htmlspecialchars($member->getGoverningBodyCategoryName()) ?>
@@ -680,7 +680,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="col-6">
           <dt class="text-truncate">
-            Club pays <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees
+            Club pays <?= htmlspecialchars(config('NGB_NAME')) ?> fees
           </dt>
           <dd>
             <?php if ($member->swimEnglandFeesPaid()) { ?>Yes<?php } else { ?>No, member pays<?php } ?>

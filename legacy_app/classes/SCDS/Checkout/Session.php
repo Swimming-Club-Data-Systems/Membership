@@ -37,8 +37,8 @@ class Session
 
   public static function new($data, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     // Validate user at this tenant
     if ($data['user']) {
@@ -76,8 +76,8 @@ class Session
 
   public static function retrieve($id, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     $get = $db->prepare("SELECT * FROM `checkoutSessions` WHERE `id` = ? AND `Tenant` = ?");
     $get->execute([
@@ -118,7 +118,7 @@ class Session
   {
     $id = \Ramsey\Uuid\Uuid::uuid4();
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $add = $db->prepare("INSERT INTO checkoutItems (`id`, `checkout_session`, `name`, `description`, `amount`, `currency`, `tax_amount`, `tax_data`, `sub_items`, `type`, `attributes`, `metadata`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     $add->execute([
@@ -139,7 +139,7 @@ class Session
 
   public function removeItem($itemId)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $remove = $db->prepare("DELETE FROM checkoutItems WHERE `id` = ? AND `checkout_session` = ?");
     $remove->execute([
@@ -177,7 +177,7 @@ class Session
 
   public function save()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $save = $db->prepare("UPDATE checkoutSessions SET `amount` = ?, `currency` = ?, `state` = ?, `allowed_types` = ?, `created` = ?, succeeded = ?, intent = ?, method = ?, `version` = ?, creator = ?, tax_id = ?, `total_details` = ?, `metadata` = ? WHERE `id` = ?");
     $save->execute([
@@ -200,7 +200,7 @@ class Session
     if ($this->intent) {
       \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-      $db = app()->db;
+      $db = DB::connection()->getPdo();
 
       $tenant = \Tenant::fromId($this->tenant);
 
@@ -232,7 +232,7 @@ class Session
 
   public function createPaymentIntent()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
     $tenant = \Tenant::fromId($this->tenant);
@@ -294,7 +294,7 @@ class Session
 
   private function loadItems()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $this->items = [];
 
     // Load the checkout session items

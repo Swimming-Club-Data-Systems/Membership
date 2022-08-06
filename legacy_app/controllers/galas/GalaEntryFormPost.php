@@ -1,6 +1,6 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 // If select sessions, include that code else continue
 
@@ -9,7 +9,7 @@ if (isset($_POST['is-select-sessions']) && bool($_POST['is-select-sessions'])) {
   include 'indicate-openness/session-select-post.php';
 } else {
 
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
 
   // Get swimmer info
   $getSwimmer = $db->prepare("SELECT UserID FROM members WHERE MemberID = ? AND Tenant = ?");
@@ -25,7 +25,7 @@ if (isset($_POST['is-select-sessions']) && bool($_POST['is-select-sessions'])) {
 
   $swimmer = $swimmerDetails['UserID'];
 
-  if ($swimmer == null || ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $swimmer != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+  if ($swimmer == null || ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $swimmer != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
     halt(404);
   }
 
@@ -131,7 +131,7 @@ if (isset($_POST['is-select-sessions']) && bool($_POST['is-select-sessions'])) {
 
       $hyTek = bool($row['HyTek']);
       $approved = 1;
-      if (bool($row['RequiresApproval']) && $numReps > 0 || !$tenant->getBooleanKey('REQUIRE_SQUAD_REP_FOR_APPROVAL')) {
+      if (bool($row['RequiresApproval']) && $numReps > 0 || !config('REQUIRE_SQUAD_REP_FOR_APPROVAL')) {
         $approved = 0;
       }
 
@@ -168,21 +168,21 @@ if (isset($_POST['is-select-sessions']) && bool($_POST['is-select-sessions'])) {
       if (bool($row['HyTek'])) {
         $message .= "<p><strong>This is a HyTek gala.</strong> Please remember to add times for this entry.</p>";
       }
-      $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
+      $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(config('CLUB_NAME')) . ' gala team as soon as possible.</p>';
       $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
       `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 1, 'Galas')";
 
-      $db = app()->db;
+      $db = DB::connection()->getPdo();
       $email = $db->prepare($notify);
-      $email->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $subject, $message]);
+      $email->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $subject, $message]);
 
-      $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry'] = [
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessfulGalaEntry'] = [
         "Gala" => $_POST['gala'],
         "Swimmer" => $_POST['swimmer'],
         'HyTek' => $hyTek
       ];
 
-      if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+      if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
         header("Location: " . autoUrl("galas/entergala"));
       } else {
         header("Location: " . autoUrl("swimmers/" . $_POST['swimmer'] . "/enter-gala-success"));

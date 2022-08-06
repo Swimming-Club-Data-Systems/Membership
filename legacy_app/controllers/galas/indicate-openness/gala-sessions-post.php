@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends` FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -34,10 +34,10 @@ if ($nowDate < $galaDate) {
           $id,
           $sessionName
         ]);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus'] = true;
       } catch (Exception $e) {
         pre($e);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
       }
     }
   } else {
@@ -49,9 +49,9 @@ if ($nowDate < $galaDate) {
             trim($_POST['session-' . $session['ID']]),
             $session['ID']
           ]);
-          $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus'] = true;
         } catch (Exception $e) {
-          $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+          $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
         }
       }
     } while ($session = $getSessions->fetch(PDO::FETCH_ASSOC));
@@ -63,9 +63,9 @@ if ($nowDate < $galaDate) {
           $id,
           trim($_POST['newSession'])
         ]);
-        $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus'] = true;
       } catch (Exception $e) {
-        $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
       }
     }
   }

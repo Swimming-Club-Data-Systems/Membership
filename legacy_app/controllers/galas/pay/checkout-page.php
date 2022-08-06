@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
@@ -55,25 +55,25 @@ $expMonth = date("m");
 $expYear = date("Y");
 
 $customer = $db->prepare("SELECT CustomerID FROM stripeCustomers WHERE User = ?");
-$customer->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$customer->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $customerId = $customer->fetchColumn();
 
 $numberOfCards = $db->prepare("SELECT COUNT(*) `count`, stripePayMethods.ID FROM stripePayMethods INNER JOIN stripeCustomers ON stripeCustomers.CustomerID = stripePayMethods.Customer WHERE User = ? AND Reusable = ? AND (ExpYear > ? OR (ExpYear = ? AND ExpMonth >= ?))");
-$numberOfCards->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
+$numberOfCards->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
 $countCards = $numberOfCards->fetch(PDO::FETCH_ASSOC);
 
 $getCards = $db->prepare("SELECT stripePayMethods.ID, `MethodID`, stripePayMethods.Customer, stripePayMethods.Last4, stripePayMethods.Brand FROM stripePayMethods INNER JOIN stripeCustomers ON stripeCustomers.CustomerID = stripePayMethods.Customer WHERE User = ? AND Reusable = ? AND (ExpYear > ? OR (ExpYear = ? AND ExpMonth >= ?)) ORDER BY `Name` ASC");
-$getCards->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
+$getCards->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
 $cards = $getCards->fetchAll(PDO::FETCH_ASSOC);
 
 $methodId = $customerID = null;
 
 $selected = null;
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID'])) {
-  $selected = $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID'])) {
+  $selected = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID'];
 
   foreach ($cards as $card) {
-    if ($card['ID'] == $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID']) {
+    if ($card['ID'] == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID']) {
       $methodId = $card['MethodID'];
       $customerID = $card['Customer'];
     }
@@ -109,15 +109,15 @@ $swimsArray = [
 $rowArray = [1, null, null, null, null, null, 2, 1,  null, null, 2, 1, null, null, 2, 1, null, null, 2, 1, null, null, 2];
 $rowArrayText = ["Freestyle", null, null, null, null, null, 2, "Backstroke",  null, null, 2, "Breaststroke", null, null, 2, "Butterfly", null, null, 2, "Individual Medley", null, null, 2];
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PaidEntries'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PaidEntries'])) {
   halt(404);
 }
 
 $intent = null;
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'])) {
   $intent = \Stripe\PaymentIntent::retrieve(
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'],
     [
       'stripe_account' => $tenant->getStripeAccount()
     ]
@@ -141,7 +141,7 @@ if ($intent->status == 'succeeded') {
 
 if ($methodId != null && $customerID != null) {
   $intent = \Stripe\PaymentIntent::update(
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'],
     [
       'payment_method' => $methodId,
       'customer' => $customerID,
@@ -152,7 +152,7 @@ if ($methodId != null && $customerID != null) {
   );
 } else if ($customerId != null) {
   $intent = \Stripe\PaymentIntent::update(
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'],
     [
       'customer' => $customerId,
     ],
@@ -162,8 +162,8 @@ if ($methodId != null && $customerID != null) {
   );
 }
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentMethodID'])) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AddNewCard'] = true;
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentMethodID'])) {
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewCard'] = true;
 }
 
 $getEntriesByPI = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE StripePayment = ?");
@@ -174,7 +174,7 @@ $getEntriesByPI->execute([
 $countries = getISOAlpha2Countries();
 
 $fontCss = 'https://fonts.googleapis.com/css?family=Open+Sans';
-if (!app()->tenant->isCLS()) {
+if (!tenant()->getLegacyTenant()->isCLS()) {
   $fontCss = 'https://fonts.googleapis.com/css?family=Source+Sans+Pro';
 }
 
@@ -191,7 +191,7 @@ include BASE_PATH . "views/header.php";
 include BASE_PATH . "controllers/galas/galaMenu.php";
 ?>
 
-<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-redirect-url-new="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete/new")) ?>" data-redirect-url="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete")) ?>" data-org-name="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($intent->amount) ?>" data-intent-currency="<?= htmlspecialchars($intent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($entryRequestDetails)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
+<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-redirect-url-new="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete/new")) ?>" data-redirect-url="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete")) ?>" data-org-name="<?= htmlspecialchars(config('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($intent->amount) ?>" data-intent-currency="<?= htmlspecialchars($intent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($entryRequestDetails)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
 </div>
 
 <div class="bg-light mt-n3 py-3 mb-3">

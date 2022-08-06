@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(503);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 http_response_code(303);
 
@@ -46,7 +46,7 @@ try {
   $redirectFlowId = $_REQUEST['redirect_flow_id'];
   $redirectFlow = $client->redirectFlows()->complete(
     $redirectFlowId, //The redirect flow ID from above.
-    ["params" => ["session_token" => $_SESSION['TENANT-' . app()->tenant->getId()]['Token']]]
+    ["params" => ["session_token" => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token']]]
   );
 
   $mandate = $redirectFlow->links->mandate;

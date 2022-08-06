@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getSubscriptions = $db->prepare("SELECT tenantPaymentSubscriptions.ID, tenants.Name FROM `tenantPaymentSubscriptions` INNER JOIN tenantStripeCustomers ON tenantPaymentSubscriptions.Customer = tenantStripeCustomers.CustomerID INNER JOIN tenants ON tenantStripeCustomers.Tenant = tenants.ID WHERE tenantPaymentSubscriptions.Active AND (EndDate IS NULL OR EndDate >= :today) ORDER BY `Name` ASC;");
 $getSubscriptions->execute([

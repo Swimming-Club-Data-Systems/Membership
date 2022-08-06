@@ -4,8 +4,8 @@ header("content-type: application/json");
 
 $data = json_decode(file_get_contents('php://input'));
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $sendingCategory = 'Notify';
 
@@ -35,16 +35,16 @@ $db->beginTransaction();
 
 try {
   // if (!SCDS\FormIdempotency::verify()) {
-  //   $_SESSION['TENANT-' . app()->tenant->getId()]['FormError'] = true;
+  //   $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'] = true;
   //   throw new Exception('Form idempotency error');
   // }
 
   // if (!SCDS\CSRF::verify()) {
-  //   $_SESSION['TENANT-' . app()->tenant->getId()]['FormError'] = true;
+  //   $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['FormError'] = true;
   //   throw new Exception('Form CSRF error');
   // }
 
-  $replyAddress = getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress');
+  $replyAddress = getUserOption($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'NotifyReplyAddress');
 
   $to_remove = [
     "<p>&nbsp;</p>",
@@ -88,7 +88,7 @@ try {
 
   if ($collectiveSize > 10485760) {
     // Collectively too large attachments
-    $_SESSION['TENANT-' . app()->tenant->getId()]['CollectiveSizeTooLargeError'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CollectiveSizeTooLargeError'] = true;
     throw new Exception();
   }
 
@@ -120,13 +120,13 @@ try {
 
   $subject = trim(str_replace('!', '', str_replace('*', '', $data->state->subject)));
   $message = str_replace($to_remove, "", $data->state->editorValue);
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Admin" && !($replyAddress && $data->state->replyTo == "toMe")) {
-    $name = getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Admin" && !($replyAddress && $data->state->replyTo == "toMe")) {
+    $name = getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
     $message .= '<p class="small text-muted">Sent by ' . $name . '. Reply to this email to contact our Enquiries Team who can pass your message on to ' . $name . '.</p>';
   }
   $force = 0;
-  $sender = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
-  if ($data->state->forceSend && ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas")) {
+  $sender = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
+  if ($data->state->forceSend && ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas")) {
     $force = 1;
   }
 
@@ -135,7 +135,7 @@ try {
   $getCoaches = $db->prepare("SELECT User FROM coaches WHERE Squad = ?");
 
   $squads = null;
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
     $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` WHERE Tenant = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
     $squads->execute([
       $tenant->getId()
@@ -143,20 +143,20 @@ try {
   } else {
     $squads = $db->prepare("SELECT `SquadName`, `SquadID` FROM `squads` INNER JOIN squadReps ON squadReps.Squad = squads.SquadID WHERE squadReps.User = ? ORDER BY `SquadFee` DESC, `SquadName` ASC;");
     $squads->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
     ]);
   }
   $row = $squads->fetchAll(PDO::FETCH_ASSOC);
 
   $lists = null;
-  if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+  if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
     $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` WHERE Tenant = ? ORDER BY `Name` ASC;");
     $lists->execute([
       $tenant->getId()
     ]);
   } else {
     $lists = $db->prepare("SELECT targetedLists.ID, targetedLists.Name FROM `targetedLists` INNER JOIN listSenders ON listSenders.List = targetedLists.ID WHERE listSenders.User = ? ORDER BY `Name` ASC;");
-    $lists->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+    $lists->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   }
   $lists = $lists->fetchAll(PDO::FETCH_ASSOC);
 
@@ -243,7 +243,7 @@ try {
       $toSendTo[$u['UserID']] = $u['UserID'];
     }
   }
-  if ($galaQuery && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+  if ($galaQuery && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
     $galaUsers = $db->query("SELECT users.UserID FROM ((`users` INNER JOIN `members` ON members.UserID = users.UserID) INNER JOIN `galaEntries` ON galaEntries.MemberID = members.MemberID) WHERE " . $galaQuery);
     while ($u = $galaUsers->fetch(PDO::FETCH_ASSOC)) {
       $toSendTo[$u['UserID']] = $u['UserID'];
@@ -283,7 +283,7 @@ try {
   if ($replyAddress && $data->state->replyTo == "toMe") {
     $recipientGroups["ReplyToMe"] = [
       "Email" => $replyAddress,
-      "Name" => $_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . app()->tenant->getId()]['Surname'],
+      "Name" => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname'],
     ];
   }
 
@@ -309,7 +309,7 @@ try {
   `ForceSend`, `Date`, `JSONData`, `Tenant`) VALUES (?, ?, ?, ?, ?, ?, ?)";
   $pdo_query = $db->prepare($sql);
   $pdo_query->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $subject,
     $message,
     $force,
@@ -332,12 +332,12 @@ try {
     }
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NotifySuccess'] = [
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifySuccess'] = [
     "Count" => $count,
     "Force" => $force
   ];
 
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $getExtraEmails = $db->prepare("SELECT `Name`, `EmailAddress`, `ID` FROM `notifyAdditionalEmails` WHERE `UserID` = ? AND `Verified` = '1'");
 
   $getPendingGroupMail = $db->prepare("SELECT ID, notifyHistory.Subject, notifyHistory.Message, notifyHistory.ForceSend, notifyHistory.JSONData FROM notifyHistory WHERE ID = ?");
@@ -363,7 +363,7 @@ try {
 
     $from = [
       "email" => "noreply@" . getenv('EMAIL_DOMAIN'),
-      "name" => app()->tenant->getKey('CLUB_NAME')
+      "name" => config('CLUB_NAME')
     ];
     if (isset($jsonData->NamedSender->Email) && isset($jsonData->NamedSender->Name)) {
       $from = [
@@ -452,14 +452,14 @@ try {
         ];
       } catch (Exception $e) {
         $apiRequest['replyTo'] = [
-          "email" => app()->tenant->getKey('CLUB_EMAIL'),
-          "name" => app()->tenant->getKey('CLUB_NAME') . ' Enquiries'
+          "email" => config('CLUB_EMAIL'),
+          "name" => config('CLUB_NAME') . ' Enquiries'
         ];
       }
     } else {
       $apiRequest['replyTo'] = [
-        "email" => app()->tenant->getKey('CLUB_EMAIL'),
-        "name" => app()->tenant->getKey('CLUB_NAME') . ' Enquiries'
+        "email" => config('CLUB_EMAIL'),
+        "name" => config('CLUB_NAME') . ' Enquiries'
       ];
     }
 
@@ -478,8 +478,8 @@ try {
   }
   $db->commit();
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'])) {
-    unset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']);
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData'])) {
+    unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NotifyPostData']);
   }
 
   echo json_encode([

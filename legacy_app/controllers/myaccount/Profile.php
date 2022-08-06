@@ -10,7 +10,7 @@ $fluidContainer = true;
 
 $require_email_auth = false;
 $pagetitle = "My Account";
-$userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $forenameUpdate = false;
 $surnameUpdate = false;
@@ -22,10 +22,10 @@ $successInformation = "";
 $emailChecked = "";
 $mobileChecked = "";
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getUser = $db->prepare("SELECT * FROM users WHERE UserID = ?");
-$getUser->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getUser->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $row = $getUser->fetch(PDO::FETCH_ASSOC);
 
 $email = $row['EmailAddress'];
@@ -42,7 +42,7 @@ $update = false;
 if (!empty($_POST['forename'])) {
   if ($_POST['forename'] != $forename) {
     $update = $db->prepare("UPDATE `users` SET `Forename` = ? WHERE `UserID` = ?");
-    $update->execute([trim(mb_convert_case($_POST['forename'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+    $update->execute([trim(mb_convert_case($_POST['forename'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
     $forenameUpdate = true;
     $update = true;
   }
@@ -50,7 +50,7 @@ if (!empty($_POST['forename'])) {
 if (!empty($_POST['surname'])) {
   if ($_POST['surname'] != $surname) {
     $update = $db->prepare("UPDATE `users` SET `Surname` = ? WHERE `UserID` = ?");
-    $update->execute([trim(mb_convert_case($_POST['surname'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+    $update->execute([trim(mb_convert_case($_POST['surname'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
     $surnameUpdate = true;
     $update = true;
   }
@@ -150,7 +150,7 @@ if ($update) {
   $updateText .= '
     </ul>
   </div>';
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserDetailsUpdate'] = $updateText;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserDetailsUpdate'] = $updateText;
 }
 
 if (app('request')->method == "POST") {
@@ -182,8 +182,8 @@ if (app('request')->method == "POST") {
       <div class="col-md-9">
         <h1>Hello <?= htmlspecialchars($forename) ?></h1>
         <p class="lead">Welcome to My Account where you can change your personal details, password, contact information and add swimmers to your account.</p>
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserDetailsUpdate'])) {
-          $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserDetailsUpdate'])) {
+          $userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
           $query = $db->prepare("SELECT * FROM users WHERE UserID = ?;");
           $query->execute([$userID]);
           $row = $query->fetch(PDO::FETCH_ASSOC);
@@ -199,8 +199,8 @@ if (app('request')->method == "POST") {
           if ($mobileComms == 1) {
             $mobileChecked = " checked ";
           }
-          echo $_SESSION['TENANT-' . app()->tenant->getId()]['UserDetailsUpdate'];
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['UserDetailsUpdate']);
+          echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserDetailsUpdate'];
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserDetailsUpdate']);
         } ?>
         <?php
         if ($require_email_auth) {
@@ -261,7 +261,7 @@ if (app('request')->method == "POST") {
           <div class="mb-3" id="gravitar">
             <label class="form-label" for="mobile" class="d-block">Account Image</label>
             <?php
-            $grav_url = "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress']))) . "?d=" . urlencode("https://www.chesterlestreetasc.co.uk/apple-touch-icon-ipad-retina.png") . "&s=240";
+            $grav_url = "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress']))) . "?d=" . urlencode("https://www.chesterlestreetasc.co.uk/apple-touch-icon-ipad-retina.png") . "&s=240";
             ?>
             <img class="me-3 rounded" src="<?= $grav_url ?>" alt="" width="80" height="80">
             <small class="form-text text-muted">If you have <a href="https://en.gravatar.com/">an image linked to your email with Gravitar</a>, we'll display it in the system</small>
@@ -271,7 +271,7 @@ if (app('request')->method == "POST") {
               </form>
             </div>
 
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
               <div class="cell">
                 <h2>My Swimmers</h2>
                 <p>Swimmers linked to your account</p>
@@ -282,9 +282,9 @@ if (app('request')->method == "POST") {
           </div>
           <div class="">
             <?php
-            if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+            if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
               $contacts = new EmergencyContacts($db);
-              $contacts->byParent($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+              $contacts->byParent($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
 
               $contactsArray = $contacts->getContacts();
             ?>

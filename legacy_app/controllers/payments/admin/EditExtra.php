@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getExtra = $db->prepare("SELECT * FROM `extras` WHERE `ExtraID` = ? AND Tenant = ?");
 $getExtra->execute([
@@ -42,9 +42,9 @@ include BASE_PATH . "views/paymentsMenu.php";
     <div class="row">
       <div class="col-lg-8">
         <?php
-        if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-          echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-          unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+        if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+          echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+          unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
         }
         ?>
         <form method="post" class="needs-validation" novalidate>

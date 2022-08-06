@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $user = app()->user;
 if (!$user->hasPermissions(['Admin'])) halt(404);
@@ -49,14 +49,14 @@ try {
     $tenant->getId(),
   ]);
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationSuccess'] = true;
 
   http_response_code(302);
   header('location: ' . autoUrl('qualifications/' . $id));
 
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationError'] = $e->getMessage();
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewQualificationError'] = $e->getMessage();
 
   http_response_code(302);
   header('location: ' . autoUrl('qualifications/new'));

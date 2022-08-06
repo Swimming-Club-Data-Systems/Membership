@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -42,7 +42,7 @@ include BASE_PATH . "views/header.php";
         <?=htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname']))?><br><small>Targeted list access</small>
       </h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignListSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignListSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListSuccess']) { ?>
       <div class="alert alert-success">
         <p class="mb-0">
           <strong>
@@ -51,10 +51,10 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignListSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignListSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListSuccess']) { ?>
       <div class="alert alert-success">
         <p class="mb-0">
           <strong>
@@ -63,10 +63,10 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListError']) { ?>
       <div class="alert alert-danger">
         <p class="mb-0">
           <strong>
@@ -75,7 +75,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveListError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveListError']);
       } ?>
 
       <?php if ($list != null) { ?>

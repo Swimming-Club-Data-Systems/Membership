@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(503);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-if (!app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || !getenv('STRIPE')) halt(403);
+if (!config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || !getenv('STRIPE')) halt(403);
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 // UPDATING

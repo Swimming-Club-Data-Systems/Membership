@@ -1,14 +1,14 @@
 <?php
 
 $galaId = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') {
   $galaId = $_POST['gala'];
 } else {
   $galaId = $id;
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends` FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -29,9 +29,9 @@ $getSessions->execute([$galaId]);
 $sessions = $getSessions->fetchAll(PDO::FETCH_ASSOC);
 
 $getSwimmers = null;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   $getSwimmers = $db->prepare("SELECT MemberID id, MForename fn, MSurname sn FROM members WHERE UserID = ?");
-  $getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $getSwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 } else {
   $getSwimmers = $db->prepare("SELECT MemberID id, MForename fn, MSurname sn FROM members WHERE MemberID = ?");
   $getSwimmers->execute([$_POST['swimmer']]);
@@ -73,13 +73,13 @@ if ($swimmer != null && $nowDate < $galaDate) {
       }
     } while ($swimmer = $getSwimmers->fetch(PDO::FETCH_ASSOC));
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus'] = true;
   } catch (Exception $e) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
   }
 }
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
   header("Location: " . autoUrl("galas/" . $galaId . "/indicate-availability"));
 } else {
   header("Location: " . autoUrl("swimmers/" . $_POST['swimmer'] . "/enter-gala-success"));

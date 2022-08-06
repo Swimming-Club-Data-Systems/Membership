@@ -27,8 +27,8 @@ class Year
 
   public static function retrieve($id, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     $get = $db->prepare("SELECT * FROM `membershipYear` WHERE ID = ? AND Tenant = ?");
     $get->execute([

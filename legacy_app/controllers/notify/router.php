@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $this->get('/lambda', function () {
 
@@ -26,23 +26,23 @@ $this->get('/lambda', function () {
 
 $rep = false;
 $repBlocked = false;
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
 	$getSquadCount = $db->prepare("SELECT COUNT(*) FROM squads INNER JOIN squadReps ON squads.SquadID = squadReps.Squad AND squadReps.User = ?");
 	$getSquadCount->execute([
-		$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 	]);
 	if ($getSquadCount->fetchColumn() > 0) {
 		$rep = true;
 	}
 
 	// If rep blocked, block access to notify
-	if (app()->tenant && app()->tenant->getBooleanKey('BLOCK_SQUAD_REPS_FROM_NOTIFY')) {
+	if (tenant()->getLegacyTenant() && config('BLOCK_SQUAD_REPS_FROM_NOTIFY')) {
 		$repBlocked = true;
 	}
 
 	$getListCount = $db->prepare("SELECT COUNT(*) FROM `targetedLists` INNER JOIN listSenders ON listSenders.List = targetedLists.ID WHERE listSenders.User = ?");
 	$getListCount->execute([
-		$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 	]);
 	if ($getListCount->fetchColumn() > 0) {
 		$rep = true;
@@ -52,7 +52,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
 
 define('REP_BLOCKED', $repBlocked);
 
-$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
 $this->post('/save-user-settings', function () {
 	include 'save-user-settings.php';
@@ -75,7 +75,7 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 	});
 
 	$this->post('/send-email', function () {
-		$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+		$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 		if (!($access == "Admin" || $access == "Coach" || $access == "Galas") && REP_BLOCKED) {
 			halt(404);
 		} else {
@@ -85,7 +85,7 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 
 	$this->group(['/new', '/newemail'], function () {
 
-		$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+		$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 		if (!($access == "Admin" || $access == "Coach" || $access == "Galas") && REP_BLOCKED) {
 			$this->any(['/', '/*'], function () {
 				include 'RepBlocked.php';
@@ -131,7 +131,7 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 		include 'ReplyToPost.php';
 	});
 
-	if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") {
+	if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") {
 		$this->get('/pending', function () {
 
 			include 'EmailList.php';
@@ -144,7 +144,7 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 	}
 
 	$this->group('/history', function () {
-		$access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+		$access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 		if (!($access == "Admin" || $access == "Coach" || $access == "Galas") && REP_BLOCKED) {
 			$this->any(['/', '/*'], function () {
 				include 'RepBlocked.php';
@@ -204,12 +204,12 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 
 	if (app()->user->hasPermissions(['Admin', 'Coach'])) {
 		$this->get('/sms', function () {
-			$db = app()->db;
+			$db = DB::connection()->getPdo();
 			include 'SMSList.php';
 		});
 
 		$this->post('/sms/ajax', function () {
-			$db = app()->db;
+			$db = DB::connection()->getPdo();
 			include 'SMSListFetch.php';
 		});
 	}

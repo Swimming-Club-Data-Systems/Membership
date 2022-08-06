@@ -1,6 +1,6 @@
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
   // IF LOGGED IN
   $this->get('/', function () {
     include 'home.php';
@@ -80,7 +80,7 @@ $this->group('/check-in', function () {
     include 'check-in/squad-registers/location-post.php';
   });
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess']) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess']) {
     $this->get('/{id}:uuid/success', function ($id) {
       include 'check-in/success.php';
     });
@@ -100,7 +100,7 @@ $this->group('/sign-out', function () {
     include 'sign-out/location-post.php';
   });
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess']) {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess']) {
     $this->get('/{id}:uuid/success', function ($id) {
       include 'sign-out/success.php';
     });

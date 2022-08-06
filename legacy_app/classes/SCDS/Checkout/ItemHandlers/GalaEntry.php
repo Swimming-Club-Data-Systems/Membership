@@ -6,7 +6,7 @@ class GalaEntry {
 
   public static function paid($item, $stripePayment) {
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $setCharged = $db->prepare("UPDATE galaEntries SET Charged = ?, StripePayment = ? WHERE EntryID = ?");
     $setCharged->execute([

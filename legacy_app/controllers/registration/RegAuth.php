@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $rr = 0;
 
@@ -79,7 +79,7 @@ if ($fam) {
 */
 
 if ($count == 1) {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'] = '
   <div class="alert alert-success mb-0">
     <p class="mb-0">
       <strong>
@@ -102,7 +102,7 @@ if ($count == 1) {
   $deleteRow = $db->prepare("DELETE FROM `newUsers` WHERE `AuthCode` = ? AND `ID` = ?");
   $deleteRow->execute([$token, $id]);
 } else if ($status == "nf") {
-	$_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationGoVerify'] = '
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RegistrationGoVerify'] = '
 	<div class="alert alert-warning mb-0">
     <p class="mb-0">
       <strong>

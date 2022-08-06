@@ -6,15 +6,15 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $userDetails = $db->prepare("SELECT `EmailComms`, `MobileComms` FROM `users` WHERE `UserID` = ?");
 $userDetails->execute([
   $user->getId(),
@@ -127,7 +127,7 @@ include BASE_PATH . "views/head.php";
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="1" id="smsContactOK" aria-describedby="smsContactOKHelp" name="smsContactOK" <?php if ($details['MobileComms']) { ?>checked<?php } ?>>
                   <label class="form-check-label" for="smsContactOK">I would like to receive important text messages</label>
-                  <div><small id="smsContactOKHelp" class="form-text text-muted">We'll still use this to contact you in an emergency. <?= htmlspecialchars(app()->tenant->getName()) ?> may not offer SMS services.</small></div>
+                  <div><small id="smsContactOKHelp" class="form-text text-muted">We'll still use this to contact you in an emergency. <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> may not offer SMS services.</small></div>
                 </div>
               </div>
             </div>

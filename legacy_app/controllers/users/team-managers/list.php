@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $userInfo = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ? AND Tenant = ?");
 $userInfo->execute([
@@ -44,7 +44,7 @@ include BASE_PATH . "views/header.php";
         <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Team Manager Settings</small>
       </h1>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignGalaSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignGalaSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -53,10 +53,10 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignGalaSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaSuccess']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaSuccess']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
@@ -65,10 +65,10 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaSuccess']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaSuccess']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
@@ -77,7 +77,7 @@ include BASE_PATH . "views/header.php";
           </p>
         </div>
       <?php
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['RemoveGalaError']);
       } ?>
 
       <?php if ($gala != null) { ?>

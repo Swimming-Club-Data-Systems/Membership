@@ -2,8 +2,8 @@
 
 use Ramsey\Uuid\Uuid;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $checkoutSession = \SCDS\Checkout\Session::retrieve($id);
 
@@ -62,7 +62,7 @@ include BASE_PATH . 'views/head.php';
 
 ?>
 
-<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-redirect-url-new="<?= htmlspecialchars($checkoutSession->getUrl()) ?>" data-redirect-url="<?= htmlspecialchars($redirect) ?>" data-org-name="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($paymentIntent->amount) ?>" data-intent-currency="<?= htmlspecialchars($paymentIntent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($paymentRequestItems)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
+<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-redirect-url-new="<?= htmlspecialchars($checkoutSession->getUrl()) ?>" data-redirect-url="<?= htmlspecialchars($redirect) ?>" data-org-name="<?= htmlspecialchars(config('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($paymentIntent->amount) ?>" data-intent-currency="<?= htmlspecialchars($paymentIntent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($paymentRequestItems)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
 </div>
 
 <div class="bg-light py-3 mb-3">
@@ -72,10 +72,10 @@ include BASE_PATH . 'views/head.php';
       <div class="col-auto">
         <div class="h1 mb-0">
           <a href="<?= htmlspecialchars($cancelUrl) ?>" class="text-decoration-none">
-            <?php if ($tenant->getKey('LOGO_DIR')) { ?>
+            <?php if (config('LOGO_DIR')) { ?>
               <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
             <?php } else { ?>
-              <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+              <?= htmlspecialchars(config('CLUB_NAME')) ?>
             <?php } ?>
           </a>
         </div>
@@ -87,7 +87,7 @@ include BASE_PATH . 'views/head.php';
     </div>
 
     <h1 class="mb-0">
-      <span class="text-muted small">Pay <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
+      <span class="text-muted small">Pay <?= htmlspecialchars(config('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
     </h1>
 
     <p class="mb-0 mt-3 d-block d-lg-none">You'll pay for <?= htmlspecialchars($numFormatter->format(sizeof($items))) ?> item<?php if (sizeof($items) != 1) { ?>s<?php } ?>. <a data-bs-toggle="collapse" href="#entry-list-group" role="button" aria-expanded="false" aria-controls="entry-list-group">Show details <i class="fa fa-caret-down" aria-hidden="true"></i></a></p>

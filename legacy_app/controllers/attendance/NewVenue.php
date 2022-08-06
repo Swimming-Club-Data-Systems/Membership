@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $venue_details = [
   'name' => '',
   'address' => '',
 ];
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueError']['Data'])) {
-  $venue_details = $_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueError']['Data'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueError']['Data'])) {
+  $venue_details = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueError']['Data'];
 }
 
 $pagetitle = "Add a venue";
@@ -32,7 +32,7 @@ include BASE_PATH . "views/header.php";
           Add a venue
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars(config('CLUB_NAME')) ?>
         </p>
         <!-- <div class="mb-3 d-lg-none"></div> -->
       </div>
@@ -44,7 +44,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueError']['Status']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueError']['Status']) { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
             <strong>
@@ -88,7 +88,7 @@ include BASE_PATH . "views/header.php";
 
 <?php
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueError']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewVenueError']);
 
 $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");

@@ -1,6 +1,6 @@
 <?php
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') {
   $this->get('/', function() {
     require 'upload.php';
   });

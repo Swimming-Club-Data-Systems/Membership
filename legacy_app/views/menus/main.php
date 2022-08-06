@@ -1,14 +1,14 @@
 <?php
 
 if (isset($use_website_menu)) {
-  define('USE_CLS_MENU', $use_website_menu && app()->tenant->isCLS());
+  define('USE_CLS_MENU', $use_website_menu && tenant()->getLegacyTenant()->isCLS());
 }
 
 if (!function_exists('chesterStandardMenu')) {
   function chesterStandardMenu()
   {
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $user = null;
     if (isset(app()->user)) {
       $user = app()->user;
@@ -22,24 +22,24 @@ if (!function_exists('chesterStandardMenu')) {
     global $edit_link;
 
     $canPayByCard = false;
-    if (getenv('STRIPE') && app()->tenant->getStripeAccount() && app()->tenant->getBooleanKey('GALA_CARD_PAYMENTS_ALLOWED')) {
+    if (getenv('STRIPE') && tenant()->getLegacyTenant()->getStripeAccount() && config('GALA_CARD_PAYMENTS_ALLOWED')) {
       $canPayByCard = true;
     }
 
     $haveSquadReps = false;
     $getRepCount = $db->prepare("SELECT COUNT(*) FROM squadReps INNER JOIN users ON squadReps.User = users.UserID WHERE users.Tenant = ?");
     $getRepCount->execute([
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
     ]);
     if ($getRepCount->fetchColumn() > 0) {
       $haveSquadReps = true;
     }
 
     $hasNotifyAccess = false;
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+    if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
       $getNotify = $db->prepare("SELECT COUNT(*) FROM (SELECT User FROM squadReps UNION SELECT User FROM listSenders) AS T WHERE T.User = ?");
       $getNotify->execute([
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       ]);
       if ($getNotify->fetchColumn()) {
         $hasNotifyAccess = true;
@@ -47,11 +47,11 @@ if (!function_exists('chesterStandardMenu')) {
     }
 
     $isTeamManager = false;
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
+    if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent') {
       $date = new DateTime('-1 day', new DateTimeZone('Europe/London'));
       $getGalas = $db->prepare("SELECT COUNT(*) FROM teamManagers INNER JOIN galas ON teamManagers.Gala = galas.GalaID WHERE teamManagers.User = ? AND galas.GalaDate >= ?");
       $getGalas->execute([
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
         $date->format("Y-m-d")
       ]);
       if ($getGalas->fetchColumn()) {
@@ -61,17 +61,17 @@ if (!function_exists('chesterStandardMenu')) {
 
 ?>
 
-    <?php if (!(isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) && user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) && (!isset($use_website_menu) || !$use_website_menu)) { ?>
+    <?php if (!(isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) && user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) && (!isset($use_website_menu) || !$use_website_menu)) { ?>
       <div class="collapse navbar-collapse offcanvas-collapse" id="chesterNavbar">
         <ul class="navbar-nav me-auto">
-          <?php if (!empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
+          <?php if (!empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) { ?>
             <li class="nav-item">
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl('')) ?>">Home</a>
             </li>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
               <?php
               $getSwimmers = $db->prepare("SELECT MForename Name, MSurname Surname, MemberID ID FROM `members` WHERE `UserID` = ? ORDER BY Name ASC, Surname ASC");
-              $getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+              $getSwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
               ?>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="swimmersDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -119,7 +119,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <div class="dropdown-menu" aria-labelledby="swimmerDropdown">
                   <h6 class="dropdown-header">Members</h6>
                   <a class="dropdown-item" href="<?= autoUrl("members") ?>">Member Directory</a>
-                  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+                  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
                     <a class="dropdown-item" href="<?= autoUrl("members/new") ?>">Create New Member</a>
                     <a class="dropdown-item" href="<?= autoUrl("memberships/renewal") ?>">Membership Renewal</a>
                     <a class="dropdown-item" href="<?= autoUrl("members/orphaned") ?>" title="View active members who are not connected to a user account">Unconnected Members</a>
@@ -127,11 +127,11 @@ if (!function_exists('chesterStandardMenu')) {
                       <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("qualifications")) ?>">Qualifications</a>
                     <?php } ?>
                   <?php } ?>
-                  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Galas") { ?>
+                  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Galas") { ?>
                     <a class="dropdown-item" href="<?= autoUrl("members/access-keys") ?>">Access Keys</a>
                   <?php } ?>
                   <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Membership Centre</a>
-                  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Galas") { ?>
+                  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Galas") { ?>
                     <div class="dropdown-divider"></div>
                     <h6 class="dropdown-header">Squads</h6>
                     <a class="dropdown-item" href="<?= autoUrl("squads") ?>">Squad Directory</a>
@@ -162,10 +162,10 @@ if (!function_exists('chesterStandardMenu')) {
               </li>
             <?php } ?>
 
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") { ?>
               <?php if (
-                $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" ||
-                $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas"
+                $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" ||
+                $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas"
               ) { ?>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="usersMenu" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -181,7 +181,7 @@ if (!function_exists('chesterStandardMenu')) {
                     <a class="dropdown-item" href="<?= autoUrl("users/add") ?>">
                       Create New User (admin, coach, volunteer)
                     </a>
-                    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+                    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
                       <a class="dropdown-item" href="<?= autoUrl("payments/user-mandates") ?>">
                         User Direct Debit Mandates
                       </a>
@@ -189,12 +189,12 @@ if (!function_exists('chesterStandardMenu')) {
                   </div>
                 </li>
               <?php } ?>
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas") { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas") { ?>
                 <li class="nav-item">
                   <a class="nav-link" href="<?= autoUrl("payments") ?>">Pay</a>
                 </li>
               <?php } ?>
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="paymentsAdminDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Pay
@@ -205,7 +205,7 @@ if (!function_exists('chesterStandardMenu')) {
                     <!-- New feature coming soon -->
                     <!-- <a class="dropdown-item" href="<?= autoUrl("payments/confirmation") ?>">Payment Confirmation</a> -->
                     <a class="dropdown-item" href="<?= autoUrl("payments/extrafees") ?>">Extra Fees</a>
-                    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Galas') { ?>
+                    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Galas') { ?>
                       <a class="dropdown-item" href="<?= autoUrl("payments/galas") ?>">
                         Charge or refund gala entries
                       </a>
@@ -227,7 +227,7 @@ if (!function_exists('chesterStandardMenu')) {
                     <a class="dropdown-item" href="https://dashboard.stripe.com/" target="_blank">
                       Stripe Dashboard
                     </a>
-                    <?php if (getenv('STRIPE') && app()->tenant->getStripeAccount()) { ?>
+                    <?php if (getenv('STRIPE') && tenant()->getLegacyTenant()->getStripeAccount()) { ?>
                       <div class="dropdown-divider"></div>
                       <h6 class="dropdown-header">Payment Cards</h6>
                       <a class="dropdown-item" href="<?= autoUrl("payments/cards") ?>">
@@ -243,7 +243,7 @@ if (!function_exists('chesterStandardMenu')) {
                   </div>
                 </li>
               <?php } ?>
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Coach" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas") { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Coach" || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Galas") { ?>
                 <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="notifyDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Notify
@@ -252,7 +252,7 @@ if (!function_exists('chesterStandardMenu')) {
                     <a class="dropdown-item" href="<?= autoUrl("notify") ?>">Notify Home</a>
                     <a class="dropdown-item" href="<?= autoUrl("notify/new") ?>">New Message</a>
                     <a class="dropdown-item" href="<?= autoUrl("notify/lists") ?>">Targeted Lists</a>
-                    <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
+                    <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Admin") { ?>
                       <a class="dropdown-item" href="<?= autoUrl("notify/sms") ?>">SMS Lists</a>
                     <?php } ?>
                     <a class="dropdown-item" href="<?= autoUrl("notify/history") ?>">Previous Messages</a>
@@ -268,7 +268,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <a class="dropdown-item" href="<?= autoUrl("galas") ?>">
                   Gala Home
                 </a>
-                <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+                <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
                   <a class="dropdown-item" href="<?= autoUrl("galas/entergala") ?>">
                     Enter a Gala
                   </a>
@@ -288,7 +288,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <?php } else { ?>
                   <a class="dropdown-item" href="<?= autoUrl("galas/addgala") ?>">Add Gala</a>
                   <a class="dropdown-item" href="<?= autoUrl("galas/entries") ?>">View Entries</a>
-                  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Galas') { ?>
+                  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Galas') { ?>
                     <a class="dropdown-item" href="<?= autoUrl("payments/galas") ?>">
                       Charge or Refund Entries
                     </a>
@@ -297,10 +297,10 @@ if (!function_exists('chesterStandardMenu')) {
                     Team Manager Dashboard
                   </a>
                 <?php } ?>
-                <?php if (app()->tenant->isCLS()) { ?>
+                <?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
                   <a class="dropdown-item" href="https://www.chesterlestreetasc.co.uk/competitions/" target="_blank">Gala website <i class="fa fa-external-link"></i></a>
                   <a class="dropdown-item" href="https://www.chesterlestreetasc.co.uk/competitions/category/galas/" target="_blank">Upcoming galas <i class="fa fa-external-link"></i></a>
-                  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
+                  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") { ?>
                     <a class="dropdown-item" href="https://www.chesterlestreetasc.co.uk/competitions/enteracompetition/guidance/" target="_blank">Help with entries <i class="fa fa-external-link"></i></a>
                   <?php } ?>
                 <?php } ?>
@@ -312,7 +312,7 @@ if (!function_exists('chesterStandardMenu')) {
                 </a>
               </div>
             </li>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' && $haveSquadReps) { ?>
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Parent' && $haveSquadReps) { ?>
               <li class="nav-item">
                 <a class="nav-link" href="<?= autoUrl("squad-reps") ?>">
                   Squad Reps
@@ -326,11 +326,11 @@ if (!function_exists('chesterStandardMenu')) {
                 </a>
               </li>
             <?php } ?>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent" && app()->tenant->getKey('ASA_CLUB_CODE') != 'UOSZ') {
-              $hasMandate = userHasMandates($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
+            <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent" && config('ASA_CLUB_CODE') != 'UOSZ') {
+              $hasMandate = userHasMandates($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']);
               $getCountNewMandates = $db->prepare("SELECT COUNT(*) FROM stripeMandates INNER JOIN stripeCustomers ON stripeMandates.Customer = stripeCustomers.CustomerID WHERE stripeCustomers.User = ? AND stripeMandates.MandateStatus != 'inactive';");
               $getCountNewMandates->execute([
-                $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+                $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
               ]);
               $hasStripeMandate = $getCountNewMandates->fetchColumn() > 0;
             ?>
@@ -342,9 +342,9 @@ if (!function_exists('chesterStandardMenu')) {
                   <h6 class="dropdown-header">Direct Debit</h6>
                   <a class="dropdown-item" href="<?= autoUrl("payments") ?>">Payments Home</a>
                   <a class="dropdown-item" href="<?= autoUrl("payments/statements") ?>">My Billing History</a>
-                  <?php if (app()->tenant->getGoCardlessAccessToken() && $hasMandate && !stripeDirectDebit(true)) { ?>
+                  <?php if (tenant()->getLegacyTenant()->getGoCardlessAccessToken() && $hasMandate && !stripeDirectDebit(true)) { ?>
                     <a class="dropdown-item" href="<?= autoUrl("payments/mandates") ?>">My Bank Account (Old System)</a>
-                  <?php } else if (app()->tenant->getGoCardlessAccessToken() && !stripeDirectDebit(true)) { ?>
+                  <?php } else if (tenant()->getLegacyTenant()->getGoCardlessAccessToken() && !stripeDirectDebit(true)) { ?>
                     <a class="dropdown-item" href="<?= autoUrl("payments/setup") ?>">
                       Setup a direct debit (Old System)
                     </a>
@@ -366,8 +366,8 @@ if (!function_exists('chesterStandardMenu')) {
                   <a class="dropdown-item" href="<?= autoUrl("payments/membership-fees") ?>">
                     Annual Membership Fees
                   </a>
-                  <?php if (getenv('STRIPE') && app()->tenant->getStripeAccount()) { ?>
-                    <?php if (app()->tenant->getGoCardlessAccessToken()) { ?>
+                  <?php if (getenv('STRIPE') && tenant()->getLegacyTenant()->getStripeAccount()) { ?>
+                    <?php if (tenant()->getLegacyTenant()->getGoCardlessAccessToken()) { ?>
                       <div class="dropdown-divider"></div>
                     <?php } ?>
                     <h6 class="dropdown-header">Card Payments</h6>
@@ -394,7 +394,7 @@ if (!function_exists('chesterStandardMenu')) {
                   <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl('pages/new')) ?>">New Page</a>
                 </div>
               </li>
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
                 <li class="nav-item">
                   <a class="nav-link" href="<?= autoUrl("admin") ?>" title="Adminstrative tools">
                     Admin
@@ -407,18 +407,18 @@ if (!function_exists('chesterStandardMenu')) {
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a>
             </li>
 
-            <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
+            <?php if (config('CLUB_WEBSITE')) { ?>
               <li class="nav-item d-lg-none">
-                <a class="nav-link" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a class="nav-link" href="<?= htmlspecialchars(config('CLUB_WEBSITE')) ?>" target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </li>
             <?php } ?>
 
           <?php } ?>
-          <?php if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
+          <?php if (empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) { ?>
             <li class="nav-item">
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl("login")) ?>">Login</a>
             </li>
-            <?php if (isset(app()->tenant) && app()->tenant->getKey('ASA_CLUB_CODE') == 'UOSZ' && false) { ?>
+            <?php if (tenant() && config('ASA_CLUB_CODE') == 'UOSZ' && false) { ?>
               <li class="nav-item">
                 <a class="nav-link" href="<?= htmlspecialchars(autoUrl("register/university-of-sheffield")) ?>">Sign Up (Trials)</a>
               </li>
@@ -432,14 +432,14 @@ if (!function_exists('chesterStandardMenu')) {
             <li class="nav-item">
               <a class="nav-link" href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Log Books</a>
             </li>
-            <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
+            <?php if (config('CLUB_WEBSITE')) { ?>
               <li class="nav-item d-lg-none">
-                <a class="nav-link" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a class="nav-link" href="<?= htmlspecialchars(config('CLUB_WEBSITE')) ?>" target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </li>
             <?php } ?>
           <?php } ?>
         </ul>
-        <?php if (!empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
+        <?php if (!empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
           $currentUser = app()->user;
           $user_name = preg_replace("/( +)/", '&nbsp;', htmlspecialchars($currentUser->getFirstName())); ?>
           <ul class="navbar-nav">
@@ -454,7 +454,7 @@ if (!function_exists('chesterStandardMenu')) {
                 if (sizeof($perms) > 1) { ?>
                   <h6 class="dropdown-header">Switch account mode</h6>
                   <?php foreach ($perms as $perm => $name) { ?>
-                    <a class="dropdown-item" href="<?= autoUrl("account-switch?type=" . urlencode($perm)) ?>"><?= htmlspecialchars($name) ?><?php if ($perm == $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) { ?> <i class="text-primary fa fa-check-circle fa-fw" aria-hidden="true"></i><?php } ?></a>
+                    <a class="dropdown-item" href="<?= autoUrl("account-switch?type=" . urlencode($perm)) ?>"><?= htmlspecialchars($name) ?><?php if ($perm == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel']) { ?> <i class="text-primary fa fa-check-circle fa-fw" aria-hidden="true"></i><?php } ?></a>
                   <?php } ?>
                   <div class="dropdown-divider"></div>
                 <?php } ?>

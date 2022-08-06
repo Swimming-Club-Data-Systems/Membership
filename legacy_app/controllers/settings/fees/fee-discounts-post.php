@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 try {
 
@@ -24,10 +24,10 @@ try {
     }
   }
 
-  app()->tenant->setKey('MembershipDiscounts', json_encode($array));
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success'] = true;
+  tenant()->getLegacyTenant()->setKey('MembershipDiscounts', json_encode($array));
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error'] = true;
 }
 
 header("Location: " . autoUrl("settings/fees/membership-discounts"));

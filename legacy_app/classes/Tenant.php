@@ -38,7 +38,7 @@ class Tenant
    */
   public static function fromId(int $id)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE ID = ?");
     $getTenant->execute([
       $id
@@ -59,7 +59,7 @@ class Tenant
    */
   public static function fromCode(string $code)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE Code COLLATE utf8mb4_general_ci = ?");
     $getTenant->execute([
       $code
@@ -80,7 +80,7 @@ class Tenant
    */
   public static function fromDomain(string $domain)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE `Domain` COLLATE utf8mb4_general_ci = ?");
     $getTenant->execute([
       $domain
@@ -101,7 +101,7 @@ class Tenant
    */
   public static function fromUUID(string $uuid)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE `UniqueID` COLLATE utf8mb4_general_ci = ?");
     $getTenant->execute([
       $uuid
@@ -119,7 +119,7 @@ class Tenant
    */
   private function getKeys()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getKeys = $db->prepare("SELECT Option, Value FROM tenantOptions WHERE Tenant = ?");
     $getKeys->execute([
       $this->id
@@ -287,7 +287,7 @@ class Tenant
    */
   public function setKey(string $key, $value)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     if (!is_numeric($value) && $value == "") {
       $value = null;
@@ -346,7 +346,7 @@ class Tenant
    */
   private function loadGoCardless()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getKey = $db->prepare("SELECT OrganisationId, AccessToken FROM gcCredentials WHERE Tenant = ?");
     $getKey->execute([
       $this->id
@@ -485,7 +485,7 @@ class Tenant
 
     \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $checkIfCustomer = $db->prepare("SELECT COUNT(*) FROM tenantStripeCustomers WHERE Tenant = ?");
     $checkIfCustomer->execute([$this->id]);
 
@@ -560,7 +560,7 @@ class Tenant
 
   public function getSwimEnglandComplianceValue($key)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getKeys = $db->prepare("SELECT `Value` FROM `swimEnglandCompliance` WHERE `Key` = ? AND `Tenant` = ?");
     $getKeys->execute([
       $key,
@@ -571,7 +571,7 @@ class Tenant
 
   public function setSwimEnglandComplianceValue($key, $value)
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     if ($value == null) {
       $delete = $db->prepare("DELETE FROM `swimEnglandCompliance` WHERE `Key` = ? AND `Tenant` = ?;");

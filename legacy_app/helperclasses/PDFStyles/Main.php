@@ -125,21 +125,21 @@
     border-bottom: 2px solid #eee;
   }
 
-  <?php if (!app()->tenant->isCLS()) { ?>
+  <?php if (!tenant()->getLegacyTenant()->isCLS()) { ?>
   
   .primary {
-    color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    color: <?= htmlspecialchars(config('SYSTEM_COLOUR')) ?>;
   }
 
   .primary-box {
-    background-color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    background-color: <?= htmlspecialchars(config('SYSTEM_COLOUR')) ?>;
   }
 
   a,
   a:hover,
   a:active,
   a:visited {
-    color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    color: <?= htmlspecialchars(config('SYSTEM_COLOUR')) ?>;
     text-decoration: underline;
   }
 
@@ -281,7 +281,7 @@
     text-align: center;
   }
 
-  <?php if (app()->tenant->getKey('SYSTEM_COLOUR') && getContrastColor(app()->tenant->getKey('SYSTEM_COLOUR'))) { ?>.primary-box {
+  <?php if (config('SYSTEM_COLOUR') && getContrastColor(config('SYSTEM_COLOUR'))) { ?>.primary-box {
     color: #000;
   }
 

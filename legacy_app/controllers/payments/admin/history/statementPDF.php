@@ -2,19 +2,19 @@
 
 // require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$db = app()->db;
-$tenant = app()->tenant;
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $sql = $payments = null;
 $count = 0;
 
 // $club = json_decode(CLUB_JSON);
-// $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+// $addr = json_decode(config('CLUB_ADDRESS'));
 
 // Check the thing exists
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == "Parent") {
   // Check the payment exists and belongs to the user
   $sql = $db->prepare("SELECT COUNT(*) FROM payments WHERE PaymentID = ? AND UserID = ?");
   $sql->execute([$id, $user]);
@@ -60,7 +60,7 @@ if ($payment_info['PMKey'] != null) {
 }
 $pagetitle = htmlspecialchars("Statement #" . $id);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars($id));
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars($id));
 
 $billDate = null;
 try {
@@ -307,21 +307,21 @@ ob_start();?>
         <img src="<?=BASE_PATH?>public/img/directdebit/directdebit@3x.png" style="height:1cm;" class="mb-3" alt="Direct Debit Logo">
       </div>
     </div>
-    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(config('CLUB_NAME'))?></p>
 
     <ul>
       <li>
         This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits
       </li>
       <li>
-        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
+        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(config('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(config('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
       </li>
       <li>
-        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
+        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(config('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
       </li>
         <ul>
           <li>
-            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(config('CLUB_NAME'))?> asks you to
           </li>
         </ul>
       <li>
@@ -329,9 +329,9 @@ ob_start();?>
       </li>
     </ul>
 
-    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(config('CLUB_NAME'))?>.</p>
 
-    <p>&copy; <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> <?=date("Y", strtotime($payment_info['Date']))?></p>
+    <p>&copy; <?=htmlspecialchars(config('CLUB_NAME'))?> <?=date("Y", strtotime($payment_info['Date']))?></p>
 
     <?php include BASE_PATH . 'helperclasses/PDFStyles/PageNumbers.php'; ?>
   </body>

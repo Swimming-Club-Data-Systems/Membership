@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $date = $_POST['date'];
 if ($date == "") {
@@ -11,7 +11,7 @@ if ($date == "") {
 }
 
 $data = [
-	$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
 	$date->format("Y-m-d H:i:s"),
 	$_POST['content'],
 	$_POST['title'],
@@ -30,6 +30,6 @@ try {
 
 $id = $db->lastInsertId();
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['PostStatus'] = "Successfully added";
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PostStatus'] = "Successfully added";
 
 header("Location: " . autoUrl("pages/" . $id));

@@ -2,8 +2,8 @@
 
 if (!app()->user->hasPermission('Admin')) halt(404);
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getYears = $db->prepare("SELECT `ID`, `Name`, `StartDate`, `EndDate` FROM `membershipYear` WHERE `Tenant` = ? ORDER BY `EndDate` DESC, `StartDate` DESC");
 $getYears->execute([

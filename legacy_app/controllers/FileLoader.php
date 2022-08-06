@@ -1,6 +1,6 @@
 <?php
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 use Aws\S3\S3Client;
 use Aws\Exception\AwsException;

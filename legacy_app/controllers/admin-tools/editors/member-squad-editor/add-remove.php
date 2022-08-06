@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_encode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 if (!isset($_POST['state']) || !isset($_POST['member']) || !isset($_POST['squad'])) {
   halt(404);

@@ -15,7 +15,7 @@ class MedicalNotes
   public function __construct($id)
   {
     $this->id = $id;
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
 
     $getDetails = $db->prepare("SELECT Conditions, Allergies, Medication, `GPName`, `GPAddress`, `GPPhone`, `WithholdConsent` FROM memberMedical WHERE MemberID = ?");
     $getDetails->execute([

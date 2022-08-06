@@ -42,8 +42,8 @@ try {
     throw new Exception('Email address is invalid');
   }
 
-  $db = app()->db;
-  $tenant = app()->tenant;
+  $db = DB::connection()->getPdo();
+  $tenant = tenant()->getLegacyTenant();
 
   $getUserCount = $db->prepare("SELECT COUNT(*) FROM users WHERE EmailAddress = ? AND Tenant = ?");
   $getUserCount->execute([
@@ -108,12 +108,12 @@ try {
     throw new Exception('A database error occurred');
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationSuccess'] = true;
   header("location: " . autoUrl("users/$id"));
 } catch (PDOException $e) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError'] = [
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserCreationError'] = [
     'message' => $e->getMessage(),
     'fields' => $_POST
   ];

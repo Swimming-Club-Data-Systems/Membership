@@ -26,8 +26,8 @@ class AttendanceHistory
 
   private function loadData(int $member, string $from, string $until)
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     // Verify member
     $getMember = $db->prepare("SELECT MForename, MSurname FROM members WHERE MemberID = ? AND Tenant = ?");

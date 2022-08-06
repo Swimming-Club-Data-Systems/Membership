@@ -1,8 +1,8 @@
 <?php
 
-\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $id);
+\SCDS\Can::view('TeamManager', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $id);
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $getGala = $db->prepare("SELECT GalaName `name` FROM galas WHERE GalaID = ?");
 $getGala->execute([$id]);
@@ -25,7 +25,7 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-fluid">
 
-  <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
+  <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Parent') { ?>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=autoUrl("galas")?>">Galas</a></li>

@@ -2,7 +2,7 @@
 
 function registerSheetGenerator($date, $sessionId)
 {
-  $db = app()->db;
+  $db = DB::connection()->getPdo();
   $user = app()->user;
 
   $photoPermissionDescriptions = [
@@ -33,7 +33,7 @@ function registerSheetGenerator($date, $sessionId)
     $getSession->execute([
       $sessionId,
       $date->format('Y-m-d'),
-      app()->tenant->getId(),
+      tenant()->getLegacyTenant()->getId(),
       $date->format('Y-m-d'),
       $date->format('Y-m-d'),
     ]);

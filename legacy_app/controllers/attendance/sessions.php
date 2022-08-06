@@ -5,8 +5,8 @@ if (isset($_GET['squad'])) {
   $selectedSquad = $_GET['squad'];
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $squads = $db->prepare("SELECT SquadName `name`, SquadID id FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, `name` ASC");
 $squads->execute([
@@ -132,16 +132,16 @@ include "attendanceMenu.php";
 
         <form id="new-session-form" class="needs-validation" novalidate>
 
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError'])) { ?>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError'])) { ?>
             <div class="alert alert-danger">
               <p class="mb-0">
                 <strong>An error occurred:</strong>
               </p>
               <p class="mb-0">
-                <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
+                <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError']) ?>
               </p>
             </div>
-          <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']);
+          <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddSessionError']);
           } ?>
 
           <div class="mb-3">

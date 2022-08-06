@@ -4,8 +4,8 @@
 
 require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMandate = $db->prepare("SELECT COUNT(*) FROM paymentMandates INNER JOIN users ON paymentMandates.UserID = users.UserID WHERE Mandate = ? AND users.Tenant = ?");
 $getMandate->execute([

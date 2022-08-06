@@ -7,8 +7,8 @@ if (getenv('STRIPE_APPLE_PAY_DOMAIN')) {
   ]);
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $updateTime = $db->prepare("UPDATE galaEntries SET FeeToPay = ? WHERE EntryID = ?");
 
@@ -45,7 +45,7 @@ $rowArrayText = ["Freestyle", null, null, null, null, null, 2, "Backstroke",  nu
 
 try {
   $entries = $db->prepare("SELECT * FROM ((galaEntries INNER JOIN members ON galaEntries.MemberID = members.MemberID) INNER JOIN galas ON galaEntries.GalaID = galas.GalaID) WHERE members.UserID = ? AND (NOT RequiresApproval OR (RequiresApproval AND Approved)) AND NOT Charged AND FeeToPay > 0 AND galas.GalaDate >= ?");
-  $entries->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $date->format("Y-m-d")]);
+  $entries->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], $date->format("Y-m-d")]);
 } catch (Exception $e) {
   pre($e);
 }
@@ -91,7 +91,7 @@ if ($entry != null) {
   } while ($entry = $entries->fetch(PDO::FETCH_ASSOC));
 }
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['PaidEntries'] = $payingEntries;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PaidEntries'] = $payingEntries;
 
 if (sizeof($payingEntries) > 0) {
 
@@ -102,9 +102,9 @@ if (sizeof($payingEntries) > 0) {
 
   $updateEntryPayment = $db->prepare("UPDATE galaEntries SET StripePayment = ? WHERE EntryID = ?");
 
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent']) && \Stripe\PaymentIntent::retrieve($_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'], ['stripe_account' => $tenant->getStripeAccount()])->status != 'succeeded') {
+  if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent']) && \Stripe\PaymentIntent::retrieve($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'], ['stripe_account' => $tenant->getStripeAccount()])->status != 'succeeded') {
     $intent = \Stripe\PaymentIntent::retrieve(
-      $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'],
       [
         'stripe_account' => $tenant->getStripeAccount()
       ]
@@ -144,12 +144,12 @@ if (sizeof($payingEntries) > 0) {
       'setup_future_usage' => 'off_session',
       'metadata' => [
         'payment_category' => 'gala_entry',
-        'user_id' => $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+        'user_id' => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       ]
     ], [
       'stripe_account' => $tenant->getStripeAccount()
     ]);
-    $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'] = $intent->id;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'] = $intent->id;
 
     $intentCreatedAt = new DateTime('@' . $intent->created, new DateTimeZone('UTC'));
 
@@ -164,7 +164,7 @@ if (sizeof($payingEntries) > 0) {
       // Add this payment intent to the database and assign the id to each entry
       $addIntent = $db->prepare("INSERT INTO stripePayments (`User`, `DateTime`, Method, Intent, Amount, Currency, Paid, AmountRefunded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
       $addIntent->execute([
-        $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+        $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
         $intentCreatedAt->format("Y-m-d H:i:s"),
         null,
         $intent->id,
@@ -195,7 +195,7 @@ if (sizeof($payingEntries) > 0) {
 
   if ($total != $intent->amount) {
     $intent = \Stripe\PaymentIntent::update(
-      $_SESSION['TENANT-' . app()->tenant->getId()]['GalaPaymentIntent'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GalaPaymentIntent'],
       [
         'amount' => $total,
       ],

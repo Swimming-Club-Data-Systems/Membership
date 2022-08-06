@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Check gala
 $getGalas = $db->prepare("SELECT COUNT(*) FROM galas WHERE GalaID = ? AND Tenant = ?");
@@ -32,9 +32,9 @@ try {
 
   $galaData->save();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['PricesSaved'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PricesSaved'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['PricesNotSaved'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PricesNotSaved'] = true;
 }
 
 header("Location: " . autoUrl("galas/" . $id . "/pricing-and-events"));

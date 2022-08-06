@@ -4,7 +4,7 @@ use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Brick\PhoneNumber\PhoneNumberFormat;
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $pagetitle = "Users - Admin Dashboard - SCDS";
 

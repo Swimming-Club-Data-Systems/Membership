@@ -1,12 +1,12 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 try {
   $getCard = $db->prepare("SELECT MethodID FROM stripePayMethods INNER JOIN stripeCustomers ON stripeCustomers.CustomerID = stripePayMethods.Customer WHERE User = ? AND stripePayMethods.ID = ?");
   $getCard->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $id
   ]);
   $card = $getCard->fetch(PDO::FETCH_ASSOC);
@@ -35,7 +35,7 @@ try {
     // Probably isn't the end of the world if this fails since system disables use of card.
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['CardDeleted'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CardDeleted'] = true;
   header("Location: " . autoUrl("payments/cards"));
 } catch (Exception $e) {
   halt(500);

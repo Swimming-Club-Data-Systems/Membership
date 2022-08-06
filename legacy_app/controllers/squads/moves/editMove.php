@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMove = $db->prepare("SELECT members.MemberID, `MForename`, `MSurname`, `SquadName`, moves.SquadID, `MovingDate` FROM ((`moves` INNER JOIN `members` ON members.MemberID = moves.MemberID) INNER JOIN `squads` ON squads.SquadID = moves.SquadID) WHERE moves.MemberID = ? AND Tenant = ?");
 $getMove->execute([
@@ -53,9 +53,9 @@ include BASE_PATH . "views/squadMenu.php"; ?>
   </nav>
 	<div class="">
 		<h1>Squad Move for <?=htmlspecialchars($name)?></h1>
-		<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
-			echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
-			unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
+		<?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'])) {
+			echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'];
+			unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState']);
 		} ?>
 		<form method="post">
 			<div class="mb-3 row">

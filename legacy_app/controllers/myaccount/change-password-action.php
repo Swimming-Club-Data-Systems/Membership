@@ -1,7 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as v;
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $status = true;
 $statusMessage = "";
@@ -11,7 +11,7 @@ $updatePassword = $db->prepare("UPDATE `users` SET `Password` = :new WHERE `User
 
 try {
   $getPassword = $db->prepare("SELECT `Password` FROM users WHERE UserID = ?");
-  $getPassword->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+  $getPassword->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
   $hash = $getPassword->fetchColumn();
 } catch (Exception $e) {
   halt(500);
@@ -51,16 +51,16 @@ if (\CheckPwned::pwned($password1)) {
 if ($status) {
   try {
     $newHash = password_hash($password1, PASSWORD_ARGON2ID);
-    $updatePassword->execute(['user' => $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'new' => $newHash]);
+    $updatePassword->execute(['user' => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 'new' => $newHash]);
 
-    $_SESSION['TENANT-' . app()->tenant->getId()]['PasswordUpdate'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PasswordUpdate'] = true;
     header("Location: " . autoUrl("my-account/password"));
   } catch (Exception $e) {
     halt(500);
   }
 }
 else {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = '
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorState'] = '
   <div class="alert alert-danger">
   <p><strong>Something wasn\'t right</strong></p>
   <ul class="mb-0">' . $statusMessage . '</ul></div>';

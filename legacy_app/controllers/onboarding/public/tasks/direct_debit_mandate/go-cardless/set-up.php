@@ -6,17 +6,17 @@ if ($session->status == 'not_ready') halt(503);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
 $tasks = \SCDS\Onboarding\Session::stagesOrder();
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
-// if (!app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || !app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT') || !getenv('STRIPE')) halt(403);
+// if (!config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || !config('USE_STRIPE_DIRECT_DEBIT') || !getenv('STRIPE')) halt(403);
 
 $client = null;
 try {
@@ -49,7 +49,7 @@ $getDetails = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WH
 $getDetails->execute([$user->getId()]);
 $row = $getDetails->fetch(PDO::FETCH_ASSOC);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['Token'] = hash('sha256', $user->getId() . "-" . rand(1000, 9999));
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token'] = hash('sha256', $user->getId() . "-" . rand(1000, 9999));
 
 $addr = null;
 $json = $user->getUserOption('MAIN_ADDRESS');
@@ -83,7 +83,7 @@ try {
       // This will be shown on the payment pages
       "description" => "Club fee payments",
       // Not the access token
-      "session_token" => $_SESSION['TENANT-' . app()->tenant->getId()]['Token'],
+      "session_token" => $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token'],
       "success_redirect_url" => $successUrl,
       // Optionally, prefill customer details on the payment page
       "prefilled_customer" => $prefilledCustomer
@@ -92,7 +92,7 @@ try {
 
   // Hold on to this ID - you'll need it when you
   // "confirm" the redirect flow later
-  $_SESSION['TENANT-' . app()->tenant->getId()]['GC_REDIRECTFLOW_ID'] = $redirectFlow->id;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['GC_REDIRECTFLOW_ID'] = $redirectFlow->id;
   http_response_code(303);
   header("Location: " . $redirectFlow->redirect_url);
 } catch (Exception $e) {

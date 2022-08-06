@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $user = app()->user;
 
 if (!isset($_GET['member']) || !isset($_GET['gala'])) halt(404);
@@ -43,7 +43,7 @@ $getCountRep->execute([
 $rep = $getCountRep->fetchColumn() > 0;
 
 if (!$rep && !$user->hasPermission('Admin') && !$user->hasPermission('Coach') && !$user->hasPermission('Galas')) {
-  if ($member['UserID'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+  if ($member['UserID'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
     halt(404);
   }
 }
@@ -148,7 +148,7 @@ include BASE_PATH . 'views/header.php';
             <input type="hidden" name="gala" value="<?= htmlspecialchars($_GET['gala']) ?>">
 
             <p>
-              [I / my child] <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> [am / is] able to participate in this competition having completed and signed the relevant Health Survey and Return to Training Declaration forms as requested by <?= htmlspecialchars(app()->tenant->getName()) ?>.
+              [I / my child] <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> [am / is] able to participate in this competition having completed and signed the relevant Health Survey and Return to Training Declaration forms as requested by <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>.
             </p>
 
             <p>

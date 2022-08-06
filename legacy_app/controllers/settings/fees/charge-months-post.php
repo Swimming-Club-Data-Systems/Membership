@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 try {
 
@@ -15,10 +15,10 @@ try {
     }
   }
 
-  app()->tenant->setKey('SquadFeeMonths', json_encode($exemptMonths));
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success'] = true;
+  tenant()->getLegacyTenant()->setKey('SquadFeeMonths', json_encode($exemptMonths));
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Success'] = true;
 } catch (Exception $e) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Update-Error'] = true;
 }
 
 header("Location: " . autoUrl("settings/fees/charge-months"));

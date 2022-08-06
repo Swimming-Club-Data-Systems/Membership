@@ -1,9 +1,9 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinParents WHERE Hash = ? AND Invited = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash'], true]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash'], true]);
 
 if ($query->fetchColumn() != 1) {
   halt(404);
@@ -19,7 +19,7 @@ try {
 }
 
 $query = $db->prepare("SELECT ID, First, Last FROM joinSwimmers WHERE Parent = ? AND SquadSuggestion IS NOT NULL ORDER BY First ASC, Last ASC");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Hash']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Hash']]);
 $swimmers = $query->fetchAll();
 
 $success = true;
@@ -35,7 +35,7 @@ foreach ($swimmers as $swimmer) {
 
 if ($success) {
   // Great news, move on the conduct codes
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AC-Registration']['Stage'] = 'CodeOfConduct';
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-Registration']['Stage'] = 'CodeOfConduct';
   header("Location: " . autoUrl("register/ac/code-of-conduct"));
 } else {
   // Parent must try again
@@ -46,7 +46,7 @@ if ($success) {
     }
   }
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-Selected'] = $selections;
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AC-TC-ErrorNames'] = $name;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-Selected'] = $selections;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AC-TC-ErrorNames'] = $name;
   header("Location: " . currentUrl());
 }

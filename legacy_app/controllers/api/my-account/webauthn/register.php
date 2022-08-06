@@ -10,14 +10,14 @@ use Nyholm\Psr7Server\ServerRequestCreator;
 use Webauthn\AuthenticatorAttestationResponseValidator;
 use Webauthn\PublicKeyCredentialCreationOptions;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialCreationOptions'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialCreationOptions'])) {
     throw new Exception("Missing session value");
 }
 
 $server = WebAuthnImplementation\Server::get();
 $publicKeyCredentialSourceRepository = new WebAuthnImplementation\PublicKeyCredentialSourceRepository();
 
-$publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptions::createFromString($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialCreationOptions']);
+$publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptions::createFromString($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialCreationOptions']);
 
 $psr17Factory = new Psr17Factory();
 $creator = new ServerRequestCreator(
@@ -43,11 +43,11 @@ try {
     // Set the name in db
     $credentialId = $publicKeyCredentialSource->getPublicKeyCredentialId();
 
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName']) && mb_strlen(trim($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'])) > 0) {
-        $db = app()->db;
+    if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialName']) && mb_strlen(trim($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialName'])) > 0) {
+        $db = DB::connection()->getPdo();
         $update = $db->prepare("UPDATE `userCredentials` SET `credential_name` = ? WHERE `credential_id` = ?");
         $update->execute([
-            $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'],
+            $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialName'],
             base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()),
         ]);
     }
@@ -66,5 +66,5 @@ try {
     ]);
 }
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialCreationOptions']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialName']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialCreationOptions']);

@@ -20,8 +20,8 @@ if ($replyAddress && $data->defaultReplyTo) {
 $defaultSendAs = app()->user->getUserOption('NotifyDefaultSendAs');
 $defaultReplyTo = app()->user->getUserOption('NotifyDefaultReplyTo');
 
-$clubName = app()->tenant->getKey('CLUB_NAME');
-$clubEmail = app()->tenant->getKey('CLUB_EMAIL');
+$clubName = config('CLUB_NAME');
+$clubEmail = config('CLUB_EMAIL');
 $userName = app()->user->getForename() . ' ' . app()->user->getSurname();
 
 $possibleReplyTos = [

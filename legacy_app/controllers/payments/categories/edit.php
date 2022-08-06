@@ -1,7 +1,7 @@
 <?php
 
-$tenant = app()->tenant;
-$db = app()->db;
+$tenant = tenant()->getLegacyTenant();
+$db = DB::connection()->getPdo();
 
 $get = $db->prepare("SELECT `Name`, `Description` FROM paymentCategories WHERE UniqueID = ? AND Tenant = ?");
 $get->execute([
@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
     <div class="col-lg-8">
       <form method="post" class="needs-validation" novalidate>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategorySuccess'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategorySuccess'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>Success</strong>
@@ -47,10 +47,10 @@ include BASE_PATH . 'views/header.php';
               We've added the new category.
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategorySuccess']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewCategorySuccess']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategorySuccess'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategorySuccess'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>Success</strong>
@@ -59,19 +59,19 @@ include BASE_PATH . 'views/header.php';
               We've saved your changes to the category.
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategorySuccess']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategorySuccess']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategoryError'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError']) ?>
+              <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategoryError']) ?>
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SaveCategoryError']);
         } ?>
 
         <div class="mb-3">

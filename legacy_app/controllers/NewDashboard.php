@@ -4,7 +4,7 @@
 // https://www.swimming.org/sport/wp-json/wp/v2/posts
 
 $obj = null;
-if (app()->tenant->isCLS()) {
+if (tenant()->getLegacyTenant()->isCLS()) {
 	$file = getCachedFile(CACHE_DIR . 'CLS-ASC-News.json', 'https://chesterlestreetasc.co.uk/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
 	$obj = json_decode($file);
 }
@@ -19,10 +19,10 @@ try {
 } catch (Exception $e) {
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
+$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']))[0]);
 
 $day = (new DateTime('now', new DateTimeZone('Europe/London')))->format("w");
 $time = (new DateTime('-15 minutes', new DateTimeZone('Europe/London')))->format("H:i:s");
@@ -37,7 +37,7 @@ $sessions = $query->fetchAll(PDO::FETCH_ASSOC);
 // $sessions = [];
 
 $query = $db->prepare("SELECT EmailAddress FROM users WHERE UserID = ?");
-$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$query->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $userInfo = $query->fetch(PDO::FETCH_ASSOC);
 
 $getLocations = $db->prepare("SELECT COUNT(*) FROM `covidLocations` WHERE `Tenant` = ?");
@@ -68,7 +68,7 @@ include BASE_PATH . "views/header.php";
 			</aside>
 		<?php } ?>
 
-		<?php if (app()->user->hasPermission('Admin') && $tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+		<?php if (app()->user->hasPermission('Admin') && config('GOCARDLESS_ACCESS_TOKEN') && !config('USE_STRIPE_DIRECT_DEBIT')) { ?>
 			<div class="alert alert-info">
 				<p class="mb-0">
 					<strong>Plan your migration to Stripe for your Direct Debit payments</strong>
@@ -116,7 +116,7 @@ include BASE_PATH . "views/header.php";
 				<a href="<?= autoUrl('covid/risk-awareness') ?>">
 					<span class="mb-3">
 						<span class="title mb-0">
-							<?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
+							<?php if (mb_strtoupper(config('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
 						</span>
 						<span>
 							Declare that you understand the risks of returning to training
@@ -212,7 +212,7 @@ include BASE_PATH . "views/header.php";
 			</div>
 		</div>
 
-		<?php if (app()->tenant->isCLS()) { ?>
+		<?php if (tenant()->getLegacyTenant()->isCLS()) { ?>
 			<div class="mb-4">
 				<h2 class="mb-4">Club News</h2>
 				<div class="news-grid">
@@ -262,7 +262,7 @@ include BASE_PATH . "views/header.php";
 			</div>
 		<?php } ?>
 
-		<?php if (app()->tenant->getKey('ASA_DISTRICT') == 'E' && $asa_ne != null) { ?>
+		<?php if (config('ASA_DISTRICT') == 'E' && $asa_ne != null) { ?>
 			<div class="mb-4">
 				<h2 class="mb-4">Swim England North East News</h2>
 				<div class="news-grid">

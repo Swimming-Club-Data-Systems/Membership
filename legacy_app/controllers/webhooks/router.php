@@ -6,7 +6,7 @@ $this->any('/sumpayments', function () {
 
 $this->any('/chargeusers', function () {
 	try {
-		if (app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) {
+		if (config('USE_STRIPE_DIRECT_DEBIT')) {
 			include 'charge-users-stripe.php';
 		} else {
 			include 'charge-users-gc-legacy.php';
@@ -22,7 +22,7 @@ $this->any('/retrypayments', function () {
 
 $this->any('/notifysend', function () {
 
-	$db = app()->db;
+	$db = DB::connection()->getPdo();
 	//echo "Service Suspended";
 	require 'SingleEmailHandler.php';
 });
@@ -32,17 +32,17 @@ $this->any('/newnotifysend', function () {
 });
 
 $this->any('/handle-legacy-renewal-period-creation', function () {
-	$db = app()->db;
+	$db = DB::connection()->getPdo();
 	require 'squadmemberupdate.php';
 });
 
 $this->any('/updateregisterweeks', function () {
-	$db = app()->db;
+	$db = DB::connection()->getPdo();
 	require 'newWeek.php';
 });
 
 $this->any('/timeupdate', function () {
-	$db = app()->db;
+	$db = DB::connection()->getPdo();
 	require 'getTimesNew.php';
 });
 
@@ -55,6 +55,6 @@ $this->post('/checkout_v2', function () {
 });
 
 /*$this->any('/timeupdatenew', function() {
-	$db = app()->db;;
+	$db = DB::connection()->getPdo();;
 	require 'getTimesNew.php';
 });*/

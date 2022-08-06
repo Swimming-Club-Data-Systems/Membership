@@ -3,11 +3,11 @@
 $fluidContainer = true;
 $pagetitle = 'Stripe Payment Services Options';
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
-$at = app()->tenant->getStripeAccount();
+$at = tenant()->getLegacyTenant()->getStripeAccount();
 
 $stripeAccount = \Stripe\Account::retrieve($at);
 
@@ -29,7 +29,7 @@ $disabled = [
 ];
 
 foreach ($vars as $key => $value) {
-  if (($value = $tenant->getKey($key)) != null) {
+  if (($value = config($key)) != null) {
     $vars[$key] = bool($value);
   }
 }
@@ -75,7 +75,7 @@ include BASE_PATH . 'views/header.php';
           Manage your Stripe connection
         </p>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Stripe-Reg-Success'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Stripe-Reg-Success'])) { ?>
           <div class="alert alert-success">
             <p class="mb-0">
               <strong>We've connected your Stripe Account</strong>
@@ -84,10 +84,10 @@ include BASE_PATH . 'views/header.php';
               Find out about Stripe <a href="https://stripe.com/gb" target="_blank">on their website</a>.
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Stripe-Reg-Success']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Stripe-Reg-Success']);
         } ?>
 
-        <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Stripe-Reg-Error'])) { ?>
+        <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Stripe-Reg-Error'])) { ?>
           <div class="alert alert-danger">
             <p class="mb-0">
               <strong>We were unable to connect your Stripe Account</strong>
@@ -96,7 +96,7 @@ include BASE_PATH . 'views/header.php';
               <a href="<?= htmlspecialchars(autoUrl("settings/stripe/register")) ?>" class="alert-link">Try again now</a> or try again later.
             </p>
           </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['Stripe-Reg-Error']);
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Stripe-Reg-Error']);
         } ?>
 
         <?php if ($at) { ?>

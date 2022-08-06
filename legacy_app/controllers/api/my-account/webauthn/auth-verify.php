@@ -4,7 +4,7 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Webauthn\PublicKeyCredentialRequestOptions;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']) || !isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestUsername'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions']) || !isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestUsername'])) {
   throw new Exception("Missing session value");
 }
 
@@ -21,9 +21,9 @@ $creator = new ServerRequestCreator(
 
 $serverRequest = $creator->fromGlobals();
 
-$publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
+$publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions']);
 
-$userEntity = $userEntityRepository->findWebauthnUserByUsername($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestUsername']);
+$userEntity = $userEntityRepository->findWebauthnUserByUsername($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestUsername']);
 
 try {
   $publicKeyCredentialSource = $server->loadAndCheckAssertionResponse(
@@ -47,5 +47,5 @@ try {
   ]);
 }
 
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestUsername']);
-unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestUsername']);
+unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['WebAuthnCredentialRequestOptions']);

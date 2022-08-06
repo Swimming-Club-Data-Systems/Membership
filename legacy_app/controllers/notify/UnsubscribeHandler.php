@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $user_id = hexdec($userid);
 $email = str_replace(' ', '+', urldecode($email));
@@ -37,11 +37,11 @@ include BASE_PATH . "views/header.php";?>
 	<h1>Successfully Unsubscribed</h1>
 	<p>You will no longer receive emails from the <span class="font-monospace"><?=htmlspecialchars($list)?></span> list.</p>
 	<p>
-		For further help and support with emails from <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, visit
+		For further help and support with emails from <?=htmlspecialchars(config('CLUB_NAME'))?>, visit
 		our <a href="<?=autoUrl("notify")?>">Notify Help Centre</a>.
 	</p>
 	<p>
-		Notify by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+		Notify by <?=htmlspecialchars(config('CLUB_NAME'))?>
 	</p>
 </div>
 

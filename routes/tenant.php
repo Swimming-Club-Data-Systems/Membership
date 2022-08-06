@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,8 +34,8 @@ Route::prefix('renewal')->group(function () {
     });
 });
 
-Route::get('/emergency-message.json', function () {
-    include LEGACY_PATH . 'controllers/public/emergency-message.json.php';
+Route::get('/emergency-message.json', function (Request $request) {
+    return include LEGACY_PATH . 'controllers/public/emergency-message.json.php';
 });
 
 Route::get('/public/{path}', function ($path) {
@@ -243,11 +244,11 @@ Route::get('/login/oauth', function () {
 });
 
 Route::prefix('payments/webhooks')->group(function () {
-    include LEGACY_PATH . 'controllers/payments/webhooks/handler.php';
+    // include LEGACY_PATH . 'controllers/payments/webhooks/handler.php';
 });
 
 Route::prefix('payments/stripe/webhooks')->group(function () {
-    include LEGACY_PATH . 'controllers/payments/stripe/webhooks.php';
+    // include LEGACY_PATH . 'controllers/payments/stripe/webhooks.php';
 });
 
 Route::prefix('webhooks')->group(function () {

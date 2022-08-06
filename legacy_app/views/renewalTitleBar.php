@@ -2,7 +2,7 @@
 <div class="bg-light mb-3 py-2 shadow-sm mt-n3">
   <div class="<?=$container_class?>">
     <div class="nav nav-underline">
-      <?php if (user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+      <?php if (user_needs_registration($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
       $target = "Club Registration";?>
       <span class="text-dark me-3"><strong>Club Registration</strong></span>
     <?php } else if (!isset($renewalName)) {

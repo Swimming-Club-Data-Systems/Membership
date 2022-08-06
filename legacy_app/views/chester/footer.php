@@ -45,8 +45,8 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
           <div class="row">
             <div class="col">
               <address>
-                <?php $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS')); ?>
-                <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
+                <?php $addr = json_decode(config('CLUB_ADDRESS')); ?>
+                <strong><?= htmlspecialchars(config('CLUB_NAME')) ?></strong><br>
                 <?php
                 if ($addr) {
                   for ($i = 0; $i < sizeof($addr); $i++) { ?>
@@ -66,7 +66,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
               <ul class="list-unstyled cls-global-footer-link-spacer">
                 <li><strong>Membership System Support</strong></li>
                 <li>
-                  <a href="<?= autoUrl("privacy") ?>" target="_blank" title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
+                  <a href="<?= autoUrl("privacy") ?>" target="_blank" title="<?= htmlspecialchars(config('CLUB_NAME')) ?> Privacy Policy">
                     Our Privacy Policy
                   </a>
                 </li>
@@ -98,8 +98,8 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
                 <li><a title="British Swimming" target="_blank" href="https://www.swimming.org/britishswimming/">British
                     Swimming</a></li>
                 <li><a title="the Amateur Swimming Association" target="_blank" href="https://www.swimming.org/swimengland/">Swim England</a></li>
-                <li><a title="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['name']) ?></a></li>
-                <li><a title="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars($districts[config('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($districts[config('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars($districts[config('ASA_DISTRICT')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars($counties[config('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($counties[config('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars($counties[config('ASA_COUNTY')]['name']) ?></a></li>
               </ul>
 
             </div>
@@ -131,7 +131,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
           $seconds = $time_end - $time_start;
           ?>
           <p class="hidden-print mb-1">
-            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars(config('CLUB_NAME')) ?>.
           </p>
           <p class="mb-1">Page rendered in <?= number_format($seconds, 3) ?> seconds. <?php if (defined('SOFTWARE_VERSION')) { ?>Software version <?= mb_substr(SOFTWARE_VERSION, 0, 7); ?>.<?php } ?>
           </p>
@@ -154,7 +154,7 @@ $script = autoUrl(getCompiledAsset('main.js'), false);
 
 ?>
 <script rel="preload" src="<?= htmlspecialchars($script) ?>"></script>
-<?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
+<?php if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) || !$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PWA']) { ?>
   <script defer src="https://static.chesterlestreetasc.co.uk/global/headers/GlobalNavigation.js"></script>
 <?php } ?>
 <?php if (isset($use_website_menu) && $use_website_menu) { ?>

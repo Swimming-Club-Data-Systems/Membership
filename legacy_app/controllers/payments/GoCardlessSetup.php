@@ -2,7 +2,7 @@
 
 // Setup GoCardless Client
 
-// $at = app()->tenant->getGoCardlessAccessToken();
+// $at = tenant()->getLegacyTenant()->getGoCardlessAccessToken();
 $client = null;
 // try {
   $client = SCDS\GoCardless\Client::get();

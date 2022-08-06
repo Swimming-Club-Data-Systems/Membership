@@ -2,8 +2,8 @@
 
 use function GuzzleHttp\json_decode;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getSquads = $db->prepare("SELECT SquadName, SquadID, SquadFee FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC;");
 $getSquads->execute([
@@ -16,7 +16,7 @@ $pagetitle = "Members for Tier 3 Billing";
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 $dateToday = clone $date;
 
-$fees = $tenant->getKey('TIER3_SQUAD_FEES');
+$fees = config('TIER3_SQUAD_FEES');
 if ($fees) {
   $fees = json_decode($fees, true);
   $date = new DateTime($fees['eighteen_by'], new DateTimeZone('Europe/London'));

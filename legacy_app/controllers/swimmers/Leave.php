@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $query = $db->prepare("SELECT UserID FROM members WHERE MemberID = ? AND Tenant = ?");
 $query->execute([
@@ -10,7 +10,7 @@ $query->execute([
 ]);
 $result = $query->fetchColumn();
 
-if ($result == null || $result != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if ($result == null || $result != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -22,14 +22,14 @@ $query = $db->prepare("SELECT MForename, MSurname FROM members WHERE MemberID = 
 $query->execute([$id]);
 $result = $query->fetch(PDO::FETCH_ASSOC);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['LeaveKey'] = hash('md5', time());
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LeaveKey'] = hash('md5', time());
 
 include BASE_PATH . "views/header.php"; ?>
 
 <div class="container-xl">
   <div class="row">
     <div class="col-lg-8">
-      <?php if ($count == 0 && $_SESSION['TENANT-' . app()->tenant->getId()]['ConfirmLeave'] !== true) { ?>
+      <?php if ($count == 0 && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ConfirmLeave'] !== true) { ?>
       <h1>
         We're sorry to see you go
       </h1>
@@ -38,11 +38,11 @@ include BASE_PATH . "views/header.php"; ?>
         <?=date("F Y", strtotime('+1 month'))?>.
       </p>
       <p>
-        <a href="<?=autoUrl("members/" . $id . "/leaveclub/" . $_SESSION['TENANT-' . app()->tenant->getId()]['LeaveKey'])?>" class="btn btn-danger">
+        <a href="<?=autoUrl("members/" . $id . "/leaveclub/" . $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LeaveKey'])?>" class="btn btn-danger">
           I Confirm
         </a>
       </p>
-      <?php } else if ($_SESSION['TENANT-' . app()->tenant->getId()]['ConfirmLeave']) { ?>
+      <?php } else if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ConfirmLeave']) { ?>
       <h1>
         We're sorry to see you go
       </h1>
@@ -81,8 +81,8 @@ include BASE_PATH . "views/header.php"; ?>
 
 <?php
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ConfirmLeave'])) {
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['ConfirmLeave']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ConfirmLeave'])) {
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ConfirmLeave']);
 }
 
 $footer = new \SCDS\Footer();

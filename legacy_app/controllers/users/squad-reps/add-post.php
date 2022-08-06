@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 // Check user
 $userCount = $db->prepare("SELECT COUNT(*) FROM users WHERE UserID = ? AND Tenant = ?");
@@ -36,10 +36,10 @@ try {
   ]);
 
   // Success
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadSuccess'] = true;
   header("Location: " . autoUrl("users/" . $id . "/rep"));
 } catch (Exception $e) {
   // Success
-  $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AssignSquadError'] = true;
   header("Location: " . autoUrl("users/" . $id . "/rep/add"));
 }

@@ -3,8 +3,8 @@
 $doNotHalt = true;
 
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -17,8 +17,8 @@ if (!$location) {
   halt(404);
 }
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("contact-tracing/check-in/" . $id);
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['size'] = 1024;
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][0]['text'] = autoUrl("contact-tracing/check-in/" . $id);
+$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['qr'][0]['size'] = 1024;
 $qrFile = true;
 
 ob_start(); ?>
@@ -90,10 +90,10 @@ ob_start(); ?>
   <?php
 
   // Inserts the standard letterhead on PDF pages
-  $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+  $addr = json_decode(config('CLUB_ADDRESS'));
   $logoPath = null;
-  if ($logos = app()->tenant->getKey('LOGO_DIR')) {
-    $logoPath = app()->tenant->getFilePath() . 'public/' . mb_substr($logos, 8) . 'logo-1024.png';
+  if ($logos = config('LOGO_DIR')) {
+    $logoPath = tenant()->getLegacyTenant()->getFilePath() . 'public/' . mb_substr($logos, 8) . 'logo-1024.png';
   }
 
   ?>
@@ -103,7 +103,7 @@ ob_start(); ?>
       <?php if ($logoPath) { ?>
         <img src="<?= $logoPath ?>" class="logo" style="height: 25mm">
       <?php } else { ?>
-        <h1 class="primary"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></h1>
+        <h1 class="primary"><?= htmlspecialchars(config('CLUB_NAME')) ?></h1>
       <?php } ?>
     </div>
     <div class="" style="position: absolute; top: 0; right: 0;>
@@ -144,7 +144,7 @@ ob_start(); ?>
     </h2>
 
     <p style="margin: none; padding: none; line-height: 16pt;">
-      Go to <strong><?= htmlspecialchars(app('request')->hostname) ?></strong>, find <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong>, select <strong>Contact Tracing</strong>, select <strong><?= htmlspecialchars($location['Name']) ?></strong> and follow the on screen instructions
+      Go to <strong><?= htmlspecialchars(app('request')->hostname) ?></strong>, find <strong><?= htmlspecialchars(config('CLUB_NAME')) ?></strong>, select <strong>Contact Tracing</strong>, select <strong><?= htmlspecialchars($location['Name']) ?></strong> and follow the on screen instructions
     </p>
 
   </div>

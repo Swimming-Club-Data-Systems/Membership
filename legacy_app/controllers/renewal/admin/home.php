@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $renewals = $db->prepare("SELECT ID, `Name`, StartDate, EndDate FROM `renewals` WHERE Tenant = ? ORDER BY `EndDate` DESC LIMIT 5;");
 $renewals->execute([

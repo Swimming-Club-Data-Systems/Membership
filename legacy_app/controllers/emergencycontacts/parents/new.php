@@ -9,9 +9,9 @@ if (isset($renewal_trap) && $renewal_trap) {
 }
 
 $v = null;
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
-  $v = $_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'];
-  unset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA']);
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['POST_DATA'])) {
+  $v = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['POST_DATA'];
+  unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['POST_DATA']);
 } else {
   $v = [
     'name' => '',
@@ -44,9 +44,9 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewError'])) {
-        echo $_SESSION['TENANT-' . app()->tenant->getId()]['AddNewError'];
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewError']);
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewError'])) {
+        echo $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewError'];
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AddNewError']);
       } ?>
 
       <form method="post" class="needs-validation" novalidate>

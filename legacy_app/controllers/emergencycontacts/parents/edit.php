@@ -1,13 +1,13 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $url_path = "emergency-contacts";
 if (isset($renewal_trap) && $renewal_trap) {
   $url_path = "renewal/emergencycontacts";
 }
 
-$user = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $contact = new EmergencyContact();
 $contact->connect($db);
@@ -48,7 +48,7 @@ if (isset($renewal_trap) && $renewal_trap) {
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PhoneError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['PhoneError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PhoneError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PhoneError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>
               The number provided was not a valid UK phone number.
@@ -57,7 +57,7 @@ if (isset($renewal_trap) && $renewal_trap) {
             Please try again
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PhoneError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PhoneError']);
       } ?>
 
       <form method="post" class="needs-validation" novalidate>

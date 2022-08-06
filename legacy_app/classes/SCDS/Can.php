@@ -10,8 +10,8 @@ class Can
 
   public static function view(String $section, int $user, int $event = null)
   {
-    $db = app()->db;
-    $al = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
+    $db = DB::connection()->getPdo();
+    $al = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
 
     if ($section == 'TeamManager') {
       if ($al == 'Admin' || $al == 'Galas' || $al == 'Coach') {

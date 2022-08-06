@@ -1,8 +1,8 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $user = app()->user;
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 $stripe = new \Stripe\StripeClient(getenv('STRIPE'));
 

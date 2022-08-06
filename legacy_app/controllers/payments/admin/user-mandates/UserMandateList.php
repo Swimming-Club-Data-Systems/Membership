@@ -5,8 +5,8 @@
  * Displays list of users and their primary mandate
  */
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMandates = $db->prepare("SELECT Forename, Surname, users.UserID, Mandate, BankName, AccountHolderName, AccountNumEnd FROM (((users LEFT JOIN paymentPreferredMandate ON users.UserID = paymentPreferredMandate.UserID) LEFT JOIN paymentMandates ON paymentPreferredMandate.MandateID = paymentMandates.MandateID) INNER JOIN `permissions` ON users.UserID = `permissions`.`User`) WHERE users.Tenant = ? AND `permissions`.`Permission` = 'Parent' ORDER BY Surname ASC, Forename ASC");
 $getMandates->execute([
@@ -33,7 +33,7 @@ include BASE_PATH . 'views/header.php';
       <h1>User mandates</h1>
       <p class="lead">(GoCardless <em>Legacy</em>) Direct Debit mandates by user</p>
 
-      <?php if (app()->tenant->getStripeAccount() || app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) { ?>
+      <?php if (tenant()->getLegacyTenant()->getStripeAccount() || config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) { ?>
         <p>
           <a href="<?= htmlspecialchars(autoUrl('payments/user-mandates')) ?>">View Stripe Mandates</a>
         </p>

@@ -1,16 +1,16 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
-$target = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
+$target = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
 $name = app()->user->getFullName();
 
 try {
 	$query = $db->prepare("SELECT * FROM `users` WHERE `UserID` = ? AND Tenant = ?");
 	$query->execute([
-		$_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']['RealUser'],
+		$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['RealUser'],
 		$tenant->getId()
 	]);
 
@@ -20,20 +20,20 @@ try {
 		halt(404);
 	}
 
-	$_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'] = null;
-	$_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'] = [];
-	unset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation']);
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'] = null;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation'] = [];
+	unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']);
 
 	$_SESSION = [];
 
 	// session_destroy();
 
-	$_SESSION['TENANT-' . app()->tenant->getId()]['Username'] = 		$info['Username'];
-	$_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'] = $info['EmailAddress'];
-	$_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] = 		$info['Forename'];
-	$_SESSION['TENANT-' . app()->tenant->getId()]['Surname'] = 			$info['Surname'];
-	$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] = 			$info['UserID'];
-	$_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] = 		1;
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Username'] = 		$info['Username'];
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['EmailAddress'] = $info['EmailAddress'];
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Forename'] = 		$info['Forename'];
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Surname'] = 			$info['Surname'];
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] = 			$info['UserID'];
+	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'] = 		1;
 
 	$userObject = new \User($info['UserID'], true);
 	app()->user = $userObject;

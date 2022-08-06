@@ -1,8 +1,8 @@
 <?php
 $title = $pagetitle = "Add a Squad";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $codesOfConduct = $db->prepare("SELECT Title, ID FROM posts WHERE Tenant = ? AND `Type` = 'conduct_code' ORDER BY Title ASC");
 $codesOfConduct->execute([
@@ -40,16 +40,16 @@ include BASE_PATH . "views/squadMenu.php"; ?>
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SquadAddError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['SquadAddError']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SquadAddError']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SquadAddError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>There was a problem trying to add your new squad</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['SquadAddError']['message']) ?>
+            <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SquadAddError']['message']) ?>
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SquadAddError']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SquadAddError']);
       } ?>
 
       <div class="">

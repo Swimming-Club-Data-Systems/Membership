@@ -40,8 +40,8 @@ class Session
 
   public static function retrieve($id, $tenant = null)
   {
-    $db = app()->db;
-    if (!$tenant) $tenant = app()->tenant->getId();
+    $db = DB::connection()->getPdo();
+    if (!$tenant) $tenant = tenant()->getLegacyTenant()->getId();
 
     $get = $db->prepare("SELECT * FROM `onboardingSessions` INNER JOIN users ON users.UserID = onboardingSessions.user WHERE `id` = ? AND `Tenant` = ?");
     $get->execute([
@@ -89,7 +89,7 @@ class Session
 
   private function loadMembers()
   {
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname FROM members INNER JOIN onboardingMembers ON members.MemberID = onboardingMembers.member WHERE `session` = ? AND `UserID` = ? AND members.Active ORDER BY MemberID ASC");
     $getMembers->execute([
       $this->id,
@@ -158,15 +158,15 @@ class Session
       $name = "renewal";
     }
 
-    $subject = 'Complete your ' . $name . ' at ' . app()->tenant->getName();
+    $subject = 'Complete your ' . $name . ' at ' . tenant()->getLegacyTenant()->getName();
     $content = '<p>Dear ' . htmlspecialchars($user->getFullName()) . ',</p>';
 
     $content .= '<p><a href="' . htmlspecialchars($this->getUrl()) . '">Please complete your registration tasks online</a>.</p>';
     $content .= '<p><a href="' . htmlspecialchars($this->getUrl()) . '">' . htmlspecialchars($this->getUrl()) . '</a></p>';
 
-    $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+    $content .= '<p>Thank you, <br>The ' . htmlspecialchars(tenant()->getLegacyTenant()->getName()) . ' team.</p>';
 
-    notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
+    notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => tenant()->getLegacyTenant()->getName() . ' Membership Secretary']);
   }
 
   public function checkMemberTasksComplete()
@@ -222,7 +222,7 @@ class Session
 
     $stages->$task->completed = true;
 
-    $db = app()->db;
+    $db = DB::connection()->getPdo();
     $update = $db->prepare("UPDATE `onboardingSessions` SET `stages` = ? WHERE `id` = ?");
     $update->execute([
       json_encode($stages),
@@ -243,7 +243,7 @@ class Session
 
     // Are all tasks completed? If so mark session complete
     if ($this->getCurrentTask() == 'done') {
-      $db = app()->db;
+      $db = DB::connection()->getPdo();
 
       // Check if marked as done
       if ($this->status != 'complete') {
@@ -268,9 +268,9 @@ class Session
 
             $content .= '<p>' . htmlspecialchars($user->getFullName()) . ' has completed their onboarding tasks.</p>';
 
-            $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+            $content .= '<p>Thank you, <br>The ' . htmlspecialchars(tenant()->getLegacyTenant()->getName()) . ' team.</p>';
 
-            notifySend(null, $subject, $content, $creator->getFullName(), $creator->getEmail(), ['Name' => app()->tenant->getName()]);
+            notifySend(null, $subject, $content, $creator->getFullName(), $creator->getEmail(), ['Name' => tenant()->getLegacyTenant()->getName()]);
           } catch (\Exception $e) {
             // Ignore
           }
@@ -295,9 +295,9 @@ class Session
 
           // $content .= '<p>In future this email will contain welcome info (if registration onboarding).</p>';
 
-          $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+          $content .= '<p>Thank you, <br>The ' . htmlspecialchars(tenant()->getLegacyTenant()->getName()) . ' team.</p>';
 
-          notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
+          notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => tenant()->getLegacyTenant()->getName() . ' Membership Secretary']);
         } catch (\Exception $e) {
           // Ignore
         }
@@ -375,9 +375,9 @@ class Session
         'revisitable' => true,
       ],
       'direct_debit_mandate' => [
-        'required' => bool(app()->tenant->getBooleanKey('USE_DIRECT_DEBIT')),
+        'required' => bool(config('USE_DIRECT_DEBIT')),
         'completed' => false,
-        'required_locked' => !app()->tenant->getBooleanKey('USE_DIRECT_DEBIT'),
+        'required_locked' => !config('USE_DIRECT_DEBIT'),
         'metadata' => [],
         'revisitable' => true,
       ],

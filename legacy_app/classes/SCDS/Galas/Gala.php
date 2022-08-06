@@ -28,8 +28,8 @@ class Gala
 
   public static function getGala($id)
   {
-    $db = app()->db;
-    $tenant = app()->tenant;
+    $db = DB::connection()->getPdo();
+    $tenant = tenant()->getLegacyTenant();
 
     $getGala = $db->prepare("SELECT `GalaID`, `GalaName`, `CourseLength`, `GalaVenue`, `ClosingDate`, `GalaDate`, `HyTek`, `CoachEnters`, `RequiresApproval`, `Description`, `PaymentCategory`, `ProcessingFee` FROM `galas` WHERE `Tenant` = ? AND `GalaID` = ?");
     $getGala->execute([

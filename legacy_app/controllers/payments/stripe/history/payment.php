@@ -97,8 +97,8 @@ function paymentIntentStatus($value)
   }
 }
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $payment = $db->prepare("SELECT * FROM ((stripePayments LEFT JOIN stripePaymentItems ON stripePaymentItems.Payment = stripePayments.ID) INNER JOIN users ON stripePayments.User = users.UserID) WHERE users.Tenant = ? AND stripePayments.ID = ?");
 $payment->execute([
@@ -115,7 +115,7 @@ if (!$pm) {
 $paymentItems = $db->prepare("SELECT * FROM stripePaymentItems WHERE stripePaymentItems.Payment = ?");
 $paymentItems->execute([$id]);
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Admin' && $pm['User'] != $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) {
+if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != 'Admin' && $pm['User'] != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']) {
   halt(404);
 }
 
@@ -172,7 +172,7 @@ $countries = getISOAlpha2Countries();
 
     <div class="row">
       <div class="col-lg-8">
-        <h1><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname']) . ':') ?> <?php } ?>Card payment #<?= htmlspecialchars($id) ?></h1>
+        <h1><?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname']) . ':') ?> <?php } ?>Card payment #<?= htmlspecialchars($id) ?></h1>
         <p class="lead mb-0">At <?= $date->format("H:i \o\\n j F Y") ?></p>
       </div>
     </div>
@@ -191,7 +191,7 @@ $countries = getISOAlpha2Countries();
         <dt class="col-sm-5 col-md-4">Amount</dt>
         <dd class="col-sm-7 col-md-8">&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $payment->amount)->withPointMovedLeft(2)->toScale(2) ?></dd>
 
-        <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+        <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
           <dt class="col-sm-5 col-md-4">Amount capturable</dt>
           <dd class="col-sm-7 col-md-8">&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $payment->amount_capturable)->withPointMovedLeft(2)->toScale(2) ?></dd>
 
@@ -463,7 +463,7 @@ $countries = getISOAlpha2Countries();
                 <p class="mb-0">No money has been refunded for this entry.</p>
               <?php } ?>
 
-              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Galas' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+              <?php if ($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Galas' || $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] == 'Admin') { ?>
                 <p class="mb-0 mt-3">
                   <a href="<?= autoUrl("galas/" . $ents['GalaID'] . "/refunds#refund-box-" . $ents['EntryID']) ?>" class="btn btn-primary">
                     Refund entry

@@ -2,7 +2,7 @@
 
 $pagetitle = "Mandate - Payments - SCDS";
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 $tenant = app()->adminCurrentTenant;
 $user = app()->adminCurrentUser;
 
@@ -16,7 +16,7 @@ $getUsableMandates->execute([
   $tenant->getId(),
 ]);
 
-$default = $tenant->getKey('DEFAULT_PAYMENT_MANDATE');
+$default = config('DEFAULT_PAYMENT_MANDATE');
 
 include BASE_PATH . "views/root/head.php";
 

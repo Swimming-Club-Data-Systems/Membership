@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 $getGala = $db->prepare("SELECT * FROM `galas` WHERE `GalaID` = ? AND Tenant = ?");
 $getGala->execute([
   $id,
@@ -43,7 +43,7 @@ include "galaMenu.php"; ?>
       <form method="post">
         <div class="mb-3">
           <label class="form-label" for="galaname" class="form-label">Gala Name</label>
-          <input type="text" class="form-control" id="galaname" name="galaname" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Open Meet') ?>" value="<?= htmlspecialchars($row['GalaName']) ?>" required>
+          <input type="text" class="form-control" id="galaname" name="galaname" placeholder="<?= htmlspecialchars('e.g. ' . config('CLUB_NAME') . ' Open Meet') ?>" value="<?= htmlspecialchars($row['GalaName']) ?>" required>
         </div>
 
         <div class="mb-3">
@@ -72,7 +72,7 @@ include "galaMenu.php"; ?>
         </div>
         <div class="mb-3">
           <label class="form-label" for="venue" class="form-label">Gala Venue</label>
-          <input type="text" class="form-control" id="venue" name="venue" value="<?= htmlspecialchars($row['GalaVenue']) ?>" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Pool') ?>" required>
+          <input type="text" class="form-control" id="venue" name="venue" value="<?= htmlspecialchars($row['GalaVenue']) ?>" placeholder="<?= htmlspecialchars('e.g. ' . config('CLUB_NAME') . ' Pool') ?>" required>
         </div>
         <div class="row">
           <div class="col">

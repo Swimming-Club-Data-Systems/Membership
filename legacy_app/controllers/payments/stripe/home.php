@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 //$paymentsMeths = \Stripe\PaymentMethod::all(["customer" => "cus_FF5F1cnWIA7UAI", "type" => "card"]);
@@ -10,7 +10,7 @@ $expMonth = date("m");
 $expYear = date("Y");
 
 $getCards = $db->prepare("SELECT stripePayMethods.ID, `Name`, Last4, Brand, ExpMonth, ExpYear, Funding, PostCode, Line1, Line2, CardName FROM stripePayMethods INNER JOIN stripeCustomers ON stripeCustomers.CustomerID = stripePayMethods.Customer WHERE User = ? AND Reusable = ? AND (ExpYear > ? OR (ExpYear = ? AND ExpMonth >= ?)) ORDER BY `Name` ASC");
-$getCards->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
+$getCards->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], 1, $expYear, $expYear, $expMonth]);
 $card = $getCards->fetch(PDO::FETCH_ASSOC);
 
 $pagetitle = 'Payment Cards';
@@ -41,22 +41,22 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccess'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardSetupSuccess'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>We have added your new card</strong>
           </p>
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand'])) { ?>
-            <p class="mb-0">Your <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand']) ?> card is now ready.</p>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardSetupSuccessBrand'])) { ?>
+            <p class="mb-0">Your <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardSetupSuccessBrand']) ?> card is now ready.</p>
           <?php } ?>
         </div>
       <?php } ?>
       <?php
-      unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand']);
-      unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccess']);
+      unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardSetupSuccessBrand']);
+      unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardSetupSuccess']);
       ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['CardDeleted'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CardDeleted'])) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>Card deleted</strong>
@@ -65,7 +65,7 @@ include BASE_PATH . 'views/header.php';
             Your card details will no longer be shown in the list of saved cards.
           </p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['CardDeleted']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CardDeleted']);
       } ?>
 
       <div class="accepted-network-logos">

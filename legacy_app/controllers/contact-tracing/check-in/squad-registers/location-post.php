@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getLocation = $db->prepare("SELECT `ID`, `Name`, `Address` FROM covidLocations WHERE `ID` = ? AND `Tenant` = ?");
 $getLocation->execute([
@@ -42,7 +42,7 @@ try {
   } else {
     $userSquads = $db->prepare("SELECT SquadName, SquadID FROM squadReps INNER JOIN squads ON squadReps.Squad = squads.SquadID WHERE User = ? AND Squad = ? ORDER BY SquadFee DESC, SquadName ASC");
     $userSquads->execute([
-      $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+      $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
       $_POST['squad'],
     ]);
   }
@@ -164,7 +164,7 @@ try {
 
   $db->commit();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingSuccess'] = true;
 
   http_response_code(302);
   header("location: " . autoUrl('contact-tracing/check-in/' . $id . '/success'));
@@ -175,7 +175,7 @@ try {
   $db->rollBack();
 } catch (Exception $e) {
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError'] = [
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ContactTracingError'] = [
     'post' => $_POST,
     'message' => $e->getMessage(),
   ];

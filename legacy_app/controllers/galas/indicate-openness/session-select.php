@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends`, CoachEnters FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -28,7 +28,7 @@ $sessions = $getSessions->fetchAll(PDO::FETCH_ASSOC);
 $getCanAttend = $db->prepare("SELECT `Session`, `CanEnter` FROM galaSessionsCanEnter ca INNER JOIN galaSessions gs ON ca.Session = gs.ID WHERE gs.Gala = ? AND ca.Member = ?");
 
 $getSwimmers = $db->prepare("SELECT MemberID id, MForename fn, MSurname sn FROM members WHERE UserID = ?");
-$getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getSwimmers->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $swimmer = $getSwimmers->fetch(PDO::FETCH_ASSOC);
 
 $hasSwimmers = true;
@@ -56,14 +56,14 @@ include BASE_PATH . 'views/header.php';
       <p class="lead">Select sessions your swimmers will be able to swim at.</p>
       <p>Your coaches will use this information to make suggested entries for your swimmers.</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']) && $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']) { ?>
         <div class="alert alert-success">Saved</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['SuccessStatus']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']) && $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']) { ?>
         <div class="alert alert-danger">Changes were not saved</div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus']);
       } ?>
 
       <?php if ($nowDate > $galaDate) { ?>

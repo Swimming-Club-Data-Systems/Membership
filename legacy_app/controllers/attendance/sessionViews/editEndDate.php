@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $sql = $db->prepare("SELECT * FROM (`sessions` INNER JOIN sessionsSquads ON sessionsSquads.Session = sessions.SessionID INNER JOIN sessionsVenues ON sessions.VenueID = sessionsVenues.VenueID) WHERE `SessionID` = ? AND `sessions`.`Tenant` = ?;");
 $sql->execute([

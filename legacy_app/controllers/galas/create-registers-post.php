@@ -1,7 +1,7 @@
 <?php
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $galaDetails = $db->prepare("SELECT GalaName `name`, GalaDate `ends` FROM galas WHERE GalaID = ? AND Tenant = ?");
 $galaDetails->execute([
@@ -96,7 +96,7 @@ try {
 
   $db->commit();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['CreateRegisterSuccessStatus'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['CreateRegisterSuccessStatus'] = true;
 
   http_response_code(302);
   header("location: " . autoUrl("galas/$id"));
@@ -104,7 +104,7 @@ try {
 } catch (Exception $e) {
   $db->rollBack();
 
-  $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['ErrorStatus'] = true;
 
   http_response_code(302);
   header("location: " . autoUrl("galas/$id/create-registers"));

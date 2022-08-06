@@ -3,15 +3,15 @@
 // See your keys here: https://dashboard.stripe.com/account/apikeys
 \Stripe\Stripe::setApiKey(getenv('STRIPE'));
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getUserEmail = $db->prepare("SELECT Forename, Surname, EmailAddress, Mobile FROM users WHERE UserID = ?");
-$getUserEmail->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$getUserEmail->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 $user = $getUserEmail->fetch(PDO::FETCH_ASSOC);
 
 $checkIfCustomer = $db->prepare("SELECT COUNT(*) FROM stripeCustomers WHERE User = ?");
-$checkIfCustomer->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+$checkIfCustomer->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']]);
 
 if ($checkIfCustomer->fetchColumn() == 0) {
   // Create a Customer:
@@ -31,23 +31,23 @@ if ($checkIfCustomer->fetchColumn() == 0) {
   $id = $customer->id;
   $addCustomer = $db->prepare("INSERT INTO stripeCustomers (User, CustomerID) VALUES (?, ?)");
   $addCustomer->execute([
-    $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'],
     $id
   ]);
 }
 
 $setupIntent = null;
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId'])) {
+if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeSetupIntentId'])) {
   $setupIntent = \Stripe\SetupIntent::create(
     [],
     [
       'stripe_account' => $tenant->getStripeAccount(),
     ]
   );
-  $_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId'] = $setupIntent->id;
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeSetupIntentId'] = $setupIntent->id;
 } else {
   $setupIntent = \Stripe\SetupIntent::retrieve(
-    $_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId'],
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['StripeSetupIntentId'],
     [
       'stripe_account' => $tenant->getStripeAccount()
     ]
@@ -57,7 +57,7 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId'])
 $countries = getISOAlpha2Countries();
 
 $fontCss = 'https://fonts.googleapis.com/css?family=Open+Sans';
-if (!app()->tenant->isCLS()) {
+if (!tenant()->getLegacyTenant()->isCLS()) {
   $fontCss = 'https://fonts.googleapis.com/css?family=Source+Sans+Pro';
 }
 
@@ -93,17 +93,17 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardError'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardError'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>An error occurred</strong>
           </p>
-          <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage'])) { ?>
-            <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage']) ?></p>
+          <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardErrorMessage'])) { ?>
+            <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardErrorMessage']) ?></p>
           <?php } ?>
         </div>
-        <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardError']);
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage']); ?>
+        <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardError']);
+        unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['PayCardErrorMessage']); ?>
       <?php } ?>
 
       <form action="<?= htmlspecialchars(autoUrl("payments/cards/add")) ?>" method="post" id="payment-form" class="mb-5 needs-validation" novalidate>
@@ -184,7 +184,7 @@ include BASE_PATH . 'views/header.php';
         <div id="card-errors" role="alert"></div>
 
         <p>
-          Please note that even when using a saved payment card, your bank may request additional verification, such as with a one-time password or a notification sent to one of your devices. When you add a new card, <?= htmlspecialchars(app()->tenant->getName()) ?> may place a temporary hold on your card for verification.
+          Please note that even when using a saved payment card, your bank may request additional verification, such as with a one-time password or a notification sent to one of your devices. When you add a new card, <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?> may place a temporary hold on your card for verification.
         </p>
 
         <p>

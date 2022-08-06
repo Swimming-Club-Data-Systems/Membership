@@ -4,8 +4,8 @@
 
 require BASE_PATH . 'controllers/payments/GoCardlessSetup.php';
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $deleteMandatePref = $db->prepare("DELETE FROM paymentPreferredMandate WHERE UserID = ? AND MandateID = ?");
 $getUser = $db->prepare("SELECT UserID, MandateID FROM paymentMandates WHERE Mandate = ?");
@@ -66,7 +66,7 @@ try {
   }
 
   if (app('request')->method == 'GET' && $user != null) {
-    $_SESSION['TENANT-' . app()->tenant->getId()]['MandateDeletedTrue'] = true;
+    $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['MandateDeletedTrue'] = true;
     header("location: " . autoUrl("users/" . $user['UserID'] . "/mandates"));
   }
 

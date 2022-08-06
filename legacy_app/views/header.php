@@ -5,9 +5,9 @@ if (isset(app()->user)) {
   $currentUser = app()->user;
 }
 $cvp = 'generic';
-// if (app()->tenant->isCLS() && $currentUser != null && $currentUser->getUserBooleanOption('UsesGenericTheme')) {
+// if (tenant()->getLegacyTenant()->isCLS() && $currentUser != null && $currentUser->getUserBooleanOption('UsesGenericTheme')) {
 //   $cvp = 'generic';
-// } else if (app()->tenant->isCLS()) {
+// } else if (tenant()->getLegacyTenant()->isCLS()) {
 //   $cvp = 'chester';
 // }
 

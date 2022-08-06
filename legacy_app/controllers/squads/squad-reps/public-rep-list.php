@@ -2,14 +2,14 @@
 
 $pagetitle = "Squad Reps";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $members = [];
 
 $getMyMembers = $db->prepare("SELECT members.MemberID, MForename, MSurname FROM members WHERE UserID = ?");
 $getMyMembers->execute([
-  $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']
+  $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID']
 ]);
 
 $getSquads = $db->prepare("SELECT SquadName `name`, SquadID id FROM squads INNER JOIN squadMembers ON squads.SquadID = squadMembers.Squad WHERE squadMembers.Member = ? ORDER BY SquadFee DESC, SquadName ASC");

@@ -2,8 +2,8 @@
 
 $pagetitle = "New Payment";
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $categories = $db->prepare("SELECT `UniqueID`, `Name` FROM paymentCategories WHERE `Tenant` = ? AND `Show` ORDER BY `Name` ASC");
 $categories->execute([
@@ -30,19 +30,19 @@ include BASE_PATH . 'views/header.php';
       <h1>New invoice payment</h1>
       <p class="lead">Add a new payment or credit to an account</p>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentSuccessMessage'])) { ?>
         <div class="alert alert-success">
-          <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage']) ?>
+          <?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentSuccessMessage']) ?>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentSuccessMessage']);
       } ?>
 
-      <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage'])) { ?>
+      <?php if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentErrorMessage'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>An error occured and we have not added the payment</strong></p>
-          <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage']) ?></p>
+          <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentErrorMessage']) ?></p>
         </div>
-      <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage']);
+      <?php unset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['NewPaymentErrorMessage']);
       } ?>
 
       <form id="payment-form" method="post" class="needs-validation" novalidate>

@@ -1,5 +1,5 @@
-<?php $access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Swimmers-FamilyMode']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") { ?>
+<?php $access = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'];
+if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Swimmers-FamilyMode']) && $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['AccessLevel'] != "Parent") { ?>
 <div class="bg-secondary text-white shadow mb-3" style="margin-top:-1rem;">
   <div class="<?=$container_class?>">
     <nav class="nav nav-underline py-2">

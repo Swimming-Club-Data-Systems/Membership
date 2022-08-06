@@ -3,8 +3,8 @@
 $pagetitle = "Marked Complete";
 $type = null;
 
-$db = app()->db;
-$tenant = app()->tenant;
+$db = DB::connection()->getPdo();
+$tenant = tenant()->getLegacyTenant();
 
 $getMove = $db->prepare("SELECT MForename, MSurname, SquadName FROM moves INNER JOIN members ON moves.MemberID = members.MemberID INNER JOIN squads ON moves.SquadID = squads.SquadID WHERE members.Tenant = ? AND moves.MemberID = ? AND moves.SquadID = ?");
 $getMove->execute([
@@ -64,7 +64,7 @@ include BASE_PATH . 'views/header.php';
 
   <p>
     Kind regards,<br>
-    The <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> Team.
+    The <?=htmlspecialchars(config('CLUB_NAME'))?> Team.
   </p>
 
 <?php } ?>

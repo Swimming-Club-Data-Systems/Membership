@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $session = \SCDS\Onboarding\Session::retrieve($_SESSION['OnboardingSessionId']);
 
@@ -8,9 +8,9 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
-$logos = app()->tenant->getKey('LOGO_DIR');
+$logos = config('LOGO_DIR');
 
 $stages = $session->stages;
 
@@ -25,7 +25,7 @@ if (isset($_SESSION['SetupMandateSuccess'])) {
 }
 
 $ddi = null;
-if (app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) {
+if (config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) {
   // Get DD details
   // Get mandates
   $getMandates = $db->prepare("SELECT ID, Mandate, Last4, SortCode, `Address`, Reference, `URL`, `Status` FROM stripeMandates WHERE Customer = ? AND (`Status` = 'accepted' OR `Status` = 'pending') ORDER BY CreationTime DESC");
@@ -128,7 +128,7 @@ include BASE_PATH . "views/head.php";
             </div>
           <?php } ?>
 
-          <?php if (getenv('STRIPE') && app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && !$good) { ?>
+          <?php if (getenv('STRIPE') && config('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && !$good) { ?>
             <!-- STRIPE -->
             <p>
               <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/stripe/set-up')) ?>" class="btn btn-success">Set up now</a>
@@ -156,7 +156,7 @@ include BASE_PATH . "views/head.php";
             </p>
           <?php } ?>
 
-          <?php if ($tenant->getBooleanKey('ALLOW_DIRECT_DEBIT_OPT_OUT') && !($hasGoCardless || $ddi)) { ?>
+          <?php if (config('ALLOW_DIRECT_DEBIT_OPT_OUT') && !($hasGoCardless || $ddi)) { ?>
             <p>
               <button type="submit" class="btn btn-dark">
                 Proceed without setting up a Direct Debit Instruction

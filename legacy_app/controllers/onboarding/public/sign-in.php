@@ -1,6 +1,6 @@
 <?php
 
-$db = app()->db;
+$db = DB::connection()->getPdo();
 
 $session = \SCDS\Onboarding\Session::retrieve($_SESSION['OnboardingSessionId']);
 
@@ -8,7 +8,7 @@ if ($session->status == 'not_ready') halt(404);
 
 $user = $session->getUser();
 
-$tenant = app()->tenant;
+$tenant = tenant()->getLegacyTenant();
 
 if ($session->isCurrentTask('done') && !isset(app()->user)) {
   try {
