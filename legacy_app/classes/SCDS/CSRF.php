@@ -10,15 +10,7 @@ class CSRF {
    * Automatically format the CSRF token for use in an HTML form
    */
   public static function write() {
-    // If the token is not set, define it
-    $csrfName = 'CSRF';
-    if (tenant()) {
-      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
-    }
-
-    self::getValue();
-
-    echo '<input id="SCDS-GLOBAL-CSRF" name="SCDS-GLOBAL-CSRF" type="hidden" value="' . htmlspecialchars($_SESSION[$csrfName]) . '">';
+    echo '<input type="hidden" name="_token" value="' . csrf_token() . '" />';
   }
 
   /**
@@ -27,16 +19,7 @@ class CSRF {
    * @return string csrf token
    */
   public static function getValue() {
-    $csrfName = 'CSRF';
-    if (tenant()) {
-      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
-    }
-
-    if (!isset($_SESSION[$csrfName]) || $_SESSION[$csrfName] == null) {
-      $_SESSION[$csrfName] = hash('sha256', random_bytes(100));
-    }
-
-    return $_SESSION[$csrfName];
+    return csrf_token();
   }
 
   /**
@@ -45,19 +28,7 @@ class CSRF {
    * @return boolean true if valid
    */
   public static function verify($throwException = false) {
-    $csrfName = 'CSRF';
-    if (tenant()) {
-      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
-    }
-
-    if (isset($_SESSION[$csrfName]) && isset($_POST['SCDS-GLOBAL-CSRF']) && $_SESSION[$csrfName] == $_POST['SCDS-GLOBAL-CSRF']) {
-      // Verifies CSRF, proceed normally
-      return true;
-    } else if ($throwException) {
-      throw new CSRFValidityException('Invalid Cross-Site Request Forgery Token');
-    } else {
-      return false;
-    }
+    return false;
   }
 
   /**
@@ -66,18 +37,6 @@ class CSRF {
    * @return boolean true if valid
    */
   public static function verifyCode($code, $throwException = false) {
-    $csrfName = 'CSRF';
-    if (tenant()) {
-      $csrfName = 'CSRF-T' . tenant()->getLegacyTenant()->getId();
-    }
-    
-    if (isset($_SESSION[$csrfName]) && $_SESSION[$csrfName] == $code) {
-      // Verifies CSRF, proceed normally
-      return true;
-    } else if ($throwException) {
-      throw new CSRFValidityException('Invalid Cross-Site Request Forgery Token');
-    } else {
-      return false;
-    }
+    return false;
   }
 }
