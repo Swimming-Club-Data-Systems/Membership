@@ -32,17 +32,17 @@ $this->any('/newnotifysend', function () {
 });
 
 $this->any('/handle-legacy-renewal-period-creation', function () {
-	$db = app()->db;;
+	$db = app()->db;
 	require 'squadmemberupdate.php';
 });
 
 $this->any('/updateregisterweeks', function () {
-	$db = app()->db;;
+	$db = app()->db;
 	require 'newWeek.php';
 });
 
 $this->any('/timeupdate', function () {
-	$db = app()->db;;
+	$db = app()->db;
 	require 'getTimesNew.php';
 });
 

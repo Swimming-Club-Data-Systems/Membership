@@ -4,8 +4,8 @@
 
 // $at = app()->tenant->getGoCardlessAccessToken();
 $client = null;
-try {
+// try {
   $client = SCDS\GoCardless\Client::get();
-} catch (Exception $e) {
-  halt(902);
-}
+// } catch (Exception $e) {
+//   halt(404);
+// }

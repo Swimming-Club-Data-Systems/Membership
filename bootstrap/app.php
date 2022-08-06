@@ -43,6 +43,19 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
+| Load legacy helper functions
+|--------------------------------------------------------------------------
+|
+| To eventually be removed
+|
+*/
+
+define("LEGACY_PATH", base_path('/legacy_app/'));
+define("BASE_PATH", LEGACY_PATH);
+require base_path('/legacy_app/functions.php');
+
+/*
+|--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
 |

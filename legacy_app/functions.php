@@ -2,6 +2,20 @@
 
 include BASE_PATH . 'includes/regions/countries-iso3166.php';
 
+function currentUrl()
+{
+  $uri = ltrim($_SERVER["REQUEST_URI"], '/');
+  $url = autoUrl($uri);
+  if (mb_substr($url, -1) != '/') {
+    $url = $url . '/';
+  }
+  return $url;
+}
+
+function halt(int $statusCode, $throwException = true) {
+  abort($statusCode);
+}
+
 /**
  * Return value as a FILTER_VALIDATE_BOOLEAN
  */
@@ -176,7 +190,7 @@ function notifySend($to, $subject, $emailMessage, $name = null, $emailaddress = 
   return false;
 }
 
-function getAttendanceByID($link = null, $id, $weeks = "all")
+function getAttendanceByID($id, $weeks = "all")
 {
   $db = app()->db;
   $tenant = app()->tenant;
@@ -202,7 +216,7 @@ function getAttendanceByID($link = null, $id, $weeks = "all")
   return 'DATA HIDDEN ';
 }
 
-function mySwimmersTable($link = null, $userID)
+function mySwimmersTable($userID)
 {
   $db = app()->db;
   // Get the information about the swimmer
@@ -289,7 +303,7 @@ function courseLengthString($string)
   return $courseLength;
 }
 
-function myMonthlyFeeTable($link = null, $userID)
+function myMonthlyFeeTable($userID)
 {
   try {
     $fs = new FeeSummer((int) (new DateTime('now', new DateTimeZone('Europe/London')))->format('n'));
@@ -359,7 +373,7 @@ function webhookUrl($relative, $includeClub = true)
   return rtrim($rootUrl . $relative, '/');
 }
 
-function monthlyFeeCost($link = null, $user, $format = "decimal")
+function monthlyFeeCost($user, $format = "decimal")
 {
   $db = app()->db;
 
@@ -458,7 +472,7 @@ function monthlyFeeCost($link = null, $user, $format = "decimal")
   }
 }
 
-function monthlyExtraCost($link = null, $userID, $format = "decimal")
+function monthlyExtraCost($userID, $format = "decimal")
 {
   $db = app()->db;
   $query = $db->prepare("SELECT extras.ExtraName, extras.ExtraFee FROM ((members
@@ -482,7 +496,7 @@ function monthlyExtraCost($link = null, $userID, $format = "decimal")
   }
 }
 
-function swimmers($link = null, $userID, $fees = false)
+function swimmers($userID, $fees = false)
 {
   $db = app()->db;
   $getSwimmers = $db->prepare("SELECT MForename fn, MSurname sn, MemberID id FROM members WHERE members.UserID = ?");
@@ -518,7 +532,7 @@ function swimmers($link = null, $userID, $fees = false)
   return $content;
 }
 
-function paymentHistory($link = null, $user, $type = null)
+function paymentHistory($user, $type = null)
 {
   $db = app()->db;
   $sql = $db->prepare("SELECT * FROM `payments` WHERE `UserID` = ? ORDER BY `PaymentID` DESC LIMIT 0, 5;");
@@ -561,7 +575,7 @@ function paymentHistory($link = null, $user, $type = null)
   <?php }
 }
 
-function feesToPay($link = null, $user)
+function feesToPay($user)
 {
   $db = app()->db;
   $sql = $db->prepare("SELECT * FROM `paymentsPending` WHERE `UserID` = ? AND `PMkey` IS NULL AND `Status` = 'Pending' ORDER BY `Date` DESC LIMIT 0, 30;");
@@ -604,7 +618,7 @@ function feesToPay($link = null, $user)
 <?php }
 }
 
-function getBillingDate($link = null, $user)
+function getBillingDate($user)
 {
   $db = app()->db;
   $sql = $db->prepare("SELECT * FROM `paymentSchedule` WHERE `UserID` = ?;");
