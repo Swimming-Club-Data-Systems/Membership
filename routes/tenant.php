@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,9 +27,7 @@ Route::middleware([
         return view('welcome');
     });
 
-    Route::get('/laravel-welcome', function () {
-        return view('welcome');
-    });
+    require __DIR__.'/auth.php';
 
     Route::prefix('dev')->group(function () {
         Route::get('/', function () {
@@ -550,8 +549,6 @@ Route::middleware([
                 include LEGACY_PATH . 'controllers/users/new/new-post.php';
             });
         });
-
-        Route::redirect('/login', '');
 
         Route::prefix('my-account')->group(function () {
             Route::get('/', function () {

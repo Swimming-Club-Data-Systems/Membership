@@ -6,6 +6,7 @@ client_secret.json
 phinx.yml
 src/cache
 .DS_Store
+/bootstrap/ssr
 /node_modules
 /public/build
 /public/hot
