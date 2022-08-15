@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Stancl\Tenancy\Database\Models\Domain;
-use App\Models\Tenant;
+use App\Models\Central\Tenant;
 
 return [
     'tenant_model' => Tenant::class,

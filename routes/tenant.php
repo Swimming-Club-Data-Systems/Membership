@@ -23,11 +23,14 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', function () {
-        return view('welcome');
+
+    Route::middleware('guest')->group(function () {
+        Route::get('/', function () {
+            return view('welcome');
+        });
     });
 
-    require __DIR__.'/auth.php';
+    require __DIR__ . '/auth.php';
 
     Route::prefix('dev')->group(function () {
         Route::get('/', function () {
@@ -308,9 +311,10 @@ Route::middleware([
     });
 
     Route::middleware(['auth'])->group(function () {
-        Route::get('/', function () {
-            // Report
-        });
+        // Route::get('/', function () {
+        //     // Report
+        //     return view('welcome');
+        // });
 
         Route::prefix('log-books')->group(function () {
             Route::get('/', function () {
