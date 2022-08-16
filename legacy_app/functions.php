@@ -1961,11 +1961,11 @@ function getCompiledAsset($filename)
 
   // if the file is inside another folder inside "dist" folder
   if ($dirName != '.') {
-    $handler = "compiled/$assetType/$dirName/";
-    $externalHandler = "compiled/$assetType/$dirName/"; // for viewing it. e.g: http://example.com/dist/styles/style1/main.css
+    $handler = base_path() . "/public/compiled/$assetType/$dirName/";
+    $externalHandler = base_path() . "/public/compiled/$assetType/$dirName/"; // for viewing it. e.g: http://example.com/dist/styles/style1/main.css
   } else {
-    $handler = "compiled/$assetType/";
-    $externalHandler = "compiled/$assetType/"; // for viewing it. e.g: http://example.com/dist/styles/main.css
+    $handler = base_path() . "/public/compiled/$assetType/";
+    $externalHandler = base_path() . "/public/compiled/$assetType/"; // for viewing it. e.g: http://example.com/dist/styles/main.css
   }
 
   $openHandler = opendir($handler);

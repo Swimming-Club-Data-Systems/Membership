@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Inertia\Inertia;
+use Illuminate\Foundation\Application;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +25,13 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-
-    Route::middleware('guest')->group(function () {
-        Route::get('/', function () {
-            return view('welcome');
-        });
+    Route::get('/', function () {
+        return Inertia::render('Welcome', [
+            'canLogin' => Route::has('login'),
+            'canRegister' => Route::has('register'),
+            'laravelVersion' => Application::VERSION,
+            'phpVersion' => PHP_VERSION,
+        ]);
     });
 
     require __DIR__ . '/auth.php';
@@ -623,12 +627,6 @@ Route::middleware([
         Route::prefix('attendance')->group($attendanceAndRegisters);
 
         Route::prefix('registers')->group($attendanceAndRegisters);
-
-        Route::prefix('users')->group(function () {
-            Route::get('/', function () {
-                // Report
-            });
-        });
 
         Route::prefix('admin')->group(function () {
             Route::get('/', function () {

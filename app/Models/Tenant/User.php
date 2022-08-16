@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -18,9 +19,10 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'Forename',
+        'Surname',
+        'EmailAddress',
+        'Password'
     ];
 
     /**
@@ -29,7 +31,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'Password',
         'remember_token',
     ];
 
@@ -41,4 +43,32 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getAuthIdentifierName() {
+        return "UserID";
+    }
+
+    public function getAuthIdentifier() {
+        return $this->UserID;
+    }
+
+    public function getAuthPassword() {
+        return $this->Password;
+    }
+
+    /**
+     * Get the user id via expected attribute.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function id(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['UserID'],
+        );
+    }
+
+    public function getLegacyUser() {
+        return new \User($this->id);
+    }
 }
