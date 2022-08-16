@@ -149,7 +149,7 @@ try {
     $bccEmails = [];
 
     // There must be at least on person in this, so we will BCC the sender by default
-    $bccEmails[app()->user->getEmail()] = app()->user->getName();
+    $bccEmails[Auth::User()->getLegacyUser()->getEmail()] = Auth::User()->getLegacyUser()->getName();
 
     // Get member squad(s)
     $getSquad = $db->prepare("SELECT Squad FROM squadMembers WHERE Member = ?");

@@ -20,7 +20,7 @@ $guests = $members = $squads = $userSquads = null;
 $isUserMember = false;
 if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
 
-  $user = app()->user;
+  $user = Auth::User()->getLegacyUser();
   if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
     $userSquads = $db->prepare("SELECT SquadName, SquadID FROM squads WHERE Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
     $userSquads->execute([
@@ -45,9 +45,9 @@ if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'
   // Check if a member name is equal to the user name
   $getEqualCount = $db->prepare('SELECT COUNT(*) FROM members WHERE UserID = ? AND MForename COLLATE utf8mb4_general_ci LIKE ? AND MSurname COLLATE utf8mb4_general_ci LIKE ?');
   $getEqualCount->execute([
-    app()->user->getId(),
-    app()->user->getForename(),
-    app()->user->getSurname(),
+    Auth::id(),
+    Auth::User()->getLegacyUser()->getForename(),
+    Auth::User()->getLegacyUser()->getSurname(),
   ]);
   $isUserMember = $getEqualCount->fetchColumn() > 0;
 
@@ -172,7 +172,7 @@ include BASE_PATH . 'views/header.php';
 
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="user" name="user" value="1">
-              <label class="form-check-label" for="user"><?= htmlspecialchars(app()->user->getName()) ?></label>
+              <label class="form-check-label" for="user"><?= htmlspecialchars(Auth::User()->getLegacyUser()->getName()) ?></label>
             </div>
           </div>
 

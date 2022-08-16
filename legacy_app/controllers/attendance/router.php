@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 if ($user->hasPermissions(['Committee', 'Admin', 'Coach'])) {
   // Attendance Home

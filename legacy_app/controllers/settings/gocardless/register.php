@@ -1,7 +1,7 @@
 <?php
 
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 if ($at = tenant()->getLegacyTenant()->getGoCardlessAccessToken()) {
   // Already go it, halt

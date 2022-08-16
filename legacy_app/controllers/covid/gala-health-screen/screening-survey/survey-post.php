@@ -2,7 +2,7 @@
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 if (!isset($_POST['member']) || !isset($_POST['gala'])) halt(404);
 

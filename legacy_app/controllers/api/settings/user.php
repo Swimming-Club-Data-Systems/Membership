@@ -7,8 +7,8 @@
 $db = DB::connection()->getPdo();
 $user = null;
 
-if (app()->user) {
-  $user = app()->user;
+if (Auth::User()->getLegacyUser()) {
+  $user = Auth::User()->getLegacyUser();
 }
 
 $output = [];

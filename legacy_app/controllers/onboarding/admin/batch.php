@@ -1,6 +1,6 @@
 <?php
 
-if (!app()->user->hasPermission('Admin')) halt(404);
+if (!Auth::User()->getLegacyUser()->hasPermission('Admin')) halt(404);
 
 $session = \SCDS\Onboarding\Session::retrieve($id);
 

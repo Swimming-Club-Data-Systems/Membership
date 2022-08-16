@@ -3,7 +3,7 @@
 $fluidContainer = true;
 
 $db = DB::connection()->getPdo();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 $tenant = tenant()->getLegacyTenant();
 
 $getExtraEmails = null;
@@ -168,7 +168,7 @@ $userID = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 					<?php while ($category = $getCategories->fetch(PDO::FETCH_OBJ)) { ?>
 						<div class="mb-3">
 							<div class="form-switch mb-2">
-								<input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars('email-category-' . $category->id) ?>" aria-describedby="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" name="<?= htmlspecialchars('email-category-' . $category->id) ?>" <?php if (isAbsolutelySubscribed(app()->user->getId(), $category->id)) { ?>checked<?php } ?>>
+								<input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars('email-category-' . $category->id) ?>" aria-describedby="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" name="<?= htmlspecialchars('email-category-' . $category->id) ?>" <?php if (isAbsolutelySubscribed(Auth::id(), $category->id)) { ?>checked<?php } ?>>
 								<label class="form-check-label" for="<?= htmlspecialchars('email-category-' . $category->id) ?>"><?= htmlspecialchars($category->name) ?></label>
 								<small id="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" class="form-text text-muted"><?= htmlspecialchars($category->description) ?></small>
 							</div>

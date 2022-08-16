@@ -3,7 +3,7 @@
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 
-$admin = app()->user->hasPermissions(['Admin', 'Coach']);
+$admin = Auth::User()->getLegacyUser()->hasPermissions(['Admin', 'Coach']);
 
 // Get all countries
 $countries = getISOAlpha2CountriesWithHomeNations();
@@ -21,9 +21,9 @@ if ($row == null) {
   halt(404);
 }
 
-$isMemberUser = $row['UserID'] == app()->user->getId();
+$isMemberUser = $row['UserID'] == Auth::id();
 
-if (!$admin && $row['UserID'] != app()->user->getId()) {
+if (!$admin && $row['UserID'] != Auth::id()) {
   halt(404);
 }
 

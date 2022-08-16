@@ -1,6 +1,6 @@
 <?php
 
-if (!app()->user->hasPermission('Admin')) halt(404);
+if (!Auth::User()->getLegacyUser()->hasPermission('Admin')) halt(404);
 
 use Ramsey\Uuid\Uuid;
 use Respect\Validation\Exceptions\NegativeException;
@@ -66,7 +66,7 @@ try {
     json_encode($paymentTypes),
     json_encode([]),
     0,
-    app()->user->getId(),
+    Auth::id(),
   ]);
 
   // $message = '<p>There are membership fees for you to review in your club account.</p>';

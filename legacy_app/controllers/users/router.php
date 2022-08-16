@@ -247,7 +247,7 @@ $this->group('/squads', function () {
 	});
 });
 
-if (app()->user->hasPermission('Admin')) {
+if (Auth::User()->getLegacyUser()->hasPermission('Admin')) {
 	$this->group('/add', function () {
 		include 'new/router.php';
 	});

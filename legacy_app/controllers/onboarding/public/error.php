@@ -36,7 +36,7 @@ include BASE_PATH . "views/head.php";
           We could not find the onboarding session you were looking for. Your session may have timed out.
         </p>
 
-        <?php if (isset(app()->user)) { ?>
+        <?php if (Auth::User()->getLegacyUser() !== null) { ?>
 
           <p>
             Please visit the <a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">onboarding home page</a> to find and resume your session.

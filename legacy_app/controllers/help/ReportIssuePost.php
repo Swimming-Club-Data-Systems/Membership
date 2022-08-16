@@ -1,6 +1,6 @@
 <?php
 
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 

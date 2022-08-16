@@ -138,12 +138,12 @@ $possibleTos['galas'] = $group;
 
 $clubName = config('CLUB_NAME');
 $clubEmail = config('CLUB_EMAIL');
-$userName = app()->user->getForename() . ' ' . app()->user->getSurname();
+$userName = Auth::User()->getLegacyUser()->getForename() . ' ' . Auth::User()->getLegacyUser()->getSurname();
 
-$replyAddress = app()->user->getUserOption('NotifyReplyAddress');
+$replyAddress = Auth::User()->getLegacyUser()->getUserOption('NotifyReplyAddress');
 
-$defaultSendAs = app()->user->getUserOption('NotifyDefaultSendAs');
-$defaultReplyTo = app()->user->getUserOption('NotifyDefaultReplyTo');
+$defaultSendAs = Auth::User()->getLegacyUser()->getUserOption('NotifyDefaultSendAs');
+$defaultReplyTo = Auth::User()->getLegacyUser()->getUserOption('NotifyDefaultReplyTo');
 
 $possibleReplyTos = [
   [
@@ -187,7 +187,7 @@ while ($category = $getCategories->fetch(PDO::FETCH_OBJ)) {
 }
 
 $canForceSend = false;
-if (app()->user->hasPermissions(['Admin', 'Galas'])) {
+if (Auth::User()->getLegacyUser()->hasPermissions(['Admin', 'Galas'])) {
   $canForceSend = true;
 }
 
@@ -207,7 +207,7 @@ echo json_encode([
   'uuid' => $uuid,
   'date' => $date->format('Y/m/d'),
   'settings' => [
-    'replyEmailAddress' => (string) app()->user->getUserOption('NotifyReplyAddress'),
+    'replyEmailAddress' => (string) Auth::User()->getLegacyUser()->getUserOption('NotifyReplyAddress'),
     'defaultReplyTo' => ($defaultReplyTo && $replyAddress) ? $defaultReplyTo : 'toClub',
     'defaultSendAs' => ($defaultSendAs) ? $defaultSendAs : 'asClub',
   ],

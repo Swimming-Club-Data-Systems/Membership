@@ -4,7 +4,7 @@ use function GuzzleHttp\json_decode;
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 $getMember = $db->prepare("SELECT MemberID, UserID, MForename, MSurname FROM members WHERE MemberID = ? AND Tenant = ?");
 $getMember->execute([

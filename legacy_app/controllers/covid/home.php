@@ -11,7 +11,7 @@ $getRepCount->execute([
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 $showCovid = true;
 if ($showCovid && config('HIDE_CONTACT_TRACING_FROM_PARENTS')) {

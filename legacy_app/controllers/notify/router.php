@@ -202,7 +202,7 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 		});
 	}
 
-	if (app()->user->hasPermissions(['Admin', 'Coach'])) {
+	if (Auth::User()->getLegacyUser()->hasPermissions(['Admin', 'Coach'])) {
 		$this->get('/sms', function () {
 			$db = DB::connection()->getPdo();
 			include 'SMSList.php';

@@ -50,9 +50,9 @@ $app->singleton(
 |
 */
 
-define("LEGACY_PATH", base_path('/legacy_app/'));
-define("BASE_PATH", LEGACY_PATH);
-require base_path('/legacy_app/functions.php');
+// define("LEGACY_PATH", base_path('/legacy_app/'));
+// define("BASE_PATH", LEGACY_PATH);
+// require base_path('/legacy_app/functions.php');
 
 /*
 |--------------------------------------------------------------------------

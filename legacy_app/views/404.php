@@ -5,8 +5,8 @@ $trace = debug_backtrace();
 http_response_code(404);
 $pagetitle = "Error 404 - Page not found";
 $currentUser = null;
-if (isset(app()->user)) {
-  $currentUser = app()->user;
+if (Auth::User()->getLegacyUser() !== null) {
+  $currentUser = Auth::User()->getLegacyUser();
 }
 if ($currentUser == null && false) {
   $clubLogoColour = 'text-white logo-text-shadow';

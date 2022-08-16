@@ -11,7 +11,7 @@ $getRepCount->execute([
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSignOut = true;
 }
@@ -93,7 +93,7 @@ if (!$showSignOut) {
           </div>
         </div>
       <?php } ?>
-      <?php if (app()->user->hasPermission('Admin')) { ?>
+      <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
         <div class="col-md mb-3">
           <div class="card card-body h-100" style="display: grid;">
             <div>

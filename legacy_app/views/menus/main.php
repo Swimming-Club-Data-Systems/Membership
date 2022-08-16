@@ -10,8 +10,8 @@ if (!function_exists('chesterStandardMenu')) {
 
     $db = DB::connection()->getPdo();
     $user = null;
-    if (isset(app()->user)) {
-      $user = app()->user;
+    if (Auth::User()->getLegacyUser() !== null) {
+      $user = Auth::User()->getLegacyUser();
     }
     $use_website_menu = false;
     if (defined('USE_CLS_MENU')) {
@@ -123,7 +123,7 @@ if (!function_exists('chesterStandardMenu')) {
                     <a class="dropdown-item" href="<?= autoUrl("members/new") ?>">Create New Member</a>
                     <a class="dropdown-item" href="<?= autoUrl("memberships/renewal") ?>">Membership Renewal</a>
                     <a class="dropdown-item" href="<?= autoUrl("members/orphaned") ?>" title="View active members who are not connected to a user account">Unconnected Members</a>
-                    <?php if (app()->user->hasPermission('Admin')) { ?>
+                    <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
                       <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("qualifications")) ?>">Qualifications</a>
                     <?php } ?>
                   <?php } ?>
@@ -384,7 +384,7 @@ if (!function_exists('chesterStandardMenu')) {
                 </div>
               </li>
             <?php } ?>
-            <?php if (isset(app()->user) && app()->user->hasPermission('Admin')) { ?>
+            <?php if (Auth::User()->getLegacyUser() !== null && Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="postDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   Pages
@@ -440,7 +440,7 @@ if (!function_exists('chesterStandardMenu')) {
           <?php } ?>
         </ul>
         <?php if (!empty($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
-          $currentUser = app()->user;
+          $currentUser = Auth::User()->getLegacyUser();
           $user_name = preg_replace("/( +)/", '&nbsp;', htmlspecialchars($currentUser->getFirstName())); ?>
           <ul class="navbar-nav">
             <li class="nav-item dropdown">

@@ -3,7 +3,7 @@
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if (!$user->hasPermissions(['Admin'])) halt(404);
 
 $json = null;

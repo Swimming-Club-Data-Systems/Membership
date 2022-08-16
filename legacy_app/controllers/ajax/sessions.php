@@ -13,7 +13,7 @@ $count = 0;
 // A function is used to produce the View/Edit and Add Sections Stuff
 // This is because we will call it when a squad is selected, and after a session is added
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 function sessionManagement($squadID, $old = null)
 {

@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 
 $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails, users.UserID user, users.Forename firstName, users.Surname lastName FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");
@@ -257,7 +257,7 @@ include BASE_PATH . "views/header.php";
           <?php } while ($item = $getBatchItems->fetch(PDO::FETCH_OBJ)); ?>
         </ul>
 
-        <?php if (app()->user->hasPermission('Admin')) { ?>
+        <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
           <p>
             <a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id/send-email")) ?>">Send email to user</a>
           </p>

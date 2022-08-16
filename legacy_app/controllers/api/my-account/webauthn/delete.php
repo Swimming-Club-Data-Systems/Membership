@@ -6,7 +6,7 @@ $post = json_decode(file_get_contents('php://input'));
 $find = $db->prepare("SELECT COUNT(*) FROM `userCredentials` WHERE `id` = ? AND `user_id` = ?");
 $find->execute([
   $post->id,
-  app()->user->getId(),
+  Auth::id(),
 ]);
 
 $count = $find->fetchColumn();
@@ -15,7 +15,7 @@ if ($count) {
   $delete = $db->prepare("DELETE FROM `userCredentials` WHERE `id` = ? AND `user_id` = ?");
   $delete->execute([
     $post->id,
-    app()->user->getId(),
+    Auth::id(),
   ]);
 
   echo json_encode([

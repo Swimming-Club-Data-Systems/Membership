@@ -23,7 +23,7 @@ if ($rep) {
   ]);
 }
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $gala = null;
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSquadOpts = true;

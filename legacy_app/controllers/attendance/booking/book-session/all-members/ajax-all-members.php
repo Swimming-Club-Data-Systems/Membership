@@ -4,7 +4,7 @@ use GuzzleHttp\json_encode;
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 header('content-type: application/json');
 

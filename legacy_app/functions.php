@@ -332,18 +332,7 @@ function myMonthlyFeeTable($userID)
 
 function autoUrl($relative, $includeClub = true)
 {
-  // Returns an absolute URL
-  $rootUrl = getenv('ROOT_URL');
-
-  if (getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
-    $rootUrl = 'https://' . app('request')->hostname . '/';
-  }
-
-  if ($includeClub && tenant() && tenant()->getLegacyTenant()->getDomain()) {
-    $rootUrl = 'https://' . tenant()->getLegacyTenant()->getDomain() . '/';
-  }
-
-  return rtrim($rootUrl . $relative, '/');
+  return url($relative);
 }
 
 function platformUrl($relative)
@@ -1962,10 +1951,10 @@ function getCompiledAsset($filename)
   // if the file is inside another folder inside "dist" folder
   if ($dirName != '.') {
     $handler = base_path() . "/public/compiled/$assetType/$dirName/";
-    $externalHandler = base_path() . "/public/compiled/$assetType/$dirName/"; // for viewing it. e.g: http://example.com/dist/styles/style1/main.css
+    $externalHandler = "/compiled/$assetType/$dirName/"; // for viewing it. e.g: http://example.com/dist/styles/style1/main.css
   } else {
     $handler = base_path() . "/public/compiled/$assetType/";
-    $externalHandler = base_path() . "/public/compiled/$assetType/"; // for viewing it. e.g: http://example.com/dist/styles/main.css
+    $externalHandler = "/compiled/$assetType/"; // for viewing it. e.g: http://example.com/dist/styles/main.css
   }
 
   $openHandler = opendir($handler);

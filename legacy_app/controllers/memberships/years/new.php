@@ -1,6 +1,6 @@
 <?php
 
-if (!app()->user->hasPermission('Admin')) halt(404);
+if (!Auth::User()->getLegacyUser()->hasPermission('Admin')) halt(404);
 
 $start = new DateTime('first day of January next year', new DateTimeZone('Europe/London'));
 $end = new DateTime('last day of December next year', new DateTimeZone('Europe/London'));

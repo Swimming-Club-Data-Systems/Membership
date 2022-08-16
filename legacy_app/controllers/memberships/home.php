@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 
 $today = new DateTime('now', new DateTimeZone('Europe/London'));
@@ -120,7 +120,7 @@ include BASE_PATH . "views/header.php";
 		</div>
 	</div>
 
-	<?php if (app()->user->hasPermission('Admin')) { ?>
+	<?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
 
 		<h2>Membership administration</h2>
 		<p class="lead">

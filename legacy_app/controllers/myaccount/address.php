@@ -3,7 +3,7 @@
 $fluidContainer = true;
 
 $db = DB::connection()->getPdo();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 
 $address = null;
 $json = $currentUser->getUserOption('MAIN_ADDRESS');

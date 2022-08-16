@@ -172,7 +172,7 @@ if (!$hasMembers || !$status) {
     $id,
     $user,
     $now->format('Y-m-d H:i:s'),
-    app()->user->getId(),
+    Auth::id(),
     $today->format('Y-m-d'),
     (int) false,
     (int) false,

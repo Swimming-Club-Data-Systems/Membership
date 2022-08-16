@@ -58,7 +58,7 @@ http_response_code(302);
 $payingEntries = [];
 
 $checkoutSession = \SCDS\Checkout\Session::new([
-  'user' => app()->user->getId(),
+  'user' => Auth::id(),
   'amount' => 1500,
   // 'version' => 'v2',
   // 'currency' => 'eur',

@@ -17,7 +17,7 @@ if (!$un) {
 // Get mandates
 $getMandates = $db->prepare("SELECT ID, Mandate, Last4, SortCode, `Address`, Reference, `URL`, `Status` FROM stripeMandates WHERE Customer = ? AND (`Status` = 'accepted' OR `Status` = 'pending') ORDER BY CreationTime DESC LIMIT 1");
 $getMandates->execute([
-  app()->user->getStripeCustomer()->id,
+  Auth::User()->getLegacyUser()->getStripeCustomer()->id,
 ]);
 $mandate = $getMandates->fetch(PDO::FETCH_ASSOC);
 

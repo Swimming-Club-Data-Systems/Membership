@@ -2,7 +2,7 @@
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 
 $query = $db->prepare("SELECT COUNT(*) FROM joinSwimmers WHERE ID = ? AND Tenant = ?");
 $query->execute([

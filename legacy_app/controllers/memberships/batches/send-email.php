@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 
 $getBatch = $db->prepare("SELECT membershipBatch.ID id, membershipBatch.Completed completed, DueDate due, Total total, PaymentTypes payMethods, PaymentDetails payDetails, membershipBatch.User `user` FROM membershipBatch INNER JOIN users ON users.UserID = membershipBatch.User WHERE membershipBatch.ID = ? AND users.Tenant = ?");

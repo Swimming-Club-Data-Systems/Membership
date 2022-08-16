@@ -28,7 +28,7 @@ if ($scheduleExists == null) {
   $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['Token'] = hash('sha256', $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'] . "-" . rand(1000,9999));
 
   $addr = null;
-  $currentUser = app()->user;
+  $currentUser = Auth::User()->getLegacyUser();
   $json = $currentUser->getUserOption('MAIN_ADDRESS');
   if ($json != null) {
     $addr = json_decode($json);

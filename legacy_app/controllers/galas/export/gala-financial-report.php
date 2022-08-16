@@ -3,7 +3,7 @@
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 
-if (!app()->user->hasPermissions(['Admin', 'Galas'])) halt(404);
+if (!Auth::User()->getLegacyUser()->hasPermissions(['Admin', 'Galas'])) halt(404);
 
 // output headers so that the file is downloaded rather than displayed
 header('Content-Type: text/csv; charset=utf-8');

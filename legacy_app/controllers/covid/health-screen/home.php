@@ -21,7 +21,7 @@ if ($rep) {
   ]);
 }
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSquadOpts = true;
   $squads = $db->prepare("SELECT SquadName, SquadID FROM squads WHERE squads.Tenant = ? ORDER BY SquadFee DESC, SquadName ASC;");

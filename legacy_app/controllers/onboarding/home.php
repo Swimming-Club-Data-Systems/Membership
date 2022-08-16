@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 
 $pagetitle = "Onboarding";
@@ -39,7 +39,7 @@ include BASE_PATH . "views/header.php";
         Onboarding works hand in hand with the new Membership Centre feature lets clubs track which memberships their members hold in a given year.
       </p>
 
-      <?php if (app()->user->hasPermission('Admin')) { ?>
+      <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
         <h2>
           Onboard a new user
         </h2>

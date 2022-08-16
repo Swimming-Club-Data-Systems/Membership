@@ -46,7 +46,7 @@ if (($_POST['auth'] == $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId(
     if (isset($_POST['RememberMe']) && bool($_POST['RememberMe'])) {
       $login->stayLoggedIn();
     }
-    $currentUser = app()->user;
+    $currentUser = Auth::User()->getLegacyUser();
     $currentUser = $login->login();
     $resetFailedLoginCount->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['2FAUserID']]);
 

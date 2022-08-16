@@ -11,7 +11,7 @@ use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\Server;
 
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 $server = WebAuthnImplementation\Server::get();
 

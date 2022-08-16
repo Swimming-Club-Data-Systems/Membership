@@ -5,24 +5,24 @@ use Respect\Validation\Validator as v;
 $data = json_decode(file_get_contents('php://input'));
 
 if (v::email()->validate($data->replyEmailAddress)) {
-  setUserOption(app()->user->getId(), 'NotifyReplyAddress', $data->replyEmailAddress);
+  setUserOption(Auth::id(), 'NotifyReplyAddress', $data->replyEmailAddress);
 }
 
 if ($data->defaultSendAs) {
-  setUserOption(app()->user->getId(), 'NotifyDefaultSendAs', $data->defaultSendAs);
+  setUserOption(Auth::id(), 'NotifyDefaultSendAs', $data->defaultSendAs);
 }
 
-$replyAddress = app()->user->getUserOption('NotifyReplyAddress');
+$replyAddress = Auth::User()->getLegacyUser()->getUserOption('NotifyReplyAddress');
 if ($replyAddress && $data->defaultReplyTo) {
-  setUserOption(app()->user->getId(), 'NotifyDefaultReplyTo', $data->defaultReplyTo);
+  setUserOption(Auth::id(), 'NotifyDefaultReplyTo', $data->defaultReplyTo);
 }
 
-$defaultSendAs = app()->user->getUserOption('NotifyDefaultSendAs');
-$defaultReplyTo = app()->user->getUserOption('NotifyDefaultReplyTo');
+$defaultSendAs = Auth::User()->getLegacyUser()->getUserOption('NotifyDefaultSendAs');
+$defaultReplyTo = Auth::User()->getLegacyUser()->getUserOption('NotifyDefaultReplyTo');
 
 $clubName = config('CLUB_NAME');
 $clubEmail = config('CLUB_EMAIL');
-$userName = app()->user->getForename() . ' ' . app()->user->getSurname();
+$userName = Auth::User()->getLegacyUser()->getForename() . ' ' . Auth::User()->getLegacyUser()->getSurname();
 
 $possibleReplyTos = [
   [
@@ -42,7 +42,7 @@ header("content-type: application/json");
 echo json_encode([
   'possibleReplyTos' => $possibleReplyTos,
   'settings' => [
-    'replyEmailAddress' => (string) app()->user->getUserOption('NotifyReplyAddress'),
+    'replyEmailAddress' => (string) Auth::User()->getLegacyUser()->getUserOption('NotifyReplyAddress'),
     'defaultReplyTo' => ($defaultReplyTo && $replyAddress) ? $defaultReplyTo : 'toClub',
     'defaultSendAs' => ($defaultSendAs) ? $defaultSendAs : 'asClub',
   ],

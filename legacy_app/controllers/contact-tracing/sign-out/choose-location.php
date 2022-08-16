@@ -16,7 +16,7 @@ $getRepCount->execute([
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSignOut = true;
 }

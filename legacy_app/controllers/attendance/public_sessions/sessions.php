@@ -98,7 +98,7 @@ $sessions = $otherDays;
 
 $showAdmin = false;
 if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'])) {
-  if (app()->user->hasPermissions(['Admin', 'Coach'])) $showAdmin = true;
+  if (Auth::User()->getLegacyUser()->hasPermissions(['Admin', 'Coach'])) $showAdmin = true;
 }
 
 $getBookingRequired = $db->prepare("SELECT COUNT(*) FROM `sessionsBookable` INNER JOIN `sessions` ON `sessions`.`SessionID` = `sessionsBookable`.`Session` WHERE `sessionsBookable`.`Session` = ? AND `sessionsBookable`.`Date` = ? AND `sessions`.`Tenant` = ?");

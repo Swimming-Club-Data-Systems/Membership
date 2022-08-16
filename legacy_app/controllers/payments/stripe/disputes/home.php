@@ -1,6 +1,6 @@
 <?php
 
-if (!app()->user->hasPermission('Admin')) {
+if (!Auth::User()->getLegacyUser()->hasPermission('Admin')) {
   halt(404);
 }
 

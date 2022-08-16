@@ -3,7 +3,7 @@
 $fluidContainer = true;
 
 $db = DB::connection()->getPdo();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 
 $perms = $currentUser->getPrintPermissions();
 $default = $currentUser->getUserOption('DefaultAccessLevel');

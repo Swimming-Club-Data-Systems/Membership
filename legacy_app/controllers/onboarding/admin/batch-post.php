@@ -1,6 +1,6 @@
 <?php
 
-if (!app()->user->hasPermission('Admin')) halt(404);
+if (!Auth::User()->getLegacyUser()->hasPermission('Admin')) halt(404);
 
 $session = \SCDS\Onboarding\Session::retrieve($id);
 
@@ -124,7 +124,7 @@ try {
     json_encode($paymentTypes),
     json_encode([]),
     0,
-    app()->user->getId(),
+    Auth::id(),
   ]);
 
   $addBatchItem = $db->prepare("INSERT INTO `membershipBatchItems` (`ID`, `Batch`, `Membership`, `Member`, `Amount`, `Notes`) VALUES (?, ?, ?, ?, ?, ?);");

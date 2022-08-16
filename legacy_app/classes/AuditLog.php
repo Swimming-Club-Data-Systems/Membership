@@ -22,11 +22,11 @@ class AuditLog
   {
     // Check user is set
     if (!$user) {
-      if (!isset(app()->user)) {
+      if (!Auth::User()->getLegacyUser() !== null) {
         throw new Exception('No active user');
       }
 
-      $user = app()->user->getId();
+      $user = Auth::id();
       if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['RealUser'])) {
         $user = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserSimulation']['RealUser'];
       }

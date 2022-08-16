@@ -7,7 +7,7 @@ if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'
   });
 
   $this->group('/locations', function () {
-    if (app()->user->hasPermission('Admin')) {
+    if (Auth::User()->getLegacyUser()->hasPermission('Admin')) {
       $this->get('/new', function () {
         include 'locations/new.php';
       });
@@ -38,7 +38,7 @@ if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'
   });
 
   $this->group('/reports', function () {
-    if (app()->user->hasPermission('Admin')) {
+    if (Auth::User()->getLegacyUser()->hasPermission('Admin')) {
       $this->get('/', function () {
         include 'reports/home.php';
       });

@@ -68,7 +68,7 @@ include BASE_PATH . "views/header.php";
 			</aside>
 		<?php } ?>
 
-		<?php if (app()->user->hasPermission('Admin') && config('GOCARDLESS_ACCESS_TOKEN') && !config('USE_STRIPE_DIRECT_DEBIT')) { ?>
+		<?php if (Auth::User()->getLegacyUser()->hasPermission('Admin') && config('GOCARDLESS_ACCESS_TOKEN') && !config('USE_STRIPE_DIRECT_DEBIT')) { ?>
 			<div class="alert alert-info">
 				<p class="mb-0">
 					<strong>Plan your migration to Stripe for your Direct Debit payments</strong>

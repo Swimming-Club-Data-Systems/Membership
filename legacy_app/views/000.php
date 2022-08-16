@@ -2,7 +2,7 @@
 http_response_code(200);
 $pagetitle = "Status 200 - OK";
 
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 if ($currentUser == null) {
 	include BASE_PATH . "views/head.php";
 } else {

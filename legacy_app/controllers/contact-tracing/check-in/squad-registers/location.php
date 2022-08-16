@@ -16,14 +16,14 @@ if (!$location) {
   halt(404);
 }
 
-if (!app()->user) {
+if (!Auth::User()->getLegacyUser()) {
   halt(404);
 }
 
 $userOnList = false;
 $listsShown = false;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $userSquads = $db->prepare("SELECT SquadName, SquadID FROM squads WHERE SquadID = ? AND Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
   $userSquads->execute([

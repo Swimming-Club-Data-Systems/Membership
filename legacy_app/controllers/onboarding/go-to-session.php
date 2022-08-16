@@ -6,7 +6,7 @@ $session = \SCDS\Onboarding\Session::retrieve($_GET['session']);
 
 if ($session->status == 'not_ready') {
   header("location: " . autoUrl("onboarding/go/error"));
-} else if (isset(app()->user) && app()->user->getId() != $session->user) {
+} else if (Auth::User()->getLegacyUser() !== null && Auth::id() != $session->user) {
   header("location: " . autoUrl("onboarding"));
 } else {
   // Good to go

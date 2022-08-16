@@ -2,7 +2,7 @@
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 $member = null;
 try {
@@ -13,7 +13,7 @@ try {
 
 $user = $member->getUser();
 
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 if (!$currentUser->hasPermissions(['Admin'])) halt(404);
 
 try {

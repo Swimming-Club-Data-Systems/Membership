@@ -6,7 +6,7 @@ $pagetitle = 'COVID Health Screening';
 
 $squad = null;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSquadOpts = true;
   $getSquad = $db->prepare("SELECT SquadName, SquadID FROM squads WHERE squads.Tenant = ? AND squads.SquadID = ?;");

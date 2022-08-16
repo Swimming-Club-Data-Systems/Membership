@@ -101,7 +101,7 @@ try {
         json_encode(['dd', 'card']),
         json_encode([]),
         0,
-        app()->user->getId(),
+        Auth::id(),
       ]);
 
       // Set batch ID for session

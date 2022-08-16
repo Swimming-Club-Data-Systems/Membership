@@ -11,7 +11,7 @@ try {
 
 $user = $member->getUser();
 
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 if (!$currentUser->hasPermissions(['Admin'])) halt(404);
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));

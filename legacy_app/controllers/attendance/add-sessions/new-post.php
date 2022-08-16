@@ -2,7 +2,7 @@
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 if (!$user->hasPermissions(['Admin', 'Committee', 'Coach'])) {
   halt(404);

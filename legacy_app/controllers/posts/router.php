@@ -2,7 +2,7 @@
 
 use Respect\Validation\Validator as v;
 
-if (app()->user->hasPermission('Admin')) {
+if (Auth::User()->getLegacyUser()->hasPermission('Admin')) {
 	$this->get('/new', function () {
 		include 'NewPost.php';
 	});

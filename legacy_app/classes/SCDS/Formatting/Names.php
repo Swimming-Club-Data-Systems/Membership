@@ -12,7 +12,7 @@ class Names
       $style = config('DISPLAY_NAME_FORMAT');
     }
 
-    if (app()->user && app()->user->getUserOption('DISPLAY_NAME_FORMAT')) {
+    if (Auth::User()->getLegacyUser() && Auth::User()->getLegacyUser()->getUserOption('DISPLAY_NAME_FORMAT')) {
       $style = tenant()->getLegacyTenant()->getUserOption('DISPLAY_NAME_FORMAT');
     }
 

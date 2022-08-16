@@ -38,7 +38,7 @@ try {
   ]);
 
   fputcsv($fp, [
-    'Report generated for ' . app()->user->getFullName() . ', ' . $tenant->getName(),
+    'Report generated for ' . Auth::User()->getLegacyUser()->getFullName() . ', ' . $tenant->getName(),
   ]);
 
   fputcsv($fp, [

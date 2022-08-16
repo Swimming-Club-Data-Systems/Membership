@@ -31,7 +31,7 @@ if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn
     $login->setUser($user);
     // $login->stayLoggedIn();
     $login->preventWarningEmail();
-    app()->user = $login->login();
+    Auth::User()->getLegacyUser() = $login->login();
   } catch (Exception $e) {
     // Ignore
   }
@@ -68,7 +68,7 @@ if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn
       $login->stayLoggedIn();
       $login->preventWarningEmail();
       $login->reLogin();
-      app()->user = $login->login();
+      Auth::User()->getLegacyUser() = $login->login();
     } catch (Exception $e) {
       reportError($e);
       // halt(403);
@@ -97,11 +97,11 @@ if (!isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn
     setcookie('TENANT-' . tenant()->getLegacyTenant()->getId() . '-' . "AutoLogin", $hash, $expiry_time, $cookiePath, app('request')->hostname, $secure, false);
   }
 } else if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
-  app()->user = new User($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], true);
+  Auth::User()->getLegacyUser() = new User($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'], true);
 }
 
 // Log urls
-if (isset(app()->user) && app()->user) {
+if (Auth::User()->getLegacyUser() !== null && Auth::User()->getLegacyUser()) {
   try {
     // pre(app()->request);
     $path = substr(app()->request->path, strlen('/' . tenant()->getLegacyTenant()->getCodeId()), strlen(app()->request->path) - strlen('/' . tenant()->getLegacyTenant()->getCodeId()));

@@ -1,8 +1,8 @@
 <?php
 
 $currentUser = null;
-if (isset(app()->user)) {
-  $currentUser = app()->user;
+if (Auth::User()->getLegacyUser() !== null) {
+  $currentUser = Auth::User()->getLegacyUser();
 }
 $cvp = 'generic';
 // if (tenant()->getLegacyTenant()->isCLS() && $currentUser != null && $currentUser->getUserBooleanOption('UsesGenericTheme')) {

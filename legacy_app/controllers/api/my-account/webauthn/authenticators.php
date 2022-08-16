@@ -8,7 +8,7 @@ $sources = [];
 
 $find = $db->prepare("SELECT `id`, `credential_id`, `credential`, `credential_name`, `created_at`, `updated_at` FROM `userCredentials` WHERE `user_id` = ?");
 $find->execute([
-  app()->user->getId(),
+  Auth::id(),
 ]);
 
 while ($data = $find->fetch(PDO::FETCH_ASSOC)) {
@@ -24,6 +24,6 @@ while ($data = $find->fetch(PDO::FETCH_ASSOC)) {
 }
 
 echo json_encode([
-  'username' => app()->user->getEmail(),
+  'username' => Auth::User()->getLegacyUser()->getEmail(),
   'authenticators' => $sources,
 ]);

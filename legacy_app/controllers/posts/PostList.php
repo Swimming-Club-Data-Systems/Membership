@@ -78,7 +78,7 @@ include BASE_PATH . "views/postsMenu.php"; ?>
         <?php } ?>
         <div class="mb-3 d-lg-none"></div>
       </div>
-      <?php if (app()->user->hasPermission('Admin')) { ?>
+      <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
         <div class="col-lg-auto ms-auto">
           <a href="<?= htmlspecialchars(autoUrl('pages/new')) ?>" class="btn btn-success">Add page</a>
         </div>
@@ -131,7 +131,7 @@ include BASE_PATH . "views/postsMenu.php"; ?>
                   Last Updated <?= htmlspecialchars($modified->format('H:i, d F Y')) ?>
                 </p>
               </div>
-              <?php if (app()->user->hasPermission('Admin')) { ?>
+              <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
                 <div class="col-auto">
                   <a href="<?= htmlspecialchars(autoUrl("pages/$id/edit")) ?>" class="btn btn-light">Edit</a>
                 </div>

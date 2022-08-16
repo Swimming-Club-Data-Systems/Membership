@@ -12,7 +12,7 @@ if (isset($_SESSION['OnboardingSessionId'])) {
   $exCheckout = $session->user == $checkoutSession->user;
 }
 
-if ($checkoutSession->user && ((isset(app()->user) && $checkoutSession->user != app()->user->getId()) || (isset($_SESSION['OnboardingSessionId']) && !$exCheckout))) {
+if ($checkoutSession->user && ((Auth::User()->getLegacyUser() !== null && $checkoutSession->user != Auth::id()) || (isset($_SESSION['OnboardingSessionId']) && !$exCheckout))) {
   reportError([$checkoutSession,]);
   halt(404);
 }

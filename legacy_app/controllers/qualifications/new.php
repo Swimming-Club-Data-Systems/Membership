@@ -1,6 +1,6 @@
 <?php
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if (!$user->hasPermissions(['Admin'])) halt(404);
 
 $pagetitle = 'New Qualification Type';

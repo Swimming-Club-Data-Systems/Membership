@@ -5,7 +5,7 @@ $tenant = tenant()->getLegacyTenant();
 
 $target = $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'];
 
-$name = app()->user->getFullName();
+$name = Auth::User()->getLegacyUser()->getFullName();
 
 try {
 	$query = $db->prepare("SELECT * FROM `users` WHERE `UserID` = ? AND Tenant = ?");
@@ -36,7 +36,7 @@ try {
 	$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['LoggedIn'] = 		1;
 
 	$userObject = new \User($info['UserID'], true);
-	app()->user = $userObject;
+	Auth::User()->getLegacyUser() = $userObject;
 
 	AuditLog::new('UserSimulation-Exited', 'Stopped simulating ' . $name);
 

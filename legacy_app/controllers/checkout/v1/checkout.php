@@ -7,7 +7,7 @@ $tenant = tenant()->getLegacyTenant();
 
 $checkoutSession = \SCDS\Checkout\Session::retrieve($id);
 
-// if ($checkoutSession->user && ($checkoutSession->user != app()->user->getId() || isset($_SESSION['OnboardingSessionId']))) {
+// if ($checkoutSession->user && ($checkoutSession->user != Auth::id() || isset($_SESSION['OnboardingSessionId']))) {
 //   halt(404);
 // }
 

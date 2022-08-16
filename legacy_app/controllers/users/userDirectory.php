@@ -10,6 +10,8 @@ if (isset($_GET['search'])) {
 $pagetitle = "Users";
 include BASE_PATH . "views/header.php";
 
+// echo BASE_PATH . "views/header.php";
+
 ?>
 
 <div class="bg-light mt-n3 py-3 mb-3">

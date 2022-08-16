@@ -69,7 +69,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
         base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()),
       ]);
     } else {
-      $user = app()->user;
+      $user = Auth::User()->getLegacyUser();
       $userId = $user->getId();
 
       $insert = $db->prepare("INSERT INTO `userCredentials` (`id`, `credential_id`, `user_id`, `credential`) VALUES (?, ?, ?, ?)");

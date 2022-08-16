@@ -5,7 +5,7 @@ function getMySessionBookingMembers($session, $date)
 
   $db = DB::connection()->getPdo();
   $tenant = tenant()->getLegacyTenant();
-  $user = app()->user;
+  $user = Auth::User()->getLegacyUser();
 
   // Get bookable members
   $members = [];

@@ -22,7 +22,7 @@ if (!$location) {
   halt(404);
 }
 
-if (!app()->user) {
+if (!Auth::User()->getLegacyUser()) {
   halt(404);
 }
 
@@ -33,7 +33,7 @@ $getRepCount->execute([
 ]);
 $showSignOut = $getRepCount->fetchColumn() > 0;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $showSignOut = true;
 }

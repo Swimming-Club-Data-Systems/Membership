@@ -16,7 +16,7 @@ if ($session->status == 'not_ready') {
   header("location: " . autoUrl("onboarding/go/error"));
 } else if (!$session->tokenOn) {
   header("location: " . autoUrl("onboarding/go/error"));
-} else if (isset(app()->user) && app()->user->getId() != $session->user) {
+} else if (Auth::User()->getLegacyUser() !== null && Auth::id() != $session->user) {
   header("location: " . autoUrl("onboarding/go/wrong-account?session=" . urlencode($_GET['session']) . '&token=' . urlencode($_GET['token'])));
 } else {
   // Good to go

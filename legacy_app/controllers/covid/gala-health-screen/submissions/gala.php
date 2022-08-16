@@ -6,7 +6,7 @@ $pagetitle = 'COVID Return to Competition Screening';
 
 $gala = null;
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 if ($user->hasPermission('Admin') || $user->hasPermission('Coach') || $user->hasPermission('Galas')) {
   $getGala = $db->prepare("SELECT GalaName FROM galas WHERE GalaID = ? AND Tenant = ?");
   $getGala->execute([

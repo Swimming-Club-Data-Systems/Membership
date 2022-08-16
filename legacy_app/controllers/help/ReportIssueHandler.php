@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php'; ?>
 
 			<div class="mb-3">
 				<label class="form-label" for="email-address">Email Address</label>
-				<input type="email" <?php if (isset(app()->user)) { ?>value="<?= htmlspecialchars(app()->user->getEmail()) ?>" readonly<?php } else { ?> <?php } ?> class="form-control" id="email-address" name="email-address" required>
+				<input type="email" <?php if (Auth::User()->getLegacyUser() !== null) { ?>value="<?= htmlspecialchars(Auth::User()->getLegacyUser()->getEmail()) ?>" readonly<?php } else { ?> <?php } ?> class="form-control" id="email-address" name="email-address" required>
 				<div class="invalid-feedback">
 					As you're not logged in, please enter your email address so we can get in touch about the issue.
 				</div>

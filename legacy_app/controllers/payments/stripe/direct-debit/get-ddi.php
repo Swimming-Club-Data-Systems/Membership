@@ -6,7 +6,7 @@ $tenant = tenant()->getLegacyTenant();
 // Get mandates
 $getMandates = $db->prepare("SELECT `URL` FROM stripeMandates WHERE Customer = ? AND ID = ?");
 $getMandates->execute([
-  app()->user->getStripeCustomer()->id,
+  Auth::User()->getLegacyUser()->getStripeCustomer()->id,
   $id,
 ]);
 $url = $getMandates->fetchColumn();

@@ -10,7 +10,7 @@ if (!bool(getenv('IS_DEV')) ||  app('request')->method != 'GET') {
 
 http_response_code(500);
 $pagetitle = "Error 500 - Internal Server Error";
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 if ($currentUser == null) {
 	include BASE_PATH . "views/head.php";
 } else {

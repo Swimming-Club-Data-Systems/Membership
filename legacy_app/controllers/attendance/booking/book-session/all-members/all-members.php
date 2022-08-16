@@ -5,7 +5,7 @@ function getAllBookedMembersForSession($session, $date)
 
   $db = DB::connection()->getPdo();
   $tenant = tenant()->getLegacyTenant();
-  $user = app()->user;
+  $user = Auth::User()->getLegacyUser();
 
   $getBookedMembers = null;
   $getBookedMembers = $db->prepare("SELECT Member id, MForename fn, MSurname sn, BookedAt FROM sessionsBookings INNER JOIN members ON sessionsBookings.Member = members.MemberID WHERE sessionsBookings.Session = ? AND sessionsBookings.Date = ? ORDER BY BookedAt ASC, MForename ASC, MSurname ASC;");

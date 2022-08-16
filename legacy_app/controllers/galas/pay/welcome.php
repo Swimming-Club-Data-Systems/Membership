@@ -42,7 +42,7 @@ try {
 }
 $entry = $entries->fetch(PDO::FETCH_ASSOC);
 
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 $notByDirectDebit = $currentUser->getUserBooleanOption('GalaDirectDebitOptOut');
 
 $numFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);

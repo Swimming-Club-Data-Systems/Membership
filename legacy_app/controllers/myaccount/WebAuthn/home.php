@@ -4,7 +4,7 @@ $fluidContainer = true;
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 
 $pagetitle = "Security Keys";
 include BASE_PATH . "views/header.php";

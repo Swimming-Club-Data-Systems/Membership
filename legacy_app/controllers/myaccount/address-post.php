@@ -1,7 +1,7 @@
 <?php
 
 $db = DB::connection()->getPdo();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 
 use Brick\Postcode\PostcodeFormatter;
 

@@ -69,9 +69,9 @@ include BASE_PATH . "views/header.php";
             <dd class="col-sm-9 font-monospace"><?= htmlspecialchars($tenant->getCode()) ?></dd>
           <?php } ?>
 
-          <?php if (isset(app()->user)) { ?>
+          <?php if (Auth::User()->getLegacyUser() !== null) { ?>
             <dt class="col-sm-3">User</dt>
-            <dd class="col-sm-9 font-monospace mb-0"><?= htmlspecialchars(app()->user->getId()) ?></dd>
+            <dd class="col-sm-9 font-monospace mb-0"><?= htmlspecialchars(Auth::id()) ?></dd>
           <?php } else { ?>
             <dt class="col-sm-3">User</dt>
             <dd class="col-sm-9 font-monospace mb-0">Not signed in</dd>

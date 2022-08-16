@@ -21,7 +21,7 @@ try {
   if (isset($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME']) && bool($_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['REACT_LOGIN_REMEMBER_ME'])) {
     $login->stayLoggedIn();
   }
-  $currentUser = app()->user;
+  $currentUser = Auth::User()->getLegacyUser();
   $currentUser = $login->login();
 
   $location = autoUrl("");

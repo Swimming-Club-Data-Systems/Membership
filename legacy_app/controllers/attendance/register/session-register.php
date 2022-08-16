@@ -3,7 +3,7 @@
 function registerSheetGenerator($date, $sessionId)
 {
   $db = DB::connection()->getPdo();
-  $user = app()->user;
+  $user = Auth::User()->getLegacyUser();
 
   $photoPermissionDescriptions = [
     'Website' => 'Take photos of this member for our website',

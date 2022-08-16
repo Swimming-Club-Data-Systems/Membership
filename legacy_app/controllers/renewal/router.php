@@ -1,6 +1,6 @@
 <?php
 
-if (app()->user && app()->user->hasPermission('Admin')) {
+if (Auth::User()->getLegacyUser() && Auth::User()->getLegacyUser()->hasPermission('Admin')) {
 	$this->get('/', function () {
 		include 'admin/home.php';
 	});

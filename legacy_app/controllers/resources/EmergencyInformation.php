@@ -2,7 +2,7 @@
 
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 
 $squads = $db->prepare("SELECT SquadID, SquadName FROM squads AND Tenant = ? ORDER BY SquadFee DESC, SquadName ASC");
 $squads->execute([

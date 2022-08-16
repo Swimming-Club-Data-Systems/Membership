@@ -10,7 +10,7 @@ $getUserEmail->execute([$_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId
 $user = $getUserEmail->fetch(PDO::FETCH_ASSOC);
 
 // UPDATING
-$customer = app()->user->getStripeCustomer();
+$customer = Auth::User()->getLegacyUser()->getStripeCustomer();
 
 $session = null;
 

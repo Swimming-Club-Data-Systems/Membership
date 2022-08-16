@@ -569,7 +569,7 @@ include BASE_PATH . 'views/header.php';
 
       <div id="qualifications-box" data-qualifications-url="<?= htmlspecialchars(autoUrl("members/$id/qualifications/current")) ?>"></div>
 
-      <?php if (app()->user->hasPermissions(['Admin'])) { ?>
+      <?php if (Auth::User()->getLegacyUser()->hasPermissions(['Admin'])) { ?>
         <p>
           <a href="<?= htmlspecialchars(autoUrl("members/$id/qualifications/new")) ?>" class="btn btn-success" id="add-qualification">
             Add qualification
@@ -705,7 +705,7 @@ include BASE_PATH . 'views/header.php';
           </div>
         <?php } while ($membership = $getMemberships->fetch(PDO::FETCH_OBJ)); ?>
 
-        <?php if ($user && app()->user->hasPermission('Admin')) { ?>
+        <?php if ($user && Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
           <a href="<?= htmlspecialchars(autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>">Create a membership batch</a> to add more memberships.
         <?php } ?>
 
@@ -714,7 +714,7 @@ include BASE_PATH . 'views/header.php';
           <p class="mb-0">
             <strong><?= htmlspecialchars($member->getForename()) ?> currently has no assigned memberships</strong>
           </p>
-          <?php if (app()->user->hasPermission('Admin')) { ?>
+          <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
             <?php if ($user) { ?>
               <p class="mb-0">
                 <a href="<?= htmlspecialchars(autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>" class="alert-link">Create a membership batch</a> to add memberships.

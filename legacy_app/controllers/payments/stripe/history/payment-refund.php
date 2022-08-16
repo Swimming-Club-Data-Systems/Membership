@@ -7,7 +7,7 @@
  * - User is authorised /
  */
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 

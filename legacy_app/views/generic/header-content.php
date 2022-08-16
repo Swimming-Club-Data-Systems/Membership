@@ -42,7 +42,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
   <?php } ?>
 
-  <?php if (config('PAYMENT_OVERDUE') && app()->user && app()->user->hasPermission('Admin')) { ?>
+  <?php if (config('PAYMENT_OVERDUE') && Auth::User()->getLegacyUser() && Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
       <div class="<?= $container_class ?>">
         <small><strong>PAYMENT TO SCDS IS OVERDUE</strong> THIS TENANT MAY SOON BE SUSPENDED</small>
@@ -50,7 +50,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
   <?php } ?>
 
-  <?php if (config('PAYMENT_METHOD_INVALID') && app()->user && app()->user->hasPermission('Admin')) { ?>
+  <?php if (config('PAYMENT_METHOD_INVALID') && Auth::User()->getLegacyUser() && Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
       <div class="<?= $container_class ?>">
         <small><strong>PAYMENT METHOD MISSING OR UNUSABLE</strong> CORRECT YOUR PAYMENT INFORMATION FOR SCDS AS SOON AS POSSIBLE. FAILURE TO DO SO MAY RESULT IN TENANT SUSPENSION.</small>
@@ -99,7 +99,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
       </div>
     </noscript>
 
-    <?php if ($_SESSION['Browser']['Name'] == "Internet Explorer") { ?>
+    <?php if (session('browser.name') == "Internet Explorer") { ?>
       <div class="bg-warning text-dark py-3 d-print-none">
         <div class="<?= $container_class ?>">
           <p class="h2">
@@ -241,7 +241,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
 
   <div class="d-none d-print-block">
     <?php
-    $addr = json_decode(config('CLUB_ADDRESS'));
+    $addr = json_decode(config('CLUB_ADDRESS', "[]"));
     $logoPath = null;
     if ($logos = config('LOGO_DIR')) {
       $logoPath = ($logos . 'logo-1024.png');

@@ -2,7 +2,7 @@
 
 use Respect\Validation\Validator as v;
 $db = DB::connection()->getPdo();
-$currentUser = app()->user;
+$currentUser = Auth::User()->getLegacyUser();
 $tenant = tenant()->getLegacyTenant();
 
 $sql = "SELECT `EmailAddress`, `EmailComms` FROM `users` WHERE `UserID` = ?";

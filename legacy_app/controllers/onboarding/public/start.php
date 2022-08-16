@@ -91,7 +91,7 @@ include BASE_PATH . "views/head.php";
             You're all set. Welcome to <?= htmlspecialchars(tenant()->getLegacyTenant()->getName()) ?>.
           </p>
 
-          <?php if (!isset(app()->user)) { ?>
+          <?php if (!Auth::User()->getLegacyUser() !== null) { ?>
             <p>
               <a href="<?= htmlspecialchars(autoUrl('onboarding/go/sign-in')) ?>" class="btn btn-success">Continue to your account</a>
             </p>

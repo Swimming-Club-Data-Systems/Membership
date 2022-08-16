@@ -7,7 +7,7 @@ $output = [
 ];
 
 try {
-  if (!app()->user->hasPermission("Admin")) {
+  if (!Auth::User()->getLegacyUser()->hasPermission("Admin")) {
     http_response_code(403);
     throw new Exception("Unauthorised");
   }

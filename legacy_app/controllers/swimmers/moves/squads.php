@@ -30,7 +30,7 @@ try {
   // Need to get current squads, squads with planned moves and squads we can move to
   $member = new Member($id);
 
-  if (!app()->user->hasPermission('Admin') && !app()->user->hasPermission('Coach') && (isset($member) && $member->getUser()->getId() != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
+  if (!Auth::User()->getLegacyUser()->hasPermission('Admin') && !Auth::User()->getLegacyUser()->hasPermission('Coach') && (isset($member) && $member->getUser()->getId() != $_SESSION['TENANT-' . tenant()->getLegacyTenant()->getId()]['UserID'])) {
     http_response_code(404);
     echo json_encode([
       'status' => 404,

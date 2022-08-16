@@ -4,7 +4,7 @@ if (!isset($_POST['id']) || !isset($_POST['member'])) halt(404);
 
 $id = $_POST['id'];
 
-$user = app()->user;
+$user = Auth::User()->getLegacyUser();
 $db = DB::connection()->getPdo();
 $tenant = tenant()->getLegacyTenant();
 

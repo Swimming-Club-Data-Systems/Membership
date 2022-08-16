@@ -10,13 +10,13 @@ $user = $session->getUser();
 
 $tenant = tenant()->getLegacyTenant();
 
-if ($session->isCurrentTask('done') && !isset(app()->user)) {
+if ($session->isCurrentTask('done') && !Auth::User()->getLegacyUser() !== null) {
   try {
     $login = new \CLSASC\Membership\Login($db);
     $login->setUser($session->user);
     $login->stayLoggedIn();
     $login->preventWarningEmail();
-    $currentUser = app()->user;
+    $currentUser = Auth::User()->getLegacyUser();
     $currentUser = $login->login();
 
     $_SESSION['OnboardingSessionId'] = null;

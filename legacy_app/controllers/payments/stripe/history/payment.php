@@ -225,7 +225,7 @@ $countries = getISOAlpha2Countries();
           <?php } ?>
         </dl>
 
-        <?php if (app()->user->hasPermission('Admin')) { ?>
+        <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
           <h2>Transaction security information</h2>
           <dl class="row">
             <?php if (isset($payment->charges->data[0]->outcome->risk_level) && $payment->charges->data[0]->outcome->risk_level) { ?>
@@ -353,7 +353,7 @@ $countries = getISOAlpha2Countries();
                     <?php } ?>
                   </div>
                 </div>
-                <?php if (app()->user->hasPermission('Admin') && !$ents) { ?>
+                <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin') && !$ents) { ?>
                   <div class="col">
                     <form id="refund-form-<?= $item['ID'] ?>">
                       <div class="row">
@@ -423,7 +423,7 @@ $countries = getISOAlpha2Countries();
                   <dt class="col-sm-5 col-md-4">Date and Time</dt>
                   <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($created->format('H:i:s, j F Y (T e)')) ?></dd>
 
-                  <?php if (app()->user->hasPermission('Admin')) { ?>
+                  <?php if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
                     <dt class="col-sm-5 col-md-4">Stripe Status</dt>
                     <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($refund->status) ?></dd>
 
@@ -440,7 +440,7 @@ $countries = getISOAlpha2Countries();
             </div>
           <?php } ?>
         <?php } ?>
-      <?php } else if (app()->user->hasPermission('Admin')) { ?>
+      <?php } else if (Auth::User()->getLegacyUser()->hasPermission('Admin')) { ?>
         <h2>Refund this transaction</h2>
         <p>To refund gala entries, use the gala refunds system. Non gala fees may be refunded via this page.</p>
       <?php } ?>
