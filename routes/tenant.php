@@ -4,7 +4,7 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
@@ -22,7 +22,7 @@ use Laravel\Passport\Passport;
 */
 
 Route::middleware([
-    InitializeTenancyByDomainOrSubdomain::class,
+    InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
     Passport::routes();
@@ -30,7 +30,7 @@ Route::middleware([
 
 Route::middleware([
     'web',
-    InitializeTenancyByDomainOrSubdomain::class,
+    InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
@@ -42,6 +42,10 @@ Route::middleware([
             'phpVersion' => PHP_VERSION,
         ]);
     });
+
+    Route::get('/dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->middleware(['auth', 'verified'])->name('dashboard');
 
     require __DIR__ . '/auth.php';
 
