@@ -6,12 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant;
 
     /**
      * The attributes that are mass assignable.
@@ -44,15 +45,33 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getAuthIdentifierName() {
+    /**
+     * Relationships
+     */
+
+    /**
+     * Get the V1Logins for the user.
+     */
+    public function v1Logins()
+    {
+        return $this->hasMany(Auth\V1Login::class, 'user_id');
+    }
+
+    /**
+     * Auth stuff
+     */
+    public function getAuthIdentifierName()
+    {
         return "UserID";
     }
 
-    public function getAuthIdentifier() {
+    public function getAuthIdentifier()
+    {
         return $this->UserID;
     }
 
-    public function getAuthPassword() {
+    public function getAuthPassword()
+    {
         return $this->Password;
     }
 
@@ -68,7 +87,10 @@ class User extends Authenticatable
         );
     }
 
-    public function getLegacyUser() {
+    public function getLegacyUser()
+    {
         return new \User($this->id);
     }
+
+    protected $primaryKey = 'UserID';
 }

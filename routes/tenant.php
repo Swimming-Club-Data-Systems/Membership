@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -7,6 +8,7 @@ use Stancl\Tenancy\Middleware\InitializeTenancyByDomainOrSubdomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 use Inertia\Inertia;
 use Illuminate\Foundation\Application;
+use Laravel\Passport\Passport;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +20,13 @@ use Illuminate\Foundation\Application;
 | contains the 'web' middleware group. Now create something great!
 |
 */
+
+Route::middleware([
+    InitializeTenancyByDomainOrSubdomain::class,
+    PreventAccessFromCentralDomains::class,
+])->group(function () {
+    Passport::routes();
+});
 
 Route::middleware([
     'web',
@@ -35,6 +44,10 @@ Route::middleware([
     });
 
     require __DIR__ . '/auth.php';
+
+    Route::middleware('auth')->group(function () {
+        Route::get('/login-to-v1', V1LoginController::class);
+    });
 
     // V1 Fallback routes in case you get served something by this app
     Route::any('/v1', function () {

@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Laravel\Passport\Passport;
+use App\Models\Tenant\Passport\Client;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,18 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        // if (!$this->app->routesAreCached()) {
+        //     Passport::routes();
+        // }
+
+        Passport::useClientModel(Client::class);
+
+        Passport::tokensCan([
+            'view-user' => 'View basic user information',
+        ]);
+
+        Passport::setDefaultScope([
+            'view-user',
+        ]);
     }
 }
