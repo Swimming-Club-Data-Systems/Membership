@@ -21,6 +21,7 @@ return [
         'localhost',
         'membership.myswimmingclub.uk',
         'myswimmingclub.uk',
+        'mt.myswimmingclub.uk',
     ],
 
     /**
@@ -137,7 +138,7 @@ return [
          * disable asset() helper tenancy and explicitly use tenant_asset() calls in places
          * where you want to use tenant-specific assets (product images, avatars, etc).
          */
-        'asset_helper_tenancy' => true,
+        'asset_helper_tenancy' => false,
     ],
 
     /**

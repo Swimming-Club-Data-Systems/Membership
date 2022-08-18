@@ -13,8 +13,8 @@ use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
 use Stancl\Tenancy\Resolvers\DomainTenantResolver;
-use Stancl\Tenancy\Resolvers\PathTenantResolver;
-use Stancl\Tenancy\Resolvers\RequestDataTenantResolver;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -116,6 +116,8 @@ class TenancyServiceProvider extends ServiceProvider
         // specify some cache store
         // null resolves to the default cache store
         DomainTenantResolver::$cacheStore = null;
+
+        TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomain::class;
     }
 
     protected function bootEvents()
@@ -146,9 +148,6 @@ class TenancyServiceProvider extends ServiceProvider
             Middleware\PreventAccessFromCentralDomains::class,
 
             Middleware\InitializeTenancyByDomain::class,
-            Middleware\InitializeTenancyBySubdomain::class,
-            Middleware\InitializeTenancyByDomainOrSubdomain::class,
-            Middleware\InitializeTenancyByPath::class,
             Middleware\InitializeTenancyByRequestData::class,
         ];
 
