@@ -50,7 +50,7 @@ Route::middleware([
     require __DIR__ . '/auth.php';
 
     Route::middleware('auth')->group(function () {
-        Route::get('/login-to-v1', V1LoginController::class);
+        Route::get('/login-to-v1', V1LoginController::class)->name('login.v1');
     });
 
     // V1 Fallback routes in case you get served something by this app

@@ -23,7 +23,6 @@ class V1LoginController extends Controller
 
         $v1Login = new V1Login();
         $v1Login->token = Str::random(512);
-        // $v1Login->save();
 
         $user->v1Logins()->save($v1Login);
 
