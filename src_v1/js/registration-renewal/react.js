@@ -1,0 +1,1 @@
+import "../../react-out/test";

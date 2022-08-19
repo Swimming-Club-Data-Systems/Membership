@@ -1,0 +1,317 @@
+{
+  "BDFT": {
+    "id": "BDFT",
+    "name": "Bedfordshire ASA",
+    "shortName": "Bedfordshire",
+    "website": "http://bedscountyasa.com/",
+    "title": "Bedfordshire ASA"
+  },
+  "BSBS": {
+    "id": "BSBS",
+    "name": "Berkshire & South Buckinghamshire",
+    "shortName": "Berkshire & S Bucks",
+    "website": "https://bsbasa.org/",
+    "title": "Berkshire & South Buckinghamshire"
+  },
+  "CHRN": {
+    "id": "sener",
+    "name": "Cheshire County WPSA",
+    "shortName": "Cheshire WPSA",
+    "website": "http://www.swimcheshire.org/",
+    "title": "Cheshire County WPSA"
+  },
+  "CMBT": {
+    "id": "CMBT",
+    "name": "Cambridgeshire ASA",
+    "shortName": "Cambridgeshire",
+    "website": "http://www.cambsasa.co.uk/",
+    "title": "Cambridgeshire ASA"
+  },
+  "CUMN": {
+    "id": "CUMN",
+    "name": "Cumbria ASA",
+    "shortName": "Cumbria",
+    "website": "http://www.swimcumbria.org.uk/",
+    "title": "Cumbria ASA"
+  },
+  "CWLW": {
+    "id": "CWLW",
+    "name": "Cornwall ASA",
+    "shortName": "Cornwall",
+    "website": "https://moodle.open.cornwall.ac.uk/course/view.php?id=69",
+    "title": "Cornwall ASA"
+  },
+  "DRBA": {
+    "id": "DRBA",
+    "name": "Derbyshire ASA",
+    "shortName": "Derbyshire",
+    "website": "http://www.derbyshireswimming.org.uk/",
+    "title": "Derbyshire ASA"
+  },
+  "DRSW": {
+    "id": "DRSW",
+    "name": "Dorset County ASA",
+    "shortName": "Dorset",
+    "website": "https://www.dorsetasa.org/",
+    "title": "Dorset County ASA"
+  },
+  "DVNW": {
+    "id": "DVNW",
+    "name": "Devon County ASA",
+    "shortName": "Devon",
+    "website": "https://www.devonswimming.org.uk/",
+    "title": "Devon County ASA"
+  },
+  "EASA": {
+    "id": "EASA",
+    "name": "EASA",
+    "shortName": "EASA",
+    "website": "",
+    "title": "EASA"
+  },
+  "ESXQ": {
+    "id": "ESXQ",
+    "name": "Essex County ASA",
+    "shortName": "Essex",
+    "website": "http://www.essexswimming.org/",
+    "title": "Essex County ASA"
+  },
+  "EWAY": {
+    "id": "EWAY",
+    "name": "South East Wales Region",
+    "shortName": "South East Wales",
+    "website": "",
+    "title": "South East Wales Region"
+  },
+  "GLUW": {
+    "id": "GLUW",
+    "name": "Gloucester ASA",
+    "shortName": "Gloucester",
+    "website": "http://glosasa.com/",
+    "title": "Gloucester ASA"
+  },
+  "HNTS": {
+    "id": "HNTS",
+    "name": "Hampshire County ASA",
+    "shortName": "Hampshire",
+    "website": "http://hampshireswi.powweb.com/",
+    "title": "Hampshire County ASA"
+  },
+  "HRTT": {
+    "id": "HRTT",
+    "name": "Swim England Hertfordshire",
+    "shortName": "Hertfordshire",
+    "website": "https://www.swimherts.org/",
+    "title": "Swim England Hertfordshire"
+  },
+  "KNTQ": {
+    "id": "KNTQ",
+    "name": "Kent County ASA",
+    "shortName": "Kent",
+    "website": "https://www.kentswimming.org/",
+    "title": "Kent County ASA"
+  },
+  "LECA": {
+    "id": "LECA",
+    "name": "Leicestershire ASA",
+    "shortName": "Leicestershire",
+    "website": "http://www.leicestershireasa.org/",
+    "title": "Leicestershire ASA"
+  },
+  "LNCA": {
+    "id": "LNCA",
+    "name": "Lincolnshire ASA",
+    "shortName": "Lincolnshire",
+    "website": "http://www.lincolnshirecountyasa.org/cms/",
+    "title": "Lincolnshire ASA"
+  },
+  "LNCN": {
+    "id": "LNCN",
+    "name": "Lancashire County WPSA",
+    "shortName": "Lancashire WPSA",
+    "website": "https://www.swimlancashire.org.uk/",
+    "title": "Lancashire County WPSA"
+  },
+  "MDXL": {
+    "id": "MDXL",
+    "name": "Middlesex County ASA",
+    "shortName": "Middlesex",
+    "website": "https://uk.teamunify.com/Home.jsp?team=reczzmcauk",
+    "title": "Middlesex County ASA"
+  },
+  "NDRE": {
+    "id": "NDRE",
+    "name": "Northumberland and Durham",
+    "shortName": "N&D",
+    "website": "http://asaner.org.uk/northumberland-durham-swimming-association/",
+    "title": "Northumberland and Durham"
+  },
+  "NHPA": {
+    "id": "NHPA",
+    "name": "Northamptonshire ASA",
+    "shortName": "Northamptonshire",
+    "website": "https://www.northantsasa.org/",
+    "title": "Northamptonshire ASA"
+  },
+  "NRFT": {
+    "id": "NRFT",
+    "name": "Norfolk County ASA",
+    "shortName": "Norfolk",
+    "website": "http://www.norfolkswimming.org.uk/",
+    "title": "Norfolk County ASA"
+  },
+  "NTMA": {
+    "id": "NTMA",
+    "name": "Nottinghamshire ASA",
+    "shortName": "Nottinghamshire",
+    "website": "https://www.notts-swimming.co.uk/",
+    "title": "Nottinghamshire ASA"
+  },
+  "NWAY": {
+    "id": "NWAY",
+    "name": "North Wales Region",
+    "shortName": "North Wales",
+    "website": "",
+    "title": "North Wales Region"
+  },
+  "ONBS": {
+    "id": "ONBS",
+    "name": "Oxfordshire & North Buckinghamshire ASA",
+    "shortName": "Oxfordshire & North Bucks",
+    "website": "http://onbcountiesasa.co.uk/",
+    "title": "Oxfordshire & North Buckinghamshire ASA"
+  },
+  "SASA": {
+    "id": "SASA",
+    "name": "SASA",
+    "shortName": "SASA",
+    "website": "",
+    "title": "SASA"
+  },
+  "SCCX": {
+    "id": "SCCX",
+    "name": "Scotland Composite",
+    "shortName": "Scotland Composite",
+    "website": "",
+    "title": "Scotland Composite"
+  },
+  "SCWX": {
+    "id": "SCWX",
+    "name": "Scotland West",
+    "shortName": "Scotland West",
+    "website": "https://www.scotswimwest.co.uk/",
+    "title": "Scotland West"
+  },
+  "SEDX": {
+    "id": "SEDX",
+    "name": "Scotland East",
+    "shortName": "Scotland East",
+    "website": "https://www.sasaeastdistrict.org.uk/",
+    "title": "Scotland East"
+  },
+  "SFKT": {
+    "id": "SFKT",
+    "name": "Suffolk ASA",
+    "shortName": "Suffolk",
+    "website": "http://www.suffolkswimming.org.uk/Championships/CountyChampionships",
+    "title": "Suffolk ASA"
+  },
+  "SHPM": {
+    "id": "SHPM",
+    "name": "Shropshire ASA",
+    "shortName": "Shropshire",
+    "website": "https://www.shropshire-asa.com/",
+    "title": "Shropshire ASA"
+  },
+  "SMDX": {
+    "id": "SMDX",
+    "name": "Scotland Midland",
+    "shortName": "Scotland Midland",
+    "website": "https://www.sasamidlanddistrict.co.uk/",
+    "title": "Scotland Midland"
+  },
+  "SMSW": {
+    "id": "SMSW",
+    "name": "Somerset ASA",
+    "shortName": "Somerset",
+    "website": "https://www.somersetasa.org/sasa/en/",
+    "title": "Somerset ASA"
+  },
+  "SNDX": {
+    "id": "SNDX",
+    "name": "Scotland North",
+    "shortName": "Scotland North",
+    "website": "http://www.sasanorth.org.uk/",
+    "title": "Scotland North"
+  },
+  "SRYQ": {
+    "id": "SRYQ",
+    "name": "Surrey County ASA",
+    "shortName": "Surrey",
+    "website": "https://surreyswimming.org/",
+    "title": "Surrey County ASA"
+  },
+  "SSXS": {
+    "id": "SSXS",
+    "name": "Sussex County ASA",
+    "shortName": "Sussex",
+    "website": "https://www.sussexswimming.org/",
+    "title": "Sussex County ASA"
+  },
+  "STFM": {
+    "id": "STFM",
+    "name": "Staffordshire ASA",
+    "shortName": "Staffordshire",
+    "website": "https://www.staffsasa.co.uk/",
+    "title": "Staffordshire ASA"
+  },
+  "WARY": {
+    "id": "WARY",
+    "name": "Cymru, Wales Region",
+    "shortName": "Cymru/Wales",
+    "website": "https://www.swimwales.org/",
+    "title": "Cymru, Wales Region"
+  },
+  "WASA": {
+    "id": "WASA",
+    "name": "WASA",
+    "shortName": "WASA",
+    "website": "",
+    "title": "WASA"
+  },
+  "WLTW": {
+    "id": "WLTW",
+    "name": "Wiltshire ASA",
+    "shortName": "Wiltshire",
+    "website": "http://www.wiltshireswimming.co.uk/",
+    "title": "Wiltshire ASA"
+  },
+  "WRCM": {
+    "id": "WRCM",
+    "name": "Worcester County ASA",
+    "shortName": "Worcester",
+    "website": "https://www.swimworcestercounty.org/",
+    "title": "Worcester County ASA"
+  },
+  "WWAY": {
+    "id": "WWAY",
+    "name": "South West Wales Region",
+    "shortName": "South West Wales",
+    "website": "",
+    "title": "South West Wales Region"
+  },
+  "WWKM": {
+    "id": "WWKM",
+    "name": "Warwickshire ASA",
+    "shortName": "Warwickshire",
+    "website": "http://www.warwickshireswimming.org.uk/",
+    "title": "Warwickshire ASA"
+  },
+  "YRKE": {
+    "id": "YRKE",
+    "name": "Yorkshire SA",
+    "shortName": "Yorkshire",
+    "website": "http://www.yorkshireswimming.org/",
+    "title": "Yorkshire SA"
+  }
+}

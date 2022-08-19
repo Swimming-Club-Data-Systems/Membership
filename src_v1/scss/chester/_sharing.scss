@@ -1,0 +1,124 @@
+/* Social Media Sharing Buttons */
+
+.sharing div {
+    text-align: center;
+    padding-right: 5px !important;
+}
+.sharing {
+    padding-left: 0;
+    margin-right: -5px;
+}
+.sharingterms {
+    margin-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+.sharing .col .btn {
+    font-size: 1.2rem !important;
+    padding: 0.375rem;
+}
+
+$sharing-colors: ();
+$sharing-colors: map-merge(
+  (
+    "mail":       $gray-800,
+    "fb":         #3b5998,
+    "tweet":      #1da1f2,
+    "whatsapp":   #25d366,
+    "pinterest":  #bd081c,
+    "linkedin":   #0077b5
+  ),
+  $sharing-colors
+);
+
+@each $color, $value in $sharing-colors {
+  .btn-#{$color} {
+    @include button-variant($value, $value);
+  }
+}
+
+@each $color, $value in $sharing-colors {
+  .btn-outline-#{$color} {
+    @include button-outline-variant($value);
+  }
+}
+
+/*
+.btn-mail {
+    background: #333;
+    color: #FFF;
+}
+.btn-mail:hover {
+    color: #FFF;
+}
+.btn-mail:active {
+    color: #FFF;
+}
+.btn-mail:focus {
+    color: #FFF;
+}
+.btn-fb {
+    background: #3b5998;
+    color: #FFF;
+}
+.btn-fb:hover {
+    color: #FFF;
+}
+.btn-fb:active {
+    color: #FFF;
+}
+.btn-fb:focus {
+    color: #FFF;
+}
+.btn-tweet {
+    background: #1da1f2;
+    color: #FFF;
+}
+.btn-tweet:hover {
+    color: #FFF;
+}
+.btn-tweet:active {
+    color: #FFF;
+}
+.btn-tweet:focus {
+    color: #FFF;
+}
+.btn-whatsapp {
+    background: #25d366;
+    color: #FFF;
+}
+.btn-whatsapp:hover {
+    color: #FFF;
+}
+.btn-whatsapp:active {
+    color: #FFF;
+}
+.btn-whatsapp:focus {
+    color: #FFF;
+}
+.btn-pinterest {
+    background: #bd081c;
+    color: #FFF;
+}
+.btn-pinterest:hover {
+    color: #FFF;
+}
+.btn-pinterest:active {
+    color: #FFF;
+}
+.btn-pinterest:focus {
+    color: #FFF;
+}
+.btn-linkedin {
+    background: #0077b5;
+    color: #FFF;
+}
+.btn-linkedin:hover {
+    color: #FFF;
+}
+.btn-linkedin:active {
+    color: #FFF;
+}
+.btn-linkedin:focus {
+    color: #FFF;
+}
+*/

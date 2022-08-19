@@ -1,0 +1,81 @@
+.collapse.show {
+  max-height: none;
+}
+
+.hide-a-underline a:hover {
+  text-decoration: none;
+}
+
+.top-bar a {
+  margin: -0.5rem inherit;
+  padding: 0.5rem 0;
+}
+
+.nav-link {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+#top-bar-more-content {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  grid-gap: 0.25rem;
+  padding: 0;
+
+  @include media-breakpoint-up(sm) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @include media-breakpoint-up(md) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @include media-breakpoint-up(lg) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  @include media-breakpoint-up(xl) {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  a {
+    display: grid;
+    padding: 0.25rem;
+    color: #fff;
+  }
+
+  a:focus, a:hover, a:active {
+    color: $body-color;
+    background: #fff;
+  }
+}
+
+@include media-breakpoint-up(lg) {
+	.navbar:first-child ul {
+	  margin-left: -0.5rem;
+	}
+
+	.navbar:last-child ul {
+	  margin-right: -0.5rem;
+	}
+}
+
+.bg-primary-darker {
+  background: darken($primary, 5%);
+}
+
+.bg-primary-dark {
+  background: darken(darken($primary, 5%), 5%);
+}
+
+/*
+Red BG Search Form
+*/
+.bg-primary::placeholder {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.membership-header {
+  background-color: $gray-800;
+}

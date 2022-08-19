@@ -1,0 +1,40 @@
+.upload-drop, .upload-drop * {
+  box-sizing: border-box;
+}
+
+.upload-drop .dz-preview .dz-progress {
+  display: block;
+}
+
+.upload-drop .dz-preview .dz-progress .dz-upload {
+  width: 0;
+}
+
+.upload-drop .dz-preview .dz-error-message {
+  color: $danger;
+  display: none;
+}
+
+.upload-drop .dz-preview.dz-error .dz-error-message, .upload-drop .dz-preview.dz-error .dz-error-mark {
+  display: block;
+}
+
+.upload-drop .dz-preview.dz-success .dz-success-mark {
+  display: block;
+}
+
+.upload-drop .dz-preview .dz-error-mark, .upload-drop .dz-preview .dz-success-mark {
+  display: none;
+}
+
+.dz-complete .progress {
+  display: none;
+}
+
+.upload-drop .dz-error .dz-preview .dz-error-message {
+  display: block;
+}
+
+.upload-drop .dz-success .dz-preview .dz-success-mark, .upload-drop .dz-error .dz-preview .dz-error-mark {
+  display: inline;
+}

@@ -1,0 +1,8 @@
+- name: Members
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Parents and members
+      items: 
+        - name: Adding a member
+          href: member/adding-a-member.md

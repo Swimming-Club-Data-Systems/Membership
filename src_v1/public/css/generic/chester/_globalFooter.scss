@@ -1,0 +1,27 @@
+
+/* CLS Global Footer CSS */
+
+.cls-global-footer-body {
+    padding: 1rem 0;
+}
+.cls-global-footer-inverse {
+    background: $gray-800;
+    color: #FFF;
+}
+.cls-global-footer-inverse a {
+    color: #FFF;
+}
+.cls-global-footer-inverse a:hover {
+    color: #FFF;
+}
+.cls-global-footer-sponsors {
+    background: $gray-700;
+    color: #FFF;
+    padding: 1.4rem 00 0;
+    margin: 1rem 0 0;
+}
+.cls-global-footer-legal {
+  padding: 1rem 0;
+  background: $gray-900;
+  color: #fff;
+}

@@ -1,0 +1,27 @@
+// Top alertss
+
+.top-alert {
+  div {
+    padding-top: $spacer;
+    padding-bottom: $spacer;
+  }
+
+  p:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+}
+
+@each $color,
+$value in $theme-colors {
+  .top-alert-#{$color} {
+    background: $value;
+    color: color-contrast($value);
+  }
+
+  .top-alert-#{$color} a {
+    color: color-contrast($value);
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}

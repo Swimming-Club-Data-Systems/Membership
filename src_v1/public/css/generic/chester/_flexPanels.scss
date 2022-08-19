@@ -1,0 +1,99 @@
+
+/* Flex Panels */
+
+.flex-panel {
+    min-height: 20px;
+    border-radius: 0;
+    margin: 0 0 1rem;
+    width: 100%
+}
+.flex-panel > :last-child {
+	margin-bottom: 0
+}
+.flex-panel-image {
+    margin: 0;
+    width: 100%;
+    height: auto;
+}
+.flex-panel-top-blue {
+    border-top: 3px solid #005fbd;
+}
+.flex-panel-top-primary {
+    border-top: 3px solid #bd0000;
+}
+.flex-panel-primary {
+    background-color: #bd0000;
+    color: #FFF;
+}
+.flex-panel-blue {
+    background-color: #005fbd;
+    color: #FFF;
+}
+.flex-panel-link-group a {
+    color: #333;
+    text-decoration: none;
+}
+.flex-panel-link-group a:hover {
+    background: #aaa;
+}
+.flex-panel-group {
+    margin-bottom: -1.1rem;
+}
+.flex-panel-bottom-link {
+    position: absolute;
+    bottom: 34px;
+    left: 25px;
+    right: 25px;
+}
+.flex-panel-link {
+    padding-bottom: 50px;
+}
+.flex-panel-aside-icon {
+    max-width: 30px!important;
+    display: inline-block;
+}
+.chesterBlue {
+    color: #005fbd;
+}
+.flex-panel-link-group a  {
+    color: #333;
+    text-decoration: none;
+}
+.flex-panel-link-group a:hover {
+    background: darken($cell-bg, 10%);
+}
+.flex-panel-group {
+    margin-bottom: -1.1rem;
+}
+.flex-panel {
+    width: 100%}
+.flex-panel-bottom-link {
+    position: absolute;
+    bottom: 34px;
+    left: 25px;
+    right: 25px;
+}
+.flex-panel-link {
+    padding-bottom: 50px;
+}
+.flex-panel-link-group a  {
+    color: #333;
+    text-decoration: none;
+}
+.flex-panel-link-group a:hover {
+    background: darken($cell-bg, 10%);
+}
+.flex-panel-group {
+    margin-bottom: -1.1rem;
+}
+.flex-panel {
+    width: 100%}
+.flex-panel-bottom-link {
+    position: absolute;
+    bottom: 34px;
+    left: 25px;
+    right: 25px;
+}
+.flex-panel-link {
+    padding-bottom: 50px;
+}

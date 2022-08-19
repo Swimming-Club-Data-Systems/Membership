@@ -1,0 +1,7 @@
+<?php
+
+$db->query(
+  "ALTER TABLE coaches
+    ADD COLUMN `Type` ENUM('LEAD_COACH', 'COACH', 'ASSISTANT_COACH', 'TEACHER', 'HELPER', 'ADMINISTRATOR') NOT NULL
+  ;"
+);

@@ -1,0 +1,22 @@
+- name: COVID-19
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Contact Tracing
+      items:
+        - name: Overview
+          href: contact-tracing/index.md
+        - name: Check in
+          href: contact-tracing/check-in.md
+        - name: Admin tools
+          items:
+            - name: Check out
+              href: contact-tracing/check-out.md
+    - name: Risk Awareness Forms
+      items:
+        - name: Overview
+          href: risk-awareness/index.md
+    - name: Health Survey
+      items:
+        - name: Overview
+          href: health-survey/index.md

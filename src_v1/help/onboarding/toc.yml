@@ -1,0 +1,8 @@
+- name: Onboarding
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Membership Years
+      href: membership-years.md
+    - name: Onboarding a new member
+      href: onboarding-a-new-member.md

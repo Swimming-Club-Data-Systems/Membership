@@ -1,0 +1,508 @@
+/* Globals */
+
+// Alternate styles
+//
+// Generate contextual modifier classes for colorizing the alert.
+
+.container-fluid {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.post img, .wp-caption img, img {
+    height: auto;
+    max-width: 100%
+}
+
+.type-post img {
+  width: 100% !important;
+  min-width: 100% !important;
+  max-width: 100% !important;
+}
+
+.blog-main blockquote {
+  font-size: 1.25rem;
+  margin: 0 0 1rem 0;
+  padding: 0 0 0 1rem;
+  border-left: $primary 5px solid;
+}
+
+.post img, .widget img, .widget select, .wp-caption, img {
+  max-width: 100%;
+}
+
+.blog-main img {
+	max-width: 100%;
+}
+
+.wp-caption {
+  margin-bottom: 0;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+}
+
+html {
+  background: #333;
+}
+
+body {
+  background: #FFF;
+}
+
+.row-flex::before {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.row-flex, .row-flex>div[class*=col-] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+}
+
+.row-flex-wrap {
+  -ms-flex-line-pack: start;
+  align-content: flex-start;
+  -webkit-box-flex: 0;
+  -ms-flex: 0;
+  flex: 0;
+}
+
+.container-flex>div[class*=col-], .row-flex>div[class*=col-] {
+  margin: -.2px;
+}
+
+.container-flex>div[class*=col-] div, .row-flex>div[class*=col-] div {
+  width: 100%
+}
+
+.flex-col {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  display: -webkit-flex;
+  -webkit-box-flex: 1;
+  -ms-flex: 1 100%;
+  flex: 1 100%;
+  -ms-flex-flow: column nowrap;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  flex-flow: column nowrap;
+}
+
+.flex-grow {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 2;
+  -ms-flex: 2;
+  flex: 2;
+}
+
+.post img {
+    border: none !important;
+}
+
+.alignleft {
+  display: inline;
+  float: left;
+  margin: .3em .9em .5em 0;
+}
+
+.alignright {
+  display: inline;
+  float: right;
+  margin: .3em 0 .5em .9em;
+}
+
+.aligncenter {
+  clear: both;
+  display: block;
+  margin: 0 auto .625em;
+}
+
+.wp-caption img {
+  display: block;
+}
+
+.post-thumb, label.screen-reader-text {
+  display: none;
+}
+
+.wp-caption-text {
+  text-align: left;
+  width: 100%;
+  background: $cell-bg;
+  padding: 0.5rem 0.8rem;
+  margin: 0 0 1rem 0;
+}
+
+.size-full {
+  margin-bottom: 0;
+}
+
+.widget_text ol:last-child, .widget_text p:last-child, .widget_text ul:last-child {
+  margin-bottom: 15px;
+}
+
+.widget ul {
+  padding: 0;
+  margin: 0 0 0 1.2em;
+}
+
+.widget ul li {
+  padding: .2em 0;
+}
+
+#wp-calendar caption {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.blog-post-title, .sidebar-module-title {
+  margin-top: 0;
+}
+
+li.comment {
+  list-style: none;
+  margin: 2em 0;
+  padding: 1em;
+  border: 1px solid #e8e8e8;
+}
+
+img.avatar {
+  float: right;
+  border: 1px solid #ddd;
+  border-radius: 50%
+}
+
+cite.fn {
+  font-size: 24px;
+}
+
+span.says {
+  display: none;
+}
+
+.comment-meta {
+  font-size: small;
+  margin: 0 0 1em;
+  display: block;
+}
+
+h3 #reply-title {
+  margin-top: 1em;
+}
+
+.comment-form textarea, input#author, input#email, input#url {
+  display: block;
+  border: 1px solid #ddd;
+  margin: .1em 0 1.1em;
+}
+
+.is-flex, .vertical-align {
+  display: -webkit-box;
+  display: -ms-flexbox;
+}
+
+.comment-form textarea {
+  max-width: 100%
+}
+
+.comment-form label {
+  font-size: 0.75rem;
+}
+
+.blog-description {
+  font-size: 1.5rem;
+	font-weight: bold;
+}
+
+.sponsor {
+  margin: 0 0 1.4rem 0;
+}
+
+.img-center {
+  margin: 0 auto;
+}
+
+.slogan {
+  text-align: right;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.masthead, .topimage-halloffame {
+  margin: -1.1rem 0 1rem 0;
+  position: relative;
+}
+
+.masthead {
+  padding: 3rem 0;
+  text-align: left;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, .1);
+  background: #d10000;
+  /*
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#d10000), to(#bd0000));
+  background-image: -webkit-linear-gradient(top, #d10000 0, #bd0000 100%);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #d10000), to(#bd0000));
+  background-image: -o-linear-gradient(top, #d10000 0, #bd0000 100%);
+  */
+  background-image: linear-gradient(to bottom, #d10000 0, #bd0000 100%);
+  background-repeat: repeat-x;
+  margin-bottom: 1.5rem;
+	color: #ffffff;
+}
+
+.list-group-flagship-content.list-group-item, ::-moz-selection {
+  text-shadow: none;
+}
+
+.list-group-flagship-content.list-group-item, ::selection {
+  text-shadow: none;
+}
+
+.masthead-header {
+  padding: 1.5rem 0;
+}
+
+.is-flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.is-flex>[class*=col-] {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.logo {
+  max-width: 445px;
+  height: 71px;
+  display: block;
+  background: url(https://www.chesterlestreetasc.co.uk/wp-content/themes/chester/img/chesterLogo.svg) left center no-repeat;
+  background-size: contain;
+}
+
+.logowhite {
+  max-width: 330px;
+	display: block;
+  background: url(https://www.chesterlestreetasc.co.uk/wp-content/themes/chester/img/chesterLogoAMP.svg) left center no-repeat;
+  height: 50px;
+}
+
+.topimage-halloffame {
+  background-image: url(/wp-content/themes/chester/img/stylish/imagetophalloffame.jpg);
+  background-size: cover;
+  height: calc(100vh - 3.25rem);
+  width: 100%;
+  min-height: auto;
+  color: #fff;
+  background-position: center;
+}
+
+#topimage-text {
+  width: calc(100% - 60px);
+  max-height: calc(100% - 60px);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.topimage-text-large {
+  font-size: 5rem !important;
+}
+
+.tweet-embed {
+  margin: 0 -10px -1rem -10px;
+  width: auto !important;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@media print {
+  .sharedaddy {
+    display: none!important;
+  }
+}
+
+.fa-navbar-caret {
+  font-size: 12px;
+}
+
+a {
+  // -webkit-tap-highlight-color: rgba(189, 0, 0, .3);
+  -webkit-tap-highlight-color: rgba($primary, .3);
+}
+
+.list-group-item, .navbar a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.blog-main a[href*="//"]:not([href*="chesterlestreetasc.co.uk"]):after {
+  font-family: "FontAwesome";
+  content: "\00a0\f08e";
+}
+
+::-moz-selection {
+  background: #b3d4fc;
+  text-shadow: none;
+}
+
+::selection {
+  background: #b3d4fc;
+}
+
+.cell, .flex-panel-default, .well {
+  background-color: $cell-bg;
+	padding: 1rem;
+}
+
+.have-full-height {
+  min-height:70vh;
+}
+
+.cell, .well {
+  border: none;
+  margin: 0 0 1rem 0;
+  padding: 1rem;
+  @include border-radius($alert-border-radius);
+  @if $cell-generic {
+    border: $card-border-width solid $card-border-color;
+  }
+}
+
+.cell p:last-child, .well p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.mono {
+  font-family: $font-family-monospace;
+}
+
+.bg-pink {
+  background: $pink;
+}
+
+.bg-indigo {
+  background: $indigo;
+}
+
+.bg-purple {
+  background: $purple;
+}
+
+.bg-orange {
+  background: $orange;
+}
+
+.bg-teal {
+  background: $teal;
+}
+
+.rsswidget {
+  overflow-x: hidden;
+  word-wrap: break-word;
+}
+
+.rsswidget ul {
+  list-style: none;
+  margin: 0;
+}
+
+.burnsheader {
+  background:#0288d1;
+  color:#fff;
+  padding:1rem
+}
+
+.serif h1, .serif h2, .serif h3, .serif h4, .serif h5, .serif h6, .serif p, .serif ul, .serif ol, blockquote {
+  font-family: 'Merriweather', Georgia, serif
+}
+
+/*
+Burns Colours
+*/
+
+.bg-burns {
+  background: #0288d1;
+}
+
+.text-burns {
+  color: #0288d1;
+}
+
+.rss-widget-icon {
+  display: none;
+}
+
+.rss-widget-icon:after {
+  content: '<i class="fa fa-rss" aria-hidden="true"></i>';
+}
+
+thead {
+  background: #fff;
+  position: sticky !important;
+  position: -webkit-sticky !important;
+  position: -moz-sticky !important;
+  position: -ms-sticky !important;
+  position: -o-sticky !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 990;
+}
+
+.widget ul {
+  list-style: none;
+  margin: 0;
+}
+
+.live {
+  margin: 0.25rem 0.3rem 0 0;
+  color: red;
+  animation: spinner-grow 1s cubic-bezier(.77,0,.18,1) infinite;
+}
+
+.panel {
+  padding: 1rem 2rem;
+  padding-top: 0;
+  font-size: 1.25rem;
+}
+
+.panel-title {
+  font-size: 1.5rem;
+  background-color: $primary;
+  color: #ffffff;
+  display: inline-block;
+  margin: 0 -2rem 0.5rem;
+  margin-top: 0;
+  padding: 0.5rem 2rem;
+  position: relative;
+  top: -1rem;
+}
+
+.auto-grow {
+	resize: none;
+	width: 100%;
+	min-height: 100px;
+	padding: 1rem;
+	overflow: hidden;
+	box-sizing: border-box;
+}

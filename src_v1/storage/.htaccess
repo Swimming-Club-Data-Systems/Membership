@@ -1,0 +1,2 @@
+# Hide files not concerning the user
+RedirectMatch 404 \.(htaccess|htpasswd|ini|log|sh|inc|bak|bkp|sql|php|html)$

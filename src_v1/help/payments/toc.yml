@@ -1,0 +1,14 @@
+- name: Payments
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Credit and Debit Cards
+      items: 
+        - name: Adding a payment card
+          href: card/adding-a-payment-card.md
+        - name: Expiring cards
+          href: card/when-your-card-expires.md
+    - name: Direct Debit
+      items: 
+        - name: Direct Debit transition
+          href: direct-debit/direct-debit-transition.md

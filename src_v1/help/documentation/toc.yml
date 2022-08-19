@@ -1,0 +1,8 @@
+- name: Membership System Documentation
+  items: 
+    - name: Overview
+      href: index.md
+    - name: How to contribute
+      href: contribute.md
+    - name: Writing standards
+      href: writing-standards.md

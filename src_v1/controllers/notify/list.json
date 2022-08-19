@@ -1,0 +1,60 @@
+{
+  "menuType": "ProfileNavigation",
+  "title": "Notify tools",
+  "links": [
+    {
+      "id": "notify-home",
+      "name": "Notify home",
+      "title": "Help and information about notify",
+      "link": "notify",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "notify-composer",
+      "name": "New email",
+      "title": "Send an email to groups of users",
+      "link": "notify/new",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "notify-history",
+      "name": "Sent emails",
+      "title": "Previously sent notify emails",
+      "link": "notify/history",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "notify-lists",
+      "name": "Targeted lists",
+      "title": "Manage targeted lists for notify",
+      "link": "notify/lists",
+      "target": "_self",
+      "external": false,
+      "exclude": [
+        "Parent"
+      ]
+    },
+    {
+      "id": "notify-reply-to",
+      "name": "Reply-to settings",
+      "title": "Choose the email address used for email replies",
+      "link": "notify/reply-to",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "notify-sms",
+      "name": "SMS lists",
+      "title": "Get SMS numbers for sendign text messages",
+      "link": "notify/sms",
+      "target": "_self",
+      "external": false,
+      "include": [
+        "Admin"
+      ]
+    }
+  ]
+}

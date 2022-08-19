@@ -1,0 +1,8 @@
+- name: Competitions
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Enter a competition
+      href: enter-a-competition.md
+    - name: Pay for a competition
+      href: pay-for-a-competition.md

@@ -1,0 +1,93 @@
+.account-body {
+	padding-top: 4.5rem;
+}
+
+.account-body {
+
+	.box-shadow {
+		box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .10);
+	}
+	.nav-scroller {
+		position: relative;
+		z-index: 2;
+		height: 2.75rem;
+		overflow-y: hidden;
+		margin: -1rem 0 1rem 0;
+	}
+	.nav-scroller .nav {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-ms-flex-wrap: nowrap;
+		flex-wrap: nowrap;
+		padding-bottom: 1rem;
+		margin-top: -1px;
+		overflow-x: auto;
+		color: rgba(255, 255, 255, .75);
+		text-align: center;
+		white-space: nowrap;
+		-webkit-overflow-scrolling: touch;
+	}
+	.nav-underline .nav-link {
+		padding-top: .75rem;
+		padding-bottom: .75rem;
+		line-height: 1.35rem;
+	}
+	@media print {
+		.nav-scroller {
+			display: none !important;
+		}
+	}
+	.ajaxPlaceholder {
+		padding: 10rem 0;
+		margin: 0 0 1rem 0;
+		text-align: center;
+		background: $cell-bg;
+	}
+	.galaEntryTimes {
+		display: -ms-grid;
+		display: grid;
+		-ms-grid-columns: (1fr)[1];
+		grid-template-columns: repeat(1, 1fr);
+		grid-column-gap: 20px;
+		-webkit-column-gap: 20px;
+		column-gap: 20px;
+		grid-row-gap: 1rem;
+		row-gap: 1rem;
+	}
+	@media (min-width: 992px) {
+		.galaEntryTimes {
+			-ms-grid-columns: (1fr)[2];
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	.chart {
+		max-width: 100%;
+	}
+
+}
+
+.ajaxPlaceholder {
+  background: #eee;
+  padding: 5rem 1rem;
+  text-align: center;
+}
+
+@media print {
+  .container {
+    width: 100% !important;
+    margin: 0px auto;
+    padding: 0;
+  }
+  body, html {
+    background-color: #ffffff;
+  }
+}
+
+.badge {
+  font-family: "Helvetica", "Helvetica Neue", "Arial", "Roboto", san-serif;
+}
+.table-nomargin {
+  margin: 0 -1rem -1rem -1rem;
+  width: auto !important;
+}

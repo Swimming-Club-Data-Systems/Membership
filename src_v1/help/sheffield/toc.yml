@@ -1,0 +1,16 @@
+- name: University of Sheffield Tools
+  items: 
+    - name: Overview
+      href: index.md
+    - name: For members
+      items: 
+      - name: Getting started
+        href: registration/get-started.md
+      - name: Booking a session
+        href: booking/booking-a-place.md
+    - name: For captains, coaches and committee members
+      items: 
+      - name: Take a register
+        href: attendance/registers.md
+      - name: Require and manage session booking
+        href: booking/manage-bookings.md

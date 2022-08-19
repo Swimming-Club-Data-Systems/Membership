@@ -1,0 +1,94 @@
+{
+  "menuType": "ProfileNavigation",
+  "title": "All tools",
+  "links": [
+    {
+      "id": "admin-home",
+      "name": "Admin tools dashboard",
+      "title": "Admin tools main page",
+      "link": "admin",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-swimmark",
+      "name": "Swim England Compliance Centre",
+      "title": "Ensure you provide information to ensure SwimMark compliance",
+      "link": "admin/swim-england-compliance",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-reports",
+      "name": "Reports",
+      "title": "Member and system reports",
+      "link": "admin/reports",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-audit",
+      "name": "Audit logs",
+      "title": "Audit logs of user actions",
+      "link": "admin/audit",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-galas",
+      "name": "Galas",
+      "title": "Upload SDIF files",
+      "link": "admin/galas",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-member-upload",
+      "name": "Member upload",
+      "title": "Upload members via CSV",
+      "link": "admin/member-upload",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-editors",
+      "name": "Bulk editors",
+      "title": "Edit details quickly",
+      "link": "admin/editors",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "admin-system-settings",
+      "name": "System settings",
+      "title": "Change system variables and manage global options",
+      "link": "settings",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "contact-tracing-settings",
+      "name": "Contact tracing",
+      "title": "Manage COVID-19 contact tracing locations and reports",
+      "link": "contact-tracing",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "scds-payments",
+      "name": "SCDS Payments",
+      "title": "Manage payments to Swimming Club Data Systems",
+      "link": "admin/scds-payments",
+      "target": "_self",
+      "external": false
+    },
+    {
+      "id": "tier-three",
+      "name": "Tier 3 Discounts",
+      "title": "Manage discounts for over 18s in Tier 3 areas",
+      "link": "admin/tier-3",
+      "target": "_self",
+      "external": false
+    }
+  ]
+}

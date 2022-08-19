@@ -1,0 +1,16 @@
+/* Bootstrap 4 and Navwalker Dropdown Fixes */
+
+.navbar-nav .active > .dropdown-item {
+    font-weight: bold;
+}
+
+.navbar.active.nav-link {
+	font-weight: bold;
+}
+
+@include media-breakpoint-down(md) {
+  .collapse.show {
+      overflow-y: auto;
+      max-height: 400px;
+  }
+}

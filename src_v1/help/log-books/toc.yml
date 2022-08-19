@@ -1,0 +1,16 @@
+- name: Log Books
+  items: 
+    - name: Overview
+      href: index.md
+    - name: Finding your log book
+      href: finding-your-log-book.md
+    - name: Log entries
+      items: 
+      - name: Adding an entry
+        href: add-log-entry.md
+      - name: Editing an entry
+        href: edit-log-entry.md
+    - name: Member access
+      items: 
+      - name: Set member password
+        href: set-member-password.md
