@@ -93,4 +93,24 @@ class User extends Authenticatable
     }
 
     protected $primaryKey = 'UserID';
+
+    public function getEmailForPasswordReset()
+    {
+        return $this->EmailAddress;
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->attributes['EmailAddress'];
+    }
+
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['EmailAddress'],
+            set: fn ($value) => [
+                'EmailAddress' => $value,
+            ],
+        );
+    }
 }

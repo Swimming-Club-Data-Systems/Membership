@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        $url = $request->session()->get('url.intended');
+        $url = $request->session()->get('url.intended') ?? "";
         if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
             $request->session()->forget('url.intended');
             $controller = new V1LoginController();
