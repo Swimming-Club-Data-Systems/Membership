@@ -278,6 +278,10 @@ if (getenv('STRIPE') && app()->tenant->getStripeAccount()) {
 	* Available to all users
 	*/
 
+	$this->get('/customer-portal', function () {
+		include 'stripe/customer-portal.php';
+	});
+
 	$this->group('/cards', function () {
 		$this->get('/', function () {
 			include 'stripe/home.php';

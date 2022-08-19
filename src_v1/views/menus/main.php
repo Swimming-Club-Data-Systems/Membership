@@ -494,7 +494,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" target="_blank" href="<?= htmlspecialchars(platformUrl('help-and-support')) ?>">Help</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="<?= autoUrl("logout") ?>">Logout</a>
+                <a class="dropdown-item disabled">Visit V2 to logout</a>
               </div>
             </li>
           </ul>
