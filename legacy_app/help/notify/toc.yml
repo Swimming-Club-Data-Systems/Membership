@@ -1,6 +1,0 @@
-- name: Notify
-  items: 
-    - name: Overview
-      href: index.md
-    - name: Adding an additional email address
-      href: adding-additional-emails.md

@@ -1,9 +1,0 @@
-<?php
-
-$db->query(
-  "ALTER TABLE galaEntries
-  MODIFY COLUMN 25FreeTime text DEFAULT NULL,
-  MODIFY COLUMN 25BackTime text DEFAULT NULL,
-  MODIFY COLUMN 25BreastTime text DEFAULT NULL,
-  MODIFY COLUMN 25FlyTime text DEFAULT NULL;"
-);
