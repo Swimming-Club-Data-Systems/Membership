@@ -329,6 +329,10 @@ function autoUrl($relative, $includeClub = true)
     $rootUrl = 'https://' . app()->tenant->getDomain() . '/';
   }
 
+  if (getenv('ROOT_URL_SUFFIX')) {
+    $rootUrl .= getenv('ROOT_URL_SUFFIX');
+  }
+
   return rtrim($rootUrl . $relative, '/');
 }
 

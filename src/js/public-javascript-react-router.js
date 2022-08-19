@@ -22,7 +22,7 @@ const rootElement = document.getElementById("root");
 render(
   <GlobalErrorBoundary>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter basename="v1">
         <ScrollToTop />
         <Suspense fallback={<SuspenseFallback />}>
           <Routes>
