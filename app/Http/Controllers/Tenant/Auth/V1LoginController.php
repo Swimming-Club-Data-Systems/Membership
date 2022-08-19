@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Auth\V1Login;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class V1LoginController extends Controller
 {
@@ -26,6 +27,6 @@ class V1LoginController extends Controller
 
         $user->v1Logins()->save($v1Login);
 
-        return redirect("/v1/login-to-v1?auth_code=" . urlencode($v1Login->token));
+        return Inertia::location("/v1/login-to-v1?auth_code=" . urlencode($v1Login->token));
     }
 }

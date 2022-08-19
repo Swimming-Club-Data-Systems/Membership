@@ -54,6 +54,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/v1/logout');
+        return Inertia::location('/v1/logout');
     }
 }
