@@ -43,6 +43,21 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
+            'tenant' => function () {
+                $tenant = tenant();
+                if ($tenant) {
+                    return [
+                        'name' => $tenant->getOption("CLUB_NAME"),
+                        'short_name' => $tenant->getOption("CLUB_CLUB_NAME"),
+                        'asa_code' => $tenant->getOption("ASA_CLUB_CODE"),
+                        'asa_district' => $tenant->getOption("ASA_DISTRICT"),
+                        'asa_county' => $tenant->getOption("ASA_COUNTY"),
+                        'website' => $tenant->getOption("CLUB_WEBSITE"),
+                        'club_logo_url' => $tenant->getOption("LOGO_DIR") ? getUploadedAssetUrl($tenant->getOption("LOGO_DIR")) : asset('/img/corporate/scds.svg'),
+                    ];
+                }
+                return null;
+            },
         ]);
     }
 }

@@ -118,6 +118,10 @@ class TenancyServiceProvider extends ServiceProvider
         DomainTenantResolver::$cacheStore = null;
 
         TenantAssetsController::$tenancyMiddleware = InitializeTenancyByDomain::class;
+
+        \Stancl\Tenancy\Features\TenantConfig::$storageToConfigMap = [
+            // 'paypal_api_key' => 'services.paypal.api_key',
+        ];
     }
 
     protected function bootEvents()
