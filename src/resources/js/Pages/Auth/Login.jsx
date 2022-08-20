@@ -1,94 +1,82 @@
-import React, { useEffect } from 'react';
-import Button from '@/Components/Button';
-import Checkbox from '@/Components/Checkbox';
-import Guest from '@/Layouts/Guest';
-import Input from '@/Components/Input';
-import Label from '@/Components/Label';
-import ValidationErrors from '@/Components/ValidationErrors';
-import { Head, Link, useForm } from '@inertiajs/inertia-react';
+import React from "react";
+import Checkbox from "@/Components/Form/Checkbox";
+import AuthServices from "@/Layouts/AuthServices";
+import { Inertia } from "@inertiajs/inertia";
+import { Head } from "@inertiajs/inertia-react";
+import Link from "@/Components/Link";
+import Form from "@/Components/Form/Form";
+import TextInput from "@/Components/Form/TextInput";
+import * as yup from "yup";
+import Alert from "@/Components/Alert";
 
 export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        email: '',
-        password: '',
-        remember: '',
-    });
-
-    useEffect(() => {
-        return () => {
-            reset('password');
-        };
-    }, []);
-
-    const onHandleChange = (event) => {
-        setData(event.target.name, event.target.type === 'checkbox' ? event.target.checked : event.target.value);
-    };
-
-    const submit = (e) => {
-        e.preventDefault();
-
-        post(route('login'));
+    const onSubmit = (values, formikBag) => {
+        Inertia.post(route("login"), values, {
+            onSuccess: (arg) => console.log(arg),
+        });
     };
 
     return (
-        <Guest>
+        <AuthServices title="Sign in to your account">
             <Head title="Log in" />
 
-            {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
+            {status && (
+                <Alert title="Success" className="mb-4">
+                    {status}
+                </Alert>
+            )}
 
-            <ValidationErrors errors={errors} />
+            <Form
+                initialValues={{
+                    email: "",
+                    password: "",
+                    remember: false,
+                }}
+                validationSchema={yup.object().shape({
+                    email: yup
+                        .string()
+                        .required("An email address is required")
+                        .email("Your email address must be valid"),
+                    password: yup.string().required("A password is required"),
+                    remember: yup
+                        .boolean()
+                        .oneOf(
+                            [false, true],
+                            "Remember me must be ticked or not ticked"
+                        ),
+                })}
+                onSubmit={onSubmit}
+                submitTitle="Sign in"
+                submitClass="w-full"
+                hideClear
+            >
+                <TextInput
+                    name="email"
+                    type="email"
+                    label="Email"
+                    autoComplete="username"
+                />
+                <TextInput
+                    name="password"
+                    type="password"
+                    label="Password"
+                    autoComplete="current-password"
+                />
 
-            <form onSubmit={submit}>
-                <div>
-                    <Label forInput="email" value="Email" />
+                <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                        <Checkbox name="remember" label="Remember me" />
+                    </div>
 
-                    <Input
-                        type="text"
-                        name="email"
-                        value={data.email}
-                        className="mt-1 block w-full"
-                        autoComplete="username"
-                        isFocused={true}
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="mt-4">
-                    <Label forInput="password" value="Password" />
-
-                    <Input
-                        type="password"
-                        name="password"
-                        value={data.password}
-                        className="mt-1 block w-full"
-                        autoComplete="current-password"
-                        handleChange={onHandleChange}
-                    />
-                </div>
-
-                <div className="block mt-4">
-                    <label className="flex items-center">
-                        <Checkbox name="remember" value={data.remember} handleChange={onHandleChange} />
-
-                        <span className="ml-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-                </div>
-
-                <div className="flex items-center justify-end mt-4">
                     {canResetPassword && (
-                        <Link
-                            href={route('password.request')}
-                            className="underline text-sm text-gray-600 hover:text-gray-900"
-                        >
-                            Forgot your password?
-                        </Link>
+                        <div className="text-sm mb-3">
+                            <Link href={route("password.request")}>
+                                Forgot your password?
+                            </Link>
+                        </div>
                     )}
-
-                    <Button className="ml-4" processing={processing}>
-                        Log in
-                    </Button>
                 </div>
-            </form>
-        </Guest>
+            </Form>
+        </AuthServices>
     );
 }

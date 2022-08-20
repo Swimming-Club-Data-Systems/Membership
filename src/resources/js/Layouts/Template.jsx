@@ -38,14 +38,14 @@ const user = {
         "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
 };
 const navigation = [
-    { name: "Members", href: "#" },
-    { name: "Squads", href: "#" },
-    { name: "Registers", href: "#" },
-    { name: "Galas", href: "#" },
-    { name: "Payments", href: "#" },
-    { name: "Notify", href: "#" },
-    { name: "Users", href: "#" },
-    { name: "Admin", href: "#" },
+    { name: "Members", href: "/members" },
+    { name: "Squads", href: "/squads" },
+    { name: "Registers", href: "/attendance" },
+    { name: "Galas", href: "/galas" },
+    { name: "Payments", href: "/payments" },
+    { name: "Notify", href: "/notify" },
+    { name: "Users", href: "/users" },
+    { name: "Admin", href: "/admin" },
 ];
 const breadcrumbs = [
     { name: "Jobs", href: "#", current: false },
