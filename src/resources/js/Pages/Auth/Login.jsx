@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Checkbox from "@/Components/Form/Checkbox";
 import AuthServices from "@/Layouts/AuthServices";
 import { Inertia } from "@inertiajs/inertia";
@@ -8,8 +8,17 @@ import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import Alert from "@/Components/Alert";
+import useLogin from "./Helpers/useLogin";
+import Button from "@/Components/Button";
+import WebAuthnHandler from "./Helpers/WebAuthnHandler";
 
-export default function Login({ status, canResetPassword }) {
+const Login = ({ status, canResetPassword }) => {
+    const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
+
+    const [hasWebauthn, setHasWebauthn] = useState(false);
+    const [ssoUrl, setSsoUrl] = useState(null);
+    const [error, setError] = useState(null);
+
     const onSubmit = (values, formikBag) => {
         Inertia.post(route("login"), values, {
             onSuccess: (arg) => console.log(arg),
@@ -54,7 +63,7 @@ export default function Login({ status, canResetPassword }) {
                     name="email"
                     type="email"
                     label="Email"
-                    autoComplete="username"
+                    autoComplete="username webauthn"
                 />
                 <TextInput
                     name="password"
@@ -76,7 +85,11 @@ export default function Login({ status, canResetPassword }) {
                         </div>
                     )}
                 </div>
+
+                <WebAuthnHandler />
             </Form>
         </AuthServices>
     );
-}
+};
+
+export default Login;

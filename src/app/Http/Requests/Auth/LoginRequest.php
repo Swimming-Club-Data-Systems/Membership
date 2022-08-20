@@ -39,7 +39,7 @@ class LoginRequest extends FormRequest
     /**
      * Attempt to authenticate the request's credentials.
      *
-     * @return void
+     * @return \App\Models\Tenant\User User object
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -58,8 +58,9 @@ class LoginRequest extends FormRequest
             ]);
         }
 
-        Auth::login($user, $this->boolean('remember'));
         RateLimiter::clear($this->throttleKey());
+
+        return $user;
     }
 
     /**

@@ -14,6 +14,9 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, BelongsToTenant;
 
+    protected $configOptionsCached = false;
+    protected $configOptions = [];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -45,6 +48,22 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    public function getOption($key)
+    {
+        if (!$this->configOptionsCached) {
+            foreach ($this->userOptions as $option) {
+                $this->configOptions[$option->Option] = $option->Value;
+            }
+            $this->configOptionsCached = true;
+        }
+
+        if (isset($this->configOptions[$key])) {
+            return $this->configOptions[$key];
+        }
+
+        return null;
+    }
+
     /**
      * Relationships
      */
@@ -55,6 +74,22 @@ class User extends Authenticatable implements MustVerifyEmail
     public function v1Logins()
     {
         return $this->hasMany(Auth\V1Login::class, 'user_id');
+    }
+
+    /**
+     * Get the WebAuthn User Credentials for the user.
+     */
+    public function userCredentials()
+    {
+        return $this->hasMany(Auth\UserCredential::class, 'user_id');
+    }
+
+    /**
+     * Get the options for the user.
+     */
+    public function userOptions()
+    {
+        return $this->hasMany(UserOptions::class, 'User');
     }
 
     /**

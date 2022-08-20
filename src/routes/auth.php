@@ -8,7 +8,11 @@ use App\Http\Controllers\Tenant\Auth\NewPasswordController;
 use App\Http\Controllers\Tenant\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Tenant\Auth\RegisteredUserController;
 use App\Http\Controllers\Tenant\Auth\VerifyEmailController;
+use App\Http\Controllers\Tenant\Auth\WebAuthnLoginController;
 use Illuminate\Support\Facades\Route;
+
+Route::post('webauthn/verify', [WebAuthnLoginController::class, 'verify'])->name('webauthn.verify');
+Route::post('webauthn/challenge', [WebAuthnLoginController::class, 'challenge'])->name('webauthn.challenge');
 
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
@@ -20,6 +24,14 @@ Route::middleware('guest')->group(function () {
                 ->name('login');
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
+
+    Route::get('two-factor-challenge', [AuthenticatedSessionController::class, 'check'])
+                ->name('two_factor');
+
+    Route::post('two-factor-challenge/backup', [AuthenticatedSessionController::class, 'resend'])
+                ->name('two_factor.resend');
+
+    Route::post('two-factor-challenge', [AuthenticatedSessionController::class, 'confirm']);
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
                 ->name('password.request');
