@@ -10,7 +10,7 @@ use Laravel\Passport\HasApiTokens;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, BelongsToTenant;
 
@@ -85,11 +85,6 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn ($value, $attributes) => $attributes['UserID'],
         );
-    }
-
-    public function getLegacyUser()
-    {
-        return new \User($this->id);
     }
 
     protected $primaryKey = 'UserID';
