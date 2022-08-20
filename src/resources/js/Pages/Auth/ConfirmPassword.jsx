@@ -5,6 +5,10 @@ import Input from "@/Components/Input";
 import Label from "@/Components/Label";
 import ValidationErrors from "@/Components/ValidationErrors";
 import { Head, useForm } from "@inertiajs/inertia-react";
+import Form from "@/Components/Form/Form";
+import TextInput from "@/Components/Form/TextInput";
+import * as yup from "yup";
+import { Inertia } from "@inertiajs/inertia";
 
 export default function ConfirmPassword() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -27,10 +31,14 @@ export default function ConfirmPassword() {
         post(route("password.confirm"));
     };
 
+    const onSubmit = (values, formikBag) => {
+        Inertia.post(route("password.confirm"), values, {
+            onSuccess: (arg) => console.log(arg),
+        });
+    };
+
     return (
-        <AuthServices
-            title="Confirm your password"
-        >
+        <AuthServices title="Confirm your password">
             <Head title="Confirm Password" />
 
             <div className="mb-4 text-sm text-gray-600">
@@ -38,7 +46,26 @@ export default function ConfirmPassword() {
                 password before continuing.
             </div>
 
-            <ValidationErrors errors={errors} />
+            <Form
+                initialValues={{
+                    password: "",
+                }}
+                validationSchema={yup.object().shape({
+                    password: yup.string().required("A password is required"),
+                })}
+                onSubmit={onSubmit}
+                submitTitle="Confirm"
+                hideClear
+            >
+                <TextInput
+                    name="password"
+                    type="password"
+                    autoFocus
+                    autoComplete="password"
+                />
+            </Form>
+
+            {/* <ValidationErrors errors={errors} />
 
             <form onSubmit={submit}>
                 <div className="mt-4">
@@ -59,7 +86,7 @@ export default function ConfirmPassword() {
                         Confirm
                     </Button>
                 </div>
-            </form>
+            </form> */}
         </AuthServices>
     );
 }

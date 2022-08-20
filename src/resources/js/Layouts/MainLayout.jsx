@@ -30,13 +30,10 @@ import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import Button from "@/Components/Button";
+import { usePage } from "@inertiajs/inertia-react";
+import MainHeader from "./Components/MainHeader";
+import Container from "@/Components/Container";
 
-const user = {
-    name: "Whitney Francis",
-    email: "whitney@example.com",
-    imageUrl:
-        "https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=256&h=256&q=80",
-};
 const navigation = [
     { name: "Members", href: "/members" },
     { name: "Squads", href: "/squads" },
@@ -53,7 +50,7 @@ const breadcrumbs = [
     { name: "Applicants", href: "#", current: true },
 ];
 const userNavigation = [
-    { name: "Your Profile", href: "#" },
+    { name: "Your Profile", href: route("my_account.show") },
     { name: "Settings", href: "#" },
     { name: "Sign out", href: "#" },
 ];
@@ -62,7 +59,18 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-export default function Example({children}) {
+const MainLayout = ({ title, subtitle, children }) => {
+
+    const userObject = usePage().props.auth.user;
+
+    console.log(userObject);
+
+    const user = {
+        name: `${userObject.Forename} ${userObject.Surname}`,
+        email: userObject.EmailAddress,
+        imageUrl: userObject.gravitar_url,
+    };
+
     return (
         <>
             {/*
@@ -75,9 +83,9 @@ export default function Example({children}) {
       */}
             <div className="min-h-full bg-gray-100">
                 <header className="bg-white shadow">
-                    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+                    <Container>
                         <Popover className="flex justify-between h-16">
-                            <div className="flex px-2 lg:px-0">
+                            <div className="flex px-0 lg:px-0">
                                 <div className="flex-shrink-0 flex items-center">
                                     <a href="#">
                                         <ApplicationLogo className="h-8 w-auto" />
@@ -166,11 +174,7 @@ export default function Example({children}) {
                                                 <div className="pt-3 pb-2">
                                                     <div className="flex items-center justify-between px-4">
                                                         <div>
-                                                            <img
-                                                                className="h-8 w-auto"
-                                                                src="https://tailwindui.com/img/logos/workflow-mark.svg?color=blue&shade=600"
-                                                                alt="Workflow"
-                                                            />
+                                                            <ApplicationLogo className="h-8 w-auto" />
                                                         </div>
                                                         <div className="-mr-2">
                                                             <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
@@ -221,7 +225,8 @@ export default function Example({children}) {
                                                                 {user.email}
                                                             </div>
                                                         </div>
-                                                        <button
+                                                        {/* We don't have notifications yet */}
+                                                        {/* <button
                                                             type="button"
                                                             className="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                                         >
@@ -233,7 +238,7 @@ export default function Example({children}) {
                                                                 className="h-6 w-6"
                                                                 aria-hidden="true"
                                                             />
-                                                        </button>
+                                                        </button> */}
                                                     </div>
                                                     <div className="mt-3 px-2 space-y-1">
                                                         {userNavigation.map(
@@ -259,7 +264,8 @@ export default function Example({children}) {
                                 </div>
                             </Transition.Root>
                             <div className="hidden lg:ml-4 lg:flex lg:items-center">
-                                <button
+                                {/* We don't have notifications yet */}
+                                {/* <button
                                     type="button"
                                     className="flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                                 >
@@ -270,7 +276,7 @@ export default function Example({children}) {
                                         className="h-6 w-6"
                                         aria-hidden="true"
                                     />
-                                </button>
+                                </button> */}
 
                                 {/* Profile dropdown */}
                                 <Menu
@@ -321,7 +327,7 @@ export default function Example({children}) {
                                 </Menu>
                             </div>
                         </Popover>
-                    </div>
+                    </Container>
 
                     {false && (
                         <div className="max-w-7xl mx-auto px-4 sm:px-6">
@@ -394,54 +400,9 @@ export default function Example({children}) {
                     )}
                 </header>
 
-                <main className="py-10">
+                <main className="py-10 min-h-screen">
                     {/* Page header */}
-                    <div className="max-w-3xl mx-auto px-4 sm:px-6 md:flex md:items-center md:justify-between md:space-x-5 lg:max-w-7xl lg:px-8">
-                        <div className="flex items-center space-x-5">
-                            <div className="flex-shrink-0">
-                                <div className="relative">
-                                    <img
-                                        className="h-16 w-16 rounded-full"
-                                        src="https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80"
-                                        alt=""
-                                    />
-                                    <span
-                                        className="absolute inset-0 shadow-inner rounded-full"
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-bold text-gray-900">
-                                    Ricardo Cooper
-                                </h1>
-                                <p className="text-sm font-medium text-gray-500">
-                                    Applied for{" "}
-                                    <a href="#" className="text-gray-900">
-                                        Front End Developer
-                                    </a>{" "}
-                                    on{" "}
-                                    <time dateTime="2020-08-25">
-                                        August 25, 2020
-                                    </time>
-                                </p>
-                            </div>
-                        </div>
-                        <div className="mt-6 flex flex-col-reverse justify-stretch space-y-4 space-y-reverse sm:flex-row-reverse sm:justify-end sm:space-x-reverse sm:space-y-0 sm:space-x-3 md:mt-0 md:flex-row md:space-x-3">
-                            <Button
-                              type="button"
-                              variant="secondary"
-                            >
-                                Disqualify
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="primary"
-                            >
-                                Advance to offer
-                            </Button>
-                        </div>
-                    </div>
+                    <MainHeader title={title} subtitle={subtitle}></MainHeader>
 
                     {children}
                 </main>
@@ -451,3 +412,5 @@ export default function Example({children}) {
         </>
     );
 }
+
+export default MainLayout;

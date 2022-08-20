@@ -143,4 +143,23 @@ class User extends Authenticatable implements MustVerifyEmail
             ],
         );
     }
+
+    /**
+     * Get the user's profile image url.
+     *
+     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    public function gravitarUrl(): Attribute
+    {
+        return new Attribute(
+            get: fn () => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->EmailAddress))) . "?d=mp",
+        );
+    }
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['gravitar_url'];
 }

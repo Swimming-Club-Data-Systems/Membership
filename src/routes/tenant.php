@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\MyAccountController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -65,6 +66,14 @@ Route::middleware([
     Route::any('/v1/{path}', function ($path) {
         return Inertia::render('Errors/V1');
     })->where('path', '.*');
+
+    Route::prefix('my-account')->group(function () {
+        Route::name('my_account.')->group(function () {
+            Route::get('/', [MyAccountController::class, 'show'])->name('show');
+            Route::post('/', [MyAccountController::class, 'save']);
+        });
+    });
+
 
     // Fallback route
     // If not defined here, it's probs in the V1 app so lets send the user there
