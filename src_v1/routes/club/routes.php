@@ -732,8 +732,8 @@ $this->get('/files/*', function () {
 });
 
 // Global Catch All 404
-$this->any('/', function () {
-  header("Location: " . autoUrl(""));
+$this->any(['/', '/v1'], function () {
+  header("Location: /");
 });
 
 // Global Catch All 404
