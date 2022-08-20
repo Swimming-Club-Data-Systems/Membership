@@ -29,5 +29,5 @@ setcookie(COOKIE_PREFIX . 'TenantSessionId', "", 0, "/", app('request')->hostnam
 if (isset($_GET['redirect'])) {
   header("location: " . $_GET['redirect']);
 } else {
-  header("Location: " . autoUrl("", false));
+  header("Location: /");
 }

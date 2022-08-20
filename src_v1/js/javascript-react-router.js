@@ -21,7 +21,7 @@ const WebAuthn = React.lazy(() => import("./my-account/webauthn/WebAuthn"));
 const rootElement = document.getElementById("root");
 render(
   <Provider store={store}>
-    <BrowserRouter>
+    <BrowserRouter basename="v1">
       <ScrollToTop />
       <Suspense fallback={<SuspenseFallback />}>
         <Routes>

@@ -352,10 +352,14 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   //   include BASE_PATH . "views/Welcome.php";
   // });
 
-  // $this->get('/login', function () {
-  //   http_response_code(303);
-  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId()), false));
-  // });
+  $this->get('/login', function () {
+    http_response_code(302);
+    header("Location: /login-to-v1");
+  });
+
+  $this->get('/login-to-v1', function () {
+    include 'autologin.php';
+  });
 
   // $this->get('/login', function () {
   //   include BASE_PATH . 'views/Login.php';
@@ -447,10 +451,10 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
   */
 
   // Global Catch All send to login
-  // $this->any(['/', '/*'], function () {
-  //   http_response_code(303);
-  //   header("Location: " . autoUrl("login?club=" . mb_strtolower(app()->tenant->getCodeId() . '&target=' . urlencode(app('request')->path)), false));
-  // });
+  $this->any(['/', '/*'], function () {
+    $_SESSION['login_redirect_target'] = app('request')->path;
+    header("Location: /login-to-v1");
+  });
 
   $this->group('/api', function () {
     include BASE_PATH . 'controllers/api/public-api.php';
