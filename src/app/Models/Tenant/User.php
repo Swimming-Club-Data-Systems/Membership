@@ -156,6 +156,10 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function getEmailForVerification() {
+        return $this->EmailAddress;
+    }
+
     /**
      * The accessors to append to the model's array form.
      *
