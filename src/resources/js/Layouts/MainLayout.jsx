@@ -33,6 +33,7 @@ import Button from "@/Components/Button";
 import { usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
+import { Link } from "@inertiajs/inertia-react";
 
 const navigation = [
     { name: "Members", href: "/members" },
@@ -50,7 +51,7 @@ const breadcrumbs = [
     { name: "Applicants", href: "#", current: true },
 ];
 const userNavigation = [
-    { name: "Your Profile", href: route("my_account.show") },
+    { name: "Your Profile", href: route("my_account.index") },
     { name: "Settings", href: "#" },
     { name: "Sign out", href: "#" },
 ];
@@ -62,9 +63,7 @@ function classNames(...classes) {
 const MainLayout = ({ title, subtitle, children }) => {
 
     const userObject = usePage().props.auth.user;
-
-    console.log(userObject);
-
+    
     const user = {
         name: `${userObject.Forename} ${userObject.Surname}`,
         email: userObject.EmailAddress,
@@ -87,22 +86,22 @@ const MainLayout = ({ title, subtitle, children }) => {
                         <Popover className="flex justify-between h-16">
                             <div className="flex px-0 lg:px-0">
                                 <div className="flex-shrink-0 flex items-center">
-                                    <a href="#">
+                                    <Link href="/">
                                         <ApplicationLogo className="h-8 w-auto" />
-                                    </a>
+                                    </Link>
                                 </div>
                                 <nav
                                     aria-label="Global"
                                     className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4"
                                 >
                                     {navigation.map((item) => (
-                                        <a
+                                        <Link
                                             key={item.name}
                                             href={item.href}
                                             className="px-3 py-2 text-gray-900 text-sm font-medium"
                                         >
                                             {item.name}
-                                        </a>
+                                        </Link>
                                     ))}
                                 </nav>
                             </div>
@@ -191,7 +190,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                     <div className="mt-3 px-2 space-y-1">
                                                         {navigation.map(
                                                             (item) => (
-                                                                <a
+                                                                <Link
                                                                     key={
                                                                         item.name
                                                                     }
@@ -201,7 +200,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                     className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
                                                                 >
                                                                     {item.name}
-                                                                </a>
+                                                                </Link>
                                                             )
                                                         )}
                                                     </div>
@@ -243,7 +242,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                     <div className="mt-3 px-2 space-y-1">
                                                         {userNavigation.map(
                                                             (item) => (
-                                                                <a
+                                                                <Link
                                                                     key={
                                                                         item.name
                                                                     }
@@ -253,7 +252,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                     className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
                                                                 >
                                                                     {item.name}
-                                                                </a>
+                                                                </Link>
                                                             )
                                                         )}
                                                     </div>
@@ -308,7 +307,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                             {userNavigation.map((item) => (
                                                 <Menu.Item key={item.name}>
                                                     {({ active }) => (
-                                                        <a
+                                                        <Link
                                                             href={item.href}
                                                             className={classNames(
                                                                 active
@@ -318,7 +317,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                             )}
                                                         >
                                                             {item.name}
-                                                        </a>
+                                                        </Link>
                                                     )}
                                                 </Menu.Item>
                                             ))}
@@ -334,7 +333,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                             <div className="border-t border-gray-200 py-3">
                                 <nav className="flex" aria-label="Breadcrumb">
                                     <div className="flex sm:hidden">
-                                        <a
+                                        <Link
                                             href="#"
                                             className="group inline-flex space-x-3 text-sm font-medium text-gray-500 hover:text-gray-700"
                                         >
@@ -343,7 +342,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                 aria-hidden="true"
                                             />
                                             <span>Back to Applicants</span>
-                                        </a>
+                                        </Link>
                                     </div>
                                     <div className="hidden sm:block">
                                         <ol
@@ -352,7 +351,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                         >
                                             <li>
                                                 <div>
-                                                    <a
+                                                    <Link
                                                         href="#"
                                                         className="text-gray-400 hover:text-gray-500"
                                                     >
@@ -363,7 +362,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         <span className="sr-only">
                                                             Home
                                                         </span>
-                                                    </a>
+                                                    </Link>
                                                 </div>
                                             </li>
                                             {breadcrumbs.map((item) => (
@@ -378,7 +377,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         >
                                                             <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                                                         </svg>
-                                                        <a
+                                                        <Link
                                                             href={item.href}
                                                             className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                                                             aria-current={
@@ -388,7 +387,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                             }
                                                         >
                                                             {item.name}
-                                                        </a>
+                                                        </Link>
                                                     </div>
                                                 </li>
                                             ))}

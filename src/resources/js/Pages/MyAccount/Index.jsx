@@ -5,19 +5,24 @@ import Card from "@/Components/Card";
 import InternalContainer from "@/Components/InternalContainer";
 import Container from "@/Components/Container";
 
-const Show = (props) => {
+const Index = (props) => {
     return (
-        <MainLayout
-            title="My Account"
-            subtitle="Manage your personal details"
-        >
+        <>
             <Head title="My Account" />
 
             <Container noMargin className="py-12">
                 
             </Container>
-        </MainLayout>
+        </>
     );
 };
 
-export default Show;
+Index.layout = (page) => (
+    <MainLayout
+        title="My Account"
+        subtitle="Manage your personal details"
+        children={page}
+    />
+);
+
+export default Index;

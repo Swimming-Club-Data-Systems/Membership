@@ -6,11 +6,11 @@ const Card = (props) => {
   return (
     <div className={`overflow-hidden bg-white shadow sm:rounded-lg ${className}`}>
       {props.header && (
-        <div className="bg-gray-50 px-4 py-4 sm:px-6">{props.header}</div>
+        <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">{props.header}</div>
       )}
-      <div className="px-4 py-5 sm:p-6">{props.children}</div>
+      <div className="bg-white py-6 px-4 space-y-6 sm:p-6">{props.children}</div>
       {props.footer && (
-        <div className="bg-gray-50 px-4 py-4 sm:px-6">{props.footer}</div>
+        <div className="px-4 py-3 bg-gray-50 text-right sm:px-6">{props.footer}</div>
       )}
     </div>
   );

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\Address;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -144,6 +145,11 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
+    public function getAddress()
+    {
+        return Address::create($this->getOption('MAIN_ADDRESS'));
+    }
+
     /**
      * Get the user's profile image url.
      *
@@ -156,7 +162,8 @@ class User extends Authenticatable implements MustVerifyEmail
         );
     }
 
-    public function getEmailForVerification() {
+    public function getEmailForVerification()
+    {
         return $this->EmailAddress;
     }
 

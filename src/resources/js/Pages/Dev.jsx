@@ -7,10 +7,7 @@ import Container from "@/Components/Container";
 
 const Dev = (props) => {
     return (
-        <MainLayout
-            title="Developer"
-            subtitle="Welcome to the SCDS Next Developer Homepage"
-        >
+        <>
             <Head title="Development" />
 
             <Container noMargin className="py-12">
@@ -31,10 +28,25 @@ const Dev = (props) => {
                         </p>
 
                         <ol>
-                            <li>Upgrading from <strong>PHP 7.4</strong> to <strong>PHP 8.1</strong></li>
-                            <li>Building on top of the hugely popular Laravel framework, replacing the small and lightweight framework previously used, which was no longer supported</li>
-                            <li>Adopting modern coding standards and practices which will benefit security, maintainability and speed of development</li>
-                            <li>Better support for Queues, WebSockets and a stronger authentication and authorisation model</li>
+                            <li>
+                                Upgrading from <strong>PHP 7.4</strong> to{" "}
+                                <strong>PHP 8.1</strong>
+                            </li>
+                            <li>
+                                Building on top of the hugely popular Laravel
+                                framework, replacing the small and lightweight
+                                framework previously used, which was no longer
+                                supported
+                            </li>
+                            <li>
+                                Adopting modern coding standards and practices
+                                which will benefit security, maintainability and
+                                speed of development
+                            </li>
+                            <li>
+                                Better support for Queues, WebSockets and a
+                                stronger authentication and authorisation model
+                            </li>
                             <li>Introduction of automated software tests</li>
                         </ol>
                     </div>
@@ -49,8 +61,16 @@ const Dev = (props) => {
                     </a>
                 </Card>
             </Container>
-        </MainLayout>
+        </>
     );
 };
+
+Dev.layout = (page) => (
+    <MainLayout
+        title="Developer"
+        subtitle="Welcome to the SCDS Next Developer Homepage"
+        children={page}
+    />
+);
 
 export default Dev;

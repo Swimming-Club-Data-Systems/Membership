@@ -69,8 +69,19 @@ Route::middleware([
 
     Route::prefix('my-account')->group(function () {
         Route::name('my_account.')->group(function () {
-            Route::get('/', [MyAccountController::class, 'show'])->name('show');
-            Route::post('/', [MyAccountController::class, 'save']);
+            Route::get('/', [MyAccountController::class, 'index'])->name('index');
+
+            Route::get('/profile', [MyAccountController::class, 'profile'])->name('profile');
+            Route::post('/profile', [MyAccountController::class, 'saveProfile']);
+
+            Route::get('/email-options', [MyAccountController::class, 'email'])->name('email');
+            Route::post('/email-options', [MyAccountController::class, 'saveEmail']);
+
+            Route::get('/advanced-options', [MyAccountController::class, 'advanced'])->name('advanced');
+            Route::post('/advanced-options', [MyAccountController::class, 'saveAdvanced']);
+
+            Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
+            Route::post('/password-and-security', [MyAccountController::class, 'savePassword']);
         });
     });
 

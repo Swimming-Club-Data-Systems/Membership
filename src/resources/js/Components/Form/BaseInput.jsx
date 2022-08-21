@@ -3,7 +3,7 @@ import { useField, useFormikContext } from "formik";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import { FormSpecialContext } from "./Form";
 
-const TextInput = ({
+const BaseInput = ({
     label,
     help,
     mb,
@@ -117,4 +117,4 @@ const TextInput = ({
     );
 };
 
-export default TextInput;
+export default BaseInput;
