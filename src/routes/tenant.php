@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\MyAccountController;
+use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -53,6 +54,10 @@ Route::middleware([
     })->middleware(['auth', 'verified'])->name('dashboard');
 
     require __DIR__ . '/auth.php';
+
+    Route::get('verify-email-update/{user}/{email}', [VerifyEmailChangeController::class, '__invoke'])
+                ->middleware(['signed', 'throttle:6,1'])
+                ->name('verification.verify_change');
 
     Route::middleware('auth')->group(function () {
         Route::get('/login-to-v1', V1LoginController::class)->name('login.v1');

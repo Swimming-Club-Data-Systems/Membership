@@ -8,17 +8,17 @@ const FlashAlert = ({ className }) => {
     return (
         <>
             {flash.error && (
-                <Alert variant="error" className={className} title="Error">
+                <Alert variant="error" className={className} title="Error" dismissable>
                     {flash.error}
                 </Alert>
             )}
             {flash.warning && (
-                <Alert variant="warning" className title="Warning">
+                <Alert variant="warning" className title="Warning" dismissable>
                     {flash.warning}
                 </Alert>
             )}
             {flash.success && (
-                <Alert variant="success" className title="Success">
+                <Alert variant="success" className title="Success" dismissable>
                     {flash.success}
                 </Alert>
             )}

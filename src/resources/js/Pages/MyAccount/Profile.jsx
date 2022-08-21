@@ -3,21 +3,19 @@ import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/inertia-react";
 import Container from "@/Components/Container";
 import Layout from "./Layout";
-import Form, { SubmissionButtons, RenderServerErrors } from "@/Components/Form/Form";
+import Form, {
+    SubmissionButtons,
+    RenderServerErrors,
+} from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import "yup-phone";
 import Card from "@/Components/Card";
 import Select from "@/Components/Form/Select";
 import { Inertia } from "@inertiajs/inertia";
+import FlashAlert from "@/Components/FlashAlert";
 
 const Show = (props) => {
-    const onSubmit = (values, formikBag) => {
-        Inertia.post(route("my_account.profile"), values, {
-            onSuccess: (arg) => console.log(arg),
-        });
-    };
-
     return (
         <>
             <Head title="My Account" />
@@ -33,6 +31,7 @@ const Show = (props) => {
                         email: "",
                         mobile: "",
                         address_line_1: "",
+                        address_line_2: "",
                         city: "",
                         county: "",
                         post_code: "",
@@ -59,18 +58,18 @@ const Show = (props) => {
                             .required("A phone number is required"),
                         address_line_1: yup
                             .string()
-                            .required("A street and house name or number is required"),
-                        city: yup
-                            .string()
-                            .required("A city is required"),
-                        county: yup
-                            .string()
-                            .required("A county is required"),
+                            .required(
+                                "A street and house name or number is required"
+                            ),
+                        address_line_2: yup
+                            .string(),
+                        city: yup.string().required("A city is required"),
+                        county: yup.string().required("A county is required"),
                         post_code: yup
                             .string()
                             .required("A post code is required"),
                     })}
-                    onSubmit={onSubmit}
+                    action={route("my_account.profile")}
                     submitTitle="Save"
                     hideClear
                     hideDefaultButtons
@@ -89,6 +88,7 @@ const Show = (props) => {
                         </div>
 
                         <RenderServerErrors />
+                        <FlashAlert className="mb-4" />
 
                         <div className="grid grid-cols-6 gap-6">
                             <div className="col-span-6 sm:col-span-3">
@@ -119,25 +119,17 @@ const Show = (props) => {
                                 />
                             </div>
 
-                            <div className="col-span-6 sm:col-span-3">
-                                <Select
-                                    name="country"
-                                    options={Object.keys(props.countries).map(
-                                        (code) => {
-                                            return {
-                                                key: code,
-                                                name: props.countries[code],
-                                            };
-                                        }
-                                    )}
-                                    label="Country"
+                            <div className="col-span-6">
+                                <TextInput
+                                    name="address_line_1"
+                                    label="Address line 1"
                                 />
                             </div>
 
                             <div className="col-span-6">
                                 <TextInput
-                                    name="address_line_1"
-                                    label="Street and number"
+                                    name="address_line_2"
+                                    label="Address line 2"
                                 />
                             </div>
 
@@ -151,6 +143,21 @@ const Show = (props) => {
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                                 <TextInput name="post_code" label="Post Code" />
+                            </div>
+
+                            <div className="col-span-6 sm:col-span-3">
+                                <Select
+                                    name="country"
+                                    options={Object.keys(props.countries).map(
+                                        (code) => {
+                                            return {
+                                                key: code,
+                                                name: props.countries[code],
+                                            };
+                                        }
+                                    )}
+                                    label="Country"
+                                />
                             </div>
                         </div>
                     </Card>

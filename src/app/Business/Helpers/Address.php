@@ -17,6 +17,7 @@ use Brick\Postcode\InvalidPostcodeException;
 class Address
 {
   public $address_line_1;
+  public $address_line_2;
   public $city;
   public $post_code;
   public $county;
@@ -34,11 +35,12 @@ class Address
       // Ignore
     }
 
-    $object->address_line_1 = $json?->streetAndNumber;
-    $object->city = $json?->city;
-    $object->post_code = $json?->postCode;
-    $object->county = $json?->county;
-    $object->country_code = $json?->country ?? "GB";
+    $object->address_line_1 = $json->streetAndNumber ?? "";
+    $object->address_line_2 = $json->address_line_2 ?? "";
+    $object->city = $json->city ?? "";
+    $object->post_code = $json->postCode ?? "";
+    $object->county = $json->county ?? "";
+    $object->country_code = $json->country ?? "GB";
     $object->country_name = Countries::getCountryName($object->country_code);
 
     return $object;
@@ -57,6 +59,7 @@ class Address
 
     return json_encode([
       'streetAndNumber' => $this->address_line_1,
+      'address_line_2' => $this->address_line_2,
       'city' => $this->city,
       'county' => $this->county,
       'country' => $this->country_code,
@@ -68,6 +71,7 @@ class Address
   {
     return [
       'address_line_1' => 'required|max:255',
+      'address_line_2' => 'required|max:255',
       'city' => 'required|max:255',
       'county' => 'required|max:255',
       'post_code' => ['required', 'max:255', new ValidPostCode],

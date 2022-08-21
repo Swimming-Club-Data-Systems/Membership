@@ -12,6 +12,7 @@ import {
 import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
+import { Inertia } from "@inertiajs/inertia";
 
 export const FormSpecialContext = React.createContext({});
 
@@ -114,13 +115,21 @@ const Form = (props) => {
         onClear,
         hideDefaultButtons = false,
         removeDefaultInputMargin,
+        action,
+        method = "post",
         ...otherProps
     } = props;
 
     const onSubmitHandler = (values, formikBag) => {
         formikBag.setStatus({});
         if (onSubmit) {
+            // Escape hatch override
             onSubmit(values, formikBag);
+        } else {
+            // Use default behaviour
+            Inertia[method](action, values, {
+                onSuccess: (arg) => formikBag.resetForm(),
+            });
         }
     };
 

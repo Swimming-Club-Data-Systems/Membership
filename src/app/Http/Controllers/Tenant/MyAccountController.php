@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VerifyEmailChange;
 
 class MyAccountController extends Controller
 {
@@ -47,6 +50,7 @@ class MyAccountController extends Controller
                 'email_subscription' => $user->EmailComms,
                 'mobile_subscription' => $user->MobileComms,
                 'address_line_1' => $address->address_line_1,
+                'address_line_2' => $address->address_line_2,
                 'city' => $address->city,
                 'county' => $address->county,
                 'post_code' => $address->post_code,
@@ -74,20 +78,34 @@ class MyAccountController extends Controller
         $user = User::find(Auth::id());
         $address = $user->getAddress();
 
-        $user->Forename = Str::ucfirst($request->input('first_name'), MB_CASE_TITLE_SIMPLE);
-        $user->Surname = Str::ucfirst($request->input('last_name'), MB_CASE_TITLE_SIMPLE);
-        $user->EmailAddress = Str::lower($request->input('email')); // Look at confirming this
+        $user->Forename = Str::ucfirst($request->input('first_name'));
+        $user->Surname = Str::ucfirst($request->input('last_name'));
+        if (Str::lower($request->input('email')) != $user->EmailAddress) {
+            // User has changed their email
+            // The email is not already in use for this tenant
+            // Send a signed link to the new email to confirm
+            $url = URL::temporarySignedRoute(
+                'verification.verify_change',
+                now()->addDay(),
+                ['user' => Auth::id(), 'email' => Str::lower($request->input('email'))]
+            );
+
+            Mail::to($user)->send(new VerifyEmailChange($user, $url));
+        }
         $user->Mobile = PhoneNumber::toDatabaseFormat($request->input('mobile'));
 
         $address->address_line_1 = Str::title($request->input('address_line_1'));
+        $address->address_line_2 = Str::title($request->input('address_line_2'));
         $address->city = Str::title($request->input('city'));
-        $address->county = $request->input('county');
+        $address->county = Str::title($request->input('county'));
         $address->country_code = Str::upper($request->input('country'));
         $address->post_code = $request->input('post_code');
 
         $user->setOption('MAIN_ADDRESS', (string) $address);
 
         $user->save();
+
+        $request->session()->flash('success', 'We\'ve saved your changes.');
 
         return Redirect::route('my_account.profile');
     }

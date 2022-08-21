@@ -63,11 +63,6 @@ class LoginRequest extends FormRequest
         return $user;
     }
 
-    public function validate($rules, ...$params)
-    {
-        ddd([$rules]);
-    }
-
     /**
      * Ensure the login request is not rate limited.
      *
