@@ -65,6 +65,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
+    public function setOption($key, $value) {
+        // Make sure values are cached
+        $this->getOption($key);
+
+        // Create or update
+        $option = $this->userOptions()->where('Option', $key)->firstOrNew();
+        $option->Value = $value;
+        $option->save();
+
+        // Update cache
+        $this->configOptions[$key] = $value;
+    }
+
     /**
      * Relationships
      */
@@ -148,6 +161,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getAddress()
     {
         return Address::create($this->getOption('MAIN_ADDRESS'));
+    }
+
+    public function setAddress() {
+        // 
     }
 
     /**

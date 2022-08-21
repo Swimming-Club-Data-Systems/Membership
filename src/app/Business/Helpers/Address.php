@@ -2,10 +2,14 @@
 
 namespace App\Business\Helpers;
 
+use App\Rules\ValidPostCode;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Brick\Postcode\PostcodeFormatter;
+use Brick\Postcode\UnknownCountryException;
+use Brick\Postcode\InvalidPostcodeException;
 
 /**
  * Standard address helper
@@ -42,12 +46,21 @@ class Address
 
   public function __toString()
   {
+    $postCodeFormatter = new PostcodeFormatter();
+    $postCode = null;
+
+    try {
+      $postCode = $postCodeFormatter->format($this->country_code, $this->post_code);
+    } catch (UnknownCountryException | InvalidPostcodeException $e) {
+      $postCode = "";
+    }
+
     return json_encode([
       'streetAndNumber' => $this->address_line_1,
       'city' => $this->city,
-      'postCode' => $this->post_code,
       'county' => $this->county,
       'country' => $this->country_code,
+      'postCode' => $postCode,
     ]);
   }
 
@@ -57,7 +70,7 @@ class Address
       'address_line_1' => 'required|max:255',
       'city' => 'required|max:255',
       'county' => 'required|max:255',
-      'post_code' => 'required|max:255',
+      'post_code' => ['required', 'max:255', new ValidPostCode],
       'country' => ['required', 'max:2', Rule::in(Countries::getISOKeys())],
     ];
   }

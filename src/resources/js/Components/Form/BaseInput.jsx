@@ -16,6 +16,7 @@ const BaseInput = ({
     endIcon,
     cornerHint,
     className = "",
+    input,
     ...props
 }) => {
     const [field, meta] = useField(props);
@@ -78,14 +79,7 @@ const BaseInput = ({
                             startIcon
                         </div>
                     )}
-                    <input
-                        disabled={isSubmitting || disabled}
-                        className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
-                        id={controlId}
-                        type={type}
-                        {...field}
-                        {...props}
-                    />
+                    {input}
                     {endIcon && (
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             endIcon

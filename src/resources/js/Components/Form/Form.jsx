@@ -76,7 +76,7 @@ const HandleServerErrors = () => {
     return null;
 };
 
-const RenderServerErrors = () => {
+export const RenderServerErrors = () => {
     const errors = useFormikContext().status;
 
     if (errors) {
@@ -109,6 +109,7 @@ const Form = (props) => {
         submitTitle,
         submitClass,
         hideClear,
+        hideErrors,
         clearTitle,
         onClear,
         hideDefaultButtons = false,
@@ -145,7 +146,7 @@ const Form = (props) => {
                 <FormikForm {...otherProps}>
                     <HandleServerErrors />
 
-                    <RenderServerErrors />
+                    {!hideErrors && <RenderServerErrors />}
 
                     {props.children}
 

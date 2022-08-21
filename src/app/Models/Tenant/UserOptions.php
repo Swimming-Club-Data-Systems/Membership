@@ -18,4 +18,5 @@ class UserOptions extends Model
     }
 
     protected $table = 'userOptions';
+    protected $primaryKey = 'ID';
 }
