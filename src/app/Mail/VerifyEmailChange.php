@@ -14,27 +14,35 @@ class VerifyEmailChange extends Mailable
 
     /**
      * The user instance
-     * 
+     *
      * @var \App\Models\Tenant\User
      */
     public $user;
 
     /**
      * The signed url to visit and confirm
-     * 
+     *
      * @var $url
      */
     public $url;
+
+    /**
+     * The user's new email address
+     *
+     * @var $email
+     */
+    public $email;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(User $user, $url)
+    public function __construct(User $user, $url, $email)
     {
         $this->user = $user;
         $this->url = $url;
+        $this->email = $email;
     }
 
     /**

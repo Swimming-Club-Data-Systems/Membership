@@ -2,8 +2,8 @@ import React from "react";
 import Alert from "./Alert";
 import { usePage } from "@inertiajs/inertia-react";
 
-const FlashAlert = ({ className }) => {
-    const { flash } = usePage().props;
+const FlashAlert = ({ className, bag }) => {
+    const flash = bag ? usePage().props.flash[bag] : usePage().props.flash;
 
     return (
         <>
@@ -13,12 +13,12 @@ const FlashAlert = ({ className }) => {
                 </Alert>
             )}
             {flash.warning && (
-                <Alert variant="warning" className title="Warning" dismissable>
+                <Alert variant="warning" className={className} title="Warning" dismissable>
                     {flash.warning}
                 </Alert>
             )}
             {flash.success && (
-                <Alert variant="success" className title="Success" dismissable>
+                <Alert variant="success" className={className} title="Success" dismissable>
                     {flash.success}
                 </Alert>
             )}

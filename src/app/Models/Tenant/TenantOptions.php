@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Central\Tenant;
 
+/**
+ * @property int $ID
+ * @property string $Option
+ * @property string $Value
+ */
 class TenantOptions extends Model
 {
     use HasFactory;

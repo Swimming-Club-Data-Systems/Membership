@@ -15,11 +15,13 @@ export const AlertList = ({ children }) => {
 };
 
 const Alert = (props) => {
-    let variantClass, symbol, titleClass;
+    let variantClass, symbol, titleClass, dismissColour;
     switch (props.variant) {
         case "error":
             variantClass = "bg-red-50 text-red-700";
             titleClass = "text-red-800";
+            dismissColour = 
+                    "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-offset-red-50 focus:ring-red-600";
             symbol = (
                 <XCircleIcon
                     className="h-5 w-5 text-red-400"
@@ -30,6 +32,8 @@ const Alert = (props) => {
         case "warning":
             variantClass = "bg-yellow-50 text-yellow-700";
             titleClass = "text-yellow-800";
+            dismissColour = 
+                    "bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600";
             symbol = (
                 <ExclamationIcon
                     className="h-5 w-5 text-yellow-400"
@@ -40,6 +44,8 @@ const Alert = (props) => {
         default:
             variantClass = "bg-green-50 text-green-700";
             titleClass = "text-green-800";
+            dismissColour = 
+                    "bg-green-50 text-green-500 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600";
             symbol = (
                 <CheckCircleIcon
                     className="h-5 w-5 text-green-400"
@@ -119,7 +125,7 @@ const Alert = (props) => {
                                 <div className="-mx-1.5 -my-1.5">
                                     <button
                                         type="button"
-                                        className="inline-flex bg-green-50 rounded-md p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-green-50 focus:ring-green-600"
+                                        className={`inline-flex rounded-md p-1.5 focus:outline-none focus:ring-2 focus:ring-offset-2 ${dismissColour}`}
                                         onClick={handleDismiss}
                                     >
                                         <span className="sr-only">Dismiss</span>

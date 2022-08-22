@@ -6,6 +6,13 @@ use App\Traits\UuidIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property string $id
+ * @property string $credential_id
+ * @property string $credential_name
+ * @property int $user_id
+ * @property string $credential
+ */
 class UserCredential extends Model
 {
     use HasFactory, UuidIdentifier;

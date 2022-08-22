@@ -34,6 +34,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request)
     {
+        $flashBag = $request->session()->get('flash_bag') ?? [];
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user(),
@@ -63,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                 'error' => fn () => $request->session()->get('error'),
                 'warning' => fn () => $request->session()->get('warning'),
                 'success' => fn () => $request->session()->get('success'),
+                ...$flashBag,
             ],
         ]);
     }

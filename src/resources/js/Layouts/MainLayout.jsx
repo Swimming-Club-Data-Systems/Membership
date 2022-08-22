@@ -120,7 +120,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                         <input
                                             id="search"
                                             name="search"
-                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-600 focus:border-blue-600 sm:text-sm"
+                                            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white shadow-sm placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-600 focus:border-indigo-600 sm:text-sm"
                                             placeholder="Search"
                                             type="search"
                                         />
@@ -129,7 +129,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                             </div> */}
                             <div className="flex items-center lg:hidden">
                                 {/* Mobile menu button */}
-                                <Popover.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                                <Popover.Button className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                     <span className="sr-only">
                                         Open main menu
                                     </span>
@@ -176,7 +176,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                             <ApplicationLogo className="h-8 w-auto" />
                                                         </div>
                                                         <div className="-mr-2">
-                                                            <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+                                                            <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                                                 <span className="sr-only">
                                                                     Close menu
                                                                 </span>
@@ -227,7 +227,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         {/* We don't have notifications yet */}
                                                         {/* <button
                                                             type="button"
-                                                            className="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                                            className="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                         >
                                                             <span className="sr-only">
                                                                 View
@@ -266,7 +266,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                 {/* We don't have notifications yet */}
                                 {/* <button
                                     type="button"
-                                    className="flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                    className="flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                 >
                                     <span className="sr-only">
                                         View notifications
@@ -283,7 +283,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                     className="ml-4 relative flex-shrink-0"
                                 >
                                     <div>
-                                        <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                             <span className="sr-only">
                                                 Open user menu
                                             </span>

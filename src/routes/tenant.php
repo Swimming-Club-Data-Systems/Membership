@@ -77,10 +77,12 @@ Route::middleware([
             Route::get('/', [MyAccountController::class, 'index'])->name('index');
 
             Route::get('/profile', [MyAccountController::class, 'profile'])->name('profile');
-            Route::post('/profile', [MyAccountController::class, 'saveProfile']);
+            Route::put('/profile', [MyAccountController::class, 'saveProfile']);
 
             Route::get('/email-options', [MyAccountController::class, 'email'])->name('email');
-            Route::post('/email-options', [MyAccountController::class, 'saveEmail']);
+            Route::put('/email-options', [MyAccountController::class, 'saveEmail']);
+            Route::post('/additional-email', [MyAccountController::class, 'email'])->name('additional_email');
+            Route::delete('/additional-email', [MyAccountController::class, 'email']);
 
             Route::get('/advanced-options', [MyAccountController::class, 'advanced'])->name('advanced');
             Route::post('/advanced-options', [MyAccountController::class, 'saveAdvanced']);

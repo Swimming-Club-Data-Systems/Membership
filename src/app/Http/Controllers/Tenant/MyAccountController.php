@@ -6,17 +6,17 @@ use App\Business\Helpers\Address;
 use App\Business\Helpers\Countries;
 use App\Business\Helpers\PhoneNumber;
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\NotifyCategories;
 use App\Models\Tenant\User;
 use App\Rules\ValidPhone;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\VerifyEmailChange;
+use Illuminate\Validation\Rule;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class MyAccountController extends Controller
 {
@@ -31,14 +31,17 @@ class MyAccountController extends Controller
         $this->middleware('password.confirm');
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         return Inertia::render('MyAccount/Index', []);
     }
 
-    public function profile(Request $request)
+    public function profile(Request $request): Response
     {
-        $user = User::find(Auth::id());
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
         $address = $user->getAddress();
 
         return Inertia::render('MyAccount/Profile', [
@@ -60,7 +63,7 @@ class MyAccountController extends Controller
         ]);
     }
 
-    public function saveProfile(Request $request)
+    public function saveProfile(Request $request): RedirectResponse
     {
         $validated = $request->validate([
             'first_name' => ['required', 'max:255'],
@@ -69,7 +72,9 @@ class MyAccountController extends Controller
                 'required',
                 'email:rfc,dns,spoof',
                 'max:255',
-                Rule::unique('users', 'EmailAddress')->where(fn ($query) => $query->where('Tenant', tenant('ID'))->where('UserID', '!=', Auth::id()))
+                Rule::unique('users', 'EmailAddress')
+                    ->where(fn($query) => $query->where('Tenant', tenant('ID'))
+                        ->where('UserID', '!=', Auth::id()))
             ],
             'mobile' => [new ValidPhone, 'max:255'],
             ...Address::validationRules(),
@@ -81,16 +86,7 @@ class MyAccountController extends Controller
         $user->Forename = Str::ucfirst($request->input('first_name'));
         $user->Surname = Str::ucfirst($request->input('last_name'));
         if (Str::lower($request->input('email')) != $user->EmailAddress) {
-            // User has changed their email
-            // The email is not already in use for this tenant
-            // Send a signed link to the new email to confirm
-            $url = URL::temporarySignedRoute(
-                'verification.verify_change',
-                now()->addDay(),
-                ['user' => Auth::id(), 'email' => Str::lower($request->input('email'))]
-            );
-
-            Mail::to($user)->send(new VerifyEmailChange($user, $url));
+            $user->verifyNewEmail($request->input('email'));
         }
         $user->Mobile = PhoneNumber::toDatabaseFormat($request->input('mobile'));
 
@@ -101,42 +97,135 @@ class MyAccountController extends Controller
         $address->country_code = Str::upper($request->input('country'));
         $address->post_code = $request->input('post_code');
 
-        $user->setOption('MAIN_ADDRESS', (string) $address);
+        $user->setOption('MAIN_ADDRESS', (string)$address);
 
         $user->save();
 
-        $request->session()->flash('success', 'We\'ve saved your changes.');
+        $flashMessage = 'We\'ve saved your changes.';
+
+        if (Str::lower($request->input('email')) != $user->EmailAddress) {
+            $flashMessage .= ' Please follow the link we have sent to ' . Str::lower($request->input('email')) . ' to finish changing your email.';
+        }
+
+        $request->session()->flash('success', $flashMessage);
 
         return Redirect::route('my_account.profile');
     }
 
-    public function email(Request $request)
+    public function email(Request $request): Response
     {
-        return Inertia::render('MyAccount/Email', []);
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+
+        $notifySubOpts = [];
+        $notifySubOptsFormik = [];
+        $notifyAdditionalEmails = [];
+
+        foreach (NotifyCategories::where('Active', true)->orderBy('Name')->get() as $sub) {
+            $subscribed = $sub->users()->wherePivot('UserID', $user->UserID)->first()?->subscription->Subscribed ?? false;
+
+            $notifySubOpts[] = [
+                'id' => $sub->ID,
+                'name' => $sub->Name,
+                'description' => Str::finish($sub->Description, '.'),
+            ];
+
+            $notifySubOptsFormik[$sub->ID] = (bool)$subscribed;
+        }
+
+        foreach ($user->notifyAdditionalEmails()->orderBy('Name')->orderBy('EmailAddress')->get() as $recipient) {
+            $notifyAdditionalEmails[] = [
+                'id' => $recipient->ID,
+                'name' => $recipient->Name,
+                'email' => $recipient->EmailAddress,
+            ];
+        }
+
+        return Inertia::render('MyAccount/Email', [
+            'notify_categories' => $notifySubOpts,
+            'notify_additional_emails' => $notifyAdditionalEmails,
+            'form_initial_values' => [
+                'email' => $user->EmailAddress,
+                'email_comms' => (bool)$user->EmailComms,
+                'notify_categories' => $notifySubOptsFormik,
+            ],
+        ]);
     }
 
-    public function saveEmail(Request $request)
+    public function saveEmail(Request $request): RedirectResponse
     {
-        return Inertia::render('', []);
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'email' => [
+                'required',
+                'email:rfc,dns,spoof',
+                'max:255',
+                Rule::unique('users', 'EmailAddress')
+                    ->where(fn($query) => $query->where('Tenant', tenant('ID'))
+                        ->where('UserID', '!=', Auth::id()))
+            ],
+        ]);
+
+        // Check and verify new email
+        if (Str::lower($request->input('email')) != $user->EmailAddress) {
+            $user->verifyNewEmail($request->input('email'));
+        }
+
+        $user->EmailComms = $request->boolean('email_comms');
+
+        foreach (NotifyCategories::where('Active', true)->get() as $sub) {
+
+            // Does the user have one?
+            $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
+
+            if ($request->boolean('notify_categories.' . $sub->ID) && !$userSub) {
+                $user->notifyCategories()->attach($sub);
+
+                $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
+                $userSub->subscription->Subscribed = true;
+                $userSub->subscription->save();
+            } else {
+                $user->notifyCategories()->detach($sub);
+            }
+        }
+
+        $user->save();
+
+        $flashMessage = 'We\'ve saved your changes.';
+
+        if (Str::lower($request->input('email')) != $user->EmailAddress) {
+            $flashMessage .= ' Please follow the link we have sent to ' . Str::lower($request->input('email')) . ' to finish changing your email.';
+        }
+
+        $request->session()->flash('success', $flashMessage);
+
+        return Redirect::route('my_account.email');
     }
 
-    public function password(Request $request)
+    public function password(Request $request): Response
     {
         return Inertia::render('MyAccount/Password', []);
     }
 
-    public function savePassword(Request $request)
+    public function savePassword(Request $request): Response
     {
         return Inertia::render('', []);
     }
 
-    public function advanced(Request $request)
+    public function advanced(Request $request): Response
     {
         return Inertia::render('MyAccount/Advanced', []);
     }
 
-    public function saveAdvanved(Request $request)
+    public function saveAdvanved(Request $request): Response
     {
         return Inertia::render('', []);
     }
+
 }

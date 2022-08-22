@@ -5,6 +5,12 @@ namespace App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $ID
+ * @property int $User
+ * @property string $Option
+ * @property string $Value
+ */
 class UserOptions extends Model
 {
     use HasFactory;

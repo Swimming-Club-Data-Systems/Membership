@@ -7,6 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\MassPrunable;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property string $token
+ */
 class V1Login extends Model
 {
     use MassPrunable, BelongsToPrimaryModel;

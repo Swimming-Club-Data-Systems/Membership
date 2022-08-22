@@ -75,6 +75,7 @@ const Show = (props) => {
                     hideDefaultButtons
                     hideErrors
                     removeDefaultInputMargin
+                    method="put"
                 >
                     <Card footer={<SubmissionButtons />}>
                         <div>

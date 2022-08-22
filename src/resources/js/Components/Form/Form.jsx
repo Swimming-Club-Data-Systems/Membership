@@ -64,7 +64,13 @@ export const SubmissionButtons = (props) => {
 };
 
 const HandleServerErrors = () => {
-    const { errors } = usePage().props;
+    const formSpecialContext = useContext(FormSpecialContext);
+
+    // If we're scoped, get those errors, otherwise just the errors
+    const errors = formSpecialContext.formName
+        ? usePage().props?.errors[formSpecialContext.formName]
+        : usePage().props.errors;
+
     const { setStatus, setSubmitting } = useFormikContext();
 
     useEffect(() => {
@@ -117,6 +123,8 @@ const Form = (props) => {
         removeDefaultInputMargin,
         action,
         method = "post",
+        formName,
+        inertiaOptions = {},
         ...otherProps
     } = props;
 
@@ -127,8 +135,13 @@ const Form = (props) => {
             onSubmit(values, formikBag);
         } else {
             // Use default behaviour
+            if (formName) {
+                inertiaOptions.errorBag = formName;
+            }
+
             Inertia[method](action, values, {
                 onSuccess: (arg) => formikBag.resetForm(),
+                ...inertiaOptions
             });
         }
     };
@@ -144,6 +157,7 @@ const Form = (props) => {
                 submitTitle: submitTitle,
                 submitClass: submitClass,
                 removeDefaultInputMargin: removeDefaultInputMargin,
+                formName: formName,
             }}
         >
             <Formik

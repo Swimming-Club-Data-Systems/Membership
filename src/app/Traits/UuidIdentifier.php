@@ -4,8 +4,8 @@ namespace App\Traits;
 
 trait UuidIdentifier
 {
-    public $incrementing = false;
-    protected $keyType = 'string';
+    // public $incrementing = false;
+    // protected $keyType = 'string';
 
     public function getIncrementing()
     {

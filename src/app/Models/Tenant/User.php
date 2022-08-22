@@ -3,20 +3,39 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Address;
+use App\Mail\VerifyEmailChange;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
+/**
+ * @property int $UserID
+ * @property string $Forename
+ * @property string $Surname
+ * @property string $Password
+ * @property string $EmailAddress
+ * @property bool $EmailComms
+ * @property string $Mobile
+ * @property bool $MobileComms
+ * @property bool $Active
+ * @property string $name
+ */
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable, BelongsToTenant;
 
-    protected $configOptionsCached = false;
-    protected $configOptions = [];
+    protected bool $configOptionsCached = false;
+    protected array $configOptions = [];
 
     /**
      * The attributes that are mass assignable.
@@ -48,6 +67,67 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+    protected $primaryKey = 'UserID';
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['gravitar_url'];
+
+    /**
+     * Send an email to the new address to validate and change
+     *
+     * @param string $email
+     * @return void
+     */
+    public function verifyNewEmail(string $email): void
+    {
+        // User has changed their email
+        // The email is not already in use for this tenant
+        // Send a signed link to the new email to confirm
+        $url = URL::temporarySignedRoute(
+            'verification.verify_change',
+            now()->addDay(),
+            ['user' => Auth::id(), 'email' => Str::lower($email)]
+        );
+
+        $recipient = new \stdClass();
+        $recipient->email = $email;
+        $recipient->name = $this->name;
+
+        Mail::to($recipient)->send(new VerifyEmailChange($this, $url, $email));
+    }
+
+    /**
+     * Get the user id via expected attribute.
+     *
+     * @return Attribute
+     */
+    protected function id(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['UserID'],
+        );
+    }
+
+    /**
+     * Relationships
+     */
+
+    public function setOption($key, $value)
+    {
+        // Make sure values are cached
+        $this->getOption($key);
+
+        // Create or update
+        $option = $this->userOptions()->where('Option', $key)->firstOrNew();
+        $option->Value = $value;
+        $option->save();
+
+        // Update cache
+        $this->configOptions[$key] = $value;
+    }
 
     public function getOption($key)
     {
@@ -65,27 +145,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
-    public function setOption($key, $value) {
-        // Make sure values are cached
-        $this->getOption($key);
-
-        // Create or update
-        $option = $this->userOptions()->where('Option', $key)->firstOrNew();
-        $option->Value = $value;
-        $option->save();
-
-        // Update cache
-        $this->configOptions[$key] = $value;
-    }
-
     /**
-     * Relationships
+     * Get the options for the user.
      */
+    public function userOptions(): HasMany
+    {
+        return $this->hasMany(UserOptions::class, 'User');
+    }
 
     /**
      * Get the V1Logins for the user.
      */
-    public function v1Logins()
+    public function v1Logins(): HasMany
     {
         return $this->hasMany(Auth\V1Login::class, 'user_id');
     }
@@ -93,52 +164,51 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Get the WebAuthn User Credentials for the user.
      */
-    public function userCredentials()
+    public function userCredentials(): HasMany
     {
         return $this->hasMany(Auth\UserCredential::class, 'user_id');
     }
 
     /**
-     * Get the options for the user.
+     * Get the user's notify category options
      */
-    public function userOptions()
+    public function notifyCategories(): BelongsToMany
     {
-        return $this->hasMany(UserOptions::class, 'User');
+        return $this->belongsToMany(NotifyCategories::class, 'notifyOptions', 'UserID', 'EmailType', 'ID')
+            ->as('subscription')
+            ->withTimestamps()
+            ->withPivot([
+                'Subscribed'
+            ]);
+    }
+
+    /**
+     * Get the WebAuthn User Credentials for the user.
+     */
+    public function notifyAdditionalEmails(): HasMany
+    {
+        return $this->hasMany(NotifyAdditionalEmails::class, 'UserID');
     }
 
     /**
      * Auth stuff
      */
-    public function getAuthIdentifierName()
+    public function getAuthIdentifierName(): string
     {
         return "UserID";
     }
 
-    public function getAuthIdentifier()
+    public function getAuthIdentifier(): int
     {
         return $this->UserID;
     }
 
-    public function getAuthPassword()
+    public function getAuthPassword(): string
     {
         return $this->Password;
     }
 
-    /**
-     * Get the user id via expected attribute.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function id(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['UserID'],
-        );
-    }
-
-    protected $primaryKey = 'UserID';
-
-    public function getEmailForPasswordReset()
+    public function getEmailForPasswordReset(): string
     {
         return $this->EmailAddress;
     }
@@ -148,46 +218,63 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->attributes['EmailAddress'];
     }
 
-    protected function email(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['EmailAddress'],
-            set: fn ($value) => [
-                'EmailAddress' => $value,
-            ],
-        );
-    }
-
-    public function getAddress()
+    /**
+     * get an Address object for the user
+     * @return Address
+     */
+    public function getAddress(): Address
     {
         return Address::create($this->getOption('MAIN_ADDRESS'));
-    }
-
-    public function setAddress() {
-        // 
     }
 
     /**
      * Get the user's profile image url.
      *
-     * @return  \Illuminate\Database\Eloquent\Casts\Attribute
+     * @return  Attribute
      */
     public function gravitarUrl(): Attribute
     {
         return new Attribute(
-            get: fn () => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->EmailAddress))) . "?d=mp",
+            get: fn() => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->EmailAddress))) . "?d=mp",
         );
     }
 
-    public function getEmailForVerification()
+    public function getEmailForVerification(): string
     {
         return $this->EmailAddress;
     }
 
     /**
-     * The accessors to append to the model's array form.
+     * Get the user name via expected attribute.
      *
-     * @var array
+     * @return Attribute
      */
-    protected $appends = ['gravitar_url'];
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['Forename'] . ' ' . $attributes['Surname'],
+        );
+    }
+
+    /**
+     * Get the user's password via expected attribute.
+     *
+     * @return Attribute
+     */
+    protected function password(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['Password'],
+        );
+    }
+
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['EmailAddress'],
+            set: fn($value) => [
+                'EmailAddress' => $value,
+            ],
+        );
+    }
 }
