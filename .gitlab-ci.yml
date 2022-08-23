@@ -30,13 +30,15 @@ deploy_staging:
     - mkdir -p ~/.ssh
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
-    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"  --baseFolder="/var/www/mt-laravel-stage"
+    - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"  --baseDir="/var/www/mt-laravel-stage"
   environment:
     name: staging
     url: https://mt.myswimmingclub.uk
   when: manual
   only:
     - add-laravel
+  tags:
+    - docker
 
 # deploy_production:
 #   stage: deploy
