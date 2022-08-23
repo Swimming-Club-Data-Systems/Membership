@@ -35,7 +35,7 @@ const ResetPassword = (props) => {
       props.setType("resetPassword");
 
       // Check token
-      const response = await axios.post("/api/auth/can-password-reset", {
+      const response = await axios.post("/v1/api/auth/can-password-reset", {
         token: searchParams.get("auth-code"),
       });
       setIsValid(response.data.success);
@@ -53,7 +53,7 @@ const ResetPassword = (props) => {
 
     try {
 
-      const response = await axios.post("/api/auth/complete-password-reset", {
+      const response = await axios.post("/v1/api/auth/complete-password-reset", {
         token: searchParams.get("auth-code"),
         password: values.password,
       });

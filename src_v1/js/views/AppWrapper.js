@@ -17,7 +17,7 @@ const AppWrapper = () => {
 
   useEffect(
     () => {
-      axios.get("/api/react/header-footer")
+      axios.get("/v1//api/react/header-footer")
         .then(response => {
           let data = response.data;
           setHeader(data.header);
@@ -32,7 +32,7 @@ const AppWrapper = () => {
 
   useEffect(
     () => {
-      axios.get("/api/settings/tenant")
+      axios.get("/v1/api/settings/tenant")
         .then(response => {
           let data = response.data;
 
@@ -57,7 +57,7 @@ const AppWrapper = () => {
 
   useEffect(
     () => {
-      axios.get("/api/settings/user")
+      axios.get("/v1/api/settings/user")
         .then(response => {
           let data = response.data;
 

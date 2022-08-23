@@ -16,7 +16,7 @@ const PublicAppFooter = () => {
 
   useEffect(
     () => {
-      axios.get("/api/react/header-footer")
+      axios.get("/v1/api/react/header-footer")
         .then(response => {
           let data = response.data;
           setHeader(data.header);
@@ -31,7 +31,7 @@ const PublicAppFooter = () => {
 
   useEffect(
     () => {
-      axios.get("/api/settings/tenant")
+      axios.get("/v1/api/settings/tenant")
         .then(response => {
           let data = response.data;
 

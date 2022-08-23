@@ -107,7 +107,7 @@ const JuniorLeagueMembers = () => {
 
     try {
 
-      const response = await axios.get("/api/admin/reports/league-members-report", {
+      const response = await axios.get("/v1/api/admin/reports/league-members-report", {
         params: {
           min_age: values.minAge,
           max_age: values.maxAge,
