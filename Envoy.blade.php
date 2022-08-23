@@ -1,4 +1,4 @@
-@servers(['localhost' => '127.0.0.1'])
+@servers(['web' => 'deployer@ssh.myswimmingclub.co.uk'])
 
 @setup
     $repository = 'git@gitlab.com:swimming-club-data-systems/Membership.git';
