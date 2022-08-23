@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Business\Helpers\Address;
 use App\Mail\VerifyEmailChange;
 use App\Models\Tenant\Auth\UserCredential;
+use App\Models\Tenant\Auth\V1Login;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -159,7 +160,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function v1Logins(): HasMany
     {
-        return $this->hasMany(Auth\V1Login::class, 'user_id');
+        return $this->hasMany(V1Login::class, 'user_id');
     }
 
     /**
