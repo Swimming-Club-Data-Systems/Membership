@@ -1,8 +1,6 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/inertia-react";
-import Card from "@/Components/Card";
-import InternalContainer from "@/Components/InternalContainer";
 import Container from "@/Components/Container";
 
 const Index = (props) => {
@@ -10,19 +8,18 @@ const Index = (props) => {
         <>
             <Head title="My Account" />
 
-            <Container noMargin className="py-12">
-                
-            </Container>
+            <Container noMargin className="py-12"></Container>
         </>
     );
 };
 
 Index.layout = (page) => (
     <MainLayout
-        title="My Account"
+        title="My Account (Test)"
         subtitle="Manage your personal details"
-        children={page}
-    />
+    >
+        {page}
+    </MainLayout>
 );
 
 export default Index;
