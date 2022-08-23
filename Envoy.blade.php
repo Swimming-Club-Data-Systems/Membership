@@ -13,7 +13,7 @@
 @story('deploy')
     clone_repository
     v2_run_composer
-    v2_run_composer
+    v1_run_composer
     v2_build_front_end
     v1_build_front_end
     v2_cache
@@ -43,6 +43,7 @@
 @task('v2_build_front_end')
     echo "V2 Front End Install and Build ({{ $release }})"
     cd {{ $v2_dir }}
+    npx browserslist@latest --update-db
     npm install
     npm run build
 @endtask
@@ -50,6 +51,7 @@
 @task('v1_build_front_end')
     echo "V1 Front End Install and Build ({{ $release }})"
     cd {{ $v1_dir }}
+    npx browserslist@latest --update-db
     npm install
     npm run build-production
 @endtask
