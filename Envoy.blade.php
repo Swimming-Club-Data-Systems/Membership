@@ -18,8 +18,9 @@
     v1_run_composer
     v2_build_front_end
     v1_build_front_end
-    v2_cache
     update_symlinks
+    v2_cache
+    update_current
 @endstory
 
 @task('clone_repository')
@@ -73,7 +74,9 @@
 
     echo 'Linking .env file'
     ln -nfs {{ $app_dir }}/.env {{ $v2_dir }}/.env
+@endtask
 
+@task('update_current')
     echo 'Linking current release'
     ln -nfs {{ $new_release_dir }} {{ $app_dir }}/current
 @endtask
