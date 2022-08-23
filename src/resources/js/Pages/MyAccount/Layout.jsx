@@ -1,10 +1,9 @@
 import React from "react";
 import {
-    MailIcon,
-    KeyIcon,
-    UserCircleIcon,
-    UserGroupIcon,
     AdjustmentsIcon,
+    KeyIcon,
+    MailIcon,
+    UserCircleIcon,
 } from "@heroicons/react/outline";
 import Container from "@/Components/Container";
 import { Link } from "@inertiajs/inertia-react";
@@ -58,6 +57,7 @@ const Layout = (props) => {
                                     "group rounded-md px-3 py-2 flex items-center text-sm font-medium"
                                 )}
                                 aria-current={item.current ? "page" : undefined}
+                                preserveScroll
                             >
                                 <item.icon
                                     className={classNames(

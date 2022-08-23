@@ -7,13 +7,18 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $ID
- * @property int $User
- * @property string $Option
- * @property string $Value
+ * @property int $UserID
+ * @property string $EmailAddress
+ * @property string $Name
+ * @property string $Hash
+ * @property bool $Verified
  */
-class UserOptions extends Model
+class NotifyAdditionalEmail extends Model
 {
     use HasFactory;
+
+    protected $primaryKey = 'ID';
+    protected $table = 'notifyAdditionalEmails';
 
     /**
      * Get the user that owns this option.
@@ -22,7 +27,4 @@ class UserOptions extends Model
     {
         return $this->belongsTo(User::class, 'User', 'UserID');
     }
-
-    protected $table = 'userOptions';
-    protected $primaryKey = 'ID';
 }

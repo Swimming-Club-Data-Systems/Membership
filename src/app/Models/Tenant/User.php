@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Business\Helpers\Address;
 use App\Mail\VerifyEmailChange;
+use App\Models\Tenant\Auth\UserCredential;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -132,7 +133,7 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getOption($key)
     {
         if (!$this->configOptionsCached) {
-            foreach ($this->userOptions as $option) {
+            foreach ($this->userOptions()->get() as $option) {
                 $this->configOptions[$option->Option] = $option->Value;
             }
             $this->configOptionsCached = true;
@@ -150,7 +151,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function userOptions(): HasMany
     {
-        return $this->hasMany(UserOptions::class, 'User');
+        return $this->hasMany(UserOption::class, 'User');
     }
 
     /**
@@ -166,7 +167,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function userCredentials(): HasMany
     {
-        return $this->hasMany(Auth\UserCredential::class, 'user_id');
+        return $this->hasMany(UserCredential::class, 'user_id');
     }
 
     /**
@@ -174,7 +175,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function notifyCategories(): BelongsToMany
     {
-        return $this->belongsToMany(NotifyCategories::class, 'notifyOptions', 'UserID', 'EmailType', 'ID')
+        return $this->belongsToMany(NotifyCategory::class, 'notifyOptions', 'UserID', 'EmailType', 'ID')
             ->as('subscription')
             ->withTimestamps()
             ->withPivot([
@@ -187,7 +188,16 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function notifyAdditionalEmails(): HasMany
     {
-        return $this->hasMany(NotifyAdditionalEmails::class, 'UserID');
+        return $this->hasMany(NotifyAdditionalEmail::class, 'UserID');
+    }
+
+    /**
+     * Get the user's assigned permissions
+     * @return HasMany
+     */
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class, 'User');
     }
 
     /**

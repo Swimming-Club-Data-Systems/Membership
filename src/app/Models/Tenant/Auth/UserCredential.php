@@ -17,6 +17,8 @@ class UserCredential extends Model
 {
     use HasFactory, UuidIdentifier;
 
+    protected $table = 'userCredentials';
+
     /**
      * Get the post that owns the comment.
      */

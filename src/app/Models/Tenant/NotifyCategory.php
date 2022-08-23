@@ -13,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string $Description
  * @property bool $Active
  */
-class NotifyCategories extends Model
+class NotifyCategory extends Model
 {
     use HasFactory, BelongsToTenant, UuidIdentifier;
 

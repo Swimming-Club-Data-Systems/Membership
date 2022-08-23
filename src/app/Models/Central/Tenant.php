@@ -2,10 +2,10 @@
 
 namespace App\Models\Central;
 
-use App\Models\Tenant\TenantOptions;
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
-use Stancl\Tenancy\Database\Concerns\HasDomains;
+use App\Models\Tenant\TenantOption;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
 class Tenant extends BaseTenant
 {
@@ -13,42 +13,6 @@ class Tenant extends BaseTenant
 
     protected $configOptionsCached = false;
     protected $configOptions = [];
-
-    /**
-     * Get the tenant id via expected attribute.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function id(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['ID'],
-        );
-    }
-
-    public function getOption($key)
-    {
-        if (!$this->configOptionsCached) {
-            foreach ($this->tenantOptions as $option) {
-                $this->configOptions[$option->Option] = $option->Value;
-            }
-            $this->configOptionsCached = true;
-        }
-
-        if (isset($this->configOptions[$key])) {
-            return $this->configOptions[$key];
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the TenantOptions.
-     */
-    public function tenantOptions()
-    {
-        return $this->hasMany(TenantOptions::class, 'Tenant');
-    }
 
     public static function getCustomColumns(): array
     {
@@ -70,11 +34,6 @@ class Tenant extends BaseTenant
     public static function getDataColumn(): string
     {
         return 'Data';
-    }
-
-    public function getIncrementing()
-    {
-        return true;
     }
 
     /**
@@ -99,5 +58,46 @@ class Tenant extends BaseTenant
         //     }
         //     ddd($tenant);
         // });
+    }
+
+    public function getOption($key)
+    {
+        if (!$this->configOptionsCached) {
+            foreach ($this->tenantOptions()->get() as $option) {
+                $this->configOptions[$option->Option] = $option->Value;
+            }
+            $this->configOptionsCached = true;
+        }
+
+        if (isset($this->configOptions[$key])) {
+            return $this->configOptions[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the TenantOption.
+     */
+    public function tenantOptions()
+    {
+        return $this->hasMany(TenantOption::class, 'Tenant');
+    }
+
+    public function getIncrementing()
+    {
+        return true;
+    }
+
+    /**
+     * Get the tenant id via expected attribute.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function id(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['ID'],
+        );
     }
 }

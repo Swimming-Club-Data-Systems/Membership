@@ -1,36 +1,45 @@
-import React from "react";
+import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/inertia-react";
-import Container from "@/Components/Container";
 import Layout from "./Layout";
 import Form, {
-    SubmissionButtons,
     RenderServerErrors,
+    SubmissionButtons,
 } from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import "yup-phone";
 import Card from "@/Components/Card";
-import Select from "@/Components/Form/Select";
-import { Inertia } from "@inertiajs/inertia";
 import FlashAlert from "@/Components/FlashAlert";
 import Checkbox from "@/Components/Form/Checkbox";
 import Fieldset from "@/Components/Form/Fieldset";
 import BasicList from "@/Components/BasicList";
 import Button from "@/Components/Button";
+import Modal from "@/Components/Modal";
+import { Inertia } from "@inertiajs/inertia";
 
 const Email = (props) => {
-
     const customCategoryValidation = {};
-    props.notify_categories.forEach(category => {
+    props.notify_categories.forEach((category) => {
         customCategoryValidation[category.id] = yup
             .bool()
-            .oneOf(
-                [true, false],
-                "Must either be true or false"
-            )
+            .oneOf([true, false], "Must either be true or false");
     });
 
+    const [deleteModalData, setDeleteModalData] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+    const deleteAdditionalRecipient = async () => {
+        Inertia.delete(
+            route("notify_additional_emails.delete", deleteModalData.id),
+            {
+                preserveScroll: true,
+                onSuccess: (page) => {
+                    setShowDeleteModal(false);
+                },
+            }
+        );
+    };
 
     return (
         <>
@@ -44,7 +53,7 @@ const Email = (props) => {
                     initialValues={{
                         email: "",
                         email_comms: false,
-                        notify_categories: {}
+                        notify_categories: {},
                     }}
                     validationSchema={yup.object().shape({
                         email: yup
@@ -57,7 +66,9 @@ const Email = (props) => {
                                 [true, false],
                                 "Must either be true or false"
                             ),
-                        notify_categories: yup.object().shape(customCategoryValidation)
+                        notify_categories: yup
+                            .object()
+                            .shape(customCategoryValidation),
                     })}
                     action={route("my_account.email")}
                     submitTitle="Save"
@@ -125,28 +136,52 @@ const Email = (props) => {
                         </p>
                     </div>
 
-                    {props.notify_additional_emails.length && (
+                    <FlashAlert
+                        className="mb-4"
+                        bag="delete_additional_emails"
+                    />
+
+                    {props.notify_additional_emails.length > 0 && (
                         <BasicList
                             items={props.notify_additional_emails.map(
                                 (item) => {
                                     return {
                                         id: item.id,
                                         content: (
-                                            <div className="flex align-middle justify-between text-sm" key={item.id}>
-                                                <div className="">
-                                                    <div className="text-gray-900">
-                                                        {item.name}
+                                            <>
+                                                <div
+                                                    className="flex align-middle justify-between text-sm"
+                                                    key={item.id}
+                                                >
+                                                    <div className="">
+                                                        <div className="text-gray-900">
+                                                            {item.name}
+                                                        </div>
+                                                        <div className="text-gray-500">
+                                                            <a
+                                                                href={`mailto:${item.email}`}
+                                                            >
+                                                                {item.email}
+                                                            </a>
+                                                        </div>
                                                     </div>
-                                                    <div className="text-gray-500">
-                                                        <a href={`mailto:${item.email}`}>{item.email}</a>
+                                                    <div className="">
+                                                        <Button
+                                                            variant="danger"
+                                                            onClick={() => {
+                                                                setShowDeleteModal(
+                                                                    true
+                                                                );
+                                                                setDeleteModalData(
+                                                                    item
+                                                                );
+                                                            }}
+                                                        >
+                                                            Delete
+                                                        </Button>
                                                     </div>
                                                 </div>
-                                                <div className="">
-                                                    <Button variant="danger">
-                                                        Delete
-                                                    </Button>
-                                                </div>
-                                            </div>
+                                            </>
                                         ),
                                     };
                                 }
@@ -154,19 +189,47 @@ const Email = (props) => {
                         />
                     )}
 
+                    <Modal
+                        show={showDeleteModal}
+                        onClose={() => setShowDeleteModal(false)}
+                        variant="danger"
+                        title="Delete additional recipient"
+                        buttons={
+                            <>
+                                <Button
+                                    variant="danger"
+                                    onClick={deleteAdditionalRecipient}
+                                >
+                                    Confirm
+                                </Button>
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => setShowDeleteModal(false)}
+                                >
+                                    Cancel
+                                </Button>
+                            </>
+                        }
+                    >
+                        {deleteModalData && (
+                            <p>
+                                Are you sure you want to delete{" "}
+                                {deleteModalData.name}?
+                            </p>
+                        )}
+                    </Modal>
+
                     <Form
                         initialValues={{
-                            new_email: "",
-                            new_name: "",
+                            email: "",
+                            name: "",
                         }}
                         validationSchema={yup.object().shape({
-                            new_email: yup
+                            email: yup
                                 .string()
                                 .required("An email address is required")
                                 .email("You must use a valid email address"),
-                            new_name: yup
-                                .string()
-                                .required("A name is required"),
+                            name: yup.string().required("A name is required"),
                         })}
                         action={route("my_account.additional_email")}
                         submitTitle="Add new recipient"
@@ -174,19 +237,22 @@ const Email = (props) => {
                         // hideDefaultButtons
                         hideErrors
                         removeDefaultInputMargin
-                        formName="additional"
+                        formName="additional_email"
+                        inertiaOptions={{
+                            preserveScroll: true,
+                        }}
                     >
                         <RenderServerErrors />
-                        <FlashAlert className="mb-4" bag="additional_recipient" />
+                        <FlashAlert className="mb-4" bag="additional_email" />
 
                         <div className="grid grid-cols-6 gap-6">
                             <div className="col-span-6 sm:col-span-3">
-                                <TextInput name="new_name" label="Name" />
+                                <TextInput name="name" label="Name" />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3">
                                 <TextInput
-                                    name="new_email"
+                                    name="email"
                                     type="email"
                                     label="Email address"
                                 />

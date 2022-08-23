@@ -6,17 +6,21 @@ use App\Business\Helpers\Address;
 use App\Business\Helpers\Countries;
 use App\Business\Helpers\PhoneNumber;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\NotifyCategories;
+use App\Mail\VerifyNotifyAdditionalEmail;
+use App\Models\Tenant\NotifyCategory;
 use App\Models\Tenant\User;
 use App\Rules\ValidPhone;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
+use Webauthn\PublicKeyCredentialSource;
 
 class MyAccountController extends Controller
 {
@@ -123,7 +127,7 @@ class MyAccountController extends Controller
         $notifySubOptsFormik = [];
         $notifyAdditionalEmails = [];
 
-        foreach (NotifyCategories::where('Active', true)->orderBy('Name')->get() as $sub) {
+        foreach (NotifyCategory::where('Active', true)->orderBy('Name')->get() as $sub) {
             $subscribed = $sub->users()->wherePivot('UserID', $user->UserID)->first()?->subscription->Subscribed ?? false;
 
             $notifySubOpts[] = [
@@ -179,7 +183,7 @@ class MyAccountController extends Controller
 
         $user->EmailComms = $request->boolean('email_comms');
 
-        foreach (NotifyCategories::where('Active', true)->get() as $sub) {
+        foreach (NotifyCategory::where('Active', true)->get() as $sub) {
 
             // Does the user have one?
             $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
@@ -208,9 +212,84 @@ class MyAccountController extends Controller
         return Redirect::route('my_account.email');
     }
 
+    public function saveAdditionalEmail(Request $request): RedirectResponse
+    {
+        // Validate response
+        $validated = $request->validate([
+            'email' => [
+                'required',
+                'max:50',
+            ],
+            'email' => [
+                'required',
+                'email:rfc,dns,spoof',
+                'max:100',
+                Rule::unique('notifyAdditionalEmails', 'EmailAddress')
+                    ->where(fn($query) => $query
+                        ->where('UserID', '!=', Auth::id()))
+            ],
+        ]);
+
+        // Check if the user already has the recipient
+
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+
+        $name = Str::title($request->input('name'));
+        $email = Str::lower($request->input('email'));
+
+        // Create a signed link for confirmation
+        $url = URL::temporarySignedRoute(
+            'notify_additional_emails.view',
+            now()->addDay(),
+            [
+                'data' => urlencode(json_encode([
+                    'user' => $user->UserID,
+                    'name' => $name,
+                    'email' => $email,
+                ]))
+            ]
+        );
+
+        $recipient = new \stdClass();
+        $recipient->email = $email;
+        $recipient->name = $name;
+
+        Mail::to($recipient)->send(new VerifyNotifyAdditionalEmail($user, $url, $email, $name));
+
+        $request->session()->flash('flash_bag.additional_email.success',
+            'We have sent an email to ' . $name . ' asking them to confirm they wish to receive squad update emails.');
+
+        return Redirect::route('my_account.email');
+    }
+
     public function password(Request $request): Response
     {
-        return Inertia::render('MyAccount/Password', []);
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+        $passkeys = [];
+        foreach ($user->userCredentials()->orderBy('credential_name')->get() as $credential) {
+
+            $source = PublicKeyCredentialSource::createFromArray(json_decode($credential->credential, true));
+
+            $passkeys[] = [
+                'id' => $credential->id,
+                'credential_id' => $credential->credential_id,
+                'type' => $source->getType(),
+                'name' => $credential->credential_name,
+                'created_at' => $credential->created_at,
+                'updated_at' => $credential->updated_at,
+            ];
+        }
+
+        return Inertia::render('MyAccount/Password', [
+            'passkeys' => $passkeys,
+            'username' => $user->email,
+        ]);
     }
 
     public function savePassword(Request $request): Response
@@ -223,7 +302,7 @@ class MyAccountController extends Controller
         return Inertia::render('MyAccount/Advanced', []);
     }
 
-    public function saveAdvanved(Request $request): Response
+    public function saveAdvanced(Request $request): Response
     {
         return Inertia::render('', []);
     }

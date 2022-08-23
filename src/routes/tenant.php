@@ -2,15 +2,15 @@
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\MyAccountController;
+use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
+use App\Http\Controllers\Tenant\WebauthnRegistrationController;
+use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Laravel\Passport\Passport;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
-use Inertia\Inertia;
-use Illuminate\Foundation\Application;
-use Laravel\Passport\Passport;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,8 +56,8 @@ Route::middleware([
     require __DIR__ . '/auth.php';
 
     Route::get('verify-email-update/{user}/{email}', [VerifyEmailChangeController::class, '__invoke'])
-                ->middleware(['signed', 'throttle:6,1'])
-                ->name('verification.verify_change');
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('verification.verify_change');
 
     Route::middleware('auth')->group(function () {
         Route::get('/login-to-v1', V1LoginController::class)->name('login.v1');
@@ -81,7 +81,7 @@ Route::middleware([
 
             Route::get('/email-options', [MyAccountController::class, 'email'])->name('email');
             Route::put('/email-options', [MyAccountController::class, 'saveEmail']);
-            Route::post('/additional-email', [MyAccountController::class, 'email'])->name('additional_email');
+            Route::post('/additional-email', [MyAccountController::class, 'saveAdditionalEmail'])->name('additional_email');
             Route::delete('/additional-email', [MyAccountController::class, 'email']);
 
             Route::get('/advanced-options', [MyAccountController::class, 'advanced'])->name('advanced');
@@ -89,8 +89,22 @@ Route::middleware([
 
             Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
             Route::post('/password-and-security', [MyAccountController::class, 'savePassword']);
+
+            Route::post('/webauthn/register', [WebauthnRegistrationController::class, 'verify'])->name('webauthn_verify');
+            Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
         });
     });
+
+    Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])
+        ->middleware(['signed', 'throttle:6,1'])
+        ->name('notify_additional_emails.view');
+
+    Route::post('/notify-additional-emails', [NotifyAdditionalEmailController::class, 'create'])
+        ->name('notify_additional_emails.confirm');
+
+    Route::delete('/notify-additional-emails/{additionalEmail}', [NotifyAdditionalEmailController::class, 'delete'])
+        ->middleware('auth')
+        ->name('notify_additional_emails.delete');
 
 
     // Fallback route

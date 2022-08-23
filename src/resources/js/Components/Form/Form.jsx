@@ -3,12 +3,7 @@
  */
 
 import React, { useContext, useEffect } from "react";
-import {
-    Formik,
-    Form as FormikForm,
-    useFormikContext,
-    ErrorMessage,
-} from "formik";
+import { Form as FormikForm, Formik, useFormikContext } from "formik";
 import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
@@ -54,7 +49,11 @@ export const SubmissionButtons = (props) => {
                 <Button
                     className={formSpecialContext.submitClass}
                     type="submit"
-                    disabled={!dirty || !isValid || isSubmitting}
+                    disabled={
+                        (!dirty && !formSpecialContext.alwaysDirty) ||
+                        !isValid ||
+                        isSubmitting
+                    }
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>
@@ -89,7 +88,9 @@ export const RenderServerErrors = () => {
     if (errors) {
         const errorList = [];
         Object.entries(errors).forEach(([key, value]) => {
-            errorList.push(<li key={key}>{value}</li>);
+            if (typeof value === "string") {
+                errorList.push(<li key={key}>{value}</li>);
+            }
         });
 
         if (errorList.length > 0) {
@@ -123,8 +124,9 @@ const Form = (props) => {
         removeDefaultInputMargin,
         action,
         method = "post",
-        formName,
+        formName = null,
         inertiaOptions = {},
+        alwaysDirty = false,
         ...otherProps
     } = props;
 
@@ -141,12 +143,14 @@ const Form = (props) => {
 
             Inertia[method](action, values, {
                 onSuccess: (arg) => formikBag.resetForm(),
-                ...inertiaOptions
+                ...inertiaOptions,
             });
         }
     };
 
-    const newInitialValues = usePage().props?.form_initial_values;
+    const newInitialValues = formName
+        ? usePage().props[formName]?.form_initial_values
+        : usePage().props.form_initial_values;
     const mergedValues = { ...initialValues, ...newInitialValues };
 
     return (
@@ -158,6 +162,7 @@ const Form = (props) => {
                 submitClass: submitClass,
                 removeDefaultInputMargin: removeDefaultInputMargin,
                 formName: formName,
+                alwaysDirty: alwaysDirty,
             }}
         >
             <Formik
