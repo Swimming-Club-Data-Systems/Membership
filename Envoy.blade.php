@@ -1,5 +1,7 @@
 @servers(['web' => 'deployer@ssh.myswimmingclub.co.uk'])
 
+{{-- TEST --}}
+
 @setup
     $repository = 'git@gitlab.com:swimming-club-data-systems/Membership.git';
     $releases_dir = $baseDir . '/releases';
