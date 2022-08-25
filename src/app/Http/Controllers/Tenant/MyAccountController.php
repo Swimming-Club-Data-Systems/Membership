@@ -10,17 +10,22 @@ use App\Mail\VerifyNotifyAdditionalEmail;
 use App\Models\Tenant\NotifyCategory;
 use App\Models\Tenant\User;
 use App\Rules\ValidPhone;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use Webauthn\PublicKeyCredentialSource;
+use Illuminate\Validation\Rules;
 
 class MyAccountController extends Controller
 {
@@ -288,13 +293,26 @@ class MyAccountController extends Controller
 
         return Inertia::render('MyAccount/Password', [
             'passkeys' => $passkeys,
-            'username' => $user->email,
         ]);
     }
 
-    public function savePassword(Request $request): Response
+    public function savePassword(Request $request): RedirectResponse
     {
-        return Inertia::render('', []);
+        $request->validate([
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+
+        $user->forceFill([
+            'Password' => Hash::make($request->password),
+            'remember_token' => Str::random(60),
+        ])->save();
+
+        return Redirect::route('my_account.email');
     }
 
     public function advanced(Request $request): Response

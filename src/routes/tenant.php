@@ -88,10 +88,11 @@ Route::middleware([
             Route::post('/advanced-options', [MyAccountController::class, 'saveAdvanced']);
 
             Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
-            Route::post('/password-and-security', [MyAccountController::class, 'savePassword']);
+            Route::put('/password-and-security', [MyAccountController::class, 'savePassword']);
 
             Route::post('/webauthn/register', [WebauthnRegistrationController::class, 'verify'])->name('webauthn_verify');
             Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
+            Route::delete('/webauthn/{credential}', [WebauthnRegistrationController::class, 'delete'])->name('webauthn_delete');
         });
     });
 

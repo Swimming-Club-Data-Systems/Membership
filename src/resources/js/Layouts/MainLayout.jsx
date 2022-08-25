@@ -1,8 +1,8 @@
 /*
-  This example requires Tailwind CSS v2.0+ 
-  
+  This example requires Tailwind CSS v2.0+
+
   This example requires some changes to your config:
-  
+
   ```
   // tailwind.config.js
   module.exports = {
@@ -16,24 +16,13 @@
 */
 import { Fragment } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
-import {
-    ArrowNarrowLeftIcon,
-    CheckIcon,
-    HomeIcon,
-    PaperClipIcon,
-    QuestionMarkCircleIcon,
-    SearchIcon,
-    ThumbUpIcon,
-    UserIcon,
-} from "@heroicons/react/solid";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import { ArrowNarrowLeftIcon, HomeIcon } from "@heroicons/react/solid";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import Button from "@/Components/Button";
-import { usePage } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
-import { Link } from "@inertiajs/inertia-react";
 
 const navigation = [
     { name: "Members", href: "/members" },
@@ -53,7 +42,7 @@ const breadcrumbs = [
 const userNavigation = [
     { name: "Your Profile", href: route("my_account.index") },
     { name: "Settings", href: "#" },
-    { name: "Sign out", href: "#" },
+    { name: "Sign out", href: route("logout"), method: "post" },
 ];
 
 function classNames(...classes) {
@@ -61,9 +50,8 @@ function classNames(...classes) {
 }
 
 const MainLayout = ({ title, subtitle, children }) => {
-
     const userObject = usePage().props.auth.user;
-    
+
     const user = {
         name: `${userObject.Forename} ${userObject.Surname}`,
         email: userObject.EmailAddress,
@@ -250,6 +238,9 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                         item.href
                                                                     }
                                                                     className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                                                                    method={
+                                                                        item.method
+                                                                    }
                                                                 >
                                                                     {item.name}
                                                                 </Link>
@@ -315,6 +306,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                     : "",
                                                                 "block px-4 py-2 text-sm text-gray-700"
                                                             )}
+                                                            method={item.method}
                                                         >
                                                             {item.name}
                                                         </Link>
@@ -410,6 +402,6 @@ const MainLayout = ({ title, subtitle, children }) => {
             <Footer />
         </>
     );
-}
+};
 
 export default MainLayout;

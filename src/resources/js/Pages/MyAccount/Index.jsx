@@ -14,10 +14,7 @@ const Index = (props) => {
 };
 
 Index.layout = (page) => (
-    <MainLayout
-        title="My Account (Test)"
-        subtitle="Manage your personal details"
-    >
+    <MainLayout title="My Account" subtitle="Manage your personal details">
         {page}
     </MainLayout>
 );

@@ -134,7 +134,7 @@ class AuthenticatedSessionController extends Controller
         Auth::login($user, (bool) $request->session()->pull('auth.remember'));
 
         // The user has just logged in with multiple factors so set confirmed at time
-        // Otherwise the user is hit with connfirm immediately if heading to profile routes.
+        // Otherwise the user is hit with confirm immediately if heading to profile routes.
         $request->session()->put('auth.password_confirmed_at', time());
 
         $request->session()->forget([

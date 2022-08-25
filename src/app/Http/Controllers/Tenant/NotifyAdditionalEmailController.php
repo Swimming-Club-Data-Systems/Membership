@@ -59,6 +59,8 @@ class NotifyAdditionalEmailController extends Controller
 
     public function delete(Request $request, NotifyAdditionalEmail $additionalEmail)
     {
+        $this->authorize('delete', $additionalEmail);
+
         $additionalEmail->delete();
 
         $request->session()->flash('flash_bag.delete_additional_emails.success', 'We have removed ' . $additionalEmail->Name . ' from your list of additional recipients.');

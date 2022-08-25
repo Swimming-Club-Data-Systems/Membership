@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useField, useFormikContext } from "formik";
 import useLogin from "./useLogin";
 import Button from "@/Components/Button";
+import { Inertia } from "@inertiajs/inertia";
 
 const WebAuthnHandler = () => {
     const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
@@ -48,15 +49,15 @@ const WebAuthnHandler = () => {
 
             if (username) {
                 requestObject.username = username;
-                const hasTokens = await checkWebauthn();
-                if (!hasTokens) {
-                    setError({
-                        variant: "warning",
-                        message:
-                            "There are no passkeys registered for this account.",
-                    });
-                    return;
-                }
+                // const hasTokens = await checkWebauthn();
+                // if (!hasTokens) {
+                //     setError({
+                //         variant: "warning",
+                //         message:
+                //             "There are no passkeys registered for this account.",
+                //     });
+                //     return;
+                // }
             }
 
             if (autoFill) {
@@ -67,7 +68,8 @@ const WebAuthnHandler = () => {
 
             const response = await login(requestObject);
             if (response.success) {
-                window.location.replace(response.redirect_url);
+                Inertia.visit(response.redirect_url);
+                // window.location.replace(response.redirect_url);
                 setError(null);
             } else {
                 setError(webAuthnError);
@@ -108,9 +110,10 @@ const WebAuthnHandler = () => {
                     variant="secondary"
                     onClick={handleLogin}
                     disabled={false}
-                    className="mb-4 w-full"
+                    className="w-full"
+                    type="button"
                 >
-                    Login with passkey
+                    Sign in with passkey
                 </Button>
             }
         </>

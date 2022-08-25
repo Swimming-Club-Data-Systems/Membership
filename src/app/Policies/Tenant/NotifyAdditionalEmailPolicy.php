@@ -77,7 +77,7 @@ class NotifyAdditionalEmailPolicy
      */
     public function delete(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)
     {
-        return $user->UserID == $notifyAdditionalEmail->UserID;
+        return $user->UserID === $notifyAdditionalEmail->UserID;
     }
 
     /**

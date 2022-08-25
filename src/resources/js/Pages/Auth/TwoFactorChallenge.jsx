@@ -54,6 +54,7 @@ const TwoFactorChallenge = (props) => {
                     name="code"
                     type="text"
                     label="Authentication code"
+                    autoComplete="one-time-code"
                 />
             </Form>
 
@@ -74,7 +75,9 @@ const TwoFactorChallenge = (props) => {
             </div>
 
             <form onSubmit={submit}>
-                <Button variant="secondary" disabled={processing}>Resend code</Button>
+                <Button variant="secondary" disabled={processing}>
+                    Resend code
+                </Button>
             </form>
         </AuthServices>
     );

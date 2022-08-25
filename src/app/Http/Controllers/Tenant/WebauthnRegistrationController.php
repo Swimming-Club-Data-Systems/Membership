@@ -8,6 +8,8 @@ use App\Business\WebAuthnImplementation\Server;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Auth\UserCredential;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
@@ -25,23 +27,31 @@ use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
 
 class WebauthnRegistrationController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function challenge(Request $request)
     {
         $userEntityRepository = new PublicKeyCredentialUserEntityRepository();
         $credentialSourceRepository = new PublicKeyCredentialSourceRepository();
-//        $server = WebAuthnImplementation\Server::get();
 
-//        $post = json_decode(file_get_contents('php://input'));
-
-// UseEntity found using the username.
-        $userEntity = $userEntityRepository->findWebauthnUserByUsername($request->input('username'));
+        // UseEntity found using the username.
+        // $userEntity = $userEntityRepository->findWebauthnUserByUsername($request->input('username'));
+        $userEntity = $userEntityRepository->findWebauthnUserByUserHandle(Auth::id());
 
         $challenge = random_bytes(16);
 
-// Get the list of authenticators associated to the user
+        // Get the list of authenticators associated to the user
         $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
 
-// Convert the Credential Sources into Public Key Credential Descriptors
+        // Convert the Credential Sources into Public Key Credential Descriptors
         $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
             return $credential->getPublicKeyCredentialDescriptor();
         }, $credentialSources);
@@ -51,7 +61,6 @@ class WebauthnRegistrationController extends Controller
         $authenticatorSelectionCriteria = AuthenticatorSelectionCriteria::create()
             ->setUserVerification(AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_DISCOURAGED);
 
-// We generate the set of options.
         PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_DIRECT;
         $publicKeyCredentialCreationOptions = PublicKeyCredentialCreationOptions::create(
             $rpEntity,
@@ -61,19 +70,6 @@ class WebauthnRegistrationController extends Controller
         )
             ->excludeCredentials(...$allowedCredentials)
             ->setAuthenticatorSelection(AuthenticatorSelectionCriteria::create());
-
-//        $publicKeyCredentialRequestOptions = $server->generatePublicKeyCredentialRequestOptions(
-//            PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED, // Default value
-//            $allowedCredentials
-//        );
-
-//        $creationJson = json_encode($publicKeyCredentialRequestOptions);
-
-//        $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestUsername'] = $post->username;
-//        $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions'] = $creationJson;
-
-//        header("content-type: application/json");
-//        echo $creationJson;
 
         $request->session()->put('webauthn_credential_registration_request_options',
             json_encode($publicKeyCredentialCreationOptions));
@@ -104,59 +100,94 @@ class WebauthnRegistrationController extends Controller
         $publicKeyCredentialLoader = PublicKeyCredentialLoader::create(
             $attestationObjectLoader
         );
-//        $publicKeyCredential = $publicKeyCredentialLoader->load($request->input());
-        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+
+        $publicKeyCredential = null;
+
+        try {
+            $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Passkey could not be loaded. Please try again.',
+            ]);
+        }
 
         $authenticatorAttestationResponse = $publicKeyCredential->getResponse();
         if (!$authenticatorAttestationResponse instanceof AuthenticatorAttestationResponse) {
             // Failed, report back
+            return response()->json([
+                'success' => false,
+                'message' => 'Passkey verification failed. Please try again.',
+            ]);
         }
 
-        $userEntityRepository = new PublicKeyCredentialUserEntityRepository();
+        try {
 
-        $psr17Factory = new Psr17Factory();
-        $creator = new ServerRequestCreator(
-            $psr17Factory, // ServerRequestFactory
-            $psr17Factory, // UriFactory
-            $psr17Factory, // UploadedFileFactory
-            $psr17Factory  // StreamFactory
-        );
+            $userEntityRepository = new PublicKeyCredentialUserEntityRepository();
 
-        $serverRequest = $creator->fromGlobals();
+            $psr17Factory = new Psr17Factory();
+            $creator = new ServerRequestCreator(
+                $psr17Factory, // ServerRequestFactory
+                $psr17Factory, // UriFactory
+                $psr17Factory, // UploadedFileFactory
+                $psr17Factory  // StreamFactory
+            );
 
-        $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository();
+            $serverRequest = $creator->fromGlobals();
 
-        $tokenBindingHandler = IgnoreTokenBindingHandler::create();
+            $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository();
 
-        $extensionOutputCheckerHandler = ExtensionOutputCheckerHandler::create();
+            $tokenBindingHandler = IgnoreTokenBindingHandler::create();
 
-        $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
-            $attestationStatementSupportManager,
-            $publicKeyCredentialSourceRepository,
-            $tokenBindingHandler,
-            $extensionOutputCheckerHandler
-        );
+            $extensionOutputCheckerHandler = ExtensionOutputCheckerHandler::create();
 
-        $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
-            $authenticatorAttestationResponse,
-            $publicKeyCredentialCreationOptions,
-            $serverRequest,
-            ['testclub.localhost', 'localhost'],
-        );
+            $authenticatorAttestationResponseValidator = AuthenticatorAttestationResponseValidator::create(
+                $attestationStatementSupportManager,
+                $publicKeyCredentialSourceRepository,
+                $tokenBindingHandler,
+                $extensionOutputCheckerHandler
+            );
 
-        // Store the key
-        $publicKeyCredentialSourceRepository->saveCredentialSource($publicKeyCredentialSource);
+            $publicKeyCredentialSource = $authenticatorAttestationResponseValidator->check(
+                $authenticatorAttestationResponse,
+                $publicKeyCredentialCreationOptions,
+                $serverRequest,
+                ['testclub.localhost', 'localhost'],
+            );
 
-        // Set the credential_name
-        $credential = UserCredential::where('credential_id', base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()))->first();
-        if ($credential) {
-            $credential->credential_name = $request->session()->pull('webauthn_credential_registration_name');
-            $credential->save();
+            // Store the key
+            $publicKeyCredentialSourceRepository->saveCredentialSource($publicKeyCredentialSource);
+
+            // Set the credential_name
+            $credential = UserCredential::where('credential_id', base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()))->first();
+            if ($credential) {
+                $credential->credential_name = $request->session()->pull('webauthn_credential_registration_name');
+                $credential->save();
+            }
+
+            $request->session()->forget('webauthn_credential_registration_request_options');
+
+            $request->session()->flash('flash_bag.manage_passkeys.success', 'We have saved your new passkey (' . $credential->credential_name . ').');
+
+            return response()->json([
+                'success' => true,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Passkey verification failed. Please try again.',
+            ]);
         }
+    }
 
-        $request->session()->forget('webauthn_credential_registration_request_options');
+    public function delete(Request $request, UserCredential $credential)
+    {
+        $this->authorize('delete', $credential);
 
-        return response()->json($publicKeyCredentialSource);
+        $credential->delete();
 
+        $request->session()->flash('flash_bag.delete_credential.success', 'We have deleted ' . $credential->credential_name . ' from your list of passkeys.');
+
+        return Redirect::route('my_account.security');
     }
 }

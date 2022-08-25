@@ -61,8 +61,7 @@ const Show = (props) => {
                             .required(
                                 "A street and house name or number is required"
                             ),
-                        address_line_2: yup
-                            .string(),
+                        address_line_2: yup.string(),
                         city: yup.string().required("A city is required"),
                         county: yup.string().required("A county is required"),
                         post_code: yup
@@ -109,6 +108,7 @@ const Show = (props) => {
                                     type="email"
                                     label="Email address"
                                     help="If you change your email address, we'll send an email to verify it before the change takes effect."
+                                    autoComplete="email"
                                 />
                             </div>
 
@@ -117,6 +117,7 @@ const Show = (props) => {
                                     name="mobile"
                                     type="tel"
                                     label="Phone number"
+                                    autoComplete="tel"
                                 />
                             </div>
 
@@ -124,6 +125,7 @@ const Show = (props) => {
                                 <TextInput
                                     name="address_line_1"
                                     label="Address line 1"
+                                    autoComplete="address-line-1"
                                 />
                             </div>
 
@@ -131,11 +133,16 @@ const Show = (props) => {
                                 <TextInput
                                     name="address_line_2"
                                     label="Address line 2"
+                                    autoComplete="address-line-2"
                                 />
                             </div>
 
                             <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                                <TextInput name="city" label="City" />
+                                <TextInput
+                                    name="city"
+                                    label="City"
+                                    autoComplete="address-level-1"
+                                />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
@@ -143,7 +150,11 @@ const Show = (props) => {
                             </div>
 
                             <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                                <TextInput name="post_code" label="Post Code" />
+                                <TextInput
+                                    name="post_code"
+                                    label="Post Code"
+                                    autoComplete="postal-code"
+                                />
                             </div>
 
                             <div className="col-span-6 sm:col-span-3">
@@ -158,6 +169,7 @@ const Show = (props) => {
                                         }
                                     )}
                                     label="Country"
+                                    autoComplete="country"
                                 />
                             </div>
                         </div>

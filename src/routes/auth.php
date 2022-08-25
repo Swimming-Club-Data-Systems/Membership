@@ -11,9 +11,6 @@ use App\Http\Controllers\Tenant\Auth\VerifyEmailController;
 use App\Http\Controllers\Tenant\Auth\WebAuthnLoginController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('webauthn/verify', [WebAuthnLoginController::class, 'verify'])->name('webauthn.verify');
-Route::post('webauthn/challenge', [WebAuthnLoginController::class, 'challenge'])->name('webauthn.challenge');
-
 Route::middleware('guest')->group(function () {
     Route::get('register', [RegisteredUserController::class, 'create'])
                 ->name('register');
@@ -44,6 +41,9 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
                 ->name('password.update');
+
+    Route::post('webauthn/verify', [WebAuthnLoginController::class, 'verify'])->name('webauthn.verify');
+    Route::post('webauthn/challenge', [WebAuthnLoginController::class, 'challenge'])->name('webauthn.challenge');
 });
 
 Route::middleware('auth')->group(function () {

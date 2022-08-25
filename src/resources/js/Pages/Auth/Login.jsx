@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Checkbox from "@/Components/Form/Checkbox";
 import AuthServices from "@/Layouts/AuthServices";
 import { Inertia } from "@inertiajs/inertia";
 import { Head } from "@inertiajs/inertia-react";
 import Link from "@/Components/Link";
-import Form from "@/Components/Form/Form";
+import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import Alert from "@/Components/Alert";
-import useLogin from "./Helpers/useLogin";
-import Button from "@/Components/Button";
 import WebAuthnHandler from "./Helpers/WebAuthnHandler";
 
 const Login = ({ status, canResetPassword }) => {
@@ -58,6 +56,7 @@ const Login = ({ status, canResetPassword }) => {
                 submitTitle="Sign in"
                 submitClass="w-full"
                 hideClear
+                hideDefaultButtons
             >
                 <TextInput
                     name="email"
@@ -72,7 +71,7 @@ const Login = ({ status, canResetPassword }) => {
                     autoComplete="current-password"
                 />
 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center">
                         <Checkbox name="remember" label="Remember me" />
                     </div>
@@ -86,6 +85,9 @@ const Login = ({ status, canResetPassword }) => {
                     )}
                 </div>
 
+                <div className="mb-4">
+                    <SubmissionButtons />
+                </div>
                 <WebAuthnHandler />
             </Form>
         </AuthServices>

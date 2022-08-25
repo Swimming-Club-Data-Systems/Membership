@@ -15,10 +15,12 @@ import Button from "@/Components/Button";
 import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 import { useRegistration } from "@web-auth/webauthn-helper";
+import Alert from "@/Components/Alert";
 
 const Password = (props) => {
     const [deleteModalData, setDeleteModalData] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [error, setError] = useState(null);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -47,20 +49,23 @@ const Password = (props) => {
     const handleRegister = async (ev, formikBag) => {
         try {
             await register({
-                username: props.username,
                 passkey_name: ev.name,
             });
             formikBag.resetForm();
             setError(null);
-            await getAuthenticators();
+            // await getAuthenticators();
+            Inertia.reload({
+                only: ["passkeys", "flash"],
+                preserveScroll: true,
+            });
         } catch (error) {
             setError(error.message);
         }
     };
 
-    const deleteAdditionalRecipient = async () => {
+    const deletePasskey = async () => {
         Inertia.delete(
-            route("notify_additional_emails.delete", deleteModalData.id),
+            route("my_account.webauthn_delete", deleteModalData.id),
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
@@ -81,17 +86,13 @@ const Password = (props) => {
                 <Form
                     initialValues={{
                         password: "",
-                        new_password: "",
-                        confirm_new_password: "",
+                        password_confirmation: "",
                     }}
                     validationSchema={yup.object().shape({
                         password: yup
                             .string()
-                            .required("Please enter your current password"),
-                        new_password: yup
-                            .string()
                             .required("Please enter a new password"),
-                        confirm_new_password: yup
+                        password_confirmation: yup
                             .string()
                             .required("Please confirm your new password")
                             .oneOf(
@@ -125,23 +126,17 @@ const Password = (props) => {
                                 <TextInput
                                     name="password"
                                     type="password"
-                                    label="Current password"
-                                />
-                            </div>
-
-                            <div className="col-span-6 sm:col-span-4">
-                                <TextInput
-                                    name="new_password"
-                                    type="password"
                                     label="New password"
+                                    autoComplete="new-password"
                                 />
                             </div>
 
                             <div className="col-span-6 sm:col-span-4">
                                 <TextInput
-                                    name="confirm_new_password"
+                                    name="password_confirmation"
                                     type="password"
                                     label="Confirm new password"
+                                    autoComplete="new-password"
                                 />
                             </div>
                         </div>
@@ -157,6 +152,8 @@ const Password = (props) => {
                             Passwordless login for your club account.
                         </p>
                     </div>
+
+                    <FlashAlert className="mb-4" bag="delete_credentials" />
 
                     {props.passkeys.length > 0 && (
                         <BasicList
@@ -211,7 +208,7 @@ const Password = (props) => {
                             <>
                                 <Button
                                     variant="danger"
-                                    onClick={deleteAdditionalRecipient}
+                                    onClick={deletePasskey}
                                 >
                                     Confirm
                                 </Button>
@@ -234,6 +231,11 @@ const Password = (props) => {
 
                     {/*<RenderServerErrors />*/}
                     {/*<FlashAlert className="mb-4" />*/}
+                    {error && (
+                        <Alert variant="error" title="Error">
+                            {error}
+                        </Alert>
+                    )}
 
                     <Form
                         initialValues={{

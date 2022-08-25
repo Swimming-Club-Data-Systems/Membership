@@ -2,7 +2,20 @@
 
 namespace App\Http\Controllers\Tenant\Auth;
 
+use App\Models\Tenant\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
+use Webauthn\AttestationStatement\AttestationObjectLoader;
+use Webauthn\AttestationStatement\AttestationStatementSupportManager;
+use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
+use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
+use Webauthn\AuthenticatorAssertionResponse;
+use Webauthn\AuthenticatorAssertionResponseValidator;
+use Webauthn\PublicKeyCredentialCreationOptions;
+use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRequestOptions;
 use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialSource;
@@ -14,6 +27,7 @@ use App\Business\WebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
 use App\Business\WebAuthnImplementation\PublicKeyCredentialSourceRepository;
 use App\Business\WebAuthnImplementation\Server;
 use App\Http\Controllers\Controller;
+use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
 
 class WebAuthnLoginController extends Controller
 {
@@ -65,10 +79,41 @@ class WebAuthnLoginController extends Controller
     {
         $options = $request->session()->pull('webauthn_credential_request_options');
 
-        // IF !$options THROW AN ERROR
+        $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($options);
 
-        $userEntityRepository = new PublicKeyCredentialUserEntityRepository();
-        $server = Server::get();
+        // The manager will receive data to load and select the appropriate
+        $attestationStatementSupportManager = AttestationStatementSupportManager::create();
+        $attestationStatementSupportManager->add(NoneAttestationStatementSupport::create());
+
+        $attestationObjectLoader = AttestationObjectLoader::create(
+            $attestationStatementSupportManager
+        );
+
+        $publicKeyCredentialLoader = PublicKeyCredentialLoader::create(
+            $attestationObjectLoader
+        );
+
+        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+
+        $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
+        if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+            //e.g. process here with a redirection to the public key login/MFA page.
+        }
+
+        // $request = Request::createFromGlobals();
+
+        $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository();
+
+        $tokenBindingHandler = IgnoreTokenBindingHandler::create();
+
+        $extensionOutputCheckerHandler = ExtensionOutputCheckerHandler::create();
+
+        $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
+            $publicKeyCredentialSourceRepository,  // The Credential Repository service
+            $tokenBindingHandler,                  // The token binding handler
+            $extensionOutputCheckerHandler,        // The extension output checker handler
+            Server::getAlgorithmManager()          // The COSE Algorithm Manager
+        );
 
         $psr17Factory = new Psr17Factory();
         $creator = new ServerRequestCreator(
@@ -80,40 +125,42 @@ class WebAuthnLoginController extends Controller
 
         $serverRequest = $creator->fromGlobals();
 
-        $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($options);
+        $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
+            $publicKeyCredential->getRawId(),
+            $authenticatorAssertionResponse,
+            $publicKeyCredentialRequestOptions,
+            $serverRequest,
+//            $userHandle
+            null,
+            ['testclub.localhost', 'localhost'],
+        );
 
-        $userEntity = $userEntityRepository->findWebauthnUserByUserHandle(base64_decode($request->input('response.userHandle')));
+        $userId = $publicKeyCredentialSource->getUserHandle();
 
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL']);
-        unset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
+        $user = User::find($userId);
 
-        try {
-            $publicKeyCredentialSource = $server->loadAndCheckAssertionResponse(
-                file_get_contents('php://input'),
-                $publicKeyCredentialRequestOptions, // The options you stored during the previous step
-                $userEntity,                        // The user entity
-                $serverRequest                      // The PSR-7 request
-            );
+        Auth::login($user);
 
-            $userId = $publicKeyCredentialSource->getUserHandle();
+        $request->session()->regenerate();
 
-            // Deal with loging them in
+        // The user has just logged in with multiple factors so set confirmed at time
+        // Otherwise the user is hit with confirm immediately if heading to profile routes.
+        $request->session()->put('auth.password_confirmed_at', time());
 
-            return response()->json([]);
+        $url = $request->session()->get('url.intended') ?? "";
 
-            //If everything is fine, this means the user has correctly been authenticated using the
-            // authenticator defined in $publicKeyCredentialSource
-            // echo json_encode([
-            //     "success" => true,
-            //     "redirect_url" => $url
-            // ]);
-        } catch (\Throwable $exception) {
-            // Something went wrong!
-            // reportError($exception);
-            return response()->json([
-                "success" => false,
-                "message" => $exception->getMessage(),
-            ]);
+        $redirectUrl = RouteServiceProvider::HOME;
+
+        if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
+            $request->session()->forget('url.intended');
+            $redirectUrl = V1LoginController::getUrl($user);
+        } else {
+            $redirectUrl = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
         }
+
+        return response()->json([
+            'success' => true,
+            'redirect_url' => $redirectUrl,
+        ]);
     }
 }
