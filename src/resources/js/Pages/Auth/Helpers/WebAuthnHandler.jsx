@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useField, useFormikContext } from "formik";
+import React, { useEffect, useState } from "react";
+import { useField } from "formik";
 import useLogin from "./useLogin";
 import Button from "@/Components/Button";
+import { Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 
-const WebAuthnHandler = () => {
-    const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
-
+const WebAuthnHandler = ({ setAC, show }) => {
     const [hasWebauthn, setHasWebauthn] = useState(false);
     const [ssoUrl, setSsoUrl] = useState(null);
     const [error, setError] = useState(null);
 
-    const [field, meta] = useField("email");
+    const [field] = useField("email");
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -39,7 +38,8 @@ const WebAuthnHandler = () => {
         },
         {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-        }
+        },
+        setAC
     );
 
     const handleLogin = async (event, autoFill = false) => {
@@ -73,11 +73,11 @@ const WebAuthnHandler = () => {
                 setError(null);
             } else {
                 setError(webAuthnError);
-                console.error(error);
+                // console.error(error);
             }
         } catch (error) {
             setError(webAuthnError);
-            console.error(error);
+            // console.error(error);
         }
     };
 
@@ -90,6 +90,7 @@ const WebAuthnHandler = () => {
             !PublicKeyCredential.isConditionalMediationAvailable()
         ) {
             // Browser doesn't support AutoFill-assisted requests.
+            setAC("username");
             return;
         }
 
@@ -104,8 +105,15 @@ const WebAuthnHandler = () => {
 
     return (
         <>
-            {
-                // (supportsWebauthn && !showTraditional && hasWebauthn) &&
+            <Transition
+                show={show}
+                enter="transition duration-500"
+                enterFrom="opacity-0 scale-0 height-0"
+                enterTo="opacity-100 scale-100 height-100"
+                leave="transition duration-150"
+                leaveFrom="opacity-100 scale-100 height-100"
+                leaveTo="opacity-0 scale-0 height-0"
+            >
                 <Button
                     variant="secondary"
                     onClick={handleLogin}
@@ -115,7 +123,7 @@ const WebAuthnHandler = () => {
                 >
                     Sign in with passkey
                 </Button>
-            }
+            </Transition>
         </>
     );
 };

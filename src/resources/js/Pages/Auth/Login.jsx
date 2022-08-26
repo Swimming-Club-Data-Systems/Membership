@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Checkbox from "@/Components/Form/Checkbox";
 import AuthServices from "@/Layouts/AuthServices";
 import { Inertia } from "@inertiajs/inertia";
@@ -9,19 +9,45 @@ import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import Alert from "@/Components/Alert";
 import WebAuthnHandler from "./Helpers/WebAuthnHandler";
+import { Transition } from "@headlessui/react";
+import SSOHandler from "@/Pages/Auth/Helpers/SSOHandler";
 
 const Login = ({ status, canResetPassword }) => {
     const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
 
-    const [hasWebauthn, setHasWebauthn] = useState(false);
+    const [showPasswordField, setShowPasswordField] = useState(true);
+    const [showWebauthn, setShowWebauthn] = useState(supportsWebauthn);
     const [ssoUrl, setSsoUrl] = useState(null);
     const [error, setError] = useState(null);
+    const [autoComplete, setAC] = useState("");
 
     const onSubmit = (values, formikBag) => {
         Inertia.post(route("login"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };
+
+    // If SSO, hide password and webauthn
+    useEffect(() => {
+        setShowPasswordField(ssoUrl === null);
+        setShowWebauthn(ssoUrl === null);
+    }, [ssoUrl]);
+
+    const validationSchema = {
+        email: yup
+            .string()
+            .required("An email address is required")
+            .email("Your email address must be valid"),
+    };
+
+    if (!ssoUrl) {
+        validationSchema.password = yup
+            .string()
+            .required("A password is required");
+        validationSchema.remember = yup
+            .boolean()
+            .oneOf([false, true], "Remember me must be ticked or not ticked");
+    }
 
     return (
         <AuthServices title="Sign in to your account">
@@ -39,19 +65,7 @@ const Login = ({ status, canResetPassword }) => {
                     password: "",
                     remember: false,
                 }}
-                validationSchema={yup.object().shape({
-                    email: yup
-                        .string()
-                        .required("An email address is required")
-                        .email("Your email address must be valid"),
-                    password: yup.string().required("A password is required"),
-                    remember: yup
-                        .boolean()
-                        .oneOf(
-                            [false, true],
-                            "Remember me must be ticked or not ticked"
-                        ),
-                })}
+                validationSchema={yup.object().shape(validationSchema)}
                 onSubmit={onSubmit}
                 submitTitle="Sign in"
                 submitClass="w-full"
@@ -62,33 +76,45 @@ const Login = ({ status, canResetPassword }) => {
                     name="email"
                     type="email"
                     label="Email"
-                    autoComplete="username webauthn"
-                />
-                <TextInput
-                    name="password"
-                    type="password"
-                    label="Password"
-                    autoComplete="current-password"
+                    autoComplete={autoComplete}
                 />
 
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center">
-                        <Checkbox name="remember" label="Remember me" />
-                    </div>
+                <Transition
+                    show={showPasswordField}
+                    enter="transition duration-500"
+                    enterFrom="opacity-0 scale-0 height-0"
+                    enterTo="opacity-100 scale-100 height-100"
+                    leave="transition duration-150"
+                    leaveFrom="opacity-100 scale-100 height-100"
+                    leaveTo="opacity-0 scale-0 height-0"
+                >
+                    <TextInput
+                        name="password"
+                        type="password"
+                        label="Password"
+                        autoComplete="current-password"
+                    />
 
-                    {canResetPassword && (
-                        <div className="text-sm mb-3">
-                            <Link href={route("password.request")}>
-                                Forgot your password?
-                            </Link>
+                    <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center">
+                            <Checkbox name="remember" label="Remember me" />
                         </div>
-                    )}
-                </div>
 
-                <div className="mb-4">
+                        {canResetPassword && (
+                            <div className="text-sm mb-3">
+                                <Link href={route("password.request")}>
+                                    Forgot your password?
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+                </Transition>
+
+                <div className="grid gap-y-4">
                     <SubmissionButtons />
+                    <WebAuthnHandler setAC={setAC} show={showWebauthn} />
                 </div>
-                <WebAuthnHandler />
+                <SSOHandler setSsoUrl={setSsoUrl} />
             </Form>
         </AuthServices>
     );

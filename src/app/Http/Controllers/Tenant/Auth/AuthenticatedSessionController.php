@@ -5,40 +5,25 @@ namespace App\Http\Controllers\Tenant\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Mail\UserLoginTwoFactorCode;
-use App\Models\Tenant\Auth\V1Login;
+use App\Models\Central\Tenant;
+use App\Models\Tenant\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 use PragmaRX\Google2FA\Google2FA;
-use App\Models\Tenant\User;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
-     *
-     * @return \Inertia\Response
-     */
-    public function create(Request $request)
-    {
-        if ($request->session()->has('auth.check_two_factor_code')) {
-            return Inertia::location(route('two_factor'));
-        }
-
-        return Inertia::render('Auth/Login', [
-            'canResetPassword' => Route::has('password.request'),
-            'status' => session('status'),
-        ]);
-    }
-
-    /**
      * Handle an incoming authentication request.
      *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
+     * @param \App\Http\Requests\Auth\LoginRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(LoginRequest $request)
@@ -131,7 +116,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        Auth::login($user, (bool) $request->session()->pull('auth.remember'));
+        Auth::login($user, (bool)$request->session()->pull('auth.remember'));
 
         // The user has just logged in with multiple factors so set confirmed at time
         // Otherwise the user is hit with confirm immediately if heading to profile routes.
@@ -157,9 +142,26 @@ class AuthenticatedSessionController extends Controller
     }
 
     /**
+     * Display the login view.
+     *
+     * @return \Inertia\Response
+     */
+    public function create(Request $request)
+    {
+        if ($request->session()->has('auth.check_two_factor_code')) {
+            return Inertia::location(route('two_factor'));
+        }
+
+        return Inertia::render('Auth/Login', [
+            'canResetPassword' => Route::has('password.request'),
+            'status' => session('status'),
+        ]);
+    }
+
+    /**
      * Destroy an authenticated session.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request)
@@ -171,5 +173,45 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return Inertia::location('/v1/logout');
+    }
+
+    /**
+     * Return information on whether the user has webauthn or an SSO url to use
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function checkUsername(Request $request)
+    {
+        // Find user by email
+        /**
+         * @var User $user
+         */
+        $user = User::query()->where('EmailAddress', $request->input('email'))->first();
+
+        // Get tenant object
+        /**
+         * @var Tenant $tenant
+         */
+        $tenant = tenant();
+
+        // TENANT_ENABLE_STAFF_OAUTH
+        // TENANT_OAUTH_EMAIL_DOMAIN
+
+        $hasWebauthn = false;
+        $ssoUrl = null;
+
+        if ($user) {
+            $hasWebauthn = $user->userCredentials()->count() > 0;
+        }
+
+        if ($user && $tenant->getOption('TENANT_ENABLE_STAFF_OAUTH') && Str::endsWith($user->EmailAddress, $tenant->getOption('TENANT_OAUTH_EMAIL_DOMAIN'))) {
+            $ssoUrl = "login/oauth?email=" . urlencode($user->EmailAddress);
+        }
+
+        return response()->json([
+            "has_webauthn" => $hasWebauthn,
+            "sso_url" => $ssoUrl,
+        ]);
     }
 }

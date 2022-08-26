@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $UserID
@@ -76,6 +77,13 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $appends = ['gravitar_url'];
+
+    protected static function booted()
+    {
+        static::addGlobalScope('active', function (Builder $builder) {
+            $builder->where('Active', true);
+        });
+    }
 
     /**
      * Send an email to the new address to validate and change
