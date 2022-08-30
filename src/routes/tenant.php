@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Passport\Passport;
@@ -47,6 +48,11 @@ Route::middleware([
 
     Route::get('/dev', function () {
         return Inertia::render('Dev');
+    });
+
+    Route::get('/dev/require-confirm', function (Request $request) {
+        $request->session()->put('auth.password_confirmed_at', 0);
+        return redirect('/dev');
     });
 
     Route::get('/dashboard', function () {

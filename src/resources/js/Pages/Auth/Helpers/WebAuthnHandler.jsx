@@ -118,11 +118,22 @@ const WebAuthnHandler = ({ setAC, show }) => {
                     variant="secondary"
                     onClick={handleLogin}
                     disabled={false}
-                    className="w-full"
+                    className="w-full mb-4"
                     type="button"
                 >
                     Sign in with passkey
                 </Button>
+
+                <div className="relative mb-4">
+                    <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-gray-300" />
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                        <span className="bg-white px-2 text-gray-500">
+                            Or use your password
+                        </span>
+                    </div>
+                </div>
             </Transition>
         </>
     );

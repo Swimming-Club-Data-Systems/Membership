@@ -22,9 +22,13 @@ const Login = ({ status, canResetPassword }) => {
     const [autoComplete, setAC] = useState("");
 
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("login"), values, {
-            onSuccess: (arg) => console.log(arg),
-        });
+        if (ssoUrl) {
+            window.location.href = ssoUrl;
+        } else {
+            Inertia.post(route("login"), values, {
+                onSuccess: (arg) => console.log(arg),
+            });
+        }
     };
 
     // If SSO, hide password and webauthn
@@ -72,6 +76,8 @@ const Login = ({ status, canResetPassword }) => {
                 hideClear
                 hideDefaultButtons
             >
+                <WebAuthnHandler setAC={setAC} show={showWebauthn} />
+
                 <TextInput
                     name="email"
                     type="email"
@@ -110,10 +116,7 @@ const Login = ({ status, canResetPassword }) => {
                     </div>
                 </Transition>
 
-                <div className="grid gap-y-4">
-                    <SubmissionButtons />
-                    <WebAuthnHandler setAC={setAC} show={showWebauthn} />
-                </div>
+                <SubmissionButtons />
                 <SSOHandler setSsoUrl={setSsoUrl} />
             </Form>
         </AuthServices>

@@ -206,7 +206,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user && $tenant->getOption('TENANT_ENABLE_STAFF_OAUTH') && Str::endsWith($user->EmailAddress, $tenant->getOption('TENANT_OAUTH_EMAIL_DOMAIN'))) {
-            $ssoUrl = "login/oauth?email=" . urlencode($user->EmailAddress);
+            $ssoUrl = url("login/oauth?email=" . urlencode($user->EmailAddress));
         }
 
         return response()->json([
