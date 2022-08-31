@@ -388,8 +388,15 @@ $route->use(function () {
 //   'continue' => true
 // ]);
 
-// If SUMDOMAIN OR DOMAIN
-if (getenv('MAIN_DOMAIN') && getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
+$centralDomains = [
+    'mt.myswimmingclub.uk',
+    'myswimmingclub.uk',
+    'membership.myswimmingclub.uk',
+    'localhost',
+];
+
+// If SUBDOMAIN OR DOMAIN
+if (!in_array(app('request')->hostname, $centralDomains)) {
   // Else use main domain
   // Get the club
 
