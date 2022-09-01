@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Central\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Central\Auth\ConfirmableWebAuthnController;
 use App\Http\Controllers\Central\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Central\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Central\Auth\NewPasswordController;
@@ -55,6 +56,17 @@ Route::name('central.')->group(function () {
             ->name('password.confirm');
 
         Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
+
+        Route::get('confirm-password/oauth', [ConfirmablePasswordController::class, 'oauth'])
+            ->name('confirm-password.oauth');
+
+        Route::get('confirm-password/oauth-verify', [ConfirmablePasswordController::class, 'verifyOauth'])
+            ->name('confirm-password.oauth-verify');
+
+        Route::post('confirm-password/webauthn/verify', [ConfirmableWebAuthnController::class, 'verify'])
+            ->name('confirm-password.webauthn.verify');
+        Route::post('confirm-password/webauthn/challenge', [ConfirmableWebAuthnController::class, 'challenge'])
+            ->name('confirm-password.webauthn.challenge');
 
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
             ->name('logout');

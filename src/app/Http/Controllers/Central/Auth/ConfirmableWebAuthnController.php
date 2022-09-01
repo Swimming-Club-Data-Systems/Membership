@@ -10,7 +10,6 @@ use App\Models\Central\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
@@ -35,7 +34,7 @@ class ConfirmableWebAuthnController extends Controller
         $credentialSourceRepository = new PublicKeyCredentialSourceRepository();
 
         // UseEntity found using the username.
-        $userEntity = $userEntityRepository->findWebauthnUserByUserHandle($user->UserID);
+        $userEntity = $userEntityRepository->findWebauthnUserByUserHandle($user->id);
 
         // Get the list of authenticators associated to the user
         $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
@@ -127,22 +126,13 @@ class ConfirmableWebAuthnController extends Controller
 
         $userId = $publicKeyCredentialSource->getUserHandle();
 
-        if ($userId != $user->UserID) {
+        if ($userId != $user->id) {
             abort(404);
         }
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        $url = $request->session()->get('url.intended') ?? "";
-
-        $redirectUrl = RouteServiceProvider::HOME;
-
-        if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
-            $request->session()->forget('url.intended');
-            $redirectUrl = V1LoginController::getUrl($user);
-        } else {
-            $redirectUrl = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
-        }
+        $redirectUrl = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
 
         return response()->json([
             'success' => true,

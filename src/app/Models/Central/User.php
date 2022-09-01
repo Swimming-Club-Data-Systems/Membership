@@ -10,6 +10,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property int id
+ * @property string first_name
+ * @property string last_name
+ * @property string email
+ * @property string password
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -20,7 +27,8 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
     ];
@@ -60,6 +68,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the WebAuthn User Credentials for the user.
+     */
+    public function userCredentials(): HasMany
+    {
+        return $this->hasMany(UserCredential::class, 'user_id');
+    }
+
+    /**
      * Get the user name via expected attribute.
      *
      * @return Attribute
@@ -69,13 +85,5 @@ class User extends Authenticatable
         return Attribute::make(
             get: fn($value, $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name'],
         );
-    }
-
-    /**
-     * Get the WebAuthn User Credentials for the user.
-     */
-    public function userCredentials(): HasMany
-    {
-        return $this->hasMany(UserCredential::class, 'user_id');
     }
 }
