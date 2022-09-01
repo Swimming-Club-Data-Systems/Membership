@@ -1,10 +1,5 @@
 import React from "react";
-import {
-    AdjustmentsIcon,
-    KeyIcon,
-    MailIcon,
-    UserCircleIcon,
-} from "@heroicons/react/outline";
+import { KeyIcon, UserCircleIcon } from "@heroicons/react/outline";
 import Container from "@/Components/Container";
 import { Link } from "@inertiajs/inertia-react";
 
@@ -21,24 +16,17 @@ const Layout = (props) => {
             current: route().current("my_account.profile"),
         },
         {
-            name: "Email Options",
-            href: route("my_account.email"),
-            icon: MailIcon,
-            current: route().current("my_account.email"),
-        },
-        {
             name: "Password & Security",
             href: route("my_account.security"),
             icon: KeyIcon,
             current: route().current("my_account.security"),
         },
-        {
-            name: "Advanced Options",
-            href: route("my_account.advanced"),
-            icon: AdjustmentsIcon,
-            current: route().current("my_account.advanced"),
-        },
-        // { name: "Integrations", href: "#", icon: ViewGridAddIcon, current: false },
+        // {
+        //     name: "Advanced Options",
+        //     href: route("my_account.advanced"),
+        //     icon: AdjustmentsIcon,
+        //     current: route().current("my_account.advanced"),
+        // },
     ];
 
     return (

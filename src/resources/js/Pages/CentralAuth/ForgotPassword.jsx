@@ -9,7 +9,7 @@ import * as yup from "yup";
 
 export default function ForgotPassword({ status }) {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("password.email"), values, {
+        Inertia.post(route("central.password.email"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

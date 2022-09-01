@@ -17,7 +17,7 @@ const TwoFactorChallenge = (props) => {
     };
 
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("two_factor"), values, {
+        Inertia.post(route("central.two_factor"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

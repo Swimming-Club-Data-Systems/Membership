@@ -30,11 +30,11 @@ const WebAuthnHandler = ({ setAC, show }) => {
 
     const login = useLogin(
         {
-            actionUrl: route("webauthn.verify"),
+            actionUrl: route("central.webauthn.verify"),
             actionHeader: {
                 "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
             },
-            optionsUrl: route("webauthn.challenge"),
+            optionsUrl: route("central.webauthn.challenge"),
         },
         {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),

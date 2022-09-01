@@ -8,7 +8,7 @@ import { Inertia } from "@inertiajs/inertia";
 
 export default function ResetPassword({ token, email }) {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("password.update"), values, {
+        Inertia.post(route("central.password.update"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

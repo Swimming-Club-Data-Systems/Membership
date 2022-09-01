@@ -10,7 +10,7 @@ export default function VerifyEmail({ status }) {
     const submit = (e) => {
         e.preventDefault();
 
-        post(route("verification.send"));
+        post(route("central.verification.send"));
     };
 
     return (

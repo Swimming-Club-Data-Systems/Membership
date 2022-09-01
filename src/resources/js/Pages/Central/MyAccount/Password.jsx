@@ -35,11 +35,11 @@ const Password = (props) => {
 
     const register = useRegistration(
         {
-            actionUrl: route("my_account.webauthn_verify"),
+            actionUrl: route("central.my_account.webauthn_verify"),
             actionHeader: {
                 "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
             },
-            optionsUrl: route("my_account.webauthn_challenge"),
+            optionsUrl: route("central.my_account.webauthn_challenge"),
         },
         {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
@@ -65,7 +65,7 @@ const Password = (props) => {
 
     const deletePasskey = async () => {
         Inertia.delete(
-            route("my_account.webauthn_delete", deleteModalData.id),
+            route("central.my_account.webauthn_delete", deleteModalData.id),
             {
                 preserveScroll: true,
                 onSuccess: (page) => {
@@ -100,7 +100,7 @@ const Password = (props) => {
                                 "Passwords must match"
                             ),
                     })}
-                    action={route("my_account.security")}
+                    action={route("central.my_account.security")}
                     submitTitle="Change password"
                     hideClear
                     hideDefaultButtons

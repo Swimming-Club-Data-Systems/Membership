@@ -30,11 +30,11 @@ export default function ConfirmPassword(props) {
 
     const login = useLogin(
         {
-            actionUrl: route("confirm-password.webauthn.verify"),
+            actionUrl: route("central.confirm-password.webauthn.verify"),
             actionHeader: {
                 "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
             },
-            optionsUrl: route("confirm-password.webauthn.challenge"),
+            optionsUrl: route("central.confirm-password.webauthn.challenge"),
         },
         {
             "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
@@ -61,7 +61,7 @@ export default function ConfirmPassword(props) {
     };
 
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("password.confirm"), values, {
+        Inertia.post(route("central.password.confirm"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };
@@ -78,7 +78,7 @@ export default function ConfirmPassword(props) {
             {props.sso_url && (
                 <>
                     <Button
-                        href={route("confirm-password.oauth")}
+                        href={route("central.confirm-password.oauth")}
                         variant="primary"
                         className="w-full"
                     >

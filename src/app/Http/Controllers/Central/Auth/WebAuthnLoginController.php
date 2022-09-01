@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Central\Auth;
 
-use App\Models\Tenant\User;
+use App\Models\Central\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,9 +23,9 @@ use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
 use Webauthn\AuthenticationExtensions\AuthenticationExtension;
 use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
-use App\Business\WebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
-use App\Business\WebAuthnImplementation\PublicKeyCredentialSourceRepository;
-use App\Business\WebAuthnImplementation\Server;
+use App\Business\CentralWebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
+use App\Business\CentralWebAuthnImplementation\PublicKeyCredentialSourceRepository;
+use App\Business\CentralWebAuthnImplementation\Server;
 use App\Http\Controllers\Controller;
 use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
 
@@ -139,7 +139,7 @@ class WebAuthnLoginController extends Controller
 
         $user = User::find($userId);
 
-        Auth::login($user);
+        Auth::guard('central')->login($user);
 
         $request->session()->regenerate();
 

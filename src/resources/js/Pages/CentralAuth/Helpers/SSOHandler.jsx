@@ -11,9 +11,12 @@ const SSOHandler = ({ setSsoUrl }) => {
         console.log("Calling ", value, meta);
         if (!meta.error) {
             try {
-                const { data } = await axios.post(route("login.check_user"), {
-                    email: value,
-                });
+                const { data } = await axios.post(
+                    route("central.login.check_user"),
+                    {
+                        email: value,
+                    }
+                );
 
                 setSsoUrl(data.sso_url);
 
