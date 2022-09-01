@@ -14,7 +14,7 @@ $centralDomains = [
 ];
 
 if (env('CENTRAL_DOMAIN')) {
-    $centralDomains [env('CENTRAL_DOMAIN')];
+    $centralDomains = [env('CENTRAL_DOMAIN')];
 }
 
 return [
