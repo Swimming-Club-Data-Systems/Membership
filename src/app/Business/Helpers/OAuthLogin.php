@@ -34,4 +34,27 @@ class OAuthLogin
 
         return $provider;
     }
+
+    public static function getCentralProvider(string $redirectUri = null): GenericProvider
+    {
+        if (!config('central.oauth.client_id')) {
+            abort(404);
+        }
+
+        if (!$redirectUri) {
+            $redirectUri = route('central.login.oauth_verify');
+        }
+
+        $provider = new GenericProvider([
+            'clientId'                => config('central.oauth.client_id'),    // The client ID assigned to you by the provider
+            'clientSecret'            => config('central.oauth.client_secret'),    // The client password assigned to you by the provider
+            'redirectUri'             => $redirectUri,
+            'urlAuthorize'            => config('central.oauth.url_authorize'),
+            'urlAccessToken'          => config('central.oauth.url_access_token'),
+            'urlResourceOwnerDetails' => '',
+            'scopes'                  => 'openid profile offline_access user.read'
+        ]);
+
+        return $provider;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Central\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Central\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
@@ -15,9 +16,9 @@ class PasswordResetLinkController extends Controller
      *
      * @return \Inertia\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return Inertia::render('Auth/ForgotPassword', [
+        return Inertia::render('CentralAuth/ForgotPassword', [
             'status' => session('status'),
         ]);
     }
@@ -39,16 +40,32 @@ class PasswordResetLinkController extends Controller
         // We will send the password reset link to this user. Once we have attempted
         // to send the link, we will examine the response then see the message we
         // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
 
-        if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+        /**
+         * @var User $user
+         */
+        $user = User::query()->where('email', $request->input('email'))->first();
+
+        if ($user) {
+            $token = Password::createToken($user);
+            $user->sendPasswordResetNotification($token);
+        }
+
+//        $status = Password::sendResetLink(
+//            $request->only('email')
+//        );
+
+        if ($user) {
+            return back()->with('status', __(Password::RESET_LINK_SENT));
         }
 
         throw ValidationException::withMessages([
-            'email' => [trans($status)],
+            'email' => [trans(Password::INVALID_USER)],
         ]);
+    }
+
+    protected function guard()
+    {
+        return Auth::guard('central');
     }
 }

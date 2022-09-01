@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Tenant\Auth;
+namespace App\Models\Central\Auth;
 
-use App\Traits\UuidIdentifier;
+use App\Models\Central\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,20 +15,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class UserCredential extends Model
 {
-    use HasFactory, UuidIdentifier;
+    use HasFactory;
 
-    protected $table = 'userCredentials';
+    protected $table = 'central_user_credentials';
 
     /**
      * Get the user that owns the credential.
      */
     public function user()
     {
-        return $this->belongsTo(User::class, null, 'UserID');
-    }
-
-    public function getRelationshipToPrimaryModel(): string
-    {
-        return 'user';
+        return $this->belongsTo(User::class);
     }
 }

@@ -18,7 +18,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function show()
     {
-        return Inertia::render('Auth/ConfirmPassword');
+        return Inertia::render('CentralAuth/ConfirmPassword');
     }
 
     /**
@@ -29,7 +29,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function store(Request $request)
     {
-        if (! Auth::guard('web')->validate([
+        if (! Auth::guard('central')->validate([
             'email' => $request->user()->email,
             'password' => $request->password,
         ])) {

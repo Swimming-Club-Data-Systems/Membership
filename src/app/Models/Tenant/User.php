@@ -193,7 +193,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get the WebAuthn User Credentials for the user.
+     * Get the additional emails for the user.
      */
     public function notifyAdditionalEmails(): HasMany
     {
