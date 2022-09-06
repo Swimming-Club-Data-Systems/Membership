@@ -11,15 +11,15 @@ const Layout = (props) => {
     const navigation = [
         {
             name: "Profile",
-            href: route("my_account.profile"),
+            href: route("central.my_account.profile"),
             icon: UserCircleIcon,
-            current: route().current("my_account.profile"),
+            current: route().current("central.my_account.profile"),
         },
         {
             name: "Password & Security",
-            href: route("my_account.security"),
+            href: route("central.my_account.security"),
             icon: KeyIcon,
-            current: route().current("my_account.security"),
+            current: route().current("central.my_account.security"),
         },
         // {
         //     name: "Advanced Options",

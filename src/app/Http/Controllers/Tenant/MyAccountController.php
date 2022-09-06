@@ -7,25 +7,25 @@ use App\Business\Helpers\Countries;
 use App\Business\Helpers\PhoneNumber;
 use App\Http\Controllers\Controller;
 use App\Mail\VerifyNotifyAdditionalEmail;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\NotifyCategory;
 use App\Models\Tenant\User;
 use App\Rules\ValidPhone;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
+use PragmaRX\Google2FA\Google2FA;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Webauthn\PublicKeyCredentialSource;
-use Illuminate\Validation\Rules;
 
 class MyAccountController extends Controller
 {
@@ -40,9 +40,10 @@ class MyAccountController extends Controller
         $this->middleware('password.confirm');
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
-        return Inertia::render('MyAccount/Index', []);
+        return redirect(route('my_account.profile'));
+        // return Inertia::render('MyAccount/Index', []);
     }
 
     public function profile(Request $request): Response
@@ -291,8 +292,12 @@ class MyAccountController extends Controller
             ];
         }
 
+        $hasTotp = (bool)$user->getOption('hasGoogleAuth2FA');
+        // $user->getOption('GoogleAuth2FASecret');
+
         return Inertia::render('MyAccount/Password', [
             'passkeys' => $passkeys,
+            'has_totp' => $hasTotp,
         ]);
     }
 
@@ -324,5 +329,78 @@ class MyAccountController extends Controller
     {
         return Inertia::render('', []);
     }
+
+    public function createTOTP(Request $request)
+    {
+        // Check
+        /** @var User $user */
+        $user = Auth::user();
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        // If the user has totp already, alert user we'll be replacing the old one
+        $hasTotp = (bool)$user->getOption('hasGoogleAuth2FA');
+
+        $g2fa = new Google2FA();
+
+        $key = $g2fa->generateSecretKey();
+
+        $request->session()->put('2fa_key', $key);
+
+        $url = $g2fa->getQRCodeUrl($tenant->getOption('CLUB_NAME'), $user->EmailAddress, $key);
+
+        QrCode::generate('Make me into a QrCode!');
+
+        $qr = QrCode::size(100)->format('png')->generate($url);
+        $qr2x = QrCode::size(200)->format('png')->generate($url);
+        $qr3x = QrCode::size(300)->format('png')->generate($url);
+
+        $img = 'data:image/png;base64,' . base64_encode($qr);
+        $img2x = 'data:image/png;base64,' . base64_encode($qr2x);
+        $img3x = 'data:image/png;base64,' . base64_encode($qr3x);
+
+        return response()->json([
+            'has_totp' => $hasTotp,
+            'key' => $key,
+            'url' => $url,
+            'image' => $img,
+            'image2x' => $img2x,
+            'image3x' => $img3x,
+        ]);
+    }
+
+    public function saveTOTP(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => [
+                'required',
+                'min:6',
+                'max:6',
+            ],
+        ]);
+
+        $key = $request->session()->get('2fa_key');
+        if (!$key) {
+            $request->session()->flash('flash_bag.totp_modal.error', 'Please request a TOTP key first.');
+            return Redirect::route('my_account.security');
+        }
+
+        $g2fa = new Google2FA();
+        $valid = $g2fa->verifyKey($key, $request->input('code'));
+
+        if (!$valid) {
+            $request->session()->flash('flash_bag.totp_modal.error', 'You entered an invalid authentication code.');
+            return Redirect::route('my_account.security');
+        }
+
+        $request->session()->flash('flash_bag.totp.success', 'You entered an invalid authentication code.');
+        return Redirect::route('my_account.security');
+    }
+//
+//    public function saveTOTP()
+//    {
+//
+//    }
 
 }

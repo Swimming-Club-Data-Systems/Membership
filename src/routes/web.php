@@ -19,21 +19,20 @@ use Inertia\Inertia;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
-        'canLogin' => Route::has('central.login'),
-        'canRegister' => Route::has('central.register'),
+        'canLogin' => Route::has('central.login') && !Auth::guard('central')->check(),
+        'canRegister' => false,
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
 
-Route::middleware('auth:central')->group(function() {
-    Route::get('/test', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('central.login'),
-            'canRegister' => Route::has('central.register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+Route::middleware('auth:central')->group(function () {
+    Route::name('central.')->group(function () {
+        Route::prefix('system-administration')->group(function () {
+            Route::name('admin.')->group(function () {
+                Route::get('/', [MyAccountController::class, 'index'])->name('index');
+            });
+        });
     });
 
     Route::name('central.')->group(function () {

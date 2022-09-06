@@ -93,9 +93,11 @@ const Modal = ({
                                         </div>
                                     </div>
                                 </div>
-                                <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse gap-4">
-                                    {props.buttons}
-                                </div>
+                                {props.buttons && (
+                                    <div className="mt-5 sm:mt-4 flex flex-row-reverse justify-center sm:justify-start gap-4">
+                                        {props.buttons}
+                                    </div>
+                                )}
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>

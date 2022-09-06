@@ -23,6 +23,7 @@
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1.0",
         "pragmarx/google2fa": "^8.0",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "stancl/tenancy": "^3.5",
         "stripe/stripe-php": "^9.0",
         "symfony/intl": "^6.1",

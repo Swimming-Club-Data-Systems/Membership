@@ -1,4 +1,6 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { apiCount } from "@/Reducers/store";
 
 const Button = ({
     type = "submit",
@@ -28,6 +30,8 @@ const Button = ({
             break;
     }
 
+    const count = useSelector(apiCount);
+
     return (
         <button
             type={type}
@@ -35,7 +39,7 @@ const Button = ({
                 `inline-flex justify-center rounded-md border py-2 px-4 text-sm font-medium shadow-sm ${variantStyle} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none ` +
                 className
             }
-            disabled={props.disabled}
+            disabled={props.disabled || count > 0}
             {...props}
         >
             {children}

@@ -2,30 +2,19 @@
 
 namespace App\Http\Controllers\Central;
 
-use App\Business\Helpers\Address;
-use App\Business\Helpers\Countries;
-use App\Business\Helpers\PhoneNumber;
 use App\Http\Controllers\Controller;
-use App\Mail\VerifyNotifyAdditionalEmail;
-use App\Models\Tenant\NotifyCategory;
-use App\Models\Tenant\User;
-use App\Rules\ValidPhone;
-use Illuminate\Auth\Events\PasswordReset;
+use App\Models\Central\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 use Webauthn\PublicKeyCredentialSource;
-use Illuminate\Validation\Rules;
 
 class MyAccountController extends Controller
 {
@@ -36,13 +25,13 @@ class MyAccountController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
         $this->middleware('password.confirm');
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request): \Illuminate\Routing\Redirector|\Illuminate\Contracts\Foundation\Application|RedirectResponse
     {
-        return Inertia::render('MyAccount/Index', []);
+        return redirect(route('central.my_account.profile'));
+        // return Inertia::render('MyAccount/Index', []);
     }
 
     public function profile(Request $request): Response

@@ -32,22 +32,9 @@ export const SubmissionButtons = (props) => {
                     <strong>{Object.keys(errors).length} errors</strong>
                 </p>
             )}
-            <div className="text-right">
-                {!formSpecialContext.hideClear && (
-                    <>
-                        <Button
-                            type="button"
-                            onClick={clearForm}
-                            disabled={isSubmitting || !dirty}
-                            variant="secondary"
-                        >
-                            {formSpecialContext.clearTitle || "Clear"}
-                        </Button>{" "}
-                    </>
-                )}
-
+            <div className="flex flex-row-reverse gap-4">
                 <Button
-                    className={formSpecialContext.submitClass}
+                    className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
                     type="submit"
                     disabled={
                         (!dirty && !formSpecialContext.alwaysDirty) ||
@@ -57,6 +44,23 @@ export const SubmissionButtons = (props) => {
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>
+
+                {!formSpecialContext.hideClear && (
+                    <>
+                        <Button
+                            type="button"
+                            onClick={clearForm}
+                            disabled={
+                                isSubmitting ||
+                                (!dirty && !formSpecialContext.alwaysClearable)
+                            }
+                            variant="secondary"
+                            className="inline-flex justify-center"
+                        >
+                            {formSpecialContext.clearTitle || "Clear"}
+                        </Button>{" "}
+                    </>
+                )}
             </div>
         </>
     );
@@ -120,6 +124,7 @@ const Form = (props) => {
         hideErrors,
         clearTitle,
         onClear,
+        alwaysClearable = false,
         hideDefaultButtons = false,
         removeDefaultInputMargin,
         action,
@@ -163,6 +168,7 @@ const Form = (props) => {
                 removeDefaultInputMargin: removeDefaultInputMargin,
                 formName: formName,
                 alwaysDirty: alwaysDirty,
+                alwaysClearable: alwaysClearable,
             }}
         >
             <Formik
@@ -179,12 +185,14 @@ const Form = (props) => {
                     {props.children}
 
                     {!hideDefaultButtons && (
-                        <SubmissionButtons
-                            submitTitle={submitTitle}
-                            hideClear={hideClear}
-                            clearTitle={clearTitle}
-                            onClear={onClear}
-                        />
+                        <div className="mt-5 sm:mt-4">
+                            <SubmissionButtons
+                                submitTitle={submitTitle}
+                                hideClear={hideClear}
+                                clearTitle={clearTitle}
+                                onClear={onClear}
+                            />
+                        </div>
                     )}
                 </FormikForm>
             </Formik>

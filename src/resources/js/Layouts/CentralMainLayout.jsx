@@ -44,7 +44,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
     const userObject = usePage().props.auth.user;
 
     const user = {
-        name: `${userObject.Forename} ${userObject.Surname}`,
+        name: `${userObject.first_name} ${userObject.last_name}`,
         email: userObject.EmailAddress,
         imageUrl: userObject.gravitar_url,
     };
