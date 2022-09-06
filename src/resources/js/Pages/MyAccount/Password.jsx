@@ -16,7 +16,6 @@ import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 import { useRegistration } from "@web-auth/webauthn-helper";
 import Alert from "@/Components/Alert";
-import Checkbox from "@/Components/Form/Checkbox";
 import { ShieldCheckIcon } from "@heroicons/react/outline";
 import A from "@/Components/A";
 import axios from "@/Utils/axios";
@@ -27,6 +26,7 @@ const Password = (props) => {
     const [showTotpModal, setShowTotpModal] = useState(false);
     const [totpModalData, setTotpModalData] = useState(null);
     const [error, setError] = useState(null);
+    const [showDisableTotpModal, setShowDisableTotpModal] = useState(false);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -73,17 +73,13 @@ const Password = (props) => {
         try {
             Inertia.post(route("my_account.save_totp"), values, {
                 onSuccess: (arg) => {
-                    console.log(arg);
+                    if (arg.props.has_totp) {
+                        setShowTotpModal(false);
+                    }
                     formikBag.resetForm();
-                    setShowTotpModal(false);
                 },
                 preserveScroll: true,
             });
-
-            // Inertia.reload({
-            //     only: ["passkeys", "flash"],
-            //     preserveScroll: true,
-            // });
         } catch (error) {
             // setError(error.message);
         }
@@ -94,7 +90,7 @@ const Password = (props) => {
             route("my_account.webauthn_delete", deleteModalData.id),
             {
                 preserveScroll: true,
-                onSuccess: (page) => {
+                onFinish: (page) => {
                     setShowDeleteModal(false);
                 },
             }
@@ -103,14 +99,32 @@ const Password = (props) => {
 
     const loadAndShowTotp = async () => {
         let result = await axios.get(route("my_account.create_totp"));
-
         setTotpModalData(result.data);
-
         setShowTotpModal(true);
     };
 
     const closeTotp = () => {
         setShowTotpModal(false);
+        Inertia.get(
+            route("my_account.security"),
+            {},
+            {
+                preserveScroll: true,
+                preserveState: true,
+                only: ["flash"],
+            }
+        );
+    };
+
+    const disableTotp = () => {
+        Inertia.delete(route("my_account.delete_totp"), {
+            preserveScroll: true,
+            preserveState: true,
+            only: ["flash", "has_totp"],
+            onSuccess: () => {
+                setShowDisableTotpModal(false);
+            },
+        });
     };
 
     const hasTotp = props.has_totp;
@@ -120,7 +134,7 @@ const Password = (props) => {
                 <Button
                     type="button"
                     variant="danger"
-                    onClick={() => setShowTotpModal(false)}
+                    onClick={() => setShowDisableTotpModal(true)}
                 >
                     Disable authenticator app
                 </Button>
@@ -360,14 +374,25 @@ const Password = (props) => {
                     <FlashAlert bag="totp" className="mb-4" />
 
                     {hasTotp && (
-                        <div className="grid grid-cols-6 gap-6">
-                            <div className="col-span-6 sm:col-span-4">
-                                <Checkbox
-                                    name="use_totp"
-                                    label="Use an authenticator app"
-                                />
-                            </div>
-                        </div>
+                        <>
+                            <p className="text-sm mb-4">
+                                You can disable your two-factor authenticator
+                                app at any time. If you do, we&apos;ll go back
+                                to sending you authentication codes by email.
+                            </p>
+
+                            <p className="text-sm mb-4">
+                                If you want to enable your two-factor
+                                authenticator app again, you&apos;ll need to
+                                complete the set up process again.
+                            </p>
+
+                            <p className="text-sm">
+                                You can still receive authentication codes by
+                                email at any time, for example if you don&apos;t
+                                have your authenticator app to hand.
+                            </p>
+                        </>
                     )}
 
                     {!hasTotp && (
@@ -394,8 +419,7 @@ const Password = (props) => {
 
                 <Modal
                     show={showTotpModal}
-                    onClose={() => setShowTotpModal(false)}
-                    // variant="danger"
+                    onClose={closeTotp}
                     Icon={ShieldCheckIcon}
                     title="Set up authenticator app"
                 >
@@ -415,13 +439,11 @@ const Password = (props) => {
                                     "Authentication codes are 6 digits"
                                 ),
                         })}
-                        //action={route("my_account.save_totp")}
                         onSubmit={handleTotpSave}
                         submitTitle="Confirm code"
                         clearTitle="Cancel"
                         hideErrors
                         removeDefaultInputMargin
-                        //method="post"
                         alwaysDirty
                         onClear={closeTotp}
                         alwaysClearable
@@ -459,6 +481,31 @@ const Password = (props) => {
                             </div>
                         )}
                     </Form>
+                </Modal>
+
+                <Modal
+                    show={showDisableTotpModal}
+                    onClose={() => setShowDisableTotpModal(false)}
+                    variant="danger"
+                    title="Disable your two-factor authenticator app"
+                    buttons={
+                        <>
+                            <Button variant="danger" onClick={disableTotp}>
+                                Confirm
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowDisableTotpModal(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    }
+                >
+                    <p>
+                        Are you sure you want to disable your two-factor
+                        authenticator app?
+                    </p>
                 </Modal>
             </div>
         </>

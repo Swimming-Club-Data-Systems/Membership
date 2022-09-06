@@ -293,7 +293,6 @@ class MyAccountController extends Controller
         }
 
         $hasTotp = (bool)$user->getOption('hasGoogleAuth2FA');
-        // $user->getOption('GoogleAuth2FASecret');
 
         return Inertia::render('MyAccount/Password', [
             'passkeys' => $passkeys,
@@ -380,7 +379,7 @@ class MyAccountController extends Controller
             ],
         ]);
 
-        $key = $request->session()->get('2fa_key');
+        $key = $request->session()->pull('2fa_key');
         if (!$key) {
             $request->session()->flash('flash_bag.totp_modal.error', 'Please request a TOTP key first.');
             return Redirect::route('my_account.security');
@@ -394,13 +393,25 @@ class MyAccountController extends Controller
             return Redirect::route('my_account.security');
         }
 
-        $request->session()->flash('flash_bag.totp.success', 'You entered an invalid authentication code.');
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->setOption('hasGoogleAuth2FA', true);
+        $user->setOption('GoogleAuth2FASecret', $key);
+
+        $request->session()->flash('flash_bag.totp.success', 'You have set up your Time-based One-Time Password application.');
         return Redirect::route('my_account.security');
     }
-//
-//    public function saveTOTP()
-//    {
-//
-//    }
+
+    public function deleteTOTP(Request $request) {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $user->setOption('hasGoogleAuth2FA', false);
+        $user->setOption('GoogleAuth2FASecret', null);
+
+        $request->session()->flash('flash_bag.totp.success', 'Your two-factor authentication app has now been disabled.');
+        return Redirect::route('my_account.security');
+    }
 
 }

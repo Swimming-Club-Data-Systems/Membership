@@ -132,6 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         // Create or update
         $option = $this->userOptions()->where('Option', $key)->firstOrNew();
+        $option->Option = $key;
         $option->Value = $value;
         $option->save();
 

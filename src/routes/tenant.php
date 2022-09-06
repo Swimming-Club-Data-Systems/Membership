@@ -96,8 +96,9 @@ Route::middleware([
             Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
             Route::put('/password-and-security', [MyAccountController::class, 'savePassword']);
 
-            Route::get('/totp/keys', [MyAccountController::class, 'createTOTP'])->name('create_totp');
-            Route::post('/totp/verify', [MyAccountController::class, 'saveTOTP'])->name('save_totp');
+            Route::get('/totp', [MyAccountController::class, 'createTOTP'])->name('create_totp');
+            Route::post('/totp', [MyAccountController::class, 'saveTOTP'])->name('save_totp');
+            Route::delete('/totp', [MyAccountController::class, 'deleteTOTP'])->name('delete_totp');
 
             Route::post('/webauthn/register', [WebauthnRegistrationController::class, 'verify'])->name('webauthn_verify');
             Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
