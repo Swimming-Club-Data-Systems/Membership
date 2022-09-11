@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Business\Helpers\Mailable;
 use App\Models\Tenant\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class VerifyNotifyAdditionalEmail extends Mailable
@@ -59,6 +59,6 @@ class VerifyNotifyAdditionalEmail extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.users.verify_notify_aditional_email');
+        return $this->setDefaultFromAndReply()->markdown('emails.users.verify_notify_aditional_email');
     }
 }

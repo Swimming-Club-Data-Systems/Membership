@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Business\Helpers\Mailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Tenant\User;
 
@@ -14,21 +14,21 @@ class UserLoginTwoFactorCode extends Mailable
 
     /**
      * The user instance
-     * 
+     *
      * @var \App\Models\Tenant\User
      */
     public $user;
 
     /**
      * The login auth code
-     * 
+     *
      * @var $code
      */
     public $code;
 
     /**
      * Create a new message instance.
-     * 
+     *
      * @param \App\Models\Tenant\User $user the logging in user
      *
      * @return void
@@ -46,6 +46,6 @@ class UserLoginTwoFactorCode extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.users.login_two_factor_code');
+        return $this->setDefaultFromAndReply()->markdown('emails.users.login_two_factor_code');
     }
 }

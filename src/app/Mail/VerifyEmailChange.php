@@ -2,9 +2,9 @@
 
 namespace App\Mail;
 
+use App\Business\Helpers\Mailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Tenant\User;
 
@@ -52,6 +52,6 @@ class VerifyEmailChange extends Mailable
      */
     public function build()
     {
-        return $this->markdown('emails.users.verify_email_change');
+        return $this->setDefaultFromAndReply()->markdown('emails.users.verify_email_change');
     }
 }
