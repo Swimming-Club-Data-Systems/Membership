@@ -10,59 +10,62 @@ use App\Models\Tenant\User;
  */
 class AppMenu
 {
-    public static function asArray(User $user): array
+    public static function asArray(User|null $user): array
     {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Members',
-            'href' => '/members',
-        ];
+        if ($user) {
 
-        $menu[] = [
-            'name' => 'Squads',
-            'href' => '/squads',
-        ];
-
-        if ($user->hasPermission(['Admin', 'Coach', 'Committee'])) {
             $menu[] = [
-                'name' => 'Registers',
-                'href' => '/attendance',
+                'name' => 'Members',
+                'href' => '/members',
             ];
-        } else {
+
             $menu[] = [
-                'name' => 'Timetable',
-                'href' => '/timetable',
+                'name' => 'Squads',
+                'href' => '/squads',
             ];
-        }
 
-        $menu[] = [
-            'name' => 'Galas',
-            'href' => '/galas',
-        ];
+            if ($user->hasPermission(['Admin', 'Coach', 'Committee'])) {
+                $menu[] = [
+                    'name' => 'Registers',
+                    'href' => '/attendance',
+                ];
+            } else {
+                $menu[] = [
+                    'name' => 'Timetable',
+                    'href' => '/timetable',
+                ];
+            }
 
-        $menu[] = [
-            'name' => 'Payments',
-            'href' => '/payments',
-        ];
-
-        $menu[] = [
-            'name' => 'Notify',
-            'href' => '/notify',
-        ];
-
-        if ($user->hasPermission(['Admin', 'Galas'])) {
             $menu[] = [
-                'name' => 'Users',
-                'href' => '/users',
+                'name' => 'Galas',
+                'href' => '/galas',
             ];
-        }
 
-        if ($user->hasPermission('Admin')) {
             $menu[] = [
-                'name' => 'Admin',
-                'href' => '/admin',
+                'name' => 'Payments',
+                'href' => '/payments',
             ];
+
+            $menu[] = [
+                'name' => 'Notify',
+                'href' => '/notify',
+            ];
+
+            if ($user->hasPermission(['Admin', 'Galas'])) {
+                $menu[] = [
+                    'name' => 'Users',
+                    'href' => '/users',
+                ];
+            }
+
+            if ($user->hasPermission('Admin')) {
+                $menu[] = [
+                    'name' => 'Admin',
+                    'href' => '/admin',
+                ];
+            }
         }
 
         return $menu;

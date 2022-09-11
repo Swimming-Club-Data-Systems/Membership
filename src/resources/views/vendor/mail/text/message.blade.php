@@ -2,7 +2,11 @@
     {{-- Header --}}
     @slot('header')
         @component('mail::header', ['url' => config('app.url')])
-            {{ config('app.name') }}
+            @if (tenant())
+                {{ tenant()->getOption("CLUB_NAME") }}
+            @else
+                {{ config('app.name') }}
+            @endif
         @endcomponent
     @endslot
 
@@ -18,10 +22,18 @@
         @endslot
     @endisset
 
-    {{-- Footer --}}
-    @slot('footer')
-        @component('mail::footer')
-            © {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')
-        @endcomponent
-    @endslot
+{{-- Footer --}}
+@slot('footer')
+@component('mail::footer')
+@if (tenant())
+Provided to {{ tenant()->getOption("CLUB_NAME") }} by SCDS.
+
+Control your email options in [My Account]({{ route("my_account.email") }}).
+@endif
+
+Unwanted email? Report mail abuse via https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u
+
+© {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved')
+@endcomponent
+@endslot
 @endcomponent

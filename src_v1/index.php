@@ -194,6 +194,8 @@ function halt(int $statusCode, $throwException = true)
   try {
     if ($statusCode == 000) {
       require "views/000.php";
+    } else if ($statusCode == 1) {
+        require "views/001.php";
     } else if ($statusCode == 200) {
       require "views/200.php";
     } else if ($statusCode == 400) {

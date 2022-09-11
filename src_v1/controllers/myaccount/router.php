@@ -2,24 +2,24 @@
 
 // My Account
 $this->get('/', function () {
-	include 'Profile.php';
+    halt(1);
 });
 
 $this->post('/', function () {
-	include 'Profile.php';
+    halt(1);
 });
 
 // Manage Password
 $this->get('/password', function () {
-	require 'change-password.php';
+    halt(1);
 });
 
 $this->post('/password', function () {
-	require 'change-password-action.php';
+    halt(1);
 });
 
 $this->get('/security-keys', function () {
-	require 'WebAuthn/home.php';
+    halt(1);
 });
 
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
@@ -43,7 +43,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
 }
 
 $this->get(['login-history/', 'loginhistory/'], function ($page = null) {
-	include 'LoginHistory.php';
+	halt(1);
 });
 
 $this->group('/email', function () {
