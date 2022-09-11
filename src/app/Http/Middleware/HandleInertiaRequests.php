@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Business\Helpers\AppMenu;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -44,7 +45,7 @@ class HandleInertiaRequests extends Middleware
                     'location' => $request->url(),
                 ]);
             },
-            'tenant' => function () {
+            'tenant' => function () use ($request) {
                 $tenant = tenant();
                 if ($tenant) {
                     return [
@@ -55,6 +56,7 @@ class HandleInertiaRequests extends Middleware
                         'asa_county' => $tenant->getOption("ASA_COUNTY"),
                         'website' => $tenant->getOption("CLUB_WEBSITE"),
                         'club_logo_url' => $tenant->getOption("LOGO_DIR") ? getUploadedAssetUrl($tenant->getOption("LOGO_DIR")) : asset('/img/corporate/scds.svg'),
+                        'menu' => AppMenu::asArray($request->user()),
                     ];
                 }
                 return null;

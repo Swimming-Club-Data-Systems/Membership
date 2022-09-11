@@ -7,6 +7,7 @@ use App\Mail\VerifyEmailChange;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +20,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
-use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property int $UserID
@@ -39,6 +39,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     protected bool $configOptionsCached = false;
     protected array $configOptions = [];
+    protected bool $permissionsCached = false;
+    protected array $permissionsCache = [];
 
     /**
      * The attributes that are mass assignable.
@@ -208,6 +210,27 @@ class User extends Authenticatable implements MustVerifyEmail
     public function permissions(): HasMany
     {
         return $this->hasMany(Permission::class, 'User');
+    }
+
+    public function hasPermission(string|array $name)
+    {
+        // Fetch cache
+        if (!$this->permissionsCached) {
+            foreach ($this->permissions()->get() as $permission) {
+                $this->permissionsCache[$permission->Permission] = true;
+            }
+            $this->permissionsCached = true;
+        }
+
+        if (gettype($name) == 'string') {
+            if (isset($this->permissionsCache[$name])) {
+                return $this->permissionsCache[$name];
+            }
+        } else if (gettype($name) == 'array') {
+            return in_array($name, $this->permissionsCache);
+        }
+
+        return false;
     }
 
     /**

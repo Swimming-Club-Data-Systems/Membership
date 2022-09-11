@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Tenant\NotifyAdditionalEmail;
+use App\Models\Tenant\User;
 use App\Policies\Tenant\NotifyAdditionalEmailPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
