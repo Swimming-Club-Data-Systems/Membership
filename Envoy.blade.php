@@ -9,6 +9,7 @@
     $release = date('YmdHis');
     $new_release_dir = $releases_dir .'/'. $release;
     $v1_dir = $new_release_dir . '/src_v1';
+    $docs = $new_release_dir . '/docs';
     $v2_dir = $new_release_dir . '/src';
 @endsetup
 
@@ -18,6 +19,7 @@
     v1_run_composer
     v2_build_front_end
     v1_build_front_end
+    build_docs
     update_symlinks
     v2_cache
     update_current
@@ -65,6 +67,14 @@
     php artisan config:cache
     php artisan route:cache
     php artisan view:cache
+@endtask
+
+@task('build_docs')
+    echo "Documentation Install and Build ({{ $release }})"
+    cd {{ $docs }}
+    npx browserslist@latest --update-db
+    npm install
+    npm run build
 @endtask
 
 @task('update_symlinks')
