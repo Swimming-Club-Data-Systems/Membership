@@ -31,12 +31,16 @@ const MainHeader = (props) => {
                     </div>
                 </div> */}
                     <div>
-                        <h1 className="text-2xl font-bold text-gray-900">
-                            {props.title}
-                        </h1>
-                        <p className="text-sm font-medium text-gray-500">
-                            {props.subtitle}
-                        </p>
+                        {props.title && (
+                            <h1 className="text-2xl font-bold text-gray-900">
+                                {props.title}
+                            </h1>
+                        )}
+                        {props.subtitle && (
+                            <p className="text-sm font-medium text-gray-500">
+                                {props.subtitle}
+                            </p>
+                        )}
                     </div>
                 </div>
                 {buttons}

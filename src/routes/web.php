@@ -18,7 +18,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Central/Index', [
         'canLogin' => Route::has('central.login') && !Auth::guard('central')->check(),
         'canRegister' => false,
         'laravelVersion' => Application::VERSION,

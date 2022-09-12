@@ -24,7 +24,11 @@ import { Link, usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
 
-const navigation = [{ name: "Admin", href: "/admin" }];
+const navigation = [
+    { name: "Clubs", href: "/clubs" },
+    { name: "Help and Support", href: "https://docs.myswimmingclub.uk/" },
+    { name: "Admin", href: "/admin" },
+];
 const breadcrumbs = [
     { name: "Jobs", href: "#", current: false },
     { name: "Front End Developer", href: "#", current: false },
@@ -43,11 +47,13 @@ function classNames(...classes) {
 const CentralMainLayout = ({ title, subtitle, children }) => {
     const userObject = usePage().props.auth.user;
 
-    const user = {
-        name: `${userObject.first_name} ${userObject.last_name}`,
-        email: userObject.EmailAddress,
-        imageUrl: userObject.gravitar_url,
-    };
+    const user = userObject
+        ? {
+              name: `${userObject.first_name} ${userObject.last_name}`,
+              email: userObject.EmailAddress,
+              imageUrl: userObject.gravitar_url,
+          }
+        : null;
 
     return (
         <>
@@ -184,27 +190,28 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <div className="pt-4 pb-2">
-                                                    <div className="flex items-center px-5">
-                                                        <div className="flex-shrink-0">
-                                                            <img
-                                                                className="h-10 w-10 rounded-full"
-                                                                src={
-                                                                    user.imageUrl
-                                                                }
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <div className="ml-3">
-                                                            <div className="text-base font-medium text-gray-800">
-                                                                {user.name}
+                                                {user && (
+                                                    <div className="pt-4 pb-2">
+                                                        <div className="flex items-center px-5">
+                                                            <div className="flex-shrink-0">
+                                                                <img
+                                                                    className="h-10 w-10 rounded-full"
+                                                                    src={
+                                                                        user.imageUrl
+                                                                    }
+                                                                    alt=""
+                                                                />
                                                             </div>
-                                                            <div className="text-sm font-medium text-gray-500">
-                                                                {user.email}
+                                                            <div className="ml-3">
+                                                                <div className="text-base font-medium text-gray-800">
+                                                                    {user.name}
+                                                                </div>
+                                                                <div className="text-sm font-medium text-gray-500">
+                                                                    {user.email}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        {/* We don't have notifications yet */}
-                                                        {/* <button
+                                                            {/* We don't have notifications yet */}
+                                                            {/* <button
                                                             type="button"
                                                             className="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                                                         >
@@ -217,28 +224,31 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                 aria-hidden="true"
                                                             />
                                                         </button> */}
+                                                        </div>
+                                                        <div className="mt-3 px-2 space-y-1">
+                                                            {userNavigation.map(
+                                                                (item) => (
+                                                                    <Link
+                                                                        key={
+                                                                            item.name
+                                                                        }
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                                                                        method={
+                                                                            item.method
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </Link>
+                                                                )
+                                                            )}
+                                                        </div>
                                                     </div>
-                                                    <div className="mt-3 px-2 space-y-1">
-                                                        {userNavigation.map(
-                                                            (item) => (
-                                                                <Link
-                                                                    key={
-                                                                        item.name
-                                                                    }
-                                                                    href={
-                                                                        item.href
-                                                                    }
-                                                                    className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
-                                                                    method={
-                                                                        item.method
-                                                                    }
-                                                                >
-                                                                    {item.name}
-                                                                </Link>
-                                                            )
-                                                        )}
-                                                    </div>
-                                                </div>
+                                                )}
                                             </div>
                                         </Popover.Panel>
                                     </Transition.Child>
@@ -260,53 +270,57 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                 </button> */}
 
                                 {/* Profile dropdown */}
-                                <Menu
-                                    as="div"
-                                    className="ml-4 relative flex-shrink-0"
-                                >
-                                    <div>
-                                        <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                            <span className="sr-only">
-                                                Open user menu
-                                            </span>
-                                            <img
-                                                className="h-8 w-8 rounded-full"
-                                                src={user.imageUrl}
-                                                alt=""
-                                            />
-                                        </Menu.Button>
-                                    </div>
-                                    <Transition
-                                        as={Fragment}
-                                        enter="transition ease-out duration-100"
-                                        enterFrom="transform opacity-0 scale-95"
-                                        enterTo="transform opacity-100 scale-100"
-                                        leave="transition ease-in duration-75"
-                                        leaveFrom="transform opacity-100 scale-100"
-                                        leaveTo="transform opacity-0 scale-95"
+                                {user && (
+                                    <Menu
+                                        as="div"
+                                        className="ml-4 relative flex-shrink-0"
                                     >
-                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            {userNavigation.map((item) => (
-                                                <Menu.Item key={item.name}>
-                                                    {({ active }) => (
-                                                        <Link
-                                                            href={item.href}
-                                                            className={classNames(
-                                                                active
-                                                                    ? "bg-gray-100"
-                                                                    : "",
-                                                                "block px-4 py-2 text-sm text-gray-700"
-                                                            )}
-                                                            method={item.method}
-                                                        >
-                                                            {item.name}
-                                                        </Link>
-                                                    )}
-                                                </Menu.Item>
-                                            ))}
-                                        </Menu.Items>
-                                    </Transition>
-                                </Menu>
+                                        <div>
+                                            <Menu.Button className="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                <span className="sr-only">
+                                                    Open user menu
+                                                </span>
+                                                <img
+                                                    className="h-8 w-8 rounded-full"
+                                                    src={user.imageUrl}
+                                                    alt=""
+                                                />
+                                            </Menu.Button>
+                                        </div>
+                                        <Transition
+                                            as={Fragment}
+                                            enter="transition ease-out duration-100"
+                                            enterFrom="transform opacity-0 scale-95"
+                                            enterTo="transform opacity-100 scale-100"
+                                            leave="transition ease-in duration-75"
+                                            leaveFrom="transform opacity-100 scale-100"
+                                            leaveTo="transform opacity-0 scale-95"
+                                        >
+                                            <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                {userNavigation.map((item) => (
+                                                    <Menu.Item key={item.name}>
+                                                        {({ active }) => (
+                                                            <Link
+                                                                href={item.href}
+                                                                className={classNames(
+                                                                    active
+                                                                        ? "bg-gray-100"
+                                                                        : "",
+                                                                    "block px-4 py-2 text-sm text-gray-700"
+                                                                )}
+                                                                method={
+                                                                    item.method
+                                                                }
+                                                            >
+                                                                {item.name}
+                                                            </Link>
+                                                        )}
+                                                    </Menu.Item>
+                                                ))}
+                                            </Menu.Items>
+                                        </Transition>
+                                    </Menu>
+                                )}
                             </div>
                         </Popover>
                     </Container>
