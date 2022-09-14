@@ -1,19 +1,3 @@
-/*
-  This example requires Tailwind CSS v2.0+
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import { ArrowNarrowLeftIcon, HomeIcon } from "@heroicons/react/solid";
@@ -26,7 +10,11 @@ import Container from "@/Components/Container";
 
 const navigation = [
     { name: "Clubs", href: "/clubs" },
-    { name: "Help and Support", href: "https://docs.myswimmingclub.uk/" },
+    {
+        name: "Help and Support",
+        href: "https://docs.myswimmingclub.uk/",
+        external: true,
+    },
     { name: "Admin", href: "/admin" },
 ];
 const breadcrumbs = [
@@ -79,15 +67,28 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                     aria-label="Global"
                                     className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4"
                                 >
-                                    {navigation.map((item) => (
-                                        <Link
-                                            key={item.name}
-                                            href={item.href}
-                                            className="px-3 py-2 text-gray-900 text-sm font-medium"
-                                        >
-                                            {item.name}
-                                        </Link>
-                                    ))}
+                                    {navigation.map((item) => {
+                                        if (item.external) {
+                                            return (
+                                                <a
+                                                    key={item.name}
+                                                    href={item.href}
+                                                    className="px-3 py-2 text-gray-900 text-sm font-medium"
+                                                >
+                                                    {item.name}
+                                                </a>
+                                            );
+                                        }
+                                        return (
+                                            <Link
+                                                key={item.name}
+                                                href={item.href}
+                                                className="px-3 py-2 text-gray-900 text-sm font-medium"
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        );
+                                    })}
                                 </nav>
                             </div>
                             {/* <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -174,19 +175,42 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                     </div>
                                                     <div className="mt-3 px-2 space-y-1">
                                                         {navigation.map(
-                                                            (item) => (
-                                                                <Link
-                                                                    key={
-                                                                        item.name
-                                                                    }
-                                                                    href={
-                                                                        item.href
-                                                                    }
-                                                                    className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
-                                                                >
-                                                                    {item.name}
-                                                                </Link>
-                                                            )
+                                                            (item) => {
+                                                                if (
+                                                                    item.external
+                                                                ) {
+                                                                    return (
+                                                                        <a
+                                                                            key={
+                                                                                item.name
+                                                                            }
+                                                                            href={
+                                                                                item.href
+                                                                            }
+                                                                            className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                                                                        >
+                                                                            {
+                                                                                item.name
+                                                                            }
+                                                                        </a>
+                                                                    );
+                                                                }
+                                                                return (
+                                                                    <Link
+                                                                        key={
+                                                                            item.name
+                                                                        }
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                                                                    >
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </Link>
+                                                                );
+                                                            }
                                                         )}
                                                     </div>
                                                 </div>

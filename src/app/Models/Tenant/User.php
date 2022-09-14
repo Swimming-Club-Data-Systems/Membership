@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
+use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -35,7 +36,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant;
+    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable;
 
     protected bool $configOptionsCached = false;
     protected array $configOptions = [];

@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
+use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
 use Illuminate\Foundation\Application;
@@ -104,6 +106,16 @@ Route::middleware([
             Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
             Route::delete('/webauthn/{credential}', [WebauthnRegistrationController::class, 'delete'])->name('webauthn_delete');
         });
+    });
+
+    Route::prefix('/members')->group(function () {
+        Route::get('/', [MemberController::class, 'index']);
+        Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
+    });
+
+    Route::prefix('/users')->group(function () {
+        Route::get('/', [UserController::class, 'index']);
+        Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
     });
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])

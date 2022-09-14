@@ -6,6 +6,7 @@ const TextInput = ({
     disabled,
     type,
     leftText,
+    rightButton,
     // rightText,
     className = "",
     ...props
@@ -30,18 +31,23 @@ const TextInput = ({
         className += " rounded-l-md ";
     }
 
+    if (!rightButton) {
+        className += " rounded-r-md ";
+    }
+
     return (
         <BaseInput
             input={
                 <input
                     disabled={isSubmitting || disabled}
-                    className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-md border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
+                    className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
                     id={controlId}
                     type={type}
                     {...field}
                     {...props}
                 />
             }
+            rightButton={rightButton}
             {...props}
         />
     );

@@ -11,6 +11,7 @@ const BaseInput = ({
     type,
     leftText,
     leftSelect,
+    rightButton,
     // rightText,
     startIcon,
     endIcon,
@@ -63,7 +64,7 @@ const BaseInput = ({
                     )}
                 </div>
 
-                <div className="relative mt-1 flex rounded-md shadow-sm">
+                <div className="relative mt-1 flex rounded-md shadow-sm focus-within:z-10">
                     {leftText && !leftSelect && (
                         <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                             {leftText}
@@ -99,12 +100,13 @@ const BaseInput = ({
                             {rightText}
                         </span>
                     )} */}
+                    {rightButton}
                 </div>
 
                 {isInvalid && (
                     <p className="mt-2 text-sm text-red-600">{meta.error}</p>
                 )}
-                
+
                 {help && <p className="mt-2 text-sm text-gray-500">{help}</p>}
             </div>
         </>

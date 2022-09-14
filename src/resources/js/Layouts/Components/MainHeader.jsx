@@ -14,7 +14,7 @@ const MainHeader = (props) => {
 
     return (
         <Container>
-            <div className="md:flex md:items-center md:justify-between md:space-x-5">
+            <div className="pb-10 md:flex md:items-center md:justify-between md:space-x-5">
                 <div className="flex items-center space-x-5">
                     {/* Optional image section */}
                     {/* <div className="flex-shrink-0">

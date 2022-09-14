@@ -42,7 +42,7 @@ const Layout = (props) => {
     ];
 
     return (
-        <Container noMargin className="my-12">
+        <Container noMargin className="mb-12">
             <div className="lg:grid lg:grid-cols-12 lg:gap-x-5">
                 <aside className="py-6 px-2 sm:px-6 lg:py-0 lg:px-0 lg:col-span-3">
                     <nav className="space-y-1">

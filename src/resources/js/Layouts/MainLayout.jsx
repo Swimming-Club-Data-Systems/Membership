@@ -23,6 +23,7 @@ import ApplicationLogo from "@/Components/ApplicationLogo";
 import { Link, usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
+import TenantLogo from "@/Components/TenantLogo";
 
 const breadcrumbs = [
     { name: "Jobs", href: "#", current: false },
@@ -67,7 +68,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                             <div className="flex px-0 lg:px-0">
                                 <div className="flex-shrink-0 flex items-center">
                                     <Link href="/">
-                                        <ApplicationLogo className="h-8 w-auto" />
+                                        <TenantLogo className="h-8 w-auto" />
                                     </Link>
                                 </div>
                                 <nav
