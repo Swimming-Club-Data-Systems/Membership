@@ -9,6 +9,7 @@ import { useFormikContext } from "formik";
 import Button from "./Button";
 import { Link } from "@inertiajs/inertia-react";
 import InternalContainer from "@/Components/InternalContainer";
+import Alert from "@/Components/Alert";
 
 const Search = (props) => {
     const url = props.path;
@@ -22,8 +23,8 @@ const Search = (props) => {
 
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
-            const searchValue = params.get("search");
-            formikProps.setFieldValue("search", searchValue);
+            const searchValue = params.get("query");
+            formikProps.setFieldValue("query", searchValue);
         }, []);
 
         return null;
@@ -36,7 +37,7 @@ const Search = (props) => {
                 type="submit"
                 variant="primary"
                 className="rounded-l-none"
-                disabled={!dirty || !isValid || isSubmitting}
+                disabled={!isValid || isSubmitting}
             >
                 Search
             </Button>
@@ -48,17 +49,17 @@ const Search = (props) => {
             <Form
                 onSubmit={handleSubmit}
                 initialValues={{
-                    search: "",
+                    query: "",
                 }}
                 validationSchema={yup.object().shape({
-                    search: yup.string().nullable().required(""),
+                    query: yup.string().nullable().required(""),
                 })}
                 hideDefaultButtons
             >
                 <SetSearchValue />
 
                 <TextInput
-                    name="search"
+                    name="query"
                     label="Search"
                     className="rounded-r-none mb-0"
                     rightButton={
@@ -97,6 +98,20 @@ const Collection = (props) => {
 
             {props.data.length > 0 && (
                 <div className="overflow-hidden bg-white shadow sm:rounded-lg">
+                    <div className="border-b border-gray-200 bg-white py-3">
+                        <InternalContainer>
+                            <p className="text-sm text-gray-700">
+                                Page{" "}
+                                <span className="font-medium">
+                                    {props.current_page}
+                                </span>{" "}
+                                of{" "}
+                                <span className="font-medium">
+                                    {props.last_page}
+                                </span>
+                            </p>
+                        </InternalContainer>
+                    </div>
                     <ul role="list" className="divide-y divide-gray-200">
                         {items}
                     </ul>
@@ -105,27 +120,29 @@ const Collection = (props) => {
             )}
 
             {props.data.length === 0 && (
-                <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:p-6 sm:pb-4 lg:rounded-lg">
-                    <div className="sm:flex sm:items-start">
-                        <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                            <ExclamationIcon
-                                className="h-6 w-6 text-red-600"
-                                aria-hidden="true"
-                            />
-                        </div>
-                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                            <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                No results
-                            </h3>
-                            <div className="mt-2">
-                                <p className="text-sm text-gray-500">
-                                    We could not find any items to match your
-                                    search.
-                                </p>
+                <>
+                    <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:p-6 sm:pb-4 lg:rounded-lg">
+                        <div className="sm:flex sm:items-start">
+                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
+                                <ExclamationIcon
+                                    className="h-6 w-6 text-red-600"
+                                    aria-hidden="true"
+                                />
+                            </div>
+                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                <h3 className="text-lg font-medium leading-6 text-gray-900">
+                                    No results
+                                </h3>
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-500">
+                                        We could not find any items to match
+                                        your search.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </>
             )}
         </>
     );

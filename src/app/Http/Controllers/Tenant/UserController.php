@@ -23,8 +23,8 @@ class UserController extends Controller
     {
         $users = null;
 
-        if ($request->search) {
-            $users = User::search($request->search)->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
+        if ($request->query('query')) {
+            $users = User::search($request->query('query'))->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
         } else {
             $users = User::orderBy('Forename', 'asc')->orderBy('Surname', 'asc')->paginate(config('app.per_page'));
         }

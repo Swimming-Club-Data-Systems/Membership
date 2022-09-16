@@ -9,13 +9,13 @@ const ItemContent = (props) => {
         <>
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
-                    {/*<div className="">*/}
-                    {/*    <img*/}
-                    {/*        className="h-8 w-8 rounded-full"*/}
-                    {/*        src={props.gravitar_url}*/}
-                    {/*        alt=""*/}
-                    {/*    />*/}
-                    {/*</div>*/}
+                    <div className="mr-4">
+                        <img
+                            className="h-8 w-8 rounded-full"
+                            src={props.gravitar_url}
+                            alt=""
+                        />
+                    </div>
                     <div>
                         <div className="truncate text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
                             {props.Forename} {props.Surname}
