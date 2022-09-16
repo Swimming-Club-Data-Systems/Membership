@@ -7,10 +7,11 @@ import TextInput from "./Form/TextInput";
 import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/inertia-react";
+import InternalContainer from "@/Components/InternalContainer";
 
 const Search = (props) => {
-    const { url } = usePage();
+    const url = props.path;
 
     const handleSubmit = (values) => {
         Inertia.get(url, values);
@@ -43,7 +44,7 @@ const Search = (props) => {
     };
 
     return (
-        <div className="px-4 sm:px-6 lg:px-0">
+        <div className="px-4 sm:px-0">
             <Form
                 onSubmit={handleSubmit}
                 initialValues={{
@@ -80,8 +81,10 @@ const Collection = (props) => {
                     href={route(props.route, item[routeIdName])}
                     className="group block hover:bg-gray-50"
                 >
-                    <div className="px-4 py-4 sm:px-6">
-                        {props.itemRenderer(item)}
+                    <div className="py-4">
+                        <InternalContainer>
+                            {props.itemRenderer(item)}
+                        </InternalContainer>
                     </div>
                 </Link>
             </li>
@@ -90,10 +93,10 @@ const Collection = (props) => {
 
     return (
         <>
-            <Search />
+            <Search path={props.path} />
 
             {props.data.length > 0 && (
-                <div className="overflow-hidden bg-white shadow lg:rounded-lg">
+                <div className="overflow-hidden bg-white shadow sm:rounded-lg">
                     <ul role="list" className="divide-y divide-gray-200">
                         {items}
                     </ul>

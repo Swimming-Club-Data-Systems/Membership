@@ -22,6 +22,7 @@
     build_docs
     update_symlinks
     v2_cache
+    post_deploy
     update_current
 @endstory
 
@@ -89,6 +90,13 @@
 @task('update_current')
     echo 'Linking current release'
     ln -nfs {{ $new_release_dir }} {{ $app_dir }}/current
+@endtask
+
+@task('post_deploy')
+    echo "V2 Post Software Deploy Tasks ({{ $release }})"
+    cd {{ $v2_dir }}
+    php artisan migrate --force
+    php artisan deploy:post
 @endtask
 
 @task('list', ['on' => 'localhost'])

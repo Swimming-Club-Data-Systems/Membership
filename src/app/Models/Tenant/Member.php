@@ -41,7 +41,17 @@ class Member extends Model
     ];
     protected $primaryKey = 'MemberID';
 
-    public function toSearchableArray()
+    /**
+     * Determine if the model should be searchable.
+     *
+     * @return bool
+     */
+    public function shouldBeSearchable()
+    {
+        return $this->Active;
+    }
+
+    public function toSearchableArray(): array
     {
         $array = $this->toArray();
 

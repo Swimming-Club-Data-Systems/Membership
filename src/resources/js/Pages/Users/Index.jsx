@@ -16,7 +16,7 @@ const ItemContent = (props) => {
                     {/*        alt=""*/}
                     {/*    />*/}
                     {/*</div>*/}
-                    <div className="ml-2">
+                    <div>
                         <div className="truncate text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
                             {props.Forename} {props.Surname}
                         </div>
@@ -36,12 +36,11 @@ const ItemContent = (props) => {
 };
 
 const Index = (props) => {
-    console.log(props);
     return (
         <>
             <Head title="Users" />
 
-            <Container>
+            <Container noMargin>
                 <Collection
                     {...props.users}
                     itemRenderer={ItemContent}

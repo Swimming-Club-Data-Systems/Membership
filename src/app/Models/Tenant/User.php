@@ -204,15 +204,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(NotifyAdditionalEmail::class, 'UserID');
     }
 
-    /**
-     * Get the user's assigned permissions
-     * @return HasMany
-     */
-    public function permissions(): HasMany
-    {
-        return $this->hasMany(Permission::class, 'User');
-    }
-
     public function hasPermission(string|array $name)
     {
         // Fetch cache
@@ -232,6 +223,15 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return false;
+    }
+
+    /**
+     * Get the user's assigned permissions
+     * @return HasMany
+     */
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class, 'User');
     }
 
     /**
@@ -286,6 +286,32 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getEmailForVerification(): string
     {
         return $this->EmailAddress;
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     *
+     * @return bool
+     */
+    public function shouldBeSearchable()
+    {
+        return $this->Active;
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $fields = [
+            'UserID',
+            'Forename',
+            'Surname',
+            'EmailAddress',
+            'Mobile',
+            'Tenant',
+        ];
+
+        return array_intersect_key($array, array_flip($fields));
     }
 
     /**
