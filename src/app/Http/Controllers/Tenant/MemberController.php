@@ -24,7 +24,7 @@ class MemberController extends Controller
     {
         $members = null;
 
-        if ($request->search) {
+        if ($request->query('query')) {
             $members = Member::search($request->query('query'))->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
         } else {
             $members = Member::orderBy('MForename', 'asc')->orderBy('MSurname', 'asc')->paginate(config('app.per_page'));
