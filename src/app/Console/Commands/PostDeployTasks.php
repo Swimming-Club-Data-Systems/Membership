@@ -29,6 +29,7 @@ class PostDeployTasks extends Command
     public function handle()
     {
         Artisan::call(UpdateMeilisearch::class);
+        Artisan::call('queue:restart');
         return 0;
     }
 }
