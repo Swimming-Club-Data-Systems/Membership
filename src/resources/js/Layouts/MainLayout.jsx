@@ -75,15 +75,87 @@ const MainLayout = ({ title, subtitle, children }) => {
                                     aria-label="Global"
                                     className="hidden lg:ml-6 lg:flex lg:items-center lg:space-x-4"
                                 >
-                                    {navigation.map((item) => (
-                                        <Link
-                                            key={item.name}
-                                            href={item.href}
-                                            className="px-3 py-2 text-gray-900 text-sm font-medium"
-                                        >
-                                            {item.name}
-                                        </Link>
-                                    ))}
+                                    {navigation.map((item) => {
+                                        if (item.children?.length > 0) {
+                                            return (
+                                                // <Link
+                                                //     key={item.name}
+                                                //     href={item.href}
+                                                //     className="px-3 py-2 text-gray-900 text-sm font-medium"
+                                                // >
+                                                //     {item.name}
+                                                // </Link>
+
+                                                <Menu
+                                                    as="div"
+                                                    className="ml-4 relative flex-shrink-0"
+                                                >
+                                                    <div>
+                                                        <Menu.Button className="px-3 py-2 text-gray-900 text-sm font-medium bg-white rounded flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                            <span className="sr-only">
+                                                                Open {item.name}{" "}
+                                                                menu
+                                                            </span>
+                                                            {item.name}
+                                                        </Menu.Button>
+                                                    </div>
+                                                    <Transition
+                                                        as={Fragment}
+                                                        enter="transition ease-out duration-100"
+                                                        enterFrom="transform opacity-0 scale-95"
+                                                        enterTo="transform opacity-100 scale-100"
+                                                        leave="transition ease-in duration-75"
+                                                        leaveFrom="transform opacity-100 scale-100"
+                                                        leaveTo="transform opacity-0 scale-95"
+                                                    >
+                                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                                            {item.children.map(
+                                                                (item) => (
+                                                                    <Menu.Item
+                                                                        key={
+                                                                            item.name
+                                                                        }
+                                                                    >
+                                                                        {({
+                                                                            active,
+                                                                        }) => (
+                                                                            <Link
+                                                                                href={
+                                                                                    item.href
+                                                                                }
+                                                                                className={classNames(
+                                                                                    active
+                                                                                        ? "bg-gray-100"
+                                                                                        : "",
+                                                                                    "block px-4 py-2 text-sm text-gray-700"
+                                                                                )}
+                                                                                method={
+                                                                                    item.method
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    item.name
+                                                                                }
+                                                                            </Link>
+                                                                        )}
+                                                                    </Menu.Item>
+                                                                )
+                                                            )}
+                                                        </Menu.Items>
+                                                    </Transition>
+                                                </Menu>
+                                            );
+                                        }
+                                        return (
+                                            <Link
+                                                key={item.name}
+                                                href={item.href}
+                                                className="px-3 py-2 text-gray-900 text-sm font-medium"
+                                            >
+                                                {item.name}
+                                            </Link>
+                                        );
+                                    })}
                                 </nav>
                             </div>
                             {/* <div className="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
