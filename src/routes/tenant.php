@@ -92,8 +92,8 @@ Route::middleware([
             Route::post('/additional-email', [MyAccountController::class, 'saveAdditionalEmail'])->name('additional_email');
             Route::delete('/additional-email', [MyAccountController::class, 'email']);
 
-            Route::get('/advanced-options', [MyAccountController::class, 'advanced'])->name('advanced');
-            Route::post('/advanced-options', [MyAccountController::class, 'saveAdvanced']);
+            // Route::get('/advanced-options', [MyAccountController::class, 'advanced'])->name('advanced');
+            // Route::post('/advanced-options', [MyAccountController::class, 'saveAdvanced']);
 
             Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
             Route::put('/password-and-security', [MyAccountController::class, 'savePassword']);

@@ -3,6 +3,7 @@
 namespace App\Business\Helpers;
 
 
+use App\Models\Central\Tenant;
 use App\Models\Tenant\User;
 
 /**
@@ -74,6 +75,11 @@ class AppMenu
                     'href' => '/admin',
                 ];
             }
+
+            $menu[] = [
+                'name' => 'COVID',
+                'href' => '/covid',
+            ];
         }
 
         return $menu;
@@ -82,45 +88,68 @@ class AppMenu
     public static function members(User $user) {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Home',
-            'href' => '/members',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'My Members',
+                'href' => '/members',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Link a new member',
-            'href' => '/my-account/add-member',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Member List',
+                'href' => '/members',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Access Keys',
-            'href' => '/members/access-keys',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Link a new member',
+                'href' => '/my-account/add-member',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Membership Centre',
-            'href' => '/memberships',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Access Keys',
+                'href' => '/members/access-keys',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Create New Member',
-            'href' => '/members/new',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Membership Centre',
+                'href' => '/memberships',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Unconnected Members',
-            'href' => '/members/orphaned',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Create New Member',
+                'href' => '/members/new',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Qualifications',
-            'href' => '/qualifications',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Unconnected Members',
+                'href' => '/members/orphaned',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Log Books',
-            'href' => '/log-books',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Qualifications',
+                'href' => '/qualifications',
+            ];
+        }
+
+        if ($user->hasPermission(['Admin', 'Coach', 'Galas'])) {
+            $menu[] = [
+                'name' => 'Log Books',
+                'href' => '/log-books',
+            ];
+        }
 
         return $menu;
     }
@@ -128,15 +157,19 @@ class AppMenu
     public static function squads(User $user) {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Squad List',
-            'href' => '/squads',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Squad List',
+                'href' => '/squads',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Squad Moves',
-            'href' => '/squads/moves',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Squad Moves',
+                'href' => '/squads/moves',
+            ];
+        }
 
         $menu[] = [
             'name' => 'Squad Reps',
@@ -149,15 +182,19 @@ class AppMenu
     public static function timetable(User $user) {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Home',
-            'href' => '/attendance',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Home',
+                'href' => '/attendance',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Take Register',
-            'href' => '/attendance/register',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Take Register',
+                'href' => '/attendance/register',
+            ];
+        }
 
         $menu[] = [
             'name' => 'Timetable',
@@ -169,20 +206,26 @@ class AppMenu
             'href' => '/timetable/booking',
         ];
 
-        $menu[] = [
-            'name' => 'Manage Sessions',
-            'href' => '/attendance/sessions',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Manage Sessions',
+                'href' => '/attendance/sessions',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Manage Venues',
-            'href' => '/attendance/venues',
-        ];
+        if ($user->hasPermission(['Admin'])) {
+            $menu[] = [
+                'name' => 'Manage Venues',
+                'href' => '/attendance/venues',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'History',
-            'href' => '/attendance/history',
-        ];
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'History',
+                'href' => '/attendance/history',
+            ];
+        }
 
         return $menu;
     }
@@ -195,20 +238,29 @@ class AppMenu
             'href' => '/galas',
         ];
 
-        $menu[] = [
-            'name' => 'Enter Gala',
-            'href' => '/galas/entergala',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Enter Gala',
+                'href' => '/galas/entergala',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'My Entries',
-            'href' => '/galas/entries',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'My Entries',
+                'href' => '/galas/entries',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Pay for Entries',
-            'href' => '/galas/pay-for-entries',
-        ];
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        if ($tenant->getOption('GALA_CARD_PAYMENTS_ALLOWED')) {
+            $menu[] = [
+                'name' => 'Pay for Entries',
+                'href' => '/galas/pay-for-entries',
+            ];
+        }
 
         $menu[] = [
             'name' => 'Time Converter',
@@ -220,20 +272,26 @@ class AppMenu
             'href' => '/galas/all-galas',
         ];
 
-        $menu[] = [
-            'name' => 'Add New Gala',
-            'href' => '/galas/addgala',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Add New Gala',
+                'href' => '/galas/addgala',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'View Entries',
-            'href' => '/galas/entries',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'View Entries',
+                'href' => '/galas/entries',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Team Manager Dashboard',
-            'href' => '/team-managers',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Parent', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Team Manager Dashboard',
+                'href' => '/team-managers',
+            ];
+        }
 
         return $menu;
     }
@@ -246,72 +304,100 @@ class AppMenu
             'href' => '/payments',
         ];
 
-        $menu[] = [
-            'name' => 'Billing History',
-            'href' => '/payments/statements',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Billing History',
+                'href' => '/payments/statements',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Bank Account',
-            'href' => '/payments/direct-debit',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Bank Account',
+                'href' => '/payments/direct-debit',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Latest Statement',
-            'href' => '/payments/statements/latest',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Latest Statement',
+                'href' => '/payments/statements/latest',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Fees Since Last Statement',
-            'href' => '/payments/fees',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Fees Since Last Statement',
+                'href' => '/payments/fees',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Squad and Extra Fees',
-            'href' => '/payments/squad-fees',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Squad and Extra Fees',
+                'href' => '/payments/squad-fees',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Annual Membership Fees',
-            'href' => '/payments/membership-fees',
-        ];
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Annual Membership Fees',
+                'href' => '/payments/membership-fees',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Payment Status',
-            'href' => '/payments/history',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Payment Status',
+                'href' => '/payments/history',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Extra Fees',
-            'href' => '/payments/extrafees',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Extra Fees',
+                'href' => '/payments/extrafees',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Charge or Refund Gala Entries',
-            'href' => '/payments/galas',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas'])) {
+            $menu[] = [
+                'name' => 'Charge or Refund Gala Entries',
+                'href' => '/payments/galas',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'This Months Squad Fees',
-            'href' => '/payments/history/squads/YEAR/MONTH',
-        ];
+        $today = new \DateTime('now', new \DateTimeZone(config('app.timezone')));
 
-        $menu[] = [
-            'name' => 'This Months Extra Fees',
-            'href' => '/payments/history/extras/YEAR/MONTH',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'This Months Squad Fees',
+                'href' => '/payments/history/squads/'.$today->format('Y').'/'.$today->format('m'),
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'GoCardless Dashboard',
-            'href' => 'https://manage.gocardless.com',
-            'external' => true,
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'This Months Extra Fees',
+                'href' => '/payments/history/extras/'.$today->format('Y').'/'.$today->format('m'),
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Stripe Dashboard',
-            'href' => 'https://dashboard.stripe.com/',
-            'external' => true,
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'GoCardless Dashboard',
+                'href' => 'https://manage.gocardless.com',
+                'external' => true,
+            ];
+        }
+
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Stripe Dashboard',
+                'href' => 'https://dashboard.stripe.com/',
+                'external' => true,
+            ];
+        }
 
         $menu[] = [
             'name' => 'Credit and Debit Cards',
@@ -334,25 +420,38 @@ class AppMenu
     public static function notify(User $user) {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Compose Email',
-            'href' => '/notify/new',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Compose Email',
+                'href' => '/notify/new',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Targeted Lists',
-            'href' => '/notify/lists',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Targeted Lists',
+                'href' => '/notify/lists',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'SMS Lists',
-            'href' => '/notify/sms',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'SMS Lists',
+                'href' => '/notify/sms',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'Previously Sent Emails',
-            'href' => '/notify/history',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Full Email History',
+                'href' => '/notify/history',
+            ];
+        }
+
+            $menu[] = [
+                'name' => 'Received Email History',
+                'href' => '/my-account/notify-history',
+            ];
 
         return $menu;
     }
@@ -360,20 +459,26 @@ class AppMenu
     public static function users(User $user) {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'User List',
-            'href' => '/users',
-        ];
+        if ($user->hasPermission(['Admin', 'Galas'])) {
+            $menu[] = [
+                'name' => 'User List',
+                'href' => '/users',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'New User (member onboarding)',
-            'href' => '/onboarding',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'New User (member onboarding)',
+                'href' => '/onboarding',
+            ];
+        }
 
-        $menu[] = [
-            'name' => 'New User (staff)',
-            'href' => '/users/add',
-        ];
+        if ($user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'New User (staff)',
+                'href' => '/users/add',
+            ];
+        }
 
         return $menu;
     }

@@ -32,12 +32,12 @@ const Layout = (props) => {
             icon: KeyIcon,
             current: route().current("my_account.security"),
         },
-        {
-            name: "Advanced Options",
-            href: route("my_account.advanced"),
-            icon: AdjustmentsIcon,
-            current: route().current("my_account.advanced"),
-        },
+        // {
+        //     name: "Advanced Options",
+        //     href: route("my_account.advanced"),
+        //     icon: AdjustmentsIcon,
+        //     current: route().current("my_account.advanced"),
+        // },
         // { name: "Integrations", href: "#", icon: ViewGridAddIcon, current: false },
     ];
 

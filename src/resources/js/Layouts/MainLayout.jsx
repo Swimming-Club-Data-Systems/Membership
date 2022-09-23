@@ -35,8 +35,7 @@ const breadcrumbs = [
     { name: "Applicants", href: "#", current: true },
 ];
 const userNavigation = [
-    { name: "Your Profile", href: route("my_account.index") },
-    { name: "Settings", href: "#" },
+    { name: "My Account", href: route("my_account.index") },
     { name: "Sign out", href: route("logout"), method: "post" },
 ];
 
