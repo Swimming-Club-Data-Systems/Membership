@@ -16,7 +16,11 @@
 */
 import { Fragment } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
-import { ArrowNarrowLeftIcon, HomeIcon } from "@heroicons/react/solid";
+import {
+    ArrowNarrowLeftIcon,
+    HomeIcon,
+    ChevronDownIcon,
+} from "@heroicons/react/solid";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
@@ -96,7 +100,11 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                 Open {item.name}{" "}
                                                                 menu
                                                             </span>
-                                                            {item.name}
+                                                            {item.name}{" "}
+                                                            <ChevronDownIcon
+                                                                className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-600"
+                                                                aria-hidden="true"
+                                                            />
                                                         </Menu.Button>
                                                     </div>
                                                     <Transition
@@ -108,7 +116,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         leaveFrom="transform opacity-100 scale-100"
                                                         leaveTo="transform opacity-0 scale-95"
                                                     >
-                                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                                        <Menu.Items className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                                             {item.children.map(
                                                                 (item) => (
                                                                     <Menu.Item
@@ -242,19 +250,106 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                     </div>
                                                     <div className="mt-3 px-2 space-y-1">
                                                         {navigation.map(
-                                                            (item) => (
-                                                                <Link
-                                                                    key={
-                                                                        item.name
-                                                                    }
-                                                                    href={
-                                                                        item.href
-                                                                    }
-                                                                    className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
-                                                                >
-                                                                    {item.name}
-                                                                </Link>
-                                                            )
+                                                            (item) => {
+                                                                if (
+                                                                    item
+                                                                        .children
+                                                                        ?.length >
+                                                                    0
+                                                                ) {
+                                                                    return (
+                                                                        // <Link
+                                                                        //     key={item.name}
+                                                                        //     href={item.href}
+                                                                        //     className="px-3 py-2 text-gray-900 text-sm font-medium"
+                                                                        // >
+                                                                        //     {item.name}
+                                                                        // </Link>
+
+                                                                        <Menu>
+                                                                            <Menu.Button className="flex rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800">
+                                                                                <span className="sr-only">
+                                                                                    Open{" "}
+                                                                                    {
+                                                                                        item.name
+                                                                                    }{" "}
+                                                                                    menu
+                                                                                </span>
+                                                                                {
+                                                                                    item.name
+                                                                                }{" "}
+                                                                                <ChevronDownIcon
+                                                                                    className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-600"
+                                                                                    aria-hidden="true"
+                                                                                />
+                                                                            </Menu.Button>
+                                                                            <Transition
+                                                                                as={
+                                                                                    Fragment
+                                                                                }
+                                                                                enter="transition ease-out duration-100"
+                                                                                enterFrom="transform opacity-0 scale-95"
+                                                                                enterTo="transform opacity-100 scale-100"
+                                                                                leave="transition ease-in duration-75"
+                                                                                leaveFrom="transform opacity-100 scale-100"
+                                                                                leaveTo="transform opacity-0 scale-95"
+                                                                            >
+                                                                                <Menu.Items className="mt-2 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                                                                    {item.children.map(
+                                                                                        (
+                                                                                            item
+                                                                                        ) => (
+                                                                                            <Menu.Item
+                                                                                                key={
+                                                                                                    item.name
+                                                                                                }
+                                                                                            >
+                                                                                                {({
+                                                                                                    active,
+                                                                                                }) => (
+                                                                                                    <Link
+                                                                                                        href={
+                                                                                                            item.href
+                                                                                                        }
+                                                                                                        className={classNames(
+                                                                                                            active
+                                                                                                                ? "bg-gray-100"
+                                                                                                                : "",
+                                                                                                            "block px-4 py-2 text-gray-700"
+                                                                                                        )}
+                                                                                                        method={
+                                                                                                            item.method
+                                                                                                        }
+                                                                                                    >
+                                                                                                        {
+                                                                                                            item.name
+                                                                                                        }
+                                                                                                    </Link>
+                                                                                                )}
+                                                                                            </Menu.Item>
+                                                                                        )
+                                                                                    )}
+                                                                                </Menu.Items>
+                                                                            </Transition>
+                                                                        </Menu>
+                                                                    );
+                                                                }
+                                                                return (
+                                                                    <Link
+                                                                        key={
+                                                                            item.name
+                                                                        }
+                                                                        href={
+                                                                            item.href
+                                                                        }
+                                                                        className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
+                                                                    >
+                                                                        {
+                                                                            item.name
+                                                                        }
+                                                                    </Link>
+                                                                );
+                                                            }
                                                         )}
                                                     </div>
                                                 </div>
