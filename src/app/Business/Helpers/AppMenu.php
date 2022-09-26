@@ -136,6 +136,13 @@ class AppMenu
             ];
         }
 
+        if ($user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Emergency Contacts',
+                'href' => '/emergency-contacts',
+            ];
+        }
+
         if ($user->hasPermission(['Admin', 'Coach'])) {
             $menu[] = [
                 'name' => 'Access Keys',

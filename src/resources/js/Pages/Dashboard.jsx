@@ -1,23 +1,50 @@
-import React from 'react';
-import Authenticated from '@/Layouts/Authenticated';
-import { Head } from '@inertiajs/inertia-react';
+import React from "react";
+import { Head } from "@inertiajs/inertia-react";
+import Container from "@/Components/Container";
+import MainLayout from "@/Layouts/MainLayout";
+import Button from "@/Components/Button";
+import { Inertia } from "@inertiajs/inertia";
 
-export default function Dashboard(props) {
+const Dashboard = (props) => {
     return (
-        <Authenticated
-            auth={props.auth}
-            errors={props.errors}
-            header={<h2 className="font-semibold text-xl text-gray-800 leading-tight">Dashboard</h2>}
-        >
+        <>
             <Head title="Dashboard" />
 
-            <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                    <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-6 bg-white border-b border-gray-200">You're logged in!</div>
+            <Container>
+                <div className="grid gap-y-4">
+                    <div
+                        className={`bg-gradient-to-r text-white rounded-lg p-6 from-violet-500 to-fuchsia-500 shadow`}
+                    >
+                        <h2 className="font-bold text-xl mb-1">
+                            Welcome to SCDS Next!
+                        </h2>
+                        <p className="font-semibold text-lg mb-4">
+                            Things look a little bit different around here.
+                        </p>
+
+                        <p>
+                            <Button
+                                onClick={() => {
+                                    Inertia.get(route("about_changes"));
+                                }}
+                            >
+                                Find out why
+                            </Button>
+                        </p>
                     </div>
                 </div>
-            </div>
-        </Authenticated>
+            </Container>
+        </>
     );
-}
+};
+
+Dashboard.layout = (page) => (
+    <MainLayout
+        title={`Hello ${page.props.auth.user.Forename}`}
+        subtitle={`Welcome to the ${page.props.tenant.name} Membership System`}
+    >
+        {page}
+    </MainLayout>
+);
+
+export default Dashboard;

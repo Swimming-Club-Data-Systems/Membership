@@ -23,6 +23,9 @@ const Footer = (props) => {
                             Help and Support
                         </p>
                         <div>
+                            <Link href="/about">About</Link>
+                        </div>
+                        <div>
                             <a href="https://docs.myswimmingclub.uk/">
                                 Documentation
                             </a>
