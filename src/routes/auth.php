@@ -85,6 +85,7 @@ Route::middleware('auth')->group(function () {
     Route::post('confirm-password/webauthn/challenge', [ConfirmableWebAuthnController::class, 'challenge'])
         ->name('confirm-password.webauthn.challenge');
 
+    Route::get('logout', [AuthenticatedSessionController::class, 'confirmDestroy']);
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });

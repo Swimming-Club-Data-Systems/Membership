@@ -214,4 +214,8 @@ class AuthenticatedSessionController extends Controller
             "sso_url" => $ssoUrl,
         ]);
     }
+
+    public function confirmDestroy() {
+        return Inertia::render('Auth/Logout');
+    }
 }

@@ -19,7 +19,7 @@ $this->post('/{id}:int/edit', function ($id) {
 if ($access == "Parent") {
 	// My Swimmers
 	$this->get('/', function () {
-		require('parentSwimmers.php');
+		header("location: /#members");
 	});
 
 
@@ -61,8 +61,7 @@ if ($access == "Parent") {
 } else if ($access == "Committee" || $access == "Galas" || $access == "Coach" || $access == "Admin") {
 	// Directory
 	$this->get('/', function () {
-
-		require('swimmerDirectory.php');
+		header("location: /members");
 	});
 
 	if ($access == "Admin") {

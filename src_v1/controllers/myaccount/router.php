@@ -2,24 +2,24 @@
 
 // My Account
 $this->get('/', function () {
-    halt(1);
+		header("location: /my-account");
 });
 
 $this->post('/', function () {
-    halt(1);
+	header("location: /my-account");
 });
 
 // Manage Password
 $this->get('/password', function () {
-    halt(1);
+	header("location: /my-account/password-and-security");
 });
 
 $this->post('/password', function () {
-    halt(1);
+	header("location: /my-account/password-and-security");
 });
 
 $this->get('/security-keys', function () {
-    halt(1);
+	header("location: /my-account/password-and-security");
 });
 
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {

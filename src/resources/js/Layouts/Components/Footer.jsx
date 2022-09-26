@@ -1,9 +1,11 @@
-import { Link } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/inertia-react";
 import React from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import InternalContainer from "@/Components/InternalContainer";
 
 const Footer = (props) => {
+    const { tenant } = usePage().props;
+
     return (
         <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
             <InternalContainer>
@@ -32,43 +34,61 @@ const Footer = (props) => {
                             </a>
                         </div>
 
-                        <div>
-                            <a href="https://docs.myswimmingclub.uk/">
-                                What&apos;s new?
-                            </a>
-                        </div>
+                        {/*<div>*/}
+                        {/*    <a href="https://docs.myswimmingclub.uk/">*/}
+                        {/*        What&apos;s new?*/}
+                        {/*    </a>*/}
+                        {/*</div>*/}
                     </div>
 
-                    <div className="space-y-4">
-                        <p className="font-semibold text-gray-600 dark:text-slate-300">
-                            Organisation
-                        </p>
-                        <div>
-                            <Link href={route("central.login")}>
-                                Admin Login
-                            </Link>
-                        </div>
+                    {!tenant && (
+                        <div className="space-y-4">
+                            <p className="font-semibold text-gray-600 dark:text-slate-300">
+                                Organisation
+                            </p>
+                            <div>
+                                <Link href={route("central.login")}>
+                                    Admin Login
+                                </Link>
+                            </div>
 
-                        <div>
-                            <Link>About Us</Link>
-                        </div>
+                            <div>
+                                <Link>About Us</Link>
+                            </div>
 
-                        <div>
-                            <a href="https://climate.stripe.com/pkIT9H">
-                                Carbon Removal
-                            </a>
-                        </div>
+                            <div>
+                                <a href="https://climate.stripe.com/pkIT9H">
+                                    Carbon Removal
+                                </a>
+                            </div>
 
-                        <div>
-                            <a
-                                href="https://github.com/Swimming-Club-Data-Systems"
-                                target="_blank"
-                                rel="noreferrer"
-                            >
-                                GitHub
-                            </a>
+                            <div>
+                                <a
+                                    href="https://github.com/Swimming-Club-Data-Systems"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    GitHub
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    )}
+
+                    {tenant && (
+                        <div className="space-y-4">
+                            <p className="font-semibold text-gray-600 dark:text-slate-300">
+                                {tenant.name}
+                            </p>
+
+                            <div>
+                                <Link href="/privacy">Privacy Policy</Link>
+                            </div>
+
+                            <div>
+                                <a href={tenant.website}>Club Website</a>
+                            </div>
+                        </div>
+                    )}
 
                     <div className="space-y-4">
                         <p className="font-semibold text-gray-600 dark:text-slate-300">

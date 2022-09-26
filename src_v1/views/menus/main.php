@@ -482,7 +482,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" target="_blank" href="https://docs.myswimmingclub.uk/">Help</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item disabled">Visit V2 to logout</a>
+                <a class="dropdown-item" href="/logout">Sign out</a>
               </div>
             </li>
           </ul>

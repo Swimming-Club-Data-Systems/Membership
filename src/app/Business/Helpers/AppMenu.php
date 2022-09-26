@@ -118,7 +118,7 @@ class AppMenu
         if ($user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'My Members',
-                'href' => '/members',
+                'href' => '/#members',
             ];
         }
 
