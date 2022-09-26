@@ -35,7 +35,7 @@ class MemberController extends Controller
     }
 
     public function show(Member $member) {
-        return redirect("/v1/members/" . $member->MemberID);
+        return Inertia::location('/v1/members/' . $member->MemberID);
     }
 
 }

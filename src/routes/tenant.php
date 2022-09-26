@@ -40,12 +40,11 @@ Route::middleware([
 ])->group(function () {
 
     Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
+        return Inertia::render('Index');
+    });
+
+    Route::get('/about', function () {
+        return Inertia::render('About');
     });
 
     Route::get('/dev', function () {
@@ -98,24 +97,30 @@ Route::middleware([
             Route::get('/password-and-security', [MyAccountController::class, 'password'])->name('security');
             Route::put('/password-and-security', [MyAccountController::class, 'savePassword']);
 
-            Route::get('/totp', [MyAccountController::class, 'createTOTP'])->name('create_totp');
-            Route::post('/totp', [MyAccountController::class, 'saveTOTP'])->name('save_totp');
-            Route::delete('/totp', [MyAccountController::class, 'deleteTOTP'])->name('delete_totp');
+            Route::get('/totp', [MyAccountController::class, 'createTOTP'])->name('create_totp')->block();
+            Route::post('/totp', [MyAccountController::class, 'saveTOTP'])->name('save_totp')->block();
+            Route::delete('/totp', [MyAccountController::class, 'deleteTOTP'])->name('delete_totp')->block();
 
-            Route::post('/webauthn/register', [WebauthnRegistrationController::class, 'verify'])->name('webauthn_verify');
-            Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
-            Route::delete('/webauthn/{credential}', [WebauthnRegistrationController::class, 'delete'])->name('webauthn_delete');
+            Route::post('/webauthn/register', [WebauthnRegistrationController::class, 'verify'])->name('webauthn_verify')->block();
+            Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge')->block();
+            Route::delete('/webauthn/{credential}', [WebauthnRegistrationController::class, 'delete'])->name('webauthn_delete')->block();
         });
     });
 
     Route::prefix('/members')->group(function () {
         Route::get('/', [MemberController::class, 'index']);
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
+        Route::any('/{path}', function ($path) {
+            return Inertia::location('/v1/members/' . $path);
+        })->where('path', '.*');
     });
 
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
         Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::any('/{path}', function ($path) {
+            return Inertia::location('/v1/users/' . $path);
+        })->where('path', '.*');
     });
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])

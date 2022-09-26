@@ -53,8 +53,8 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.update');
 
-    Route::post('webauthn/verify', [WebAuthnLoginController::class, 'verify'])->name('webauthn.verify');
-    Route::post('webauthn/challenge', [WebAuthnLoginController::class, 'challenge'])->name('webauthn.challenge');
+    Route::post('webauthn/verify', [WebAuthnLoginController::class, 'verify'])->name('webauthn.verify')->block();
+    Route::post('webauthn/challenge', [WebAuthnLoginController::class, 'challenge'])->name('webauthn.challenge')->block();
 });
 
 Route::middleware('auth')->group(function () {

@@ -80,12 +80,39 @@ class AppMenu
                 'name' => 'COVID',
                 'href' => '/covid',
             ];
+        } else {
+            $menu[] = [
+                'name' => 'Login',
+                'href' => route('login'),
+            ];
+
+            $menu[] = [
+                'name' => 'Timetable',
+                'href' => '/timetable',
+            ];
+
+            $menu[] = [
+                'name' => 'Time Converter',
+                'href' => '/timeconverter',
+            ];
+
+            $menu[] = [
+                'name' => 'Log Books',
+                'href' => '/log-books',
+            ];
+
+            $menu[] = [
+                'name' => 'Help',
+                'href' => 'https://docs.myswimmingclub.uk',
+                'external' => true,
+            ];
         }
 
         return $menu;
     }
 
-    public static function members(User $user) {
+    public static function members(User $user)
+    {
         $menu = [];
 
         if ($user->hasPermission('Parent')) {
@@ -154,7 +181,8 @@ class AppMenu
         return $menu;
     }
 
-    public static function squads(User $user) {
+    public static function squads(User $user)
+    {
         $menu = [];
 
         if ($user->hasPermission(['Admin', 'Coach'])) {
@@ -179,7 +207,8 @@ class AppMenu
         return $menu;
     }
 
-    public static function timetable(User $user) {
+    public static function timetable(User $user)
+    {
         $menu = [];
 
         if ($user->hasPermission(['Admin', 'Coach'])) {
@@ -230,7 +259,8 @@ class AppMenu
         return $menu;
     }
 
-    public static function galas(User $user) {
+    public static function galas(User $user)
+    {
         $menu = [];
 
         $menu[] = [
@@ -296,7 +326,8 @@ class AppMenu
         return $menu;
     }
 
-    public static function payments(User $user) {
+    public static function payments(User $user)
+    {
         $menu = [];
 
         $menu[] = [
@@ -372,14 +403,14 @@ class AppMenu
         if ($user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Squad Fees',
-                'href' => '/payments/history/squads/'.$today->format('Y').'/'.$today->format('m'),
+                'href' => '/payments/history/squads/' . $today->format('Y') . '/' . $today->format('m'),
             ];
         }
 
         if ($user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Extra Fees',
-                'href' => '/payments/history/extras/'.$today->format('Y').'/'.$today->format('m'),
+                'href' => '/payments/history/extras/' . $today->format('Y') . '/' . $today->format('m'),
             ];
         }
 
@@ -417,7 +448,8 @@ class AppMenu
         return $menu;
     }
 
-    public static function notify(User $user) {
+    public static function notify(User $user)
+    {
         $menu = [];
 
         if ($user->hasPermission(['Admin', 'Galas', 'Coach'])) {
@@ -448,15 +480,16 @@ class AppMenu
             ];
         }
 
-            $menu[] = [
-                'name' => 'Received Email History',
-                'href' => '/my-account/notify-history',
-            ];
+        $menu[] = [
+            'name' => 'Received Email History',
+            'href' => '/my-account/notify-history',
+        ];
 
         return $menu;
     }
 
-    public static function users(User $user) {
+    public static function users(User $user)
+    {
         $menu = [];
 
         if ($user->hasPermission(['Admin', 'Galas'])) {

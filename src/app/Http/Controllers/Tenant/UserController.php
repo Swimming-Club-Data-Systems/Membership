@@ -34,6 +34,6 @@ class UserController extends Controller
     }
 
     public function show(User $user) {
-        return redirect("/v1/users/" . $user->UserID);
+        return Inertia::location('/v1/users/' . $user->UserID);
     }
 }

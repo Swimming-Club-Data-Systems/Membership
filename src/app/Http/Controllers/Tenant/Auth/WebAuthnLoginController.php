@@ -42,13 +42,16 @@ class WebAuthnLoginController extends Controller
             // UseEntity found using the username.
             $userEntity = $userEntityRepository->findWebauthnUserByUsername($request->input('username'));
 
-            // Get the list of authenticators associated to the user
-            $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
+            // Don't if no user entity found
+            if ($userEntity) {
+                // Get the list of authenticators associated to the user
+                $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
 
-            // Convert the Credential Sources into Public Key Credential Descriptors
-            $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-                return $credential->getPublicKeyCredentialDescriptor();
-            }, $credentialSources);
+                // Convert the Credential Sources into Public Key Credential Descriptors
+                $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
+                    return $credential->getPublicKeyCredentialDescriptor();
+                }, $credentialSources);
+            }
         }
 
         // We generate the set of options.
