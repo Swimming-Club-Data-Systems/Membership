@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use MeiliSearch\Endpoints\Indexes;
 
 class MemberController extends Controller
 {
@@ -25,16 +24,21 @@ class MemberController extends Controller
         $members = null;
 
         if ($request->query('query')) {
-            $members = Member::search($request->query('query'))->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
+            $members = Member::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['squads' => function ($query) {
+                $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
+            }]))->paginate(config('app.per_page'));
         } else {
-            $members = Member::orderBy('MForename', 'asc')->orderBy('MSurname', 'asc')->paginate(config('app.per_page'));
+            $members = Member::orderBy('MForename', 'asc')->orderBy('MSurname', 'asc')->with(['squads' => function ($query) {
+                $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
+            }])->paginate(config('app.per_page'));
         }
         return Inertia::render('Members/Index', [
             'members' => $members->onEachSide(3),
         ]);
     }
 
-    public function show(Member $member) {
+    public function show(Member $member)
+    {
         return Inertia::location('/v1/members/' . $member->MemberID);
     }
 

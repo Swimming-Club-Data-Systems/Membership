@@ -5,6 +5,8 @@ import Collection from "@/Components/Collection";
 import MainLayout from "@/Layouts/MainLayout";
 
 const ItemContent = (props) => {
+    const squadNames = props.squads.map((squad) => squad.SquadName);
+
     return (
         <>
             <div className="flex items-center justify-between">
@@ -21,7 +23,10 @@ const ItemContent = (props) => {
                             {props.MForename} {props.MSurname}
                         </div>
                         <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
-                            {props.ASANumber}
+                            {props.ASANumber} -{" "}
+                            {squadNames.length > 0
+                                ? squadNames.join(", ")
+                                : "No Squads"}
                         </div>
                     </div>
                 </div>

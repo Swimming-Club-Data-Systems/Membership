@@ -462,7 +462,7 @@ if (!function_exists('chesterStandardMenu')) {
                 <a class="dropdown-item" href="/my-account/profile">
                   Profile
                 </a>
-                <a class="dropdown-item" href="/my-account/email">
+                <a class="dropdown-item" href="/my-account/email-options">
                   Email Options
                 </a>
                 <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("emergency-contacts")) ?>">

@@ -204,6 +204,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(NotifyAdditionalEmail::class, 'UserID');
     }
 
+    public function members(): HasMany
+    {
+        return $this->hasMany(Member::class, 'UserID');
+    }
+
     public function hasPermission(string|array $name)
     {
         // Fetch cache

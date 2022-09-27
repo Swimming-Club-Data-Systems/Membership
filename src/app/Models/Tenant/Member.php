@@ -4,6 +4,9 @@ namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -49,6 +52,20 @@ class Member extends Model
     public function shouldBeSearchable()
     {
         return $this->Active;
+    }
+
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'UserID', 'UserID');
+    }
+
+    public function squads(): BelongsToMany
+    {
+        return $this->belongsToMany(Squad::class, 'squadMembers', 'Member', 'Squad')
+            ->withTimestamps()
+            ->withPivot([
+                'Paying'
+            ]);
     }
 
     public function toSearchableArray(): array

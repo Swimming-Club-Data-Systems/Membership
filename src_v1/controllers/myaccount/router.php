@@ -47,7 +47,7 @@ $this->get(['login-history/', 'loginhistory/'], function ($page = null) {
 });
 
 $this->get('/email', function () {
-	header("location: /my-account/email");
+	header("location: /my-account/email-options");
 });
 
 $this->group(['/google-authenticator', '/googleauthenticator'], function () {

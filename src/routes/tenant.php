@@ -7,6 +7,7 @@ use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -41,7 +42,13 @@ Route::middleware([
 
     Route::get('/', function () {
         if (Auth::check()) {
-            return Inertia::render('Dashboard');
+            /** @var User $user */
+            $user = Auth::user();
+            return Inertia::render('Dashboard', [
+                'members' => $user->members()->with(['squads' => function ($query) {
+                    $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
+                }])->get(),
+            ]);
         }
         return Inertia::render('Index');
     });
