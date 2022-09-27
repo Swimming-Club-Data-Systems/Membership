@@ -18,7 +18,7 @@ try {
   }
 
   // Get members
-  $getMembers = $db->prepare("SELECT MForename, MSurname, ASANumber, DateOfBirth, MemberID, Forename, Surname, members.UserID FROM members LEFT JOIN users ON users.UserID = members.UserID WHERE members.Tenant = ? AND DateOfBirth <= ? ORDER BY MSurname ASC, MForename ASC");
+  $getMembers = $db->prepare("SELECT MForename, MSurname, ASANumber, DateOfBirth, MemberID, Forename, Surname, members.UserID FROM members LEFT JOIN users ON users.UserID = members.UserID WHERE members.Active AND members.Tenant = ? AND DateOfBirth <= ? ORDER BY MSurname ASC, MForename ASC");
   $getMembers->execute([
     $tenant->getId(),
     $target->format('Y-m-d'),
