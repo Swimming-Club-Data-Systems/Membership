@@ -4,6 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
 import { Inertia } from "@inertiajs/inertia";
+import { format, formatISO9075 } from "date-fns";
 
 const Card = (props) => {
     return (
@@ -19,10 +20,7 @@ const Card = (props) => {
             {/*    />*/}
             {/*</div>*/}
             <div className="min-w-0 flex-1">
-                <InertiaLink
-                    href={route("members.show", props.id)}
-                    className="focus:outline-none"
-                >
+                <InertiaLink href={props.link} className="focus:outline-none">
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">
                         {props.name}
@@ -37,6 +35,8 @@ const Card = (props) => {
 };
 
 const Dashboard = (props) => {
+    const date = formatISO9075(new Date(), { representation: "date" });
+
     return (
         <>
             <Head title="Dashboard" />
@@ -47,7 +47,7 @@ const Dashboard = (props) => {
                         className={`bg-gradient-to-r text-white rounded-lg p-6 from-violet-500 to-fuchsia-500 shadow`}
                     >
                         <h2 className="font-bold text-xl mb-1">
-                            Welcome to SCDS Next!
+                            Welcome to the revamped membership system!
                         </h2>
                         <p className="font-semibold text-lg mb-4">
                             Things look a little bit different around here.
@@ -70,7 +70,7 @@ const Dashboard = (props) => {
                                 Members
                             </h2>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {props.members.map((member) => {
                                     const squadNames = member.squads.map(
                                         (squad) => squad.SquadName
@@ -86,6 +86,46 @@ const Dashboard = (props) => {
                                                     : "No Squads"
                                             }
                                             id={member.MemberID}
+                                            link={route(
+                                                "members.show",
+                                                member.MemberID
+                                            )}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {props.sessions.length > 0 && (
+                        <div id="members">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                                Current training sessions
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {props.sessions.map((session) => {
+                                    // const squadNames = member.squads.map(
+                                    //     (squad) => squad.SquadName
+                                    // );
+
+                                    return (
+                                        <Card
+                                            key={session.SessionID}
+                                            name={`${session.SessionName}`}
+                                            role={`${format(
+                                                Date.parse(
+                                                    `${date} ${session.StartTime}`
+                                                ),
+                                                "HH:mm"
+                                            )} - ${format(
+                                                Date.parse(
+                                                    `${date} ${session.EndTime}`
+                                                ),
+                                                "HH:mm"
+                                            )}`}
+                                            id={session.SessionID}
+                                            link={`/attendance/register?date=${date}&session=${session.SessionID}`}
                                         />
                                     );
                                 })}

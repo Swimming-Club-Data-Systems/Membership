@@ -7,6 +7,7 @@ use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
+use App\Models\Tenant\Session;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,13 @@ Route::middleware([
                 'members' => $user->members()->with(['squads' => function ($query) {
                     $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
                 }])->get(),
+                'sessions' => Session::where('SessionDay', '=', now()->dayOfWeek)
+                    ->where('DisplayFrom', '<=', now()->toDateString())
+                    ->where('DisplayUntil', '>=', now()->toDateString())
+                    ->where('StartTime', '>=', now()->subHours(1)->toTimeString())
+                    ->where('EndTime', '<=', now()->addHours(5)->toTimeString())
+                    ->get(),
+                'now' => now()->toDateString(),
             ]);
         }
         return Inertia::render('Index');
