@@ -1,6 +1,6 @@
 # Tenant Billing
 
-Clubs (tenants) pay a monthly subscription for the membership system. Payment is now taken automatically on the first day of each month.
+Clubs (tenants) pay a monthly subscription for the membership system. Payment is now taken automatically on the first day of each month. If a club needs to pay at a different date, for cashflow reasons, they can contact SCDS for a bespoke arrangement.
 
 ## Payment Methods
 
@@ -32,3 +32,9 @@ If you pay by Direct Debit, you will be sent an email confirming the amount thre
 All billing is currently monthly and you will get one invoice on the first day of each month with all items on it.
 
 SCDS keeps its services under review so may add additional products which are billed differently or may change the billing periods and methods for existing products in future.
+
+## Service suspension due to non-payment
+
+In the event of non-payment, SCDS may withdraw service to a tenant. Clubs will be given the opportunity to arrange payment before this happens.
+
+If your service is suspended, direct debit payments from members may not be processed, or may fail and you will be unable to access user data.

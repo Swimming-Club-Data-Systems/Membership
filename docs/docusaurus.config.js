@@ -141,6 +141,7 @@ const config = {
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+        additionalLanguages: ['csharp', 'php', 'dns-zone-file'],
       },
     }),
 };
