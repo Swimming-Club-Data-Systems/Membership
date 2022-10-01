@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Central\MyAccountController;
+use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/clubs', [TenantController::class, 'index'])->name('tenants');
+Route::get('/clubs/{tenant}', [TenantController::class, 'redirect'])->name('tenants.redirect');
 
 Route::middleware('auth:central')->group(function () {
     Route::name('central.')->group(function () {

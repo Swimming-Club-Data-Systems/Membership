@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\User;
 use Illuminate\Console\Command;
@@ -31,8 +32,10 @@ class UpdateMeilisearchDocuments extends Command
     {
         User::where('Active', true)->searchable();
         Member::where('Active', true)->searchable();
+        Tenant::where('Verified', true)->searchable();
         User::where('Active', false)->unsearchable();
         Member::where('Active', false)->unsearchable();
+        Tenant::where('Verified', false)->unsearchable();
         return 0;
     }
 }

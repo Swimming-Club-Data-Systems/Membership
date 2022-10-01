@@ -24,7 +24,7 @@ const Index = () => {
                         <span className="block xl:inline">
                             Software to run your
                         </span>{" "}
-                        <span className="block text-indigo-600 xl:inline">
+                        <span className="block text-gray-900 xl:inline">
                             swimming club
                         </span>
                     </h1>
@@ -32,24 +32,24 @@ const Index = () => {
                         Manage your members, subscriptions, competition entries
                         and more.
                     </p>
-                    <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                        <div className="rounded-md shadow">
-                            <a
-                                href="#"
-                                className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-4 md:px-10 md:text-lg"
-                            >
-                                Get started
-                            </a>
-                        </div>
-                        <div className="mt-3 sm:mt-0 sm:ml-3">
-                            <a
-                                href="#"
-                                className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-100 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-200 md:py-4 md:px-10 md:text-lg"
-                            >
-                                Live demo
-                            </a>
-                        </div>
-                    </div>
+                    {/*<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">*/}
+                    {/*    <div className="rounded-md shadow">*/}
+                    {/*        <a*/}
+                    {/*            href="#"*/}
+                    {/*            className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 md:py-4 md:px-10 md:text-lg"*/}
+                    {/*        >*/}
+                    {/*            Get started*/}
+                    {/*        </a>*/}
+                    {/*    </div>*/}
+                    {/*    <div className="mt-3 sm:mt-0 sm:ml-3">*/}
+                    {/*        <a*/}
+                    {/*            href="#"*/}
+                    {/*            className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-100 px-8 py-3 text-base font-medium text-indigo-700 hover:bg-indigo-200 md:py-4 md:px-10 md:text-lg"*/}
+                    {/*        >*/}
+                    {/*            Live demo*/}
+                    {/*        </a>*/}
+                    {/*    </div>*/}
+                    {/*</div>*/}
                 </div>
 
                 <div className="grid gap-y-8 gap-x-6 grid-cols-12">
@@ -180,6 +180,78 @@ const Index = () => {
                                 <li>Printable backup forms</li>
                             </ul>
                         </GradientCard>
+                    </div>
+
+                    <div className="col-span-full">
+                        <h2 className="font-bold text-2xl mb-1">
+                            Used by clubs across the North East
+                        </h2>
+                        <p className="font-semibold text-lg mb-4">
+                            Feature development is driven by the needs of our
+                            clubs.
+                        </p>
+
+                        <div className="grid gap-x-4 gap-y-8 grid-cols-1 md:grid-cols-5 items-center mt-10">
+                            <a
+                                href="https://www.rdasc.org.uk/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="justify-self-center"
+                            >
+                                <img
+                                    src="/img/customer-clubs/rice.png"
+                                    className="h-20"
+                                />
+                            </a>
+
+                            <a
+                                href="https://newcastleswimteam.co.uk/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="justify-self-center"
+                            >
+                                <img
+                                    src="/img/customer-clubs/newe.png"
+                                    className="h-20"
+                                />
+                            </a>
+
+                            <a
+                                href="https://www.darlingtonasc.co.uk/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="justify-self-center"
+                            >
+                                <img
+                                    src="/img/customer-clubs/dare.png"
+                                    className="h-20"
+                                />
+                            </a>
+
+                            <a
+                                href="https://nasc.co.uk/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="justify-self-center"
+                            >
+                                <img
+                                    src="/img/customer-clubs/nore.png"
+                                    className="h-20"
+                                />
+                            </a>
+
+                            <a
+                                href="https://www.chesterlestreetasc.co.uk/"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="justify-self-center"
+                            >
+                                <img
+                                    src="/img/chesterLogo.svg"
+                                    className="h-20"
+                                />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </main>
