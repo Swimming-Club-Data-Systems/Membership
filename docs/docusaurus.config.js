@@ -37,7 +37,7 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/Swimming-Club-Data-Systems/Membership/tree/main/docs/docs/',
+            'https://github.com/Swimming-Club-Data-Systems/Membership/tree/main/docs/',
         },
         blog: {
           showReadingTime: true,

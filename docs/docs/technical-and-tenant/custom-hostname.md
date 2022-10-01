@@ -1,6 +1,6 @@
 # Custom Hostnames
 
-You can use your own domain name with the membership system. This costs an additional £2 per month, which will be billed automatically with your monthly invoice.
+You can use your own domain name with the membership system. Custom hostnames are included with the City plan, For other plans, this costs an additional £2 per month, which will be billed automatically with your monthly invoice.
 
 ## Getting started
 
