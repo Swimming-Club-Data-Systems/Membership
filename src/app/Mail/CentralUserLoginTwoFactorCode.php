@@ -6,9 +6,9 @@ use App\Business\Helpers\Mailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Tenant\User;
+use App\Models\Central\User;
 
-class UserLoginTwoFactorCode extends Mailable
+class CentralUserLoginTwoFactorCode extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,7 +29,7 @@ class UserLoginTwoFactorCode extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\Tenant\User $user the logging in user
+     * @param \App\Models\Central\User $user the logging in user
      *
      * @return void
      */
@@ -46,6 +46,6 @@ class UserLoginTwoFactorCode extends Mailable
      */
     public function build()
     {
-        return $this->setDefaultFromAndReply()->subject('Your Two-Factor Login Code')->markdown('emails.users.login_two_factor_code');
+        return $this->setDefaultFromAndReply()->subject('Your Two-Factor Login Code')->markdown('emails.central_users.login_two_factor_code');
     }
 }

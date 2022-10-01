@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
+import { Head } from "@inertiajs/inertia-react";
 
 const GradientCard = (props) => {
     return (
@@ -18,6 +19,7 @@ const GradientCard = (props) => {
 const Index = () => {
     return (
         <Container>
+            <Head title="Membership software for swimming clubs" />
             <main className="">
                 <div className="sm:mt-2 md:mt-6 lg:mt-10 xl:mt-18 mb-10 sm:mb-12 md:mb-16 lg:mb-20 xl:mb-28 sm:text-center lg:text-left">
                     <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
@@ -31,6 +33,13 @@ const Index = () => {
                     <p className="mt-3 text-base text-gray-500 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl lg:mx-0">
                         Manage your members, subscriptions, competition entries
                         and more.
+                    </p>
+                    <p className="mt-3 text-base text-gray-500 sm:mx-auto sm:mt-5 sm:max-w-xl sm:text-lg md:mt-5 md:text-xl lg:mx-0">
+                        For sales enquiries, please contact{" "}
+                        <a href="mailto:sales@myswimmingclub.uk">
+                            sales@myswimmingclub.uk
+                        </a>
+                        .
                     </p>
                     {/*<div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">*/}
                     {/*    <div className="rounded-md shadow">*/}

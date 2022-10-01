@@ -2,6 +2,7 @@ import React from "react";
 import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
 import Collection from "@/Components/Collection";
+import { Head } from "@inertiajs/inertia-react";
 
 const ItemContent = (props) => {
     const logo = props.logo_path
@@ -43,6 +44,7 @@ const ItemContent = (props) => {
 const Clubs = (props) => {
     return (
         <Container>
+            <Head title="Clubs" />
             <Collection
                 {...props.tenants}
                 itemRenderer={ItemContent}

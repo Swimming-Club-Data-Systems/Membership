@@ -9,7 +9,7 @@
 {{ tenant()->getOption("CLUB_NAME") }}
 @endif
 @else
-{{ config('app.name') }}
+<img src="{{ asset("img/corporate/scds.svg") }}" style="height: 75px" alt="{{ config('app.name') }}" />
 @endif
 @endcomponent
 @endslot

@@ -24,6 +24,14 @@ Route::name('central.')->group(function () {
 
         Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+        Route::get('two-factor-challenge', [AuthenticatedSessionController::class, 'check'])
+            ->name('two_factor');
+
+        Route::post('two-factor-challenge/backup', [AuthenticatedSessionController::class, 'resend'])
+            ->name('two_factor.resend');
+
+        Route::post('two-factor-challenge', [AuthenticatedSessionController::class, 'confirm']);
+
         Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
             ->name('password.request');
 

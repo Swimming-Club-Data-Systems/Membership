@@ -24,7 +24,7 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      *
      * @param \App\Http\Requests\Auth\LoginRequest $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\Response
      */
     public function store(LoginRequest $request)
     {
@@ -50,7 +50,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      *
-     * @return \Inertia\Response
+     // * @return \Illuminate\Http\Response
      */
     public function check(Request $request)
     {
@@ -66,7 +66,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      *
-     * @return \Inertia\Response
+     * @return \Illuminate\Http\Response
      */
     public function resend(Request $request)
     {

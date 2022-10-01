@@ -8,15 +8,6 @@ import { Link, usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
 
-const navigation = [
-    { name: "Clubs", href: "/clubs" },
-    {
-        name: "Help and Support",
-        href: "https://docs.myswimmingclub.uk/",
-        external: true,
-    },
-    { name: "Admin", href: "/admin" },
-];
 const breadcrumbs = [
     { name: "Jobs", href: "#", current: false },
     { name: "Front End Developer", href: "#", current: false },
@@ -24,7 +15,6 @@ const breadcrumbs = [
 ];
 const userNavigation = [
     { name: "Your Profile", href: route("my_account.index") },
-    { name: "Settings", href: "#" },
     { name: "Sign out", href: route("logout"), method: "post" },
 ];
 
@@ -34,6 +24,8 @@ function classNames(...classes) {
 
 const CentralMainLayout = ({ title, subtitle, children }) => {
     const userObject = usePage().props.auth.user;
+
+    const navigation = usePage().props.central.menu;
 
     const user = userObject
         ? {

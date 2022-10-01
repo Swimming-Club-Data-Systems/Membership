@@ -67,7 +67,7 @@ const Login = ({ status, canResetPassword }) => {
                 initialValues={{
                     email: "",
                     password: "",
-                    remember: false,
+                    remember: true,
                 }}
                 validationSchema={yup.object().shape(validationSchema)}
                 onSubmit={onSubmit}
