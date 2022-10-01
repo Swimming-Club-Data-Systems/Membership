@@ -13,7 +13,7 @@ To request to use a custom hostname, contact [support@myswimmingclub.uk](mailto:
 
 You can use any **subdomain** of a domain name that you control. In most circumstances, you cannot use your apex domain.
 
-If you want to use an apex domain, you
+If you want to use an apex domain, you must use [Cloudflare DNS](https://www.cloudflare.com/en-gb/dns/).
 
 Example domain names you could choose include
 
