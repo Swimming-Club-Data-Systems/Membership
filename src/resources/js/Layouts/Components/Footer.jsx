@@ -49,11 +49,13 @@ const Footer = (props) => {
                             <p className="font-semibold text-gray-600 dark:text-slate-300">
                                 Organisation
                             </p>
-                            <div>
-                                <Link href={route("central.login")}>
-                                    Admin Login
-                                </Link>
-                            </div>
+                            {!usePage().props.auth?.user && (
+                                <div>
+                                    <Link href={route("central.login")}>
+                                        Admin Login
+                                    </Link>
+                                </div>
+                            )}
 
                             <div>
                                 <Link>About Us</Link>
