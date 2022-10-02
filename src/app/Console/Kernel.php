@@ -16,6 +16,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('telescope:prune')->daily();
         $schedule->command('model:prune')->daily();
         $schedule->command(UpdateMeilisearchDocuments::class)->everyFifteenMinutes();
     }
