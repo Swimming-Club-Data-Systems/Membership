@@ -3,6 +3,7 @@
 namespace App\Business\WebAuthnImplementation;
 
 use App\Models\Tenant\Auth\UserCredential;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\PublicKeyCredentialSourceRepository as PublicKeyCredentialSourceRepositoryInterface;
 use Webauthn\PublicKeyCredentialSource;
 use Webauthn\PublicKeyCredentialUserEntity;
@@ -13,7 +14,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
 {
   public function findOneByCredentialId(string $publicKeyCredentialId): ?PublicKeyCredentialSource
   {
-    $credential = UserCredential::firstWhere('credential_id', base64_encode($publicKeyCredentialId));
+    $credential = UserCredential::firstWhere('credential_id', Base64UrlSafe::encodeUnpadded($publicKeyCredentialId));
 
     if (!$credential) {
       return null;
@@ -42,7 +43,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
   public function saveCredentialSource(PublicKeyCredentialSource $publicKeyCredentialSource): void
   {
     // Check if existing
-    $credential = UserCredential::firstWhere('credential_id', base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()));
+    $credential = UserCredential::firstWhere('credential_id', Base64UrlSafe::encodeUnpadded($publicKeyCredentialSource->getPublicKeyCredentialId()));
 
     if ($credential) {
       // Update
@@ -57,7 +58,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
       $user = User::find(Auth::id());
 
       $credential = new UserCredential();
-      $credential->credential_id = base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId());
+      $credential->credential_id = Base64UrlSafe::encodeUnpadded($publicKeyCredentialSource->getPublicKeyCredentialId());
       $credential->credential = json_encode($publicKeyCredentialSource->jsonSerialize());
 
       $user->userCredentials()->save($credential);

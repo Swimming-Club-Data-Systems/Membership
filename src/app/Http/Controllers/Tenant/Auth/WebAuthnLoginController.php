@@ -96,6 +96,7 @@ class WebAuthnLoginController extends Controller
             $attestationObjectLoader
         );
 
+        // $publicKeyCredential = $publicKeyCredentialLoader->load($request->getContent());
         $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();

@@ -9,6 +9,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "ext-simplexml": "*",
         "aws/aws-sdk-php": "^3.233",
         "brick/phonenumber": "^0.4.0",
         "brick/postcode": "^0.2.7",
@@ -28,6 +29,7 @@
         "microsoft/microsoft-graph": "^1.73",
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1.0",
+        "paragonie/constant_time_encoding": "^2.6",
         "pragmarx/google2fa": "^8.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "stancl/tenancy": "^3.5",
@@ -35,8 +37,7 @@
         "symfony/intl": "^6.1",
         "symfony/psr-http-message-bridge": "^2.1",
         "tightenco/ziggy": "^1.0",
-        "web-auth/webauthn-lib": "^4.0",
-        "ext-simplexml": "*"
+        "web-auth/webauthn-lib": "^4.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

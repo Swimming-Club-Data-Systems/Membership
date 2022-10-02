@@ -1,16 +1,18 @@
 import {
     fetchEndpoint,
-    preparePublicKeyCredentials,
     preparePublicKeyOptions,
 } from "@web-auth/webauthn-helper/src/common";
+import { preparePublicKeyCredentials } from "@/Pages/Auth/Helpers/useLogin";
 
-const useLogin = (
-    { actionUrl = "/login", actionHeader = {}, optionsUrl = "/login/options" },
-    optionsHeader = {},
-    setAc = null
+const useRegistration = (
+    {
+        actionUrl = "/register",
+        actionHeader = {},
+        optionsUrl = "/register/options",
+    },
+    optionsHeader = {}
 ) => {
-    // eslint-disable-next-line no-unused-vars
-    return async ({ credentialsGetProps, ...data }) => {
+    return async (data) => {
         const optionsResponse = await fetchEndpoint(
             data,
             optionsUrl,
@@ -18,15 +20,7 @@ const useLogin = (
         );
         const json = await optionsResponse.json();
         const publicKey = preparePublicKeyOptions(json);
-
-        if (setAc) {
-            setAc("username webauthn");
-        }
-
-        const credentials = await navigator.credentials.get({
-            publicKey,
-            ...credentialsGetProps,
-        });
+        const credentials = await navigator.credentials.create({ publicKey });
         const publicKeyCredential = preparePublicKeyCredentials(credentials);
         const actionResponse = await fetchEndpoint(
             publicKeyCredential,
@@ -42,4 +36,4 @@ const useLogin = (
     };
 };
 
-export default useLogin;
+export default useRegistration;

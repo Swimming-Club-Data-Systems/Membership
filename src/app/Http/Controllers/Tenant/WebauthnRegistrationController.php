@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\ValidationException;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
@@ -69,7 +70,8 @@ class WebauthnRegistrationController extends Controller
             Server::getPublicKeyParameterList(),
         )
             ->excludeCredentials(...$allowedCredentials)
-            ->setAuthenticatorSelection(AuthenticatorSelectionCriteria::create());
+            ->setAuthenticatorSelection(AuthenticatorSelectionCriteria::create())
+            ->setAttestation(PublicKeyCredentialCreationOptions::ATTESTATION_CONVEYANCE_PREFERENCE_NONE);
 
         $request->session()->put('webauthn_credential_registration_request_options',
             json_encode($publicKeyCredentialCreationOptions));
@@ -159,7 +161,7 @@ class WebauthnRegistrationController extends Controller
             $publicKeyCredentialSourceRepository->saveCredentialSource($publicKeyCredentialSource);
 
             // Set the credential_name
-            $credential = UserCredential::where('credential_id', base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()))->first();
+            $credential = UserCredential::where('credential_id', Base64UrlSafe::encodeUnpadded($publicKeyCredentialSource->getPublicKeyCredentialId()))->first();
             if ($credential) {
                 $credential->credential_name = $request->session()->pull('webauthn_credential_registration_name');
                 $credential->save();

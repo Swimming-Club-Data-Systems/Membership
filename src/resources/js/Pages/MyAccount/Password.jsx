@@ -14,7 +14,7 @@ import BasicList from "@/Components/BasicList";
 import Button from "@/Components/Button";
 import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
-import { useRegistration } from "@web-auth/webauthn-helper";
+import useRegistration from "@/Pages/Auth/Helpers/useRegistration";
 import Alert from "@/Components/Alert";
 import { ShieldCheckIcon } from "@heroicons/react/outline";
 import A from "@/Components/A";
