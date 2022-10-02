@@ -2,7 +2,7 @@
  * Form component
  */
 
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Form as FormikForm, Formik, useFormikContext } from "formik";
 import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
@@ -135,6 +135,22 @@ const Form = (props) => {
         ...otherProps
     } = props;
 
+    const [hasErrors, setHasErrors] = useState(false);
+    const handleNetErrorDismiss = () => {
+        setHasErrors(false);
+    };
+
+    useEffect(() => {
+        // If we get an invalid response, don't show any of the response
+        // Instead show a warning to the user in the form
+        return Inertia.on("invalid", (event) => {
+            setHasErrors(true);
+            if (import.meta.env.PROD) {
+                event.preventDefault();
+            }
+        });
+    }, []);
+
     const onSubmitHandler = (values, formikBag) => {
         formikBag.setStatus({});
         if (onSubmit) {
@@ -149,6 +165,13 @@ const Form = (props) => {
             Inertia[method](action, values, {
                 onSuccess: (arg) => formikBag.resetForm(),
                 ...inertiaOptions,
+                // onError: (error) => {
+                //     console.log(error);
+                // },
+                onFinish: () => {
+                    // Always mark as not submitting once done
+                    formikBag.setSubmitting(false);
+                },
             });
         }
     };
@@ -181,6 +204,17 @@ const Form = (props) => {
                     <HandleServerErrors />
 
                     {!hideErrors && <RenderServerErrors />}
+
+                    {hasErrors && (
+                        <Alert
+                            className="mb-3"
+                            variant="error"
+                            title="An unknown error occurred"
+                            handleDismiss={handleNetErrorDismiss}
+                        >
+                            Please check your form data and try again.
+                        </Alert>
+                    )}
 
                     {props.children}
 

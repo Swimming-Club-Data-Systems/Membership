@@ -132,7 +132,8 @@ export default function ConfirmPassword(props) {
                                 .string()
                                 .required("A password is required"),
                         })}
-                        onSubmit={onSubmit}
+                        action={route("password.confirm")}
+                        method="post"
                         submitTitle="Confirm"
                         hideClear
                     >

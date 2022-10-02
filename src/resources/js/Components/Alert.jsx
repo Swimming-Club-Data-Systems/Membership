@@ -20,8 +20,8 @@ const Alert = (props) => {
         case "error":
             variantClass = "bg-red-50 text-red-700";
             titleClass = "text-red-800";
-            dismissColour = 
-                    "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-offset-red-50 focus:ring-red-600";
+            dismissColour =
+                "bg-red-50 text-red-500 hover:bg-red-100 focus:ring-offset-red-50 focus:ring-red-600";
             symbol = (
                 <XCircleIcon
                     className="h-5 w-5 text-red-400"
@@ -32,8 +32,8 @@ const Alert = (props) => {
         case "warning":
             variantClass = "bg-yellow-50 text-yellow-700";
             titleClass = "text-yellow-800";
-            dismissColour = 
-                    "bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600";
+            dismissColour =
+                "bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600";
             symbol = (
                 <ExclamationIcon
                     className="h-5 w-5 text-yellow-400"
@@ -44,8 +44,8 @@ const Alert = (props) => {
         default:
             variantClass = "bg-green-50 text-green-700";
             titleClass = "text-green-800";
-            dismissColour = 
-                    "bg-green-50 text-green-500 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600";
+            dismissColour =
+                "bg-green-50 text-green-500 hover:bg-green-100 focus:ring-offset-green-50 focus:ring-green-600";
             symbol = (
                 <CheckCircleIcon
                     className="h-5 w-5 text-green-400"
@@ -59,13 +59,16 @@ const Alert = (props) => {
 
     const [dismissed, setDismissed] = useState(false);
 
-    const handleDismiss = () => {
+    const handleDismiss = (e) => {
+        if (props.handleDismiss) {
+            props.handleDismiss(e);
+        }
         setDismissed(true);
     };
 
     // Reshow if props change - means alert changed
     useEffect(() => {
-      setDismissed(false);
+        setDismissed(false);
     }, [props]);
 
     const renderActionButtons = () => {
@@ -108,7 +111,10 @@ const Alert = (props) => {
                     <div className="flex">
                         <div className="flex-shrink-0">{symbol}</div>
                         <div className="ml-3">
-                            <h3 ref={title} className={`text-sm font-medium ${titleClass}`}>
+                            <h3
+                                ref={title}
+                                className={`text-sm font-medium ${titleClass}`}
+                            >
                                 {props.title}
                             </h3>
                             <div className="mt-2 text-sm">{props.children}</div>
@@ -120,7 +126,7 @@ const Alert = (props) => {
                                 </div>
                             )}
                         </div>
-                        {props.dismissable && (
+                        {(props.dismissable || props.handleDismiss) && (
                             <div className="ml-auto pl-3">
                                 <div className="-mx-1.5 -my-1.5">
                                     <button
