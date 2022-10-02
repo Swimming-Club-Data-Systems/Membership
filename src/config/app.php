@@ -187,6 +187,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Laravel\Telescope\TelescopeServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -197,6 +198,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\TenancyServiceProvider::class,
+        App\Providers\TelescopeServiceProvider::class,
 
     ],
 

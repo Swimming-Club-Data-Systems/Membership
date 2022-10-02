@@ -3,6 +3,7 @@
 namespace App\Business\Helpers;
 
 use App\Models\Central\User;
+use Illuminate\Support\Facades\Gate;
 
 /**
  * Defines the menu for users in the tenant app
@@ -30,6 +31,14 @@ class CentralAppMenu
                 'name' => 'Admin',
                 'href' => '/admin',
             ];
+
+            if (Gate::check('viewTelescope', [$user])) {
+                $menu[] = [
+                    'name' => 'Telescope',
+                    'href' => '/telescope',
+                    'external' => true,
+                ];
+            }
 
         }
 

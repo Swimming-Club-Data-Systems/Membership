@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Central\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Telescope\IncomingEntry;
 use Laravel\Telescope\Telescope;
@@ -53,15 +56,21 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         ]);
     }
 
+    /**
+     * Configure the Telescope authorization services.
+     *
+     * @return void
+     */
     protected function authorization()
     {
         $this->gate();
 
-        Telescope::auth(function ($request) {
+        Telescope::auth(function (Request $request) {
             return app()->environment('local') ||
                 Gate::check('viewTelescope', [$request->user('central')]);
         });
     }
+
 
     /**
      * Register the Telescope gate.
@@ -72,8 +81,13 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
      */
     protected function gate()
     {
-        Gate::define('viewTelescope', function ($user) {
-            return $user->id == 1;
+        Gate::define('viewTelescope', function ($user = null) {
+            /** @var User $user */
+            $user = Auth::guard('central')->user();
+
+            if ($user) {
+                return $user->id == 1;
+            }
         });
     }
 }
