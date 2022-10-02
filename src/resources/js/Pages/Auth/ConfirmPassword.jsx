@@ -82,7 +82,7 @@ export default function ConfirmPassword(props) {
                         variant="primary"
                         className="w-full"
                     >
-                        Sign in
+                        Confirm with SSO
                     </Button>
                 </>
             )}
@@ -97,7 +97,7 @@ export default function ConfirmPassword(props) {
                                     title="Error"
                                     className="mb-4"
                                 >
-                                    {error}
+                                    {error.message}
                                 </Alert>
                             )}
                             <Button
@@ -107,7 +107,7 @@ export default function ConfirmPassword(props) {
                                 className="w-full mb-4"
                                 type="button"
                             >
-                                Sign in with passkey
+                                Confirm with passkey
                             </Button>
 
                             <div className="relative mb-4">

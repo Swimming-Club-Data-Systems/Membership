@@ -5,6 +5,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
 import { Inertia } from "@inertiajs/inertia";
 import { format, formatISO9075 } from "date-fns";
+import BaseLink from "@/Components/BaseLink";
 
 const Card = (props) => {
     return (
@@ -20,15 +21,19 @@ const Card = (props) => {
             {/*    />*/}
             {/*</div>*/}
             <div className="min-w-0 flex-1">
-                <InertiaLink href={props.link} className="focus:outline-none">
+                <BaseLink
+                    href={props.link}
+                    external={props.external}
+                    className="focus:outline-none"
+                >
                     <span className="absolute inset-0" aria-hidden="true" />
                     <p className="text-sm font-medium text-gray-900">
                         {props.name}
                     </p>
-                    <p className="truncate text-sm text-gray-500">
+                    <p className="truncate text-sm text-gray-500 mt-1">
                         {props.role}
                     </p>
-                </InertiaLink>
+                </BaseLink>
             </div>
         </div>
     );
@@ -126,6 +131,66 @@ const Dashboard = (props) => {
                                             )}`}
                                             id={session.SessionID}
                                             link={`/attendance/register?date=${date}&session=${session.SessionID}`}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {props.swim_england_news.length > 0 && (
+                        <div id="members">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                                Swim England News
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {props.swim_england_news.map((item) => {
+                                    // const squadNames = member.squads.map(
+                                    //     (squad) => squad.SquadName
+                                    // );
+
+                                    return (
+                                        <Card
+                                            key={item.id}
+                                            name={`${item.title}`}
+                                            role={format(
+                                                Date.parse(item.date),
+                                                "HH:mm, do MMMM yyyy"
+                                            )}
+                                            id={item.id}
+                                            link={item.link}
+                                            external
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
+                    {props.regional_news.length > 0 && (
+                        <div id="members">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                                Swim England North East News
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {props.regional_news.map((item) => {
+                                    // const squadNames = member.squads.map(
+                                    //     (squad) => squad.SquadName
+                                    // );
+
+                                    return (
+                                        <Card
+                                            key={item.id}
+                                            name={`${item.title}`}
+                                            role={format(
+                                                Date.parse(item.date),
+                                                "HH:mm, do MMMM yyyy"
+                                            )}
+                                            id={item.id}
+                                            link={item.link}
+                                            external
                                         />
                                     );
                                 })}

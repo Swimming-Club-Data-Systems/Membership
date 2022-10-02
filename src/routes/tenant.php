@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
@@ -11,6 +12,8 @@ use App\Models\Tenant\Session;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Passport\Passport;
@@ -41,32 +44,14 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', function () {
-        if (Auth::check()) {
-            /** @var User $user */
-            $user = Auth::user();
-            return Inertia::render('Dashboard', [
-                'members' => $user->members()->with(['squads' => function ($query) {
-                    $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
-                }])->get(),
-                'sessions' => Session::where('SessionDay', '=', now()->dayOfWeek)
-                    ->where('DisplayFrom', '<=', now()->toDateString())
-                    ->where('DisplayUntil', '>=', now()->toDateString())
-                    ->where('StartTime', '>=', now()->subHours(1)->toTimeString())
-                    ->where('EndTime', '<=', now()->addHours(5)->toTimeString())
-                    ->get(),
-                'now' => now()->toDateString(),
-            ]);
-        }
-        return Inertia::render('Index');
-    });
+    Route::get('/', [DashboardController::class, 'index']);
 
     Route::get('/about', function () {
         return Inertia::render('About');
     });
 
     Route::get('/about-the-changes', function () {
-        return Inertia::location("https://docs.myswimmingclub.uk/");
+        return Inertia::location("https://docs.myswimmingclub.uk/docs/technical-and-tenant/scds-next");
     })->name('about_changes');
 
     Route::get('/dev', function () {
