@@ -104,10 +104,10 @@ const MainLayout = ({ title, subtitle, children }) => {
 
                                                 <Menu
                                                     as="div"
-                                                    className="ml-4 relative flex-shrink-0"
+                                                    className="ml-1 relative flex-shrink-0"
                                                 >
                                                     <div>
-                                                        <Menu.Button className="px-3 py-2 text-gray-900 text-sm font-medium bg-white rounded flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                        <Menu.Button className="p-2 text-gray-900 text-sm font-medium bg-white rounded flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                             <span className="sr-only">
                                                                 Open {item.name}{" "}
                                                                 menu
@@ -128,7 +128,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         leaveFrom="transform opacity-100 scale-100"
                                                         leaveTo="transform opacity-0 scale-95"
                                                     >
-                                                        <Menu.Items className="origin-top-left absolute left-0 mt-2 w-56 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                                        <Menu.Items className="origin-top-left absolute -left-2 mt-2 max-w-56 whitespace-nowrap rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                                             {item.children.map(
                                                                 (item) => (
                                                                     <Menu.Item

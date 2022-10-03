@@ -49,8 +49,16 @@ class AppMenu
                 'children' => self::galas($user),
             ];
 
+            if ($user->hasPermission(['Admin', 'Galas'])) {
+                $menu[] = [
+                    'name' => 'Users',
+                    'href' => '/users',
+                    'children' => self::users($user),
+                ];
+            }
+
             $menu[] = [
-                'name' => 'Payments',
+                'name' => 'Pay',
                 'href' => '/payments',
                 'children' => self::payments($user),
             ];
@@ -61,25 +69,13 @@ class AppMenu
                 'children' => self::notify($user),
             ];
 
-            if ($user->hasPermission(['Admin', 'Galas'])) {
-                $menu[] = [
-                    'name' => 'Users',
-                    'href' => '/users',
-                    'children' => self::users($user),
-                ];
-            }
-
             if ($user->hasPermission('Admin')) {
                 $menu[] = [
                     'name' => 'Admin',
                     'href' => '/admin',
+                    'children' => self::admin($user),
                 ];
             }
-
-            $menu[] = [
-                'name' => 'COVID',
-                'href' => '/covid',
-            ];
         } else {
             $menu[] = [
                 'name' => 'Login',
@@ -131,7 +127,7 @@ class AppMenu
 
         if ($user->hasPermission('Parent')) {
             $menu[] = [
-                'name' => 'Link a new member',
+                'name' => 'Link a New Member',
                 'href' => '/my-account/add-member',
             ];
         }
@@ -184,6 +180,11 @@ class AppMenu
                 'href' => '/log-books',
             ];
         }
+
+        $menu[] = [
+            'name' => 'COVID Tools (Deprecated)',
+            'href' => '/covid',
+        ];
 
         return $menu;
     }
@@ -519,6 +520,32 @@ class AppMenu
                 'href' => '/users/add',
             ];
         }
+
+        return $menu;
+    }
+
+    public static function admin(User $user) {
+        $menu = [];
+
+        $menu[] = [
+            'name' => 'Admin tools',
+            'href' => '/admin',
+        ];
+
+        $menu[] = [
+            'name' => 'Pages',
+            'href' => '/pages',
+        ];
+
+        $menu[] = [
+            'name' => 'Reports',
+            'href' => '/admin/reports',
+        ];
+
+        $menu[] = [
+            'name' => 'System Settings',
+            'href' => '/settings',
+        ];
 
         return $menu;
     }
