@@ -34,9 +34,28 @@ deploy_staging:
   environment:
     name: staging
     url: https://mt.myswimmingclub.uk
-  when: manual
+  when: on_success
   only:
-    - add-laravel
+    - development-main
+  tags:
+    - docker
+
+deploy_production:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-prod"
+  environment:
+    name: production
+    url: https://myswimmingclub.uk
+  when: on_success
+  only:
+    - main
   tags:
     - docker
 
