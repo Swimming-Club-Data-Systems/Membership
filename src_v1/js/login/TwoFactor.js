@@ -39,7 +39,7 @@ const TwoFactor = (props) => {
     setEnableResend(false);
 
     // Make API request
-    const response = await axios.post("/api/auth/login/resend-two-factor", {
+    const response = await axios.post("/v1/api/auth/login/resend-two-factor", {
     });
 
     if (response.data.success) {
@@ -64,7 +64,7 @@ const TwoFactor = (props) => {
     setSubmitting(true);
 
     try {
-      const response = await axios.post("/api/auth/login/two-factor", {
+      const response = await axios.post("/v1/api/auth/login/two-factor", {
         auth_code: values.authCode,
         target: props.target,
         setup_two_factor: values.setUpTwoFactor,

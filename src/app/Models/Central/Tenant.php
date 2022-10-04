@@ -2,53 +2,41 @@
 
 namespace App\Models\Central;
 
-use App\Models\Tenant\TenantOptions;
-use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
-use Stancl\Tenancy\Database\Concerns\HasDomains;
+use App\Models\Tenant\TenantOption;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Laravel\Scout\Searchable;
+use Stancl\Tenancy\Database\Concerns\HasDomains;
+use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
 
+/**
+ * @property int ID
+ * @property string Name
+ * @property string Code
+ * @property string Website
+ * @property string Email
+ * @property boolean Verified
+ * @property string UniqueID
+ * @property string Domain
+ * @property string Data
+ */
 class Tenant extends BaseTenant
 {
-    use HasDomains;
+    use HasDomains, Searchable;
 
     protected $configOptionsCached = false;
     protected $configOptions = [];
-
     /**
-     * Get the tenant id via expected attribute.
+     * The attributes that should be hidden for arrays.
      *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     * @var array
      */
-    protected function id(): Attribute
-    {
-        return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['ID'],
-        );
-    }
-
-    public function getOption($key)
-    {
-        if (!$this->configOptionsCached) {
-            foreach ($this->tenantOptions as $option) {
-                $this->configOptions[$option->Option] = $option->Value;
-            }
-            $this->configOptionsCached = true;
-        }
-
-        if (isset($this->configOptions[$key])) {
-            return $this->configOptions[$key];
-        }
-
-        return null;
-    }
-
+    protected $hidden = ['tenantOptions', 'Email'];
     /**
-     * Get the TenantOptions.
+     * The accessors to append to the model's array form.
+     *
+     * @var array
      */
-    public function tenantOptions()
-    {
-        return $this->hasMany(TenantOptions::class, 'Tenant');
-    }
+    protected $appends = ['logo_path'];
 
     public static function getCustomColumns(): array
     {
@@ -72,11 +60,6 @@ class Tenant extends BaseTenant
         return 'Data';
     }
 
-    public function getIncrementing()
-    {
-        return true;
-    }
-
     /**
      * The "booted" method of the model.
      *
@@ -84,14 +67,14 @@ class Tenant extends BaseTenant
      */
     protected static function booted()
     {
-        static::retrieved(function ($model) {
-            foreach ($model->tenantOptions as $option) {
-                // $model->configOptions[] = $option;
-                $model->setAttribute($option->Option, $option->Value);
-                $model->syncOriginalAttribute($option->Option);
-            }
-            // ddd($model);
-        });
+        // static::retrieved(function ($model) {
+        //    foreach ($model->tenantOptions as $option) {
+        //        // $model->configOptions[] = $option;
+        //        $model->setAttribute($option->Option, $option->Value);
+        //        $model->syncOriginalAttribute($option->Option);
+        //    }
+        //    // ddd($model);
+        //});
 
         // static::retrieved(function ($tenant) {
         //     foreach ($tenant->tenantOptions as $option) {
@@ -99,5 +82,83 @@ class Tenant extends BaseTenant
         //     }
         //     ddd($tenant);
         // });
+    }
+
+    public function getIncrementing()
+    {
+        return true;
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return [
+            'ID' => $this->ID,
+            'Name' => $this->Name,
+            'Website' => $this->Website,
+            'Domain' => $this->Domain,
+        ];
+    }
+
+    /**
+     * Determine if the model should be searchable.
+     *
+     * @return bool
+     */
+    public function shouldBeSearchable()
+    {
+        return $this->Verified;
+    }
+
+    /**
+     * Get the tenant id via expected attribute.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function id(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['ID'],
+        );
+    }
+
+    /**
+     * Get the tenant logo path.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function logoPath(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
+        );
+    }
+
+    public function getOption($key)
+    {
+        if (!$this->configOptionsCached) {
+            foreach ($this->tenantOptions()->get() as $option) {
+                $this->configOptions[$option->Option] = $option->Value;
+            }
+            $this->configOptionsCached = true;
+        }
+
+        if (isset($this->configOptions[$key])) {
+            return $this->configOptions[$key];
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the TenantOption.
+     */
+    public function tenantOptions()
+    {
+        return $this->hasMany(TenantOption::class, 'Tenant');
     }
 }

@@ -22,7 +22,7 @@ const WebAuthn = () => {
   }, []);
 
   const getAuthenticators = async () => {
-    const { data } = await axios.get("/api/my-account/webauthn/authenticators");
+    const { data } = await axios.get("/v1/api/my-account/webauthn/authenticators");
     setAuthenticators(data.authenticators);
     setUsername(data.username);
   };
@@ -34,13 +34,13 @@ const WebAuthn = () => {
   }, []);
 
   const register = useRegistration({
-    actionUrl: "/api/my-account/webauthn/register",
-    optionsUrl: "/api/my-account/webauthn/challenge",
+    actionUrl: "/v1/api/my-account/webauthn/register",
+    optionsUrl: "/v1/api/my-account/webauthn/challenge",
   });
 
   // const login = useLogin({
-  //   actionUrl: "/api/my-account/webauthn/auth-verify",
-  //   optionsUrl: "/api/my-account/webauthn/auth-challenge",
+  //   actionUrl: "/v1/api/my-account/webauthn/auth-verify",
+  //   optionsUrl: "/v1/api/my-account/webauthn/auth-challenge",
   // });
 
   const handleRegister = async (ev, formikBag) => {
@@ -71,7 +71,7 @@ const WebAuthn = () => {
   // };
 
   const deleteAuthenticator = async (id) => {
-    const response = await axios.post("/api/my-account/webauthn/delete", {
+    const response = await axios.post("/v1/api/my-account/webauthn/delete", {
       id
     });
 

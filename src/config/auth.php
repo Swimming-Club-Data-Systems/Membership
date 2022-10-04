@@ -41,6 +41,11 @@ return [
             'provider' => 'users',
         ],
 
+        'central' => [
+            'driver' => 'session',
+            'provider' => 'central_users',
+        ],
+
         'api' => [
             'driver' => 'passport',
             'provider' => 'users',
@@ -70,6 +75,11 @@ return [
             'model' => App\Models\Tenant\User::class,
         ],
 
+        'central_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Central\User::class,
+        ],
+
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
@@ -95,6 +105,12 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'central_users' => [
+            'provider' => 'central_users',
+            'table' => 'central_password_resets',
             'expire' => 60,
             'throttle' => 60,
         ],

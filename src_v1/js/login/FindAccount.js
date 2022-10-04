@@ -28,7 +28,7 @@ const FindAccount = (props) => {
 
     try {
 
-      const response = await axios.post("/api/auth/request-password-reset", {
+      const response = await axios.post("/v1/api/auth/request-password-reset", {
         email_address: values.emailAddress,
       });
 

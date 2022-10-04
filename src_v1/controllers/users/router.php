@@ -1,18 +1,17 @@
 <?php
 $access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
-	$this->get('/simulate/exit', function () {
+// if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
+// 	$this->get('/simulate/exit', function () {
 
-		include 'ExitSimulation.php';
-	});
-}
+// 		include 'ExitSimulation.php';
+// 	});
+// }
 
 if ($access == "Committee" || $access == "Admin" || $access == "Galas") {
 	// User Directory
 	$this->get(['/', '/filter'], function ($id = null) {
-
-		include 'userDirectory.php';
+		header("location: /users");
 	});
 
 	$this->any('/ajax/userList', function () {
@@ -114,12 +113,12 @@ if ($access == "Committee" || $access == "Admin" || $access == "Galas") {
 		include BASE_PATH . 'controllers/payments/parent/MembershipFees.php';
 	});
 
-	if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
-		$this->get('/simulate/{id}:int', function ($id) {
+	// if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserSimulation'])) {
+	// 	$this->get('/simulate/{id}:int', function ($id) {
 
-			include 'EnterSimulation.php';
-		});
-	}
+	// 		include 'EnterSimulation.php';
+	// 	});
+	// }
 
 	$this->post('/ajax/username', function () {
 		include 'usernameAjax.php';

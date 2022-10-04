@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const isPwned = async (password) => {
   try {
-    const result = await axios.post("/api/utilities/pwned-password-check", {
+    const result = await axios.post("/v1/api/utilities/pwned-password-check", {
       password: password,
     });
 

@@ -2,24 +2,24 @@
 
 // My Account
 $this->get('/', function () {
-	include 'Profile.php';
+		header("location: /my-account");
 });
 
 $this->post('/', function () {
-	include 'Profile.php';
+	header("location: /my-account");
 });
 
 // Manage Password
 $this->get('/password', function () {
-	require 'change-password.php';
+	header("location: /my-account/password-and-security");
 });
 
 $this->post('/password', function () {
-	require 'change-password-action.php';
+	header("location: /my-account/password-and-security");
 });
 
 $this->get('/security-keys', function () {
-	require 'WebAuthn/home.php';
+	header("location: /my-account/password-and-security");
 });
 
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
@@ -43,56 +43,24 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
 }
 
 $this->get(['login-history/', 'loginhistory/'], function ($page = null) {
-	include 'LoginHistory.php';
+	halt(1);
 });
 
-$this->group('/email', function () {
-
-	$this->group('/cc', function () {
-
-		if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['VerifyEmailSent'])) {
-			$this->get('/new', function () {
-				include 'CC/CCEmailSent.php';
-			});
-		} else {
-			$this->post('/new', function () {
-				include 'CC/NewCCVerify.php';
-			});
-
-			$this->get('/new', function () {
-				header("Location: " . autoUrl("my-account/email"));
-			});
-		}
-
-		$this->get('/{id}:int/delete', function ($id) {
-			include 'CC/DeleteCC.php';
-		});
-	});
-
-	$this->get('/', function () {
-		include 'EmailOptions.php';
-	});
-
-	$this->post('/', function () {
-		include 'EmailOptionsPost.php';
-	});
+$this->get('/email', function () {
+	header("location: /my-account/email-options");
 });
 
 $this->group(['/google-authenticator', '/googleauthenticator'], function () {
 	$this->get('/', function () {
-		include 'EnableGoogleAuthenticator.php';
+		header("location: /my-account/password-and-security");
 	});
 
 	$this->get('/setup', function () {
-		include 'GoogleAuthenticatorKeyGen.php';
+		header("location: /my-account/password-and-security");
 	});
 
 	$this->get('/disable', function () {
-		include 'GoogleAuthenticatorDisable.php';
-	});
-
-	$this->post('/setup', function () {
-		include 'GoogleAuthenticatorKeyVerify.php';
+		header("location: /my-account/password-and-security");
 	});
 });
 
@@ -116,10 +84,6 @@ $this->group('/general', function () {
 
 $this->group('/address', function () {
 	$this->get('/', function () {
-		include 'address.php';
-	});
-
-	$this->post('/', function () {
-		include 'address-post.php';
+		header("location: /my-account/profile");
 	});
 });

@@ -234,3 +234,6 @@ dist
 vendor/
 public/compiled
 cachebuster.json
+
+/.idea
+/.vscode

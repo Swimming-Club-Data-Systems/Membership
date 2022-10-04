@@ -574,16 +574,16 @@ include BASE_PATH . "views/header.php";
           Act as this user.
         </p>
 
-        <p>
-          You can use this feature to provide help and support to other users. It
-          will be as if you have logged in as this user.
-        </p>
+        <div class="alert alert-warning">
+          <p class="mb-0"><strong>This feature is no longer supported.</strong></p>
+          <p class="mb-0">This is due to our upgrade work.</p>
+        </div>
 
         <p>
           <strong>Usage of this feature is recorded.</strong> Any actions will still be recorded as being performed by yourself in audit logs.
         </p>
 
-        <p><a href="<?= autoUrl("users/simulate/" . $id) ?>" class="btn btn-primary">Simulate this user <span class="fa fa-chevron-right"></span> </a></p>
+        <p><a href="<?= autoUrl("users/simulate/" . $id) ?>" class="btn btn-primary disabled">Simulate this user <span class="fa fa-chevron-right"></span> </a></p>
       </div>
 
       <hr>

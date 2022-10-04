@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant\Auth;
 
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Auth\V1Login;
@@ -21,11 +22,23 @@ class V1LoginController extends Controller
         // Get current user
         $user = $request->user();
 
+        $url = self::getUrl($user);
+
         $v1Login = new V1Login();
         $v1Login->token = Str::random(512);
 
         $user->v1Logins()->save($v1Login);
 
-        return Inertia::location("/v1/login-to-v1?auth_code=" . urlencode($v1Login->token));
+        return Inertia::location($url);
+    }
+
+    public static function getUrl(User $user): string
+    {
+        $v1Login = new V1Login();
+        $v1Login->token = Str::random(512);
+
+        $user->v1Logins()->save($v1Login);
+
+        return "/v1/login-to-v1?auth_code=" . urlencode($v1Login->token);
     }
 }

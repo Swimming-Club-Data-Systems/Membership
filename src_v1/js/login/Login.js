@@ -92,7 +92,7 @@ const Login = (props) => {
     }
 
     // Check for tokens first!
-    const { data } = await axios.get("/api/auth/login/has-webauthn", {
+    const { data } = await axios.get("/v1/api/auth/login/has-webauthn", {
       params: {
         email: value || username,
       }
@@ -111,8 +111,8 @@ const Login = (props) => {
   };
 
   const login = useLogin({
-    actionUrl: "/api/auth/login/webauthn-verify",
-    optionsUrl: "/api/auth/login/webauthn-challenge",
+    actionUrl: "/v1/api/auth/login/webauthn-verify",
+    optionsUrl: "/v1/api/auth/login/webauthn-challenge",
   });
 
   const handleLogin = async (event, autoFill = false) => {
@@ -174,7 +174,7 @@ const Login = (props) => {
 
     try {
 
-      const response = await axios.post("/api/auth/login/login", {
+      const response = await axios.post("/v1/api/auth/login/login", {
         email_address: values.emailAddress,
         password: values.password,
       });

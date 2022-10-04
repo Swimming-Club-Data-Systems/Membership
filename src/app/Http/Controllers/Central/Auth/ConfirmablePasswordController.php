@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Central\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\CentralLoginRequest;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,7 @@ class ConfirmablePasswordController extends Controller
      */
     public function show()
     {
-        return Inertia::render('Auth/ConfirmPassword');
+        return Inertia::render('CentralAuth/ConfirmPassword');
     }
 
     /**
@@ -27,10 +28,10 @@ class ConfirmablePasswordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    public function store(Request $request)
+    public function store(CentralLoginRequest $request)
     {
-        if (! Auth::guard('web')->validate([
-            'email' => $request->user()->email,
+        if (! Auth::guard('central')->validate([
+            'email' => $request->user('central')->email,
             'password' => $request->password,
         ])) {
             throw ValidationException::withMessages([

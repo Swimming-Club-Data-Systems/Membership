@@ -459,42 +459,30 @@ if (!function_exists('chesterStandardMenu')) {
                   <div class="dropdown-divider"></div>
                 <?php } ?>
                 <h6 class="dropdown-header">Account settings</h6>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account")) ?>">
-                  Your Profile
+                <a class="dropdown-item" href="/my-account/profile">
+                  Profile
                 </a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/email")) ?>">
-                  Your Email Options
-                </a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/address")) ?>">
-                  Your Address
-                </a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/general")) ?>">
-                  Your General Options
+                <a class="dropdown-item" href="/my-account/email-options">
+                  Email Options
                 </a>
                 <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("emergency-contacts")) ?>">
-                  Your Emergency Contacts
+                  Emergency Contacts
                 </a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/passkeys")) ?>">
-                  Your Passkeys
-                </a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/password")) ?>">
-                  Your Password
+                <a class="dropdown-item" href="/my-account/password-and-security">
+                  Password and Security
                 </a>
                 <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/notify-history")) ?>">
-                  Your Message History
+                  Message History
                 </a>
                 <?php if ($user->hasPermission('Parent')) { ?>
                   <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("account-switch?type=Parent&redirect=" . urlencode(autoUrl("my-account/add-member")))) ?>">
                     Add Member
                   </a>
                 <?php } ?>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("my-account/login-history")) ?>">
-                  Your Login History
-                </a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" target="_blank" href="<?= htmlspecialchars(platformUrl('help-and-support')) ?>">Help</a>
+                <a class="dropdown-item" target="_blank" href="https://docs.myswimmingclub.uk/">Help</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item disabled">Visit V2 to logout</a>
+                <a class="dropdown-item" href="/logout">Sign out</a>
               </div>
             </li>
           </ul>

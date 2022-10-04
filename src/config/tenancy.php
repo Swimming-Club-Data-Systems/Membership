@@ -5,6 +5,18 @@ declare(strict_types=1);
 use Stancl\Tenancy\Database\Models\Domain;
 use App\Models\Central\Tenant;
 
+$centralDomains = [
+    '127.0.0.1',
+    'localhost',
+    'membership.myswimmingclub.uk',
+    'myswimmingclub.uk',
+    'mt.myswimmingclub.uk',
+];
+
+if (env('CENTRAL_DOMAIN')) {
+    $centralDomains = [env('CENTRAL_DOMAIN')];
+}
+
 return [
     'tenant_model' => Tenant::class,
     'id_generator' => null,
@@ -16,13 +28,7 @@ return [
      *
      * Only relevant if you're using the domain or subdomain identification middleware.
      */
-    'central_domains' => [
-        '127.0.0.1',
-        'localhost',
-        'membership.myswimmingclub.uk',
-        'myswimmingclub.uk',
-        'mt.myswimmingclub.uk',
-    ],
+    'central_domains' => $centralDomains,
 
     /**
      * Tenancy bootstrappers are executed when tenancy is initialized.

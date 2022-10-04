@@ -194,6 +194,8 @@ function halt(int $statusCode, $throwException = true)
   try {
     if ($statusCode == 000) {
       require "views/000.php";
+    } else if ($statusCode == 1) {
+        require "views/001.php";
     } else if ($statusCode == 200) {
       require "views/200.php";
     } else if ($statusCode == 400) {
@@ -388,8 +390,15 @@ $route->use(function () {
 //   'continue' => true
 // ]);
 
-// If SUMDOMAIN OR DOMAIN
-if (getenv('MAIN_DOMAIN') && getenv('DOMAIN_TYPE') == 'SUBDOMAIN') {
+$centralDomains = [
+    'mt.myswimmingclub.uk',
+    'myswimmingclub.uk',
+    'membership.myswimmingclub.uk',
+    'localhost',
+];
+
+// If SUBDOMAIN OR DOMAIN
+if (!in_array(app('request')->hostname, $centralDomains)) {
   // Else use main domain
   // Get the club
 
