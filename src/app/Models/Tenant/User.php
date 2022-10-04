@@ -209,6 +209,21 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Member::class, 'UserID');
     }
 
+    public function representedSquads(): BelongsToMany
+    {
+        return $this->belongsToMany(Squad::class, 'squadReps', 'User', 'Squad')
+            ->withTimestamps()
+            ->withPivot([
+                'ContactDescription'
+            ]);
+    }
+
+    public function galas(): BelongsToMany
+    {
+        return $this->belongsToMany(Gala::class, 'teamManagers', 'User', 'Gala')
+            ->withTimestamps();
+    }
+
     public function hasPermission(string|array $name)
     {
         // Fetch cache

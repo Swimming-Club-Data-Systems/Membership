@@ -30,4 +30,13 @@ class Squad extends Model
                 'Paying'
             ]);
     }
+
+    public function reps(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'squadReps', 'Squad', 'User')
+            ->withTimestamps()
+            ->withPivot([
+                'ContactDescription'
+            ]);
+    }
 }
