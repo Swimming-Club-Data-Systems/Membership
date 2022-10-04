@@ -97,6 +97,14 @@ const About = (props) => {
                                 {navigator.userAgent}
                             </dd>
                         </div>
+                        <div className="sm:col-span-1">
+                            <dt className="text-sm font-medium text-gray-500">
+                                React Server Side Rendered
+                            </dt>
+                            <dd className="mt-1 text-sm text-gray-900">
+                                {import.meta.env.SSR ? "Yes" : "No"}
+                            </dd>
+                        </div>
                     </dl>
 
                     <h2>Legal</h2>

@@ -1,14 +1,15 @@
 import { Link, usePage } from "@inertiajs/inertia-react";
 import React from "react";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import InternalContainer from "@/Components/InternalContainer";
+import Container from "@/Components/Container";
+import { format } from "date-fns";
 
 const Footer = (props) => {
     const { tenant } = usePage().props;
 
     return (
         <div className="bg-gray-200 text-gray-700  dark:bg-slate-900 dark:text-slate-200">
-            <InternalContainer>
+            <Container>
                 <div className="grid grid-cols-1 gap-16 border-b border-gray-300 py-5 dark:border-slate-200 md:grid-cols-3 lg:grid-cols-5">
                     <div className="md:col-span-3 lg:col-span-2">
                         <ApplicationLogo />
@@ -131,9 +132,9 @@ const Footer = (props) => {
                     </div>
                 </div>
                 <p className="py-5 text-center text-sm font-semibold text-gray-500 dark:text-slate-400">
-                    &copy; Swimming Club Data Systems 2022
+                    &copy; Swimming Club Data Systems {format(new Date(), "Y")}
                 </p>
-            </InternalContainer>
+            </Container>
         </div>
     );
 };
