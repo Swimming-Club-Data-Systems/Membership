@@ -6,13 +6,19 @@ var stripe = Stripe(stripeData.dataset.stripePublishable, {
 
 var cardButton = document.getElementById('new-card-button');
 var clientSecret = cardButton.dataset.secret;
+
 var elements = stripe.elements({
+  clientSecret: clientSecret,
   fonts: [
     {
       cssSrc: stripeData.dataset.stripeFontCss,
     },
   ]
 });
+
+var paymentElement = elements.create('payment');
+paymentElement.mount('#payment-element');
+
 var successAlert = '<div class="alert alert-success"><p class="mb-0"><strong>Payment Successful</strong></p><p class="mb-0">Please wait while we redirect you</p></div>';
 
 var cardNumberElement = elements.create('cardNumber', {

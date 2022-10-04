@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /webhooks/
+Disallow: /webhooks
+Disallow: /css
+Disallow: /js
+Disallow: /img
+Disallow: /public
+Disallow: /files
+
+User-agent: SemrushBot
+Disallow: /
