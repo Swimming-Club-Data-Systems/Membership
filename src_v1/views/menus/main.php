@@ -456,10 +456,6 @@ if (!function_exists('chesterStandardMenu')) {
                         <?php } ?>
                     <?php } ?>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a>
-                    </li>
-
                     <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
                         <li class="nav-item d-lg-none">
                             <a class="nav-link" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>"

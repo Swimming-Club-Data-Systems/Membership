@@ -154,28 +154,6 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     <?php } ?>
 
     <div class="bg-white border-bottom border-light">
-<!--      <div class="club-name-header --><?php //if (date("m") == "12") { ?><!--festive--><?php //} ?><!--" style="background-color: rgba(0, 0, 0, .075)">-->
-<!--        <div class="--><?//= $container_class ?><!--">-->
-<!--          <div class="row justify-content-between align-items-center py-3 mb-0 d-none d-md-flex">-->
-<!--            <div class="col-auto">-->
-<!--              <h1 class="mb-0">-->
-<!--                <a href="--><?//= htmlspecialchars(autoUrl("")) ?><!--" class="text-dark text-decoration-none fw-bold">-->
-<!--                  --><?php //if ($tenant->getKey('LOGO_DIR') && $tenant->getKey('SHOW_LOGO')) { ?>
-<!--                    <img src="--><?//= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?><!--" srcset="--><?//= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?><!-- 2x, --><?//= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?><!-- 3x" alt="--><?//= htmlspecialchars($tenant->getName()) ?><!--" class="img-fluid" style="height: 75px">-->
-<!--                  --><?php //} else { ?>
-<!--                    --><?//= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
-<!--                  --><?php //} ?>
-<!--                </a>-->
-<!--              </h1>-->
-<!--            </div>-->
-<!--            --><?php //if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
-<!--              <div class="col-auto">-->
-<!--                <a href="--><?//= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?><!--" class="btn text-dark btn-outline-light-d text-decoration-none">Club website <i class="fa fa-external-link" aria-hidden="true"></i></a>-->
-<!--              </div>-->
-<!--            --><?php //} ?>
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
 
       <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) || !user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) { ?>
         <div>
