@@ -12,15 +12,16 @@ use App\Models\Tenant\User;
  */
 class AppMenu
 {
-    private bool $isTeamManager;
-    private bool $isSquadRep;
-    private User $user;
+    private ?bool $isTeamManager;
+    private ?bool $isSquadRep;
+    private ?bool $hasSquadReps;
+    private ?User $user;
 
-    private function __construct(User $user)
+    private function __construct(?User $user)
     {
         $this->user = $user;
-        $this->isTeamManager = $this->user->galas()->where('GalaDate', '>=', now()->subDay())->exists();
-        $this->isSquadRep = $this->user->representedSquads()->exists();
+        $this->isTeamManager = $this->user?->galas()->where('GalaDate', '>=', now()->subDay())->exists();
+        $this->isSquadRep = $this->user?->representedSquads()->exists();
         $this->hasSquadReps = $this->isSquadRep || Squad::has('reps')->exists();
     }
 
