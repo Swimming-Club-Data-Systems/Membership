@@ -38,9 +38,11 @@ class HandleInertiaRequests extends Middleware
     {
         $flashBag = $request->session()->get('flash_bag') ?? [];
         return array_merge(parent::share($request), [
-            'auth' => [
-                'user' => tenant() ? $request->user() : $request->user('central'),
-            ],
+            'auth' => function () use ($request) {
+                return [
+                    'user' => tenant() ? $request->user() : $request->user('central'),
+                ];
+            },
             'ziggy' => function () use ($request) {
                 return array_merge((new Ziggy)->toArray(), [
                     'location' => $request->url(),
