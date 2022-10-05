@@ -4,6 +4,10 @@
  * API
  */
 
+$this->get('/user-permissions', function($id) {
+    include 'user-permissions.php';
+});
+
 $this->before('/api', function (){
   header("content-type: application/json");
 });
