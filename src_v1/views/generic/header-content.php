@@ -7,22 +7,12 @@ $tenant = app()->tenant;
 
 $logos = $tenant->getKey('LOGO_DIR');
 
-$clubLogoColour = 'text-white logo-text-shadow';
-$navTextColour = 'navbar-dark';
-$clubLinkColour = 'btn-light';
-
-if (app()->tenant->getKey('SYSTEM_COLOUR') && getContrastColor(app()->tenant->getKey('SYSTEM_COLOUR'))) {
-  $clubLogoColour = 'text-dark';
-  $navTextColour = 'navbar-light';
-  $clubLinkColour = 'btn-dark';
-}
-
 $bg = "";
 if (isset($customBackground) && $customBackground) {
   $bg = $customBackground;
 }
 
-$container_class;
+$container_class = null;
 if (isset($fluidContainer) && $fluidContainer == true) {
   $container_class = "container-fluid";
 } else {
@@ -33,14 +23,6 @@ if (isset($fluidContainer) && $fluidContainer == true) {
   <div class="visually-hidden visually-hidden-focusable">
     <a href="#maincontent">Skip to main content</a>
   </div>
-
-  <?php if (bool(getenv('IS_DEV'))) { ?>
-    <div class="bg-warning text-dark bg-striped py-1 d-print-none">
-      <div class="<?= $container_class ?>">
-        <small><strong>DEVELOPMENT PLATFORM</strong> NOT FOR PRODUCTION USE</small>
-      </div>
-    </div>
-  <?php } ?>
 
   <?php if (app()->tenant->getBooleanKey('PAYMENT_OVERDUE') && app()->user && app()->user->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
@@ -171,13 +153,13 @@ if (isset($fluidContainer) && $fluidContainer == true) {
       </div>
     <?php } ?>
 
-    <div class="membership-header">
+    <div class="bg-light">
       <div class="club-name-header <?php if (date("m") == "12") { ?>festive<?php } ?>" style="background-color: rgba(0, 0, 0, .075)">
         <div class="<?= $container_class ?>">
           <div class="row justify-content-between align-items-center py-3 mb-0 d-none d-md-flex">
             <div class="col-auto">
               <h1 class="mb-0">
-                <a href="<?= htmlspecialchars(autoUrl("")) ?>" class="<?= $clubLogoColour ?> text-light-d text-decoration-none fw-bold">
+                <a href="<?= htmlspecialchars(autoUrl("")) ?>" class="text-dark text-decoration-none fw-bold">
                   <?php if ($tenant->getKey('LOGO_DIR') && $tenant->getKey('SHOW_LOGO')) { ?>
                     <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
                   <?php } else { ?>
@@ -188,7 +170,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
             </div>
             <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
               <div class="col-auto">
-                <a href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" class="btn <?= $clubLinkColour ?> btn-outline-light-d text-decoration-none">Club website <i class="fa fa-external-link" aria-hidden="true"></i></a>
+                <a href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>" class="btn text-dark btn-outline-light-d text-decoration-none">Club website <i class="fa fa-external-link" aria-hidden="true"></i></a>
               </div>
             <?php } ?>
           </div>
@@ -200,7 +182,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
           <div class="<?= $container_class ?>">
             <div class="">
               <div class="">
-                <nav class="navbar navbar-expand-lg <?= $navTextColour ?>
+                <nav class="navbar navbar-expand-lg navbar-light
         d-print-none justify-content-between px-0" role="navigation">
 
                   <a class="navbar-brand align-items-center d-lg-none" href="<?= htmlspecialchars(autoUrl("")) ?>">
