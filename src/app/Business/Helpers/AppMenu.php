@@ -4,6 +4,7 @@ namespace App\Business\Helpers;
 
 
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
 
 /**
@@ -15,10 +16,79 @@ class AppMenu
     private bool $isSquadRep;
     private User $user;
 
-    private function __construct(User $user) {
+    private function __construct(User $user)
+    {
         $this->user = $user;
         $this->isTeamManager = $this->user->galas()->where('GalaDate', '>=', now()->subDay())->exists();
         $this->isSquadRep = $this->user->representedSquads()->exists();
+        $this->hasSquadReps = $this->isSquadRep || Squad::has('reps')->exists();
+    }
+
+    public function galas()
+    {
+        $menu = [];
+
+        $menu[] = [
+            'name' => 'Home',
+            'href' => '/galas',
+        ];
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Enter Gala',
+                'href' => '/galas/entergala',
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'My Entries',
+                'href' => '/galas/entries',
+            ];
+        }
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        if ($tenant->getOption('GALA_CARD_PAYMENTS_ALLOWED')) {
+            $menu[] = [
+                'name' => 'Pay for Entries',
+                'href' => '/galas/pay-for-entries',
+            ];
+        }
+
+        $menu[] = [
+            'name' => 'Time Converter',
+            'href' => '/time-converter',
+        ];
+
+        $menu[] = [
+            'name' => 'Gala List',
+            'href' => '/galas/all-galas',
+        ];
+
+        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Add New Gala',
+                'href' => '/galas/addgala',
+            ];
+        }
+
+        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'View Entries',
+                'href' => '/galas/entries',
+            ];
+        }
+
+        if ($this->isTeamManager || $this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Team Manager Dashboard',
+                'href' => '/team-managers',
+            ];
+        }
+
+        return $menu;
     }
 
     public static function asArray(User|null $user): array
@@ -225,10 +295,12 @@ class AppMenu
             ];
         }
 
-        $menu[] = [
-            'name' => 'Squad Reps',
-            'href' => '/squad-reps',
-        ];
+        if ($this->hasSquadReps || $this->user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Squad Reps',
+                'href' => '/squad-reps',
+            ];
+        }
 
         return $menu;
     }
@@ -285,67 +357,28 @@ class AppMenu
         return $menu;
     }
 
-    public function galas()
+    public function users()
     {
         $menu = [];
 
-        $menu[] = [
-            'name' => 'Home',
-            'href' => '/galas',
-        ];
-
-        if ($this->user->hasPermission('Parent')) {
+        if ($this->user->hasPermission(['Admin', 'Galas'])) {
             $menu[] = [
-                'name' => 'Enter Gala',
-                'href' => '/galas/entergala',
+                'name' => 'User List',
+                'href' => '/users',
             ];
         }
 
-        if ($this->user->hasPermission('Parent')) {
+        if ($this->user->hasPermission('Admin')) {
             $menu[] = [
-                'name' => 'My Entries',
-                'href' => '/galas/entries',
+                'name' => 'New User (member onboarding)',
+                'href' => '/onboarding',
             ];
         }
 
-        /** @var Tenant $tenant */
-        $tenant = tenant();
-
-        if ($tenant->getOption('GALA_CARD_PAYMENTS_ALLOWED')) {
+        if ($this->user->hasPermission('Admin')) {
             $menu[] = [
-                'name' => 'Pay for Entries',
-                'href' => '/galas/pay-for-entries',
-            ];
-        }
-
-        $menu[] = [
-            'name' => 'Time Converter',
-            'href' => '/time-converter',
-        ];
-
-        $menu[] = [
-            'name' => 'Gala List',
-            'href' => '/galas/all-galas',
-        ];
-
-        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
-            $menu[] = [
-                'name' => 'Add New Gala',
-                'href' => '/galas/addgala',
-            ];
-        }
-
-        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
-            $menu[] = [
-                'name' => 'View Entries',
-                'href' => '/galas/entries',
-            ];
-        }
-
-        if ($this->isTeamManager || $this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
-            $menu[] = [
-                'name' => 'Team Manager Dashboard',
-                'href' => '/team-managers',
+                'name' => 'New User (staff)',
+                'href' => '/users/add',
             ];
         }
 
@@ -512,35 +545,8 @@ class AppMenu
         return $menu;
     }
 
-    public function users()
+    public function admin()
     {
-        $menu = [];
-
-        if ($this->user->hasPermission(['Admin', 'Galas'])) {
-            $menu[] = [
-                'name' => 'User List',
-                'href' => '/users',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'New User (member onboarding)',
-                'href' => '/onboarding',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'New User (staff)',
-                'href' => '/users/add',
-            ];
-        }
-
-        return $menu;
-    }
-
-    public function admin() {
         $menu = [];
 
         $menu[] = [

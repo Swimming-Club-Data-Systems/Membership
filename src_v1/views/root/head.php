@@ -56,6 +56,7 @@ Chester-le-Street ASC is a non profit unincorporated association.
   <meta name="X-SCDS-Membership-Tracking" content="no">
   <script src="https://js.stripe.com/v3/"></script>
   <link rel="stylesheet preload" href="<?= htmlspecialchars($stylesheet) ?>">
+  <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
   <!-- Generic icon -->
   <link rel="icon" href="<?= htmlspecialchars(autoUrl("img/corporate/scds.png")) ?>">
