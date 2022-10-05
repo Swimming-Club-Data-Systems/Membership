@@ -153,7 +153,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
       </div>
     <?php } ?>
 
-    <div class="bg-white border-bottom border-light">
+    <div class="bg-white border-bottom border-light shadow">
 
       <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']) || !user_needs_registration($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) { ?>
         <div>
