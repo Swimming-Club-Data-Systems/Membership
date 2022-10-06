@@ -56,7 +56,7 @@ const NotFound = () => {
 
                     return <a
                       key={permission.name}
-                      href={"/v1/account-switch?type=" + encodeURIComponent(permission) + "&redirect=" + encodeURIComponent(location.pathname)}
+                      href={"/v1/account-switch?type=" + encodeURIComponent(permission.name) + "&redirect=" + encodeURIComponent(location.pathname)}
                       className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${disabled}`}>
                       {permission.name} {permission.current &&
                       <span>Current mode <i className="text-primary fa fa-check-circle fa-fw"

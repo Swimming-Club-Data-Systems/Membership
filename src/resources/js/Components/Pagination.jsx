@@ -6,6 +6,7 @@ import InternalContainer from "@/Components/InternalContainer";
 const Pagination = ({ collection }) => {
     const {
         current_page,
+        last_page,
         from,
         to,
         total,
@@ -69,6 +70,10 @@ const Pagination = ({ collection }) => {
         <div className="border-t border-gray-200 bg-white py-3">
             <InternalContainer>
                 <div className="sm:hidden text-center mb-4">
+                    <p className="text-sm text-gray-700 mb-2">
+                        Page <span className="font-medium">{current_page}</span>{" "}
+                        of <span className="font-medium">{last_page}</span>
+                    </p>
                     <p className="text-sm text-gray-700">
                         Showing <span className="font-medium">{from}</span> to{" "}
                         <span className="font-medium">{to}</span> of{" "}
@@ -88,7 +93,7 @@ const Pagination = ({ collection }) => {
                         {next_page_url && (
                             <Link
                                 href={next_page_url}
-                                className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                                className="relative ml-auto inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
                             >
                                 Next
                             </Link>
