@@ -13,13 +13,15 @@ const Card = (props) => {
             // key={person.email}
             className="relative flex items-center space-x-3 rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm focus-within:ring-2 focus-within:ring-indigo-500 focus-within:ring-offset-2 hover:border-gray-400"
         >
-            {/*<div className="flex-shrink-0">*/}
-            {/*    <img*/}
-            {/*        className="h-10 w-10 rounded-full"*/}
-            {/*        src={person.imageUrl}*/}
-            {/*        alt=""*/}
-            {/*    />*/}
-            {/*</div>*/}
+            {props.image && (
+                <div className="flex-shrink-0">
+                    <img
+                        className="h-10 w-10 rounded-full"
+                        src={props.image}
+                        alt={props.imageAlt || ""}
+                    />
+                </div>
+            )}
             <div className="min-w-0 flex-1">
                 <BaseLink
                     href={props.link}

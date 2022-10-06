@@ -8,15 +8,15 @@ const ItemContent = (props) => {
     return (
         <>
             <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <div className="mr-4">
+                <div className="flex items-center min-w-0">
+                    <div className="mr-4 shrink-0">
                         <img
                             className="h-8 w-8 rounded-full"
                             src={props.gravitar_url}
                             alt=""
                         />
                     </div>
-                    <div>
+                    <div className="min-w-0 truncate overflow-ellipsis flex-shrink">
                         <div className="truncate text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
                             {props.Forename} {props.Surname}
                         </div>
@@ -25,11 +25,11 @@ const ItemContent = (props) => {
                         </div>
                     </div>
                 </div>
-                <div className="ml-2 flex flex-shrink-0">
-                    <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">
-                        Active
-                    </span>
-                </div>
+                {/*<div className="ml-2 flex-none flex-shrink-0">*/}
+                {/*    <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold leading-5 text-green-800">*/}
+                {/*        Active*/}
+                {/*    </span>*/}
+                {/*</div>*/}
             </div>
         </>
     );
