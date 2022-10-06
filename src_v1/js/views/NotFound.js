@@ -17,13 +17,15 @@ const NotFound = () => {
   }, []);
 
   useEffect(() => {
-    try {
-      const response = axios.get("/v1/api/user-permissions");
+    (async () => {
+      try {
+        const response = await axios.get("/v1/api/user-permissions");
 
-      setUserPermissions(response.data);
-    } catch (error) {
-      setUserPermissions([]);
-    }
+        setUserPermissions(response.data);
+      } catch (error) {
+        setUserPermissions([]);
+      }
+    })();
   }, []);
 
   const goBack = () => {
