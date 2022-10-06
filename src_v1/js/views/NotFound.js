@@ -36,7 +36,7 @@ const NotFound = () => {
         <div className="col-lg-8">
           <h1>The page you requested cannot be found</h1>
 
-          {userPermissions.length > 1 &&
+          {userPermissions && userPermissions.length > 1 &&
             <>
               <p className="lead">
                 If you expected to see something here, you may want to try reloading this page with an appropriate
@@ -54,7 +54,7 @@ const NotFound = () => {
 
                     return <a
                       key={permission.name}
-                      href={"/v1/account-switch?type=" + permission + "&redirect=" + location.pathname}
+                      href={"/v1/account-switch?type=" + encodeURIComponent(permission) + "&redirect=" + encodeURIComponent(location.pathname)}
                       className={`list-group-item list-group-item-action d-flex justify-content-between align-items-center ${disabled}`}>
                       {permission.name} {permission.current &&
                       <span>Current mode <i className="text-primary fa fa-check-circle fa-fw"
@@ -66,7 +66,7 @@ const NotFound = () => {
                 </div>
               </div>
 
-              <hr />
+              <hr/>
             </>
           }
 
