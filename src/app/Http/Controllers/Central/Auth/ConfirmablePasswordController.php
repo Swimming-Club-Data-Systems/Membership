@@ -28,7 +28,7 @@ class ConfirmablePasswordController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return mixed
      */
-    public function store(CentralLoginRequest $request)
+    public function store(Request $request)
     {
         if (! Auth::guard('central')->validate([
             'email' => $request->user('central')->email,

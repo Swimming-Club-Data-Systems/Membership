@@ -66,7 +66,6 @@ $enable-important-utilities:  true !default;
 
 $chesterRed: #bd0000;
 $blue:    #007bff;
-$indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
 $red:     #dc3545 !default;
@@ -76,11 +75,15 @@ $green:   #28a745 !default;
 $teal:    #20c997 !default;
 $cyan:    #17a2b8 !default;
 
-$primary: $purple;
-// $primary: #c70106;
-$secondary: #3c236a;
-
-$info: #29dea4;
+$primary:       #4f46e5;
+$indigo:        $primary;
+$secondary:     $gray-600 !default;
+$success:       #16a34a;
+$info:          $cyan !default;
+$warning:       #ca8a04;
+$danger:        #dc2626;
+$light:         #f3f4f6;
+$dark:          $gray-900 !default;
 
 // stylelint-disable
 $white:    #fff !default;

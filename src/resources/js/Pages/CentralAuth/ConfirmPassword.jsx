@@ -60,12 +60,6 @@ export default function ConfirmPassword(props) {
         }
     };
 
-    const onSubmit = (values, formikBag) => {
-        Inertia.post(route("central.password.confirm"), values, {
-            onSuccess: (arg) => console.log(arg),
-        });
-    };
-
     return (
         <CentralAuthServices title="Confirm your password">
             <Head title="Confirm Password" />
@@ -132,7 +126,8 @@ export default function ConfirmPassword(props) {
                                 .string()
                                 .required("A password is required"),
                         })}
-                        onSubmit={onSubmit}
+                        method="post"
+                        action={route("central.password.confirm")}
                         submitTitle="Confirm"
                         hideClear
                     >
