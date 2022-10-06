@@ -17,9 +17,13 @@ const NotFound = () => {
   }, []);
 
   useEffect(() => {
-    const response = axios.get("/v1/api/user-permissions");
+    try {
+      const response = axios.get("/v1/api/user-permissions");
 
-    setUserPermissions(response.data);
+      setUserPermissions(response.data);
+    } catch (error) {
+      setUserPermissions([]);
+    }
   }, []);
 
   const goBack = () => {
@@ -36,8 +40,7 @@ const NotFound = () => {
             <>
               <p className="lead">
                 If you expected to see something here, you may want to try reloading this page with an appropriate
-                access
-                level.
+                access level.
               </p>
 
               <div className="card">

@@ -18,8 +18,8 @@ import { Fragment } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
     ArrowNarrowLeftIcon,
-    HomeIcon,
     ChevronDownIcon,
+    HomeIcon,
 } from "@heroicons/react/solid";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
@@ -319,7 +319,10 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                                                 {({
                                                                                                     active,
                                                                                                 }) => (
-                                                                                                    <Link
+                                                                                                    <Popover.Button
+                                                                                                        as={
+                                                                                                            Link
+                                                                                                        }
                                                                                                         href={
                                                                                                             item.href
                                                                                                         }
@@ -336,7 +339,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                                                         {
                                                                                                             item.name
                                                                                                         }
-                                                                                                    </Link>
+                                                                                                    </Popover.Button>
                                                                                                 )}
                                                                                             </Menu.Item>
                                                                                         )
@@ -347,7 +350,10 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                     );
                                                                 }
                                                                 return (
-                                                                    <Link
+                                                                    <Popover.Button
+                                                                        as={
+                                                                            Link
+                                                                        }
                                                                         key={
                                                                             item.name
                                                                         }
@@ -359,7 +365,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                         {
                                                                             item.name
                                                                         }
-                                                                    </Link>
+                                                                    </Popover.Button>
                                                                 );
                                                             }
                                                         )}

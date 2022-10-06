@@ -4,7 +4,7 @@
  * API
  */
 
-$this->get('/user-permissions', function($id) {
+$this->get('/user-permissions', function() {
     include 'user-permissions.php';
 });
 
