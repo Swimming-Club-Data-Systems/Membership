@@ -34,6 +34,8 @@
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-react": "^0.8.0",
         "@reduxjs/toolkit": "^1.8.5",
+        "@stripe/react-stripe-js": "^1.12.0",
+        "@stripe/stripe-js": "^1.38.1",
         "@web-auth/webauthn-helper": "^0.0.13",
         "date-fns": "^2.29.3",
         "formik": "^2.2.9",
