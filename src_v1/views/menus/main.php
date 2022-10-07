@@ -100,7 +100,6 @@ if (!function_exists('chesterStandardMenu')) {
                            class="text-dark text-decoration-none fw-bold">
                             <?php if ($logos) { ?>
                                 <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>"
-                                     srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x"
                                      alt="Home" class="img-fluid"
                                      style="height: 2rem">
                             <?php } else { ?>
