@@ -3,6 +3,7 @@
 use App\Http\Controllers\Central\MyAccountController;
 use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
+use App\Http\Controllers\Central\TenantUserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -54,6 +55,11 @@ Route::middleware('auth:central')->group(function () {
                 Route::post('/webauthn/options', [WebauthnRegistrationController::class, 'challenge'])->name('webauthn_challenge');
                 Route::delete('/webauthn/{credential}', [WebauthnRegistrationController::class, 'delete'])->name('webauthn_delete');
             });
+        });
+
+        Route::prefix('/users')->group(function () {
+            Route::get('/', [TenantUserController::class, 'index']);
+            Route::get('/{user}', [TenantUserController::class, 'show'])->name('users.show');
         });
     });
 });

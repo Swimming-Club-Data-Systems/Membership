@@ -129,6 +129,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Internal Key
+    |--------------------------------------------------------------------------
+    |
+    | Key used as an API token by the application for requests to/from the
+    | v1 app.
+    |
+    | Set on the custom 'X-SCDS-INTERNAL-KEY' HTTP request header
+    |
+    */
+
+    'internal_key' => env('INTERNAL_KEY'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Maintenance Mode Driver
     |--------------------------------------------------------------------------
     |

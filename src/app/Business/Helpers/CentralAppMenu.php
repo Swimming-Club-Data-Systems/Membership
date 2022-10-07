@@ -32,6 +32,11 @@ class CentralAppMenu
                 'href' => '/admin',
             ];
 
+            $menu[] = [
+                'name' => 'Tenant Users',
+                'href' => '/users',
+            ];
+
             if (Gate::check('viewTelescope', [$user])) {
                 $menu[] = [
                     'name' => 'Telescope',

@@ -231,7 +231,7 @@ $this->get('/notify/unsubscribe/{userid}/{email}/{list}/do', function ($userid, 
 });
 
 $this->get(['/help-and-support', '/help-and-support/*'], function () {
-  include BASE_PATH . 'controllers/help/help-documentation.php';
+  header("location: https://docs.myswimmingclub.uk");
 });
 
 $this->group(['/timeconverter', '/time-converter'], function () {
