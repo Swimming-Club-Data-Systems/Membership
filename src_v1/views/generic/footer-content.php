@@ -11,32 +11,6 @@ $logos = $tenant->getKey('LOGO_DIR')
 <!-- THE HEPPELL FOOTER -->
 <footer>
 
-  <!-- COVID ALERT ADVERT -->
-  <?php
-  $covidVideos = [
-    'https://myswimmingclub.uk/assets/covid/act-like-youve-got-it.mov',
-  ];
-
-  $covidMobileVideos = [
-    'https://myswimmingclub.uk/assets/covid/act-like-youve-got-it-mobile.mov',
-    'https://myswimmingclub.uk/assets/covid/anyone-can-get-it-mobile.mov',
-    'https://myswimmingclub.uk/assets/covid/anyone-can-spread-it-mobile.mov'
-  ];
-  ?>
-
-  <!-- <div class="mt-3 mb-n3 text-center" style="background: #000000;">
-    <div class="container-xl">
-      <video class="d-none d-sm-block mx-auto my-0 p-0 img-fluid" autoplay loop muted playsinline>
-        <source src="<?= htmlspecialchars($covidVideos[rand(0, sizeof($covidVideos) - 1)]) ?>" type="video/mp4" />
-        A COVID-19 video message appears here but your browser does not support the video element.
-      </video>
-      <video class="d-block d-sm-none mx-auto my-0 p-0 img-fluid" autoplay loop muted playsinline>
-        <source src="<?= htmlspecialchars($covidMobileVideos[rand(0, sizeof($covidMobileVideos) - 1)]) ?>" type="video/mp4" />
-        A COVID-19 video message appears here but your browser does not support the video element.
-      </video>
-    </div>
-  </div> -->
-
   <div class="cls-global-footer cls-global-footer-inverse cls-global-footer-body d-print-none mt-3 pb-0 focus-highlight">
     <div class="<?php if (isset($this->fluidContainer) && $this->fluidContainer == true) { ?>container-fluid<?php } else { ?>container-xl<?php } ?>">
       <div class="row">
@@ -53,9 +27,9 @@ $logos = $tenant->getKey('LOGO_DIR')
                 } ?>
               </address>
               <!--<p><i class="fa fa-envelope fa-fw" aria-hidden="true"></i> <a href="mailto:enquiries@chesterlestreetasc.co.uk" target="new">E-Mail Us</a></p>-->
-              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= htmlspecialchars(autoUrl("reportanissue?url=" . urlencode(app('request')->curl))) ?>">Report an issue with this page</a>
+              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= htmlspecialchars("/report-an-issue?url=" . urlencode(app('request')->curl)) ?>">Report an issue with this page</a>
               </p>
-              <p><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i> <a href="<?= htmlspecialchars(autoUrl("about")) ?>">Support information</a>
+              <p><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i> <a href="/about">Support information</a>
               </p>
             </div>
           </div>
@@ -66,12 +40,12 @@ $logos = $tenant->getKey('LOGO_DIR')
               <ul class="list-unstyled cls-global-footer-link-spacer">
                 <li><strong>Membership System Support</strong></li>
                 <li>
-                  <a href="<?= autoUrl("privacy") ?>" target="_blank" title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
+                  <a href="/privacy" target="_blank" title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
                     Our Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="<?= htmlspecialchars(autoUrl('help-and-support', false)) ?>" title="Help and Support">
+                  <a href="https://docs.myswimmingclub.uk" title="Help and Support">
                     Help and Support
                   </a>
                 </li>
