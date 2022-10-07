@@ -34,7 +34,7 @@ if (!function_exists('chesterStandardMenu')) {
                         'X-SCDS-INTERNAL-KEY' => getenv('INTERNAL_KEY'),
                     ]
                 ]);
-                $menu = $res->getBody();
+                $menu = json_decode($res->getBody(), true);
             } catch (\GuzzleHttp\Exception\ClientException $e) {
                 // ignore the error, no menu will be provided
             }
@@ -101,16 +101,16 @@ if (!function_exists('chesterStandardMenu')) {
                     </li>
 
                     <?php foreach ($menu as $item) { ?>
-                        <?php if (sizeof($item->children)) { ?>
+                        <?php if (sizeof($item['children'])) { ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    <?= htmlspecialchars($item->name) ?>
+                                    <?= htmlspecialchars($item['name']) ?>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <?php foreach ($item->children as $subItem) { ?>
+                                    <?php foreach ($item['children'] as $subItem) { ?>
                                         <li><a class="dropdown-item"
-                                               href="<?= htmlspecialchars($subItem->href) ?>"><?= htmlspecialchars($subItem->name) ?></a>
+                                               href="<?= htmlspecialchars($subItem['href']) ?>"><?= htmlspecialchars($subItem['name']) ?></a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -118,7 +118,7 @@ if (!function_exists('chesterStandardMenu')) {
                         <?php } else { ?>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="<?= htmlspecialchars($item->href) ?>"><?= htmlspecialchars($item->name) ?></a>
+                                   href="<?= htmlspecialchars($item['href']) ?>"><?= htmlspecialchars($item['name']) ?></a>
                             </li>
                         <?php } ?>
                     <?php } ?>
