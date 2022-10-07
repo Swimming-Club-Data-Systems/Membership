@@ -40,7 +40,7 @@ if (!function_exists('chesterStandardMenu')) {
                             'X-SCDS-INTERNAL-KEY' => getenv('INTERNAL_KEY'),
                         ]
                     ]);
-                    $data = $res->getBody();
+                    $data = (string) $res->getBody();
                     $_SESSION[$key] = $data;
                     $menu = json_decode($data, true);
                 } catch (\GuzzleHttp\Exception\ClientException $e) {
