@@ -26,17 +26,26 @@ if (!function_exists('chesterStandardMenu')) {
         $menu = [];
 
         if ($user) {
-            try {
-                $client = new GuzzleHttp\Client();
-                // X-SCDS-INTERNAL-KEY
-                $res = $client->request('GET', getenv('INTERNAL_API_BASE_URL') . '/internal/application-menu/' . $user->getId(), [
-                    'headers' => [
-                        'X-SCDS-INTERNAL-KEY' => getenv('INTERNAL_KEY'),
-                    ]
-                ]);
-                $menu = json_decode($res->getBody(), true);
-            } catch (\GuzzleHttp\Exception\ClientException $e) {
-                // ignore the error, no menu will be provided
+
+            $key = 'USER_APP_MENU_JSON_' . $user->getId();
+
+            if (isset($_SESSION[$key])) {
+                $menu = json_decode($_SESSION[$key], true);
+            } else {
+                try {
+                    $client = new GuzzleHttp\Client();
+                    // X-SCDS-INTERNAL-KEY
+                    $res = $client->request('GET', getenv('INTERNAL_API_BASE_URL') . '/internal/application-menu/' . $user->getId(), [
+                        'headers' => [
+                            'X-SCDS-INTERNAL-KEY' => getenv('INTERNAL_KEY'),
+                        ]
+                    ]);
+                    $data = $res->getBody();
+                    $_SESSION[$key] = $data;
+                    $menu = json_decode($data, true);
+                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                    // ignore the error, no menu will be provided
+                }
             }
         }
 
