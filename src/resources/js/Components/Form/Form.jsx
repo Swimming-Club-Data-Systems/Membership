@@ -36,11 +36,7 @@ export const SubmissionButtons = (props) => {
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
                     type="submit"
-                    disabled={
-                        (!dirty && !formSpecialContext.alwaysDirty) ||
-                        !isValid ||
-                        isSubmitting
-                    }
+                    disabled={isSubmitting}
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>

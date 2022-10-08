@@ -5,6 +5,7 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
+use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
@@ -56,6 +57,11 @@ Route::middleware([
 
     Route::get('/dev', function () {
         return Inertia::render('Dev');
+    });
+
+    Route::prefix('report-an-error')->controller(ReportAnErrorController::class)->group(function () {
+        Route::get('/', 'create')->name('report_an_error');
+        Route::post('/', 'store');
     });
 
     Route::get('/dev/require-confirm', function (Request $request) {
