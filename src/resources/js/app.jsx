@@ -7,6 +7,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Provider } from "react-redux";
 import { store } from "@/Reducers/store";
+import { ErrorBoundary } from "@/Components/ErrorBoundary";
 
 const appName =
     window.document.getElementsByTagName("title")[0]?.innerText ||
@@ -25,9 +26,11 @@ createInertiaApp({
         ),
     setup({ el, App, props }) {
         return render(
-            <Wrapper>
-                <App {...props} />
-            </Wrapper>,
+            <ErrorBoundary>
+                <Wrapper>
+                    <App {...props} />
+                </Wrapper>
+            </ErrorBoundary>,
             el
         );
     },

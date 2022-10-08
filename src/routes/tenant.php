@@ -59,7 +59,7 @@ Route::middleware([
         return Inertia::render('Dev');
     });
 
-    Route::prefix('report-an-error')->controller(ReportAnErrorController::class)->group(function () {
+    Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->group(function () {
         Route::get('/', 'create')->name('report_an_error');
         Route::post('/', 'store');
     });

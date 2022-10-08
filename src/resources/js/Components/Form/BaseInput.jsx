@@ -18,6 +18,7 @@ const BaseInput = ({
     cornerHint,
     className = "",
     input,
+    maxLength,
     ...props
 }) => {
     const [field, meta] = useField(props);
@@ -32,6 +33,8 @@ const BaseInput = ({
     if (!type) {
         type = "text";
     }
+
+    const textColour = isInvalid ? "text-red-600" : "text-gray-500";
 
     let errorClasses = "";
     if (isInvalid) {
@@ -103,11 +106,25 @@ const BaseInput = ({
                     {rightButton}
                 </div>
 
-                {isInvalid && (
-                    <p className="mt-2 text-sm text-red-600">{meta.error}</p>
-                )}
+                <div className="flex justify-between">
+                    <div>
+                        {isInvalid && (
+                            <p className="mt-2 text-sm text-red-600">
+                                {meta.error}
+                            </p>
+                        )}
 
-                {help && <p className="mt-2 text-sm text-gray-500">{help}</p>}
+                        {help && (
+                            <p className="mt-2 text-sm text-gray-500">{help}</p>
+                        )}
+                    </div>
+
+                    {maxLength && (
+                        <p className={`mt-2 text-sm ${textColour}`}>
+                            {field.value.length}/{maxLength}
+                        </p>
+                    )}
+                </div>
             </div>
         </>
     );

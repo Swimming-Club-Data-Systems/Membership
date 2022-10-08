@@ -3,6 +3,7 @@ import TextInput from "@/Components/Form/TextInput";
 import TextArea from "@/Components/Form/TextArea";
 import * as yup from "yup";
 import Checkbox from "@/Components/Form/Checkbox";
+import FlashAlert from "@/Components/FlashAlert";
 
 const ReportAnErrorForm = (props) => {
     return (
@@ -24,21 +25,27 @@ const ReportAnErrorForm = (props) => {
             }}
             validationSchema={yup.object({
                 user: yup.object({
-                    name: yup.string().required("Please tell us your name"),
+                    name: yup
+                        .string()
+                        .required("Please tell us your name")
+                        .max(255, "Please use no more than 255 characters"),
                     email: yup
                         .string()
                         .email()
-                        .required("Please tell us your email address"),
+                        .required("Please tell us your email address")
+                        .max(255, "Please use no more than 255 characters"),
                 }),
                 url: yup
                     .string()
                     .url()
                     .required(
                         "Please tell us the URL of the page you were on when you encountered an error"
-                    ),
+                    )
+                    .max(1000, "Please use no more than 1000 characters"),
                 description: yup
                     .string()
-                    .required("Please include a description of your issue"),
+                    .required("Please include a description of your issue")
+                    .max(1000, "Please use no more than 1000 characters"),
                 data_sharing_agreement: yup
                     .bool()
                     .oneOf(
@@ -49,21 +56,27 @@ const ReportAnErrorForm = (props) => {
             submitTitle="Report error"
             action={route("report_an_error")}
         >
+            <FlashAlert className="mb-4" />
+
             <TextInput name="user.name" label="Name" />
             <TextInput
                 name="user.email"
                 label="Email address"
                 help="Please tell us your email so that we can contact you about this issue."
+                type="email"
+                autoComplete="email"
             />
             <TextInput
                 name="url"
                 label="Page address (URL)"
                 help="The URL of the page you were on when you encountered an error."
+                autoComplete="name"
             />
             <TextArea
                 name="description"
                 label="Description"
-                help="Please describe what you were doing before you encountered the error. This helps us recreate the issue."
+                help="Please describe what you were doing before you encountered the error. This helps us recreate the issue. You may use Markdown formatting in this field."
+                maxLength={1000}
             />
 
             <div className="prose prose-sm mb-4">

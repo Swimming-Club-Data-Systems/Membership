@@ -6,14 +6,20 @@ use App\Http\Controllers\Controller;
 use App\Mail\IssueReport;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class ReportAnErrorController extends Controller
 {
     public function create(Request $request)
     {
-        $userData = null;
+        $userData = [
+            'id' => "",
+            'name' => "",
+            'email' => "",
+        ];
 
         if ($request->user()) {
             /** @var User $user */
@@ -56,6 +62,19 @@ class ReportAnErrorController extends Controller
             $request->input('user_agent_mobile'),
         ));
 
+        if (config('app.zoho_desk.auth')) {
+            // TODO add support for sending data to Zoho Desk
+            Http::withHeaders([
+                'Authorization' => config('app.zoho_desk.auth'),
+                'orgId' => config('app.zoho_desk.org_id'),
+            ])->post('https://desk.zoho.com/api/v1/', [
 
+            ]);
+        }
+
+        $request->session()->flash('success', "We've sent your error report. It will be reviewed as soon as possible.");
+
+//        return Inertia::location(route('report_an_error'));
+        return Redirect::route('report_an_error');
     }
 }

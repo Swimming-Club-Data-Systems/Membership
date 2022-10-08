@@ -23,6 +23,17 @@ const Footer = (props) => {
                         <p className="font-semibold text-gray-600 dark:text-slate-300">
                             Help and Support
                         </p>
+                        {tenant && (
+                            <div>
+                                <Link
+                                    href={`/report-an-issue?url=${encodeURIComponent(
+                                        window?.location?.href
+                                    )}`}
+                                >
+                                    Report an issue
+                                </Link>
+                            </div>
+                        )}
                         <div>
                             <Link href="/about">About</Link>
                         </div>

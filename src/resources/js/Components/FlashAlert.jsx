@@ -13,7 +13,7 @@ const FlashAlert = ({ className, bag = null }) => {
                     variant="error"
                     className={className}
                     title="Error"
-                    dismissable
+                    // dismissable
                 >
                     {flash.error}
                 </Alert>
@@ -23,7 +23,7 @@ const FlashAlert = ({ className, bag = null }) => {
                     variant="warning"
                     className={className}
                     title="Warning"
-                    dismissable
+                    // dismissable
                 >
                     {flash.warning}
                 </Alert>
@@ -33,7 +33,7 @@ const FlashAlert = ({ className, bag = null }) => {
                     variant="success"
                     className={className}
                     title="Success"
-                    dismissable
+                    // dismissable
                 >
                     {flash.success}
                 </Alert>
