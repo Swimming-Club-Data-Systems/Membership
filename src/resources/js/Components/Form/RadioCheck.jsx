@@ -28,6 +28,11 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
         checkStyles = "rounded";
     }
 
+    let invalidCheckStyles = "";
+    if (isInvalid) {
+        invalidCheckStyles = "text-red-600 focus:ring-red-500";
+    }
+
     return (
         <div className={`flex items-start ${marginBotton}`}>
             <div className="flex h-5 items-center">
@@ -37,7 +42,7 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
                     {...props}
                     disabled={isSubmitting || disabled}
                     type={type}
-                    className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles}`}
+                    className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles} ${invalidCheckStyles}`}
                 />
             </div>
             <div className="ml-3 text-sm">
@@ -47,6 +52,11 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
                 >
                     {label}
                 </label>
+
+                {isInvalid && (
+                    <p className="mt-2 text-sm text-red-600">{meta.error}</p>
+                )}
+
                 {props.help && <p className="text-gray-500">{props.help}</p>}
             </div>
         </div>

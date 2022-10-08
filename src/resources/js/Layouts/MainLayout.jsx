@@ -24,7 +24,7 @@ import {
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Head, Link, usePage } from "@inertiajs/inertia-react";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
 import TenantLogo from "@/Components/TenantLogo";
@@ -66,6 +66,8 @@ const MainLayout = ({ title, subtitle, children }) => {
         <body class="h-full">
         ```
       */}
+            {/* Fall back to the layout title if no page title is set */}
+            <Head title={title} />
             <div className="min-h-full bg-gray-100">
                 <header className="bg-white shadow">
                     <Container>

@@ -8,6 +8,7 @@ import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
 import { Inertia } from "@inertiajs/inertia";
+import { merge } from "lodash";
 
 export const FormSpecialContext = React.createContext({});
 
@@ -36,11 +37,7 @@ export const SubmissionButtons = (props) => {
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
                     type="submit"
-                    disabled={
-                        (!dirty && !formSpecialContext.alwaysDirty) ||
-                        !isValid ||
-                        isSubmitting
-                    }
+                    disabled={isSubmitting}
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>
@@ -179,7 +176,9 @@ const Form = (props) => {
     const newInitialValues = formName
         ? usePage().props[formName]?.form_initial_values
         : usePage().props.form_initial_values;
-    const mergedValues = { ...initialValues, ...newInitialValues };
+    const mergedValues = merge(initialValues, newInitialValues);
+
+    console.log(mergedValues);
 
     return (
         <FormSpecialContext.Provider
