@@ -41,24 +41,24 @@ const ItemContent = (props) => {
     );
 };
 
-const Clubs = (props) => {
+const Index = (props) => {
     return (
         <Container>
             <Head title="Clubs" />
             <Collection
                 {...props.tenants}
                 itemRenderer={ItemContent}
-                route="central.clubs.redirect"
+                route="central.tenants.show"
                 routeIdName="ID"
             />
         </Container>
     );
 };
 
-Clubs.layout = (page) => (
-    <CentralMainLayout title="Clubs" subtitle="Find your club to sign in">
+Index.layout = (page) => (
+    <CentralMainLayout title="Tenants" subtitle="Manage your tenant settings">
         {page}
     </CentralMainLayout>
 );
 
-export default Clubs;
+export default Index;

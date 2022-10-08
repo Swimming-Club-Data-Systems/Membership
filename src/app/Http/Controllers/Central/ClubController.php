@@ -8,7 +8,7 @@ use App\Models\Tenant\Member;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
-class TenantController extends Controller
+class ClubController extends Controller
 {
     public function index(Request $request)
     {
@@ -23,15 +23,13 @@ class TenantController extends Controller
                 $query->where('Option', 'LOGO_DIR');
             }])->paginate(config('app.per_page'));
         }
-        return Inertia::render('Central/Tenants/Index', [
+        return Inertia::render('Central/Clubs', [
             'tenants' => $tenants->onEachSide(3),
         ]);
     }
 
-    public function show(Tenant $tenant, Request $request)
+    public function redirect(Tenant $tenant, Request $request)
     {
-        return Inertia::render('Central/Tenants/Show', [
-            'name' => $tenant->Name,
-        ]);
+        return Inertia::location($request->getScheme() . '://' . $tenant->Domain);
     }
 }
