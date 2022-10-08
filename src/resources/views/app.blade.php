@@ -44,7 +44,7 @@
               href="{{getUploadedAssetUrl($logos . 'icon-32x32.png')}}">
         <link rel="apple-touch-icon-precomposed" sizes="196x196"
               href="{{getUploadedAssetUrl($logos . 'icon-196x196.png')}}">
-        <meta property="og:image" content="getUploadedAssetUrl($logos . 'logo-512.png')" />
+        <meta property="og:image" content="{{getUploadedAssetUrl($logos . 'logo-512.png')}}" />
     @else
         <!-- For iPhone 6 Plus with @3× display: -->
         <link rel="apple-touch-icon-precomposed" sizes="180x180"
