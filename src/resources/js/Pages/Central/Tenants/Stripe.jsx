@@ -46,7 +46,7 @@ const Index = (props) => {
                         </div>
                     )}
 
-                    {props.stripe_account && (
+                    {!props.stripe_account && (
                         <div>
                             <p className="text-sm mb-3">
                                 The membership system integrates with{" "}

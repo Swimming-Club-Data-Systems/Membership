@@ -74,6 +74,13 @@ Route::middleware('auth:central')->group(function () {
             Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
             Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
 
+            Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
+            Route::put('/{tenant}/billing', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/billing/portal', [TenantController::class, 'stripeBillingPortal'])->name('tenants.billing.portal');
+            Route::get('/{tenant}/billing/add-payment-method', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add-method');
+            Route::get('/{tenant}/billing/add-payment-method-success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add-method-success');
+
             Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
             Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
 

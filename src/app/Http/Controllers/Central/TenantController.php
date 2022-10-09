@@ -89,7 +89,7 @@ class TenantController extends Controller
 
         $provider = new Stripe([
             'clientId' => config('services.stripe.client_id'),
-            'clientSecret' => config('services.stripe.key'),
+            'clientSecret' => config('cashier.secret'),
             'redirectUri' => route('central.tenants.setup_stripe_redirect'),
         ]);
 
@@ -119,7 +119,7 @@ class TenantController extends Controller
 
                 $provider = new Stripe([
                     'clientId' => config('services.stripe.client_id'),
-                    'clientSecret' => config('services.stripe.key'),
+                    'clientSecret' => config('cashier.secret'),
                     'redirectUri' => route('central.tenants.setup_stripe_redirect'),
                 ]);
 
@@ -146,4 +146,50 @@ class TenantController extends Controller
             return Inertia::location(route('central.tenants'));
         }
     }
+
+    public function billing(Tenant $tenant, Request $request)
+    {
+        $paymentMethod = $tenant->defaultPaymentMethod();
+        $invoices = $tenant->invoicesIncludingPending([
+            'limit' => 5,
+        ]);
+
+        return Inertia::render('Central/Tenants/Billing', [
+            'id' => $tenant->ID,
+            'name' => $tenant->Name,
+            'payment_method' => $paymentMethod,
+            'invoices' => $invoices,
+        ]);
+    }
+
+    public function addPaymentMethod(Tenant $tenant) {
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
+
+        abort_unless($tenant->stripe_id, 404);
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card', 'bacs_debit'],
+            'mode' => 'setup',
+            'customer' => $tenant->stripe_id,
+            'success_url' => route('central.tenants.billing.add-method-success', $tenant),
+            'cancel_url' => route('central.tenants.billing', $tenant),
+            'locale' => 'en-GB',
+            'metadata' => [
+                'session_type' => 'direct_debit_setup',
+            ],
+        ]);
+
+        return Inertia::location($session->url);
+    }
+
+    public function addPaymentMethodSuccess(Tenant $tenant) {
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
+
+        return Inertia::location(route('central.tenants.billing', $tenant));
+    }
+
+    public function stripeBillingPortal(Tenant $tenant, Request $request) {
+        return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
+    }
+
 }
