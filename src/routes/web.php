@@ -66,6 +66,19 @@ Route::middleware('auth:central')->group(function () {
         Route::middleware('auth:central')->prefix('/tenants')->group(function () {
             Route::get('/', [TenantController::class, 'index'])->name('tenants');
             Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
+            Route::put('/{tenant}', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/statistics', [TenantController::class, 'show'])->name('tenants.statistics');
+            Route::put('/{tenant}/statistics', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
+            Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
+            Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
+
+            Route::get('/{tenant}/config-keys', [TenantController::class, 'show'])->name('tenants.config_keys');
+            Route::put('/{tenant}/config-keys', [TenantController::class, 'save']);
         });
     });
 });

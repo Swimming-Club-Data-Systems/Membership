@@ -154,6 +154,21 @@ class Tenant extends BaseTenant
         return null;
     }
 
+    public function setOption($key, $value)
+    {
+        // Make sure values are cached
+        $this->getOption($key);
+
+        // Create or update
+        $option = $this->tenantOptions()->where('Option', $key)->firstOrNew();
+        $option->Option = $key;
+        $option->Value = $value;
+        $option->save();
+
+        // Update cache
+        $this->configOptions[$key] = $value;
+    }
+
     /**
      * Get the TenantOption.
      */

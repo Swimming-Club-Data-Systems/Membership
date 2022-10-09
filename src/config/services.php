@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'eu-west-2'),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'client_id' => env('STRIPE_CLIENT_ID'),
+    ]
+
 ];

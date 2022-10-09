@@ -5,7 +5,7 @@ const Card = (props) => {
     const { className = "" } = props;
 
     return (
-        <div className={` bg-white shadow sm:rounded-lg ${className}`}>
+        <div className={`bg-white shadow sm:rounded-lg ${className}`}>
             {props.header && (
                 <div className="py-3 bg-gray-50 text-right sm:rounded-t-lg">
                     <InternalContainer>{props.header}</InternalContainer>

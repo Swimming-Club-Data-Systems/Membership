@@ -1,25 +1,46 @@
 import React from "react";
-import { KeyIcon, UserCircleIcon } from "@heroicons/react/outline";
+import {
+    ChartPieIcon,
+    CogIcon,
+    CurrencyPoundIcon,
+    KeyIcon,
+    OfficeBuildingIcon,
+    UserCircleIcon,
+} from "@heroicons/react/outline";
 import Container from "@/Components/Container";
-import { Link } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/inertia-react";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
 const Layout = (props) => {
+    const tenantId = usePage().props.id;
+
     const navigation = [
         {
-            name: "Profile",
-            href: route("central.my_account.profile"),
-            icon: UserCircleIcon,
-            current: route().current("central.my_account.profile"),
+            name: "Details",
+            href: route("central.tenants.show", tenantId),
+            icon: OfficeBuildingIcon,
+            current: route().current("central.tenants.show", tenantId),
         },
         {
-            name: "Password & Security",
-            href: route("central.my_account.security"),
-            icon: KeyIcon,
-            current: route().current("central.my_account.security"),
+            name: "Stripe Account",
+            href: route("central.tenants.stripe", tenantId),
+            icon: CurrencyPoundIcon,
+            current: route().current("central.tenants.stripe", tenantId),
+        },
+        {
+            name: "Statistics",
+            href: route("central.tenants.statistics", tenantId),
+            icon: ChartPieIcon,
+            current: route().current("central.tenants.statistics", tenantId),
+        },
+        {
+            name: "Config Keys",
+            href: route("central.tenants.config_keys", tenantId),
+            icon: CogIcon,
+            current: route().current("central.tenants.config_keys", tenantId),
         },
         // {
         //     name: "Advanced Options",
