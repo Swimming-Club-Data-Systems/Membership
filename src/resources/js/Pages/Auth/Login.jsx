@@ -26,7 +26,7 @@ const Login = ({ status, canResetPassword }) => {
             window.location.href = ssoUrl;
         } else {
             Inertia.post(route("login"), values, {
-                onSuccess: (arg) => console.log(arg),
+                // onSuccess: (arg) => console.log(arg),
             });
         }
     };

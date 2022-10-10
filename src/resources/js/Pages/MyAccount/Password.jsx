@@ -476,7 +476,7 @@ const Password = (props) => {
                                 <TextInput
                                     name="code"
                                     label="Enter the code from the application"
-                                    help="After scanning the QR code image, the app will display a code that you can enter below."
+                                    help="After scanning the QR code, the app will display a code that you can enter above."
                                 />
                             </div>
                         )}

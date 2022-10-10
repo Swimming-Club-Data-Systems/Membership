@@ -142,6 +142,9 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                             active,
                                                                         }) => (
                                                                             <Link
+                                                                                key={
+                                                                                    item.href
+                                                                                }
                                                                                 href={
                                                                                     item.href
                                                                                 }
