@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/Components/Button";
 import AuthServices from "@/Layouts/AuthServices";
 import { Head } from "@inertiajs/inertia-react";
@@ -8,9 +8,20 @@ import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
 import useLogin from "@/Pages/Auth/Helpers/useLogin";
 import Alert from "@/Components/Alert";
+import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
 
 export default function ConfirmPassword(props) {
     const [error, setError] = useState(null);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if (await platformAuthenticatorIsAvailable()) {
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -89,7 +100,7 @@ export default function ConfirmPassword(props) {
 
             {!props.sso_url && (
                 <>
-                    {props.has_webauthn && (
+                    {props.has_webauthn && canUsePlatformAuthenticator && (
                         <>
                             {error && (
                                 <Alert

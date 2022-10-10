@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import { Head } from "@inertiajs/inertia-react";
 import Layout from "./Layout";
@@ -19,6 +19,7 @@ import Alert from "@/Components/Alert";
 import { ShieldCheckIcon } from "@heroicons/react/outline";
 import A from "@/Components/A";
 import axios from "@/Utils/axios";
+import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
 
 const Password = (props) => {
     const [deleteModalData, setDeleteModalData] = useState(null);
@@ -27,6 +28,16 @@ const Password = (props) => {
     const [totpModalData, setTotpModalData] = useState(null);
     const [error, setError] = useState(null);
     const [showDisableTotpModal, setShowDisableTotpModal] = useState(false);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if (await platformAuthenticatorIsAvailable()) {
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -159,6 +170,139 @@ const Password = (props) => {
                 {/* <form action="#" method="POST"> */}
                 <Form
                     initialValues={{
+                        name: "",
+                    }}
+                    validationSchema={yup.object().shape({
+                        name: yup
+                            .string()
+                            .required("A name is required for your passkey"),
+                    })}
+                    // action={route("my_account.additional_email")}
+                    submitTitle="Add passkey"
+                    hideClear
+                    // hideDefaultButtons
+                    hideErrors
+                    removeDefaultInputMargin
+                    formName="manage_passkeys"
+                    onSubmit={handleRegister}
+                    hideDefaultButtons
+                >
+                    <Card footer={<SubmissionButtons />}>
+                        <div>
+                            <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                Passkeys
+                            </h3>
+                            <p className="mt-1 text-sm text-gray-500">
+                                Passwordless login for your club account.
+                            </p>
+                        </div>
+
+                        <FlashAlert className="mb-4" bag="delete_credentials" />
+
+                        {props.passkeys.length > 0 && (
+                            <BasicList
+                                items={props.passkeys.map((item) => {
+                                    return {
+                                        id: item.id,
+                                        content: (
+                                            <>
+                                                <div
+                                                    className="flex align-middle justify-between text-sm"
+                                                    key={item.id}
+                                                >
+                                                    <div className="">
+                                                        <div className="text-gray-900">
+                                                            {item.name}
+                                                        </div>
+                                                        <div className="text-gray-500">
+                                                            Created at{" "}
+                                                            {new Date(
+                                                                item.created_at
+                                                            ).toLocaleString()}
+                                                        </div>
+                                                    </div>
+                                                    <div className="">
+                                                        <Button
+                                                            variant="danger"
+                                                            onClick={() => {
+                                                                setShowDeleteModal(
+                                                                    true
+                                                                );
+                                                                setDeleteModalData(
+                                                                    item
+                                                                );
+                                                            }}
+                                                        >
+                                                            Delete
+                                                        </Button>
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ),
+                                    };
+                                })}
+                            />
+                        )}
+
+                        {/*<RenderServerErrors />*/}
+                        {/*<FlashAlert className="mb-4" />*/}
+                        {error && (
+                            <Alert variant="error" title="Error">
+                                {error}
+                            </Alert>
+                        )}
+
+                        {canUsePlatformAuthenticator && (
+                            <>
+                                <RenderServerErrors />
+                                <FlashAlert
+                                    className="mb-4"
+                                    bag="manage_passkeys"
+                                />
+
+                                <div className="grid grid-cols-6 gap-6">
+                                    <div className="col-span-6 sm:col-span-3">
+                                        <TextInput
+                                            name="name"
+                                            label="Passkey name"
+                                            help="Name your passkey to help you identify the device or keychain it is stored in."
+                                        />
+                                    </div>
+                                </div>
+                            </>
+                        )}
+                    </Card>
+                </Form>
+
+                <Modal
+                    show={showDeleteModal}
+                    onClose={() => setShowDeleteModal(false)}
+                    variant="danger"
+                    title="Delete passkey"
+                    buttons={
+                        <>
+                            <Button variant="danger" onClick={deletePasskey}>
+                                Confirm
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowDeleteModal(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    }
+                >
+                    {deleteModalData && (
+                        <p>
+                            Are you sure you want to delete{" "}
+                            {deleteModalData.name}?
+                        </p>
+                    )}
+                </Modal>
+
+                <Form
+                    initialValues={{
                         password: "",
                         password_confirmation: "",
                     }}
@@ -216,138 +360,6 @@ const Password = (props) => {
                         </div>
                     </Card>
                 </Form>
-
-                <Card>
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Passkeys
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Passwordless login for your club account.
-                        </p>
-                    </div>
-
-                    <FlashAlert className="mb-4" bag="delete_credentials" />
-
-                    {props.passkeys.length > 0 && (
-                        <BasicList
-                            items={props.passkeys.map((item) => {
-                                return {
-                                    id: item.id,
-                                    content: (
-                                        <>
-                                            <div
-                                                className="flex align-middle justify-between text-sm"
-                                                key={item.id}
-                                            >
-                                                <div className="">
-                                                    <div className="text-gray-900">
-                                                        {item.name}
-                                                    </div>
-                                                    <div className="text-gray-500">
-                                                        Created at{" "}
-                                                        {new Date(
-                                                            item.created_at
-                                                        ).toLocaleString()}
-                                                    </div>
-                                                </div>
-                                                <div className="">
-                                                    <Button
-                                                        variant="danger"
-                                                        onClick={() => {
-                                                            setShowDeleteModal(
-                                                                true
-                                                            );
-                                                            setDeleteModalData(
-                                                                item
-                                                            );
-                                                        }}
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </>
-                                    ),
-                                };
-                            })}
-                        />
-                    )}
-
-                    <Modal
-                        show={showDeleteModal}
-                        onClose={() => setShowDeleteModal(false)}
-                        variant="danger"
-                        title="Delete passkey"
-                        buttons={
-                            <>
-                                <Button
-                                    variant="danger"
-                                    onClick={deletePasskey}
-                                >
-                                    Confirm
-                                </Button>
-                                <Button
-                                    variant="secondary"
-                                    onClick={() => setShowDeleteModal(false)}
-                                >
-                                    Cancel
-                                </Button>
-                            </>
-                        }
-                    >
-                        {deleteModalData && (
-                            <p>
-                                Are you sure you want to delete{" "}
-                                {deleteModalData.name}?
-                            </p>
-                        )}
-                    </Modal>
-
-                    {/*<RenderServerErrors />*/}
-                    {/*<FlashAlert className="mb-4" />*/}
-                    {error && (
-                        <Alert variant="error" title="Error">
-                            {error}
-                        </Alert>
-                    )}
-
-                    <Form
-                        initialValues={{
-                            name: "",
-                        }}
-                        validationSchema={yup.object().shape({
-                            name: yup
-                                .string()
-                                .required(
-                                    "A name is required for your passkey"
-                                ),
-                        })}
-                        // action={route("my_account.additional_email")}
-                        submitTitle="Add passkey"
-                        hideClear
-                        // hideDefaultButtons
-                        hideErrors
-                        removeDefaultInputMargin
-                        formName="manage_passkeys"
-                        onSubmit={handleRegister}
-                    >
-                        <RenderServerErrors />
-                        <FlashAlert className="mb-4" bag="manage_passkeys" />
-
-                        <div className="grid grid-cols-6 gap-6">
-                            <div className="col-span-6 sm:col-span-3">
-                                <TextInput
-                                    name="name"
-                                    label="Passkey name"
-                                    help="Name your passkey to help you identify the device or keychain it is stored in."
-                                />
-                            </div>
-                        </div>
-                    </Form>
-
-                    <div className="grid grid-cols-6 gap-6"></div>
-                </Card>
 
                 <Card footer={totpButtons(hasTotp)}>
                     <div>

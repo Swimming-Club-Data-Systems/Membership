@@ -143,7 +143,7 @@ class WebAuthnLoginController extends Controller
 
         $user = User::find($userId);
 
-        Auth::login($user);
+        Auth::login($user, true);
 
         $request->session()->regenerate();
 
