@@ -24,7 +24,8 @@ import {
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { Head, Link, usePage } from "@inertiajs/inertia-react";
+import { Head, usePage } from "@inertiajs/inertia-react";
+import Link from "@/Components/BaseLink";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";
 import TenantLogo from "@/Components/TenantLogo";
@@ -142,6 +143,9 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                             active,
                                                                         }) => (
                                                                             <Link
+                                                                                key={
+                                                                                    item.href
+                                                                                }
                                                                                 href={
                                                                                     item.href
                                                                                 }
@@ -280,7 +284,11 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                         //     {item.name}
                                                                         // </Link>
 
-                                                                        <Menu>
+                                                                        <Menu
+                                                                            key={
+                                                                                item.name
+                                                                            }
+                                                                        >
                                                                             <Menu.Button className="flex rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800">
                                                                                 <span className="sr-only">
                                                                                     Open{" "}

@@ -16,7 +16,7 @@ class CentralAppMenu
 
         $menu[] = [
             'name' => 'Clubs',
-            'href' => route('tenants'),
+            'href' => route('central.clubs'),
         ];
 
         $menu[] = [
@@ -33,8 +33,13 @@ class CentralAppMenu
             ];
 
             $menu[] = [
+                'name' => 'Tenants',
+                'href' => route('central.tenants'),
+            ];
+
+            $menu[] = [
                 'name' => 'Tenant Users',
-                'href' => '/users',
+                'href' => route('central.tenant_users.index'),
             ];
 
             if (Gate::check('viewTelescope', [$user])) {

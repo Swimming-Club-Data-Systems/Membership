@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Central\ClubController;
 use App\Http\Controllers\Central\MyAccountController;
 use App\Http\Controllers\Central\TenantController;
-use App\Http\Controllers\Central\WebauthnRegistrationController;
 use App\Http\Controllers\Central\TenantUserController;
+use App\Http\Controllers\Central\WebauthnRegistrationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -28,8 +29,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/clubs', [TenantController::class, 'index'])->name('tenants');
-Route::get('/clubs/{tenant}', [TenantController::class, 'redirect'])->name('tenants.redirect');
+Route::get('/clubs', [ClubController::class, 'index'])->name('central.clubs');
+Route::get('/clubs/{tenant}', [ClubController::class, 'redirect'])->name('central.clubs.redirect');
 
 Route::middleware('auth:central')->group(function () {
     Route::name('central.')->group(function () {
@@ -57,9 +58,34 @@ Route::middleware('auth:central')->group(function () {
             });
         });
 
-        Route::prefix('/users')->group(function () {
-            Route::get('/', [TenantUserController::class, 'index']);
+        Route::prefix('/tenants/users')->group(function () {
+            Route::get('/', [TenantUserController::class, 'index'])->name('tenant_users.index');
             Route::get('/{user}', [TenantUserController::class, 'show'])->name('users.show');
+        });
+
+        Route::middleware('auth:central')->prefix('/tenants')->group(function () {
+            Route::get('/', [TenantController::class, 'index'])->name('tenants');
+            Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
+            Route::put('/{tenant}', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/statistics', [TenantController::class, 'show'])->name('tenants.statistics');
+            Route::put('/{tenant}/statistics', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
+            Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
+            Route::put('/{tenant}/billing', [TenantController::class, 'save']);
+
+            Route::get('/{tenant}/billing/portal', [TenantController::class, 'stripeBillingPortal'])->name('tenants.billing.portal');
+            Route::get('/{tenant}/billing/add-payment-method', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add-method');
+            Route::get('/{tenant}/billing/add-payment-method-success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add-method-success');
+
+            Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
+            Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
+
+            Route::get('/{tenant}/config-keys', [TenantController::class, 'show'])->name('tenants.config_keys');
+            Route::put('/{tenant}/config-keys', [TenantController::class, 'save']);
         });
     });
 });

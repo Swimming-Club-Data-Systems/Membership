@@ -4,9 +4,11 @@ namespace App\Models\Central;
 
 use App\Models\Tenant\TenantOption;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Laravel\Cashier\Billable;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+use function Illuminate\Events\queueable;
 
 /**
  * @property int ID
@@ -18,10 +20,14 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property string UniqueID
  * @property string Domain
  * @property string Data
+ * @property string stripe_id
+ * @property string pm_type
+ * @property string pm_last_four
+ * @property DateTime trial_ends_at
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, Searchable;
+    use HasDomains, Searchable, Billable;
 
     protected $configOptionsCached = false;
     protected $configOptions = [];
@@ -67,6 +73,11 @@ class Tenant extends BaseTenant
      */
     protected static function booted()
     {
+        static::updated(queueable(function (Tenant $customer) {
+            if ($customer->hasStripeId()) {
+                $customer->syncStripeCustomerDetails();
+            }
+        }));
         // static::retrieved(function ($model) {
         //    foreach ($model->tenantOptions as $option) {
         //        // $model->configOptions[] = $option;
@@ -82,6 +93,39 @@ class Tenant extends BaseTenant
         //     }
         //     ddd($tenant);
         // });
+    }
+
+    public function syncStripeCustomerDetails()
+    {
+        return $this->updateStripeCustomer([
+            'name' => $this->stripeName(),
+            'email' => $this->stripeEmail(),
+            'phone' => $this->stripePhone(),
+            'address' => $this->stripeAddress(),
+            'preferred_locales' => $this->stripePreferredLocales(),
+            'invoice_settings' => [
+                'custom_fields' => [
+                    [
+                        "name" => "Tenant ID",
+                        "value" => $this->ID,
+                    ],
+                    [
+                        "name" => "Swim England Club Code",
+                        "value" => $this->Code,
+                    ]
+                ]
+            ]
+        ]);
+    }
+
+    public function stripeName()
+    {
+        return $this->Name;
+    }
+
+    public function stripeEmail()
+    {
+        return $this->Email;
     }
 
     public function getIncrementing()
@@ -114,28 +158,19 @@ class Tenant extends BaseTenant
         return $this->Verified;
     }
 
-    /**
-     * Get the tenant id via expected attribute.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function id(): Attribute
+    public function setOption($key, $value)
     {
-        return Attribute::make(
-            get: fn($value, $attributes) => $attributes['ID'],
-        );
-    }
+        // Make sure values are cached
+        $this->getOption($key);
 
-    /**
-     * Get the tenant logo path.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
-     */
-    protected function logoPath(): Attribute
-    {
-        return Attribute::make(
-            get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
-        );
+        // Create or update
+        $option = $this->tenantOptions()->where('Option', $key)->firstOrNew();
+        $option->Option = $key;
+        $option->Value = $value;
+        $option->save();
+
+        // Update cache
+        $this->configOptions[$key] = $value;
     }
 
     public function getOption($key)
@@ -160,5 +195,29 @@ class Tenant extends BaseTenant
     public function tenantOptions()
     {
         return $this->hasMany(TenantOption::class, 'Tenant');
+    }
+
+    /**
+     * Get the tenant id via expected attribute.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function id(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['ID'],
+        );
+    }
+
+    /**
+     * Get the tenant logo path.
+     *
+     * @return \Illuminate\Database\Eloquent\Casts\Attribute
+     */
+    protected function logoPath(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
+        );
     }
 }

@@ -11,22 +11,32 @@ import Alert from "@/Components/Alert";
 import WebAuthnHandler from "./Helpers/WebAuthnHandler";
 import { Transition } from "@headlessui/react";
 import SSOHandler from "@/Pages/Auth/Helpers/SSOHandler";
+import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
 
 const Login = ({ status, canResetPassword }) => {
-    const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
-
     const [showPasswordField, setShowPasswordField] = useState(true);
-    const [showWebauthn, setShowWebauthn] = useState(supportsWebauthn);
+    const [showWebauthn, setShowWebauthn] = useState(false);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
     const [ssoUrl, setSsoUrl] = useState(null);
     const [error, setError] = useState(null);
     const [autoComplete, setAC] = useState("");
+
+    useEffect(() => {
+        (async () => {
+            if (await platformAuthenticatorIsAvailable()) {
+                setShowWebauthn(true);
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
 
     const onSubmit = (values, formikBag) => {
         if (ssoUrl) {
             window.location.href = ssoUrl;
         } else {
             Inertia.post(route("login"), values, {
-                onSuccess: (arg) => console.log(arg),
+                // onSuccess: (arg) => console.log(arg),
             });
         }
     };
@@ -34,7 +44,7 @@ const Login = ({ status, canResetPassword }) => {
     // If SSO, hide password and webauthn
     useEffect(() => {
         setShowPasswordField(ssoUrl === null);
-        setShowWebauthn(ssoUrl === null);
+        setShowWebauthn(ssoUrl === null && canUsePlatformAuthenticator);
     }, [ssoUrl]);
 
     const validationSchema = {

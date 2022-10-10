@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Central\Tenant;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use Laravel\Cashier\Cashier;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Laravel\Passport\Passport;
 
@@ -44,5 +46,8 @@ class AppServiceProvider extends ServiceProvider
                 ? $rule->mixedCase()->numbers()->uncompromised()
                 : $rule;
         });
+
+        Cashier::useCustomerModel(Tenant::class);
+        Cashier::calculateTaxes();
     }
 }

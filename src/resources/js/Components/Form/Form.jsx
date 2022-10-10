@@ -178,8 +178,6 @@ const Form = (props) => {
         : usePage().props.form_initial_values;
     const mergedValues = merge(initialValues, newInitialValues);
 
-    console.log(mergedValues);
-
     return (
         <FormSpecialContext.Provider
             value={{

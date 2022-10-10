@@ -4,6 +4,8 @@ import useLogin from "./useLogin";
 import Button from "@/Components/Button";
 import { Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
+import Alert from "@/Components/Alert";
+import { browserSupportsWebAuthnAutofill } from "@simplewebauthn/browser";
 
 const WebAuthnHandler = ({ setAC, show }) => {
     const [hasWebauthn, setHasWebauthn] = useState(false);
@@ -84,11 +86,7 @@ const WebAuthnHandler = ({ setAC, show }) => {
     // eslint-disable-next-line no-unused-vars
     const handleAutofillLogin = async () => {
         // eslint-disable-next-line no-undef
-        if (
-            !PublicKeyCredential.isConditionalMediationAvailable ||
-            // eslint-disable-next-line no-undef
-            !PublicKeyCredential.isConditionalMediationAvailable()
-        ) {
+        if (!(await browserSupportsWebAuthnAutofill())) {
             // Browser doesn't support AutoFill-assisted requests.
             setAC("username");
             return;
@@ -114,6 +112,12 @@ const WebAuthnHandler = ({ setAC, show }) => {
                 leaveFrom="opacity-100 scale-100 height-100"
                 leaveTo="opacity-0 scale-0 height-0"
             >
+                {error && (
+                    <Alert className="mb-4" variant="error" title="Error">
+                        {error.message}
+                    </Alert>
+                )}
+
                 <Button
                     variant="secondary"
                     onClick={handleLogin}
