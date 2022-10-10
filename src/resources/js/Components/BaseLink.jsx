@@ -15,7 +15,14 @@ const BaseLink = ({ external, ...props }) => {
     if (external) {
         return <A {...props} />;
     }
-    return <Link {...props} />;
+
+    let { as, ...otherProps } = props;
+
+    if (as === "a" && props.method !== "get") {
+        as = "button";
+    }
+
+    return <Link as={as} {...otherProps} />;
 };
 
 export default BaseLink;
