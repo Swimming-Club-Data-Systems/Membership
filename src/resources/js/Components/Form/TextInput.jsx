@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useField, useFormikContext } from "formik";
 import BaseInput from "./BaseInput";
+import { FormSpecialContext } from "@/Components/Form/Form";
 
 const TextInput = ({
     disabled,
@@ -13,9 +14,11 @@ const TextInput = ({
 }) => {
     const [field, meta] = useField(props);
     const { isSubmitting } = useFormikContext();
+    const { formName } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
-    const controlId = props.id || props.name;
+    const controlId =
+        (formName ? formName + "_" : "") + (props.id || props.name);
 
     if (!type) {
         type = "text";

@@ -19,7 +19,7 @@ import Alert from "@/Components/Alert";
 import { ShieldCheckIcon } from "@heroicons/react/outline";
 import A from "@/Components/A";
 import axios from "@/Utils/axios";
-import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
+import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 
 const Password = (props) => {
     const [deleteModalData, setDeleteModalData] = useState(null);
@@ -33,7 +33,7 @@ const Password = (props) => {
 
     useEffect(() => {
         (async () => {
-            if (await platformAuthenticatorIsAvailable()) {
+            if (await browserSupportsWebAuthn()) {
                 setCanUsePlatformAuthenticator(true);
             }
         })();

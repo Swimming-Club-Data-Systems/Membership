@@ -78,7 +78,7 @@ const WebAuthnHandler = ({ setAC, show }) => {
 
     useEffect(() => {
         (async () => {
-            await handleLogin(null, true);
+            // await handleLogin(null, true);
         })();
     }, []);
 
