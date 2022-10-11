@@ -11,7 +11,7 @@ import Alert from "@/Components/Alert";
 import WebAuthnHandler from "./Helpers/WebAuthnHandler";
 import { Transition } from "@headlessui/react";
 import SSOHandler from "@/Pages/Auth/Helpers/SSOHandler";
-import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
+import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 
 const Login = ({ status, canResetPassword }) => {
     const [showPasswordField, setShowPasswordField] = useState(true);
@@ -23,7 +23,7 @@ const Login = ({ status, canResetPassword }) => {
 
     useEffect(() => {
         (async () => {
-            if (await platformAuthenticatorIsAvailable()) {
+            if (await browserSupportsWebAuthn()) {
                 setShowWebauthn(true);
                 setCanUsePlatformAuthenticator(true);
             }
