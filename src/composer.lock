@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68ea1ca2a64b677c144b8aa4b2f80dc9",
+    "content-hash": "3b7d495ea04b7bebd71dfced32d84168",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -9281,16 +9281,16 @@
         },
         {
             "name": "web-auth/metadata-service",
-            "version": "4.2.2",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-metadata-service.git",
-                "reference": "62f90abebb8494fd2c9a0ea822371a435e8e31af"
+                "reference": "af8c413d00f1e5f2074f0156c4d51c3217290efa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-metadata-service/zipball/62f90abebb8494fd2c9a0ea822371a435e8e31af",
-                "reference": "62f90abebb8494fd2c9a0ea822371a435e8e31af",
+                "url": "https://api.github.com/repos/web-auth/webauthn-metadata-service/zipball/af8c413d00f1e5f2074f0156c4d51c3217290efa",
+                "reference": "af8c413d00f1e5f2074f0156c4d51c3217290efa",
                 "shasum": ""
             },
             "require": {
@@ -9336,7 +9336,7 @@
                 "webauthn"
             ],
             "support": {
-                "source": "https://github.com/web-auth/webauthn-metadata-service/tree/4.2.2"
+                "source": "https://github.com/web-auth/webauthn-metadata-service/tree/4.3.0"
             },
             "funding": [
                 {
@@ -9348,20 +9348,20 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-09-18T15:06:01+00:00"
+            "time": "2022-10-04T13:12:23+00:00"
         },
         {
             "name": "web-auth/webauthn-lib",
-            "version": "4.2.2",
+            "version": "4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/web-auth/webauthn-lib.git",
-                "reference": "c177ca7ba6a54fdf838fa13dc6e1786babf31328"
+                "reference": "3f5c41d629f20ce36cabb97be78b7cb4954d0dd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/c177ca7ba6a54fdf838fa13dc6e1786babf31328",
-                "reference": "c177ca7ba6a54fdf838fa13dc6e1786babf31328",
+                "url": "https://api.github.com/repos/web-auth/webauthn-lib/zipball/3f5c41d629f20ce36cabb97be78b7cb4954d0dd8",
+                "reference": "3f5c41d629f20ce36cabb97be78b7cb4954d0dd8",
                 "shasum": ""
             },
             "require": {
@@ -9379,8 +9379,12 @@
                 "web-auth/cose-lib": "^4.0.12",
                 "web-auth/metadata-service": "self.version"
             },
+            "require-dev": {
+                "symfony/event-dispatcher": "^6.1"
+            },
             "suggest": {
                 "psr/log-implementation": "Recommended to receive logs from the library",
+                "symfony/event-dispatcher": "Recommended to use dispatched events",
                 "web-token/jwt-key-mgmt": "Mandatory for the AndroidSafetyNet Attestation Statement support",
                 "web-token/jwt-signature-algorithm-ecdsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
                 "web-token/jwt-signature-algorithm-eddsa": "Recommended for the AndroidSafetyNet Attestation Statement support",
@@ -9414,7 +9418,7 @@
                 "webauthn"
             ],
             "support": {
-                "source": "https://github.com/web-auth/webauthn-lib/tree/4.2.2"
+                "source": "https://github.com/web-auth/webauthn-lib/tree/4.3.0"
             },
             "funding": [
                 {
@@ -9426,7 +9430,7 @@
                     "type": "patreon"
                 }
             ],
-            "time": "2022-09-27T10:44:51+00:00"
+            "time": "2022-10-06T11:15:37+00:00"
         },
         {
             "name": "webmozart/assert",

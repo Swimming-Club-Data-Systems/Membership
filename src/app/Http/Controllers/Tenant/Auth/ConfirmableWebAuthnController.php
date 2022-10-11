@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
@@ -83,7 +84,12 @@ class ConfirmableWebAuthnController extends Controller
             $attestationObjectLoader
         );
 
-        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+        $input = $request->input();
+        if ($request->input('response.userHandle')) {
+            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
+        }
+
+        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
         if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {

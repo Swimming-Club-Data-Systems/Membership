@@ -8,7 +8,11 @@ import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
 import useLogin from "@/Pages/Auth/Helpers/useLogin";
 import Alert from "@/Components/Alert";
-import { platformAuthenticatorIsAvailable } from "@simplewebauthn/browser";
+import {
+    platformAuthenticatorIsAvailable,
+    startAuthentication,
+} from "@simplewebauthn/browser";
+import axios from "@/Utils/axios";
 
 export default function ConfirmPassword(props) {
     const [error, setError] = useState(null);
@@ -53,22 +57,36 @@ export default function ConfirmPassword(props) {
     );
 
     const handleWebAuthnLogin = async () => {
-        try {
-            const requestObject = {};
+        let asseResp;
 
-            const response = await login(requestObject);
-            if (response.success) {
-                Inertia.visit(response.redirect_url);
-                // window.location.replace(response.redirect_url);
-                setError(null);
-            } else {
-                setError(webAuthnError);
-                // console.error(error);
-            }
+        const request = await axios.post(
+            route("confirm-password.webauthn.challenge"),
+            {}
+        );
+
+        try {
+            // Pass the options to the authenticator and wait for a response
+            asseResp = await startAuthentication(request.data);
         } catch (error) {
+            // Some basic error handling
+            setError({ ...webAuthnError, message: error.message });
+        }
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyAuthenticationResponse()
+        const verificationResponse = await axios.post(
+            route("confirm-password.webauthn.verify"),
+            asseResp
+        );
+
+        if (verificationResponse.data.success) {
+            Inertia.visit(verificationResponse.data.redirect_url);
+        } else {
             setError(webAuthnError);
             // console.error(error);
         }
+
+        return;
     };
 
     const onSubmit = (values, formikBag) => {

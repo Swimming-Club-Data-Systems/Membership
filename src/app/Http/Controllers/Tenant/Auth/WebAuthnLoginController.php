@@ -2,31 +2,27 @@
 
 namespace App\Http\Controllers\Tenant\Auth;
 
+use App\Business\WebAuthnImplementation\PublicKeyCredentialSourceRepository;
+use App\Business\WebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
+use App\Business\WebAuthnImplementation\Server;
+use App\Http\Controllers\Controller;
 use App\Models\Tenant\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
+use Nyholm\Psr7\Factory\Psr17Factory;
+use Nyholm\Psr7Server\ServerRequestCreator;
+use ParagonIE\ConstantTime\Base64UrlSafe;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
-use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialSource;
-use Nyholm\Psr7\Factory\Psr17Factory;
-use Nyholm\Psr7Server\ServerRequestCreator;
-use Webauthn\AuthenticationExtensions\AuthenticationExtension;
-use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
-use App\Business\WebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
-use App\Business\WebAuthnImplementation\PublicKeyCredentialSourceRepository;
-use App\Business\WebAuthnImplementation\Server;
-use App\Http\Controllers\Controller;
 use Webauthn\TokenBinding\IgnoreTokenBindingHandler;
 
 class WebAuthnLoginController extends Controller
@@ -96,8 +92,12 @@ class WebAuthnLoginController extends Controller
             $attestationObjectLoader
         );
 
-        // $publicKeyCredential = $publicKeyCredentialLoader->load($request->getContent());
-        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+        $input = $request->input();
+        if ($request->input('response.userHandle')) {
+            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
+        }
+
+        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
         if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {

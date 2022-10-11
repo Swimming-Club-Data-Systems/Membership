@@ -187,7 +187,13 @@ const Password = (props) => {
                     onSubmit={handleRegister}
                     hideDefaultButtons
                 >
-                    <Card footer={<SubmissionButtons />}>
+                    <Card
+                        footer={
+                            canUsePlatformAuthenticator ? (
+                                <SubmissionButtons />
+                            ) : null
+                        }
+                    >
                         <div>
                             <h3 className="text-lg leading-6 font-medium text-gray-900">
                                 Passkeys
