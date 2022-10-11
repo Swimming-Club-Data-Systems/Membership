@@ -20,7 +20,6 @@ const Login = ({ status, canResetPassword }) => {
         useState(false);
     const [ssoUrl, setSsoUrl] = useState(null);
     const [error, setError] = useState(null);
-    const [autoComplete, setAC] = useState("");
 
     useEffect(() => {
         (async () => {
@@ -86,13 +85,13 @@ const Login = ({ status, canResetPassword }) => {
                 hideClear
                 hideDefaultButtons
             >
-                <WebAuthnHandler setAC={setAC} show={showWebauthn} />
+                <WebAuthnHandler show={showWebauthn} />
 
                 <TextInput
                     name="email"
                     type="email"
                     label="Email"
-                    autoComplete={autoComplete}
+                    autoComplete="username webauthn"
                 />
 
                 <Transition

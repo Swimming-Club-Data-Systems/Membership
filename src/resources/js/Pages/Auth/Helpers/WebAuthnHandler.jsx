@@ -5,7 +5,11 @@ import Button from "@/Components/Button";
 import { Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import Alert from "@/Components/Alert";
-import { browserSupportsWebAuthnAutofill } from "@simplewebauthn/browser";
+import {
+    browserSupportsWebAuthnAutofill,
+    startAuthentication,
+} from "@simplewebauthn/browser";
+import axios from "@/Utils/axios";
 
 const WebAuthnHandler = ({ setAC, show }) => {
     const [hasWebauthn, setHasWebauthn] = useState(false);
@@ -45,59 +49,36 @@ const WebAuthnHandler = ({ setAC, show }) => {
     );
 
     const handleLogin = async (event, autoFill = false) => {
-        const username = field.value;
+        let asseResp;
+
+        const request = await axios.post(route("webauthn.challenge"), {});
+
         try {
-            const requestObject = {};
-
-            if (username) {
-                requestObject.username = username;
-                // const hasTokens = await checkWebauthn();
-                // if (!hasTokens) {
-                //     setError({
-                //         variant: "warning",
-                //         message:
-                //             "There are no passkeys registered for this account.",
-                //     });
-                //     return;
-                // }
-            }
-
-            if (autoFill) {
-                requestObject.credentialsGetProps = {
-                    mediation: "conditional",
-                };
-            }
-
-            const response = await login(requestObject);
-            if (response.success) {
-                Inertia.visit(response.redirect_url);
-                // window.location.replace(response.redirect_url);
-                setError(null);
-            } else {
-                setError(webAuthnError);
-                // console.error(error);
-            }
+            // Pass the options to the authenticator and wait for a response
+            asseResp = await startAuthentication(request.data, autoFill);
         } catch (error) {
+            // Some basic error handling
+            setError({ ...webAuthnError, message: error.message });
+        }
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyAuthenticationResponse()
+        const verificationResponse = await axios.post(
+            route("webauthn.verify"),
+            asseResp
+        );
+
+        if (verificationResponse.data.success) {
+            Inertia.visit(verificationResponse.data.redirect_url);
+        } else {
             setError(webAuthnError);
             // console.error(error);
         }
     };
 
-    // eslint-disable-next-line no-unused-vars
-    const handleAutofillLogin = async () => {
-        // eslint-disable-next-line no-undef
-        if (!(await browserSupportsWebAuthnAutofill())) {
-            // Browser doesn't support AutoFill-assisted requests.
-            setAC("username");
-            return;
-        }
-
-        await handleLogin(null, true);
-    };
-
     useEffect(() => {
         (async () => {
-            await handleAutofillLogin();
+            await handleLogin(null, true);
         })();
     }, []);
 
