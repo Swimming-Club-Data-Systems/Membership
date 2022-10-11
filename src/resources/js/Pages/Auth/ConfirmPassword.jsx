@@ -9,7 +9,7 @@ import { Inertia } from "@inertiajs/inertia";
 import useLogin from "@/Pages/Auth/Helpers/useLogin";
 import Alert from "@/Components/Alert";
 import {
-    browserSupportsWebauthn,
+    browserSupportsWebAuthn,
     startAuthentication,
 } from "@simplewebauthn/browser";
 import axios from "@/Utils/axios";
@@ -21,7 +21,7 @@ export default function ConfirmPassword(props) {
 
     useEffect(() => {
         (async () => {
-            if (await browserSupportsWebauthn()) {
+            if (await browserSupportsWebAuthn()) {
                 setCanUsePlatformAuthenticator(true);
             }
         })();
