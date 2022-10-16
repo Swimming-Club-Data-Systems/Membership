@@ -5,10 +5,7 @@ import Button from "@/Components/Button";
 import { Transition } from "@headlessui/react";
 import { Inertia } from "@inertiajs/inertia";
 import Alert from "@/Components/Alert";
-import {
-    browserSupportsWebAuthnAutofill,
-    startAuthentication,
-} from "@simplewebauthn/browser";
+import { startAuthentication } from "@simplewebauthn/browser";
 import axios from "@/Utils/axios";
 
 const WebAuthnHandler = ({ setAC, show }) => {
@@ -68,10 +65,18 @@ const WebAuthnHandler = ({ setAC, show }) => {
 
         // POST the response to the endpoint that calls
         // @simplewebauthn/server -> verifyAuthenticationResponse()
-        const verificationResponse = await axios.post(
-            route("webauthn.verify"),
-            asseResp
-        );
+        let verificationResponse;
+        try {
+            verificationResponse = await axios.post(
+                route("webauthn.verify"),
+                asseResp
+            );
+        } catch (error) {
+            // Some basic error handling
+            console.log(error);
+            setError({ ...webAuthnError, message: error.message });
+            return;
+        }
 
         if (verificationResponse.data.success) {
             Inertia.visit(verificationResponse.data.redirect_url);
