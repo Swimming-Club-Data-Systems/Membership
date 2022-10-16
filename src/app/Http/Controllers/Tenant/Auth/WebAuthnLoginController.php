@@ -93,9 +93,9 @@ class WebAuthnLoginController extends Controller
         );
 
         $input = $request->input();
-        if ($request->input('response.userHandle')) {
-            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
-        }
+//        if ($request->input('response.userHandle')) {
+//            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
+//        }
 
         $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
