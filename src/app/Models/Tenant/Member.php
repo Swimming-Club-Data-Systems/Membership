@@ -12,6 +12,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int MemberID
+ * @property int UserID
  * @property boolean Status
  * @property string AccessKey
  * @property string MForename

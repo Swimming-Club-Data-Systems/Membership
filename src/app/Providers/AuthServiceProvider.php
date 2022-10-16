@@ -21,6 +21,8 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Tenant\NotifyAdditionalEmail::class => \App\Policies\Tenant\NotifyAdditionalEmailPolicy::class,
         \App\Models\Tenant\Auth\UserCredential::class => \App\Policies\Tenant\Auth\UserCredentialPolicy::class,
         \App\Models\Central\Auth\UserCredential::class => \App\Policies\Central\Auth\UserCredentialPolicy::class,
+        \App\Models\Tenant\Member::class => \App\Policies\Tenant\MemberPolicy::class,
+        \App\Models\Tenant\User::class => \App\Policies\Tenant\UserPolicy::class,
     ];
 
     /**
