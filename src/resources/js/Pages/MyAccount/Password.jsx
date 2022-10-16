@@ -77,6 +77,9 @@ const Password = (props) => {
         );
 
         const options = request.data;
+        if (!options.excludeCredentials) {
+            options.excludeCredentials = [];
+        }
 
         try {
             // Pass the options to the authenticator and wait for a response
