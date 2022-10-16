@@ -19,7 +19,10 @@ import Alert from "@/Components/Alert";
 import { ShieldCheckIcon } from "@heroicons/react/outline";
 import A from "@/Components/A";
 import axios from "@/Utils/axios";
-import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
+import {
+    startRegistration,
+    browserSupportsWebAuthn,
+} from "@simplewebauthn/browser";
 
 const Password = (props) => {
     const [deleteModalData, setDeleteModalData] = useState(null);
@@ -64,20 +67,45 @@ const Password = (props) => {
     );
 
     const handleRegister = async (ev, formikBag) => {
-        try {
-            await register({
+        let asseResp;
+
+        const request = await axios.post(
+            route("my_account.webauthn_challenge"),
+            {
                 passkey_name: ev.name,
-            });
+            }
+        );
+
+        const options = request.data;
+
+        try {
+            // Pass the options to the authenticator and wait for a response
+            asseResp = await startRegistration(options);
+        } catch (error) {
+            // Some basic error handling
+            formikBag.setSubmitting(false);
+            setError(error.message);
+            return;
+        }
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyAuthenticationResponse()
+        const verificationResponse = await axios.post(
+            route("my_account.webauthn_verify"),
+            asseResp
+        );
+
+        if (verificationResponse.data.success) {
             formikBag.resetForm();
             setError(null);
-            // await getAuthenticators();
             Inertia.reload({
                 only: ["passkeys", "flash"],
                 preserveScroll: true,
             });
-        } catch (error) {
-            setError(error.message);
+        } else {
+            setError("Invalid registration");
         }
+        formikBag.setSubmitting(false);
     };
 
     const handleTotpSave = async (values, formikBag) => {

@@ -71,7 +71,7 @@ class Address
   {
     return [
       'address_line_1' => 'required|max:255',
-      'address_line_2' => 'required|max:255',
+      'address_line_2' => 'max:255',
       'city' => 'required|max:255',
       'county' => 'required|max:255',
       'post_code' => ['required', 'max:255', new ValidPostCode],
