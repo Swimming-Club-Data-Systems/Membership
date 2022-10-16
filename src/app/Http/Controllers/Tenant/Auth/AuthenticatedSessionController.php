@@ -103,7 +103,7 @@ class AuthenticatedSessionController extends Controller
         if ($request->session()->missing('auth.two_factor_code')) {
             // Verify TOTP
             $totp = new Google2FA();
-            if (!$totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $response->input('code'))) {
+            if (!$totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $request->input('code'))) {
                 throw ValidationException::withMessages([
                     'code' => $invalidMessage,
                 ]);
