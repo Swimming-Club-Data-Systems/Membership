@@ -21,6 +21,8 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('viewAll', User::class);
+
         $users = null;
 
         if ($request->query('query')) {
@@ -34,6 +36,8 @@ class UserController extends Controller
     }
 
     public function show(User $user) {
+        $this->authorize('view', $user);
+
         return Inertia::location('/v1/users/' . $user->UserID);
     }
 }

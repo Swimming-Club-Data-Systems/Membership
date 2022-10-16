@@ -118,7 +118,7 @@ Route::middleware([
 
     Route::prefix('/members')->group(function () {
         Route::get('/', [MemberController::class, 'index']);
-        Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
+        Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/members/' . $path);
         })->where('path', '.*');
@@ -126,7 +126,7 @@ Route::middleware([
 
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::get('/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/{user}', [UserController::class, 'show'])->whereNumber('user')->name('users.show');
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/users/' . $path);
         })->where('path', '.*');
