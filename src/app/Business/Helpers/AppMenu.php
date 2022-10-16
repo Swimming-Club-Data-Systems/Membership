@@ -15,6 +15,7 @@ class AppMenu
     private ?bool $isTeamManager;
     private ?bool $isSquadRep;
     private ?bool $hasSquadReps;
+    private ?bool $hasMembers;
     private ?User $user;
 
     private function __construct(?User $user)
@@ -22,6 +23,7 @@ class AppMenu
         $this->user = $user;
         $this->isTeamManager = $this->user?->galas()->where('GalaDate', '>=', now()->subDay())->exists();
         $this->isSquadRep = $this->user?->representedSquads()->exists();
+        $this->hasMembers = $this->user?->members()->exists();
         $this->hasSquadReps = $this->isSquadRep || Squad::has('reps')->exists();
     }
 
@@ -200,7 +202,7 @@ class AppMenu
     {
         $menu = [];
 
-        if ($this->user->hasPermission('Parent')) {
+        if ($this->hasMembers) {
             $menu[] = [
                 'name' => 'My Members',
                 'href' => '/#members',

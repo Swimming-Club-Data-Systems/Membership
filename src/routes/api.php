@@ -20,5 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware('auth.internal')->prefix('internal')->group(function () {
-    Route::get('/application-menu/{id}', [Internal::class, 'getMenu']);
+    Route::get('/application-menu/{id}', [Internal::class, 'getMenu'])->withoutMiddleware('throttle:api');
 });

@@ -21,6 +21,8 @@ class MemberController extends Controller
 
     public function index(Request $request)
     {
+        $this->authorize('viewAll', Member::class);
+
         $members = null;
 
         if ($request->query('query')) {
@@ -39,6 +41,8 @@ class MemberController extends Controller
 
     public function show(Member $member)
     {
+        $this->authorize('view', $member);
+
         return Inertia::location('/v1/members/' . $member->MemberID);
     }
 
