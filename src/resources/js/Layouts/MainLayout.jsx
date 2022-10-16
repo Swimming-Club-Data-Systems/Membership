@@ -420,7 +420,10 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                         <div className="mt-3 px-2 space-y-1">
                                                             {userNavigation.map(
                                                                 (item, idx) => (
-                                                                    <Link
+                                                                    <Popover.Button
+                                                                        as={
+                                                                            Link
+                                                                        }
                                                                         key={
                                                                             idx
                                                                         }
@@ -438,7 +441,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                         {
                                                                             item.name
                                                                         }
-                                                                    </Link>
+                                                                    </Popover.Button>
                                                                 )
                                                             )}
                                                         </div>
