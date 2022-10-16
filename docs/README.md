@@ -1,52 +1,41 @@
-# Membership
-Membership is a project from [Chester-le-Street ASC](https://www.chesterlestreetasc.co.uk/) and [Swimming Club Data Systems](https://www.myswimmingclub.uk/) which aims to make swimming club
-management simpler for club volunteers, coaches, helpers and members. It is available under the Apache open-source license, so you are free to use our code in any way possible.
+# Website
 
-## Documentation - Help and Support
+This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
-You can find documentation here on our docs repository. Other documentation is available on the Chester-le-Street ASC Website. It will eventually be migrated here.
+### Installation
 
-* [Log books](log-books)
-* [Other categories](https://www.chesterlestreetasc.co.uk/support/onlinemembership/)
-* [What's new?](whats-new)
+```
+$ yarn
+```
 
-## About
+### Local Development
 
-This software is continuously developed in accordance with the business and operational needs of Chester-le-Street ASC and SCDS customer clubs, with a steady stream of feature requests from all.
+```
+$ yarn start
+```
 
-Chester-le-Street ASC and SCDS accept no liability for any issues, including all legal issues, with this software.
+This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
-The system requires at least PHP 7.4 and for JavaScipt to be enabled on clients.
+### Build
 
-## Features
-### Automatic Member Management
-The application is built on a database of club members. Members are assigned to squads and parents can link members to their account. This allows us to automatically calculate monthly fees and more.
+```
+$ yarn build
+```
 
-### Online Gala Entries
-Galas are added to the system by admins. Parents can enter their children into swims by selecting their name, gala and swims. This cuts down on duplicated data from existing arrangements. Parents recieve emails detailing their entries and can then edit entries up to the closing date or when the entry is processed.
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-### Online Attendance Records
-Attendance records are online, facilitating automatic attendance calculation. Squads are managed online and swimmer moves between squads can be scheduled in the system to be carried out automatically.
+### Deployment
 
-### Notify
-Notify is our E-Mail and SMS mailing list solution. Administrators can send emails to selected groups of parents for each squad. The system is GDPR compliant and users can opt in or out of receiving emails at any time.
+Using SSH:
 
-### Direct Debit Payments
-This application has been integrated with GoCardless and their APIs to allow customer clubs to bill members by Direct Debit. The GoCardless client library which is included in this software is copyright of GoCardless.
+```
+$ USE_SSH=true yarn deploy
+```
 
-### Online Membership Renewal and Registration
-We're able to walk parents/members through the annual renewal process, including checking their details, updating details for their swimmers such as medical information and photography permissions as well as agreeing to the club code of conduct and terms and conditions. At the end of the process, we charge users
-their Swim England Fees and any club fees by Direct Debit.
+Not using SSH:
 
-### Credit and Debit Card Payments
-We support credit and debit card payments for gala entries via an integration with Stripe. Refunds for rejections can also be made via the system. We have plans to introduce card payments in more locations soon.
+```
+$ GIT_USER=<Your GitHub username> yarn deploy
+```
 
-## Legal Notices for Third Party Libraries
-
-This application contains third party client libraries. These are managed via Composer. They will come with the application, so we recommend that you do not update them via composer yourself, as this may cause issues.
-
-### Included Packages
-
-For a list of included packages, view [DEPENDENCIES.md](./DEPENDENCIES.md).
-
-This product includes GeoLite2 data created by MaxMind, available from [http://www.maxmind.com](http://www.maxmind.com).
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.

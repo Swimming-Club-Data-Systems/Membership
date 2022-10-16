@@ -1,0 +1,77 @@
+image: registry.gitlab.com/swimming-club-data-systems/membership:latest
+
+# services:
+#   - mysql:5.7
+
+# variables:
+#   MYSQL_DATABASE: homestead
+#   MYSQL_ROOT_PASSWORD: secret
+#   DB_HOST: mysql
+#   DB_USERNAME: root
+
+stages:
+  - deploy
+
+# unit_test:
+#   stage: test
+#   script:
+#     - cp .env.example .env
+#     - composer install
+#     - php artisan key:generate
+#     - php artisan migrate
+#     - vendor/bin/phpunit
+
+deploy_staging:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-stage"
+  environment:
+    name: staging
+    url: https://mt.myswimmingclub.uk
+  when: on_success
+  only:
+    - development-main
+  tags:
+    - docker
+
+deploy_production:
+  stage: deploy
+  script:
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+    - ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-prod"
+  environment:
+    name: production
+    url: https://myswimmingclub.uk
+  when: on_success
+  only:
+    - main
+  tags:
+    - docker
+
+# deploy_production:
+#   stage: deploy
+#   script:
+#     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+#     - eval $(ssh-agent -s)
+#     - ssh-add <(echo "$SSH_PRIVATE_KEY")
+#     - mkdir -p ~/.ssh
+#     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
+#     - ~/.composer/vendor/bin/envoy run deploy --commit="$CI_COMMIT_SHA"
+#   environment:
+#     name: production
+#     url: http://192.168.1.1
+#   when: manual
+#   only:
+#     - main

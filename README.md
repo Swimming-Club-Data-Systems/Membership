@@ -2,6 +2,18 @@
 Membership is a project from [Chester-le-Street ASC](https://www.chesterlestreetasc.co.uk/) and [Swimming Club Data Systems](https://www.myswimmingclub.uk/) which aims to make swimming club
 management simpler for club volunteers, coaches, helpers and members. It is available under the Apache open-source license, so you are free to use our code in any way possible.
 
+## Redevelopment work
+
+The membership system is being re-implemented in Laravel.
+
+The new Laravel based system (`./src`) runs on PHP 8 and later only. The legacy side (`./src_v1`) runs specifically on PHP 7.4 only as a result of its legacy status.
+
+When you set up the applications, the legacy app runs at `/v1` and the new laravel app at `/`. This allows the two systems to send you between one and the other depending on where features are implemented.
+
+In production we use nginx to achieve this split.
+
+## About
+
 This software is continuously developed in accordance with the business and operational needs of Chester-le-Street ASC and SCDS customer clubs, with a steady stream of feature requests from all.
 
 Chester-le-Street ASC and SCDS accept no liability for any issues, including all legal issues, with this software.

@@ -1,0 +1,49 @@
+{
+  "menuType": "ProfileNavigation",
+  "title": "Account Options",
+  "links": [
+    {
+      "id": "profile",
+      "name": "Profile",
+      "title": "Profile",
+      "link": "/my-account/profile",
+      "target": "_self",
+      "external": true
+    },
+    {
+      "id": "email",
+      "name": "Email Options",
+      "title": "Email Options",
+      "link": "/my-account/email-options",
+      "target": "_self",
+      "external": true
+    },
+    {
+      "id": "passkeys",
+      "name": "Password and Security",
+      "title": "Password and Security",
+      "link": "/my-account/password-and-security",
+      "target": "_self",
+      "external": true
+    },
+    {
+      "id": "addswimmer",
+      "name": "Add Member",
+      "title": "Connect a club member to your account",
+      "link": "my-account/add-member",
+      "target": "_self",
+      "external": false,
+      "include": [
+        "Parent"
+      ]
+    },
+    {
+      "id": "notify",
+      "name": "Email History",
+      "title": "Emails sent to you by us",
+      "link": "my-account/notify-history",
+      "target": "_self",
+      "external": false
+    }
+  ]
+}

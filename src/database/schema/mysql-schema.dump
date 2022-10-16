@@ -1,0 +1,1775 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `auditLogging`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `auditLogging` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `Time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Event` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Description` varchar(512) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `checkoutItems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkoutItems` (
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `checkout_session` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `amount` BIGINT UNSIGNED NOT NULL,
+  `currency` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `tax_amount` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `tax_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`tax_data`)),
+  `sub_items` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`sub_items`)),
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'debit',
+  `attributes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`attributes`)),
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `checkoutSessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `checkoutSessions` (
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `user` BIGINT UNSIGNED DEFAULT NULL,
+  `amount` BIGINT UNSIGNED NOT NULL,
+  `currency` char(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `state` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `allowed_types` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`allowed_types`)),
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `succeeded` datetime DEFAULT NULL,
+  `intent` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `method` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `version` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'v1',
+  `creator` BIGINT UNSIGNED DEFAULT NULL,
+  `tax_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `total_details` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`total_details`)),
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `clubMembershipClasses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `clubMembershipClasses` (
+  `ID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Type` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT 'club',
+  `Name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `Fees` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`Fees`)),
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `coaches`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `coaches` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `Squad` BIGINT UNSIGNED NOT NULL,
+  `Type` enum('LEAD_COACH','COACH','ASSISTANT_COACH','TEACHER','HELPER','ADMINISTRATOR') COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `completedForms`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `completedForms` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Member` BIGINT UNSIGNED DEFAULT NULL,
+  `User` BIGINT UNSIGNED DEFAULT NULL,
+  `Form` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Date` date NOT NULL,
+  `About` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `covidGalaHealthScreen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `covidGalaHealthScreen` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `DateTime` datetime NOT NULL DEFAULT current_timestamp(),
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Gala` BIGINT UNSIGNED NOT NULL,
+  `MemberAgreement` tinyint(1) NOT NULL DEFAULT 0,
+  `Guardian` BIGINT UNSIGNED DEFAULT NULL,
+  `GuardianAgreement` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `covidHealthScreen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `covidHealthScreen` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `DateTime` datetime NOT NULL DEFAULT current_timestamp(),
+  `OfficerApproval` tinyint(1) NOT NULL DEFAULT 0,
+  `ApprovedBy` BIGINT UNSIGNED DEFAULT NULL,
+  `Document` text COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `covidLocations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `covidLocations` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Name` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Address` text COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `covidRiskAwareness`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `covidRiskAwareness` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `DateTime` datetime NOT NULL DEFAULT current_timestamp(),
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `MemberAgreement` tinyint(1) NOT NULL DEFAULT 0,
+  `Guardian` BIGINT UNSIGNED DEFAULT NULL,
+  `GuardianAgreement` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `covidVisitors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `covidVisitors` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Location` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Time` datetime NOT NULL,
+  `Person` BIGINT UNSIGNED DEFAULT NULL,
+  `Type` enum('member','user','guest') COLLATE utf8mb4_bin NOT NULL,
+  `GuestName` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `GuestPhone` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Inputter` BIGINT UNSIGNED DEFAULT NULL,
+  `Notes` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `SignedOut` tinyint(1) NOT NULL DEFAULT 0,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `domains`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `domains` (
+  `id` BIGINT unsigned NOT NULL AUTO_INCREMENT,
+  `domain` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tenant_id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `emergencyContacts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `emergencyContacts` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Name` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `ContactNumber` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Relation` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `extras`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extras` (
+  `ExtraID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ExtraName` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `ExtraFee` decimal(6,2) NOT NULL,
+  `Type` enum('Payment','Refund') COLLATE utf8mb4_bin DEFAULT 'Payment',
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ExtraID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `extrasRelations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `extrasRelations` (
+  `RelationID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ExtraID` BIGINT UNSIGNED NOT NULL,
+  `MemberID` BIGINT UNSIGNED DEFAULT NULL,
+  `UserID` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`RelationID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galaData`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galaData` (
+  `Gala` BIGINT UNSIGNED NOT NULL,
+  `Events` text COLLATE utf8mb4_bin NOT NULL,
+  `Prices` text COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galaEntries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galaEntries` (
+  `EntryID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `GalaID` BIGINT UNSIGNED NOT NULL,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `EntryProcessed` tinyint(1) NOT NULL,
+  `TimesRequired` tinyint(1) DEFAULT NULL COMMENT 'If true, times required from coaches',
+  `TimesProvided` tinyint(1) DEFAULT NULL COMMENT 'Set true if times provided for a non HyTek Gala',
+  `FeeToPay` double DEFAULT NULL,
+  `Charged` tinyint(1) NOT NULL DEFAULT 0,
+  `25Free` tinyint(1) DEFAULT NULL,
+  `50Free` tinyint(1) DEFAULT NULL,
+  `100Free` tinyint(1) DEFAULT NULL,
+  `200Free` tinyint(1) DEFAULT NULL,
+  `400Free` tinyint(1) DEFAULT NULL,
+  `800Free` tinyint(1) DEFAULT NULL,
+  `1500Free` tinyint(1) DEFAULT NULL,
+  `25Breast` tinyint(1) DEFAULT NULL,
+  `50Breast` tinyint(1) DEFAULT NULL,
+  `100Breast` tinyint(1) DEFAULT NULL,
+  `200Breast` tinyint(1) DEFAULT NULL,
+  `25Fly` tinyint(1) DEFAULT NULL,
+  `50Fly` tinyint(1) DEFAULT NULL,
+  `100Fly` tinyint(1) DEFAULT NULL,
+  `200Fly` tinyint(1) DEFAULT NULL,
+  `25Back` tinyint(1) DEFAULT NULL,
+  `50Back` tinyint(1) DEFAULT NULL,
+  `100Back` tinyint(1) DEFAULT NULL,
+  `200Back` tinyint(1) DEFAULT NULL,
+  `200IM` tinyint(1) DEFAULT NULL,
+  `400IM` tinyint(1) DEFAULT NULL,
+  `100IM` tinyint(1) DEFAULT NULL,
+  `150IM` tinyint(1) DEFAULT NULL,
+  `25FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `50FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `100FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `200FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `400FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `800FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `1500FreeTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `25BreastTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `50BreastTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `100BreastTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `200BreastTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `25FlyTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `50FlyTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `100FlyTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `200FlyTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `25BackTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `50BackTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `100BackTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `200BackTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `200IMTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `400IMTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `100IMTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `150IMTime` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Refunded` tinyint(1) DEFAULT 0,
+  `Locked` tinyint(1) DEFAULT 0,
+  `Vetoable` tinyint(1) DEFAULT 0,
+  `AmountRefunded` BIGINT UNSIGNED DEFAULT 0,
+  `StripePayment` BIGINT UNSIGNED DEFAULT NULL,
+  `Approved` tinyint(1) DEFAULT 1,
+  `PaymentID` BIGINT UNSIGNED DEFAULT NULL,
+  `ProcessingFee` BIGINT UNSIGNED DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`EntryID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galaSessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galaSessions` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Gala` BIGINT UNSIGNED NOT NULL,
+  `Name` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galaSessionsCanEnter`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galaSessionsCanEnter` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Session` BIGINT UNSIGNED NOT NULL,
+  `CanEnter` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `galas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `galas` (
+  `GalaID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `GalaName` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `CourseLength` enum('SHORT','LONG','IRREGULAR') COLLATE utf8mb4_bin DEFAULT NULL,
+  `GalaVenue` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `GalaFee` decimal(8,2) DEFAULT NULL,
+  `GalaFeeConstant` tinyint(1) NOT NULL DEFAULT 1,
+  `ClosingDate` datetime DEFAULT NULL,
+  `GalaDate` date NOT NULL COMMENT 'Last day of gala when the event will disappear from accounts',
+  `HyTek` tinyint(1) NOT NULL,
+  `CoachEnters` tinyint(1) DEFAULT 0,
+  `RequiresApproval` tinyint(1) DEFAULT 0,
+  `Description` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `PaymentCategory` BIGINT UNSIGNED DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `ProcessingFee` BIGINT UNSIGNED DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`GalaID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `gcCredentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `gcCredentials` (
+  `OrganisationId` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `AccessToken` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`OrganisationId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `individualFeeTrack`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `individualFeeTrack` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MonthID` BIGINT UNSIGNED NOT NULL,
+  `PaymentID` BIGINT UNSIGNED DEFAULT NULL,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `UserID` BIGINT UNSIGNED DEFAULT NULL,
+  `Description` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Type` enum('SquadFee','ExtraFee') COLLATE utf8mb4_bin NOT NULL,
+  `NC` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `joinParents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `joinParents` (
+  `Hash` char(40) COLLATE utf8mb4_bin NOT NULL,
+  `First` varchar(30) COLLATE utf8mb4_bin NOT NULL,
+  `Last` varchar(40) COLLATE utf8mb4_bin NOT NULL,
+  `Email` varchar(70) COLLATE utf8mb4_bin NOT NULL,
+  `Invited` tinyint(1) NOT NULL DEFAULT 0,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `joinSwimmers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `joinSwimmers` (
+  `ID` BIGINT UNSIGNED NOT NULL,
+  `Parent` char(40) COLLATE utf8mb4_bin NOT NULL,
+  `First` varchar(30) COLLATE utf8mb4_bin NOT NULL,
+  `Last` varchar(40) COLLATE utf8mb4_bin NOT NULL,
+  `DoB` date NOT NULL,
+  `XP` BIGINT UNSIGNED NOT NULL,
+  `XPDetails` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Medical` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Questions` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Club` varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
+  `ASA` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `TrialStart` datetime DEFAULT NULL,
+  `TrialEnd` datetime DEFAULT NULL,
+  `Comments` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `SquadSuggestion` BIGINT UNSIGNED DEFAULT NULL,
+  `Sex` enum('Male','Female','Other') COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `linkedAccounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `linkedAccounts` (
+  `ID` BIGINT UNSIGNED NOT NULL,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `LinkedUser` BIGINT UNSIGNED NOT NULL,
+  `Key` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Active` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `listSenders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `listSenders` (
+  `User` BIGINT UNSIGNED NOT NULL,
+  `List` BIGINT UNSIGNED NOT NULL,
+  `Manager` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `meetResults`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `meetResults` (
+  `Result` BIGINT UNSIGNED NOT NULL,
+  `Meet` BIGINT UNSIGNED NOT NULL,
+  `Date` date NOT NULL,
+  `Time` varchar(8) COLLATE utf8mb4_bin NOT NULL,
+  `IntTime` BIGINT UNSIGNED NOT NULL,
+  `ChronologicalOrder` BIGINT UNSIGNED NOT NULL,
+  `Round` char(1) COLLATE utf8mb4_bin NOT NULL,
+  `Stroke` char(1) COLLATE utf8mb4_bin NOT NULL,
+  `Distance` BIGINT UNSIGNED NOT NULL,
+  `Course` char(1) COLLATE utf8mb4_bin NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `meets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `meets` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name` varchar(200) COLLATE utf8mb4_bin NOT NULL,
+  `StartTime` datetime NOT NULL,
+  `Creator` BIGINT UNSIGNED NOT NULL,
+  `Started` tinyint(1) NOT NULL DEFAULT 0,
+  `Finished` tinyint(1) NOT NULL DEFAULT 0,
+  `Link` varchar(2048) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `meetsWithResults`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `meetsWithResults` (
+  `Meet` BIGINT UNSIGNED NOT NULL,
+  `Gala` BIGINT UNSIGNED DEFAULT NULL,
+  `Name` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `City` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `Start` date DEFAULT NULL,
+  `End` date DEFAULT NULL,
+  `Course` char(1) COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `memberEmailAddresses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `memberEmailAddresses` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `EmailAddress` varchar(320) COLLATE utf8mb4_bin NOT NULL,
+  `Verified` tinyint(1) DEFAULT 0,
+  `Primary` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `memberMedical`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `memberMedical` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `Conditions` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `Allergies` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `Medication` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `GPName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `GPAddress` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' CHECK (json_valid(`GPAddress`)),
+  `GPPhone` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `WithholdConsent` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `memberPhotography`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `memberPhotography` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `Website` tinyint(1) NOT NULL,
+  `Social` tinyint(1) NOT NULL,
+  `Noticeboard` tinyint(1) NOT NULL,
+  `FilmTraining` tinyint(1) NOT NULL,
+  `ProPhoto` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `members`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `members` (
+  `MemberID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED DEFAULT NULL,
+  `Status` tinyint(1) NOT NULL DEFAULT 1,
+  `RR` tinyint(1) NOT NULL DEFAULT 0,
+  `AccessKey` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `MForename` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `MSurname` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `MMiddleNames` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `ASANumber` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `NGBCategory` char(36) COLLATE utf8mb4_bin DEFAULT NULL,
+  `DateOfBirth` date NOT NULL,
+  `Gender` enum('Male','Female') COLLATE utf8mb4_bin NOT NULL,
+  `OtherNotes` text COLLATE utf8mb4_bin NOT NULL,
+  `RRTransfer` tinyint(1) DEFAULT 0,
+  `ASAPrimary` tinyint(1) NOT NULL DEFAULT 1,
+  `ASAPaid` tinyint(1) NOT NULL DEFAULT 0,
+  `ClubMember` tinyint(1) NOT NULL DEFAULT 1,
+  `ClubPaid` tinyint(1) NOT NULL DEFAULT 0,
+  `ASAMember` tinyint(1) NOT NULL DEFAULT 1,
+  `Country` varchar(7) COLLATE utf8mb4_bin NOT NULL DEFAULT 'GB-ENG',
+  `PWHash` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
+  `PWWrong` BIGINT UNSIGNED DEFAULT 0,
+  `Active` tinyint(1) DEFAULT 1,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `ClubCategory` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `GenderIdentity` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `GenderPronouns` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `GenderDisplay` tinyint(1) DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`MemberID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `membershipBatch`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `membershipBatch` (
+  `ID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `User` BIGINT UNSIGNED NOT NULL,
+  `StartText` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `Footer` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `DueDate` date DEFAULT NULL,
+  `Completed` tinyint(1) NOT NULL DEFAULT 0,
+  `Cancelled` tinyint(1) NOT NULL DEFAULT 0,
+  `Total` BIGINT UNSIGNED NOT NULL,
+  `PaymentTypes` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`PaymentTypes`)),
+  `PaymentDetails` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`PaymentDetails`)),
+  `AutoReminders` tinyint(1) NOT NULL DEFAULT 0,
+  `Creator` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `membershipBatchItems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `membershipBatchItems` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Batch` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Membership` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Notes` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Year` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `membershipYear`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `membershipYear` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Name` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `StartDate` date NOT NULL,
+  `EndDate` date NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `membershipYearMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `membershipYearMembers` (
+  `Year` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `memberships`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `memberships` (
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Year` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Membership` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `StartDate` date NOT NULL,
+  `EndDate` date NOT NULL,
+  `Purchased` datetime NOT NULL,
+  `PaymentInfo` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`PaymentInfo`)),
+  `Notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `newUsers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `newUsers` (
+  `ID` int(25) NOT NULL AUTO_INCREMENT,
+  `AuthCode` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `UserJSON` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Time` datetime NOT NULL DEFAULT current_timestamp(),
+  `Type` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notify`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notify` (
+  `EmailID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MessageID` BIGINT UNSIGNED DEFAULT NULL,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Status` enum('Queued','Sent','No_Sub','Failed') COLLATE utf8mb4_bin NOT NULL,
+  `Subject` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Message` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Sender` BIGINT UNSIGNED DEFAULT NULL,
+  `ForceSend` tinyint(1) NOT NULL DEFAULT 0,
+  `EmailType` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`EmailID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notifyAdditionalEmails`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifyAdditionalEmails` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `EmailAddress` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `Name` varchar(50) COLLATE utf8mb4_bin NOT NULL,
+  `Hash` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Verified` tinyint(1) DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notifyCategories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifyCategories` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Name` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Description` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Active` tinyint(1) DEFAULT 1,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notifyHistory`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifyHistory` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Sender` BIGINT UNSIGNED NOT NULL,
+  `Subject` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Message` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `ForceSend` tinyint(1) NOT NULL,
+  `Date` datetime NOT NULL,
+  `JSONData` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `notifyOptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `notifyOptions` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `EmailType` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Subscribed` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `onboardingMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `onboardingMembers` (
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `session` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `member` BIGINT UNSIGNED NOT NULL,
+  `stages` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' CHECK (json_valid(`stages`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `onboardingSessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `onboardingSessions` (
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `user` BIGINT UNSIGNED NOT NULL,
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `creator` BIGINT UNSIGNED DEFAULT NULL,
+  `start` date NOT NULL DEFAULT current_timestamp(),
+  `charge_outstanding` tinyint(1) NOT NULL DEFAULT 0,
+  `charge_pro_rata` tinyint(1) NOT NULL DEFAULT 0,
+  `welcome_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `token` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `token_on` tinyint(1) NOT NULL DEFAULT 0,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
+  `completed_at` datetime DEFAULT NULL,
+  `stages` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`stages`)),
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
+  `batch` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT 'onboarding',
+  `renewal` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `passwordTokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `passwordTokens` (
+  `TokenID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Token` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Date` date DEFAULT NULL,
+  `Type` enum('Password_Reset','Account_Verification') COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`TokenID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentCategories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentCategories` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `Description` varchar(200) COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `UniqueID` varchar(36) COLLATE utf8mb4_bin NOT NULL,
+  `Show` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentMandates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentMandates` (
+  `MandateID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Name` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `Mandate` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `Customer` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `BankAccount` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `BankName` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL,
+  `AccountHolderName` varchar(30) COLLATE utf8mb4_bin NOT NULL,
+  `AccountNumEnd` varchar(2) COLLATE utf8mb4_bin NOT NULL,
+  `InUse` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`MandateID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentMonths`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentMonths` (
+  `MonthID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MonthStart` varchar(7) COLLATE utf8mb4_bin NOT NULL,
+  `Date` date NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`MonthID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentPreferredMandate`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentPreferredMandate` (
+  `PrefID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `MandateID` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`PrefID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentRetries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentRetries` (
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Day` date NOT NULL,
+  `PMKey` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Tried` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentSchedule`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentSchedule` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Day` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentSquadFees`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentSquadFees` (
+  `SFID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MonthID` BIGINT UNSIGNED NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`SFID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentTypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentTypes` (
+  `PayTypeID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `PayTypeName` varchar(60) COLLATE utf8mb4_bin NOT NULL,
+  `PayTypeDescription` varchar(200) COLLATE utf8mb4_bin DEFAULT NULL,
+  `PayTypeEnabled` tinyint(1) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`PayTypeID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentWebhookOps`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentWebhookOps` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `EventID` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `payments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `payments` (
+  `PaymentID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Date` date NOT NULL,
+  `Status` enum('pending_api_request','pending_customer_approval','pending_submission','submitted','confirmed','paid_out','cancelled','customer_approval_denied','failed','charged_back','cust_not_dd','paid_manually','requires_payment_method','requires_confirmation','requires_action','processing','succeeded','canceled') COLLATE utf8mb4_bin NOT NULL,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `MandateID` BIGINT UNSIGNED DEFAULT NULL,
+  `Name` varchar(50) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Currency` varchar(3) COLLATE utf8mb4_bin NOT NULL,
+  `PMkey` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Type` enum('Payment','Refund') COLLATE utf8mb4_bin NOT NULL,
+  `Payout` varchar(30) COLLATE utf8mb4_bin DEFAULT NULL,
+  `stripeMandate` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `stripePaymentIntent` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `stripePayout` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `stripeFailureCode` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `stripeFee` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`PaymentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentsPayouts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentsPayouts` (
+  `ID` varchar(30) COLLATE utf8mb4_bin NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Fees` BIGINT UNSIGNED NOT NULL,
+  `Currency` char(3) COLLATE utf8mb4_bin NOT NULL,
+  `ArrivalDate` date DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `paymentsPending`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `paymentsPending` (
+  `PaymentID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Date` date NOT NULL,
+  `Status` enum('Pending','Queued','Requested','Paid','Failed') COLLATE utf8mb4_bin NOT NULL,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Name` varchar(500) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Currency` varchar(3) COLLATE utf8mb4_bin NOT NULL,
+  `PMkey` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Type` enum('Payment','Refund') COLLATE utf8mb4_bin NOT NULL,
+  `MetadataJSON` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Category` BIGINT UNSIGNED DEFAULT NULL,
+  `Payment` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`PaymentID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `permissions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `permissions` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Permission` varchar(200) COLLATE utf8mb4_bin NOT NULL,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `posts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `posts` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Author` BIGINT UNSIGNED DEFAULT NULL,
+  `Date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `Content` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Title` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Excerpt` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Path` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Modified` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Type` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `MIME` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `qualifications`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `qualifications` (
+  `ID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `DefaultExpiry` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`DefaultExpiry`)),
+  `Show` tinyint(1) NOT NULL DEFAULT 1,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `qualificationsMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `qualificationsMembers` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Qualification` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `ValidFrom` date NOT NULL DEFAULT current_timestamp(),
+  `ValidUntil` date DEFAULT NULL,
+  `Notes` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewalData`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewalData` (
+  `ID` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
+  `Renewal` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `User` BIGINT UNSIGNED DEFAULT NULL,
+  `Document` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`Document`)),
+  `PaymentIntent` BIGINT UNSIGNED DEFAULT NULL,
+  `PaymentDD` BIGINT UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewalMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewalMembers` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `PaymentID` BIGINT UNSIGNED DEFAULT NULL,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `RenewalID` BIGINT UNSIGNED NOT NULL,
+  `Date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' ON UPDATE current_timestamp(),
+  `CountRenewal` tinyint(1) NOT NULL DEFAULT 0,
+  `Renewed` tinyint(1) DEFAULT 0,
+  `PaymentType` enum('dd','cash','card','cheque','bacs','none') COLLATE utf8mb4_bin DEFAULT 'dd',
+  `StripePayment` BIGINT UNSIGNED DEFAULT NULL,
+  `CashPaid` tinyint(1) DEFAULT 0,
+  `ChequePaid` tinyint(1) DEFAULT 0,
+  `BACSPaid` tinyint(1) DEFAULT 0,
+  `BACSReference` varchar(18) COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewalPeriods`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewalPeriods` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Opens` date NOT NULL,
+  `Closes` longtext COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`Closes`)),
+  `Name` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Year` BIGINT UNSIGNED NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewalProgress`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewalProgress` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `RenewalID` BIGINT UNSIGNED NOT NULL,
+  `Date` date NOT NULL,
+  `Stage` BIGINT UNSIGNED NOT NULL,
+  `Substage` BIGINT UNSIGNED NOT NULL,
+  `Part` BIGINT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewals` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Year` BIGINT UNSIGNED NOT NULL,
+  `StartDate` date NOT NULL,
+  `EndDate` date NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `renewalv2`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `renewalv2` (
+  `id` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `start` date NOT NULL,
+  `end` date NOT NULL,
+  `default_stages` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' CHECK (json_valid(`default_stages`)),
+  `default_member_stages` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL DEFAULT '[]' CHECK (json_valid(`default_member_stages`)),
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`metadata`)),
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `club_year` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  `ngb_year` char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `schemaMigrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `schemaMigrations` (
+  `id` BIGINT UNSIGNED NOT NULL,
+  `migration` varchar(30) COLLATE utf8mb4_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessions` (
+  `SessionID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `VenueID` BIGINT UNSIGNED NOT NULL,
+  `SessionName` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `SessionDay` BIGINT UNSIGNED NOT NULL,
+  `StartTime` time DEFAULT NULL,
+  `EndTime` time DEFAULT NULL,
+  `DisplayFrom` date DEFAULT NULL,
+  `DisplayUntil` date DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`SessionID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin COMMENT='Stores information about sessions for Squads';
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsAttendance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsAttendance` (
+  `WeekID` BIGINT UNSIGNED NOT NULL,
+  `SessionID` BIGINT UNSIGNED NOT NULL,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `AttendanceBoolean` BIGINT UNSIGNED DEFAULT NULL,
+  `AttendanceRequired` tinyint(1) DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsBookable`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsBookable` (
+  `Session` BIGINT UNSIGNED NOT NULL,
+  `Date` date NOT NULL,
+  `MaxPlaces` BIGINT UNSIGNED DEFAULT NULL,
+  `AllSquads` tinyint(1) DEFAULT 0,
+  `RegisterGenerated` tinyint(1) DEFAULT 0,
+  `BookingOpens` datetime DEFAULT NULL,
+  `BookingFee` BIGINT UNSIGNED DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsBookings`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsBookings` (
+  `Session` BIGINT UNSIGNED NOT NULL,
+  `Date` date NOT NULL,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `BookedAt` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsSquads`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsSquads` (
+  `Squad` BIGINT UNSIGNED NOT NULL,
+  `Session` BIGINT UNSIGNED NOT NULL,
+  `ForAllMembers` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsVenues`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsVenues` (
+  `VenueID` BIGINT UNSIGNED NOT NULL,
+  `VenueName` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `Location` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`VenueID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sessionsWeek`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sessionsWeek` (
+  `WeekID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `WeekDateBeginning` date NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`WeekID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `squadMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `squadMembers` (
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Squad` BIGINT UNSIGNED NOT NULL,
+  `Paying` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `squadMoves`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `squadMoves` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `Date` date NOT NULL,
+  `Old` BIGINT UNSIGNED DEFAULT NULL,
+  `New` BIGINT UNSIGNED DEFAULT NULL,
+  `Paying` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `squadReps`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `squadReps` (
+  `User` BIGINT UNSIGNED NOT NULL,
+  `Squad` BIGINT UNSIGNED NOT NULL,
+  `ContactDescription` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `squads`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `squads` (
+  `SquadID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `SquadName` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `SquadFee` decimal(8,2) DEFAULT NULL,
+  `SquadCoach` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `SquadTimetable` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `SquadCoC` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `SquadKey` varchar(20) COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`SquadID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripeCustomers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripeCustomers` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `CustomerID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripeDisputes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripeDisputes` (
+  `ID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `SID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `Currency` varchar(3) COLLATE utf8mb4_bin NOT NULL,
+  `PaymentIntent` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Reason` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Status` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Created` datetime DEFAULT NULL,
+  `EvidenceDueBy` datetime DEFAULT NULL,
+  `IsRefundable` tinyint(1) NOT NULL DEFAULT 0,
+  `HasEvidence` tinyint(1) NOT NULL DEFAULT 0,
+  `EvidencePastDue` tinyint(1) NOT NULL DEFAULT 0,
+  `EvidenceSubmissionCount` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripeMandates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripeMandates` (
+  `ID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Mandate` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Customer` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Fingerprint` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Last4` varchar(4) COLLATE utf8mb4_bin NOT NULL,
+  `SortCode` varchar(8) COLLATE utf8mb4_bin NOT NULL,
+  `Address` varchar(1024) COLLATE utf8mb4_bin NOT NULL,
+  `Status` enum('pending','revoked','refused','accepted') COLLATE utf8mb4_bin NOT NULL,
+  `MandateStatus` enum('active','inactive','pending') COLLATE utf8mb4_bin NOT NULL,
+  `CreationTime` datetime NOT NULL DEFAULT current_timestamp(),
+  `Reference` varchar(64) COLLATE utf8mb4_bin NOT NULL,
+  `URL` varchar(512) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePayMethods`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePayMethods` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Customer` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `MethodID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `CardName` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `City` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Country` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Line1` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Line2` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `PostCode` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Brand` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `IssueCountry` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `ExpMonth` BIGINT UNSIGNED DEFAULT NULL,
+  `ExpYear` BIGINT UNSIGNED DEFAULT NULL,
+  `Funding` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Last4` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Fingerprint` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Reusable` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePaymentIntents`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePaymentIntents` (
+  `id` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `stripe_id` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `amount` BIGINT UNSIGNED NOT NULL,
+  `amount_capturable` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `amount_received` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `amount_refunded` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `currency` char(3) COLLATE utf8mb4_bin DEFAULT 'gbp',
+  `customer` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `description` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `payment_method` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `shipping` longtext COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`shipping`)),
+  `charge_data` longtext COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`charge_data`)),
+  `status` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `review` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `application_fee_amount` BIGINT UNSIGNED DEFAULT 0,
+  `cancelled_at` datetime DEFAULT NULL,
+  `cancellation_reason` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `invoice` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePaymentItems`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePaymentItems` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Payment` BIGINT UNSIGNED NOT NULL,
+  `Name` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Description` text COLLATE utf8mb4_bin DEFAULT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Currency` varchar(3) COLLATE utf8mb4_bin NOT NULL,
+  `AmountRefunded` BIGINT UNSIGNED DEFAULT 0,
+  `Category` BIGINT UNSIGNED DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePaymentMethods`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePaymentMethods` (
+  `id` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `stripe_id` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `customer` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `billing_details` longtext COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`billing_details`)),
+  `type` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `type_data` longtext COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`type_data`)),
+  `fingerprint` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `reusable` tinyint(1) DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePayments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePayments` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `DateTime` datetime NOT NULL,
+  `Method` BIGINT UNSIGNED DEFAULT NULL,
+  `Intent` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `Currency` varchar(3) COLLATE utf8mb4_bin NOT NULL,
+  `ServedBy` BIGINT UNSIGNED DEFAULT NULL,
+  `Paid` tinyint(1) NOT NULL,
+  `AmountRefunded` BIGINT UNSIGNED DEFAULT 0,
+  `Fees` BIGINT UNSIGNED DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stripePayouts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stripePayouts` (
+  `ID` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Amount` BIGINT UNSIGNED NOT NULL,
+  `ArrivalDate` date DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `superUsers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `superUsers` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `First` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Last` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `PWHash` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Email` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `TwoFactor` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `superUsersLogins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `superUsersLogins` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `User` char(36) COLLATE utf8mb4_bin NOT NULL,
+  `Time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `IPAddress` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `GeoLocation` varchar(512) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Browser` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Platform` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Mobile` tinyint(1) NOT NULL DEFAULT 0,
+  `Hash` varchar(512) COLLATE utf8mb4_bin NOT NULL,
+  `HashActive` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `swimEnglandCompliance`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `swimEnglandCompliance` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Key` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `Value` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `targetedListMembers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `targetedListMembers` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ListID` BIGINT UNSIGNED NOT NULL,
+  `ReferenceID` BIGINT UNSIGNED NOT NULL,
+  `ReferenceType` enum('User','Member') COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `targetedLists`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `targetedLists` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Description` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin ROW_FORMAT=COMPACT;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `teamManagers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `teamManagers` (
+  `User` BIGINT UNSIGNED NOT NULL,
+  `Gala` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_entries`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_entries` (
+  `sequence` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch_id` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `family_hash` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `should_display_on_index` tinyint(1) NOT NULL DEFAULT 1,
+  `type` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `content` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`sequence`),
+  UNIQUE KEY `telescope_entries_uuid_unique` (`uuid`),
+  KEY `telescope_entries_batch_id_index` (`batch_id`),
+  KEY `telescope_entries_family_hash_index` (`family_hash`),
+  KEY `telescope_entries_created_at_index` (`created_at`),
+  KEY `telescope_entries_type_should_display_on_index_index` (`type`,`should_display_on_index`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_entries_tags`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_entries_tags` (
+  `entry_uuid` char(36) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tag` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  KEY `telescope_entries_tags_entry_uuid_tag_index` (`entry_uuid`,`tag`),
+  KEY `telescope_entries_tags_tag_index` (`tag`),
+  CONSTRAINT `telescope_entries_tags_entry_uuid_foreign` FOREIGN KEY (`entry_uuid`) REFERENCES `telescope_entries` (`uuid`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `telescope_monitoring`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `telescope_monitoring` (
+  `tag` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `tenantOptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tenantOptions` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Option` varchar(255) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Value` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `tenantRedirect`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tenantRedirect` (
+  `ID` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Source` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Target` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Created` datetime NOT NULL DEFAULT current_timestamp(),
+  `Tenant` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `tenants`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tenants` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Name` varchar(128) COLLATE utf8mb4_bin NOT NULL,
+  `Code` char(4) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Website` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `Email` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `Verified` tinyint(1) NOT NULL DEFAULT 0,
+  `UniqueID` varchar(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `Domain` varchar(256) COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `Data` longtext COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`Data`)),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `timesIndividual`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `timesIndividual` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `MemberID` BIGINT UNSIGNED NOT NULL,
+  `Minutes` BIGINT UNSIGNED NOT NULL,
+  `Seconds` BIGINT UNSIGNED NOT NULL,
+  `Hundreds` BIGINT UNSIGNED NOT NULL,
+  `FinaPoints` BIGINT UNSIGNED NOT NULL,
+  `Round` enum('Heat','Final') COLLATE utf8mb4_bin NOT NULL,
+  `Date` date NOT NULL,
+  `Meet` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Venue` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Club` BIGINT UNSIGNED NOT NULL,
+  `Level` BIGINT UNSIGNED NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `trainingLogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `trainingLogs` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Member` BIGINT UNSIGNED NOT NULL,
+  `DateTime` datetime NOT NULL,
+  `Content` text COLLATE utf8mb4_bin NOT NULL,
+  `ContentType` varchar(100) COLLATE utf8mb4_bin NOT NULL,
+  `Title` varchar(150) COLLATE utf8mb4_bin NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `userCredentials`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userCredentials` (
+  `id` char(36) COLLATE utf8mb4_bin NOT NULL DEFAULT uuid(),
+  `credential_id` varchar(256) COLLATE utf8mb4_bin NOT NULL,
+  `credential_name` varchar(256) COLLATE utf8mb4_bin DEFAULT '',
+  `user_id` BIGINT UNSIGNED NOT NULL,
+  `credential` longtext COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`credential`)),
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `userLogins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userLogins` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `UserID` BIGINT UNSIGNED NOT NULL,
+  `Time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `IPAddress` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `GeoLocation` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `Browser` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Platform` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Mobile` tinyint(1) NOT NULL,
+  `Hash` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `HashActive` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `userOptions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `userOptions` (
+  `ID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `User` BIGINT UNSIGNED NOT NULL,
+  `Option` varchar(30) COLLATE utf8mb4_bin NOT NULL,
+  `Value` mediumtext COLLATE utf8mb4_bin DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `UserID` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `Username` varchar(65) COLLATE utf8mb4_bin DEFAULT NULL,
+  `GID` BIGINT UNSIGNED DEFAULT NULL COMMENT 'If G Suite User, store the ID here for automatic passwords',
+  `Password` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `EmailAddress` varchar(255) COLLATE utf8mb4_bin NOT NULL,
+  `EmailComms` tinyint(1) NOT NULL,
+  `Forename` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Surname` mediumtext COLLATE utf8mb4_bin NOT NULL,
+  `Mobile` text COLLATE utf8mb4_bin NOT NULL,
+  `MobileComms` tinyint(1) NOT NULL,
+  `RR` tinyint(1) NOT NULL DEFAULT 0,
+  `Edit` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `WrongPassCount` BIGINT UNSIGNED NOT NULL DEFAULT 0,
+  `Active` tinyint(1) DEFAULT 1,
+  `Tenant` BIGINT UNSIGNED NOT NULL DEFAULT 1,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`UserID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `migrations` VALUES (1,'2018_08_08_100000_create_telescope_entries_table',1);
+INSERT INTO `migrations` VALUES (2,'2019_08_19_000000_create_failed_jobs_table',1);
+INSERT INTO `migrations` VALUES (3,'2019_12_14_000001_create_personal_access_tokens_table',1);
