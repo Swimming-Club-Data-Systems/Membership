@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { apiCount } from "@/Reducers/store";
 
 const Button = ({
-    type = "submit",
+    type = "button",
     className = "",
     children,
     variant = "primary",

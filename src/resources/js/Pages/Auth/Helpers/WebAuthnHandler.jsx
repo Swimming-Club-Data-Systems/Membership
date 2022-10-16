@@ -53,12 +53,17 @@ const WebAuthnHandler = ({ setAC, show }) => {
 
         const request = await axios.post(route("webauthn.challenge"), {});
 
+        const options = request.data;
+        options.allowCredentials = [];
+
         try {
             // Pass the options to the authenticator and wait for a response
-            asseResp = await startAuthentication(request.data, autoFill);
+            asseResp = await startAuthentication(options, autoFill);
         } catch (error) {
             // Some basic error handling
+            console.log(error);
             setError({ ...webAuthnError, message: error.message });
+            return;
         }
 
         // POST the response to the endpoint that calls
