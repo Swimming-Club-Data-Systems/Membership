@@ -24,7 +24,9 @@ const Search = (props) => {
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
             const searchValue = params.get("query");
-            formikProps.setFieldValue("query", searchValue);
+            if (searchValue) {
+                formikProps.setFieldValue("query", searchValue);
+            }
         }, []);
 
         return null;

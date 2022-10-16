@@ -229,17 +229,19 @@ class User extends Authenticatable implements MustVerifyEmail
         // Fetch cache
         if (!$this->permissionsCached) {
             foreach ($this->permissions()->get() as $permission) {
-                $this->permissionsCache[$permission->Permission] = true;
+                $this->permissionsCache[] = $permission->Permission;
             }
             $this->permissionsCached = true;
         }
 
         if (gettype($name) == 'string') {
-            if (isset($this->permissionsCache[$name])) {
-                return $this->permissionsCache[$name];
-            }
-        } else if (gettype($name) == 'array') {
             return in_array($name, $this->permissionsCache);
+        } else if (gettype($name) == 'array') {
+            foreach ($name as $item) {
+                if (in_array($item, $this->permissionsCache)) {
+                    return true;
+                }
+            }
         }
 
         return false;
