@@ -17,7 +17,7 @@ const AppWrapper = () => {
 
   useEffect(
     () => {
-      axios.get("/v1//api/react/header-footer")
+      axios.get("/v1/api/react/header-footer")
         .then(response => {
           let data = response.data;
           setHeader(data.header);
