@@ -69,7 +69,7 @@ const Pagination = ({ collection }) => {
     return (
         <div className="border-t border-gray-200 bg-white py-3">
             <InternalContainer>
-                <div className="sm:hidden text-center mb-4">
+                <div className="md:hidden text-center mb-4">
                     <p className="text-sm text-gray-700 mb-2">
                         Page <span className="font-medium">{current_page}</span>{" "}
                         of <span className="font-medium">{last_page}</span>
@@ -81,7 +81,7 @@ const Pagination = ({ collection }) => {
                     </p>
                 </div>
                 <div className="flex items-center justify-between">
-                    <div className="flex flex-1 justify-between sm:hidden">
+                    <div className="flex flex-1 justify-between md:hidden">
                         {prev_page_url && (
                             <Link
                                 href={prev_page_url}
@@ -99,7 +99,7 @@ const Pagination = ({ collection }) => {
                             </Link>
                         )}
                     </div>
-                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
+                    <div className="hidden md:flex md:flex-1 md:items-center md:justify-between">
                         <div>
                             <p className="text-sm text-gray-700">
                                 Showing{" "}
