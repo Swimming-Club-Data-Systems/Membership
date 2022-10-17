@@ -75,7 +75,7 @@ const TwoFactorChallenge = (props) => {
             </div>
 
             <form onSubmit={submit}>
-                <Button variant="secondary" disabled={processing}>
+                <Button variant="secondary" disabled={processing} type="submit">
                     Resend code
                 </Button>
             </form>
