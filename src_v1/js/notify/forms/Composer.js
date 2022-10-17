@@ -524,7 +524,7 @@ export class Composer extends React.Component {
                           remove_script_host: false,
                           document_base_url: document.documentURI,
                           selector: "#message",
-                          images_upload_url: "/notify/new/image-upload",
+                          images_upload_url: "/v1/notify/new/image-upload",
                           automatic_uploads: true,
                           images_upload_credentials: true,
                           branding: false,
@@ -590,7 +590,7 @@ export class Composer extends React.Component {
                     </p>
                   </Tab>
                   <Tab eventKey="attachments" title="Attachments">
-                    <Dropzone action="/notify/file-uploads" uuid={this.state.emailUuid} date={this.state.date} maxTotalFileSize={this.state.dzMaxTotalFileSize} maxFileSize={this.state.dzMaxFileSize} setAttachments={this.setAttachments} attachments={this.state.attachments} canSubmitAttachments={this.state.canSubmitAttachments} setCanSubmitAttachments={this.setCanSubmitAttachments} />
+                    <Dropzone action="/v1/notify/file-uploads" uuid={this.state.emailUuid} date={this.state.date} maxTotalFileSize={this.state.dzMaxTotalFileSize} maxFileSize={this.state.dzMaxFileSize} setAttachments={this.setAttachments} attachments={this.state.attachments} canSubmitAttachments={this.state.canSubmitAttachments} setCanSubmitAttachments={this.setCanSubmitAttachments} />
                   </Tab>
                   <Tab eventKey="preview" title="Preview">
                     <div className="mb-3">
