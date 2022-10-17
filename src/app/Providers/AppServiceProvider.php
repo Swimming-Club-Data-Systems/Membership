@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Central\Tenant;
+use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -38,6 +39,11 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         BelongsToTenant::$tenantIdColumn = 'Tenant';
+
+        Request::setTrustedProxies(
+            ['REMOTE_ADDR'],
+            Request::HEADER_X_FORWARDED_FOR
+        );
 
         Password::defaults(function () {
             $rule = Password::min(8);
