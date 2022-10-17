@@ -83,7 +83,7 @@ export class Composer extends React.Component {
   }
 
   componentDidMount() {
-    axios.get("/notify/new/react-data")
+    axios.get("/v1/notify/new/react-data")
       .then(response => {
         let data = response.data;
         this.setState({
@@ -194,7 +194,7 @@ export class Composer extends React.Component {
       }
     });
 
-    axios.post("/notify/send-email", {
+    axios.post("/v1/notify/send-email", {
       state: this.state,
       recipients,
     })
@@ -350,7 +350,7 @@ export class Composer extends React.Component {
       disableSettingsSave: true,
     });
 
-    axios.post("/notify/save-user-settings", {
+    axios.post("/v1/notify/save-user-settings", {
       ...this.state.settings
     })
       .then(response => {
