@@ -4,7 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
 import { Inertia } from "@inertiajs/inertia";
-import { format, formatISO9075 } from "date-fns";
+import { format, formatISO9075, parse } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 
 const Card = (props) => {
@@ -122,13 +122,11 @@ const Dashboard = (props) => {
                                             name={`${session.SessionName}`}
                                             role={`${format(
                                                 Date.parse(
-                                                    `${date} ${session.StartTime}`
+                                                    session.StartDateTime
                                                 ),
                                                 "HH:mm"
                                             )} - ${format(
-                                                Date.parse(
-                                                    `${date} ${session.EndTime}`
-                                                ),
+                                                Date.parse(session.EndDateTime),
                                                 "HH:mm"
                                             )}`}
                                             id={session.SessionID}

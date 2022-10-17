@@ -26,7 +26,16 @@ class DashboardController extends Controller
                     ->where('DisplayUntil', '>=', now()->toDateString())
                     ->where('StartTime', '>=', now()->subHours(1)->toTimeString())
                     ->where('EndTime', '<=', now()->addHours(2)->toTimeString())
-                    ->get() : [],
+                    ->get()->map(function(Session $item) {
+                        return [
+                            'SessionID' => $item->SessionID,
+                            'SessionName' => $item->SessionName,
+                            'StartTime' => $item->StartTime,
+                            'EndTime' => $item->EndTime,
+                            'StartDateTime' => (new \DateTime($item->StartTime, new \DateTimeZone('Europe/London')))->format('c'),
+                            'EndDateTime' => (new \DateTime($item->EndTime, new \DateTimeZone('Europe/London')))->format('c'),
+                        ];
+                    }) : [],
                 'swim_england_news' => Cache::remember('swim_england_news', 3600 * 3, function () {
                     try {
                         $data = [];
