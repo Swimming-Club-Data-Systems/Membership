@@ -21,12 +21,12 @@ class DashboardController extends Controller
                 'members' => $user->members()->with(['squads' => function ($query) {
                     $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
                 }])->get(),
-                'sessions' => Session::where('SessionDay', '=', now()->dayOfWeek)
+                'sessions' => $user->hasPermission(['Admin', 'Coach']) ? Session::where('SessionDay', '=', now()->dayOfWeek)
                     ->where('DisplayFrom', '<=', now()->toDateString())
                     ->where('DisplayUntil', '>=', now()->toDateString())
                     ->where('StartTime', '>=', now()->subHours(1)->toTimeString())
-                    ->where('EndTime', '<=', now()->addHours(5)->toTimeString())
-                    ->get(),
+                    ->where('EndTime', '<=', now()->addHours(2)->toTimeString())
+                    ->get() : [],
                 'swim_england_news' => Cache::remember('swim_england_news', 3600 * 3, function () {
                     try {
                         $data = [];
@@ -52,10 +52,10 @@ class DashboardController extends Controller
 
                         for ($i = 0; $i < min(sizeof($response->channel->item), 6); $i++) {
                             $data[] = [
-                                'id' => (string) $response->channel->item[$i]->guid,
-                                'title' => (string) $response->channel->item[$i]->title,
-                                'link' => (string) $response->channel->item[$i]->link,
-                                'date' => (string) $response->channel->item[$i]->pubDate,
+                                'id' => (string)$response->channel->item[$i]->guid,
+                                'title' => (string)$response->channel->item[$i]->title,
+                                'link' => (string)$response->channel->item[$i]->link,
+                                'date' => (string)$response->channel->item[$i]->pubDate,
                             ];
                         }
                         return $data;
