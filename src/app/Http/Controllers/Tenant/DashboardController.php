@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\OnboardingSession;
 use App\Models\Tenant\Session;
 use App\Models\Tenant\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
+use Illuminate\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
 {
@@ -26,7 +28,7 @@ class DashboardController extends Controller
                     ->where('DisplayUntil', '>=', now()->toDateString())
                     ->where('StartTime', '>=', now()->subHours(1)->toTimeString())
                     ->where('EndTime', '<=', now()->addHours(2)->toTimeString())
-                    ->get()->map(function(Session $item) {
+                    ->get()->map(function (Session $item) {
                         return [
                             'SessionID' => $item->SessionID,
                             'SessionName' => $item->SessionName,
@@ -36,6 +38,16 @@ class DashboardController extends Controller
                             'EndDateTime' => (new \DateTime($item->EndTime, new \DateTimeZone('Europe/London')))->format('c'),
                         ];
                     }) : [],
+                'onboarding_sessions' => $user->onboardingSessions()
+                    ->where(function (Builder $query) {
+                        return $query->where('status', 'pending')->orWhere('status', 'in_progress');
+                    })
+                    ->get()
+                    ->map(function (OnboardingSession $item) {
+                        return [
+                            'id' => $item->id,
+                        ];
+                    }),
                 'swim_england_news' => Cache::remember('swim_england_news', 3600 * 3, function () {
                     try {
                         $data = [];
