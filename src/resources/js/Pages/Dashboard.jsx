@@ -71,6 +71,28 @@ const Dashboard = (props) => {
                         </p>
                     </div>
 
+                    {props.onboarding_sessions.length > 0 && (
+                        <div id="members">
+                            <h2 className="text-xl font-bold text-gray-900 mb-4">
+                                Registration and Renewal
+                            </h2>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                {props.onboarding_sessions.map((session) => {
+                                    return (
+                                        <Card
+                                            key={session.id}
+                                            name={`Complete your Registration/Renewal now`}
+                                            // role={`Start`}
+                                            id={session.id}
+                                            link={`/onboarding/go-to-session?session=${session.id}`}
+                                        />
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
                     {props.members.length > 0 && (
                         <div id="members">
                             <h2 className="text-xl font-bold text-gray-900 mb-4">

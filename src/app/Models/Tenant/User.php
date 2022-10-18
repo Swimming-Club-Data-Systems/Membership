@@ -256,6 +256,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Permission::class, 'User');
     }
 
+    public function onboardingSessions()
+    {
+        return $this->hasMany(OnboardingSession::class, 'user', 'UserID');
+    }
+
     /**
      * Auth stuff
      */
