@@ -147,7 +147,7 @@ Route::middleware([
     // Fallback route
     // If not defined here, it's probs in the V1 app so lets send the user there
     // Until V1 App is removed, it will handle 404 cases
-    Route::any('/{path}', function ($path) {
-        return Inertia::location('/v1/' . $path);
+    Route::any('/{path}', function (Request $request) {
+        return Inertia::location(url('/v1' . $request->getRequestUri()));
     })->where('path', '.*');
 });
