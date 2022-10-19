@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Central\ClubController;
 use App\Http\Controllers\Central\MyAccountController;
+use App\Http\Controllers\Central\NotifyHistoryController;
 use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\TenantUserController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
@@ -61,6 +62,11 @@ Route::middleware('auth:central')->group(function () {
         Route::prefix('/tenants/users')->group(function () {
             Route::get('/', [TenantUserController::class, 'index'])->name('tenant_users.index');
             Route::get('/{user}', [TenantUserController::class, 'show'])->name('users.show');
+        });
+
+        Route::middleware('auth:central')->prefix('/notify')->group(function () {
+            Route::get('/', [NotifyHistoryController::class, 'index'])->name('notify');
+            Route::get('/{notify}', [NotifyHistoryController::class, 'show'])->name('notify.show');
         });
 
         Route::middleware('auth:central')->prefix('/tenants')->group(function () {
