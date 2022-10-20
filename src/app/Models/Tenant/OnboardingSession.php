@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\UuidIdentifier;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,7 +26,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class OnboardingSession extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use HasFactory, BelongsToPrimaryModel, UuidIdentifier;
 
     protected $table = 'onboardingSessions';
 
