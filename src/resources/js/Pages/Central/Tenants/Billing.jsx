@@ -131,24 +131,20 @@ const Index = (props) => {
                                                 data={item.items}
                                                 columns={[
                                                     {
-                                                        id: "test",
                                                         headerName:
                                                             "Product Name",
                                                         field: "product_name",
                                                     },
                                                     {
-                                                        id: "test4",
                                                         headerName: "Quantity",
                                                         field: "quantity",
                                                     },
                                                     {
-                                                        id: "test4",
                                                         headerName:
                                                             "Unit Price",
                                                         field: "price.unit_amount_period",
                                                     },
                                                     {
-                                                        id: "test3",
                                                         headerName: "Total",
                                                         field: "price.amount_period",
                                                     },

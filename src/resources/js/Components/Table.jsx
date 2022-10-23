@@ -9,36 +9,42 @@ const Table = (props) => {
                     <table className="min-w-full divide-y divide-gray-300">
                         <thead>
                             <tr>
-                                {props.columns.map((item, idx) => (
-                                    <th
-                                        key={item.id}
-                                        scope="col"
-                                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0"
-                                    >
-                                        {item.headerName}
-                                    </th>
-                                ))}
+                                {props.columns.map((item, idx) => {
+                                    const key = item.key || item.id;
+                                    return (
+                                        <th
+                                            key={`column-title-${key}`}
+                                            scope="col"
+                                            className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 md:pl-0"
+                                        >
+                                            {item.headerName}
+                                        </th>
+                                    );
+                                })}
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                            {props.data.map((row, idx) => (
-                                <tr key={idx}>
-                                    {props.columns.map((column) => {
-                                        return (
-                                            <td
-                                                key={column.field}
-                                                className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0"
-                                            >
-                                                {_.get(
-                                                    row,
-                                                    column.field,
-                                                    column.default || null
-                                                )}
-                                            </td>
-                                        );
-                                    })}
-                                </tr>
-                            ))}
+                            {props.data.map((row, idx) => {
+                                const key = _.get(row, "id", idx);
+                                return (
+                                    <tr key={`row-${key}`}>
+                                        {props.columns.map((column) => {
+                                            return (
+                                                <td
+                                                    key={column.field}
+                                                    className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0"
+                                                >
+                                                    {_.get(
+                                                        row,
+                                                        column.field,
+                                                        column.default || null
+                                                    )}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
