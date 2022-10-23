@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\Central\ClubController;
+use App\Http\Controllers\Central\InvoiceController;
 use App\Http\Controllers\Central\MyAccountController;
 use App\Http\Controllers\Central\NotifyHistoryController;
+use App\Http\Controllers\Central\PaymentMethodController;
 use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\TenantUserController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
@@ -69,6 +71,10 @@ Route::middleware('auth:central')->group(function () {
             Route::get('/{notify}', [NotifyHistoryController::class, 'show'])->name('notify.show');
         });
 
+        Route::middleware('auth:central')->prefix('/invoices')->group(function () {
+            Route::get('/{invoiceId}', [InvoiceController::class, 'show'])->name('invoices.show');
+        });
+
         Route::middleware('auth:central')->prefix('/tenants')->group(function () {
             Route::get('/', [TenantController::class, 'index'])->name('tenants');
             Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
@@ -82,10 +88,15 @@ Route::middleware('auth:central')->group(function () {
 
             Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
             Route::put('/{tenant}/billing', [TenantController::class, 'save']);
+            Route::get('/{tenant}/billing/payment-methods/new', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add_payment_method');
+            Route::get('/{tenant}/billing/payment-methods/success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add_payment_method_success');
+            Route::put('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'setDefault'])->name('tenants.billing.update_payment_method');
+            Route::delete('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'delete'])->name('tenants.billing.delete_payment_method');
+            // Route::get('/{tenant}/billing/payment-methods/new', [PaymentMethodController::class, 'create'])->name('tenants.billing.add_payment_method');
+            Route::get('/{tenant}/invoices/{invoice}/download', [InvoiceController::class, 'download'])->name('invoices.download');
 
             Route::get('/{tenant}/billing/portal', [TenantController::class, 'stripeBillingPortal'])->name('tenants.billing.portal');
-            Route::get('/{tenant}/billing/add-payment-method', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add-method');
-            Route::get('/{tenant}/billing/add-payment-method-success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add-method-success');
+
 
             Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
             Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');

@@ -4,7 +4,9 @@ namespace App\Models\Central;
 
 use App\Models\Tenant\TenantOption;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Support\Collection;
 use Laravel\Cashier\Billable;
+use Laravel\Cashier\PaymentMethod;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -16,14 +18,14 @@ use function Illuminate\Events\queueable;
  * @property string Code
  * @property string Website
  * @property string Email
- * @property boolean Verified
+ * @property bool Verified
  * @property string UniqueID
  * @property string Domain
  * @property string Data
  * @property string stripe_id
  * @property string pm_type
  * @property string pm_last_four
- * @property DateTime trial_ends_at
+ * @property \DateTime trial_ends_at
  */
 class Tenant extends BaseTenant
 {

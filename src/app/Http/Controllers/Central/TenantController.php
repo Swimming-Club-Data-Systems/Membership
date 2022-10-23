@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers\Central;
 
+use App\Business\Helpers\Money;
+use App\Business\Helpers\PaymentMethod;
 use App\Business\OAuthProviders\Stripe;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Laravel\Cashier\Invoice;
 
 class TenantController extends Controller
 {
@@ -41,7 +43,7 @@ class TenantController extends Controller
                 'code' => $tenant->Code,
                 'website' => $tenant->Website,
                 'email' => $tenant->Email,
-                'verified' => $tenant->Verified,
+                'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
             ]
         ]);
@@ -149,20 +151,45 @@ class TenantController extends Controller
 
     public function billing(Tenant $tenant, Request $request)
     {
-        $paymentMethod = $tenant->defaultPaymentMethod();
-        $invoices = $tenant->invoicesIncludingPending([
-            'limit' => 5,
-        ]);
-
         return Inertia::render('Central/Tenants/Billing', [
-            'id' => $tenant->ID,
-            'name' => $tenant->Name,
-            'payment_method' => $paymentMethod,
-            'invoices' => $invoices,
+            'id' => fn() => $tenant->ID,
+            'name' => fn() => $tenant->Name,
+            'invoices' => function () use ($tenant) {
+                return $tenant->invoicesIncludingPending([
+                    'limit' => 5,
+                ])->map(
+                    function (Invoice $item) {
+                        return [
+                            'id' => $item->asStripeInvoice()->id,
+                            'currency' => $item->asStripeInvoice()->currency,
+                            'created' => $item->asStripeInvoice()->created,
+                            'total' => $item->asStripeInvoice()->total,
+                            'money_formatted_total' => Money::formatCurrency($item->asStripeInvoice()->total, $item->asStripeInvoice()->currency),
+                            'decimal_formatted_total' => Money::formatDecimal($item->asStripeInvoice()->total, $item->asStripeInvoice()->currency),
+                            'link' => $item->asStripeInvoice()->hosted_invoice_url,
+                            'pdf_link' => $item->asStripeInvoice()->invoice_pdf,
+                        ];
+                    }
+                );
+            },
+            'payment_methods' => function () use ($tenant) {
+                $paymentMethod = $tenant->defaultPaymentMethod();
+
+                return $tenant->paymentMethods()->merge($tenant->paymentMethods('bacs_debit'))->map(function ($item) use ($paymentMethod) {
+                    return [
+                        'id' => $item->id,
+                        'description' => PaymentMethod::formatName($item),
+                        'created' => $item->created,
+                        'info_line' => PaymentMethod::formatInfoLine($item),
+                        'default' => $item->id === $paymentMethod->id,
+                    ];
+                });
+            },
         ]);
     }
 
-    public function addPaymentMethod(Tenant $tenant) {
+    public function addPaymentMethod(Tenant $tenant)
+    {
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         abort_unless($tenant->stripe_id, 404);
@@ -171,7 +198,7 @@ class TenantController extends Controller
             'payment_method_types' => ['card', 'bacs_debit'],
             'mode' => 'setup',
             'customer' => $tenant->stripe_id,
-            'success_url' => route('central.tenants.billing.add-method-success', $tenant),
+            'success_url' => route('central.tenants.billing.add_payment_method_success', $tenant),
             'cancel_url' => route('central.tenants.billing', $tenant),
             'locale' => 'en-GB',
             'metadata' => [
@@ -182,13 +209,15 @@ class TenantController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function addPaymentMethodSuccess(Tenant $tenant) {
+    public function addPaymentMethodSuccess(Tenant $tenant)
+    {
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         return Inertia::location(route('central.tenants.billing', $tenant));
     }
 
-    public function stripeBillingPortal(Tenant $tenant, Request $request) {
+    public function stripeBillingPortal(Tenant $tenant, Request $request)
+    {
         return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
     }
 
