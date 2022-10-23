@@ -11,6 +11,7 @@ import BasicList from "@/Components/BasicList";
 import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 import { fromUnixTime } from "date-fns";
+import Table from "@/Components/Table";
 
 const Index = (props) => {
     const [showPaymentMethodDeleteModal, setShowPaymentMethodDeleteModal] =
@@ -64,32 +65,101 @@ const Index = (props) => {
             <Head title={`Billing - ${props.name}`} />
 
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-                <Card>
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Billing
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Manage your payment methods, payments and
-                            subscriptions.
-                        </p>
-                    </div>
+                <Card
+                    title="Subscriptions"
+                    subtitle="View all your active subscriptions with SCDS."
+                >
+                    {props.subscriptions.length > 0 && (
+                        <BasicList
+                            items={props.subscriptions.map((item) => {
+                                return {
+                                    id: item.id,
+                                    content: (
+                                        <>
+                                            <div
+                                                className="flex flex-col gap-y-3 text-sm"
+                                                key={item.id}
+                                            >
+                                                <div className="">
+                                                    <div className="text-gray-900">
+                                                        {item.name}.
+                                                        {/*{item.status}*/}
+                                                    </div>
+                                                    <div className="text-gray-500">
+                                                        Started{" "}
+                                                        {fromUnixTime(
+                                                            item.billing_cycle_anchor
+                                                        ).toLocaleDateString()}
+                                                        {item.current_period_start &&
+                                                            item.current_period_end && (
+                                                                <>
+                                                                    , Current
+                                                                    period{" "}
+                                                                    {fromUnixTime(
+                                                                        item.current_period_start
+                                                                    ).toLocaleDateString()}{" "}
+                                                                    -{" "}
+                                                                    {fromUnixTime(
+                                                                        item.current_period_end
+                                                                    ).toLocaleDateString()}
+                                                                </>
+                                                            )}
+                                                        .
+                                                    </div>
+                                                </div>
+                                                <div className="">
+                                                    <div className="text-sm text-gray-500">
+                                                        This subscription is
+                                                        billed in{" "}
+                                                        {item.currency_name}.
+                                                        {item.discount && (
+                                                            <>
+                                                                {" "}
+                                                                A discount is
+                                                                applied to this
+                                                                subscription,
+                                                                meaning your
+                                                                billed total may
+                                                                be less.
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                    <FlashAlert className="mb-4" />
-
-                    <div>
-                        <p className="text-sm">
-                            <Link
-                                href={route(
-                                    "central.tenants.billing.portal",
-                                    props.id
-                                )}
-                            >
-                                View Customer Portal
-                            </Link>
-                            .
-                        </p>
-                    </div>
+                                            <Table
+                                                data={item.items}
+                                                columns={[
+                                                    {
+                                                        id: "test",
+                                                        headerName:
+                                                            "Product Name",
+                                                        field: "product_name",
+                                                    },
+                                                    {
+                                                        id: "test4",
+                                                        headerName: "Quantity",
+                                                        field: "quantity",
+                                                    },
+                                                    {
+                                                        id: "test4",
+                                                        headerName:
+                                                            "Unit Price",
+                                                        field: "price.unit_amount_period",
+                                                    },
+                                                    {
+                                                        id: "test3",
+                                                        headerName: "Total",
+                                                        field: "price.amount_period",
+                                                    },
+                                                ]}
+                                            />
+                                        </>
+                                    ),
+                                };
+                            })}
+                        />
+                    )}
                 </Card>
 
                 <Card
@@ -264,7 +334,18 @@ const Index = (props) => {
                     )}
                 </Modal>
 
-                <Card>
+                <Card
+                    footer={
+                        <ButtonLink
+                            href={route(
+                                "central.tenants.billing.portal",
+                                props.id
+                            )}
+                        >
+                            View more
+                        </ButtonLink>
+                    }
+                >
                     <div>
                         <h3 className="text-lg leading-6 font-medium text-gray-900">
                             Invoices
@@ -295,7 +376,7 @@ const Index = (props) => {
                                                         ,{" "}
                                                         {fromUnixTime(
                                                             item.created
-                                                        ).toLocaleString()}
+                                                        ).toLocaleDateString()}
                                                     </div>
                                                 </div>
                                                 <div className="">

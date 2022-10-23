@@ -47,6 +47,7 @@ class PaymentMethodController extends Controller
 
             if ($request->input('set_default')) {
                 $tenant->updateDefaultPaymentMethod($paymentMethod->id);
+                $tenant->save();
 
                 $request->session()->flash('flash_bag.payment_method.success', 'We have set ' . PaymentMethod::formatName($paymentMethod) . ' as your default payment method.');
             }

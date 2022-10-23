@@ -38,18 +38,18 @@ const Layout = (props) => {
             icon: CurrencyPoundIcon,
             current: route().current("central.tenants.stripe", tenantId),
         },
-        {
-            name: "Statistics",
-            href: route("central.tenants.statistics", tenantId),
-            icon: ChartPieIcon,
-            current: route().current("central.tenants.statistics", tenantId),
-        },
-        {
-            name: "Config Keys",
-            href: route("central.tenants.config_keys", tenantId),
-            icon: CogIcon,
-            current: route().current("central.tenants.config_keys", tenantId),
-        },
+        // {
+        //     name: "Statistics",
+        //     href: route("central.tenants.statistics", tenantId),
+        //     icon: ChartPieIcon,
+        //     current: route().current("central.tenants.statistics", tenantId),
+        // },
+        // {
+        //     name: "Config Keys",
+        //     href: route("central.tenants.config_keys", tenantId),
+        //     icon: CogIcon,
+        //     current: route().current("central.tenants.config_keys", tenantId),
+        // },
         {
             name: "Administrators",
             href: route("central.tenants.config_keys", tenantId),

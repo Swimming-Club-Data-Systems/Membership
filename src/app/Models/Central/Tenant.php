@@ -59,7 +59,11 @@ class Tenant extends BaseTenant
             'Domain',
             'created_at',
             'updated_at',
-            'Data'
+            'Data',
+            'stripe_id',
+            'pm_type',
+            'pm_last_four',
+            'trial_ends_at',
         ];
     }
 

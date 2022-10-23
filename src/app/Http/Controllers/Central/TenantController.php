@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Laravel\Cashier\Invoice;
+use Laravel\Cashier\Subscription;
+use Symfony\Component\Intl\Currencies;
 
 class TenantController extends Controller
 {
@@ -129,9 +131,22 @@ class TenantController extends Controller
                     'code' => $request->input('code')
                 ]);
 
-                $tokenString = $token->getToken();
+                $responseValues = $token->getValues();
 
-                $tenant->setOption('STRIPE_ACCOUNT_ID', $tokenString);
+                if (!isset($responseValues['stripe_user_id'])) {
+                    throw new \Exception("No stripe_user_id returned in response");
+                }
+
+                $tenant->setOption('STRIPE_ACCOUNT_ID', $responseValues['stripe_user_id']);
+
+                if ($tenant->Domain) {
+                    // Setup Apple Pay domains
+                    \Stripe\ApplePayDomain::create([
+                        'domain_name' => $tenant->Domain,
+                    ], [
+                        'stripe_account' => $responseValues['stripe_user_id']
+                    ]);
+                }
 
                 $request->session()->flash('success', 'Connected to Stripe successfully.');
 
@@ -185,10 +200,55 @@ class TenantController extends Controller
                     ];
                 });
             },
+            'subscriptions' => function () use ($tenant) {
+                return $tenant->subscriptions()->with(['items'])->get()->map(function (Subscription $item) {
+                    /** @var \Stripe\Subscription $stripeSubscription */
+                    $stripeSubscription = $item->asStripeSubscription(['items', 'items.data.price.product', 'latest_invoice', 'default_payment_method']);
+
+                    $name = Str::replaceLast(', ', ', and ', collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                        return $subItem->price->product->name;
+                    })->implode(', '));
+
+                    return [
+                        'id' => $item->id,
+                        'status' => $item->stripe_status,
+                        'name' => $name,
+                        'current_period_start' => $stripeSubscription->current_period_start,
+                        'current_period_end' => $stripeSubscription->current_period_end,
+                        'currency' => $stripeSubscription->currency,
+                        'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : "N/A",
+                        'description' => $stripeSubscription->description,
+                        'billing_cycle_anchor' => $stripeSubscription->billing_cycle_anchor,
+                        'collection_method' => $stripeSubscription->collection_method,
+                        'discount' => (bool)$stripeSubscription->discount,
+                        'items' => collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                            return [
+                                'id' => $subItem->id,
+                                'quantity' => $subItem->quantity,
+                                'created' => $subItem->created,
+                                'price' => [
+                                    'billing_scheme' => $subItem->price->billing_scheme,
+                                    'unit_amount' => $subItem->price->unit_amount,
+                                    'currency' => $subItem->price->currency,
+                                    'formatted_unit_amount' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency),
+                                    'decimal_unit_amount' => Money::formatDecimal($subItem->price->unit_amount, $subItem->price->currency),
+                                    'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency) . ' '
+                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
+                                    'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency) . ' '
+                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
+                                ],
+                                'product_name' => $subItem->price->product->name,
+                                'product_type' => $subItem->price->product->type,
+                            ];
+                        }),
+                    ];
+                });
+            },
         ]);
     }
 
-    public function addPaymentMethod(Tenant $tenant)
+    public
+    function addPaymentMethod(Tenant $tenant)
     {
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
@@ -209,14 +269,16 @@ class TenantController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function addPaymentMethodSuccess(Tenant $tenant)
+    public
+    function addPaymentMethodSuccess(Tenant $tenant)
     {
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         return Inertia::location(route('central.tenants.billing', $tenant));
     }
 
-    public function stripeBillingPortal(Tenant $tenant, Request $request)
+    public
+    function stripeBillingPortal(Tenant $tenant, Request $request)
     {
         return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
     }

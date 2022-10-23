@@ -40,6 +40,8 @@ class AppServiceProvider extends ServiceProvider
         //
         BelongsToTenant::$tenantIdColumn = 'Tenant';
 
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
+
         Request::setTrustedProxies(
             ['REMOTE_ADDR'],
             Request::HEADER_X_FORWARDED_FOR
@@ -55,5 +57,7 @@ class AppServiceProvider extends ServiceProvider
 
         Cashier::useCustomerModel(Tenant::class);
         Cashier::calculateTaxes();
+
+        \Locale::setDefault('en_GB');
     }
 }
