@@ -4,6 +4,7 @@ namespace App\Models\Central;
 
 use App\Models\Tenant\TenantOption;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 use Laravel\Cashier\Billable;
 use Laravel\Cashier\PaymentMethod;
@@ -225,5 +226,10 @@ class Tenant extends BaseTenant
         return Attribute::make(
             get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
         );
+    }
+
+    public function centralUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'central_user_tenant', 'tenant_id', 'user_id');
     }
 }
