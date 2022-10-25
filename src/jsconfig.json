@@ -1,9 +1,12 @@
 {
     "compilerOptions": {
+        "jsx": "react",
         "baseUrl": ".",
         "paths": {
             "@/*": ["resources/js/*"]
-        }
+        },
+        "allowJs": true,
+        "target": "ES2018"
     },
     "exclude": ["node_modules", "public"]
 }

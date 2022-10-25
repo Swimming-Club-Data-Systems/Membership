@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "Node16",
+        "target": "ESNext",
+        "jsx": "react",
+        "sourceMap": true,
+        "paths": {
+            "@/*": [
+                "resources/js/*"
+            ]
+        },
+        "allowSyntheticDefaultImports": true,
+        "types": ["vite/client"],
+    },
+    "exclude": [
+        "node_modules",
+        "public"
+    ]
+}

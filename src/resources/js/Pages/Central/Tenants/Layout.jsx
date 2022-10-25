@@ -52,9 +52,12 @@ const Layout = (props) => {
         // },
         {
             name: "Administrators",
-            href: route("central.tenants.config_keys", tenantId),
+            href: route("central.tenants.administrators", tenantId),
             icon: UsersIcon,
-            current: route().current("central.tenants.config_keys", tenantId),
+            current: route().current(
+                "central.tenants.administrators",
+                tenantId
+            ),
         },
         // {
         //     name: "Advanced Options",

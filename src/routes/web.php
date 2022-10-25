@@ -5,6 +5,7 @@ use App\Http\Controllers\Central\InvoiceController;
 use App\Http\Controllers\Central\MyAccountController;
 use App\Http\Controllers\Central\NotifyHistoryController;
 use App\Http\Controllers\Central\PaymentMethodController;
+use App\Http\Controllers\Central\TenantAdministratorsController;
 use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\TenantUserController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
@@ -80,6 +81,8 @@ Route::middleware('auth:central')->group(function () {
             Route::middleware('can:manage,App\Models\Central\Tenant')->group(function () {
                 Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
                 Route::put('/{tenant}', [TenantController::class, 'save']);
+
+                Route::get('/{tenant}/administrators', [TenantAdministratorsController::class, 'index'])->name('tenants.administrators');
 
                 Route::get('/{tenant}/statistics', [TenantController::class, 'show'])->name('tenants.statistics');
                 Route::put('/{tenant}/statistics', [TenantController::class, 'save']);

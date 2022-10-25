@@ -2,17 +2,39 @@
  * Form component
  */
 
-import React, { useContext, useEffect, useState } from "react";
-import { Form as FormikForm, Formik, useFormikContext } from "formik";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import {
+    Form as FormikForm,
+    Formik,
+    FormikBag,
+    useFormikContext,
+} from "formik";
 import { usePage } from "@inertiajs/inertia-react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
-import { Inertia } from "@inertiajs/inertia";
+import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
+import { bool } from "yup";
 
-export const FormSpecialContext = React.createContext({});
+interface FormSpecialContextInterface {
+    submitClass?: string;
+    submitTitle?: string;
+    hideClear?: boolean;
+    alwaysClearable?: boolean;
+    formName?: string;
+    clearTitle?: string;
+    removeDefaultInputMargin?: boolean;
+    alwaysDirty?: boolean;
+}
 
-export const SubmissionButtons = (props) => {
+export const FormSpecialContext =
+    React.createContext<FormSpecialContextInterface | null>({});
+
+type SubmissionButtonsProps = {
+    onClear?: () => void;
+};
+
+export const SubmissionButtons = (props: SubmissionButtonsProps) => {
     const { isSubmitting, dirty, isValid, errors, handleReset } =
         useFormikContext();
 
@@ -110,7 +132,31 @@ export const RenderServerErrors = () => {
     return null;
 };
 
-const Form = (props) => {
+type FormProps = {
+    initialValues: Record<string, unknown>;
+    validationSchema: never | (() => never);
+    onSubmit?: (
+        values: Record<string, unknown>,
+        formikBag: FormikBag<never, never>
+    ) => void;
+    submitTitle?: string;
+    submitClass?: string;
+    hideClear?: boolean;
+    hideErrors?: boolean;
+    clearTitle?: string;
+    onClear?: () => void;
+    alwaysClearable?: boolean;
+    hideDefaultButtons?: boolean;
+    removeDefaultInputMargin?: boolean;
+    action?: string;
+    method?: string;
+    formName?: string;
+    inertiaOptions?: VisitOptions;
+    alwaysDirty?: boolean;
+    children?: ReactNode;
+};
+
+const Form = (props: FormProps) => {
     const {
         initialValues,
         validationSchema,
@@ -142,6 +188,7 @@ const Form = (props) => {
         // Instead show a warning to the user in the form
         return Inertia.on("invalid", (event) => {
             setHasErrors(true);
+            // When in production, show the dev error messages
             if (import.meta.env.PROD) {
                 event.preventDefault();
             }
@@ -173,9 +220,14 @@ const Form = (props) => {
         }
     };
 
-    const newInitialValues = formName
-        ? usePage().props[formName]?.form_initial_values
-        : usePage().props.form_initial_values;
+    type InitialValues = Record<string, unknown> | null;
+    const pageProps: Record<string, unknown> = usePage().props;
+
+    const newInitialValues: InitialValues = formName
+        ? // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore
+          pageProps[formName]?.form_initial_values
+        : pageProps.form_initial_values;
     const mergedValues = merge(initialValues, newInitialValues);
 
     return (
@@ -217,12 +269,7 @@ const Form = (props) => {
 
                     {!hideDefaultButtons && (
                         <div className="mt-5 sm:mt-4">
-                            <SubmissionButtons
-                                submitTitle={submitTitle}
-                                hideClear={hideClear}
-                                clearTitle={clearTitle}
-                                onClear={onClear}
-                            />
+                            <SubmissionButtons onClear={onClear} />
                         </div>
                     )}
                 </FormikForm>
