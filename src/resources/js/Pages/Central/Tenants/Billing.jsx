@@ -322,11 +322,18 @@ const Index = (props) => {
                     }
                 >
                     {paymentMethodDefaultModalData && (
-                        <p>
-                            Are you sure you want to make{" "}
-                            {paymentMethodDefaultModalData.description} your
-                            default payment method?
-                        </p>
+                        <>
+                            <p className="mb-3">
+                                Are you sure you want to make{" "}
+                                {paymentMethodDefaultModalData.description} your
+                                default payment method?
+                            </p>
+
+                            <p>
+                                We will automatically charge all future
+                                subscription payments to this payment method.
+                            </p>
+                        </>
                     )}
                 </Modal>
 

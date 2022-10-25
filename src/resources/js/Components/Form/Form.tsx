@@ -14,7 +14,6 @@ import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
 import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
-import { bool } from "yup";
 
 interface FormSpecialContextInterface {
     submitClass?: string;
@@ -34,9 +33,8 @@ type SubmissionButtonsProps = {
     onClear?: () => void;
 };
 
-export const SubmissionButtons = (props: SubmissionButtonsProps) => {
-    const { isSubmitting, dirty, isValid, errors, handleReset } =
-        useFormikContext();
+export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
+    const { isSubmitting, dirty, errors, handleReset } = useFormikContext();
 
     const formSpecialContext = useContext(FormSpecialContext);
 
@@ -49,12 +47,12 @@ export const SubmissionButtons = (props: SubmissionButtonsProps) => {
 
     return (
         <>
-            {false && errors && (
-                <p className="text-end text-danger">
-                    There are{" "}
-                    <strong>{Object.keys(errors).length} errors</strong>
-                </p>
-            )}
+            {/*{errors && (*/}
+            {/*    <p className="text-end text-danger">*/}
+            {/*        There are{" "}*/}
+            {/*        <strong>{Object.keys(errors).length} errors</strong>*/}
+            {/*    </p>*/}
+            {/*)}*/}
             <div className="flex flex-row-reverse gap-4">
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
@@ -207,7 +205,7 @@ const Form = (props: FormProps) => {
             }
 
             Inertia[method](action, values, {
-                onSuccess: (arg) => formikBag.resetForm(),
+                onSuccess: () => formikBag.resetForm(),
                 ...inertiaOptions,
                 // onError: (error) => {
                 //     console.log(error);
