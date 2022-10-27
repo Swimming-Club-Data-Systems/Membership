@@ -1,9 +1,29 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 import { useField, useFormikContext } from "formik";
 import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import { FormSpecialContext } from "./Form";
 
-const BaseInput = ({
+type Props = {
+    id?: string;
+    name: string;
+    showValid?: boolean;
+    label: string;
+    help?: string;
+    mb?: string;
+    disabled?: boolean;
+    type: string;
+    leftText?: string;
+    leftSelect?: null;
+    rightButton?: ReactNode;
+    startIcon?: ReactNode;
+    endIcon?: ReactNode;
+    cornerHint?: string;
+    className?: string;
+    input: ReactNode;
+    maxLength?: number;
+};
+
+const BaseInput: React.FC<Props> = ({
     label,
     help,
     mb,

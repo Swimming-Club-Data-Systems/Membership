@@ -14,6 +14,7 @@ import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
 import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
+import { AnyObjectSchema } from "yup";
 
 interface FormSpecialContextInterface {
     submitClass?: string;
@@ -132,7 +133,7 @@ export const RenderServerErrors = () => {
 
 type FormProps = {
     initialValues: Record<string, unknown>;
-    validationSchema: never | (() => never);
+    validationSchema: AnyObjectSchema | (() => AnyObjectSchema);
     onSubmit?: (
         values: Record<string, unknown>,
         formikBag: FormikBag<never, never>

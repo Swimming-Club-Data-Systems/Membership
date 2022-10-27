@@ -5,6 +5,7 @@
         "target": "ESNext",
         "jsx": "react",
         "sourceMap": true,
+        "baseUrl": ".",
         "paths": {
             "@/*": [
                 "resources/js/*"
@@ -12,6 +13,7 @@
         },
         "allowSyntheticDefaultImports": true,
         "types": ["vite/client"],
+        "allowJs": true,
     },
     "exclude": [
         "node_modules",

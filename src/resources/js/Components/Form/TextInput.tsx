@@ -1,9 +1,21 @@
-import React, { useContext } from "react";
+import React, { ReactNode, useContext } from "react";
 import { useField, useFormikContext } from "formik";
 import BaseInput from "./BaseInput";
 import { FormSpecialContext } from "@/Components/Form/Form";
 
-const TextInput = ({
+type Props = {
+    disabled?: boolean;
+    type?: string;
+    leftText?: string;
+    rightButton?: ReactNode;
+    className?: string;
+    id?: string;
+    name: string;
+    label: string;
+};
+
+const TextInput: React.FC<Props> = ({
+    label,
     disabled,
     type,
     leftText,
@@ -40,6 +52,8 @@ const TextInput = ({
 
     return (
         <BaseInput
+            label={label}
+            type={type}
             input={
                 <input
                     disabled={isSubmitting || disabled}
