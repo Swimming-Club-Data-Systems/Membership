@@ -15,7 +15,6 @@ import Alert, { AlertList } from "../Alert";
 import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
 import { AnyObjectSchema } from "yup";
-import { ExclamationCircleIcon } from "@heroicons/react/solid";
 
 interface FormSpecialContextInterface {
     submitClass?: string;
@@ -26,6 +25,9 @@ interface FormSpecialContextInterface {
     clearTitle?: string;
     removeDefaultInputMargin?: boolean;
     alwaysDirty?: boolean;
+    disabled?: boolean;
+    readOnly?: boolean;
+    hasErrors?: boolean;
 }
 
 export const FormSpecialContext =
@@ -113,6 +115,24 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
     );
 };
 
+export const UnknownError = () => {
+    const { hasErrors } = useContext(FormSpecialContext);
+
+    if (hasErrors) {
+        return (
+            <Alert
+                className="mb-3"
+                variant="error"
+                title="An unknown error occurred"
+                // handleDismiss={handleNetErrorDismiss}
+            >
+                Please check your form data and try again.
+            </Alert>
+        );
+    }
+    return null;
+};
+
 const HandleServerErrors = () => {
     const formSpecialContext = useContext(FormSpecialContext);
 
@@ -182,6 +202,8 @@ type FormProps = {
     inertiaOptions?: VisitOptions;
     alwaysDirty?: boolean;
     children?: ReactNode;
+    disabled?: boolean;
+    readOnly?: boolean;
 };
 
 const Form = (props: FormProps) => {
@@ -203,6 +225,8 @@ const Form = (props: FormProps) => {
         formName = null,
         inertiaOptions = {},
         alwaysDirty = false,
+        disabled = false,
+        readOnly = false,
         ...otherProps
     } = props;
 
@@ -269,6 +293,9 @@ const Form = (props: FormProps) => {
                 formName: formName,
                 alwaysDirty: alwaysDirty,
                 alwaysClearable: alwaysClearable,
+                disabled: disabled,
+                readOnly: readOnly,
+                hasErrors: hasErrors,
             }}
         >
             <Formik
@@ -282,16 +309,7 @@ const Form = (props: FormProps) => {
 
                     {!hideErrors && <RenderServerErrors />}
 
-                    {hasErrors && (
-                        <Alert
-                            className="mb-3"
-                            variant="error"
-                            title="An unknown error occurred"
-                            handleDismiss={handleNetErrorDismiss}
-                        >
-                            Please check your form data and try again.
-                        </Alert>
-                    )}
+                    {!hideErrors && <UnknownError />}
 
                     {props.children}
 

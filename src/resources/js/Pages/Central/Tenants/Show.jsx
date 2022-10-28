@@ -5,6 +5,7 @@ import Layout from "@/Pages/Central/Tenants/Layout";
 import Form, {
     RenderServerErrors,
     SubmissionButtons,
+    UnknownError,
 } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Card from "@/Components/Card";
@@ -59,26 +60,32 @@ const Index = (props) => {
                     hideErrors
                     method="put"
                 >
-                    <Card footer={<SubmissionButtons />}>
-                        <div>
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                Tenant Information
-                            </h3>
-                            <p className="mt-1 text-sm text-gray-500">
-                                Information about the tenant organisation and
-                                settings
-                            </p>
-                        </div>
-
+                    <Card
+                        title="Tenant Information"
+                        subtitle="Information about the tenant organisation and
+                                settings"
+                        footer={<SubmissionButtons />}
+                    >
                         <RenderServerErrors />
+                        <UnknownError />
                         <FlashAlert className="mb-4" />
 
                         <TextInput name="name" label="Tenant name" />
                         <TextInput name="code" label="Swim England club code" />
                         <TextInput name="email" label="Default email address" />
                         <TextInput name="website" label="Club website url" />
-                        <Checkbox name="verified" label="Tenant is verified" />
-                        <TextInput name="domain" label="Primary domain" />
+                        {props.editable && (
+                            <>
+                                <Checkbox
+                                    name="verified"
+                                    label="Tenant is verified"
+                                />
+                                <TextInput
+                                    name="domain"
+                                    label="Primary domain"
+                                />
+                            </>
+                        )}
                     </Card>
                 </Form>
             </div>

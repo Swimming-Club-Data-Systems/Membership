@@ -9,7 +9,7 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
         type,
         ...props,
     });
-    const { isSubmitting } = useFormikContext();
+    const { isSubmitting, readOnly, ...context } = useFormikContext();
 
     let feedback = null;
     let feedbackType = null;
@@ -40,7 +40,8 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
                     id={id}
                     {...field}
                     {...props}
-                    disabled={isSubmitting || disabled}
+                    readOnly={readOnly}
+                    disabled={isSubmitting || disabled || context.disabled}
                     type={type}
                     className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles} ${invalidCheckStyles}`}
                 />

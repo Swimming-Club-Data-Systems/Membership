@@ -50,29 +50,32 @@ class TenantController extends Controller
                 'email' => $tenant->Email,
                 'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
-            ]
+            ],
+            'editable' => Gate::allows('manage')
         ]);
     }
 
     public function save(Tenant $tenant, Request $request)
     {
-        $this->authorize('update', $tenant);
+        $this->authorize('manage', $tenant);
 
         $validated = $request->validate([
             'name' => ['required', 'max:128'],
             'code' => ['required', 'size:4'],
             'email' => ['required', 'email:rfc,dns', 'max:256'],
             'website' => ['required', 'url', 'max:256'],
-            'verified' => ['required', 'boolean'],
-            'domain' => ['required', 'max:256'],
+            'verified' => ['sometimes', 'required', 'boolean'],
+            'domain' => ['sometimes', 'required', 'max:256'],
         ]);
 
         $tenant->Name = $request->input('name');
         $tenant->Code = Str::upper($request->input('code'));
         $tenant->Email = $request->input('email');
         $tenant->Website = $request->input('website');
-        $tenant->Verified = $request->input('verified');
-        $tenant->Domain = $request->input('domain');
+        if (Gate::allows('manage')) {
+            $tenant->Verified = $request->input('verified');
+            $tenant->Domain = $request->input('domain');
+        }
         $tenant->save();
 
         $request->session()->flash('success', "We've saved your changes to {$tenant->Name}.");
