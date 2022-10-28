@@ -72,7 +72,11 @@ const Index = (props) => {
 
                         <TextInput name="name" label="Tenant name" />
                         <TextInput name="code" label="Swim England club code" />
-                        <TextInput name="email" label="Default email address" />
+                        <TextInput
+                            name="email"
+                            label="Default email address"
+                            help="This is where replies to system emails will go unless otherwise specified."
+                        />
                         <TextInput name="website" label="Club website url" />
                         {props.editable && (
                             <>
