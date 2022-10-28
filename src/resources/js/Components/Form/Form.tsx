@@ -15,6 +15,7 @@ import Alert, { AlertList } from "../Alert";
 import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
 import { AnyObjectSchema } from "yup";
+import { ExclamationCircleIcon } from "@heroicons/react/solid";
 
 interface FormSpecialContextInterface {
     submitClass?: string;
@@ -35,7 +36,8 @@ type SubmissionButtonsProps = {
 };
 
 export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
-    const { isSubmitting, dirty, errors, handleReset } = useFormikContext();
+    const { isSubmitting, dirty, errors, handleReset, touched } =
+        useFormikContext();
 
     const formSpecialContext = useContext(FormSpecialContext);
 
@@ -46,14 +48,41 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
         handleReset();
     };
 
+    const numErrors = Object.keys(errors).reduce((total, current) => {
+        if (errors[current].length > 0 && touched[current]) {
+            total += 1;
+        }
+        return total;
+    }, 0);
+
     return (
-        <>
-            {/*{errors && (*/}
-            {/*    <p className="text-end text-danger">*/}
-            {/*        There are{" "}*/}
-            {/*        <strong>{Object.keys(errors).length} errors</strong>*/}
-            {/*    </p>*/}
-            {/*)}*/}
+        <div className="flex gap-4 items-center justify-between">
+            <div>
+                {numErrors > 0 && (
+                    <div className="text-red-500 text-sm">
+                        {/* May reinstate icon later */}
+                        {/*<ExclamationCircleIcon*/}
+                        {/*    className="h-5 w-5 text-red-500 inline"*/}
+                        {/*    aria-hidden="true"*/}
+                        {/*/>{" "}*/}
+                        <>
+                            {numErrors === 1 && (
+                                <>
+                                    <span className="sr-only">There is </span>
+                                    <strong>1</strong> error to correct
+                                </>
+                            )}
+                            {numErrors !== 1 && (
+                                <>
+                                    <span className="sr-only">There are </span>
+                                    <strong>{numErrors}</strong> errors to
+                                    correct
+                                </>
+                            )}
+                        </>
+                    </div>
+                )}
+            </div>
             <div className="flex flex-row-reverse gap-4">
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
@@ -80,7 +109,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                     </>
                 )}
             </div>
-        </>
+        </div>
     );
 };
 
