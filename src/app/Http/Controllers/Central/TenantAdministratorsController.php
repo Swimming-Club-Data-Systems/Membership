@@ -24,7 +24,7 @@ class TenantAdministratorsController extends Controller
         return Inertia::render('Central/Tenants/Administrators', [
             'id' => $tenant->ID,
             'name' => $tenant->Name,
-            'users' => $tenant->centralUsers()->get()->map(function (User $user) {
+            'users' => $tenant->centralUsers()->orderBy('first_name')->orderBy('last_name')->get()->map(function (User $user) {
                 return [
                     'id' => $user->id,
                     'first_name' => $user->first_name,

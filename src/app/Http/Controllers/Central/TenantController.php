@@ -8,6 +8,7 @@ use App\Business\OAuthProviders\Stripe;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -19,10 +20,17 @@ class TenantController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user('central');
-        $tenants = $user->tenants()->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
-            $query->where('Option', 'LOGO_DIR');
-        }])->paginate(config('app.per_page'));
+        $tenants = null;
+        if (Gate::allows('manage')) {
+            $tenants = Tenant::orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
+                $query->where('Option', 'LOGO_DIR');
+            }])->paginate(config('app.per_page'));
+        } else {
+            $user = $request->user('central');
+            $tenants = $user->tenants()->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
+                $query->where('Option', 'LOGO_DIR');
+            }])->paginate(config('app.per_page'));
+        }
         return Inertia::render('Central/Tenants/Index', [
             'tenants' => $tenants->onEachSide(3),
         ]);
