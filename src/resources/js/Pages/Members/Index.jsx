@@ -47,6 +47,7 @@ const Index = (props) => {
 
             <Container noMargin>
                 <Collection
+                    searchable
                     {...props.members}
                     itemRenderer={ItemContent}
                     route="members.show"

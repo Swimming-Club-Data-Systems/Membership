@@ -28,10 +28,10 @@ Route::get('/', function () {
     return Inertia::render('Central/Index', [
         'canLogin' => Route::has('central.login') && !Auth::guard('central')->check(),
         'canRegister' => false,
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
     ]);
-});
+})->name('central.home');
+
+// Route::get('/new-user/{user}', [TenantAdministratorsController::class, 'index'])->name('central.admin_signup');
 
 Route::get('/clubs', [ClubController::class, 'index'])->name('central.clubs');
 Route::get('/clubs/{tenant}', [ClubController::class, 'redirect'])->name('central.clubs.redirect');
@@ -78,36 +78,35 @@ Route::middleware('auth:central')->group(function () {
 
         Route::middleware('auth:central')->prefix('/tenants')->group(function () {
             Route::get('/', [TenantController::class, 'index'])->name('tenants');
-            Route::middleware('can:manage,App\Models\Central\Tenant')->group(function () {
-                Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
-                Route::put('/{tenant}', [TenantController::class, 'save']);
+            Route::get('/{tenant}', [TenantController::class, 'show'])->name('tenants.show');
+            Route::put('/{tenant}', [TenantController::class, 'save']);
 
-                Route::get('/{tenant}/administrators', [TenantAdministratorsController::class, 'index'])->name('tenants.administrators');
+            Route::get('/{tenant}/administrators', [TenantAdministratorsController::class, 'index'])->name('tenants.administrators');
+            Route::post('/{tenant}/administrators', [TenantAdministratorsController::class, 'create']);
+            Route::delete('/{tenant}/administrators/{user}', [TenantAdministratorsController::class, 'delete'])->name('tenants.administrators.delete');
 
-                Route::get('/{tenant}/statistics', [TenantController::class, 'show'])->name('tenants.statistics');
-                Route::put('/{tenant}/statistics', [TenantController::class, 'save']);
+            // Route::get('/{tenant}/statistics', [TenantController::class, 'show'])->name('tenants.statistics');
+            // Route::put('/{tenant}/statistics', [TenantController::class, 'save']);
 
-                Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
-                Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
+            Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
+            Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
 
-                Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
-                Route::put('/{tenant}/billing', [TenantController::class, 'save']);
-                Route::get('/{tenant}/billing/payment-methods/new', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add_payment_method');
-                Route::get('/{tenant}/billing/payment-methods/success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add_payment_method_success');
-                Route::put('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'setDefault'])->name('tenants.billing.update_payment_method');
-                Route::delete('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'delete'])->name('tenants.billing.delete_payment_method');
-                // Route::get('/{tenant}/billing/payment-methods/new', [PaymentMethodController::class, 'create'])->name('tenants.billing.add_payment_method');
-                Route::get('/{tenant}/invoices/{invoice}/download', [InvoiceController::class, 'download'])->name('invoices.download');
+            Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
+            Route::put('/{tenant}/billing', [TenantController::class, 'save']);
+            Route::get('/{tenant}/billing/payment-methods/new', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add_payment_method');
+            Route::get('/{tenant}/billing/payment-methods/success', [TenantController::class, 'addPaymentMethodSuccess'])->name('tenants.billing.add_payment_method_success');
+            Route::put('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'setDefault'])->name('tenants.billing.update_payment_method');
+            Route::delete('/{tenant}/billing/payment-methods/{id}', [PaymentMethodController::class, 'delete'])->name('tenants.billing.delete_payment_method');
+            // Route::get('/{tenant}/billing/payment-methods/new', [PaymentMethodController::class, 'create'])->name('tenants.billing.add_payment_method');
+            Route::get('/{tenant}/invoices/{invoice}/download', [InvoiceController::class, 'download'])->name('invoices.download');
 
-                Route::get('/{tenant}/billing/portal', [TenantController::class, 'stripeBillingPortal'])->name('tenants.billing.portal');
+            Route::get('/{tenant}/billing/portal', [TenantController::class, 'stripeBillingPortal'])->name('tenants.billing.portal');
 
+            Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
+            Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
 
-                Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
-                Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
-
-                Route::get('/{tenant}/config-keys', [TenantController::class, 'show'])->name('tenants.config_keys');
-                Route::put('/{tenant}/config-keys', [TenantController::class, 'save']);
-            });
+            // Route::get('/{tenant}/config-keys', [TenantController::class, 'show'])->name('tenants.config_keys');
+            // Route::put('/{tenant}/config-keys', [TenantController::class, 'save']);
         });
     });
 });

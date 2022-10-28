@@ -43,9 +43,10 @@ const ItemContent = (props) => {
 
 const Clubs = (props) => {
     return (
-        <Container>
+        <Container noMargin>
             <Head title="Clubs" />
             <Collection
+                searchable
                 {...props.tenants}
                 itemRenderer={ItemContent}
                 route="central.clubs.redirect"

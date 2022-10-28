@@ -19,17 +19,10 @@ class TenantController extends Controller
 {
     public function index(Request $request)
     {
-        $tenants = null;
-
-        if ($request->query('query')) {
-            $tenants = Tenant::search($request->query('query'))->query(fn($query) => $query->with(['tenantOptions' => function ($query) {
-                $query->where('Option', 'LOGO_DIR');
-            }]))->paginate(config('app.per_page'));
-        } else {
-            $tenants = Tenant::where('Verified', true)->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
-                $query->where('Option', 'LOGO_DIR');
-            }])->paginate(config('app.per_page'));
-        }
+        $user = $request->user('central');
+        $tenants = $user->tenants()->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
+            $query->where('Option', 'LOGO_DIR');
+        }])->paginate(config('app.per_page'));
         return Inertia::render('Central/Tenants/Index', [
             'tenants' => $tenants->onEachSide(3),
         ]);
@@ -37,6 +30,8 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::render('Central/Tenants/Show', [
             'id' => $tenant->ID,
             'name' => $tenant->Name,
@@ -53,6 +48,8 @@ class TenantController extends Controller
 
     public function save(Tenant $tenant, Request $request)
     {
+        $this->authorize('update', $tenant);
+
         $validated = $request->validate([
             'name' => ['required', 'max:128'],
             'code' => ['required', 'size:4'],
@@ -77,6 +74,8 @@ class TenantController extends Controller
 
     public function stripe(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::render('Central/Tenants/Stripe', [
             'id' => $tenant->ID,
             'name' => $tenant->Name,
@@ -86,6 +85,8 @@ class TenantController extends Controller
 
     public function stripeOAuthStart(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         // You should store your client ID and secret in environment variables rather than
         // committing them with your code
 
@@ -166,6 +167,8 @@ class TenantController extends Controller
 
     public function billing(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::render('Central/Tenants/Billing', [
             'id' => fn() => $tenant->ID,
             'name' => fn() => $tenant->Name,
@@ -247,9 +250,10 @@ class TenantController extends Controller
         ]);
     }
 
-    public
-    function addPaymentMethod(Tenant $tenant)
+    public function addPaymentMethod(Tenant $tenant)
     {
+        $this->authorize('manage', $tenant);
+
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         abort_unless($tenant->stripe_id, 404);
@@ -269,17 +273,19 @@ class TenantController extends Controller
         return Inertia::location($session->url);
     }
 
-    public
-    function addPaymentMethodSuccess(Tenant $tenant)
+    public function addPaymentMethodSuccess(Tenant $tenant)
     {
+        $this->authorize('manage', $tenant);
+
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         return Inertia::location(route('central.tenants.billing', $tenant));
     }
 
-    public
-    function stripeBillingPortal(Tenant $tenant, Request $request)
+    public function stripeBillingPortal(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
     }
 

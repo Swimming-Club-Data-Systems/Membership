@@ -17,6 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string last_name
  * @property string email
  * @property string password
+ * @property string gravatar_url
  */
 class User extends Authenticatable
 {
@@ -90,6 +91,6 @@ class User extends Authenticatable
 
     public function tenants(): BelongsToMany
     {
-        return $this->belongsToMany(Tenant::class, 'central_user_tenant', 'user_id', 'tenant_id', 'ID');
+        return $this->belongsToMany(Tenant::class, 'central_user_tenant', 'user_id', 'tenant_id', 'id');
     }
 }

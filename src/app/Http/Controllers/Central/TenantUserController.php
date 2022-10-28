@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Central;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class TenantUserController extends Controller
@@ -21,6 +22,8 @@ class TenantUserController extends Controller
 
     public function index(Request $request)
     {
+        Gate::authorize('manage');
+
         $users = null;
 
         if ($request->query('query')) {
@@ -34,6 +37,7 @@ class TenantUserController extends Controller
     }
 
     public function show(User $user) {
+        Gate::authorize('manage');
         return Inertia::location('/v1/users/' . $user->UserID);
     }
 }

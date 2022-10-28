@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\NotifyHistory;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
 class NotifyHistoryController extends Controller
 {
     public function index(Request $request)
     {
+        Gate::authorize('manage');
+
         $emails = null;
 
         if ($request->query('query')) {
@@ -26,6 +29,7 @@ class NotifyHistoryController extends Controller
     }
 
     public function show(NotifyHistory $email) {
+        Gate::authorize('manage');
         return response()->json($email->jsonSerialize());
     }
 }

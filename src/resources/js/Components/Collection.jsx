@@ -9,7 +9,6 @@ import { useFormikContext } from "formik";
 import Button from "./Button";
 import { Link } from "@inertiajs/inertia-react";
 import InternalContainer from "@/Components/InternalContainer";
-import Alert from "@/Components/Alert";
 
 const Search = (props) => {
     const url = props.path;
@@ -96,7 +95,7 @@ const Collection = (props) => {
 
     return (
         <>
-            <Search path={props.path} />
+            {props.searchable && <Search path={props.path} />}
 
             {props.data.length > 0 && (
                 <div className="overflow-hidden bg-white shadow sm:rounded-lg">
