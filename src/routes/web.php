@@ -36,7 +36,7 @@ Route::get('/', function () {
 // Route::get('/new-user/{user}', [TenantAdministratorsController::class, 'index'])->name('central.admin_signup');
 
 Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->group(function () {
-    Route::get('/', 'create')->name('report_an_error');
+    Route::get('/', 'create')->name('central.report_an_error');
     Route::post('/', 'store');
 });
 
