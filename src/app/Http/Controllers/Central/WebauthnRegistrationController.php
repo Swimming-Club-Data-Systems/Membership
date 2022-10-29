@@ -175,6 +175,7 @@ class WebauthnRegistrationController extends Controller
                 'success' => true,
             ]);
         } catch (\Throwable $e) {
+            report($e);
             return response()->json([
                 'success' => false,
                 'message' => 'Passkey verification failed. Please try again.',

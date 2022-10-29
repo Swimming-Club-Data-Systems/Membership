@@ -9,7 +9,9 @@ use App\Http\Controllers\Central\TenantAdministratorsController;
 use App\Http\Controllers\Central\TenantController;
 use App\Http\Controllers\Central\TenantUserController;
 use App\Http\Controllers\Central\WebauthnRegistrationController;
-use Illuminate\Foundation\Application;
+use App\Http\Controllers\Tenant\ReportAnErrorController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,6 +34,16 @@ Route::get('/', function () {
 })->name('central.home');
 
 // Route::get('/new-user/{user}', [TenantAdministratorsController::class, 'index'])->name('central.admin_signup');
+
+Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->group(function () {
+    Route::get('/', 'create')->name('report_an_error');
+    Route::post('/', 'store');
+});
+
+Route::get('/dev/require-confirm', function (Request $request) {
+    $request->session()->put('auth.password_confirmed_at', 0);
+    return redirect('/');
+});
 
 Route::get('/clubs', [ClubController::class, 'index'])->name('central.clubs');
 Route::get('/clubs/{tenant}', [ClubController::class, 'redirect'])->name('central.clubs.redirect');

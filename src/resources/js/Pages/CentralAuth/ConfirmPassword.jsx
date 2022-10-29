@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@/Components/Button";
 import CentralAuthServices from "@/Layouts/CentralAuthServices";
 import { Head } from "@inertiajs/inertia-react";
@@ -8,9 +8,24 @@ import * as yup from "yup";
 import { Inertia } from "@inertiajs/inertia";
 import useLogin from "@/Pages/Auth/Helpers/useLogin";
 import Alert from "@/Components/Alert";
+import {
+    browserSupportsWebAuthn,
+    startAuthentication,
+} from "@simplewebauthn/browser";
+import axios from "@/Utils/axios";
 
 export default function ConfirmPassword(props) {
     const [error, setError] = useState(null);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if (await browserSupportsWebAuthn()) {
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -28,36 +43,37 @@ export default function ConfirmPassword(props) {
         message: "Passkey authentication failed.",
     };
 
-    const login = useLogin(
-        {
-            actionUrl: route("central.confirm-password.webauthn.verify"),
-            actionHeader: {
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
-            optionsUrl: route("central.confirm-password.webauthn.challenge"),
-        },
-        {
-            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-        }
-    );
-
     const handleWebAuthnLogin = async () => {
-        try {
-            const requestObject = {};
+        let asseResp;
 
-            const response = await login(requestObject);
-            if (response.success) {
-                Inertia.visit(response.redirect_url);
-                // window.location.replace(response.redirect_url);
-                setError(null);
-            } else {
-                setError(webAuthnError);
-                // console.error(error);
-            }
+        const request = await axios.post(
+            route("central.confirm-password.webauthn.challenge"),
+            {}
+        );
+
+        try {
+            // Pass the options to the authenticator and wait for a response
+            asseResp = await startAuthentication(request.data);
         } catch (error) {
+            // Some basic error handling
+            setError({ ...webAuthnError, message: error.message });
+        }
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyAuthenticationResponse()
+        const verificationResponse = await axios.post(
+            route("central.confirm-password.webauthn.verify"),
+            asseResp
+        );
+
+        if (verificationResponse.data.success) {
+            Inertia.visit(verificationResponse.data.redirect_url);
+        } else {
             setError(webAuthnError);
             // console.error(error);
         }
+
+        return;
     };
 
     return (
@@ -83,7 +99,7 @@ export default function ConfirmPassword(props) {
 
             {!props.sso_url && (
                 <>
-                    {props.has_webauthn && (
+                    {props.has_webauthn && canUsePlatformAuthenticator && (
                         <>
                             {error && (
                                 <Alert
