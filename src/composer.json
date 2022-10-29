@@ -40,6 +40,7 @@
         "symfony/intl": "^6.1",
         "symfony/psr-http-message-bridge": "^2.1",
         "tightenco/ziggy": "^1.0",
+        "twilio/sdk": "^6.43",
         "web-auth/webauthn-lib": "^4.3"
     },
     "require-dev": {

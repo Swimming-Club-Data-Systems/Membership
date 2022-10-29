@@ -1,10 +1,22 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useField, useFormikContext } from "formik";
 import BaseInput from "./BaseInput";
 
-const TextArea = ({
+type Props = {
+    disabled?: boolean;
+    leftText?: string;
+    rightButton?: ReactNode;
+    className?: string;
+    id?: string;
+    name: string;
+    label: string;
+    autoComplete?: string;
+    rows?: number;
+    maxLength?: number;
+};
+
+const TextArea: React.FC<Props> = ({
     disabled,
-    type,
     leftText,
     rightButton,
     // rightText,
@@ -17,10 +29,6 @@ const TextArea = ({
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
     const controlId = props.id || props.name;
-
-    if (!type) {
-        type = "text";
-    }
 
     let errorClasses = "";
     if (isInvalid) {
@@ -43,7 +51,6 @@ const TextArea = ({
                     disabled={isSubmitting || disabled}
                     className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
                     id={controlId}
-                    type={type}
                     rows={rows}
                     {...field}
                     {...props}

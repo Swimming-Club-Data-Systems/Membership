@@ -50,6 +50,7 @@ class TenantController extends Controller
                 'email' => $tenant->Email,
                 'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
+                'alphanumeric_sender_id' => (string) $tenant->alphanumeric_sender_id,
             ],
             'editable' => Gate::allows('manage')
         ]);
@@ -66,6 +67,7 @@ class TenantController extends Controller
             'website' => ['required', 'url', 'max:256'],
             'verified' => ['sometimes', 'required', 'boolean'],
             'domain' => ['sometimes', 'required', 'max:256'],
+            'alphanumeric_sender_id' => ['max:11'],
         ]);
 
         $tenant->Name = $request->input('name');
@@ -76,6 +78,7 @@ class TenantController extends Controller
             $tenant->Verified = $request->input('verified');
             $tenant->Domain = $request->input('domain');
         }
+        $tenant->alphanumeric_sender_id = $request->input('alphanumeric_sender_id', null);
         $tenant->save();
 
         $request->session()->flash('success', "We've saved your changes to {$tenant->Name}.");

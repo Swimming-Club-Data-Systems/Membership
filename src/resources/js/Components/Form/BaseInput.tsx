@@ -11,7 +11,7 @@ type Props = {
     help?: string;
     mb?: string;
     disabled?: boolean;
-    type: string;
+    type?: string;
     leftText?: string;
     leftSelect?: null;
     rightButton?: ReactNode;

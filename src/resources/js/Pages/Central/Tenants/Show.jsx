@@ -27,6 +27,7 @@ const Index = (props) => {
                         website: "",
                         verified: false,
                         domain: "",
+                        alphanumeric_sender_id: "",
                     }}
                     validationSchema={yup.object().shape({
                         name: yup
@@ -52,6 +53,12 @@ const Index = (props) => {
                         domain: yup
                             .string()
                             .required("You must enter a default domain"),
+                        alphanumeric_sender_id: yup
+                            .string()
+                            .max(
+                                11,
+                                "Alphanumeric sender IDs may not exceed 11 characters"
+                            ),
                     })}
                     action={route("central.tenants.show", props.id)}
                     submitTitle="Save"
@@ -90,6 +97,12 @@ const Index = (props) => {
                                 />
                             </>
                         )}
+                        <TextInput
+                            name="alphanumeric_sender_id"
+                            label="SMS Sender ID"
+                            help="The from name to use on SMS messages sent by the membership system. If left blank, messages will be sent with a from name of SWIM CLUB."
+                            maxLength={11}
+                        />
                     </Card>
                 </Form>
             </div>

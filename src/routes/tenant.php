@@ -6,15 +6,11 @@ use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
+use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
-use App\Models\Tenant\Session;
-use App\Models\Tenant\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Passport\Passport;
@@ -130,6 +126,13 @@ Route::middleware([
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/users/' . $path);
         })->where('path', '.*');
+    });
+
+    Route::prefix('notify')->group(function () {
+        Route::name('notify.')->group(function () {
+            Route::get('/sms', [SMSController::class, 'new'])->name('sms.new');
+            Route::post('/sms', [SMSController::class, 'store']);
+        });
     });
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])

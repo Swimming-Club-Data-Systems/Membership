@@ -27,6 +27,7 @@ use function Illuminate\Events\queueable;
  * @property string pm_type
  * @property string pm_last_four
  * @property \DateTime trial_ends_at
+ * @property string alphanumeric_sender_id
  */
 class Tenant extends BaseTenant
 {
