@@ -13,6 +13,7 @@ import {
     startAuthentication,
 } from "@simplewebauthn/browser";
 import axios from "@/Utils/axios";
+import ButtonLink from "@/Components/ButtonLink";
 
 export default function ConfirmPassword(props) {
     const [error, setError] = useState(null);
@@ -106,13 +107,14 @@ export default function ConfirmPassword(props) {
 
             {props.sso_url && (
                 <>
-                    <Button
+                    <ButtonLink
                         href={route("confirm-password.oauth")}
+                        external
                         variant="primary"
                         className="w-full"
                     >
                         Confirm with SSO
-                    </Button>
+                    </ButtonLink>
                 </>
             )}
 
