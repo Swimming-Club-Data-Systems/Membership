@@ -60,6 +60,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
       $credential = new UserCredential();
       $credential->credential_id = Base64UrlSafe::encodeUnpadded($publicKeyCredentialSource->getPublicKeyCredentialId());
       $credential->credential = json_encode($publicKeyCredentialSource->jsonSerialize());
+        $credential->credential_name = "FIDO2 Passkey Credential";
 
       $user->userCredentials()->save($credential);
     }

@@ -7,23 +7,17 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 use Webauthn\AttestationStatement\AttestationObjectLoader;
 use Webauthn\AttestationStatement\AttestationStatementSupportManager;
 use Webauthn\AttestationStatement\NoneAttestationStatementSupport;
 use Webauthn\AuthenticationExtensions\ExtensionOutputCheckerHandler;
 use Webauthn\AuthenticatorAssertionResponse;
 use Webauthn\AuthenticatorAssertionResponseValidator;
-use Webauthn\PublicKeyCredentialCreationOptions;
 use Webauthn\PublicKeyCredentialLoader;
 use Webauthn\PublicKeyCredentialRequestOptions;
-use Webauthn\PublicKeyCredentialUserEntity;
 use Webauthn\PublicKeyCredentialSource;
 use Nyholm\Psr7\Factory\Psr17Factory;
 use Nyholm\Psr7Server\ServerRequestCreator;
-use Webauthn\AuthenticationExtensions\AuthenticationExtension;
-use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
-use App\Business\CentralWebAuthnImplementation\PublicKeyCredentialUserEntityRepository;
 use App\Business\CentralWebAuthnImplementation\PublicKeyCredentialSourceRepository;
 use App\Business\CentralWebAuthnImplementation\Server;
 use App\Http\Controllers\Controller;
@@ -33,7 +27,7 @@ class WebAuthnLoginController extends Controller
 {
     public function challenge(Request $request)
     {
-        $userEntityRepository = new PublicKeyCredentialUserEntityRepository();
+        $userEntityRepository = new \App\Business\WebAuthnImplementation\PublicKeyCredentialUserEntityRepository();
         $credentialSourceRepository = new PublicKeyCredentialSourceRepository();
         // $server = Server::get();
 
@@ -42,13 +36,16 @@ class WebAuthnLoginController extends Controller
             // UseEntity found using the username.
             $userEntity = $userEntityRepository->findWebauthnUserByUsername($request->input('username'));
 
-            // Get the list of authenticators associated to the user
-            $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
+            // Don't if no user entity found
+            if ($userEntity) {
+                // Get the list of authenticators associated to the user
+                $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
 
-            // Convert the Credential Sources into Public Key Credential Descriptors
-            $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-                return $credential->getPublicKeyCredentialDescriptor();
-            }, $credentialSources);
+                // Convert the Credential Sources into Public Key Credential Descriptors
+                $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
+                    return $credential->getPublicKeyCredentialDescriptor();
+                }, $credentialSources);
+            }
         }
 
         // We generate the set of options.
@@ -93,7 +90,12 @@ class WebAuthnLoginController extends Controller
             $attestationObjectLoader
         );
 
-        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
+        $input = $request->input();
+//        if ($request->input('response.userHandle')) {
+//            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
+//        }
+
+        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
         if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
@@ -139,7 +141,7 @@ class WebAuthnLoginController extends Controller
 
         $user = User::find($userId);
 
-        Auth::guard('central')->login($user);
+        Auth::guard('central')->login($user, true);
 
         $request->session()->regenerate();
 
