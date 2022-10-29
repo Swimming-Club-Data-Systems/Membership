@@ -194,13 +194,15 @@ class MyAccountController extends Controller
             // Does the user have one?
             $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
 
-            if ($request->boolean('notify_categories.' . $sub->ID) && !$userSub) {
+            $checked = $request->boolean('notify_categories.' . $sub->ID);
+
+            if ($checked && !$userSub) {
                 $user->notifyCategories()->attach($sub);
 
                 $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
                 $userSub->subscription->Subscribed = true;
                 $userSub->subscription->save();
-            } else {
+            } else if (!$checked) {
                 $user->notifyCategories()->detach($sub);
             }
         }
