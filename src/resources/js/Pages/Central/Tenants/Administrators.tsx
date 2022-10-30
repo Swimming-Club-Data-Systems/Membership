@@ -9,7 +9,7 @@ import Modal from "@/Components/Modal";
 import Form from "@/Components/Form/Form";
 import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
-import { UserAddIcon } from "@heroicons/react/outline";
+import { UserPlusIcon } from "@heroicons/react/24/outline";
 import BasicList from "@/Components/BasicList";
 import { Inertia } from "@inertiajs/inertia";
 
@@ -135,7 +135,7 @@ const Index: Layout<Props> = (props: Props) => {
                     onClose={() => setShowNewUserModal(false)}
                     variant="primary"
                     title="Add a new administrator"
-                    Icon={UserAddIcon}
+                    Icon={UserPlusIcon}
                 >
                     <p className="text-sm mb-3">
                         To add a new administrator, provide the following

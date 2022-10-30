@@ -1,5 +1,5 @@
 import React from "react";
-import { KeyIcon, UserCircleIcon } from "@heroicons/react/outline";
+import { KeyIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link } from "@inertiajs/inertia-react";
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Pagination from "./Pagination";
-import { ExclamationIcon } from "@heroicons/react/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Inertia } from "@inertiajs/inertia";
 import Form from "./Form/Form";
 import TextInput from "./Form/TextInput";
@@ -117,7 +117,7 @@ const PlainCollection = (props) => {
                     <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:p-6 sm:pb-4 lg:rounded-lg">
                         <div className="sm:flex sm:items-start">
                             <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <ExclamationIcon
+                                <ExclamationTriangleIcon
                                     className="h-6 w-6 text-red-600"
                                     aria-hidden="true"
                                 />
