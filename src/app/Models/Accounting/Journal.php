@@ -143,9 +143,9 @@ class Journal extends Model
      * Get balance
      * @return string
      */
-    public function getBalanceInPounds(): float
+    public function getFormattedBalance(): string
     {
-        return \App\Business\Helpers\Money::formatCurrency($this->getBalance()->getAmount());
+        return \App\Business\Helpers\Money::formatCurrency($this->getBalance()->getAmount(), $this->currency);
     }
 
     public function credit(

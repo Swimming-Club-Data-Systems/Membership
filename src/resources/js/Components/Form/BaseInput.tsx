@@ -1,6 +1,6 @@
 import React, { ReactNode, useContext } from "react";
 import { useField, useFormikContext } from "formik";
-import { ExclamationCircleIcon } from "@heroicons/react/solid";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { FormSpecialContext } from "./Form";
 
 type Props = {

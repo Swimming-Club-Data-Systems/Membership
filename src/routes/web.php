@@ -117,6 +117,11 @@ Route::middleware('auth:central')->group(function () {
             Route::get('/{tenant}/stripe/setup', [TenantController::class, 'stripeOAuthStart'])->name('tenants.setup_stripe');
             Route::get('/stripe/setup', [TenantController::class, 'stripeOAuthRedirect'])->name('tenants.setup_stripe_redirect');
 
+            Route::get('/{tenant}/pay-as-you-go', [TenantController::class, 'payAsYouGo'])->name('tenants.pay_as_you_go');
+            Route::put('/{tenant}/pay-as-you-go', [TenantController::class, 'topUp']);
+            Route::get('/{tenant}/pay-as-you-go/top-up', [TenantController::class, 'topUp'])->name('tenants.top_up');
+            Route::get('/{tenant}/pay-as-you-go/top-up-success', [TenantController::class, 'topUpSuccess'])->name('tenants.top_up_success');
+
             // Route::get('/{tenant}/config-keys', [TenantController::class, 'show'])->name('tenants.config_keys');
             // Route::put('/{tenant}/config-keys', [TenantController::class, 'save']);
         });

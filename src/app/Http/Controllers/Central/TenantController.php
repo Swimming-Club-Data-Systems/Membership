@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Central;
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PaymentMethod;
 use App\Business\OAuthProviders\Stripe;
+use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use Illuminate\Http\Request;
@@ -50,7 +51,7 @@ class TenantController extends Controller
                 'email' => $tenant->Email,
                 'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
-                'alphanumeric_sender_id' => (string) $tenant->alphanumeric_sender_id,
+                'alphanumeric_sender_id' => (string)$tenant->alphanumeric_sender_id,
             ],
             'editable' => Gate::allows('manage')
         ]);
@@ -301,6 +302,74 @@ class TenantController extends Controller
         $this->authorize('manage', $tenant);
 
         return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
+    }
+
+    public function payAsYouGo(Tenant $tenant)
+    {
+        if (!$tenant->journal) {
+            try {
+                $tenant->initJournal();
+                $tenant = $tenant->fresh();
+            } catch (JournalAlreadyExists $e) {
+                // Ignore, we already checked existence
+            }
+        }
+
+        $balance = $tenant->journal->getBalance();
+
+        return Inertia::render('Central/Tenants/PayAsYouGo', [
+            'id' => $tenant->ID,
+            'name' => $tenant->Name,
+            'formatted_balance' => Money::formatCurrency($balance->getAmount(), $balance->getCurrency()),
+            'balance' => $balance->getAmount(),
+            'currency' => $balance->getCurrency(),
+        ]);
+    }
+
+    public function topUp(Tenant $tenant)
+    {
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+        $checkoutSession = $stripe->checkout->sessions->create([
+            'success_url' => route('central.tenants.top_up_success', $tenant) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('central.tenants.pay_as_you_go', [$tenant]),
+            'line_items' => [
+                [
+                    'price' => 'price_1LyZn0FvtGbCZZLQjRsOsWgT',
+                    'quantity' => 1,
+                ],
+            ],
+            'mode' => 'payment',
+            'payment_method_types' => ['card'],
+            'submit_type' => 'pay',
+            'customer' => $tenant->stripe_id,
+            'client_reference_id' => $tenant->ID,
+            'metadata' => [
+                'type' => 'tenant_account_top_up',
+                'tenant' => $tenant->ID,
+            ],
+        ]);
+
+        return Inertia::location($checkoutSession->url);
+    }
+
+    public function topUpSuccess(Tenant $tenant, Request $request)
+    {
+        if ($request->input('session_id')) {
+            try {
+                $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+                $session = $stripe->checkout->sessions->retrieve($request->input('session_id'), [
+                    'expand' => ['payment_intent']
+                ]);
+
+                if ($session->status == 'complete' && $session->payment_intent) {
+                    $request->session()->flash('success', 'You have topped up your balance by ' . Money::formatCurrency($session->payment_intent->amount, $session->payment_intent->currency) . '. It may take a moment for your balance to update.');
+                }
+            } catch (\Exception $e) {
+            }
+        }
+
+        return Redirect::route('central.tenants.pay_as_you_go', [$tenant]);
     }
 
 }

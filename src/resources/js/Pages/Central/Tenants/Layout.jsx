@@ -4,11 +4,12 @@ import {
     CogIcon,
     CurrencyPoundIcon,
     KeyIcon,
-    OfficeBuildingIcon,
+    BuildingOffice2Icon,
     UserCircleIcon,
     CreditCardIcon,
     UsersIcon,
-} from "@heroicons/react/outline";
+    BanknotesIcon,
+} from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link, usePage } from "@inertiajs/inertia-react";
 
@@ -23,7 +24,7 @@ const Layout = (props) => {
         {
             name: "Details",
             href: route("central.tenants.show", tenantId),
-            icon: OfficeBuildingIcon,
+            icon: BuildingOffice2Icon,
             current: route().current("central.tenants.show", tenantId),
         },
         {
@@ -31,6 +32,12 @@ const Layout = (props) => {
             href: route("central.tenants.billing", tenantId),
             icon: CreditCardIcon,
             current: route().current("central.tenants.billing", tenantId),
+        },
+        {
+            name: "Pay As You Go",
+            href: route("central.tenants.pay_as_you_go", tenantId),
+            icon: BanknotesIcon,
+            current: route().current("central.tenants.pay_as_you_go", tenantId),
         },
         {
             name: "Stripe Account",

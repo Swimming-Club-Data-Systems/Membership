@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Models\Accounting\Journal;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,9 +17,9 @@ class CreateAccountingJournalTransactionsTable extends Migration
     public function up(): void
     {
         Schema::create('accounting_journal_transactions', function (Blueprint $table) {
-            $table->char('id', 36)->unique();
+            $table->char('id', 36)->unique()->primary();
             $table->char('transaction_group', 36)->nullable();
-            $table->integer('journal_id');
+            $table->foreignIdFor(Journal::class, 'journal_id');
             $table->bigInteger('debit')->nullable();
             $table->bigInteger('credit')->nullable();
             $table->char('currency', 5);

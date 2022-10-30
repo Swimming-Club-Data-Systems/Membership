@@ -2,7 +2,9 @@
 
 namespace App\Models\Central;
 
+use App\Models\Accounting\Journal;
 use App\Models\Tenant\TenantOption;
+use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
@@ -28,10 +30,11 @@ use function Illuminate\Events\queueable;
  * @property string pm_last_four
  * @property \DateTime trial_ends_at
  * @property string alphanumeric_sender_id
+ * @property Journal journal
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, Searchable, Billable;
+    use HasDomains, Searchable, Billable, AccountingJournal;
 
     protected $configOptionsCached = false;
     protected $configOptions = [];

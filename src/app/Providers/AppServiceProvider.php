@@ -28,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Passport::ignoreMigrations();
+
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
     }
 
     /**

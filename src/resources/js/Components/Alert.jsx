@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import {
-    ExclamationIcon,
+    ExclamationTriangleIcon,
     XCircleIcon,
     CheckCircleIcon,
-    XIcon,
-} from "@heroicons/react/solid";
+    XMarkIcon,
+} from "@heroicons/react/24/solid";
 
 export const AlertList = ({ children }) => {
     return (
@@ -35,7 +35,7 @@ const Alert = (props) => {
             dismissColour =
                 "bg-yellow-50 text-yellow-500 hover:bg-yellow-100 focus:ring-offset-yellow-50 focus:ring-yellow-600";
             symbol = (
-                <ExclamationIcon
+                <ExclamationTriangleIcon
                     className="h-5 w-5 text-yellow-400"
                     aria-hidden="true"
                 />
@@ -135,7 +135,7 @@ const Alert = (props) => {
                                         onClick={handleDismiss}
                                     >
                                         <span className="sr-only">Dismiss</span>
-                                        <XIcon
+                                        <XMarkIcon
                                             className="h-5 w-5"
                                             aria-hidden="true"
                                         />
