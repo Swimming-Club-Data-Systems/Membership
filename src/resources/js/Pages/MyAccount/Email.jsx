@@ -53,6 +53,7 @@ const Email = (props) => {
                     initialValues={{
                         email: "",
                         email_comms: false,
+                        sms_comms: false,
                         notify_categories: {},
                     }}
                     validationSchema={yup.object().shape({
@@ -61,6 +62,12 @@ const Email = (props) => {
                             .required("An email address is required")
                             .email("You must use a valid email address"),
                         email_comms: yup
+                            .bool()
+                            .oneOf(
+                                [true, false],
+                                "Must either be true or false"
+                            ),
+                        sms_comms: yup
                             .bool()
                             .oneOf(
                                 [true, false],
@@ -119,6 +126,16 @@ const Email = (props) => {
                                             />
                                         );
                                     })}
+                                </Fieldset>
+                            </div>
+
+                            <div className="col-span-6">
+                                <Fieldset legend="SMS options">
+                                    <Checkbox
+                                        name="sms_comms"
+                                        label="Receive urgent squad updates by SMS"
+                                        help="Get SMS messages when the club needs to share news quickly. Some clubs may not use this feature."
+                                    />
                                 </Fieldset>
                             </div>
                         </div>

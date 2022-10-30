@@ -159,6 +159,7 @@ class MyAccountController extends Controller
             'form_initial_values' => [
                 'email' => $user->EmailAddress,
                 'email_comms' => (bool)$user->EmailComms,
+                'sms_comms' => (bool)$user->MobileComms,
                 'notify_categories' => $notifySubOptsFormik,
             ],
         ]);
@@ -188,6 +189,7 @@ class MyAccountController extends Controller
         }
 
         $user->EmailComms = $request->boolean('email_comms');
+        $user->MobileComms = $request->boolean('sms_comms');
 
         foreach (NotifyCategory::where('Active', true)->get() as $sub) {
 

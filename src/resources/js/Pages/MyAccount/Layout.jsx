@@ -20,7 +20,7 @@ const Layout = (props) => {
             current: route().current("my_account.profile"),
         },
         {
-            name: "Email Options",
+            name: "Communication Options",
             href: route("my_account.email"),
             icon: EnvelopeIcon,
             current: route().current("my_account.email"),
