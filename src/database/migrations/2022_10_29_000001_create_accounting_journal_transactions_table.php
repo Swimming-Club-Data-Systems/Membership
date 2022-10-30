@@ -24,8 +24,8 @@ class CreateAccountingJournalTransactionsTable extends Migration
             $table->char('currency', 5);
             $table->text('memo')->nullable();
             $table->text('tags')->nullable();
-            $table->char('ref_class', 32)->nullable();
-            $table->integer('ref_class_id')->nullable();
+            $table->char('ref_class', 128)->nullable();
+            $table->bigInteger('ref_class_id')->nullable();
             $table->timestamps();
             $table->dateTime('post_date');
             $table->softDeletes();
