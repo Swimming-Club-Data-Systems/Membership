@@ -35,4 +35,26 @@ return [
 
     'from' => env('TWILIO_NUMBER'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Twilio Edge Location
+    |--------------------------------------------------------------------------
+    |
+    | The edge location used for Twilio requests, defaults to dublin.
+    |
+    */
+
+    'edge' => env('TWILIO_EDGE_LOCATION', 'dublin'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Twilio Region
+    |--------------------------------------------------------------------------
+    |
+    | The region used for Twilio requests, defaults to null for Twilio default.
+    |
+    */
+
+    'region' => env('TWILIO_REGION', null),
+
 ];

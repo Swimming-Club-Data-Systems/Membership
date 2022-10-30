@@ -1,12 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { ReactNode, useEffect, useRef, useState } from "react";
 import {
+    CheckCircleIcon,
     ExclamationTriangleIcon,
     XCircleIcon,
-    CheckCircleIcon,
     XMarkIcon,
 } from "@heroicons/react/24/solid";
 
-export const AlertList = ({ children }) => {
+type AlertListProps = {
+    children: ReactNode;
+};
+
+export const AlertList: React.FC<AlertListProps> = ({ children }) => {
     return (
         <ul role="list" className="list-disc space-y-1 pl-5">
             {children}
@@ -14,7 +18,23 @@ export const AlertList = ({ children }) => {
     );
 };
 
-const Alert = (props) => {
+type Action = {
+    id: string | number;
+    onClick: (ev) => void;
+    text: string;
+};
+
+type Props = {
+    className?: string;
+    variant?: string;
+    handleDismiss?: (e) => void;
+    title: string;
+    actions?: Action[];
+    children: ReactNode | string;
+    dismissable?: boolean;
+};
+
+const Alert: React.FC<Props> = (props) => {
     let variantClass, symbol, titleClass, dismissColour;
     switch (props.variant) {
         case "error":

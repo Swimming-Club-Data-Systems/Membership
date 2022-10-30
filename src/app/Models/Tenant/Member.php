@@ -30,6 +30,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string GenderIdentity
  * @property string GenderPronouns
  * @property boolean GenderDisplay
+ * @property User user
  */
 class Member extends Model
 {

@@ -16,7 +16,7 @@ class CreateAccountingJournalsTable extends Migration
             $table->foreignIdFor(Ledger::class, 'ledger_id')->nullable();
             $table->bigInteger('balance');
             $table->string('currency', 5);
-            $table->string('morphed_type', 32);
+            $table->string('morphed_type', 128);
             $table->bigInteger('morphed_id');
             $table->timestamps();
         });
