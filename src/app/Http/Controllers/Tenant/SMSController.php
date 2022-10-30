@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Twilio\Rest\Client;
@@ -26,13 +28,16 @@ class SMSController extends Controller
         /** @var Tenant $tenant */
         $tenant = tenant();
 
+        /** @var User $user */
+        $user = Auth::guard('central')->user();
+
         try {
             $client = new Client(config('twilio.sid'), config('twilio.token'));
 
             $from = $tenant->alphanumeric_sender_id ? $tenant->alphanumeric_sender_id : "SWIM CLUB";
 
             $client->messages->create(
-                '+447577002981',
+                $user->Mobile,
                 [
                     'from' => $from,
                     'body' => $request->input('message'),
