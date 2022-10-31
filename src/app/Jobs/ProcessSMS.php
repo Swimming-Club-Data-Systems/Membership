@@ -68,6 +68,12 @@ class ProcessSMS implements ShouldQueue
 
         foreach ($numbers as $number => $userId) {
             try {
+                // Check balance > 0
+                if ($tenant->journal->getBalance()->getAmount() < 0) {
+                    // The tenant is out of funds and needs to top up
+                    break;
+                }
+
                 $response = $client->messages->create(
                     $number,
                     [
@@ -80,7 +86,9 @@ class ProcessSMS implements ShouldQueue
 
                 PhoneNumber::create($number)->getDescription();
 
-                $tenant->journal->debit(5 * $response->numSegments, 'SMS message of ' . $response->numSegments . ' ' . Str::plural('segment', $response->numSegments) . ' to ' . Str::mask($number, '*', -6) . ' (' . PhoneNumber::create($number)->getDescription() . ')');
+                // Debit the tenant and reference the Sms model
+                $transaction = $tenant->journal->debit(5 * $response->numSegments, 'SMS message of ' . $response->numSegments . ' ' . Str::plural('segment', $response->numSegments) . ' to ' . Str::mask($number, '*', -6) . ' (' . PhoneNumber::create($number)->getDescription() . ')');
+                $transaction->referencesObject($this->sms);
             } catch (TwilioException $e) {
                 report($e);
             } catch (\Exception $e) {

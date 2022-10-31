@@ -132,6 +132,7 @@ Route::middleware([
         Route::name('notify.')->group(function () {
             Route::get('/sms', [SMSController::class, 'new'])->name('sms.new');
             Route::post('/sms', [SMSController::class, 'store']);
+            Route::get('/sms/history', [SMSController::class, 'index'])->name('sms.history');
         });
     });
 

@@ -101,18 +101,20 @@ const SMS: Layout<Props> = (props: Props) => {
                     </Alert>
                     <RenderServerErrors />
                     <UnknownError />
-                    <FlashAlert />
+                    <FlashAlert className="mb-4" />
 
                     <Fieldset legend="Squads">
-                        {props.squads.map((squad) => {
-                            return (
-                                <Checkbox
-                                    name={`squads.${squad.id}`}
-                                    label={squad.name}
-                                    key={squad.id}
-                                />
-                            );
-                        })}
+                        <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
+                            {props.squads.map((squad) => {
+                                return (
+                                    <Checkbox
+                                        name={`squads.${squad.id}`}
+                                        label={squad.name}
+                                        key={squad.id}
+                                    />
+                                );
+                            })}
+                        </div>
                     </Fieldset>
 
                     <TextArea name="message" label="Message" maxLength={160} />

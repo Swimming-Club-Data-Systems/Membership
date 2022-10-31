@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ProcessSMS;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\NotifyHistory;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
@@ -19,8 +20,21 @@ use Inertia\Inertia;
 
 class SMSController extends Controller
 {
+    public function index()
+    {
+        $this->authorize('view', Sms::class);
+
+        $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
+
+        return Inertia::render('Notify/SMSHistory', [
+            'messages' => $sms->onEachSide(3),
+        ]);
+    }
+
     public function new(): \Inertia\Response
     {
+        $this->authorize('create', Sms::class);
+
         abort_unless(config('twilio.sid') && config('twilio.token'), 404);
 
         /** @var Tenant $tenant */
@@ -56,6 +70,8 @@ class SMSController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Sms::class);
+
         abort_unless(config('twilio.sid') && config('twilio.token'), 404);
 
         /** @var Tenant $tenant */
