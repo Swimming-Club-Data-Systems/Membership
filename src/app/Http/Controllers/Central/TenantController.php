@@ -328,6 +328,8 @@ class TenantController extends Controller
 
     public function topUp(Tenant $tenant)
     {
+        abort_unless(config('custom.top_up_price') != null, 404, 'The Price ID for top ups has not been defined');
+
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
         $checkoutSession = $stripe->checkout->sessions->create([
@@ -335,7 +337,7 @@ class TenantController extends Controller
             'cancel_url' => route('central.tenants.pay_as_you_go', [$tenant]),
             'line_items' => [
                 [
-                    'price' => 'price_1LyZn0FvtGbCZZLQjRsOsWgT',
+                    'price' => config('custom.top_up_price'),
                     'quantity' => 1,
                 ],
             ],
