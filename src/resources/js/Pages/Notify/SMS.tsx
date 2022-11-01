@@ -14,6 +14,7 @@ import Fieldset from "@/Components/Form/Fieldset";
 import Alert from "@/Components/Alert";
 import FlashAlert from "@/Components/FlashAlert";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import Link from "@/Components/Link";
 
 type Squad = {
     id: number;
@@ -68,12 +69,21 @@ const SMS: Layout<Props> = (props: Props) => {
                                     Your balance is too low
                                 </h3>
                                 <div className="mt-2">
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm mb-3 text-gray-500">
                                         As your club balance is only{" "}
                                         {props.formatted_balance}, you
                                         won&apos;t be able to send any messages.
                                         You can top up your club account in SCDS
                                         System Administration.
+                                    </p>
+
+                                    <p className="text-sm text-gray-500">
+                                        <Link
+                                            href="https://docs.myswimmingclub.uk/docs/notify/sms"
+                                            external
+                                        >
+                                            Find out more about Notify SMS
+                                        </Link>
                                     </p>
                                 </div>
                             </div>
@@ -110,7 +120,14 @@ const SMS: Layout<Props> = (props: Props) => {
                     >
                         <p className="text-sm mb-3">
                             Your club balance is {props.formatted_balance}. SMS
-                            messages cost £0.05 per message segment.
+                            messages cost £0.05 per message segment.{" "}
+                            <Link
+                                href="https://docs.myswimmingclub.uk/docs/notify/sms"
+                                external
+                            >
+                                Find out more about Notify SMS
+                            </Link>
+                            .
                         </p>
 
                         <Alert
