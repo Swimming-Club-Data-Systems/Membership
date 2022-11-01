@@ -2,8 +2,10 @@
 
 namespace App\Jobs;
 
+use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
 use App\Exceptions\Accounting\JournalAlreadyExists;
+use App\Mail\SmsSent;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Sms;
 use Illuminate\Bus\Queueable;
@@ -11,6 +13,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Twilio\Exceptions\TwilioException;
 use Twilio\Rest\Client;
@@ -66,6 +69,10 @@ class ProcessSMS implements ShouldQueue
             $from = config('twilio.from');
         }
 
+        $totalFee = 0;
+        $sentUsers = 0;
+        $failedUsers = 0;
+
         foreach ($numbers as $number => $userId) {
             try {
                 // Check balance > 0
@@ -86,18 +93,26 @@ class ProcessSMS implements ShouldQueue
 
                 PhoneNumber::create($number)->getDescription();
 
+                $fee = 5 * $response->numSegments;
+                $totalFee += $fee;
+
                 // Debit the tenant and reference the Sms model
-                $transaction = $tenant->journal->debit(5 * $response->numSegments, 'SMS message of ' . $response->numSegments . ' ' . Str::plural('segment', $response->numSegments) . ' to ' . Str::mask($number, '*', -6) . ' (' . PhoneNumber::create($number)->getDescription() . ')');
+                $transaction = $tenant->journal->debit($fee, 'SMS message of ' . $response->numSegments . ' ' . Str::plural('segment', $response->numSegments) . ' to ' . Str::mask($number, '*', -6) . ' (' . PhoneNumber::create($number)->getDescription() . ')');
                 $transaction->referencesObject($this->sms);
+                $sentUsers++;
             } catch (TwilioException $e) {
                 report($e);
+                $failedUsers++;
             } catch (\Exception $e) {
                 report($e);
+                $failedUsers++;
             }
         }
 
         $this->sms->processed = true;
         $this->sms->save();
+
+        Mail::to($this->sms->author)->send(new SmsSent($this->sms, Money::formatCurrency($totalFee), $sentUsers, $failedUsers));
 
     }
 }

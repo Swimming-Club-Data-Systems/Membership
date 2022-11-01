@@ -52,6 +52,8 @@ class NewTenantAdministratorUser extends Mailable
      */
     public function build()
     {
-        return $this->setDefaultFromAndReply()->subject('You\'ve been invited to become an administrator of ' . $this->tenant->Name)->markdown('emails.central.new_tenant_administrator_user');
+        return $this->setDefaultFromAndReply()
+            ->subject('You\'ve been invited to become an administrator of ' . $this->tenant->Name)
+            ->markdown('emails.central.new_tenant_administrator_user');
     }
 }
