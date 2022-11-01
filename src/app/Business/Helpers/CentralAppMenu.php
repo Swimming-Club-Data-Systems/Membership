@@ -32,7 +32,7 @@ class CentralAppMenu
                 'href' => route('central.tenants'),
             ];
 
-            if (Gate::allows('manage')) {
+            if (Gate::forUser($user)->allows('manage')) {
                 $menu[] = [
                     'name' => 'Tenant Users',
                     'href' => route('central.tenant_users.index'),
@@ -47,7 +47,7 @@ class CentralAppMenu
                 ];
             }
 
-            if (Gate::allows('manage')) {
+            if (Gate::forUser($user)->allows('manage')) {
                 $menu[] = [
                     'name' => 'Notify',
                     'href' => route('central.notify'),
