@@ -20,11 +20,29 @@ use Inertia\Inertia;
 
 class SMSController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorize('view', Sms::class);
 
-        $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
+        $sms = null;
+        if ($request->query('query')) {
+            $sms = Sms::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+        } else {
+            $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
+        }
+
+        $sms->getCollection()->transform(function ($item) {
+            return [
+                'id' => $item->id,
+                'author' => [
+                    'Forename' => $item->author->Forename,
+                    'Surname' => $item->author->Surname,
+                ],
+                'message' => $item->message,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+            ];
+        });
 
         return Inertia::render('Notify/SMSHistory', [
             'messages' => $sms->onEachSide(3),

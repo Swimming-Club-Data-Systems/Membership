@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Traits\BelongsToTenant;
+use Laravel\Scout\Searchable;
 
 /**
  * @property int $id
@@ -14,7 +15,7 @@ use App\Traits\BelongsToTenant;
  */
 class Sms extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, Searchable;
 
     public function squads()
     {
@@ -29,5 +30,17 @@ class Sms extends Model
     public function author()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'message' => $this->message,
+            'author' => $this->author->Forename . ' ' . $this->author->Surname,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'Tenant' => $this->Tenant,
+        ];
     }
 }

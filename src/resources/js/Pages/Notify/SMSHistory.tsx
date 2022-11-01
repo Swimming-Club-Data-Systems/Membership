@@ -54,7 +54,7 @@ const SMSHistory: Layout<Props> = (props) => {
                 {...props.messages}
                 itemRenderer={ItemContent}
                 route="notify.sms.history"
-                routeIdName="ID"
+                routeIdName="id"
             />
         </Container>
     );
