@@ -12,17 +12,10 @@ const Index = (props) => {
             <Head title={`Stripe Account - ${props.name}`} />
 
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
-                <Card>
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Stripe Account
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Information about the tenant organisation and
-                            settings
-                        </p>
-                    </div>
-
+                <Card
+                    title="Stripe Account"
+                    subtitle="Add or manage a Stripe account"
+                >
                     <FlashAlert className="mb-4" />
 
                     {props.stripe_account && (

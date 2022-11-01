@@ -490,6 +490,9 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                 method={
                                                                     item.method
                                                                 }
+                                                                external={
+                                                                    item.external
+                                                                }
                                                             >
                                                                 {item.name}
                                                             </Link>

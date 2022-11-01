@@ -128,6 +128,9 @@ class SMSController extends Controller
 
         $sms->save();
 
+        // Send a copy to the current user too
+        $users[$user->UserID] = $user->Mobile;
+
         foreach (Squad::all() as $squad) {
             /** @var Squad $squad */
             if ($request->boolean('squads.' . $squad->SquadID)) {
