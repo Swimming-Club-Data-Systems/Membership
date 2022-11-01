@@ -342,6 +342,15 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
+     * Get Sms messages sent to this user
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function sms()
+    {
+        return $this->morphToMany(Sms::class, 'smsable');
+    }
+
+    /**
      * Get the user name via expected attribute.
      *
      * @return Attribute

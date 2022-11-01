@@ -5,7 +5,7 @@ import {
     CheckIcon,
     ChevronDownIcon,
     ChevronUpIcon,
-} from "@heroicons/react/solid";
+} from "@heroicons/react/24/solid";
 import BaseInput from "./BaseInput";
 
 /**

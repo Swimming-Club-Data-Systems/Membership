@@ -2,10 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Tenant\NotifyAdditionalEmail;
-use App\Models\Tenant\User;
-use App\Policies\Tenant\NotifyAdditionalEmailPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 use App\Models\Tenant\Passport\Client;
@@ -23,6 +21,8 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Central\Auth\UserCredential::class => \App\Policies\Central\Auth\UserCredentialPolicy::class,
         \App\Models\Tenant\Member::class => \App\Policies\Tenant\MemberPolicy::class,
         \App\Models\Tenant\User::class => \App\Policies\Tenant\UserPolicy::class,
+        \App\Models\Central\Tenant::class => \App\Policies\Central\TenantPolicy::class,
+        \App\Models\Tenant\Sms::class => \App\Policies\Tenant\SmsPolicy::class,
     ];
 
     /**
@@ -37,6 +37,12 @@ class AuthServiceProvider extends ServiceProvider
         // if (!$this->app->routesAreCached()) {
         //     Passport::routes();
         // }
+
+        Gate::define('manage', function (\App\Models\Central\User $user) {
+            return $user->id === 1
+                ? Response::allow()
+                : Response::denyWithStatus(404);
+        });
 
         Passport::useClientModel(Client::class);
 

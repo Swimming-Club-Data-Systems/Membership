@@ -28,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Passport::ignoreMigrations();
+
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
     }
 
     /**
@@ -39,6 +41,8 @@ class AppServiceProvider extends ServiceProvider
     {
         //
         BelongsToTenant::$tenantIdColumn = 'Tenant';
+
+        \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         Request::setTrustedProxies(
             ['REMOTE_ADDR'],
@@ -55,5 +59,7 @@ class AppServiceProvider extends ServiceProvider
 
         Cashier::useCustomerModel(Tenant::class);
         Cashier::calculateTaxes();
+
+        \Locale::setDefault('en_GB');
     }
 }

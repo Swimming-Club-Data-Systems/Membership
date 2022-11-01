@@ -5,6 +5,7 @@ import Layout from "@/Pages/Central/Tenants/Layout";
 import Form, {
     RenderServerErrors,
     SubmissionButtons,
+    UnknownError,
 } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Card from "@/Components/Card";
@@ -26,6 +27,7 @@ const Index = (props) => {
                         website: "",
                         verified: false,
                         domain: "",
+                        alphanumeric_sender_id: "",
                     }}
                     validationSchema={yup.object().shape({
                         name: yup
@@ -51,6 +53,12 @@ const Index = (props) => {
                         domain: yup
                             .string()
                             .required("You must enter a default domain"),
+                        alphanumeric_sender_id: yup
+                            .string()
+                            .max(
+                                11,
+                                "Alphanumeric sender IDs may not exceed 11 characters"
+                            ),
                     })}
                     action={route("central.tenants.show", props.id)}
                     submitTitle="Save"
@@ -59,26 +67,42 @@ const Index = (props) => {
                     hideErrors
                     method="put"
                 >
-                    <Card footer={<SubmissionButtons />}>
-                        <div>
-                            <h3 className="text-lg leading-6 font-medium text-gray-900">
-                                Tenant Information
-                            </h3>
-                            <p className="mt-1 text-sm text-gray-500">
-                                Information about the tenant organisation and
-                                settings
-                            </p>
-                        </div>
-
+                    <Card
+                        title="Tenant Information"
+                        subtitle="Information about the tenant organisation and
+                                settings"
+                        footer={<SubmissionButtons />}
+                    >
                         <RenderServerErrors />
+                        <UnknownError />
                         <FlashAlert className="mb-4" />
 
                         <TextInput name="name" label="Tenant name" />
                         <TextInput name="code" label="Swim England club code" />
-                        <TextInput name="email" label="Default email address" />
+                        <TextInput
+                            name="email"
+                            label="Default email address"
+                            help="This is where replies to system emails will go unless otherwise specified."
+                        />
                         <TextInput name="website" label="Club website url" />
-                        <Checkbox name="verified" label="Tenant is verified" />
-                        <TextInput name="domain" label="Primary domain" />
+                        {props.editable && (
+                            <>
+                                <Checkbox
+                                    name="verified"
+                                    label="Tenant is verified"
+                                />
+                                <TextInput
+                                    name="domain"
+                                    label="Primary domain"
+                                />
+                            </>
+                        )}
+                        <TextInput
+                            name="alphanumeric_sender_id"
+                            label="SMS Sender ID"
+                            help="The from name to use on SMS messages sent by the membership system. If left blank, messages will be sent with a from name of SWIM CLUB."
+                            maxLength={11}
+                        />
                     </Card>
                 </Form>
             </div>

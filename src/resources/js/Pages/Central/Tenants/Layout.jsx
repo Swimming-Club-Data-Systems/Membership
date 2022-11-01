@@ -4,11 +4,12 @@ import {
     CogIcon,
     CurrencyPoundIcon,
     KeyIcon,
-    OfficeBuildingIcon,
+    BuildingOffice2Icon,
     UserCircleIcon,
     CreditCardIcon,
     UsersIcon,
-} from "@heroicons/react/outline";
+    BanknotesIcon,
+} from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link, usePage } from "@inertiajs/inertia-react";
 
@@ -23,7 +24,7 @@ const Layout = (props) => {
         {
             name: "Details",
             href: route("central.tenants.show", tenantId),
-            icon: OfficeBuildingIcon,
+            icon: BuildingOffice2Icon,
             current: route().current("central.tenants.show", tenantId),
         },
         {
@@ -33,28 +34,37 @@ const Layout = (props) => {
             current: route().current("central.tenants.billing", tenantId),
         },
         {
+            name: "Pay As You Go",
+            href: route("central.tenants.pay_as_you_go", tenantId),
+            icon: BanknotesIcon,
+            current: route().current("central.tenants.pay_as_you_go", tenantId),
+        },
+        {
             name: "Stripe Account",
             href: route("central.tenants.stripe", tenantId),
             icon: CurrencyPoundIcon,
             current: route().current("central.tenants.stripe", tenantId),
         },
-        {
-            name: "Statistics",
-            href: route("central.tenants.statistics", tenantId),
-            icon: ChartPieIcon,
-            current: route().current("central.tenants.statistics", tenantId),
-        },
-        {
-            name: "Config Keys",
-            href: route("central.tenants.config_keys", tenantId),
-            icon: CogIcon,
-            current: route().current("central.tenants.config_keys", tenantId),
-        },
+        // {
+        //     name: "Statistics",
+        //     href: route("central.tenants.statistics", tenantId),
+        //     icon: ChartPieIcon,
+        //     current: route().current("central.tenants.statistics", tenantId),
+        // },
+        // {
+        //     name: "Config Keys",
+        //     href: route("central.tenants.config_keys", tenantId),
+        //     icon: CogIcon,
+        //     current: route().current("central.tenants.config_keys", tenantId),
+        // },
         {
             name: "Administrators",
-            href: route("central.tenants.config_keys", tenantId),
+            href: route("central.tenants.administrators", tenantId),
             icon: UsersIcon,
-            current: route().current("central.tenants.config_keys", tenantId),
+            current: route().current(
+                "central.tenants.administrators",
+                tenantId
+            ),
         },
         // {
         //     name: "Advanced Options",

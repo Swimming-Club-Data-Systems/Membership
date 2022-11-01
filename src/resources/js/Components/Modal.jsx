@@ -1,11 +1,14 @@
 /* This example requires Tailwind CSS v2.0+ */
 import React, { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { ExclamationIcon, XIcon } from "@heroicons/react/outline";
+import {
+    ExclamationTriangleIcon,
+    XMarkIcon,
+} from "@heroicons/react/24/outline";
 
 const Modal = ({
     variant,
-    Icon = ExclamationIcon,
+    Icon = ExclamationTriangleIcon,
     show,
     onClose,
     ...props
@@ -69,7 +72,7 @@ const Modal = ({
                                         onClick={onClose}
                                     >
                                         <span className="sr-only">Close</span>
-                                        <XIcon
+                                        <XMarkIcon
                                             className="h-6 w-6"
                                             aria-hidden="true"
                                         />

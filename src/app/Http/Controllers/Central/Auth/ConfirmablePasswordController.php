@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Central\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\CentralLoginRequest;
+use App\Models\Tenant\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,18 +19,31 @@ class ConfirmablePasswordController extends Controller
      */
     public function show()
     {
-        return Inertia::render('CentralAuth/ConfirmPassword');
+        /**
+         * @var User $user
+         */
+        $user = Auth::user();
+
+        // Does this user have webauthn credentials?
+        $hasCredentials = $user->userCredentials()->count() > 0;
+
+        $ssoUrl = null;
+
+        return Inertia::render('CentralAuth/ConfirmPassword', [
+            'has_webauthn' => $hasCredentials,
+            'sso_url' => $ssoUrl,
+        ]);
     }
 
     /**
      * Confirm the user's password.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return mixed
      */
     public function store(Request $request)
     {
-        if (! Auth::guard('central')->validate([
+        if (!Auth::guard('central')->validate([
             'email' => $request->user('central')->email,
             'password' => $request->password,
         ])) {

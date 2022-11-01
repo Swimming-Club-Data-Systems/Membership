@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
 import { Head } from "@inertiajs/inertia-react";
 import Layout from "./Layout";
@@ -16,11 +16,26 @@ import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 import useRegistration from "@/Pages/Auth/Helpers/useRegistration";
 import Alert from "@/Components/Alert";
+import {
+    startRegistration,
+    browserSupportsWebAuthn,
+} from "@simplewebauthn/browser";
+import axios from "@/Utils/axios";
 
 const Password = (props) => {
     const [deleteModalData, setDeleteModalData] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [error, setError] = useState(null);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
+
+    useEffect(() => {
+        (async () => {
+            if (await browserSupportsWebAuthn()) {
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
 
     const getCookie = (cName) => {
         const name = cName + "=";
@@ -33,34 +48,49 @@ const Password = (props) => {
         return res;
     };
 
-    const register = useRegistration(
-        {
-            actionUrl: route("central.my_account.webauthn_verify"),
-            actionHeader: {
-                "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-            },
-            optionsUrl: route("central.my_account.webauthn_challenge"),
-        },
-        {
-            "X-XSRF-TOKEN": getCookie("XSRF-TOKEN"),
-        }
-    );
-
     const handleRegister = async (ev, formikBag) => {
-        try {
-            await register({
+        let asseResp;
+
+        const request = await axios.post(
+            route("central.my_account.webauthn_challenge"),
+            {
                 passkey_name: ev.name,
-            });
+            }
+        );
+
+        const options = request.data;
+        if (!options.excludeCredentials) {
+            options.excludeCredentials = [];
+        }
+
+        try {
+            // Pass the options to the authenticator and wait for a response
+            asseResp = await startRegistration(options);
+        } catch (error) {
+            // Some basic error handling
+            formikBag.setSubmitting(false);
+            setError(error.message);
+            return;
+        }
+
+        // POST the response to the endpoint that calls
+        // @simplewebauthn/server -> verifyAuthenticationResponse()
+        const verificationResponse = await axios.post(
+            route("central.my_account.webauthn_verify"),
+            asseResp
+        );
+
+        if (verificationResponse.data.success) {
             formikBag.resetForm();
             setError(null);
-            // await getAuthenticators();
             Inertia.reload({
                 only: ["passkeys", "flash"],
                 preserveScroll: true,
             });
-        } catch (error) {
-            setError(error.message);
+        } else {
+            setError("Invalid registration");
         }
+        formikBag.setSubmitting(false);
     };
 
     const deletePasskey = async () => {

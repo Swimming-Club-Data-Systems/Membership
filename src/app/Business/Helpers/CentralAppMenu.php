@@ -28,25 +28,29 @@ class CentralAppMenu
         if ($user) {
 
             $menu[] = [
-                'name' => 'Admin',
-                'href' => '/admin',
-            ];
-
-            $menu[] = [
                 'name' => 'Tenants',
                 'href' => route('central.tenants'),
             ];
 
-            $menu[] = [
-                'name' => 'Tenant Users',
-                'href' => route('central.tenant_users.index'),
-            ];
+            if (Gate::forUser($user)->allows('manage')) {
+                $menu[] = [
+                    'name' => 'Tenant Users',
+                    'href' => route('central.tenant_users.index'),
+                ];
+            }
 
             if (Gate::check('viewTelescope', [$user])) {
                 $menu[] = [
                     'name' => 'Telescope',
                     'href' => '/telescope',
                     'external' => true,
+                ];
+            }
+
+            if (Gate::forUser($user)->allows('manage')) {
+                $menu[] = [
+                    'name' => 'Notify',
+                    'href' => route('central.notify'),
                 ];
             }
 

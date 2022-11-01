@@ -40,7 +40,7 @@ const ItemContent = (props) => {
 
 const Index = (props) => {
     return (
-        <Container>
+        <Container noMargin>
             <Head title="Notify History" />
             <PlainCollection
                 {...props.emails}

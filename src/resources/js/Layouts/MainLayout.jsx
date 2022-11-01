@@ -17,11 +17,11 @@
 import { Fragment } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
-    ArrowNarrowLeftIcon,
+    ArrowLongLeftIcon,
     ChevronDownIcon,
     HomeIcon,
-} from "@heroicons/react/solid";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+} from "@heroicons/react/24/solid";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 import { Head, usePage } from "@inertiajs/inertia-react";
@@ -213,7 +213,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                     <span className="sr-only">
                                         Open main menu
                                     </span>
-                                    <MenuIcon
+                                    <Bars3Icon
                                         className="block h-6 w-6"
                                         aria-hidden="true"
                                     />
@@ -260,7 +260,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                                 <span className="sr-only">
                                                                     Close menu
                                                                 </span>
-                                                                <XIcon
+                                                                <XMarkIcon
                                                                     className="h-6 w-6"
                                                                     aria-hidden="true"
                                                                 />
@@ -539,7 +539,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                             href="#"
                                             className="group inline-flex space-x-3 text-sm font-medium text-gray-500 hover:text-gray-700"
                                         >
-                                            <ArrowNarrowLeftIcon
+                                            <ArrowLongLeftIcon
                                                 className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-600"
                                                 aria-hidden="true"
                                             />

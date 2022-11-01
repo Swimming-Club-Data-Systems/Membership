@@ -1,10 +1,9 @@
 import React from "react";
 import {
-    AdjustmentsIcon,
     KeyIcon,
-    MailIcon,
+    EnvelopeIcon,
     UserCircleIcon,
-} from "@heroicons/react/outline";
+} from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link } from "@inertiajs/inertia-react";
 
@@ -21,9 +20,9 @@ const Layout = (props) => {
             current: route().current("my_account.profile"),
         },
         {
-            name: "Email Options",
+            name: "Communication Options",
             href: route("my_account.email"),
-            icon: MailIcon,
+            icon: EnvelopeIcon,
             current: route().current("my_account.email"),
         },
         {

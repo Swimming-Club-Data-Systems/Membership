@@ -7,7 +7,7 @@ import { Head } from "@inertiajs/inertia-react";
 
 const ReportAnError = () => {
     return (
-        <Container>
+        <Container noMargin>
             <Card>
                 <ReportAnErrorForm />
             </Card>

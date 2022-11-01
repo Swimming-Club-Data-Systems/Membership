@@ -11,15 +11,32 @@ import Alert from "@/Components/Alert";
 import WebAuthnHandler from "./Helpers/WebAuthnHandler";
 import { Transition } from "@headlessui/react";
 import SSOHandler from "@/Pages/Auth/Helpers/SSOHandler";
+import { browserSupportsWebAuthn } from "@simplewebauthn/browser";
 
 const Login = ({ status, canResetPassword }) => {
-    const supportsWebauthn = typeof PublicKeyCredential !== "undefined";
+    const [showWebauthn, setShowWebauthn] = useState(false);
+    const [canUsePlatformAuthenticator, setCanUsePlatformAuthenticator] =
+        useState(false);
 
     const [showPasswordField, setShowPasswordField] = useState(true);
-    const [showWebauthn, setShowWebauthn] = useState(supportsWebauthn);
     const [ssoUrl, setSsoUrl] = useState(null);
     const [error, setError] = useState(null);
     const [autoComplete, setAC] = useState("");
+
+    useEffect(() => {
+        (async () => {
+            if (await browserSupportsWebAuthn()) {
+                setShowWebauthn(true);
+                setCanUsePlatformAuthenticator(true);
+            }
+        })();
+    }, []);
+
+    // If SSO, hide password and webauthn
+    useEffect(() => {
+        setShowPasswordField(ssoUrl === null);
+        setShowWebauthn(ssoUrl === null && canUsePlatformAuthenticator);
+    }, [ssoUrl]);
 
     const onSubmit = (values, formikBag) => {
         if (ssoUrl) {
@@ -76,7 +93,7 @@ const Login = ({ status, canResetPassword }) => {
                 hideClear
                 hideDefaultButtons
             >
-                <WebAuthnHandler setAC={setAC} show={showWebauthn} />
+                <WebAuthnHandler show={showWebauthn} />
 
                 <TextInput
                     name="email"

@@ -43,7 +43,7 @@ const ItemContent = (props) => {
 
 const Index = (props) => {
     return (
-        <Container>
+        <Container noMargin>
             <Head title="Clubs" />
             <Collection
                 {...props.tenants}

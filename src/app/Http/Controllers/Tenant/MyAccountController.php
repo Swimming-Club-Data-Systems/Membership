@@ -159,6 +159,7 @@ class MyAccountController extends Controller
             'form_initial_values' => [
                 'email' => $user->EmailAddress,
                 'email_comms' => (bool)$user->EmailComms,
+                'sms_comms' => (bool)$user->MobileComms,
                 'notify_categories' => $notifySubOptsFormik,
             ],
         ]);
@@ -188,19 +189,22 @@ class MyAccountController extends Controller
         }
 
         $user->EmailComms = $request->boolean('email_comms');
+        $user->MobileComms = $request->boolean('sms_comms');
 
         foreach (NotifyCategory::where('Active', true)->get() as $sub) {
 
             // Does the user have one?
             $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
 
-            if ($request->boolean('notify_categories.' . $sub->ID) && !$userSub) {
+            $checked = $request->boolean('notify_categories.' . $sub->ID);
+
+            if ($checked && !$userSub) {
                 $user->notifyCategories()->attach($sub);
 
                 $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
                 $userSub->subscription->Subscribed = true;
                 $userSub->subscription->save();
-            } else {
+            } else if (!$checked) {
                 $user->notifyCategories()->detach($sub);
             }
         }

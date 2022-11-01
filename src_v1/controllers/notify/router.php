@@ -201,16 +201,4 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 			});
 		});
 	}
-
-	if (app()->user->hasPermissions(['Admin', 'Coach'])) {
-		$this->get('/sms', function () {
-			$db = app()->db;
-			include 'SMSList.php';
-		});
-
-		$this->post('/sms/ajax', function () {
-			$db = app()->db;
-			include 'SMSListFetch.php';
-		});
-	}
 }

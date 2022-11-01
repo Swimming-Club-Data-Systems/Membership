@@ -16,7 +16,7 @@ import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 import useRegistration from "@/Pages/Auth/Helpers/useRegistration";
 import Alert from "@/Components/Alert";
-import { ShieldCheckIcon } from "@heroicons/react/outline";
+import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 import A from "@/Components/A";
 import axios from "@/Utils/axios";
 import {

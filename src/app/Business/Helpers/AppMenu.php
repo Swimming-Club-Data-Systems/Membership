@@ -4,6 +4,7 @@ namespace App\Business\Helpers;
 
 
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
 
@@ -90,6 +91,88 @@ class AppMenu
                 'href' => '/team-managers',
             ];
         }
+
+        return $menu;
+    }
+
+    public function members()
+    {
+        $menu = [];
+
+        if ($this->hasMembers) {
+            $menu[] = [
+                'name' => 'My Members',
+                'href' => '/#members',
+            ];
+        }
+
+        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Member List',
+                'href' => '/members',
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Link a New Member',
+                'href' => '/my-account/add-member',
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Emergency Contacts',
+                'href' => '/emergency-contacts',
+            ];
+        }
+
+        if ($this->user->hasPermission(['Admin', 'Coach'])) {
+            $menu[] = [
+                'name' => 'Access Keys',
+                'href' => '/members/access-keys',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Membership Centre',
+                'href' => '/memberships',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Create New Member',
+                'href' => '/members/new',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Unconnected Members',
+                'href' => '/members/orphaned',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Qualifications',
+                'href' => '/qualifications',
+            ];
+        }
+
+        if ($this->user->hasPermission(['Admin', 'Coach', 'Galas'])) {
+            $menu[] = [
+                'name' => 'Log Books',
+                'href' => '/log-books',
+            ];
+        }
+
+        $menu[] = [
+            'name' => 'COVID Tools (Deprecated)',
+            'href' => '/covid',
+        ];
 
         return $menu;
     }
@@ -194,88 +277,6 @@ class AppMenu
                 'external' => true,
             ];
         }
-
-        return $menu;
-    }
-
-    public function members()
-    {
-        $menu = [];
-
-        if ($this->hasMembers) {
-            $menu[] = [
-                'name' => 'My Members',
-                'href' => '/#members',
-            ];
-        }
-
-        if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
-            $menu[] = [
-                'name' => 'Member List',
-                'href' => '/members',
-            ];
-        }
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Link a New Member',
-                'href' => '/my-account/add-member',
-            ];
-        }
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Emergency Contacts',
-                'href' => '/emergency-contacts',
-            ];
-        }
-
-        if ($this->user->hasPermission(['Admin', 'Coach'])) {
-            $menu[] = [
-                'name' => 'Access Keys',
-                'href' => '/members/access-keys',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Membership Centre',
-                'href' => '/memberships',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Create New Member',
-                'href' => '/members/new',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Unconnected Members',
-                'href' => '/members/orphaned',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Qualifications',
-                'href' => '/qualifications',
-            ];
-        }
-
-        if ($this->user->hasPermission(['Admin', 'Coach', 'Galas'])) {
-            $menu[] = [
-                'name' => 'Log Books',
-                'href' => '/log-books',
-            ];
-        }
-
-        $menu[] = [
-            'name' => 'COVID Tools (Deprecated)',
-            'href' => '/covid',
-        ];
 
         return $menu;
     }
@@ -519,6 +520,13 @@ class AppMenu
             'href' => '/notify/new',
         ];
 
+        if ($this->user->can('create', Sms::class)) {
+            $menu[] = [
+                'name' => 'Compose SMS',
+                'href' => route('notify.sms.new'),
+            ];
+        }
+
         if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
             $menu[] = [
                 'name' => 'Targeted Lists',
@@ -526,17 +534,17 @@ class AppMenu
             ];
         }
 
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'SMS Lists',
-                'href' => '/notify/sms',
-            ];
-        }
-
         if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
             $menu[] = [
                 'name' => 'Full Email History',
                 'href' => '/notify/history',
+            ];
+        }
+
+        if ($this->user->can('view', Sms::class)) {
+            $menu[] = [
+                'name' => 'Full SMS History',
+                'href' => route('notify.sms.history'),
             ];
         }
 

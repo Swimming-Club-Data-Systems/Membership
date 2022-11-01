@@ -2,27 +2,33 @@
 
 namespace App\Http\Controllers\Central;
 
+use App\Business\Helpers\Money;
+use App\Business\Helpers\PaymentMethod;
 use App\Business\OAuthProviders\Stripe;
+use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
-use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use Laravel\Cashier\Invoice;
+use Laravel\Cashier\Subscription;
+use Symfony\Component\Intl\Currencies;
 
 class TenantController extends Controller
 {
     public function index(Request $request)
     {
         $tenants = null;
-
-        if ($request->query('query')) {
-            $tenants = Tenant::search($request->query('query'))->query(fn($query) => $query->with(['tenantOptions' => function ($query) {
+        if (Gate::allows('manage')) {
+            $tenants = Tenant::orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
                 $query->where('Option', 'LOGO_DIR');
-            }]))->paginate(config('app.per_page'));
+            }])->paginate(config('app.per_page'));
         } else {
-            $tenants = Tenant::where('Verified', true)->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
+            $user = $request->user('central');
+            $tenants = $user->tenants()->orderBy('Name', 'asc')->with(['tenantOptions' => function ($query) {
                 $query->where('Option', 'LOGO_DIR');
             }])->paginate(config('app.per_page'));
         }
@@ -33,6 +39,8 @@ class TenantController extends Controller
 
     public function show(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::render('Central/Tenants/Show', [
             'id' => $tenant->ID,
             'name' => $tenant->Name,
@@ -41,29 +49,37 @@ class TenantController extends Controller
                 'code' => $tenant->Code,
                 'website' => $tenant->Website,
                 'email' => $tenant->Email,
-                'verified' => $tenant->Verified,
+                'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
-            ]
+                'alphanumeric_sender_id' => (string)$tenant->alphanumeric_sender_id,
+            ],
+            'editable' => Gate::allows('manage')
         ]);
     }
 
     public function save(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         $validated = $request->validate([
             'name' => ['required', 'max:128'],
             'code' => ['required', 'size:4'],
             'email' => ['required', 'email:rfc,dns', 'max:256'],
             'website' => ['required', 'url', 'max:256'],
-            'verified' => ['required', 'boolean'],
-            'domain' => ['required', 'max:256'],
+            'verified' => ['sometimes', 'required', 'boolean'],
+            'domain' => ['sometimes', 'required', 'max:256'],
+            'alphanumeric_sender_id' => ['max:11'],
         ]);
 
         $tenant->Name = $request->input('name');
         $tenant->Code = Str::upper($request->input('code'));
         $tenant->Email = $request->input('email');
         $tenant->Website = $request->input('website');
-        $tenant->Verified = $request->input('verified');
-        $tenant->Domain = $request->input('domain');
+        if (Gate::allows('manage')) {
+            $tenant->Verified = $request->input('verified');
+            $tenant->Domain = $request->input('domain');
+        }
+        $tenant->alphanumeric_sender_id = $request->input('alphanumeric_sender_id', null);
         $tenant->save();
 
         $request->session()->flash('success', "We've saved your changes to {$tenant->Name}.");
@@ -73,6 +89,8 @@ class TenantController extends Controller
 
     public function stripe(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         return Inertia::render('Central/Tenants/Stripe', [
             'id' => $tenant->ID,
             'name' => $tenant->Name,
@@ -82,6 +100,8 @@ class TenantController extends Controller
 
     public function stripeOAuthStart(Tenant $tenant, Request $request)
     {
+        $this->authorize('manage', $tenant);
+
         // You should store your client ID and secret in environment variables rather than
         // committing them with your code
 
@@ -127,9 +147,22 @@ class TenantController extends Controller
                     'code' => $request->input('code')
                 ]);
 
-                $tokenString = $token->getToken();
+                $responseValues = $token->getValues();
 
-                $tenant->setOption('STRIPE_ACCOUNT_ID', $tokenString);
+                if (!isset($responseValues['stripe_user_id'])) {
+                    throw new \Exception("No stripe_user_id returned in response");
+                }
+
+                $tenant->setOption('STRIPE_ACCOUNT_ID', $responseValues['stripe_user_id']);
+
+                if ($tenant->Domain) {
+                    // Setup Apple Pay domains
+                    \Stripe\ApplePayDomain::create([
+                        'domain_name' => $tenant->Domain,
+                    ], [
+                        'stripe_account' => $responseValues['stripe_user_id']
+                    ]);
+                }
 
                 $request->session()->flash('success', 'Connected to Stripe successfully.');
 
@@ -149,20 +182,93 @@ class TenantController extends Controller
 
     public function billing(Tenant $tenant, Request $request)
     {
-        $paymentMethod = $tenant->defaultPaymentMethod();
-        $invoices = $tenant->invoicesIncludingPending([
-            'limit' => 5,
-        ]);
+        $this->authorize('manage', $tenant);
 
         return Inertia::render('Central/Tenants/Billing', [
-            'id' => $tenant->ID,
-            'name' => $tenant->Name,
-            'payment_method' => $paymentMethod,
-            'invoices' => $invoices,
+            'id' => fn() => $tenant->ID,
+            'name' => fn() => $tenant->Name,
+            'invoices' => function () use ($tenant) {
+                return $tenant->invoicesIncludingPending([
+                    'limit' => 5,
+                ])->map(
+                    function (Invoice $item) {
+                        return [
+                            'id' => $item->asStripeInvoice()->id,
+                            'currency' => $item->asStripeInvoice()->currency,
+                            'created' => $item->asStripeInvoice()->created,
+                            'total' => $item->asStripeInvoice()->total,
+                            'money_formatted_total' => Money::formatCurrency($item->asStripeInvoice()->total, $item->asStripeInvoice()->currency),
+                            'decimal_formatted_total' => Money::formatDecimal($item->asStripeInvoice()->total, $item->asStripeInvoice()->currency),
+                            'link' => $item->asStripeInvoice()->hosted_invoice_url,
+                            'pdf_link' => $item->asStripeInvoice()->invoice_pdf,
+                        ];
+                    }
+                );
+            },
+            'payment_methods' => function () use ($tenant) {
+                $paymentMethod = $tenant->defaultPaymentMethod();
+
+                return $tenant->paymentMethods()->merge($tenant->paymentMethods('bacs_debit'))->map(function ($item) use ($paymentMethod) {
+                    return [
+                        'id' => $item->id,
+                        'description' => PaymentMethod::formatName($item),
+                        'created' => $item->created,
+                        'info_line' => PaymentMethod::formatInfoLine($item),
+                        'default' => $item->id === $paymentMethod->id,
+                    ];
+                });
+            },
+            'subscriptions' => function () use ($tenant) {
+                return $tenant->subscriptions()->with(['items'])->get()->map(function (Subscription $item) {
+                    /** @var \Stripe\Subscription $stripeSubscription */
+                    $stripeSubscription = $item->asStripeSubscription(['items', 'items.data.price.product', 'latest_invoice', 'default_payment_method']);
+
+                    $name = Str::replaceLast(', ', ', and ', collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                        return $subItem->price->product->name;
+                    })->implode(', '));
+
+                    return [
+                        'id' => $item->id,
+                        'status' => $item->stripe_status,
+                        'name' => $name,
+                        'current_period_start' => $stripeSubscription->current_period_start,
+                        'current_period_end' => $stripeSubscription->current_period_end,
+                        'currency' => $stripeSubscription->currency,
+                        'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : "N/A",
+                        'description' => $stripeSubscription->description,
+                        'billing_cycle_anchor' => $stripeSubscription->billing_cycle_anchor,
+                        'collection_method' => $stripeSubscription->collection_method,
+                        'discount' => (bool)$stripeSubscription->discount,
+                        'items' => collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                            return [
+                                'id' => $subItem->id,
+                                'quantity' => $subItem->quantity,
+                                'created' => $subItem->created,
+                                'price' => [
+                                    'billing_scheme' => $subItem->price->billing_scheme,
+                                    'unit_amount' => $subItem->price->unit_amount,
+                                    'currency' => $subItem->price->currency,
+                                    'formatted_unit_amount' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency),
+                                    'decimal_unit_amount' => Money::formatDecimal($subItem->price->unit_amount, $subItem->price->currency),
+                                    'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency) . ' '
+                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
+                                    'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency) . ' '
+                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
+                                ],
+                                'product_name' => $subItem->price->product->name,
+                                'product_type' => $subItem->price->product->type,
+                            ];
+                        }),
+                    ];
+                });
+            },
         ]);
     }
 
-    public function addPaymentMethod(Tenant $tenant) {
+    public function addPaymentMethod(Tenant $tenant)
+    {
+        $this->authorize('manage', $tenant);
+
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         abort_unless($tenant->stripe_id, 404);
@@ -171,7 +277,7 @@ class TenantController extends Controller
             'payment_method_types' => ['card', 'bacs_debit'],
             'mode' => 'setup',
             'customer' => $tenant->stripe_id,
-            'success_url' => route('central.tenants.billing.add-method-success', $tenant),
+            'success_url' => route('central.tenants.billing.add_payment_method_success', $tenant),
             'cancel_url' => route('central.tenants.billing', $tenant),
             'locale' => 'en-GB',
             'metadata' => [
@@ -182,14 +288,90 @@ class TenantController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function addPaymentMethodSuccess(Tenant $tenant) {
+    public function addPaymentMethodSuccess(Tenant $tenant)
+    {
+        $this->authorize('manage', $tenant);
+
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
         return Inertia::location(route('central.tenants.billing', $tenant));
     }
 
-    public function stripeBillingPortal(Tenant $tenant, Request $request) {
+    public function stripeBillingPortal(Tenant $tenant, Request $request)
+    {
+        $this->authorize('manage', $tenant);
+
         return Inertia::location($tenant->billingPortalUrl(route('central.tenants.billing', $tenant)));
+    }
+
+    public function payAsYouGo(Tenant $tenant)
+    {
+        if (!$tenant->journal) {
+            try {
+                $tenant->initJournal();
+                $tenant = $tenant->fresh();
+            } catch (JournalAlreadyExists $e) {
+                // Ignore, we already checked existence
+            }
+        }
+
+        $balance = $tenant->journal->getBalance();
+
+        return Inertia::render('Central/Tenants/PayAsYouGo', [
+            'id' => $tenant->ID,
+            'name' => $tenant->Name,
+            'formatted_balance' => Money::formatCurrency($balance->getAmount(), $balance->getCurrency()),
+            'balance' => $balance->getAmount(),
+            'currency' => $balance->getCurrency(),
+        ]);
+    }
+
+    public function topUp(Tenant $tenant)
+    {
+        abort_unless(config('custom.top_up_price') != null, 404, 'The Price ID for top ups has not been defined');
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+        $checkoutSession = $stripe->checkout->sessions->create([
+            'success_url' => route('central.tenants.top_up_success', $tenant) . '?session_id={CHECKOUT_SESSION_ID}',
+            'cancel_url' => route('central.tenants.pay_as_you_go', [$tenant]),
+            'line_items' => [
+                [
+                    'price' => config('custom.top_up_price'),
+                    'quantity' => 1,
+                ],
+            ],
+            'mode' => 'payment',
+            'payment_method_types' => ['card'],
+            'submit_type' => 'pay',
+            'customer' => $tenant->stripe_id,
+            'client_reference_id' => $tenant->ID,
+            'metadata' => [
+                'type' => 'tenant_account_top_up',
+                'tenant' => $tenant->ID,
+            ],
+        ]);
+
+        return Inertia::location($checkoutSession->url);
+    }
+
+    public function topUpSuccess(Tenant $tenant, Request $request)
+    {
+        if ($request->input('session_id')) {
+            try {
+                $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+                $session = $stripe->checkout->sessions->retrieve($request->input('session_id'), [
+                    'expand' => ['payment_intent']
+                ]);
+
+                if ($session->status == 'complete' && $session->payment_intent) {
+                    $request->session()->flash('success', 'You have topped up your balance by ' . Money::formatCurrency($session->payment_intent->amount, $session->payment_intent->currency) . '. It may take a moment for your balance to update.');
+                }
+            } catch (\Exception $e) {
+            }
+        }
+
+        return Redirect::route('central.tenants.pay_as_you_go', [$tenant]);
     }
 
 }

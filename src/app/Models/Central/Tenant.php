@@ -2,9 +2,14 @@
 
 namespace App\Models\Central;
 
+use App\Models\Accounting\Journal;
 use App\Models\Tenant\TenantOption;
+use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Collection;
 use Laravel\Cashier\Billable;
+use Laravel\Cashier\PaymentMethod;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -16,18 +21,20 @@ use function Illuminate\Events\queueable;
  * @property string Code
  * @property string Website
  * @property string Email
- * @property boolean Verified
+ * @property bool Verified
  * @property string UniqueID
  * @property string Domain
  * @property string Data
  * @property string stripe_id
  * @property string pm_type
  * @property string pm_last_four
- * @property DateTime trial_ends_at
+ * @property \DateTime trial_ends_at
+ * @property string alphanumeric_sender_id
+ * @property Journal journal
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, Searchable, Billable;
+    use HasDomains, Searchable, Billable, AccountingJournal;
 
     protected $configOptionsCached = false;
     protected $configOptions = [];
@@ -57,7 +64,11 @@ class Tenant extends BaseTenant
             'Domain',
             'created_at',
             'updated_at',
-            'Data'
+            'Data',
+            'stripe_id',
+            'pm_type',
+            'pm_last_four',
+            'trial_ends_at',
         ];
     }
 
@@ -219,5 +230,10 @@ class Tenant extends BaseTenant
         return Attribute::make(
             get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
         );
+    }
+
+    public function centralUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'central_user_tenant', 'tenant_id', 'user_id');
     }
 }
