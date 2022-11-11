@@ -7,9 +7,7 @@ use App\Models\Tenant\TenantOption;
 use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Collection;
 use Laravel\Cashier\Billable;
-use Laravel\Cashier\PaymentMethod;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
@@ -208,6 +206,21 @@ class Tenant extends BaseTenant
         return $this->hasMany(TenantOption::class, 'Tenant');
     }
 
+    public function centralUsers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'central_user_tenant', 'tenant_id', 'user_id');
+    }
+
+    /**
+     * Return the ID of the tenant's Stripe account, or null if they do not have one
+     *
+     * @return string|null
+     */
+    public function stripeAccount(): ?string
+    {
+        return $this->getOption('STRIPE_ACCOUNT_ID');
+    }
+
     /**
      * Get the tenant id via expected attribute.
      *
@@ -230,10 +243,5 @@ class Tenant extends BaseTenant
         return Attribute::make(
             get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
         );
-    }
-
-    public function centralUsers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'central_user_tenant', 'tenant_id', 'user_id');
     }
 }

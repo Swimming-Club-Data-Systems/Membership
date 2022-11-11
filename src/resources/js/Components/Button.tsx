@@ -1,8 +1,14 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { apiCount } from "@/Reducers/store";
 
-const Button = ({
+export interface Props extends React.ComponentProps<"button"> {
+    className?: string;
+    variant?: string;
+    disabled?: boolean;
+}
+
+const Button: React.FC<Props> = ({
     type = "button",
     className = "",
     children,

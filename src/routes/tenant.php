@@ -5,6 +5,7 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
+use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
@@ -41,7 +42,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/about', function () {
         return Inertia::render('About');
@@ -133,6 +134,21 @@ Route::middleware([
             Route::get('/sms', [SMSController::class, 'new'])->name('sms.new');
             Route::post('/sms', [SMSController::class, 'store']);
             Route::get('/sms/history', [SMSController::class, 'index'])->name('sms.history');
+        });
+    });
+
+    Route::prefix('payments')->group(function () {
+        Route::name('payments.')->group(function () {
+            Route::prefix('payment-methods')->group(function () {
+                Route::name('methods.')->group(function () {
+                    Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
+                    Route::get('/new', [PaymentMethodController::class, 'addPaymentMethod'])->name('new');
+                    Route::get('/new-direct-debit', [PaymentMethodController::class, 'addDirectDebit'])->name('new_direct_debit');
+                    Route::get('/new-success', [PaymentMethodController::class, 'addPaymentMethodSuccess'])->name('new_success');
+                    Route::delete('/{id}', [PaymentMethodController::class, 'delete'])->name('delete');
+                    Route::put('/{id}', [PaymentMethodController::class, 'update'])->name('update');
+                });
+            });
         });
     });
 

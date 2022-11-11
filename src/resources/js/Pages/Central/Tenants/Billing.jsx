@@ -169,16 +169,9 @@ const Index = (props) => {
                             Add a payment method
                         </ButtonLink>
                     }
+                    title="Payment methods"
+                    subtitle="Manage your payment methods."
                 >
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Payment methods
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Manage your payment methods.
-                        </p>
-                    </div>
-
                     <FlashAlert className="mb-4" bag="payment_method" />
 
                     {props.payment_method && (

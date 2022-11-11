@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Business\Helpers\Address;
 use App\Mail\VerifyEmailChange;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -33,6 +34,8 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property bool $MobileComms
  * @property bool $Active
  * @property string $name
+ * @property string $email
+ * @property StripeCustomer $stripeCustomer
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -382,5 +385,37 @@ class User extends Authenticatable implements MustVerifyEmail
                 'EmailAddress' => $value,
             ],
         );
+    }
+
+    /**
+     * Get the stripe customer for this user
+     */
+    protected function stripeCustomer()
+    {
+        return $this->hasOne(StripeCustomer::class, 'User');
+    }
+
+    public function stripeCustomerId()
+    {
+        if ($this->stripeCustomer) {
+            return $this->stripeCustomer->CustomerID;
+        } else {
+            /** @var Tenant $tenant */
+            $tenant = tenant();
+
+            // Create a new Stripe customer
+            $customer = \Stripe\Customer::create([
+                "name" => $this->name,
+                "description" => "Customer for " . $this->UserID . ' (' . $this->email . ')',
+                'email' => $this->email,
+                'phone' => $this->Mobile
+            ], [
+                'stripe_account' => $tenant->stripeAccount()
+            ]);
+
+            $stripeCustomer = new StripeCustomer();
+            $stripeCustomer->CustomerID = $customer->id;
+            $this->stripeCustomer = $stripeCustomer;
+        }
     }
 }

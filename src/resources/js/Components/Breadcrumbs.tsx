@@ -2,7 +2,14 @@ import React from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/inertia-react";
 
-const Breadcrumbs = (props) => {
+interface Props {
+    crumbs?: {
+        name: string;
+        href: string;
+    }[];
+}
+
+const Breadcrumbs: React.FC<Props> = (props) => {
     const { url } = usePage();
 
     if (props.crumbs) {

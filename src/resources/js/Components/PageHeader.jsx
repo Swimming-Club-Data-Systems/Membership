@@ -2,7 +2,7 @@ import { Link, usePage } from "@inertiajs/inertia-react";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import Container from "./Container";
-import Breadcrumbs from "./Breadcrumbs.jsx";
+import Breadcrumbs from "./Breadcrumbs.tsx";
 
 /* This example requires Tailwind CSS v2.0+ */
 import { Fragment } from "react";

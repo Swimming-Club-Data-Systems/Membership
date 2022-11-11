@@ -14,6 +14,7 @@
         "allowSyntheticDefaultImports": true,
         "types": ["vite/client"],
         "allowJs": true,
+        "moduleSuffixes": [".tsx", ".jsx", ""]
     },
     "exclude": [
         "node_modules",
