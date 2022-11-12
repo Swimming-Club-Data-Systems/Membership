@@ -15,9 +15,27 @@ class PaymentMethodController extends Controller
 {
     public function index()
     {
+        /** @var User $user */
+        $user = Auth::user();
+
+        $directDebits = $user->paymentMethods()->where('type', '=', 'bacs_debit')->get();
+        $otherMethods = $user->paymentMethods()->where('type', '!=', 'bacs_debit')->get();
+
+        $map = function (\App\Models\Tenant\PaymentMethod $item) {
+            return [
+                'id' => $item->id,
+                'type' => $item->type,
+                'description' => PaymentMethod::formatNameFromData($item->type, $item->pm_type_data),
+                'created' => $item->created,
+                'info_line' => PaymentMethod::formatInfoLineFromData($item->type, $item->pm_type_data),
+                'default' => false,
+            ];
+        };
+
         return Inertia::render('Payments/PaymentMethods', [
             'payment_method' => null,
-            'payment_methods' => [],
+            'direct_debits' => $directDebits->map($map),
+            'payment_methods' => $otherMethods->map($map),
         ]);
     }
 

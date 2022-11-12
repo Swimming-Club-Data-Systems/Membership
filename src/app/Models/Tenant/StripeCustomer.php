@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $ID
  * @property int $User
  * @property string $CustomerID
+ * @property User $user
  */
 class StripeCustomer extends Model
 {

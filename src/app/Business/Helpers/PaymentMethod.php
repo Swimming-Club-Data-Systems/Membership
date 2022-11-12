@@ -8,13 +8,20 @@ class PaymentMethod
 {
     public static function formatName($paymentMethod)
     {
-        switch ($paymentMethod->type) {
+        $type = $paymentMethod->type;
+        return self::formatNameFromData($type, $paymentMethod->$type);
+    }
+
+    public static function formatNameFromData($type, $typeData)
+    {
+        $typeData = json_decode(json_encode($typeData));
+        switch ($type) {
             case 'card':
-                return self::formatCardBrandName($paymentMethod->card->brand) . ' ···· ' . $paymentMethod->card->last4;
+                return self::formatCardBrandName($typeData->brand) . ' ···· ' . $typeData->last4;
             case 'bacs_debit':
-                return 'Bacs Direct Debit ···· ' . $paymentMethod->bacs_debit->last4;
+                return 'Bacs Direct Debit ···· ' . $typeData->last4;
             default:
-                return $paymentMethod->type . ': ' . $paymentMethod->id;
+                return $type . ': ' . $typeData->id;
         }
     }
 
@@ -43,19 +50,25 @@ class PaymentMethod
 
     public static function formatInfoLine($paymentMethod)
     {
-        switch ($paymentMethod->type) {
+        $type = $paymentMethod->type;
+        return self::formatInfoLineFromData($type, $paymentMethod->$type);
+    }
+
+    public static function formatInfoLineFromData($type, $typeData)
+    {
+        $typeData = json_decode(json_encode($typeData));
+        switch ($type) {
             case 'card':
                 $expiry = Date::now();
                 $expiry->day = 1;
-                $expiry->year = $paymentMethod->card->exp_year;
-                $expiry->month = $paymentMethod->card->exp_month;
+                $expiry->year = $typeData->exp_year;
+                $expiry->month = $typeData->exp_month;
                 return 'Expires ' . $expiry->monthName . ' ' . $expiry->year;
             case 'bacs_debit':
-                return implode("-", str_split($paymentMethod->bacs_debit->sort_code, 2));
+                return implode("-", str_split($typeData->sort_code, 2));
             default:
                 return null;
         }
-
     }
 
     public static function formatCardFundingType(string $funding): string

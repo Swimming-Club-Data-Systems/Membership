@@ -353,6 +353,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphToMany(Sms::class, 'smsable');
     }
 
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
     /**
      * Get the user name via expected attribute.
      *

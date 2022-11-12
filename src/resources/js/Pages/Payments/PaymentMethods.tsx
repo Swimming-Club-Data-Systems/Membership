@@ -9,9 +9,11 @@ import { Inertia } from "@inertiajs/inertia";
 import { Head } from "@inertiajs/inertia-react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
+import Modal from "@/Components/Modal";
 
 type Props = {
     payment_methods: [];
+    direct_debits: [];
     payment_method: {};
 };
 
@@ -46,8 +48,8 @@ const Index: Layout<Props> = (props: Props) => {
                             )}
                         </div>
                         <div className="block">
-                            {!item.default && (
-                                <>
+                            <>
+                                {item.type === "bacs_debit" && !item.default && (
                                     <Button
                                         variant="secondary"
                                         onClick={() => {
@@ -61,7 +63,9 @@ const Index: Layout<Props> = (props: Props) => {
                                     >
                                         Make default
                                     </Button>
+                                )}
 
+                                {!item.default && (
                                     <Button
                                         variant="danger"
                                         className="ml-3"
@@ -76,8 +80,8 @@ const Index: Layout<Props> = (props: Props) => {
                                     >
                                         Delete
                                     </Button>
-                                </>
-                            )}
+                                )}
+                            </>
                         </div>
                     </div>
                 </>
@@ -140,21 +144,23 @@ const Index: Layout<Props> = (props: Props) => {
                         <div>
                             <p className="text-sm">
                                 You can change your default Direct Debit at any
-                                time.
+                                time. Direct Debit payments are covered by the
+                                Direct Debit Guarantee.
                             </p>
                         </div>
                     )}
 
-                    {props.payment_methods.length > 0 && (
+                    {props.direct_debits.length > 0 && (
                         <BasicList
-                            items={props.payment_methods.map(PaymentMethod)}
+                            items={props.direct_debits.map(PaymentMethod)}
                         />
                     )}
 
-                    {!props.payment_methods.length && (
+                    {!props.direct_debits.length && (
                         <div>
                             <p className="text-sm">
-                                You have no Direct Debit Instruction set up.
+                                You have no Direct Debit Instruction set up.{" "}
+                                {props.direct_debits.length}
                             </p>
                         </div>
                     )}
@@ -194,6 +200,78 @@ const Index: Layout<Props> = (props: Props) => {
                         </div>
                     )}
                 </Card>
+
+                <Modal
+                    show={showPaymentMethodDeleteModal}
+                    onClose={() => setShowPaymentMethodDeleteModal(false)}
+                    variant="danger"
+                    title="Delete payment method"
+                    buttons={
+                        <>
+                            <Button
+                                variant="danger"
+                                onClick={deletePaymentMethod}
+                            >
+                                Confirm
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() =>
+                                    setShowPaymentMethodDeleteModal(false)
+                                }
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    }
+                >
+                    {paymentMethodDeleteModalData && (
+                        <p>
+                            Are you sure you want to delete{" "}
+                            {paymentMethodDeleteModalData.description}?
+                        </p>
+                    )}
+                </Modal>
+
+                <Modal
+                    show={showPaymentMethodDefaultModal}
+                    onClose={() => setShowPaymentMethodDefaultModal(false)}
+                    variant="primary"
+                    title="Change default payment method"
+                    buttons={
+                        <>
+                            <Button
+                                variant="primary"
+                                onClick={setDefaultPaymentMethod}
+                            >
+                                Confirm
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() =>
+                                    setShowPaymentMethodDefaultModal(false)
+                                }
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    }
+                >
+                    {paymentMethodDefaultModalData && (
+                        <>
+                            <p className="mb-3">
+                                Are you sure you want to make{" "}
+                                {paymentMethodDefaultModalData.description} your
+                                default payment method?
+                            </p>
+
+                            <p>
+                                We will automatically charge all future monthly
+                                payments to this payment method.
+                            </p>
+                        </>
+                    )}
+                </Modal>
             </div>
         </>
     );
