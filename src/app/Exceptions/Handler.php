@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Throwable;
 use Inertia\Inertia;
 
@@ -59,7 +60,13 @@ class Handler extends ExceptionHandler
     {
         $response = parent::render($request, $e);
 
-        if (!app()->environment(['local', 'testing', 'debug']) && in_array($response->status(), [500, 503, 404, 403])) {
+        $debug = app()->environment(['local', 'testing', 'debug']);
+
+        if (!$debug && $e instanceof TenantCouldNotBeIdentifiedOnDomainException) {
+            return redirect(route('central.home'));
+        }
+
+        if (!$debug && in_array($response->status(), [500, 503, 404, 403])) {
             return Inertia::render('Errors/Error', ['status' => $response->status(), 'message' => $response->statusText()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
