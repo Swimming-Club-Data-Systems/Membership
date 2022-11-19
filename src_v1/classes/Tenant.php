@@ -81,15 +81,17 @@ class Tenant
   public static function fromDomain(string $domain)
   {
     $db = app()->db;
-    $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE `Domain` COLLATE utf8mb4_general_ci = ?");
-    $getTenant->execute([
-      $domain
-    ]);
-    $tentantDetails = $getTenant->fetch(PDO::FETCH_ASSOC);
 
-    if ($tentantDetails) {
-      return new Tenant($tentantDetails);
+    $getTenant = $db->prepare("SELECT `tenants`.`ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `tenants`.`Domain` from `domains` INNER JOIN `tenants` ON `tenants`.`ID` = `domains`.`tenant_id` where `domains`.`domain` COLLATE utf8mb4_general_ci = ?");
+    $getTenant->execute([
+        $domain
+    ]);
+    $tenantDetails = $getTenant->fetch(PDO::FETCH_ASSOC);
+
+    if ($tenantDetails) {
+      return new Tenant($tenantDetails);
     }
+
     return null;
   }
 
