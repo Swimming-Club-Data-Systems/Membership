@@ -2,8 +2,8 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Models\Tenant\PaymentMethod;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,5 +35,14 @@ class HandlePaymentMethodDetached implements ShouldQueue
     public function handle()
     {
         // Remove the user id from the PaymentMethod object
+
+        // See if it's in the database
+        /** @var PaymentMethod $paymentMethod */
+        $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
+
+        if ($paymentMethod) {
+            $paymentMethod->user()->dissociate();
+            $paymentMethod->save();
+        }
     }
 }

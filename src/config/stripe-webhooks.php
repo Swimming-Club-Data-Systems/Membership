@@ -22,8 +22,9 @@ return [
      * https://stripe.com/docs/api#event_types.
      */
     'jobs' => [
-        // 'source_chargeable' => \App\Jobs\StripeWebhooks\HandleChargeableSource::class,
-         'checkout_session_completed' => \App\Jobs\StripeWebhooks\HandleCheckoutSessionCompleted::class,
+        'checkout_session_completed' => \App\Jobs\StripeWebhooks\HandleCheckoutSessionCompleted::class,
+        'payment_method_attached' => \App\Jobs\StripeWebhooks\HandlePaymentMethodAttached::class,
+        'payment_method_detached' => \App\Jobs\StripeWebhooks\HandlePaymentMethodDetached::class,
     ],
 
     /*
