@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('mandates', function (Blueprint $table) {
             $table->id();
-            $table->string('stripe_id', 255);
+            $table->string('stripe_id', 255)->unique();
             $table->string('status', 255);
             $table->string('type', 255);
             $table->json('customer_acceptance');

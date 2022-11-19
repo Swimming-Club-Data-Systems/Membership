@@ -76,6 +76,17 @@ class Tenant extends BaseTenant
         return 'Data';
     }
 
+    public static function findByStripeAccountId(string $id): Tenant
+    {
+        /** @var TenantOption $tenantOption */
+        $tenantOption = TenantOption::where('Option', 'STRIPE_ACCOUNT_ID')->where('Value', $id)->with(['tenant'])->first();
+
+        if ($tenantOption) {
+            return $tenantOption->tenant;
+        }
+        throw new \Exception('No tenant found for Stripe Account ID: ' . $id);
+    }
+
     /**
      * The "booted" method of the model.
      *

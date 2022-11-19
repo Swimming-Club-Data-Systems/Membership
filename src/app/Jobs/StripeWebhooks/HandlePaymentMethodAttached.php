@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
 use Illuminate\Bus\Queueable;
@@ -39,36 +40,43 @@ class HandlePaymentMethodAttached implements ShouldQueue
         // Check if PM is in the database already
         // If not add the payment method to the database
 
-        // Get a user if they exist
-        /** @var StripeCustomer $customer */
-        $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
+        /** @var Tenant $tenant */
+        $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
-        if (!$customer) {
-            // Stop executing
-            return;
-        }
+        $tenant->run(function () {
+            \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
-        // See if it's already in the database
-        $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
+            // Get a user if they exist
+            /** @var StripeCustomer $customer */
+            $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
 
-        if (!$paymentMethod) {
-            $pm = \Stripe\PaymentMethod::retrieve([
-                'id' => $this->webhookCall->payload['data']['object']['id'],
-                'expand' => ['billing_details.address'],
-            ], [
-                'stripe_account' => $this->webhookCall->payload['account'],
-            ]);
+            if (!$customer) {
+                // Stop executing
+                return;
+            }
 
-            $paymentMethod = new PaymentMethod();
-            $paymentMethod->stripe_id = $pm->id;
-            $type = $pm->type;
-            $paymentMethod->type = $type;
-            $paymentMethod->pm_type_data = $pm->$type;
-            $paymentMethod->billing_address = $pm->billing_details;
-            $paymentMethod->user()->associate($customer->user);
-            $paymentMethod->created_at = $pm->created;
+            // See if it's already in the database
+            $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
 
-            $paymentMethod->save();
-        }
+            if (!$paymentMethod) {
+                $pm = \Stripe\PaymentMethod::retrieve([
+                    'id' => $this->webhookCall->payload['data']['object']['id'],
+                    'expand' => ['billing_details.address'],
+                ], [
+                    'stripe_account' => $this->webhookCall->payload['account'],
+                ]);
+
+                $paymentMethod = new PaymentMethod();
+                $paymentMethod->stripe_id = $pm->id;
+                $type = $pm->type;
+                $paymentMethod->type = $type;
+                $paymentMethod->pm_type_data = $pm->$type;
+                $paymentMethod->billing_address = $pm->billing_details;
+                $paymentMethod->user()->associate($customer->user);
+                $paymentMethod->created_at = $pm->created;
+
+                $paymentMethod->save();
+            }
+        });
     }
 }

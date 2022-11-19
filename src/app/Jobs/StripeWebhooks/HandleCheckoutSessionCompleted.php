@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Mandate;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
@@ -40,58 +41,68 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
 
         // you can access the payload of the webhook call with `$this->webhookCall->payload`
 
-        \Stripe\Stripe::setApiKey(config('cashier.secret'));
+        /** @var Tenant $tenant */
+        $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
-        $checkoutSession = \Stripe\Checkout\Session::retrieve($this->webhookCall->payload['data']['object']['id'], [
-            'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
-            'stripe_account' => $this->webhookCall->payload['account'],
-        ]);
+        $tenant->run(function () {
+            \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
-        if ($checkoutSession->setup_intent) {
-            try {
-                $setupIntent = \Stripe\SetupIntent::retrieve([
-                    'id' => $checkoutSession->setup_intent,
-                    'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
-                ], [
-                    'stripe_account' => $this->webhookCall->payload['account'],
-                ]);
+            $checkoutSession = \Stripe\Checkout\Session::retrieve($this->webhookCall->payload['data']['object']['id'], [
+                'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
+                'stripe_account' => $this->webhookCall->payload['account'],
+            ]);
 
-                // Add to the database
+            if ($checkoutSession->setup_intent) {
+                try {
+                    $setupIntent = \Stripe\SetupIntent::retrieve([
+                        'id' => $checkoutSession->setup_intent,
+                        'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
+                    ], [
+                        'stripe_account' => $this->webhookCall->payload['account'],
+                    ]);
 
-                $paymentMethod = new PaymentMethod();
-                $paymentMethod->stripe_id = $setupIntent->payment_method->id;
-                $type = $setupIntent->payment_method->type;
-                $paymentMethod->type = $type;
-                $paymentMethod->pm_type_data = $setupIntent->payment_method->$type;
-                $paymentMethod->billing_address = $setupIntent->payment_method->billing_details;
+                    // See if it's already in the database
+                    $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $setupIntent->payment_method->id);
 
-                if ($setupIntent->customer) {
-                    /** @var StripeCustomer $customer */
-                    $customer = StripeCustomer::firstWhere('CustomerID', $setupIntent->customer);
-                    if ($customer) {
-                        $paymentMethod->user()->associate($customer->user);
+                    if (!$paymentMethod) {
+                        // Add to the database
+
+                        $paymentMethod = new PaymentMethod();
+                        $paymentMethod->stripe_id = $setupIntent->payment_method->id;
+                        $type = $setupIntent->payment_method->type;
+                        $paymentMethod->type = $type;
+                        $paymentMethod->pm_type_data = $setupIntent->payment_method->$type;
+                        $paymentMethod->billing_address = $setupIntent->payment_method->billing_details;
+
+                        if ($setupIntent->customer) {
+                            /** @var StripeCustomer $customer */
+                            $customer = StripeCustomer::firstWhere('CustomerID', $setupIntent->customer);
+                            if ($customer) {
+                                $paymentMethod->user()->associate($customer->user);
+                            }
+                        }
+
+                        $paymentMethod->created_at = $setupIntent->payment_method->created;
+
+                        $paymentMethod->save();
                     }
+
+                    if ($setupIntent->mandate) {
+                        $mandate = new Mandate();
+                        $mandate->paymentMethod()->associate($paymentMethod);
+                        $mandate->stripe_id = $setupIntent->mandate->id;
+                        $mandate->type = $setupIntent->mandate->type;
+                        $mandate->customer_acceptance = $setupIntent->mandate->customer_acceptance;
+                        $type = $setupIntent->mandate->payment_method_details->type;
+                        $mandate->pm_type_details = $setupIntent->mandate->payment_method_details->$type;
+                        $mandate->status = $setupIntent->mandate->status;
+                        $mandate->save();
+                    }
+                } catch (\Throwable $e) {
+                    report($e);
+                    throw $e;
                 }
-
-                $paymentMethod->created_at = $setupIntent->payment_method->created;
-
-                $paymentMethod->save();
-
-                if ($setupIntent->mandate) {
-                    $mandate = new Mandate();
-                    $mandate->paymentMethod()->associate($paymentMethod);
-                    $mandate->stripe_id = $setupIntent->mandate->id;
-                    $mandate->type = $setupIntent->mandate->type;
-                    $mandate->customer_acceptance = $setupIntent->mandate->customer_acceptance;
-                    $type = $setupIntent->mandate->payment_method_details->type;
-                    $mandate->pm_type_details = $setupIntent->mandate->payment_method_details->$type;
-                    $mandate->status = $setupIntent->mandate->status;
-                    $mandate->save();
-                }
-            } catch (\Throwable $e) {
-                report($e);
-                throw $e;
             }
-        }
+        });
     }
 }

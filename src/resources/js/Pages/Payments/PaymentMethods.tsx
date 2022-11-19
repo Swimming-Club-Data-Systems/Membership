@@ -159,8 +159,7 @@ const Index: Layout<Props> = (props: Props) => {
                     {!props.direct_debits.length && (
                         <div>
                             <p className="text-sm">
-                                You have no Direct Debit Instruction set up.{" "}
-                                {props.direct_debits.length}
+                                You have no Direct Debit Instruction set up.
                             </p>
                         </div>
                     )}

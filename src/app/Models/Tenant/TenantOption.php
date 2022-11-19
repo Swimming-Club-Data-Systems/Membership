@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $ID
  * @property string $Option
  * @property string $Value
+ * @property Tenant $tenant
  */
 class TenantOption extends Model
 {

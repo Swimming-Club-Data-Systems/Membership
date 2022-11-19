@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $ID
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class StripeCustomer extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToPrimaryModel;
 
     protected $table = 'stripeCustomers';
     protected $primaryKey = 'ID';
@@ -24,5 +25,10 @@ class StripeCustomer extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'User', 'UserID');
+    }
+
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'user';
     }
 }

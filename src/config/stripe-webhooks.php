@@ -25,6 +25,8 @@ return [
         'checkout_session_completed' => \App\Jobs\StripeWebhooks\HandleCheckoutSessionCompleted::class,
         'payment_method_attached' => \App\Jobs\StripeWebhooks\HandlePaymentMethodAttached::class,
         'payment_method_detached' => \App\Jobs\StripeWebhooks\HandlePaymentMethodDetached::class,
+        'payment_method_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodUpdated::class,
+        'payment_method_automatically_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodAutomaticallyUpdated::class,
     ],
 
     /*
