@@ -404,6 +404,11 @@ class AppMenu
             'href' => '/payments',
         ];
 
+        $menu[] = [
+            'name' => 'Cards and Direct Debits',
+            'href' => route('payments.methods.index'),
+        ];
+
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Billing History',

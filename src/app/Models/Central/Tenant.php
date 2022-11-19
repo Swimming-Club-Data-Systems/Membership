@@ -2,6 +2,7 @@
 
 namespace App\Models\Central;
 
+use App\Exceptions\NoStripeAccountException;
 use App\Models\Accounting\Journal;
 use App\Models\Tenant\TenantOption;
 use App\Traits\Accounting\AccountingJournal;
@@ -215,10 +216,15 @@ class Tenant extends BaseTenant
      * Return the ID of the tenant's Stripe account, or null if they do not have one
      *
      * @return string|null
+     * @throws NoStripeAccountException
      */
     public function stripeAccount(): ?string
     {
-        return $this->getOption('STRIPE_ACCOUNT_ID');
+        $accountId = $this->getOption('STRIPE_ACCOUNT_ID');
+        if ($accountId) {
+            return $accountId;
+        }
+        throw new NoStripeAccountException();
     }
 
     /**
