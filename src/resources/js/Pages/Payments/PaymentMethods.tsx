@@ -93,7 +93,7 @@ const Index: Layout<Props> = (props: Props) => {
         Inertia.delete(
             route("payments.methods.delete", [paymentMethodDeleteModalData.id]),
             {
-                only: ["payment_methods", "flash"],
+                only: ["payment_methods", "direct_debits", "flash"],
                 preserveScroll: true,
                 preserveState: true,
                 onFinish: (page) => {
@@ -138,7 +138,7 @@ const Index: Layout<Props> = (props: Props) => {
                     title="Direct Debit"
                     subtitle="Manage your Direct Debit."
                 >
-                    <FlashAlert className="mb-4" bag="payment_method" />
+                    <FlashAlert className="mb-4" bag="direct_debit" />
 
                     {props.payment_method && (
                         <div>

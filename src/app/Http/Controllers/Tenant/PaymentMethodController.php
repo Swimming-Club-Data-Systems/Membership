@@ -127,8 +127,34 @@ class PaymentMethodController extends Controller
 
     }
 
-    public function delete($id)
+    public function delete(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request)
     {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
+        $type = $paymentMethod->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
+
+        try {
+            // Detach customer in Stripe so this PM can not be used again
+            $stripe = new \Stripe\StripeClient(
+                config('cashier.secret')
+            );
+            $pm = $stripe->paymentMethods->detach(
+                $paymentMethod->stripe_id,
+                [],
+                [
+                    'stripe_account' => $tenant->stripeAccount()
+                ]
+            );
+
+            $paymentMethod->user()->dissociate();
+            $paymentMethod->save();
+
+            $request->session()->flash('flash_bag.' . $type . '.success', 'We have deleted ' . PaymentMethod::formatName($pm) . ' from your list of payment methods.');
+        } catch (\Exception $e) {
+            $request->session()->flash('flash_bag.' . $type . '.error', $e->getMessage());
+        }
+
+        return Redirect::route('payments.methods.index');
     }
 }
