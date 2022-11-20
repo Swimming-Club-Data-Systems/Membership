@@ -8,6 +8,7 @@ use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -45,15 +46,15 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
         $tenant->run(function () {
-            \Stripe\Stripe::setApiKey(config('cashier.secret'));
+            try {
+                \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
-            $checkoutSession = \Stripe\Checkout\Session::retrieve($this->webhookCall->payload['data']['object']['id'], [
-                'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
-                'stripe_account' => $this->webhookCall->payload['account'],
-            ]);
+                $checkoutSession = \Stripe\Checkout\Session::retrieve($this->webhookCall->payload['data']['object']['id'], [
+                    'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
+                    'stripe_account' => $this->webhookCall->payload['account'],
+                ]);
 
-            if ($checkoutSession->setup_intent) {
-                try {
+                if ($checkoutSession->setup_intent) {
                     $setupIntent = \Stripe\SetupIntent::retrieve([
                         'id' => $checkoutSession->setup_intent,
                         'expand' => ['payment_method', 'payment_method.billing_details.address', 'mandate'],
@@ -88,20 +89,27 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                     }
 
                     if ($setupIntent->mandate) {
-                        $mandate = new Mandate();
-                        $mandate->paymentMethod()->associate($paymentMethod);
-                        $mandate->stripe_id = $setupIntent->mandate->id;
-                        $mandate->type = $setupIntent->mandate->type;
-                        $mandate->customer_acceptance = $setupIntent->mandate->customer_acceptance;
-                        $type = $setupIntent->mandate->payment_method_details->type;
-                        $mandate->pm_type_details = $setupIntent->mandate->payment_method_details->$type;
-                        $mandate->status = $setupIntent->mandate->status;
-                        $mandate->save();
+                        $mandate = Mandate::firstWhere('stripe_id', '=', $setupIntent->mandate->id);
+
+                        if (!$mandate) {
+                            $mandate = new Mandate();
+                            $mandate->paymentMethod()->associate($paymentMethod);
+                            $mandate->stripe_id = $setupIntent->mandate->id;
+                            $mandate->type = $setupIntent->mandate->type;
+                            $mandate->customer_acceptance = $setupIntent->mandate->customer_acceptance;
+                            $type = $setupIntent->mandate->payment_method_details->type;
+                            $mandate->pm_type_details = $setupIntent->mandate->payment_method_details->$type;
+                            $mandate->status = $setupIntent->mandate->status;
+                            $mandate->save();
+                        }
                     }
-                } catch (\Throwable $e) {
-                    report($e);
-                    throw $e;
+
                 }
+            } catch (QueryException) {
+                // Will be not unique, ignore this case
+            } catch (\Throwable $e) {
+                report($e);
+                throw $e;
             }
         });
     }

@@ -42,7 +42,7 @@ const Button: React.FC<Props> = ({
         <button
             type={type}
             className={
-                `inline-flex justify-center rounded-md border py-2 px-4 text-sm font-medium shadow-sm ${variantStyle} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none ` +
+                `inline-flex justify-center rounded-md border py-2 px-4 text-sm font-sans font-medium shadow-sm ${variantStyle} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none ` +
                 className
             }
             disabled={props.disabled || count > 0}

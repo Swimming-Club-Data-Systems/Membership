@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $id
@@ -19,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property ArrayObject $pm_type_data
  * @property ArrayObject $billing_address
  * @property Tenant $tenant
+ * @property boolean $default
  */
 class PaymentMethod extends Model
 {
@@ -28,6 +28,49 @@ class PaymentMethod extends Model
         'pm_type_data' => AsArrayObject::class,
         'billing_address' => AsArrayObject::class,
     ];
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::saving(function (self $paymentMethod) {
+            // If the type is bacs_debit, and there are no defaults for the user, make this default
+            if ($paymentMethod->user && $paymentMethod->type == 'bacs_debit') {
+                // Are there any other default bacs_debit methods?
+                // If no make this the default
+                $otherDefault = $paymentMethod->user->paymentMethods()
+                    ->where('type', '=', 'bacs_debit')
+                    ->where('default', '=', true)
+                    ->where('id', '!=', $paymentMethod->id)
+                    ->count();
+                if ($otherDefault == 0) {
+                    $paymentMethod->default = true;
+                }
+            } else {
+                $paymentMethod->default = false;
+            }
+        });
+
+        static::saved(function (self $paymentMethod) {
+            if ($paymentMethod->default) {
+                // Set any others as not default
+
+                $pms = $paymentMethod->user->paymentMethods()
+                    ->where('type', '=', 'bacs_debit')
+                    ->where('default', '=', true)
+                    ->where('id', '!=', $paymentMethod->id)
+                    ->get();
+
+                foreach ($pms as $pm) {
+                    $pm->default = false;
+                    $pm->save();
+                }
+            }
+        });
+    }
 
     public function mandate(): \Illuminate\Database\Eloquent\Relations\HasOne
     {

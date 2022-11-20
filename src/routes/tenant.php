@@ -146,7 +146,7 @@ Route::middleware([
                     Route::get('/new-direct-debit', [PaymentMethodController::class, 'addDirectDebit'])->name('new_direct_debit');
                     Route::get('/new-success', [PaymentMethodController::class, 'addPaymentMethodSuccess'])->name('new_success');
                     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'delete'])->name('delete');
-                    Route::put('/{id}', [PaymentMethodController::class, 'update'])->name('update');
+                    Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
                 });
             });
         });

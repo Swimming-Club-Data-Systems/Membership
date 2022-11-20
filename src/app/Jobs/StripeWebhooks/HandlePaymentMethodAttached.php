@@ -7,6 +7,7 @@ use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -44,38 +45,42 @@ class HandlePaymentMethodAttached implements ShouldQueue
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
         $tenant->run(function () {
-            \Stripe\Stripe::setApiKey(config('cashier.secret'));
+            try {
+                \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
-            // Get a user if they exist
-            /** @var StripeCustomer $customer */
-            $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
+                // Get a user if they exist
+                /** @var StripeCustomer $customer */
+                $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
 
-            if (!$customer) {
-                // Stop executing
-                return;
-            }
+                if (!$customer) {
+                    // Stop executing
+                    return;
+                }
 
-            // See if it's already in the database
-            $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
+                // See if it's already in the database
+                $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
 
-            if (!$paymentMethod) {
-                $pm = \Stripe\PaymentMethod::retrieve([
-                    'id' => $this->webhookCall->payload['data']['object']['id'],
-                    'expand' => ['billing_details.address'],
-                ], [
-                    'stripe_account' => $this->webhookCall->payload['account'],
-                ]);
+                if (!$paymentMethod) {
+                    $pm = \Stripe\PaymentMethod::retrieve([
+                        'id' => $this->webhookCall->payload['data']['object']['id'],
+                        'expand' => ['billing_details.address'],
+                    ], [
+                        'stripe_account' => $this->webhookCall->payload['account'],
+                    ]);
 
-                $paymentMethod = new PaymentMethod();
-                $paymentMethod->stripe_id = $pm->id;
-                $type = $pm->type;
-                $paymentMethod->type = $type;
-                $paymentMethod->pm_type_data = $pm->$type;
-                $paymentMethod->billing_address = $pm->billing_details;
-                $paymentMethod->user()->associate($customer->user);
-                $paymentMethod->created_at = $pm->created;
+                    $paymentMethod = new PaymentMethod();
+                    $paymentMethod->stripe_id = $pm->id;
+                    $type = $pm->type;
+                    $paymentMethod->type = $type;
+                    $paymentMethod->pm_type_data = $pm->$type;
+                    $paymentMethod->billing_address = $pm->billing_details;
+                    $paymentMethod->user()->associate($customer->user);
+                    $paymentMethod->created_at = $pm->created;
 
-                $paymentMethod->save();
+                    $paymentMethod->save();
+                }
+            } catch (QueryException) {
+                // Will be not unique, ignore this case
             }
         });
     }

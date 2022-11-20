@@ -112,7 +112,7 @@ const Index: Layout<Props> = (props: Props) => {
                 set_default: true,
             },
             {
-                only: ["payment_methods", "flash"],
+                only: ["payment_methods", "direct_debits", "flash"],
                 preserveScroll: true,
                 preserveState: true,
                 onFinish: (page) => {
@@ -285,7 +285,7 @@ Index.layout = (page) => (
             { name: "Payment Methods", route: "payments.methods.index" },
         ]}
     >
-        <Container>{page}</Container>
+        <Container noMargin>{page}</Container>
     </MainLayout>
 );
 
