@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class PaymentMethodController extends Controller
@@ -210,6 +211,9 @@ class PaymentMethodController extends Controller
         return Redirect::route('payments.methods.index');
     }
 
+    /**
+     * @throws ValidationException
+     */
     public
     function delete(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request)
     {
@@ -217,6 +221,11 @@ class PaymentMethodController extends Controller
         $tenant = tenant();
 
         $type = $paymentMethod->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
+
+        if ($paymentMethod->default) {
+            $request->session()->flash('flash_bag.' . $type . '.error', 'You can not delete a default payment method');
+            return Redirect::route('payments.methods.index');
+        }
 
         try {
             // Detach customer in Stripe so this PM can not be used again

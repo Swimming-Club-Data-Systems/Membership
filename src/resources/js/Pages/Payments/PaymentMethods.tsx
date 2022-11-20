@@ -96,7 +96,7 @@ const Index: Layout<Props> = (props: Props) => {
                 only: ["payment_methods", "direct_debits", "flash"],
                 preserveScroll: true,
                 preserveState: true,
-                onFinish: (page) => {
+                onSuccess: (page) => {
                     setShowPaymentMethodDeleteModal(false);
                 },
             }
@@ -115,7 +115,7 @@ const Index: Layout<Props> = (props: Props) => {
                 only: ["payment_methods", "direct_debits", "flash"],
                 preserveScroll: true,
                 preserveState: true,
-                onFinish: (page) => {
+                onSuccess: (page) => {
                     setShowPaymentMethodDefaultModal(false);
                 },
             }
