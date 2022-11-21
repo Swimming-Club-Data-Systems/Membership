@@ -76,95 +76,102 @@ class WebAuthnLoginController extends Controller
 
     public function verify(Request $request)
     {
-        $options = $request->session()->pull('webauthn_credential_request_options');
+        try {
+            $options = $request->session()->pull('webauthn_credential_request_options');
 
-        $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($options);
+            $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($options);
 
-        // The manager will receive data to load and select the appropriate
-        $attestationStatementSupportManager = AttestationStatementSupportManager::create();
-        $attestationStatementSupportManager->add(NoneAttestationStatementSupport::create());
+            // The manager will receive data to load and select the appropriate
+            $attestationStatementSupportManager = AttestationStatementSupportManager::create();
+            $attestationStatementSupportManager->add(NoneAttestationStatementSupport::create());
 
-        $attestationObjectLoader = AttestationObjectLoader::create(
-            $attestationStatementSupportManager
-        );
+            $attestationObjectLoader = AttestationObjectLoader::create(
+                $attestationStatementSupportManager
+            );
 
-        $publicKeyCredentialLoader = PublicKeyCredentialLoader::create(
-            $attestationObjectLoader
-        );
+            $publicKeyCredentialLoader = PublicKeyCredentialLoader::create(
+                $attestationObjectLoader
+            );
 
-        $input = $request->input();
+            $input = $request->input();
 //        if ($request->input('response.userHandle')) {
 //            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
 //        }
 
-        $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
+            $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
-        $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
-        if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
-            //e.g. process here with a redirection to the public key login/MFA page.
-        }
+            $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
+            if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+                //e.g. process here with a redirection to the public key login/MFA page.
+            }
 
-        // $request = Request::createFromGlobals();
+            // $request = Request::createFromGlobals();
 
-        $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository();
+            $publicKeyCredentialSourceRepository = new PublicKeyCredentialSourceRepository();
 
-        $tokenBindingHandler = IgnoreTokenBindingHandler::create();
+            $tokenBindingHandler = IgnoreTokenBindingHandler::create();
 
-        $extensionOutputCheckerHandler = ExtensionOutputCheckerHandler::create();
+            $extensionOutputCheckerHandler = ExtensionOutputCheckerHandler::create();
 
-        $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
-            $publicKeyCredentialSourceRepository,  // The Credential Repository service
-            $tokenBindingHandler,                  // The token binding handler
-            $extensionOutputCheckerHandler,        // The extension output checker handler
-            Server::getAlgorithmManager()          // The COSE Algorithm Manager
-        );
+            $authenticatorAssertionResponseValidator = AuthenticatorAssertionResponseValidator::create(
+                $publicKeyCredentialSourceRepository,  // The Credential Repository service
+                $tokenBindingHandler,                  // The token binding handler
+                $extensionOutputCheckerHandler,        // The extension output checker handler
+                Server::getAlgorithmManager()          // The COSE Algorithm Manager
+            );
 
-        $psr17Factory = new Psr17Factory();
-        $creator = new ServerRequestCreator(
-            $psr17Factory, // ServerRequestFactory
-            $psr17Factory, // UriFactory
-            $psr17Factory, // UploadedFileFactory
-            $psr17Factory  // StreamFactory
-        );
+            $psr17Factory = new Psr17Factory();
+            $creator = new ServerRequestCreator(
+                $psr17Factory, // ServerRequestFactory
+                $psr17Factory, // UriFactory
+                $psr17Factory, // UploadedFileFactory
+                $psr17Factory  // StreamFactory
+            );
 
-        $serverRequest = $creator->fromGlobals();
+            $serverRequest = $creator->fromGlobals();
 
-        $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
-            $publicKeyCredential->getRawId(),
-            $authenticatorAssertionResponse,
-            $publicKeyCredentialRequestOptions,
-            $serverRequest,
+            $publicKeyCredentialSource = $authenticatorAssertionResponseValidator->check(
+                $publicKeyCredential->getRawId(),
+                $authenticatorAssertionResponse,
+                $publicKeyCredentialRequestOptions,
+                $serverRequest,
 //            $userHandle
-            null,
-            ['testclub.localhost', 'localhost'],
-        );
+                null,
+                ['testclub.localhost', 'localhost'],
+            );
 
-        $userId = $publicKeyCredentialSource->getUserHandle();
+            $userId = $publicKeyCredentialSource->getUserHandle();
 
-        $user = User::find($userId);
+            $user = User::find($userId);
 
-        Auth::login($user, true);
+            Auth::login($user, true);
 
-        $request->session()->regenerate();
+            $request->session()->regenerate();
 
-        // The user has just logged in with multiple factors so set confirmed at time
-        // Otherwise the user is hit with confirm immediately if heading to profile routes.
-        $request->session()->put('auth.password_confirmed_at', time());
+            // The user has just logged in with multiple factors so set confirmed at time
+            // Otherwise the user is hit with confirm immediately if heading to profile routes.
+            $request->session()->put('auth.password_confirmed_at', time());
 
-        $url = $request->session()->get('url.intended') ?? "";
+            $url = $request->session()->get('url.intended') ?? "";
 
-        $redirectUrl = RouteServiceProvider::HOME;
+            $redirectUrl = RouteServiceProvider::HOME;
 
-        if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
-            $request->session()->forget('url.intended');
-            $redirectUrl = V1LoginController::getUrl($user);
-        } else {
-            $redirectUrl = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
+            if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
+                $request->session()->forget('url.intended');
+                $redirectUrl = V1LoginController::getUrl($user);
+            } else {
+                $redirectUrl = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
+            }
+
+            return response()->json([
+                'success' => true,
+                'redirect_url' => $redirectUrl,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
         }
-
-        return response()->json([
-            'success' => true,
-            'redirect_url' => $redirectUrl,
-        ]);
     }
 }
