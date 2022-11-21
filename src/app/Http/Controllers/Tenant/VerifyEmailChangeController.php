@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Central\User;
+use App\Models\Tenant\User;
 
 class VerifyEmailChangeController extends Controller
 {
