@@ -81,7 +81,10 @@ const WebAuthnHandler = ({ setAC, show }) => {
         if (verificationResponse.data.success) {
             Inertia.visit(verificationResponse.data.redirect_url);
         } else {
-            setError(webAuthnError);
+            setError({
+                ...webAuthnError,
+                message: verificationResponse.data.message,
+            });
             // console.error(error);
         }
     };
