@@ -4,12 +4,12 @@
 @component('mail::header', ['url' => config('app.url')])
 @if (tenant())
 @if (tenant()->getOption("LOGO_DIR"))
-<img src="{{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75.png" srcset="{{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75@2x.png 2x, {{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75@3x.png 3x" />
+<img src="{{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75.png" srcset="{{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75@2x.png 2x, {{ getUploadedAssetUrl(tenant()->getOption("LOGO_DIR")) }}logo-75@3x.png 3x" aria-hidden="true" alt="" />
 @else
 {{ tenant()->getOption("CLUB_NAME") }}
 @endif
 @else
-<img src="{{ asset("img/corporate/scds.svg") }}" style="height: 75px" alt="{{ config('app.name') }}" />
+<img src="{{ asset("img/corporate/scds.svg") }}" style="height: 75px" aria-hidden="true" alt="" />
 @endif
 @endcomponent
 @endslot
