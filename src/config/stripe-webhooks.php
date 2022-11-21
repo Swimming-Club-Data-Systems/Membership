@@ -27,6 +27,7 @@ return [
         'payment_method_detached' => \App\Jobs\StripeWebhooks\HandlePaymentMethodDetached::class,
         'payment_method_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodUpdated::class,
         'payment_method_automatically_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodAutomaticallyUpdated::class,
+        'mandate_updated' => \App\Jobs\StripeWebhooks\HandleMandateUpdated::class,
     ],
 
     /*
