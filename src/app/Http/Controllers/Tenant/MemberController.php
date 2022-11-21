@@ -30,7 +30,7 @@ class MemberController extends Controller
                 $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
             }]))->paginate(config('app.per_page'));
         } else {
-            $members = Member::orderBy('MForename', 'asc')->orderBy('MSurname', 'asc')->with(['squads' => function ($query) {
+            $members = Member::where('Active', 1)->orderBy('MForename', 'asc')->orderBy('MSurname', 'asc')->with(['squads' => function ($query) {
                 $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
             }])->paginate(config('app.per_page'));
         }
