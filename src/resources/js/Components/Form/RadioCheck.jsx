@@ -49,7 +49,7 @@ const RadioCheck = ({ type, label, mb, disabled, ...props }) => {
             <div className="ml-3 text-sm">
                 <label
                     htmlFor={id}
-                    className="font-medium text-gray-700 select-none"
+                    className="font-medium text-gray-700 select-none flex break-words"
                 >
                     {label}
                 </label>
