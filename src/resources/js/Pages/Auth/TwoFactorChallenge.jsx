@@ -55,6 +55,8 @@ const TwoFactorChallenge = (props) => {
                     type="text"
                     label="Authentication code"
                     autoComplete="one-time-code"
+                    pattern="[0-9]*"
+                    inputMode="numeric"
                 />
             </Form>
 
