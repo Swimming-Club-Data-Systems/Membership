@@ -14,7 +14,7 @@ const ItemContent = (props) => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     <div>
-                        <div className="truncate text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
+                        <div className="flex text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
                             {props.Subject}
                         </div>
                         <div
