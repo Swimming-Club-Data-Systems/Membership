@@ -21,14 +21,16 @@ const ItemContent: React.FC<Message> = (props) => {
             <div className="flex items-center justify-between">
                 <div className="flex items-center">
                     <div>
-                        <p className="text-sm">
+                        <p className="text-sm font-medium">
                             {props.author.Forename} {props.author.Surname} at{" "}
                             {format(
                                 Date.parse(props.created_at),
                                 "HH:mm, do MMMM yyyy"
                             )}
                         </p>
-                        <p className="text-sm">{props.message}</p>
+                        <div className="prose prose-sm">
+                            <p>{props.message}</p>
+                        </div>
                     </div>
                 </div>
             </div>
