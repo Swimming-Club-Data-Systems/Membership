@@ -19,12 +19,29 @@ import Modal from "@/Components/Modal";
 import { Inertia } from "@inertiajs/inertia";
 
 const Email = (props) => {
+    const validationSchemaObject = {
+        email: yup
+            .string()
+            .required("An email address is required")
+            .email("You must use a valid email address"),
+        email_comms: yup
+            .bool()
+            .oneOf([true, false], "Must either be true or false"),
+        sms_comms: yup
+            .bool()
+            .oneOf([true, false], "Must either be true or false"),
+    };
     const customCategoryValidation = {};
     props.notify_categories.forEach((category) => {
         customCategoryValidation[category.id] = yup
             .bool()
             .oneOf([true, false], "Must either be true or false");
     });
+    if (props.notify_categories.length > 0) {
+        validationSchemaObject.notify_categories = yup
+            .object()
+            .shape(customCategoryValidation);
+    }
 
     const [deleteModalData, setDeleteModalData] = useState(null);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -56,27 +73,9 @@ const Email = (props) => {
                         sms_comms: false,
                         notify_categories: {},
                     }}
-                    validationSchema={yup.object().shape({
-                        email: yup
-                            .string()
-                            .required("An email address is required")
-                            .email("You must use a valid email address"),
-                        email_comms: yup
-                            .bool()
-                            .oneOf(
-                                [true, false],
-                                "Must either be true or false"
-                            ),
-                        sms_comms: yup
-                            .bool()
-                            .oneOf(
-                                [true, false],
-                                "Must either be true or false"
-                            ),
-                        notify_categories: yup
-                            .object()
-                            .shape(customCategoryValidation),
-                    })}
+                    validationSchema={yup
+                        .object()
+                        .shape(validationSchemaObject)}
                     action={route("my_account.email")}
                     submitTitle="Save"
                     hideClear
