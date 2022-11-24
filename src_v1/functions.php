@@ -326,13 +326,7 @@ function myMonthlyFeeTable($link = null, $userID)
 function autoUrl($relative, $includeClub = true)
 {
     // Returns an absolute URL
-    $rootUrl = getenv('ROOT_URL');
-
-    if ($includeClub && isset(app()->tenant) && app()->tenant->getDomain()) {
-        $rootUrl = 'https://' . app()->tenant->getDomain() . '/';
-    } else {
-        $rootUrl = 'https://' . app('request')->hostname . '/';
-    }
+    $rootUrl = 'https://' . app('request')->hostname . '/';
 
     if (getenv('ROOT_URL_SUFFIX')) {
         $rootUrl .= getenv('ROOT_URL_SUFFIX');
