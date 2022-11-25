@@ -48,7 +48,9 @@ const EmailListItemContent: React.FC<EmailListItemContentProps> = (props) => {
         {
             key: "sent_by",
             term: "Sent by",
-            definition: props.author.first_name + " " + props.author.last_name,
+            definition: props.author
+                ? props.author.first_name + " " + props.author.last_name
+                : "Unknown author",
         },
     ];
 

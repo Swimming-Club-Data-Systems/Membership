@@ -56,11 +56,11 @@ class NotifyHistoryTransform
                 'id' => $item->tenant->id,
                 'name' => $item->tenant->Name,
             ],
-            'author' => [
+            'author' => $item->author ? [
                 'first_name' => $item->author->Forename,
                 'last_name' => $item->author->Surname,
                 'id' => $item->author->UserID,
-            ],
+            ] : null,
             'force_send' => (bool)$item->JSONData['Metadata']['ForceSend'],
             'sent_as' => isset($item->JSONData['NamedSender']) ? [
                 'name' => $item->JSONData['NamedSender']['Name'],
