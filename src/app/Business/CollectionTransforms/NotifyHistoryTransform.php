@@ -9,28 +9,34 @@ class NotifyHistoryTransform
     public static function transform(NotifyHistory $item): array
     {
         $sentTo = [];
-        foreach ($item->JSONData['To']['Galas'] as $key => $name) {
-            $sentTo[] = [
-                'id' => $key,
-                'name' => $name,
-                'type' => 'gala',
-            ];
+        if (isset($item->JSONData['To']['Galas'])) {
+            foreach ($item->JSONData['To']['Galas'] as $key => $name) {
+                $sentTo[] = [
+                    'id' => $key,
+                    'name' => $name,
+                    'type' => 'gala',
+                ];
+            }
         }
 
-        foreach ($item->JSONData['To']['Squads'] as $key => $name) {
-            $sentTo[] = [
-                'id' => $key,
-                'name' => $name,
-                'type' => 'squad',
-            ];
+        if (isset($item->JSONData['To']['Squads'])) {
+            foreach ($item->JSONData['To']['Squads'] as $key => $name) {
+                $sentTo[] = [
+                    'id' => $key,
+                    'name' => $name,
+                    'type' => 'squad',
+                ];
+            }
         }
 
-        foreach ($item->JSONData['To']['Targeted_Lists'] as $key => $name) {
-            $sentTo[] = [
-                'id' => $key,
-                'name' => $name,
-                'type' => 'targeted_list',
-            ];
+        if (isset($item->JSONData['To']['Targeted_Lists'])) {
+            foreach ($item->JSONData['To']['Targeted_Lists'] as $key => $name) {
+                $sentTo[] = [
+                    'id' => $key,
+                    'name' => $name,
+                    'type' => 'targeted_list',
+                ];
+            }
         }
 
         $routeName = tenant() ? 'notify.email.download_file' : 'central.notify.download_file';
