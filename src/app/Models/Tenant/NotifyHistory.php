@@ -49,7 +49,7 @@ class NotifyHistory extends Model
 
         $data = array_intersect_key($array, array_flip($fields));
 
-        $data['author'] = $this->author->Forename . ' ' . $this->author->Surname;
+        $data['author'] = $this->author ? $this->author->Forename . ' ' . $this->author->Surname : null;
 
         return $data;
     }
