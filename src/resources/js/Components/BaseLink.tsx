@@ -1,21 +1,34 @@
 import React from "react";
 import { InertiaLink } from "@inertiajs/inertia-react";
 
-const A = (props) => {
+interface AProps {
+    href: string;
+    target?: string;
+    external?: boolean;
+    as?: string;
+    children: React.ReactNode;
+}
+
+const A: React.FC<AProps> = (props) => {
     const target = props.target ? props.target : "_blank";
 
     return <a {...props} target={target} />;
 };
 
-const Link = (props) => {
+interface LinkProps extends AProps {
+    method?: string;
+}
+
+const Link: React.FC<LinkProps> = (props) => {
     return <InertiaLink {...props} />;
 };
 
-const BaseLink = ({ external, ...props }) => {
+const BaseLink: React.FC<LinkProps> = ({ external, ...props }) => {
     if (external) {
         return <A {...props} />;
     }
 
+    // eslint-disable-next-line prefer-const
     let { as, ...otherProps } = props;
 
     if (as === "a" && props.method !== "get") {

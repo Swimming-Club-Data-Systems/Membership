@@ -1,15 +1,17 @@
 import React from "react";
 import { PaperClipIcon } from "@heroicons/react/24/outline";
 
-type Props = {
-    items: {
-        name: string;
-        url: string;
-        mime_type: string;
-    }[];
+export type FileProps = {
+    name: string;
+    url: string;
+    mime_type: string;
 };
 
-export const FileList: React.FC<Props> = ({ items }) => {
+export type FileListProps = {
+    items: FileProps[];
+};
+
+export const FileList: React.FC<FileListProps> = ({ items }) => {
     if (items.length === 0) {
         return;
     }

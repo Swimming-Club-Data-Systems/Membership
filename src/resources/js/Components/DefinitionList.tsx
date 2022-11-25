@@ -1,15 +1,17 @@
 import React, { ReactNode } from "react";
 
-type Props = {
-    items: {
-        key: string | number;
-        term: ReactNode;
-        definition: ReactNode;
-    }[];
+export type DefinitionListItemProps = {
+    key: string | number;
+    term: ReactNode;
+    definition: ReactNode;
+};
+
+export type DefinitionListProps = {
+    items: DefinitionListItemProps[];
     verticalPadding: number;
 };
 
-export const DefinitionList: React.FC<Props> = ({
+export const DefinitionList: React.FC<DefinitionListProps> = ({
     items,
     verticalPadding = 4,
 }) => {
