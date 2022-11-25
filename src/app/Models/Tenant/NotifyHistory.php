@@ -15,6 +15,9 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property bool $ForceSend
  * @property Date $Date
  * @property $JSONData
+ * @property User $author
+ * @property Date created_at
+ * @property Date $updated_at
  */
 class NotifyHistory extends Model
 {
@@ -25,6 +28,10 @@ class NotifyHistory extends Model
 
     public function author()
     {
-        return $this->hasMany(User::class, 'Sender', 'UserID');
+        return $this->belongsTo(User::class, 'Sender', 'UserID');
     }
+
+    protected $casts = [
+        'JSONData' => 'array',
+    ];
 }
