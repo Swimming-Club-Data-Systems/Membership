@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\NotifyHistory;
 use App\Models\Tenant\User;
 use Illuminate\Console\Command;
 
@@ -36,6 +37,7 @@ class UpdateMeilisearchDocuments extends Command
         User::where('Active', false)->unsearchable();
         Member::where('Active', false)->unsearchable();
         Tenant::where('Verified', false)->unsearchable();
+        NotifyHistory::all()->searchable();
         return 0;
     }
 }

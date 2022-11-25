@@ -19,8 +19,7 @@ class NotifyHistoryController extends Controller
         $emails = null;
 
         if ($request->query('query')) {
-            // Enable search once ready
-            // $emails = NotifyHistory::search($request->query('query'))->paginate(config('app.per_page'));
+            $emails = NotifyHistory::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
         } else {
             $emails = NotifyHistory::orderBy('Date', 'desc')->with(['author'])->paginate(config('app.per_page'));
         }

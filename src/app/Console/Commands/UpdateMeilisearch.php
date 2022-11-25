@@ -33,6 +33,7 @@ class UpdateMeilisearch extends Command
         $client->index(config('scout.prefix').'members')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'users')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'sms')->updateFilterableAttributes(['Tenant']);
+        $client->index(config('scout.prefix').'notifyHistory')->updateFilterableAttributes(['Tenant']);
 
         return 0;
     }

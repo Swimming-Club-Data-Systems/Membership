@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
+use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -21,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class NotifyHistory extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, Searchable;
 
     protected $primaryKey = 'ID';
     protected $table = 'notifyHistory';
@@ -34,4 +35,22 @@ class NotifyHistory extends Model
     protected $casts = [
         'JSONData' => 'array',
     ];
+
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $fields = [
+            'ID',
+            'Subject',
+            'Message',
+            'Tenant',
+        ];
+
+        $data = array_intersect_key($array, array_flip($fields));
+
+        $data['author'] = $this->author->Forename . ' ' . $this->author->Surname;
+
+        return $data;
+    }
 }
