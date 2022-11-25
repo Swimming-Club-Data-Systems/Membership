@@ -81,7 +81,8 @@ Route::middleware('auth:central')->group(function () {
 
         Route::middleware('auth:central')->prefix('/notify')->group(function () {
             Route::get('/', [NotifyHistoryController::class, 'index'])->name('notify');
-            Route::get('/{notify}', [NotifyHistoryController::class, 'show'])->name('notify.show');
+            // Route::get('/{notify}', [NotifyHistoryController::class, 'show'])->name('notify.show');
+            Route::get('/{email}/download-file', [NotifyHistoryController::class, 'downloadFile'])->name('notify.download_file');
         });
 
         Route::middleware('auth:central')->prefix('/invoices')->group(function () {

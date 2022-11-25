@@ -23,6 +23,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Tenant\User::class => \App\Policies\Tenant\UserPolicy::class,
         \App\Models\Central\Tenant::class => \App\Policies\Central\TenantPolicy::class,
         \App\Models\Tenant\Sms::class => \App\Policies\Tenant\SmsPolicy::class,
+        \App\Models\Tenant\NotifyHistory::class => \App\Policies\Tenant\NotifyHistoryPolicy::class,
     ];
 
     /**

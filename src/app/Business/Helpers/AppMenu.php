@@ -537,7 +537,7 @@ class AppMenu
         if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
             $menu[] = [
                 'name' => 'Full Email History',
-                'href' => '/notify/history',
+                'href' => route('notify.email.history'),
             ];
         }
 
