@@ -44,6 +44,7 @@ class NotifyHistory extends Model
             'ID',
             'Subject',
             'Message',
+            'Date',
             'Tenant',
         ];
 
