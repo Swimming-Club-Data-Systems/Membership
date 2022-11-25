@@ -33,6 +33,8 @@ class NotifyHistoryTransform
             ];
         }
 
+        $routeName = tenant() ? 'notify.email.download_file' : 'central.notify.download_file';
+
         $attachments = [];
         if (isset($item->JSONData['Attachments'])) {
             foreach ($item->JSONData['Attachments'] as $key => $data) {
@@ -41,7 +43,7 @@ class NotifyHistoryTransform
                     'name' => $data['Filename'],
                     'mime_type' => $data['MIME'],
                     'path' => $data['URI'],
-                    'url' => route('central.notify.download_file', ['email' => $item->ID, 'file' => $data['URI']]),
+                    'url' => route($routeName, ['email' => $item->ID, 'file' => $data['URI']]),
                 ];
             }
         }
