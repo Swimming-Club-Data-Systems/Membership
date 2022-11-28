@@ -16,9 +16,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // CLean up telescope records
         $schedule->command('telescope:prune')->daily();
+
+        // CLean up prune able models
         $schedule->command('model:prune')->daily();
+
+        // Update Meilisearch records
         $schedule->command(UpdateMeilisearchDocuments::class)->everyFifteenMinutes();
+
+        // Back up data
+        $schedule->command('backup:clean')->daily()->at('01:00');
+        $schedule->command('backup:run')->daily()->at('01:30');
     }
 
     /**

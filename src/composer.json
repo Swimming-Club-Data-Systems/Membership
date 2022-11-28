@@ -37,6 +37,7 @@
         "paragonie/constant_time_encoding": "^2.6",
         "pragmarx/google2fa": "^8.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-backup": "^8.1",
         "stancl/tenancy": "^3.6",
         "stripe/stripe-php": "^9.0",
         "symfony/intl": "^6.1",
