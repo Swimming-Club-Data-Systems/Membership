@@ -5,40 +5,6 @@ $tenant = app()->tenant;
 
 $currentUser = null;
 
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_SESSION['SCDS-SuperUser'])) {
-  try {
-    // Sign in from super user
-    $getSuperUser = $db->prepare("SELECT Email FROM superUsers WHERE ID = ?");
-    $getSuperUser->execute([
-      $_SESSION['SCDS-SuperUser']
-    ]);
-    $email = $getSuperUser->fetchColumn();
-
-    if ($email == null) throw new Exception('No superuser');
-
-    // Get matching user
-    $getUser = $db->prepare("SELECT UserID FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active = ?");
-    $getUser->execute([
-      $email,
-      $tenant->getId(),
-      (int) true,
-    ]);
-    $user = $getUser->fetchColumn();
-
-    if ($user == null) throw new Exception('No user');
-
-    $login = new \CLSASC\Membership\Login($db);
-    $login->setUser($user);
-    // $login->stayLoggedIn();
-    $login->preventWarningEmail();
-    app()->user = $login->login();
-  } catch (Exception $e) {
-    // Ignore
-  }
-} else if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'SUPERUSER-AutoLogin'])) {
-  // Ignore for now
-}
-
 if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin']) && $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'] != "") {
   $sql = "SELECT users.UserID, `Time` FROM `userLogins` INNER JOIN users ON users.UserID = userLogins.UserID WHERE users.Tenant = ? AND `Hash` = ? AND `Time` >= ? AND `HashActive` = ?";
 
@@ -101,17 +67,17 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($
 }
 
 // Log urls
-if (isset(app()->user) && app()->user) {
-  try {
-    // pre(app()->request);
-    $path = substr(app()->request->path, strlen('/' . app()->tenant->getCodeId()), strlen(app()->request->path) - strlen('/' . app()->tenant->getCodeId()));
-    if (substr($path, 0, 7) !== "/public" && substr($path, 0, 8) !== "/uploads" && substr($path, 0, 6) !== "/sw.js") {
-      AuditLog::new('HTTP_REQUEST', app()->request->method . ' - ' . app()->request->curl);
-    }
-  } catch (Exception $e) {
-    // Ignore all errors
-  }
-}
+//if (isset(app()->user) && app()->user) {
+//  try {
+//    // pre(app()->request);
+//    $path = substr(app()->request->path, strlen('/' . app()->tenant->getCodeId()), strlen(app()->request->path) - strlen('/' . app()->tenant->getCodeId()));
+//    if (substr($path, 0, 7) !== "/public" && substr($path, 0, 8) !== "/uploads" && substr($path, 0, 6) !== "/sw.js") {
+//      AuditLog::new('HTTP_REQUEST', app()->request->method . ' - ' . app()->request->curl);
+//    }
+//  } catch (Exception $e) {
+//    // Ignore all errors
+//  }
+//}
 
 if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] && !isset($_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'])) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'] = filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "DisableTrackers"), FILTER_VALIDATE_BOOLEAN);
