@@ -3,66 +3,7 @@
 $db = app()->db;
 $tenant = app()->tenant;
 
-$currentUser = null;
-
-if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin']) && $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'] != "") {
-  $sql = "SELECT users.UserID, `Time` FROM `userLogins` INNER JOIN users ON users.UserID = userLogins.UserID WHERE users.Tenant = ? AND `Hash` = ? AND `Time` >= ? AND `HashActive` = ?";
-
-  $data = [
-    $tenant->getId(),
-    $_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'],
-    date('Y-m-d H:i:s', strtotime("120 days ago")),
-    1
-  ];
-
-  try {
-    $query = $db->prepare($sql);
-    $query->execute($data);
-  } catch (PDOException $e) {
-    //halt(500);
-  }
-
-  $row = $query->fetch(PDO::FETCH_ASSOC);
-  if ($row != null) {
-    $user = $row['UserID'];
-    $utc = new DateTimeZone("UTC");
-    $time = new DateTime($row['Time'], $utc);
-
-    try {
-      $login = new \CLSASC\Membership\Login($db);
-      $login->setUser($user);
-      $login->stayLoggedIn();
-      $login->preventWarningEmail();
-      $login->reLogin();
-      app()->user = $login->login();
-    } catch (Exception $e) {
-      reportError($e);
-      // halt(403);
-    }
-
-    $hash = hash('sha512', time() . $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . random_bytes(64));
-
-    $sql = "UPDATE `userLogins` SET `Hash` = ? WHERE `Hash` = ?";
-    try {
-      $query = $db->prepare($sql);
-      $query->execute([$hash, $_COOKIE['TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin']]);
-    } catch (PDOException $e) {
-      halt(500);
-    }
-
-    $expiry_time = ($time->format('U')) + 60 * 60 * 24 * 120;
-
-    $secure = true;
-    if (app('request')->protocol == 'http' && bool(getenv('IS_DEV'))) {
-      $secure = false;
-    }
-    $cookiePath = '/' . app()->tenant->getCodeId();
-    if (getenv('MAIN_DOMAIN')) {
-      $cookiePath = '';
-    }
-    setcookie('TENANT-' . app()->tenant->getId() . '-' . "AutoLogin", $hash, $expiry_time, $cookiePath, app('request')->hostname, $secure, false);
-  }
-} else if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
+if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
   app()->user = new User($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], true);
 }
 
