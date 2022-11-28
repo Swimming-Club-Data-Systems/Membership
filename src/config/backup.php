@@ -110,7 +110,7 @@ return [
             /*
              * The filename prefix used for the backup zip file.
              */
-            'filename_prefix' => 'scds-membership-backup',
+            'filename_prefix' => '',
 
             /*
              * The disk names on which the backups will be stored.
@@ -166,7 +166,7 @@ return [
         'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
 
         'mail' => [
-            'to' => env('MAIL_REPLY_ADDRESS'),
+            'to' => env('MAIL_REPORTING_ADDRESS'),
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
