@@ -20,10 +20,6 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) {
 //  }
 //}
 
-if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && $_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'] && !isset($_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'])) {
-  $_SESSION['TENANT-' . app()->tenant->getId()]['DisableTrackers'] = filter_var(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], "DisableTrackers"), FILTER_VALIDATE_BOOLEAN);
-}
-
 if (bool(getenv('IS_DEV'))) {
   $this->group('/dev', function () {
     include BASE_PATH . 'controllers/dev/router.php';
