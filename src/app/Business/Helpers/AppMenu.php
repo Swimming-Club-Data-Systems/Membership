@@ -259,7 +259,7 @@ class AppMenu
         } else {
             $menu[] = [
                 'name' => 'Login',
-                'href' => route('login'),
+                'href' => route('login', [], false),
             ];
 
             $menu[] = [
@@ -619,7 +619,7 @@ class AppMenu
         if ($this->user->can('create', Sms::class)) {
             $menu[] = [
                 'name' => 'Compose SMS',
-                'href' => route('notify.sms.new'),
+                'href' => route('notify.sms.new', [], false),
             ];
         }
 
@@ -633,14 +633,14 @@ class AppMenu
         if ($this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
             $menu[] = [
                 'name' => 'Full Email History',
-                'href' => '/notify/history',
+                'href' => route('notify.email.history', [], false),
             ];
         }
 
         if ($this->user->can('view', Sms::class)) {
             $menu[] = [
                 'name' => 'Full SMS History',
-                'href' => route('notify.sms.history'),
+                'href' => route('notify.sms.history', [], false),
             ];
         }
 

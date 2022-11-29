@@ -1,9 +1,12 @@
 import React from "react";
-import { InertiaLink, InertiaLinkProps } from "@inertiajs/inertia-react";
+import { InertiaLink } from "@inertiajs/inertia-react";
 
-interface AProps extends React.AriaAttributes {
+interface AProps {
     href: string;
-    target?: "_self" | "_blank";
+    target?: string;
+    external?: boolean;
+    as?: string;
+    children: React.ReactNode;
 }
 
 const A: React.FC<AProps> = (props) => {
@@ -12,22 +15,19 @@ const A: React.FC<AProps> = (props) => {
     return <a {...props} target={target} />;
 };
 
-const Link: React.FC<InertiaLinkProps> = (props) => {
+interface LinkProps extends AProps {
+    method?: string;
+}
+
+const Link: React.FC<LinkProps> = (props) => {
     return <InertiaLink {...props} />;
 };
 
-interface BaseLinkProps extends InertiaLinkProps {
-    href: string;
-    external?: boolean;
-    target?: "_self" | "_blank";
-}
-
-const BaseLink: React.FC<BaseLinkProps> = ({ external, ...props }) => {
+const BaseLink: React.FC<LinkProps> = ({ external, ...props }) => {
     if (external) {
         return <A {...props} />;
     }
 
-    // Ignore prefer const as we're destructuring then maybe changing "as"
     // eslint-disable-next-line prefer-const
     let { as, ...otherProps } = props;
 

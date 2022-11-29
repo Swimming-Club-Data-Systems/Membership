@@ -152,7 +152,8 @@ if ($access == "Admin" || $access == "Coach" || $access == "Galas" || $rep) {
 		}
 
 		$this->get('/', function () {
-			include 'MessageHistory.php';
+			// include 'MessageHistory.php'; // This is the legacy one
+            header('location: /notify/email/history');
 		});
 	});
 

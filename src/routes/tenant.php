@@ -5,7 +5,6 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
-use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
@@ -131,6 +130,9 @@ Route::middleware([
 
     Route::prefix('notify')->group(function () {
         Route::name('notify.')->group(function () {
+            Route::get('/email/history', [NotifyHistoryController::class, 'index'])->name('email.history');
+            // Route::get('/{notify}', [NotifyHistoryController::class, 'show'])->name('email.show');
+            Route::get('/{email}/download-file', [NotifyHistoryController::class, 'downloadFile'])->name('email.download_file');
             Route::get('/sms', [SMSController::class, 'new'])->name('sms.new');
             Route::post('/sms', [SMSController::class, 'store']);
             Route::get('/sms/history', [SMSController::class, 'index'])->name('sms.history');

@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Central;
+namespace App\Http\Controllers\Tenant;
 
 use App\Business\CollectionTransforms\NotifyHistoryTransform;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\NotifyHistory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -15,12 +14,12 @@ class NotifyHistoryController extends Controller
 {
     public function index(Request $request)
     {
-        Gate::authorize('manage');
+        $this->authorize('view', NotifyHistory::class);
 
         $emails = null;
 
         if ($request->query('query')) {
-            $emails = NotifyHistory::search($request->query('query'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+            $emails = NotifyHistory::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
         } else {
             $emails = NotifyHistory::orderBy('Date', 'desc')->with(['author'])->paginate(config('app.per_page'));
         }
@@ -29,21 +28,20 @@ class NotifyHistoryController extends Controller
             return NotifyHistoryTransform::transform($item);
         });
 
-        return Inertia::render('Central/Notify/Index', [
+        return Inertia::render('Notify/EmailHistory', [
             'emails' => $emails->onEachSide(3),
         ]);
     }
 
     public function show(NotifyHistory $email)
     {
-        Gate::authorize('manage');
+        $this->authorize('view', NotifyHistory::class);
         return response()->json($email->jsonSerialize());
     }
 
     public function downloadFile(NotifyHistory $email, Request $request)
     {
-        Gate::authorize('manage');
-
+        $this->authorize('view', NotifyHistory::class);
         $file = Arr::first($email->JSONData['Attachments'] ?? [], function ($value) use ($request) {
             return $value['URI'] == $request->input('file');
         });
