@@ -7,6 +7,7 @@ use App\Mail\VerifyEmailChange;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
+use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -41,7 +42,7 @@ use function Illuminate\Events\queueable;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable;
+    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal;
 
     protected bool $configOptionsCached = false;
     protected array $configOptions = [];
