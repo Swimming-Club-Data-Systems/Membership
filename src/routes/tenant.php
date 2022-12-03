@@ -5,7 +5,10 @@ use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
+use App\Http\Controllers\Tenant\NotifyHistoryController;
+use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
+use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
@@ -153,6 +156,15 @@ Route::middleware([
             });
         });
     });
+
+    Route::prefix('settings')->group(function () {
+        Route::name('settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'showPaymentSettings'])->name('index');
+            Route::get('/payments', [SettingsController::class, 'showPaymentSettings'])->name('payments');
+            Route::put('/payments', [SettingsController::class, 'updatePaymentSettings']);
+        });
+    });
+
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])
         ->middleware(['signed', 'throttle:6,1'])

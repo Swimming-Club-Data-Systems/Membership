@@ -28,7 +28,7 @@ interface Props {
     title: string;
     subtitle?: string;
     children: ReactNode;
-    breadcrumbs: {
+    breadcrumbs?: {
         name: string;
         route: string;
         routeParams?: never;
