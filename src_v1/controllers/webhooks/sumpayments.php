@@ -99,7 +99,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
         $tenant->getId()
       ]);
 
-      $sql = $db->prepare("SELECT `UserID` FROM `users` INNER JOIN `permissions` ON users.UserID = `permissions`.`User` WHERE users.Tenant = ? AND `Permission` = 'Parent' AND Active;");
+      $sql = $db->prepare("SELECT DISTINCT `UserID` FROM `users` INNER JOIN `permissions` ON users.UserID = `permissions`.`User` WHERE users.Tenant = ? AND `Permission` = 'Parent' AND Active;");
       $sql->execute([
         $tenant->getId()
       ]);

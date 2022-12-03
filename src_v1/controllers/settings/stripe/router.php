@@ -7,7 +7,3 @@ $this->get('/', function() {
 $this->post('/', function() {
   include 'home-post.php';
 });
-
-$this->get('/register', function() {
-  include 'register.php';
-});
