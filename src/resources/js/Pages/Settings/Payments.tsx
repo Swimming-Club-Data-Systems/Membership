@@ -31,7 +31,7 @@ const Password = (props) => {
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
                 <Form
                     initialValues={{
-                        use_v2: false,
+                        use_payments_v2: false,
                         enable_automated_billing_system: false,
                         hide_squad_fees_from_move_emails: false,
                         squad_fee_calculation_date: 1,
@@ -56,7 +56,7 @@ const Password = (props) => {
                         },
                     }}
                     validationSchema={yup.object().shape({
-                        use_v2: mustBeBool,
+                        use_payments_v2: mustBeBool,
                         enable_automated_billing_system: mustBeBool,
                         hide_squad_fees_from_move_emails: mustBeBool,
                         squad_fee_calculation_day: yup
@@ -117,7 +117,7 @@ const Password = (props) => {
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6">
                                     <Checkbox
-                                        name="use_v2"
+                                        name="use_payments_v2"
                                         label="Use the new payments system"
                                     />
                                     <Checkbox

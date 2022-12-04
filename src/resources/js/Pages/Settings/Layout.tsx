@@ -1,5 +1,12 @@
 import React, { ReactNode } from "react";
-import { CurrencyPoundIcon } from "@heroicons/react/24/outline";
+import {
+    ClipboardDocumentCheckIcon,
+    CreditCardIcon,
+    CurrencyPoundIcon,
+    EnvelopeIcon,
+    FlagIcon,
+    WrenchIcon,
+} from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link } from "@inertiajs/inertia-react";
 
@@ -14,10 +21,52 @@ interface Props {
 const Layout: React.FC<Props> = (props) => {
     const navigation = [
         {
+            name: "System variables",
+            href: "/settings/variables",
+            icon: WrenchIcon,
+            current: false,
+        },
+        {
             name: "Payments",
             href: route("settings.payments"),
             icon: CurrencyPoundIcon,
             current: route().current("settings.payments"),
+        },
+        {
+            name: "Club logo",
+            href: "/settings/logo",
+            icon: FlagIcon,
+            current: false,
+        },
+        {
+            name: "Membership fees",
+            href: "/settings/fees",
+            icon: CurrencyPoundIcon,
+            current: false,
+        },
+        {
+            name: "Stripe settings",
+            href: "/settings/stripe",
+            icon: CreditCardIcon,
+            current: false,
+        },
+        {
+            name: "Codes of conduct",
+            href: "/settings/codes-of-conduct",
+            icon: ClipboardDocumentCheckIcon,
+            current: false,
+        },
+        {
+            name: "Terms and conditions",
+            href: "/settings/terms-and-conditions",
+            icon: ClipboardDocumentCheckIcon,
+            current: false,
+        },
+        {
+            name: "Notify categories",
+            href: "/settings/notify-categories",
+            icon: EnvelopeIcon,
+            current: false,
         },
         // {
         //     name: "Advanced Options",
