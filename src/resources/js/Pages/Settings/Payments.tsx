@@ -11,8 +11,27 @@ import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
 import Checkbox from "@/Components/Form/Checkbox";
 import Select from "@/Components/Form/Select";
+import DateInput from "@/Components/Form/base/date/DateInput";
+import { useField, useFormikContext } from "formik";
 
-const Password = (props) => {
+const WrappedDate = (props) => {
+    const { setFieldValue } = useFormikContext();
+    const [field, meta] = useField(props);
+
+    return (
+        <DateInput
+            id={props.name}
+            {...props}
+            {...field}
+            onChange={(ev) => {
+                console.log(ev);
+                setFieldValue(props.name, ev.target.value.formattedValue);
+            }}
+        />
+    );
+};
+
+const Payments = (props) => {
     const mustBeBool = yup.boolean().oneOf([true, false], "Must be yes or no");
     const dayOptions = [];
     for (let i = 1; i < 29; i++) {
@@ -31,6 +50,7 @@ const Password = (props) => {
             <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
                 <Form
                     initialValues={{
+                        date: "2022-10-01",
                         use_payments_v2: false,
                         enable_automated_billing_system: false,
                         hide_squad_fees_from_move_emails: false,
@@ -56,6 +76,7 @@ const Password = (props) => {
                         },
                     }}
                     validationSchema={yup.object().shape({
+                        date: yup.date().required(),
                         use_payments_v2: mustBeBool,
                         enable_automated_billing_system: mustBeBool,
                         hide_squad_fees_from_move_emails: mustBeBool,
@@ -115,6 +136,9 @@ const Password = (props) => {
                             </div>
 
                             <div className="grid grid-cols-6 gap-6">
+                                <div className="col-span-6 sm:col-span-4">
+                                    <WrappedDate name="date" label="Date" />
+                                </div>
                                 <div className="col-span-6">
                                     <Checkbox
                                         name="use_payments_v2"
@@ -254,7 +278,7 @@ const Password = (props) => {
     );
 };
 
-Password.layout = (page) => (
+Payments.layout = (page) => (
     <MainLayout
         title="Payment Settings"
         subtitle="Manage Stripe, billing and payment options"
@@ -273,4 +297,4 @@ Password.layout = (page) => (
     </MainLayout>
 );
 
-export default Password;
+export default Payments;

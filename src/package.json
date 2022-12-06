@@ -33,6 +33,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "@floating-ui/dom": "^1.0.7",
         "@heroicons/react": "^2.0.12",
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-react": "^0.8.0",
@@ -42,7 +43,10 @@
         "@stripe/stripe-js": "^1.38.1",
         "@web-auth/webauthn-helper": "^0.0.13",
         "date-fns": "^2.29.3",
+        "focus-trap-react": "^10.0.2",
         "formik": "^2.2.9",
+        "react-day-picker": "^8.3.7",
+        "react-popper": "^2.3.0",
         "react-redux": "^8.0.2",
         "redux": "^4.2.0",
         "uuid": "^8.3.2",
