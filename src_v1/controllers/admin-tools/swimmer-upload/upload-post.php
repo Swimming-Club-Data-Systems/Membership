@@ -50,7 +50,7 @@ if (is_uploaded_file($_FILES['file-upload']['tmp_name'])) {
         $cat = null;
         $findNGBCategory->execute([
           '%' . $row[5] .  '%',
-          $tenant->getId(),
+          $tenant,
         ]);
         $cat = $findNGBCategory->fetchColumn();
 

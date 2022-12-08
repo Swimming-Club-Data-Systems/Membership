@@ -1,6 +1,6 @@
-# Membership Onboarding
+# Membership Onboarding and Renewal
 
-## Member onboarding tools
+## Member onboarding and renewal tools
 
 Onboarding is the new system for signing up new members and completing membership renewal. It replaces assisted registration and the old renewal system.
 
