@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,6 +18,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string AccessKey
  * @property string MForename
  * @property string MSurname
+ * @property string $name,
  * @property string MMiddleNames
  * @property string ASANumber
  * @property \DateTime DateOfBirth
@@ -68,6 +70,18 @@ class Member extends Model
             ->withPivot([
                 'Paying'
             ]);
+    }
+
+    /**
+     * Get the member name.
+     *
+     * @return Attribute
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
+        );
     }
 
     public function toSearchableArray(): array

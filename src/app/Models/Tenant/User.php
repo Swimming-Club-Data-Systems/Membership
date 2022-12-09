@@ -3,7 +3,9 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Address;
+use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Mail\VerifyEmailChange;
+use App\Models\Accounting\Journal;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
@@ -14,6 +16,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -39,10 +42,13 @@ use function Illuminate\Events\queueable;
  * @property string $name
  * @property string $email
  * @property StripeCustomer $stripeCustomer
+ * @property Journal $journal
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal;
+    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal {
+        journal as protected traitJournal;
+    }
 
     protected bool $configOptionsCached = false;
     protected array $configOptions = [];
@@ -433,8 +439,22 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
+    public function journal(): MorphOne
+    {
+        if (!$this->traitJournal()) {
+            try {
+                $this->initJournal();
+                $this->refresh();
+            } catch (JournalAlreadyExists $e) {
+                // Ignore, we already checked existence
+            }
+        }
+
+        return $this->traitJournal();
+    }
+
     /**
-     * Get the user name via expected attribute.
+     * Get the user full name via expected attribute.
      *
      * @return Attribute
      */
