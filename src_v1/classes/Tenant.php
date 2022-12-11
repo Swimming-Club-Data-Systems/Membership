@@ -28,8 +28,8 @@ class Tenant
         $this->uuid = $details['UniqueID'];
         $this->domain = $details['Domain'];
         try {
-            $this->jsonData = json_decode($details['Domain']);
-            } catch (Exception $e) {
+            $this->jsonData = json_decode($details['Data']);
+        } catch (Exception $e) {
             $this->jsonData = json_decode('{}');
         }
 
