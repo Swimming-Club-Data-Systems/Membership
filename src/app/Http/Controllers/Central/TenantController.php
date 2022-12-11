@@ -55,7 +55,9 @@ class TenantController extends Controller
                 'domain' => $tenant->Domain,
                 'alphanumeric_sender_id' => (string)$tenant->alphanumeric_sender_id,
                 'application_fee_type' => $tenant->application_fee_type ?? "none",
-                'application_fee_amount' => $tenant->application_fee_type != "none" ? BigDecimal::of((string)$tenant->application_fee_amount)->withPointMovedLeft(2) : 0,
+                'application_fee_amount' => $tenant->application_fee_type != "none" &&
+                mb_strlen((string)$tenant->application_fee_amount) > 0 ?
+                    BigDecimal::of((string)$tenant->application_fee_amount)->withPointMovedLeft(2) : 0,
             ],
             'editable' => Gate::allows('manage')
         ]);
