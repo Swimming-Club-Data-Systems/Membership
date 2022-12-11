@@ -404,6 +404,12 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(PaymentMethod::class);
     }
 
+    public function extraFees(): BelongsToMany
+    {
+        return $this->belongsToMany(ExtraFee::class, 'extrasRelations', 'UserID', 'ExtraID')
+            ->withTimestamps();
+    }
+
     public function stripeCustomerId()
     {
         if ($this->stripeCustomer) {

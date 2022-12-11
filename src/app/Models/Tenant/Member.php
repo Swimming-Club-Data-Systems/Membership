@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
@@ -72,16 +71,10 @@ class Member extends Model
             ]);
     }
 
-    /**
-     * Get the member name.
-     *
-     * @return Attribute
-     */
-    protected function name(): Attribute
+    public function extraFees(): BelongsToMany
     {
-        return Attribute::make(
-            get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
-        );
+        return $this->belongsToMany(ExtraFee::class, 'extrasRelations', 'MemberID', 'ExtraID')
+            ->withTimestamps();
     }
 
     public function toSearchableArray(): array
@@ -99,6 +92,18 @@ class Member extends Model
         ];
 
         return array_intersect_key($array, array_flip($fields));
+    }
+
+    /**
+     * Get the member name.
+     *
+     * @return Attribute
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
+        );
     }
 
 }
