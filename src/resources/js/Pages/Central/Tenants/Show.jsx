@@ -12,6 +12,31 @@ import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
 import TextInput from "@/Components/Form/TextInput";
 import Checkbox from "@/Components/Form/Checkbox";
+import Fieldset from "@/Components/Form/Fieldset";
+import { useField } from "formik";
+import Radio from "@/Components/Form/Radio";
+
+const ApplicationFeeAmount = () => {
+    const [field] = useField("application_fee_type");
+
+    if (field.value === "none") {
+        return null;
+    }
+
+    return (
+        <TextInput
+            name="application_fee_amount"
+            label={
+                field.value === "fixed"
+                    ? "Application fee amount"
+                    : "Application fee percent"
+            }
+            type="number"
+            min="0"
+            step="0.01"
+        />
+    );
+};
 
 const Index = (props) => {
     return (
@@ -28,6 +53,8 @@ const Index = (props) => {
                         verified: false,
                         domain: "",
                         alphanumeric_sender_id: "",
+                        application_fee_type: "none",
+                        application_fee_amount: 0,
                     }}
                     validationSchema={yup.object().shape({
                         name: yup
@@ -59,6 +86,18 @@ const Index = (props) => {
                                 11,
                                 "Alphanumeric sender IDs may not exceed 11 characters"
                             ),
+                        application_fee_type: yup
+                            .string()
+                            .required()
+                            .oneOf(["none", "fixed", "percent"]),
+                        application_fee_amount: yup
+                            .number()
+                            .nullable()
+                            .when("application_fee_type", {
+                                is: (val) =>
+                                    val === "fixed" || val === "percent",
+                                then: (schema) => schema.min(0).required(),
+                            }),
                     })}
                     action={route("central.tenants.show", props.id)}
                     submitTitle="Save"
@@ -100,9 +139,30 @@ const Index = (props) => {
                         <TextInput
                             name="alphanumeric_sender_id"
                             label="SMS Sender ID"
-                            help="The from name to use on SMS messages sent by the membership system. If left blank, messages will be sent with a from name of SWIM CLUB."
+                            help="The from name to use on SMS messages sent by the membership system. If you leave this blank, we'll use SWIM CLUB as the sender name."
                             maxLength={11}
                         />
+                        {props.editable && (
+                            <Fieldset legend="Application fee type">
+                                <Radio
+                                    name="application_fee_type"
+                                    value="none"
+                                    label="None"
+                                />
+                                <Radio
+                                    name="application_fee_type"
+                                    value="percent"
+                                    label="Percent"
+                                />
+                                <Radio
+                                    name="application_fee_type"
+                                    value="fixed"
+                                    label="Fixed"
+                                />
+
+                                <ApplicationFeeAmount />
+                            </Fieldset>
+                        )}
                     </Card>
                 </Form>
             </div>
