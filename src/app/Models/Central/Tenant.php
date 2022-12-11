@@ -31,6 +31,8 @@ use function Illuminate\Events\queueable;
  * @property \DateTime trial_ends_at
  * @property string alphanumeric_sender_id
  * @property Journal journal
+ * @property string application_fee_type
+ * @property float application_fee_amount
  */
 class Tenant extends BaseTenant
 {

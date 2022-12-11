@@ -8,10 +8,12 @@ use App\Business\OAuthProviders\Stripe;
 use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
+use Brick\Math\BigDecimal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Laravel\Cashier\Invoice;
 use Laravel\Cashier\Subscription;
@@ -52,6 +54,8 @@ class TenantController extends Controller
                 'verified' => (bool)$tenant->Verified,
                 'domain' => $tenant->Domain,
                 'alphanumeric_sender_id' => (string)$tenant->alphanumeric_sender_id,
+                'application_fee_type' => $tenant->application_fee_type ?? "none",
+                'application_fee_amount' => $tenant->application_fee_type != "none" ? BigDecimal::of((string)$tenant->application_fee_amount)->withPointMovedLeft(2) : 0,
             ],
             'editable' => Gate::allows('manage')
         ]);
@@ -69,6 +73,8 @@ class TenantController extends Controller
             'verified' => ['sometimes', 'required', 'boolean'],
             'domain' => ['sometimes', 'required', 'max:256'],
             'alphanumeric_sender_id' => ['max:11'],
+            'application_fee_type' => ['sometimes', 'required', Rule::in(['none', 'fixed', 'percent'])],
+            'application_fee_amount' => ['sometimes', 'required_unless:application_fee_type,none', 'min:0'],
         ]);
 
         $tenant->Name = $request->input('name');
@@ -78,6 +84,14 @@ class TenantController extends Controller
         if (Gate::allows('manage')) {
             $tenant->Verified = $request->input('verified');
             $tenant->Domain = $request->input('domain');
+            if ($request->input('application_fee_type') === "fixed" || $request->input('application_fee_type') === "percent") {
+                $tenant->application_fee_type = $request->input('application_fee_type');
+                $tenant->application_fee_amount =
+                    BigDecimal::of((string)$request->input('application_fee_amount'))->withPointMovedRight(2)->toInt();
+            } else {
+                $tenant->application_fee_type = "none";
+                $tenant->application_fee_amount = 0;
+            }
         }
         $tenant->alphanumeric_sender_id = $request->input('alphanumeric_sender_id', null);
         $tenant->save();
