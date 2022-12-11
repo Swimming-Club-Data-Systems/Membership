@@ -33,7 +33,7 @@ class ApplicationFeeAmount
             return (int)$applicationFeeAmount;
         } else if ($applicationFeeType === "percent") {
             $percent = BigDecimal::of($applicationFeeAmount)->withPointMovedLeft(2);
-            $multiplier = $percent->dividedBy('100', null, RoundingMode::HALF_UP);
+            $multiplier = $percent->dividedBy('100', 4, RoundingMode::HALF_UP);
             return BigDecimal::of($amount)->multipliedBy($multiplier)->toScale(0, RoundingMode::HALF_UP)->toInt();
         } else {
             return 0;
