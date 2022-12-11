@@ -123,7 +123,7 @@ class Tenant
     public static function fromCode(string $code)
     {
         $db = app()->db;
-        $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE Code COLLATE utf8mb4_general_ci = ?");
+        $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain`, `Data` FROM tenants WHERE Code COLLATE utf8mb4_general_ci = ?");
         $getTenant->execute([
             $code
         ]);
@@ -145,7 +145,7 @@ class Tenant
     {
         $db = app()->db;
 
-        $getTenant = $db->prepare("SELECT `tenants`.`ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `tenants`.`Domain` from `domains` INNER JOIN `tenants` ON `tenants`.`ID` = `domains`.`tenant_id` where `domains`.`domain` COLLATE utf8mb4_general_ci = ?");
+        $getTenant = $db->prepare("SELECT `tenants`.`ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `tenants`.`Domain`, `Data` from `domains` INNER JOIN `tenants` ON `tenants`.`ID` = `domains`.`tenant_id` where `domains`.`domain` COLLATE utf8mb4_general_ci = ?");
         $getTenant->execute([
             $domain
         ]);
@@ -167,7 +167,7 @@ class Tenant
     public static function fromUUID(string $uuid)
     {
         $db = app()->db;
-        $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain` FROM tenants WHERE `UniqueID` COLLATE utf8mb4_general_ci = ?");
+        $getTenant = $db->prepare("SELECT `ID`, `Name`, `Code`, `Website`, `Email`, `Verified`, `UniqueID`, `Domain`, `Data` FROM tenants WHERE `UniqueID` COLLATE utf8mb4_general_ci = ?");
         $getTenant->execute([
             $uuid
         ]);
