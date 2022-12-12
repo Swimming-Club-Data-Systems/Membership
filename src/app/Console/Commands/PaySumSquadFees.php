@@ -3,10 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Models\Central\Tenant;
+use App\Models\Tenant\ExtraFee;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
-use Brick\Math\RoundingMode;
 use Illuminate\Console\Command;
 
 class PaySumSquadFees extends Command
@@ -129,7 +129,18 @@ class PaySumSquadFees extends Command
                     }
 
                     // Calculate extra fees
-
+                    $user->members();
+                    foreach ($user->members() as $member) {
+                        /** @var Member $member */
+                        foreach ($member->extraFees() as $extra) {
+                            /** @var ExtraFee $extra */
+                            if ($extra->Type == 'Payment') {
+                                $user->journal->debit($extra->fee, $member->name . ' - ' . $extra->ExtraName);
+                            } else if ($extra->Type == 'Refund') {
+                                $user->journal->credit($extra->fee, $member->name . ' - ' . $extra->ExtraName);
+                            }
+                        }
+                    }
                 }
             });
         }

@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Central\Tenant;
+use App\Models\Tenant\User;
 use Illuminate\Console\Command;
 
 class PaySumFees extends Command
@@ -27,6 +29,25 @@ class PaySumFees extends Command
      */
     public function handle()
     {
+        $date = today()->day;
+
+        $tenants = Tenant::where('data->use_payments_v2', true)->where('data->fee_calculation_date', $date)->get();
+
+        foreach ($tenants as $tenant) {
+            /** @var Tenant $tenant */
+            $tenant->run(function () use ($tenant) {
+
+                $users = User::all();
+                foreach ($users as $user) {
+                    /** @var User $user */
+                    $balance = $user->journal->getBalance();
+                    if ($balance > 100) {
+                        // Balance greater than Stripe minimum, create an invoice for it
+                    }
+                }
+
+            });
+        }
         return Command::SUCCESS;
     }
 }
