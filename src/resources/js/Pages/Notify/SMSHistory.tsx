@@ -3,7 +3,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import PlainCollection from "@/Components/PlainCollection";
 import { Head } from "@inertiajs/inertia-react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 type Message = {
     author: {
@@ -24,7 +24,7 @@ const ItemContent: React.FC<Message> = (props) => {
                         <p className="text-sm font-medium">
                             {props.author.Forename} {props.author.Surname} at{" "}
                             {format(
-                                Date.parse(props.created_at),
+                                parseISO(props.created_at),
                                 "HH:mm, do MMMM yyyy"
                             )}
                         </p>
