@@ -1,12 +1,12 @@
 import React, { ReactNode } from "react";
 import Badge from "@/Components/Badge";
-import { format, parseISO } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { usePage } from "@inertiajs/inertia-react";
+import { formatDateTime } from "@/Utils/date-utils";
 
 export type SMSListItemContentProps = {
     items: {
@@ -52,10 +52,7 @@ const SMSListItemContent: React.FC<SMSListItemContentProps> = (props) => {
                         SMS Message
                     </h3>
                     <p className="block mt-1 max-w-2xl text-sm text-gray-500">
-                        {format(
-                            parseISO(props.created_at),
-                            "HH:mm, do MMMM yyyy"
-                        )}
+                        {formatDateTime(props.created_at)}
                     </p>
                 </div>
                 {usePage().props.central && (

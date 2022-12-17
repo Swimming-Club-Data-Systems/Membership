@@ -1,13 +1,13 @@
 import React, { ReactNode } from "react";
 import Badge from "@/Components/Badge";
 import FileList, { FileProps } from "@/Components/FileList";
-import { format, parseISO } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { usePage } from "@inertiajs/inertia-react";
+import { formatDateTime } from "@/Utils/date-utils";
 
 export type EmailListItemContentProps = {
     items: {
@@ -109,7 +109,7 @@ const EmailListItemContent: React.FC<EmailListItemContentProps> = (props) => {
                         {props.subject}
                     </h3>
                     <p className="block mt-1 max-w-2xl text-sm text-gray-500">
-                        {format(parseISO(props.date), "HH:mm, do MMMM yyyy")}
+                        {formatDateTime(props.date)}
                     </p>
                 </div>
                 {usePage().props.central && (
