@@ -75,15 +75,15 @@ const ApplePayDomains: Layout<Props> = (props: Props) => {
         <>
             <Head title={`Apple Pay Domains - ${props.name}`} />
 
-            {!props.stripe_account && (
-                <Alert title="Stripe not enabled" variant="error">
-                    Stripe has not been set up for this tenant.
-                </Alert>
-            )}
+            <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                {!props.stripe_account && (
+                    <Alert title="Stripe not enabled" variant="error">
+                        Stripe has not been set up for this tenant.
+                    </Alert>
+                )}
 
-            {props.stripe_account && (
-                <>
-                    <div className="space-y-6 sm:px-6 lg:px-0 lg:col-span-9">
+                {props.stripe_account && (
+                    <>
                         <Form
                             initialValues={{
                                 domain: "",
@@ -164,31 +164,31 @@ const ApplePayDomains: Layout<Props> = (props: Props) => {
                                 <TextInput name="domain" label="Domain name" />
                             </Card>
                         </Form>
-                    </div>
 
-                    <Modal
-                        show={showDomainDeleteModal}
-                        onClose={() => setShowDomainDeleteModal(false)}
-                        variant="danger"
-                        title="Delete Apple Pay Domain"
-                        buttons={
-                            <Button
-                                variant="danger"
-                                onClick={deletePaymentMethod}
-                            >
-                                Delete
-                            </Button>
-                        }
-                    >
-                        {domainDeleteModalData && (
-                            <p>
-                                Are you sure you want to delete{" "}
-                                {domainDeleteModalData.domain_name}?
-                            </p>
-                        )}
-                    </Modal>
-                </>
-            )}
+                        <Modal
+                            show={showDomainDeleteModal}
+                            onClose={() => setShowDomainDeleteModal(false)}
+                            variant="danger"
+                            title="Delete Apple Pay Domain"
+                            buttons={
+                                <Button
+                                    variant="danger"
+                                    onClick={deletePaymentMethod}
+                                >
+                                    Delete
+                                </Button>
+                            }
+                        >
+                            {domainDeleteModalData && (
+                                <p>
+                                    Are you sure you want to delete{" "}
+                                    {domainDeleteModalData.domain_name}?
+                                </p>
+                            )}
+                        </Modal>
+                    </>
+                )}
+            </div>
         </>
     );
 };
