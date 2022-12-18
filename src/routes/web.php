@@ -105,6 +105,10 @@ Route::middleware('auth:central')->group(function () {
             Route::get('/{tenant}/stripe', [TenantController::class, 'stripe'])->name('tenants.stripe');
             Route::put('/{tenant}/stripe', [TenantController::class, 'save']);
 
+            Route::get('/{tenant}/apple-pay-domains', [TenantController::class, 'applePayDomains'])->name('tenants.apple_pay_domains');
+            Route::post('/{tenant}/apple-pay-domains', [TenantController::class, 'addApplePayDomain']);
+            Route::delete('/{tenant}/apple-pay-domains/{id}', [TenantController::class, 'deleteApplePayDomain'])->name('tenants.delete_apple_pay_domains');
+
             Route::get('/{tenant}/billing', [TenantController::class, 'billing'])->name('tenants.billing');
             Route::put('/{tenant}/billing', [TenantController::class, 'save']);
             Route::get('/{tenant}/billing/payment-methods/new', [TenantController::class, 'addPaymentMethod'])->name('tenants.billing.add_payment_method');
