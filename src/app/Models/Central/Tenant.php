@@ -218,7 +218,7 @@ class Tenant extends BaseTenant
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['ID'],
+            get: fn($value, $attributes) => $attributes['ID'] ?? null,
         );
     }
 
