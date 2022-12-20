@@ -509,7 +509,7 @@ export class Composer extends React.Component {
                 <DropdownRow name="from" options={this.state.possibleFroms} label="Send as" formValue={this.state.from} handleChange={this.handleChange} />
                 <DropdownRow name="replyTo" options={this.state.possibleReplyTos} label="Send replies to" formValue={this.state.replyTo} handleChange={this.handleChange} />
                 <DropdownRow name="category" options={this.state.possibleCategories} label="Subscription category" formValue={this.state.category} handleChange={this.handleChange} />
-                <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required />
+                <TextRow name="subject" label="Subject" formValue={this.state.subject} handleChange={this.handleChange} required maxLength={78} />
                 <Tabs id="tabs" activeKey={this.state.tabKey} onSelect={(k) => this.setState({ tabKey: k })} className="mb-3">
                   <Tab eventKey="editor" title="Editor">
                     <div className="mb-3">

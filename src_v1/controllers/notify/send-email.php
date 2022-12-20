@@ -119,6 +119,9 @@ try {
     }
 
     $subject = trim(str_replace('!', '', str_replace('*', '', $data->state->subject)));
+    if (mb_strlen($subject) > 78) {
+        $subject = mb_substr($subject, 0, 78);
+    }
     $message = str_replace($to_remove, "", $data->state->editorValue);
     if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Admin" && !($replyAddress && $data->state->replyTo == "toMe")) {
         $name = getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
