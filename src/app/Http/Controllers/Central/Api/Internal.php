@@ -40,7 +40,7 @@ class Internal extends Controller
         ]);
 
         /** @var NotifyHistory $notifyEmail */
-        $notifyEmail = NotifyHistory::find($request->input('id'));
+        $notifyEmail = NotifyHistory::find($request->integer('id'));
 
         $notifyEmail->tenant->run(function () use ($notifyEmail, $request) {
 

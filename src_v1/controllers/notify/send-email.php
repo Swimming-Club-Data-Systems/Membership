@@ -409,6 +409,8 @@ try {
             "recipients" => $recipients,
         ];
 
+        $db->commit();
+
         try {
             $client = new GuzzleHttp\Client();
             // X-SCDS-INTERNAL-KEY
@@ -439,7 +441,6 @@ try {
 
         AuditLog::new('Notify-SentGroup', 'Sent email ' . $id);
     }
-    $db->commit();
 
     if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'])) {
         unset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']);
@@ -449,7 +450,11 @@ try {
         'success' => true,
     ]);
 } catch (Exception $e) {
-    $db->rollback();
+    try {
+        $db->rollback();
+    } catch (Exception $e) {
+        // Ignore
+    }
 
     reportError($e);
 
