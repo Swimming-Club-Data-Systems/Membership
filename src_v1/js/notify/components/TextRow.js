@@ -14,7 +14,7 @@ class DropdownRow extends React.Component {
           label={this.props.label}
           className="mb-3"
         >
-          <Form.Control type={type} value={this.props.formValue} onChange={this.props.handleChange} name={this.props.name} required={this.props.required}/>
+          <Form.Control type={type} value={this.props.formValue} onChange={this.props.handleChange} name={this.props.name} required={this.props.required} maxLength={this.props.maxLength} />
         </FloatingLabel>
       </div>
     );

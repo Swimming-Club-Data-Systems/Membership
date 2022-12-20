@@ -9,14 +9,15 @@ import { DefinitionList } from "@/Components/DefinitionList";
 import { format } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 import EmailListItemContent from "@/Components/Notify/EmailListItemContent";
+import SMSListItemContent from "@/Components/Notify/SMSListItemContent";
 
 const Index = (props) => {
     return (
         <Container noMargin>
-            <Head title="Notify Email History" />
+            <Head title="Notify SMS History" />
             <PlainCollection
-                {...props.emails}
-                itemRenderer={EmailListItemContent}
+                {...props.messages}
+                itemRenderer={SMSListItemContent}
                 route="central.notify.show"
                 routeIdName="id"
             />
@@ -25,7 +26,7 @@ const Index = (props) => {
 };
 
 Index.layout = (page) => (
-    <CentralMainLayout title="Email History" subtitle="Monitor notify history">
+    <CentralMainLayout title="SMS History" subtitle="Monitor notify history">
         {page}
     </CentralMainLayout>
 );

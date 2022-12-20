@@ -51,6 +51,16 @@ class CentralAppMenu
                 $menu[] = [
                     'name' => 'Notify',
                     'href' => route('central.notify'),
+                    'children' => [
+                        [
+                            'name' => 'Email',
+                            'href' => route('central.notify'),
+                        ],
+                        [
+                            'name' => 'SMS',
+                            'href' => route('central.notify-sms'),
+                        ],
+                    ]
                 ];
             }
 

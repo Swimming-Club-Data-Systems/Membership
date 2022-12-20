@@ -390,4 +390,75 @@ class TenantController extends Controller
         return Redirect::route('central.tenants.pay_as_you_go', [$tenant]);
     }
 
+    public function applePayDomains(Tenant $tenant, Request $request)
+    {
+        $this->authorize('manage', $tenant);
+
+        $stripeAccount = $tenant->getOption('STRIPE_ACCOUNT_ID');
+
+        $applePay = null;
+        if ($stripeAccount) {
+            $applePay = \Stripe\ApplePayDomain::all([
+                'limit' => 20
+            ], [
+                'stripe_account' => $stripeAccount
+            ]);
+        }
+
+        return Inertia::render('Central/Tenants/ApplePayDomains', [
+            'id' => $tenant->ID,
+            'name' => $tenant->Name,
+            'stripe_account' => $tenant->getOption('STRIPE_ACCOUNT_ID'),
+            'apple_pay_domains' => $applePay?->data,
+        ]);
+    }
+
+    public function addApplePayDomain(Tenant $tenant, Request $request)
+    {
+        $this->authorize('manage', $tenant);
+
+        $stripeAccount = $tenant->getOption('STRIPE_ACCOUNT_ID');
+
+        abort_unless($stripeAccount, 404, 'This tenant does not have a connected Stripe Account');
+
+        try {
+            $domain = \Stripe\ApplePayDomain::create([
+                'domain_name' => $request->input('domain')
+            ], [
+                'stripe_account' => $stripeAccount
+            ]);
+
+            $request->session()->flash('success', 'We have added ' . $domain->domain_name . ' to the list of Apple Pay domains.');
+        } catch (\Exception $e) {
+            $request->session()->flash('error', $e->getMessage());
+        }
+
+        return Redirect::route('central.tenants.apple_pay_domains', $tenant);
+    }
+
+    public function deleteApplePayDomain(Tenant $tenant, $id, Request $request)
+    {
+        $this->authorize('manage', $tenant);
+
+        $stripeAccount = $tenant->getOption('STRIPE_ACCOUNT_ID');
+
+        abort_unless($stripeAccount, 404, 'This tenant does not have a connected Stripe Account');
+
+        try {
+            $domain = \Stripe\ApplePayDomain::retrieve($id, [
+                'stripe_account' => $stripeAccount
+            ]);
+
+            $domainName = $domain->domain_name;
+
+            $domain->delete();
+
+            $request->session()->flash('success', 'We have deleted ' . $domainName . ' from the list of Apple Pay domains.');
+        } catch (\Exception $e) {
+            $request->session()->flash('error', $e->getMessage());
+        }
+
+        return Redirect::route('central.tenants.apple_pay_domains', $tenant);
+    }
+
 }

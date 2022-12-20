@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Central;
 use App\Business\CollectionTransforms\NotifyHistoryTransform;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\NotifyHistory;
+use App\Models\Tenant\Sms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
@@ -72,5 +73,38 @@ class NotifyHistoryController extends Controller
         } else {
             abort(404);
         }
+    }
+
+    public function smsHistory(Request $request)
+    {
+        Gate::authorize('manage');
+
+        $sms = null;
+        if ($request->query('query')) {
+            $sms = Sms::search($request->query('query'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+        } else {
+            $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
+        }
+
+        $sms->getCollection()->transform(function ($item) {
+            return [
+                'id' => $item->id,
+                'author' => [
+                    'first_name' => $item->author->Forename,
+                    'last_name' => $item->author->Surname,
+                ],
+                'message' => $item->message,
+                'created_at' => $item->created_at,
+                'updated_at' => $item->updated_at,
+                'tenant' => [
+                    'id' => $item->tenant->id,
+                    'name' => $item->tenant->Name,
+                ],
+            ];
+        });
+
+        return Inertia::render('Central/Notify/SMSHistory', [
+            'messages' => $sms->onEachSide(3),
+        ]);
     }
 }

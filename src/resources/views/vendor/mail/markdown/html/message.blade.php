@@ -32,7 +32,7 @@
 @if (tenant())
 Provided to {{ tenant()->getOption("CLUB_NAME") }} by SCDS.
 
-Control your email options in [My Account]({{ route("my_account.email") }}).
+Control your email options in [My Account]({{ 'https://' . tenant()->Domain . route("my_account.email", null, false) }}).
 @endif
 
 Unwanted email? [Report mail abuse](https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u).

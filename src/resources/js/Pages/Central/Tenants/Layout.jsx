@@ -9,6 +9,7 @@ import {
     CreditCardIcon,
     UsersIcon,
     BanknotesIcon,
+    GlobeEuropeAfricaIcon,
 } from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
 import { Link, usePage } from "@inertiajs/inertia-react";
@@ -63,6 +64,15 @@ const Layout = (props) => {
             icon: UsersIcon,
             current: route().current(
                 "central.tenants.administrators",
+                tenantId
+            ),
+        },
+        {
+            name: "Apple Pay Domains",
+            href: route("central.tenants.apple_pay_domains", tenantId),
+            icon: GlobeEuropeAfricaIcon,
+            current: route().current(
+                "central.tenants.apple_pay_domains",
                 tenantId
             ),
         },
