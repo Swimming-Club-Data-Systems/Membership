@@ -36,7 +36,7 @@
             @if (tenant())
                 <p>Provided to {{ tenant()->getOption("CLUB_NAME") }} by SCDS.</p>
 
-                <p>Control your email options in <a href="{{ route("my_account.email") }}">My Account</a>.</p>
+                <p>Control your email options in <a href="{{ 'https://' . tenant()->Domain . route("my_account.email", null, false) }}">My Account</a>.</p>
             @endif
 
             <p>Unwanted email? <a
