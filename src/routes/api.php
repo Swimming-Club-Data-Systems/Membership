@@ -21,4 +21,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::middleware('auth.internal')->prefix('internal')->group(function () {
     Route::get('/application-menu/{id}', [Internal::class, 'getMenu'])->withoutMiddleware('throttle:api');
+
+    Route::post('/notify/email', [Internal::class, 'triggerEmailSend'])->withoutMiddleware('throttle:api');
 });

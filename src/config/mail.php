@@ -101,6 +101,14 @@ return [
         'name' => env('MAIL_REPLY_NAME', 'Example'),
     ],
 
+    'mail' => [
+        'theme' => 'default',
+
+        'paths' => [
+            resource_path('views/vendor/mail'),
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings
@@ -116,7 +124,7 @@ return [
         'theme' => 'default',
 
         'paths' => [
-            resource_path('views/vendor/mail'),
+            resource_path('views/vendor/mail/markdown'),
         ],
     ],
 
