@@ -53,6 +53,7 @@ class NotifyMail extends Mailable
     {
         return new Content(
             view: 'emails.notify.message',
+            text: 'emails.notify.message-text',
         );
     }
 
