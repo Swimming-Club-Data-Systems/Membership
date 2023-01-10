@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\DashboardController;
+use App\Http\Controllers\Tenant\JournalAccountController;
+use App\Http\Controllers\Tenant\LedgerAccountController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
@@ -152,6 +154,20 @@ Route::middleware([
                     Route::get('/new-success', [PaymentMethodController::class, 'addPaymentMethodSuccess'])->name('new_success');
                     Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'delete'])->name('delete');
                     Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
+                });
+            });
+
+            Route::prefix('ledgers')->group(function () {
+                Route::name('ledgers.')->group(function () {
+                    Route::get('/', [LedgerAccountController::class, 'index'])->name('index');
+                    Route::get('/new', [LedgerAccountController::class, 'addPaymentMethod'])->name('new');
+                    Route::post('/new', [LedgerAccountController::class, 'addPaymentMethod']);
+                    Route::get('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('show');
+                    Route::put('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
+                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
+                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
+                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
+                    Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
                 });
             });
         });
