@@ -3,20 +3,23 @@
 namespace App\Models\Tenant;
 
 use App\Models\Accounting\Ledger;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int id
  * @property string name
+ * @property string type
  * @property Ledger ledger
  */
 class LedgerAccount extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToTenant;
 
-    public function journal(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function ledger(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(Ledger::class);
+        return $this->belongsTo(Ledger::class, 'ledger_id', 'id');
     }
 
     /**
@@ -26,11 +29,12 @@ class LedgerAccount extends Model
      */
     protected static function booted()
     {
-        static::created(function (LedgerAccount $account) {
-            $this->ledger = Ledger::create([
-                'name' => $this->name,
-                'type' => 'expense'
-            ]);
+        static::creating(function (LedgerAccount $account) {
+            $ledger = new Ledger();
+            $ledger->name = $account->name;
+            $ledger->type = $account->type;
+            $ledger->save();
+            $account->ledger()->associate($ledger);
         });
     }
 }

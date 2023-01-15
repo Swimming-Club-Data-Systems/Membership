@@ -29,32 +29,35 @@ const ItemContent = (props) => {
 };
 
 const Index: Layout<Props> = (props: Props) => {
+    console.log(usePage());
     return (
         <>
-            <Head title="Payment Methods" />
+            <Head title={props.name} />
 
             <Collection
-                {...props.ledgers}
+                {...props.journals}
                 itemRenderer={ItemContent}
-                route="payments.ledgers.show"
+                route="payments.ledgers.journals.show"
             />
         </>
     );
 };
 
-Index.layout = (page) => {
-    return (
-        <MainLayout
-            title="Ledgers"
-            subtitle="Manage your custom ledgers"
-            breadcrumbs={[
-                { name: "Payments", route: "my_account.index" },
-                { name: "Ledgers", route: "payments.ledgers.index" },
-            ]}
-        >
-            <Container noMargin>{page}</Container>
-        </MainLayout>
-    );
-};
+Index.layout = (page) => (
+    <MainLayout
+        title="Ledger"
+        subtitle="Manage your custom ledgers"
+        breadcrumbs={[
+            { name: "Payments", route: "my_account.index" },
+            { name: "Ledgers", route: "payments.ledgers.index" },
+            {
+                name: "Ledger",
+                route: "this",
+            },
+        ]}
+    >
+        <Container noMargin>{page}</Container>
+    </MainLayout>
+);
 
 export default Index;

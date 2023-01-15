@@ -160,14 +160,14 @@ Route::middleware([
             Route::prefix('ledgers')->group(function () {
                 Route::name('ledgers.')->group(function () {
                     Route::get('/', [LedgerAccountController::class, 'index'])->name('index');
-                    Route::get('/new', [LedgerAccountController::class, 'addPaymentMethod'])->name('new');
-                    Route::post('/new', [LedgerAccountController::class, 'addPaymentMethod']);
-                    Route::get('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('show');
+                    Route::get('/new', [LedgerAccountController::class, 'new'])->name('new');
+                    Route::post('/new', [LedgerAccountController::class, 'create']);
+                    Route::get('/{ledger}', [LedgerAccountController::class, 'show'])->whereNumber('ledger')->name('show');
                     Route::put('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
-                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
-                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
-                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
-                    Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('new');
+                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'new'])->whereNumber('ledger');
+                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
+                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger')->name('journals.show');
+                    Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
                 });
             });
         });

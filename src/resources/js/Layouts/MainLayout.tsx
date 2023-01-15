@@ -592,10 +592,16 @@ const MainLayout: React.FC<Props> = ({
                                                             <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                                                         </svg>
                                                         <Link
-                                                            href={route(
-                                                                item.route,
-                                                                item.routeParams
-                                                            )}
+                                                            href={
+                                                                item.route ===
+                                                                "this"
+                                                                    ? usePage()
+                                                                          .url
+                                                                    : route(
+                                                                          item.route,
+                                                                          item.routeParams
+                                                                      )
+                                                            }
                                                             className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                                                             aria-current={
                                                                 route().current(
