@@ -12,7 +12,7 @@ import {
     GlobeEuropeAfricaIcon,
 } from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/react";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");

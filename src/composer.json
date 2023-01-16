@@ -20,7 +20,7 @@
         "gocardless/gocardless-pro": "^4.20",
         "guzzlehttp/guzzle": "^7.5",
         "http-interop/http-factory-guzzle": "^1.0",
-        "inertiajs/inertia-laravel": "^0.5.4",
+        "inertiajs/inertia-laravel": "^0.6.8",
         "laravel/cashier": "^14.2",
         "laravel/framework": "^9.19",
         "laravel/passport": "^10.4",

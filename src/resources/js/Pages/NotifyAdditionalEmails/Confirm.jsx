@@ -1,15 +1,14 @@
 import React from "react";
 import AuthServices from "@/Layouts/AuthServices";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
 import Alert from "@/Components/Alert";
 import Hidden from "@/Components/Form/Hidden";
 
 const Confirm = (props) => {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("notify_additional_emails.confirm"), values, {
+        router.post(route("notify_additional_emails.confirm"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };
@@ -50,7 +49,6 @@ const Confirm = (props) => {
                     validationSchema={yup.object().shape({
                         data: yup.string().required("Signed data is required"),
                     })}
-                    onSubmit={onSubmit}
                     submitTitle="Confirm"
                     submitClass="w-full"
                     hideClear

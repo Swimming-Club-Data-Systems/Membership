@@ -1,7 +1,7 @@
 import React from "react";
 import Button from "@/Components/Button";
 import AuthServices from "@/Layouts/AuthServices";
-import { Head, useForm } from "@inertiajs/inertia-react";
+import { Head, useForm } from "@inertiajs/react";
 import Link from "@/Components/Link";
 
 export default function Logout() {

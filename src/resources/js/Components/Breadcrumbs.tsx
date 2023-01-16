@@ -1,6 +1,6 @@
 import React from "react";
 import { HomeIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/react";
 
 interface Props {
     crumbs?: {

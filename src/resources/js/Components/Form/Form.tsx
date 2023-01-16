@@ -9,10 +9,9 @@ import {
     FormikBag,
     useFormikContext,
 } from "formik";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage, router, VisitOptions } from "@inertiajs/react";
 import Button from "../Button";
 import Alert, { AlertList } from "../Alert";
-import { Inertia, VisitOptions } from "@inertiajs/inertia";
 import { merge } from "lodash";
 import { AnyObjectSchema } from "yup";
 
@@ -238,7 +237,7 @@ const Form = (props: FormProps) => {
     useEffect(() => {
         // If we get an invalid response, don't show any of the response
         // Instead show a warning to the user in the form
-        return Inertia.on("invalid", (event) => {
+        return router.on("invalid", (event) => {
             setHasErrors(true);
             // When in production, show the dev error messages
             if (import.meta.env.PROD) {
@@ -258,7 +257,7 @@ const Form = (props: FormProps) => {
                 inertiaOptions.errorBag = formName;
             }
 
-            Inertia[method](action, values, {
+            router[method](action, values, {
                 onSuccess: () => formikBag.resetForm(),
                 ...inertiaOptions,
                 // onError: (error) => {

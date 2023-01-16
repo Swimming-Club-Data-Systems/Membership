@@ -1,6 +1,6 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Layout from "./Layout";
 import Form, {
     RenderServerErrors,

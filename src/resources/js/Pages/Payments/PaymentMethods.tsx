@@ -5,8 +5,7 @@ import BasicList from "@/Components/BasicList.jsx";
 import Button from "@/Components/Button.jsx";
 import Card from "@/Components/Card.jsx";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { router, Head } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Modal from "@/Components/Modal";
@@ -90,7 +89,7 @@ const Index: Layout<Props> = (props: Props) => {
     };
 
     const deletePaymentMethod = async () => {
-        Inertia.delete(
+        router.delete(
             route("payments.methods.delete", [paymentMethodDeleteModalData.id]),
             {
                 only: ["payment_methods", "direct_debits", "flash"],
@@ -104,7 +103,7 @@ const Index: Layout<Props> = (props: Props) => {
     };
 
     const setDefaultPaymentMethod = () => {
-        Inertia.put(
+        router.put(
             route("payments.methods.update", [
                 paymentMethodDefaultModalData.id,
             ]),

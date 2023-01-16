@@ -1,6 +1,6 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { Head, usePage } from "@inertiajs/inertia-react";
+import { Head, usePage } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Collection from "@/Components/Collection";

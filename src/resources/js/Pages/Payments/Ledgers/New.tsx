@@ -1,7 +1,7 @@
 import React from "react";
 import * as yup from "yup";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Card from "@/Components/Card";

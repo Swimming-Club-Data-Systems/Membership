@@ -2,7 +2,7 @@ import React from "react";
 import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
 import PlainCollection from "@/Components/PlainCollection";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Badge from "@/Components/Badge";
 import FileList from "@/Components/FileList";
 import { DefinitionList } from "@/Components/DefinitionList";

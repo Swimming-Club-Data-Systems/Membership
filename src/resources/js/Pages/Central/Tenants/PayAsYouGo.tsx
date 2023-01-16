@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";

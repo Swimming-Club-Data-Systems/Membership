@@ -1,4 +1,4 @@
-import { Link, usePage } from "@inertiajs/inertia-react";
+import { Link, usePage } from "@inertiajs/react";
 import React from "react";
 import ApplicationLogo from "./ApplicationLogo";
 import Container from "./Container";

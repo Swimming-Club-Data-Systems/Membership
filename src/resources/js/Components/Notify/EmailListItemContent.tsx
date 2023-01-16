@@ -6,7 +6,7 @@ import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
 import { formatDateTime } from "@/Utils/date-utils";
 
 export type EmailListItemContentProps = {

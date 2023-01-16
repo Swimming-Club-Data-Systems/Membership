@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Button from "@/Components/Button";
 import CentralAuthServices from "@/Layouts/CentralAuthServices";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
 import useLogin from "@/Pages/Auth/Helpers/useLogin";
 import Alert from "@/Components/Alert";
 import {
@@ -67,7 +66,7 @@ export default function ConfirmPassword(props) {
         );
 
         if (verificationResponse.data.success) {
-            Inertia.visit(verificationResponse.data.redirect_url);
+            router.visit(verificationResponse.data.redirect_url);
         } else {
             setError(webAuthnError);
             // console.error(error);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Layout from "./Layout";
 import Form, {
     RenderServerErrors,
@@ -16,7 +16,6 @@ import Fieldset from "@/Components/Form/Fieldset";
 import BasicList from "@/Components/BasicList";
 import Button from "@/Components/Button";
 import Modal from "@/Components/Modal";
-import { Inertia } from "@inertiajs/inertia";
 
 const Email = (props) => {
     const validationSchemaObject = {
@@ -47,7 +46,7 @@ const Email = (props) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
 
     const deleteAdditionalRecipient = async () => {
-        Inertia.delete(
+        router.delete(
             route("notify_additional_emails.delete", deleteModalData.id),
             {
                 preserveScroll: true,

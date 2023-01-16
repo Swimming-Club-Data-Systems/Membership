@@ -4,7 +4,7 @@ import AuthServices from "@/Layouts/AuthServices";
 import Input from "@/Components/Input";
 import Label from "@/Components/Label";
 import ValidationErrors from "@/Components/ValidationErrors";
-import { Head, Link, useForm } from "@inertiajs/inertia-react";
+import { Head, Link, useForm } from "@inertiajs/react";
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -36,9 +36,7 @@ export default function Register() {
     };
 
     return (
-        <AuthServices
-            title="Register for an account"
-        >
+        <AuthServices title="Register for an account">
             <Head title="Register" />
 
             <ValidationErrors errors={errors} />

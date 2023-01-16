@@ -1,11 +1,10 @@
 import React from "react";
 import Button from "@/Components/Button";
 import CentralAuthServices from "@/Layouts/CentralAuthServices";
-import { Head, useForm } from "@inertiajs/inertia-react";
+import { Head, useForm, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
 
 const TwoFactorChallenge = (props) => {
     const { post, processing } = useForm();
@@ -17,7 +16,7 @@ const TwoFactorChallenge = (props) => {
     };
 
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("central.two_factor"), values, {
+        router.post(route("central.two_factor"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

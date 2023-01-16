@@ -5,7 +5,7 @@ import {
     UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Container from "@/Components/Container";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/react";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");

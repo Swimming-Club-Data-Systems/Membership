@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { Inertia } from "@inertiajs/inertia";
+import { router, Link } from "@inertiajs/react";
 import Form from "./Form/Form";
 import TextInput from "./Form/TextInput";
 import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
-import { Link } from "@inertiajs/inertia-react";
 import InternalContainer from "@/Components/InternalContainer";
 
 const Search = (props) => {
     const url = props.path;
 
     const handleSubmit = (values) => {
-        Inertia.get(url, values);
+        router.get(url, values);
     };
 
     const SetSearchValue = () => {

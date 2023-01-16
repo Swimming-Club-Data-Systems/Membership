@@ -8,7 +8,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Footer from "./Components/Footer";
 import ApplicationLogo from "@/Components/ApplicationLogo";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
 import Link from "@/Components/BaseLink";
 import MainHeader from "./Components/MainHeader";
 import Container from "@/Components/Container";

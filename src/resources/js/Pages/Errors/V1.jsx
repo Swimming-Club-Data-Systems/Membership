@@ -1,6 +1,6 @@
 import React from "react";
 import AuthServices from "@/Layouts/AuthServices";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 
 export default function V1(props) {
     return (

@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
@@ -15,7 +15,7 @@ import Form, {
 } from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 
 type ApplePayDomain = {
     id: string;
@@ -55,7 +55,7 @@ const ApplePayDomains: Layout<Props> = (props: Props) => {
         useState<ApplePayDomain | null>(null);
 
     const deletePaymentMethod = async () => {
-        Inertia.delete(
+        router.delete(
             route("central.tenants.delete_apple_pay_domains", [
                 props.id,
                 domainDeleteModalData.id,

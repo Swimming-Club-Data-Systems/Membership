@@ -1,6 +1,6 @@
 import React from "react";
+import { router } from "@inertiajs/react";
 import Button from "@/Components/Button.jsx";
-import { Inertia } from "@inertiajs/inertia";
 import { Props } from "./Button.jsx";
 
 interface ButtonLinkProps extends Props {
@@ -17,7 +17,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
         if (external) {
             window.location.href = href;
         } else {
-            Inertia.visit(href);
+            router.visit(href);
         }
     };
 

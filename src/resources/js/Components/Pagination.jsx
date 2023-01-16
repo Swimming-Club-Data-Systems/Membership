@@ -1,6 +1,6 @@
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import { Link } from "@inertiajs/inertia-react";
+import { Link } from "@inertiajs/react";
 import InternalContainer from "@/Components/InternalContainer";
 
 const Pagination = ({ collection }) => {

@@ -1,14 +1,13 @@
 import React from "react";
 import CentralAuthServices from "@/Layouts/CentralAuthServices";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
 
 export default function ResetPassword({ token, email }) {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("central.password.update"), values, {
+        router.post(route("central.password.update"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

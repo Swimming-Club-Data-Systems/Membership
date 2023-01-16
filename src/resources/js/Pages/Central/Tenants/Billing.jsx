@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Card from "@/Components/Card";
 import Link from "@/Components/Link";
@@ -9,7 +9,6 @@ import Button from "@/Components/Button";
 import ButtonLink from "@/Components/ButtonLink";
 import BasicList from "@/Components/BasicList";
 import Modal from "@/Components/Modal";
-import { Inertia } from "@inertiajs/inertia";
 import { fromUnixTime } from "date-fns";
 import Table from "@/Components/Table";
 
@@ -24,7 +23,7 @@ const Index = (props) => {
         useState(null);
 
     const deletePaymentMethod = async () => {
-        Inertia.delete(
+        router.delete(
             route("central.tenants.billing.update_payment_method", [
                 props.id,
                 paymentMethodDeleteModalData.id,
@@ -41,7 +40,7 @@ const Index = (props) => {
     };
 
     const setDefaultPaymentMethod = () => {
-        Inertia.put(
+        router.put(
             route("central.tenants.billing.update_payment_method", [
                 props.id,
                 paymentMethodDefaultModalData.id,
