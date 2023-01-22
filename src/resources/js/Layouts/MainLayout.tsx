@@ -13,6 +13,7 @@ import Link from "@/Components/BaseLink.jsx";
 import MainHeader from "./Components/MainHeader.jsx";
 import Container from "@/Components/Container.jsx";
 import TenantLogo from "@/Components/TenantLogo.jsx";
+import { connect } from "react-redux";
 
 const userNavigation = [
     { name: "My Account", href: route("my_account.index") },
@@ -33,6 +34,8 @@ interface Props {
         route: string;
         routeParams?: never;
     }[];
+    buttons: ReactNode;
+    hideHeader?: boolean;
 }
 
 const MainLayout: React.FC<Props> = ({
@@ -40,7 +43,10 @@ const MainLayout: React.FC<Props> = ({
     subtitle,
     children,
     breadcrumbs,
+    buttons,
+    hideHeader = false,
 }) => {
+    console.log(title);
     const userObject = usePage().props.auth.user;
 
     const navigation = usePage().props.tenant.menu;
@@ -627,7 +633,15 @@ const MainLayout: React.FC<Props> = ({
 
                 <main className="py-10 min-h-screen">
                     {/* Page header */}
-                    <MainHeader title={title} subtitle={subtitle}></MainHeader>
+                    {!hideHeader && (
+                        <Container>
+                            <MainHeader
+                                title={title}
+                                subtitle={subtitle}
+                                buttons={buttons}
+                            ></MainHeader>
+                        </Container>
+                    )}
 
                     {children}
                 </main>
@@ -638,4 +652,16 @@ const MainLayout: React.FC<Props> = ({
     );
 };
 
-export default MainLayout;
+const mapStateToProps = (state, ownProps) => {
+    // console.log(state, ownProps);
+
+    const newProps = { ...ownProps };
+
+    newProps.title = state?.main?.title || ownProps.title;
+    newProps.subtitle = state?.main?.subtitle || ownProps.subtitle;
+    newProps.breadcrumbs = state?.main?.breadcrumbs || ownProps.breadcrumbs;
+
+    return newProps;
+};
+
+export default connect(mapStateToProps)(MainLayout);

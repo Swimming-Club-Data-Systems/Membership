@@ -1,15 +1,26 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { Head, usePage } from "@inertiajs/react";
+import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Collection from "@/Components/Collection";
+import MainHeader from "@/Layouts/Components/MainHeader";
+import ButtonLink from "@/Components/ButtonLink";
 
-type Props = {
-    ledgers: [];
+type JournalProps = {
+    id: number;
+    name: string;
+    type: string;
 };
 
-const ItemContent = (props) => {
+type Props = {
+    journals: [];
+    name: string;
+    type: string;
+    id: number;
+};
+
+const ItemContent: React.FC<JournalProps> = (props) => {
     return (
         <>
             <div className="flex items-center justify-between">
@@ -28,11 +39,33 @@ const ItemContent = (props) => {
     );
 };
 
-const Index: Layout<Props> = (props: Props) => {
-    console.log(usePage());
+const Show: Layout<Props> = (props: Props) => {
     return (
         <>
-            <Head title={props.name} />
+            <Head
+                title={props.name}
+                breadcrumbs={[
+                    { name: "Payments", route: "my_account.index" },
+                    { name: "Ledgers", route: "payments.ledgers.index" },
+                    {
+                        name: props.name,
+                        route: "payments.ledgers.show",
+                        routeParams: props.id,
+                    },
+                ]}
+            />
+
+            <MainHeader
+                title={props.name}
+                subtitle="Manage your custom ledgers"
+                buttons={
+                    <ButtonLink
+                        href={route("payments.ledgers.journals.new", props.id)}
+                    >
+                        Create journal
+                    </ButtonLink>
+                }
+            ></MainHeader>
 
             <Collection
                 {...props.journals}
@@ -43,21 +76,10 @@ const Index: Layout<Props> = (props: Props) => {
     );
 };
 
-Index.layout = (page) => (
-    <MainLayout
-        title="Ledger"
-        subtitle="Manage your custom ledgers"
-        breadcrumbs={[
-            { name: "Payments", route: "my_account.index" },
-            { name: "Ledgers", route: "payments.ledgers.index" },
-            {
-                name: "Ledger",
-                route: "this",
-            },
-        ]}
-    >
+Show.layout = (page) => (
+    <MainLayout hideHeader>
         <Container noMargin>{page}</Container>
     </MainLayout>
 );
 
-export default Index;
+export default Show;

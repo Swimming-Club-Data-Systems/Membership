@@ -4,6 +4,7 @@ import { Head, usePage } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Collection from "@/Components/Collection";
+import ButtonLink from "@/Components/ButtonLink";
 
 type Props = {
     ledgers: [];
@@ -51,6 +52,11 @@ Index.layout = (page) => {
                 { name: "Payments", route: "my_account.index" },
                 { name: "Ledgers", route: "payments.ledgers.index" },
             ]}
+            buttons={
+                <ButtonLink href={route("payments.ledgers.new")}>
+                    Create ledger
+                </ButtonLink>
+            }
         >
             <Container noMargin>{page}</Container>
         </MainLayout>
