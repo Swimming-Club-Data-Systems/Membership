@@ -17,11 +17,6 @@ class LedgerAccount extends Model
 {
     use HasFactory, BelongsToTenant;
 
-    public function ledger(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(Ledger::class, 'ledger_id', 'id');
-    }
-
     /**
      * The "booted" method of the model.
      *
@@ -36,5 +31,21 @@ class LedgerAccount extends Model
             $ledger->save();
             $account->ledger()->associate($ledger);
         });
+
+        static::saved(function (LedgerAccount $account) {
+            $account->ledger->name = $account->name;
+            $account->ledger->type = $account->type;
+            $account->ledger->save();
+        });
+    }
+
+    public function ledger(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Ledger::class, 'ledger_id', 'id');
+    }
+
+    public function journalAccounts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(JournalAccount::class);
     }
 }

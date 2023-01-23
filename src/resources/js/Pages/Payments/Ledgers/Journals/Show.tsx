@@ -22,14 +22,14 @@ const Show: Layout<Props> = (props: Props) => {
                     { name: "Payments", route: "my_account.index" },
                     { name: "Ledgers", route: "payments.ledgers.index" },
                     {
-                        name: props.name,
+                        name: props.ledger_name,
                         route: "payments.ledgers.show",
                         routeParams: props.ledger_id,
                     },
                     {
                         name: props.name,
                         route: "payments.ledgers.journals.show",
-                        routeParams: props.id,
+                        routeParams: [props.ledger_id, props.id],
                     },
                 ]}
             />

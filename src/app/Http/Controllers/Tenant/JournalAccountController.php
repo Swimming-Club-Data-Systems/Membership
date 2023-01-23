@@ -40,18 +40,19 @@ class JournalAccountController extends Controller
 
         $journalAccount = new JournalAccount();
         $journalAccount->name = $request->input('name');
-        $journalAccount->ledger = $ledger->ledger;
+        $journalAccount->ledgerAccount()->associate($ledger);
         $journalAccount->save();
 
         return redirect(route('payments.ledgers.journals.show', [$ledger->id, $journalAccount->id]));
     }
 
-    public function show(LedgerAccount $ledgerAccount, JournalAccount $journalAccount)
+    public function show(LedgerAccount $ledger, JournalAccount $journal)
     {
         return Inertia::render('Payments/Ledgers/Journals/Show', [
-            'id' => $journalAccount->id,
-            'ledger_id' => $ledgerAccount->id,
-            'name' => $journalAccount->name,
+            'id' => $journal->id,
+            'ledger_id' => $ledger->id,
+            'ledger_name' => $ledger->name,
+            'name' => $journal->name,
         ]);
     }
 }

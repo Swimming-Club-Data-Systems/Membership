@@ -52,7 +52,7 @@ class LedgerAccountController extends Controller
     public function show(LedgerAccount $ledger, Request $request)
     {
         return Inertia::render('Payments/Ledgers/Show', [
-            'journals' => $ledger->ledger->journals()->paginate()->onEachSide(3),
+            'journals' => $ledger->journalAccounts()->paginate()->onEachSide(3),
             'id' => $ledger->id,
             'name' => $ledger->name,
             'type' => $ledger->type,

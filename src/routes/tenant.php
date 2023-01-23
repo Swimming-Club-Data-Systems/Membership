@@ -166,7 +166,7 @@ Route::middleware([
                     // Route::put('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
                     Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'new'])->whereNumber('ledger')->name('journals.new');
                     Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'create'])->whereNumber('ledger');
-                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'show'])->whereNumber('ledger')->name('journals.show');
+                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'show'])->whereNumber(['ledger', 'journal'])->name('journals.show');
                     Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
                 });
             });

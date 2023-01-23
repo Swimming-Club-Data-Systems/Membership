@@ -4,7 +4,6 @@ namespace App\Models\Tenant;
 
 use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Models\Accounting\Journal;
-use App\Models\Accounting\Ledger;
 use App\Traits\Accounting\AccountingJournal;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property Journal journal
  * @property string name
  * @property int id
- * @property Ledger ledger
+ * @property LedgerAccount ledgerAccount
  */
 class JournalAccount extends Model
 {
@@ -23,7 +22,13 @@ class JournalAccount extends Model
         journal as protected traitJournal;
     }
 
-    public Ledger $ledger;
+    protected static function booted()
+    {
+        static::created(function (JournalAccount $account) {
+            $journal = $account->initJournal();
+            $journal->assignToLedger($account->ledgerAccount->ledger);
+        });
+    }
 
     public function journal(): MorphOne
     {
@@ -39,13 +44,8 @@ class JournalAccount extends Model
         return $this->traitJournal();
     }
 
-    protected static function booted()
+    public function ledgerAccount(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        static::created(function (JournalAccount $account) {
-            if ($account->ledger != null) {
-                $journal = $account->initJournal();
-                $journal->assignToLedger($account->ledger);
-            }
-        });
+        return $this->belongsTo(LedgerAccount::class);
     }
 }

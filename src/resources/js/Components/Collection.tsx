@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { router, Link } from "@inertiajs/react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { Link, router } from "@inertiajs/react";
 import Form from "./Form/Form";
 import TextInput from "./Form/TextInput";
 import * as yup from "yup";
@@ -9,7 +11,11 @@ import { useFormikContext } from "formik";
 import Button from "./Button";
 import InternalContainer from "@/Components/InternalContainer";
 
-const Search = (props) => {
+type SearchProps = {
+    path: string;
+};
+
+const Search: React.FC<SearchProps> = (props) => {
     const url = props.path;
 
     const handleSubmit = (values) => {
@@ -72,14 +78,34 @@ const Search = (props) => {
     );
 };
 
-const Collection = (props) => {
+type CollectonProps = {
+    route: string;
+    data: [];
+    routeIdName?: string;
+    routeParams?: [number | string];
+    searchable?: boolean;
+    path: string;
+    current_page: number;
+    last_page: number;
+    itemRenderer: (item: never) => React.FC;
+};
+
+const Collection: React.FC<CollectonProps> = (props) => {
     const items = props.data.map((item, idx) => {
         const routeIdName = props.routeIdName || "id";
 
+        const routeParams = [...props.routeParams] || [];
+
+        routeParams.push(item[routeIdName]);
+
         return (
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
             <li key={item.id || idx}>
                 <Link
-                    href={route(props.route, item[routeIdName])}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    href={route(props.route, routeParams)}
                     className="group block hover:bg-gray-50"
                 >
                     <div className="py-4">
