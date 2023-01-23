@@ -1,7 +1,7 @@
 import React from "react";
 import * as yup from "yup";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { Head } from "@inertiajs/react";
+import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Card from "@/Components/Card";
@@ -15,13 +15,30 @@ import Radio from "@/Components/Form/Radio";
 import Fieldset from "@/Components/Form/Fieldset";
 
 type Props = {
-    ledgers: [];
+    ledger_id: number;
+    ledger_name: string;
 };
 
 const New: Layout<Props> = (props: Props) => {
     return (
         <>
-            <Head title="Create Journal" />
+            <Head
+                title="Create Journal"
+                breadcrumbs={[
+                    { name: "Payments", route: "my_account.index" },
+                    { name: "Ledgers", route: "payments.ledgers.index" },
+                    {
+                        name: props.ledger_name,
+                        route: "payments.ledgers.show",
+                        routeParams: props.ledger_id,
+                    },
+                    {
+                        name: "New Journal",
+                        route: "payments.ledgers.journals.new",
+                        routeParams: props.ledger_id,
+                    },
+                ]}
+            />
 
             <Form
                 initialValues={{
@@ -41,7 +58,7 @@ const New: Layout<Props> = (props: Props) => {
                 hideDefaultButtons
                 hideErrors
                 method="post"
-                action={route("payments.ledgers.new")}
+                action={route("payments.ledgers.journals.new", props.ledger_id)}
             >
                 <Card footer={<SubmissionButtons />}>
                     <RenderServerErrors />
@@ -60,15 +77,7 @@ const New: Layout<Props> = (props: Props) => {
 };
 
 New.layout = (page) => (
-    <MainLayout
-        title="Create Journal"
-        subtitle="Create a new custom ledgers"
-        breadcrumbs={[
-            { name: "Payments", route: "my_account.index" },
-            { name: "Ledgers", route: "payments.ledgers.index" },
-            { name: "Create", route: "payments.ledgers.new" },
-        ]}
-    >
+    <MainLayout title="Create Journal" subtitle="Create a new custom ledgers">
         <Container noMargin>{page}</Container>
     </MainLayout>
 );

@@ -17,6 +17,8 @@ class JournalAccountController extends Controller
 
     public function new(LedgerAccount $ledger) {
         return Inertia::render('Payments/Ledgers/Journals/New', [
+            'ledger_id' => $ledger->id,
+            'ledger_name' => $ledger->name,
         ]);
     }
 
@@ -26,13 +28,13 @@ class JournalAccountController extends Controller
             'name' => [
                 'required',
                 'max:100',
-                Rule::unique('ledger_accounts')->where(function ($query) {
+                Rule::unique('journal_accounts')->where(function ($query) {
                     return $query->where('Tenant', tenant('ID'));
                 }),
             ],
-            'type' => [
+            'currency' => [
                 'required',
-                Rule::in(['asset', 'liability', 'equity', 'income', 'expense']),
+                Rule::in(['GBP']),
             ]
         ]);
 
@@ -41,6 +43,15 @@ class JournalAccountController extends Controller
         $journalAccount->ledger = $ledger->ledger;
         $journalAccount->save();
 
-        return redirect(route('payments.ledgers.journals.show', $journalAccount->id));
+        return redirect(route('payments.ledgers.journals.show', [$ledger->id, $journalAccount->id]));
+    }
+
+    public function show(LedgerAccount $ledgerAccount, JournalAccount $journalAccount)
+    {
+        return Inertia::render('Payments/Ledgers/Journals/Show', [
+            'id' => $journalAccount->id,
+            'ledger_id' => $ledgerAccount->id,
+            'name' => $journalAccount->name,
+        ]);
     }
 }

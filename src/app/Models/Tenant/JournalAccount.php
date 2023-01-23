@@ -6,6 +6,7 @@ use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Models\Accounting\Journal;
 use App\Models\Accounting\Ledger;
 use App\Traits\Accounting\AccountingJournal;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -18,7 +19,9 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 class JournalAccount extends Model
 {
-    use HasFactory, AccountingJournal;
+    use HasFactory, BelongsToTenant, AccountingJournal {
+        journal as protected traitJournal;
+    }
 
     public Ledger $ledger;
 
