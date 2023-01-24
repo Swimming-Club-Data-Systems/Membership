@@ -580,7 +580,12 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
 
                 <main className="py-10 min-h-screen">
                     {/* Page header */}
-                    <MainHeader title={title} subtitle={subtitle}></MainHeader>
+                    <Container>
+                        <MainHeader
+                            title={title}
+                            subtitle={subtitle}
+                        ></MainHeader>
+                    </Container>
 
                     {children}
                 </main>

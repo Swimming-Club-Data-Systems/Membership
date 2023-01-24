@@ -94,7 +94,7 @@ const Collection: React.FC<CollectonProps> = (props) => {
     const items = props.data.map((item, idx) => {
         const routeIdName = props.routeIdName || "id";
 
-        const routeParams = [...props.routeParams] || [];
+        const routeParams = props.routeParams ? [...props.routeParams] : [];
 
         routeParams.push(item[routeIdName]);
 

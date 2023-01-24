@@ -405,8 +405,13 @@ class AppMenu
         ];
 
         $menu[] = [
-            'name' => 'Cards and Direct Debits',
+            'name' => 'Payment Methods',
             'href' => route('payments.methods.index'),
+        ];
+
+        $menu[] = [
+            'name' => 'Ledgers and Journals',
+            'href' => route('payments.ledgers.index'),
         ];
 
         if ($this->user->hasPermission('Parent')) {
