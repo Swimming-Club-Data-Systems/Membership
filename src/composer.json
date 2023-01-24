@@ -23,6 +23,7 @@
         "inertiajs/inertia-laravel": "^0.6.8",
         "laravel/cashier": "^14.2",
         "laravel/framework": "^9.19",
+        "laravel/horizon": "^5.13",
         "laravel/passport": "^10.4",
         "laravel/sanctum": "^2.8",
         "laravel/scout": "^9.4",
