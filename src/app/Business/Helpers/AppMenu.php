@@ -7,6 +7,7 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
+use Illuminate\Support\Facades\App;
 
 /**
  * Defines the menu for users in the tenant app
@@ -235,11 +236,13 @@ class AppMenu
                 'children' => $this->payments(),
             ];
 
-            $menu[] = [
-                'name' => 'Pay (V2)',
-                'href' => '/payments',
-                'children' => $this->paymentsV2(),
-            ];
+            if (App::isLocal()) {
+                $menu[] = [
+                    'name' => 'Pay (V2)',
+                    'href' => '/payments',
+                    'children' => $this->paymentsV2(),
+                ];
+            }
 
             if ($this->isSquadRep || $this->user->hasPermission(['Admin', 'Galas', 'Coach'])) {
                 $menu[] = [
