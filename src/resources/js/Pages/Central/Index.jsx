@@ -1,7 +1,7 @@
 import React from "react";
 import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 
 const GradientCard = (props) => {
     return (

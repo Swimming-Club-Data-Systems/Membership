@@ -1,6 +1,6 @@
 import React from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import Layout from "./Layout";
 import Form, {
@@ -12,7 +12,6 @@ import * as yup from "yup";
 import "yup-phone";
 import Card from "@/Components/Card";
 import Select from "@/Components/Form/Select";
-import { Inertia } from "@inertiajs/inertia";
 import FlashAlert from "@/Components/FlashAlert";
 
 const Show = (props) => {

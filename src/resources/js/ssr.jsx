@@ -1,26 +1,53 @@
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
-import { createInertiaApp } from '@inertiajs/inertia-react';
-import createServer from '@inertiajs/server';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import route from '../../vendor/tightenco/ziggy/dist/index.m';
+import React from "react";
+import ReactDOMServer from "react-dom/server";
+import createServer from "@inertiajs/react/server";
+import { createInertiaApp } from "@inertiajs/react";
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
+import route from "../../vendor/tightenco/ziggy/dist/index.m";
+import { render } from "react-dom";
+import { ErrorBoundary } from "@/Components/ErrorBoundary";
+import { Provider } from "react-redux";
+import { store } from "@/Reducers/store";
 
-const appName = 'Laravel';
+const appName =
+    window.document.getElementsByTagName("title")[0]?.innerText ||
+    "SCDS Membership";
+
+// eslint-disable-next-line react/prop-types
+const Wrapper = ({ children, ...props }) => {
+    return (
+        <Provider store={store} {...props}>
+            {children}
+        </Provider>
+    );
+};
 
 createServer((page) =>
     createInertiaApp({
-        page,
-        render: ReactDOMServer.renderToString,
+        progress: {
+            color: "#4F46E5",
+        },
         title: (title) => `${title} - ${appName}`,
-        resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
-        setup: ({ App, props }) => {
-            global.route = (name, params, absolute) =>
-                route(name, params, absolute, {
-                    ...page.props.ziggy,
-                    location: new URL(page.props.ziggy.location),
-                });
-
-            return <App {...props} />;
+        resolve: (name) =>
+            Promise.any([
+                resolvePageComponent(
+                    `./Pages/${name}.jsx`,
+                    import.meta.glob("./Pages/**/*.jsx")
+                ),
+                resolvePageComponent(
+                    `./Pages/${name}.tsx`,
+                    import.meta.glob("./Pages/**/*.tsx")
+                ),
+            ]),
+        setup({ el, App, props }) {
+            return render(
+                <ErrorBoundary>
+                    <Wrapper>
+                        <App {...props} />
+                    </Wrapper>
+                </ErrorBoundary>,
+                el
+            );
         },
     })
 );

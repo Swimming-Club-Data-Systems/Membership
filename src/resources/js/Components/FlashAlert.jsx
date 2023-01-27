@@ -1,6 +1,6 @@
 import React from "react";
 import Alert from "./Alert";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
 
 const FlashAlert = ({ className, bag = null }) => {
     const flash =

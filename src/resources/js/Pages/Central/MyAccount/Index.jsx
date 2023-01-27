@@ -1,6 +1,6 @@
 import React from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container";
 
 const Index = (props) => {

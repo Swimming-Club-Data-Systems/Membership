@@ -1,8 +1,14 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { apiCount } from "@/Reducers/store";
 
-const Button = ({
+export interface Props extends React.ComponentProps<"button"> {
+    className?: string;
+    variant?: string;
+    disabled?: boolean;
+}
+
+const Button: React.FC<Props> = ({
     type = "button",
     className = "",
     children,
@@ -36,7 +42,7 @@ const Button = ({
         <button
             type={type}
             className={
-                `inline-flex justify-center rounded-md border py-2 px-4 text-sm font-medium shadow-sm ${variantStyle} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none ` +
+                `inline-flex justify-center rounded-md border py-2 px-4 text-sm font-sans font-medium shadow-sm ${variantStyle} focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none ` +
                 className
             }
             disabled={props.disabled || count > 0}

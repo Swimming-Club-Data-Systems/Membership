@@ -3,7 +3,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import Container from "@/Components/Container";
 import Card from "@/Components/Card";
 import React from "react";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 
 const ReportAnError = () => {
     return (

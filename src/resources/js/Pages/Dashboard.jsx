@@ -1,9 +1,8 @@
 import React from "react";
-import { Head, InertiaLink } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
-import { Inertia } from "@inertiajs/inertia";
 import { format, formatISO9075, parse } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 
@@ -63,7 +62,7 @@ const Dashboard = (props) => {
                         <p>
                             <Button
                                 onClick={() => {
-                                    Inertia.get(route("about_changes"));
+                                    router.get(route("about_changes"));
                                 }}
                             >
                                 Find out why

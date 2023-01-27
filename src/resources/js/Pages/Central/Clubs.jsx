@@ -2,7 +2,7 @@ import React from "react";
 import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
 import Collection from "@/Components/Collection";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 
 const ItemContent = (props) => {
     const logo = props.logo_path

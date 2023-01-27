@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
 import Layout from "./Layout";
 import Form, {
     RenderServerErrors,
@@ -13,7 +12,7 @@ import TextInput from "@/Components/Form/TextInput";
 import BasicList from "@/Components/BasicList";
 import Button from "@/Components/Button";
 import Modal from "@/Components/Modal";
-import { Inertia } from "@inertiajs/inertia";
+import { router, Head } from "@inertiajs/react";
 import useRegistration from "@/Pages/Auth/Helpers/useRegistration";
 import Alert from "@/Components/Alert";
 import {
@@ -83,7 +82,7 @@ const Password = (props) => {
         if (verificationResponse.data.success) {
             formikBag.resetForm();
             setError(null);
-            Inertia.reload({
+            router.reload({
                 only: ["passkeys", "flash"],
                 preserveScroll: true,
             });
@@ -94,7 +93,7 @@ const Password = (props) => {
     };
 
     const deletePasskey = async () => {
-        Inertia.delete(
+        router.delete(
             route("central.my_account.webauthn_delete", deleteModalData.id),
             {
                 preserveScroll: true,

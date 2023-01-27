@@ -3,20 +3,20 @@
   "title": "System Options",
   "links": [
     {
-      "id": "settings-home",
-      "name": "Settings menu",
-      "title": "Settings home",
-      "link": "settings",
-      "target": "_self",
-      "external": false
-    },
-    {
       "id": "settings-vars",
       "name": "System variables",
       "title": "Edit system variables such as club name",
       "link": "settings/variables",
       "target": "_self",
       "external": false
+    },
+    {
+      "id": "settings-payments",
+      "name": "Payments",
+      "title": "Edit global payment settings",
+      "link": "/settings/payments",
+      "target": "_self",
+      "external": true
     },
     {
       "id": "settings-logo",

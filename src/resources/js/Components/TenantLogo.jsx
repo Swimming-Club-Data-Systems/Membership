@@ -1,5 +1,5 @@
 import React from "react";
-import { usePage } from "@inertiajs/inertia-react";
+import { usePage } from "@inertiajs/react";
 
 export default function TenantLogo({ className }) {
     const { tenant } = usePage().props;

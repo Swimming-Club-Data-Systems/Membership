@@ -2,11 +2,15 @@
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\DashboardController;
+use App\Http\Controllers\Tenant\JournalAccountController;
+use App\Http\Controllers\Tenant\LedgerAccountController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\NotifyHistoryController;
+use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
+use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
@@ -42,7 +46,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::get('/', [DashboardController::class, 'index']);
+    Route::get('/', [DashboardController::class, 'index'])->name('index');
 
     Route::get('/about', function () {
         return Inertia::render('About');
@@ -139,6 +143,44 @@ Route::middleware([
             Route::get('/sms/history', [SMSController::class, 'index'])->name('sms.history');
         });
     });
+
+    Route::prefix('payments')->group(function () {
+        Route::name('payments.')->group(function () {
+            Route::prefix('payment-methods')->group(function () {
+                Route::name('methods.')->group(function () {
+                    Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
+                    Route::get('/new', [PaymentMethodController::class, 'addPaymentMethod'])->name('new');
+                    Route::get('/new-direct-debit', [PaymentMethodController::class, 'addDirectDebit'])->name('new_direct_debit');
+                    Route::get('/new-success', [PaymentMethodController::class, 'addPaymentMethodSuccess'])->name('new_success');
+                    Route::delete('/{paymentMethod}', [PaymentMethodController::class, 'delete'])->name('delete');
+                    Route::put('/{paymentMethod}', [PaymentMethodController::class, 'update'])->name('update');
+                });
+            });
+
+            Route::prefix('ledgers')->group(function () {
+                Route::name('ledgers.')->group(function () {
+                    Route::get('/', [LedgerAccountController::class, 'index'])->name('index');
+                    Route::get('/new', [LedgerAccountController::class, 'new'])->name('new');
+                    Route::post('/new', [LedgerAccountController::class, 'create']);
+                    Route::get('/{ledger}', [LedgerAccountController::class, 'show'])->whereNumber('ledger')->name('show');
+                    // Route::put('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
+                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'new'])->whereNumber('ledger')->name('journals.new');
+                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'create'])->whereNumber('ledger');
+                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'show'])->whereNumber(['ledger', 'journal'])->name('journals.show');
+                    Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
+                });
+            });
+        });
+    });
+
+    Route::prefix('settings')->group(function () {
+        Route::name('settings.')->group(function () {
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::get('/payments', [SettingsController::class, 'showPaymentSettings'])->name('payments');
+            Route::put('/payments', [SettingsController::class, 'updatePaymentSettings']);
+        });
+    });
+
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])
         ->middleware(['signed', 'throttle:6,1'])

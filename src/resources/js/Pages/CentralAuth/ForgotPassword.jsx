@@ -1,7 +1,6 @@
 import React from "react";
 import CentralAuthServices from "@/Layouts/CentralAuthServices";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import Alert from "@/Components/Alert";
@@ -9,7 +8,7 @@ import * as yup from "yup";
 
 export default function ForgotPassword({ status }) {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("central.password.email"), values, {
+        router.post(route("central.password.email"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };

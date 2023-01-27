@@ -1,6 +1,6 @@
 import React from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Form, {
     RenderServerErrors,
