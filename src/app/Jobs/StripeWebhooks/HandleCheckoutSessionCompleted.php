@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 use Spatie\WebhookClient\Models\WebhookCall;
 
 class HandleCheckoutSessionCompleted implements ShouldQueue
@@ -101,6 +102,30 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                             $mandate->pm_type_details = $setupIntent->mandate->payment_method_details->$type;
                             $mandate->status = $setupIntent->mandate->status;
                             $mandate->save();
+                        }
+                    }
+
+                    if ($setupIntent->payment_method && $setupIntent->payment_method->type == 'bacs_debit' && $setupIntent->mandate) {
+                        try {
+                            DB::table('stripeMandates')->upsert([
+                                'ID' => $setupIntent->payment_method->id,
+                                'Customer' => $setupIntent->customer,
+                                'Mandate' => $setupIntent->mandate->id,
+                                'Fingerprint' => $setupIntent->payment_method->bacs_debit->fingerprint,
+                                'Last4' => $setupIntent->payment_method->bacs_debit->last4,
+                                'SortCode' => $setupIntent->payment_method->bacs_debit->sort_code,
+                                'Address' => json_encode($setupIntent->payment_method->billing_details->address),
+                                'Status' => $setupIntent->mandate->payment_method_details->bacs_debit->network_status,
+                                'MandateStatus' => $setupIntent->mandate->status,
+                                'Reference' => $setupIntent->mandate->payment_method_details->bacs_debit->reference,
+                                'URL' => $setupIntent->mandate->payment_method_details->bacs_debit->url,
+                            ], [
+                                'ID'
+                            ], [
+                                'Reference', 'Status', 'MandateStatus', 'URL', 'SortCode', 'Last4', 'Address'
+                            ]);
+                        } catch (\Exception $e) {
+                            report($e);
                         }
                     }
 
