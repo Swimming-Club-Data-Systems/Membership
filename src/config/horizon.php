@@ -119,7 +119,7 @@ return [
     */
 
     'silenced' => [
-        // App\Jobs\ExampleJob::class,
+        \Laravel\Scout\Jobs\MakeSearchable::class
     ],
 
     /*
