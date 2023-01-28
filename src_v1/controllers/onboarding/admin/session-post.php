@@ -45,7 +45,7 @@ try {
   }
 
   $status = $session->status;
-  $completedAt = $session->completedAt->format('Y-m-d H:i:s');
+  $completedAt = null;
   if ($status != 'not_ready' && isset($_POST['status']) && in_array($_POST['status'], $states)) {
     $status = $_POST['status'];
 
