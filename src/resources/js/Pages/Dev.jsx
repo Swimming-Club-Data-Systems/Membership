@@ -1,6 +1,6 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Card from "@/Components/Card";
 import InternalContainer from "@/Components/InternalContainer";
 import Container from "@/Components/Container";

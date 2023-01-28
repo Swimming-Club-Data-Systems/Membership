@@ -2,7 +2,7 @@ import React, { ReactNode } from "react";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import PlainCollection from "@/Components/PlainCollection";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import EmailListItemContent, {
     EmailListItemContentProps,
 } from "@/Components/Notify/EmailListItemContent";

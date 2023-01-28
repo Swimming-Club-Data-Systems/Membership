@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Card from "@/Components/Card";
 import Link from "@/Components/Link";
@@ -9,7 +9,6 @@ import Button from "@/Components/Button";
 import ButtonLink from "@/Components/ButtonLink";
 import BasicList from "@/Components/BasicList";
 import Modal from "@/Components/Modal";
-import { Inertia } from "@inertiajs/inertia";
 import { fromUnixTime } from "date-fns";
 import Table from "@/Components/Table";
 
@@ -24,7 +23,7 @@ const Index = (props) => {
         useState(null);
 
     const deletePaymentMethod = async () => {
-        Inertia.delete(
+        router.delete(
             route("central.tenants.billing.update_payment_method", [
                 props.id,
                 paymentMethodDeleteModalData.id,
@@ -41,7 +40,7 @@ const Index = (props) => {
     };
 
     const setDefaultPaymentMethod = () => {
-        Inertia.put(
+        router.put(
             route("central.tenants.billing.update_payment_method", [
                 props.id,
                 paymentMethodDefaultModalData.id,
@@ -169,16 +168,9 @@ const Index = (props) => {
                             Add a payment method
                         </ButtonLink>
                     }
+                    title="Payment methods"
+                    subtitle="Manage your payment methods."
                 >
-                    <div>
-                        <h3 className="text-lg leading-6 font-medium text-gray-900">
-                            Payment methods
-                        </h3>
-                        <p className="mt-1 text-sm text-gray-500">
-                            Manage your payment methods.
-                        </p>
-                    </div>
-
                     <FlashAlert className="mb-4" bag="payment_method" />
 
                     {props.payment_method && (

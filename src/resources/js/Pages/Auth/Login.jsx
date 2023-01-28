@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Checkbox from "@/Components/Form/Checkbox";
 import AuthServices from "@/Layouts/AuthServices";
-import { Inertia } from "@inertiajs/inertia";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Link from "@/Components/Link";
 import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
@@ -34,7 +33,7 @@ const Login = ({ status, canResetPassword }) => {
         if (ssoUrl) {
             window.location.href = ssoUrl;
         } else {
-            Inertia.post(route("login"), values, {
+            router.post(route("login"), values, {
                 // onSuccess: (arg) => console.log(arg),
             });
         }

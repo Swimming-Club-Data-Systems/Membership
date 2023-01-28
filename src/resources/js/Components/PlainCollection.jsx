@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 import Form from "./Form/Form";
 import TextInput from "./Form/TextInput";
 import * as yup from "yup";
@@ -13,7 +13,7 @@ const Search = (props) => {
     const url = props.path;
 
     const handleSubmit = (values) => {
-        Inertia.get(url, values);
+        router.get(url, values);
     };
 
     const SetSearchValue = () => {

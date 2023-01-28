@@ -1,22 +1,19 @@
 import React from "react";
 import AuthServices from "@/Layouts/AuthServices";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { Inertia } from "@inertiajs/inertia";
 
 export default function ResetPassword({ token, email }) {
     const onSubmit = (values, formikBag) => {
-        Inertia.post(route("password.update"), values, {
+        router.post(route("password.update"), values, {
             onSuccess: (arg) => console.log(arg),
         });
     };
 
     return (
-        <AuthServices
-            title="Reset your account password"
-        >
+        <AuthServices title="Reset your account password">
             <Head title="Reset Password" />
 
             <Form

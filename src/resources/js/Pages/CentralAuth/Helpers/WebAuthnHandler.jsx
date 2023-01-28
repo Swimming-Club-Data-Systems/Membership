@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useField } from "formik";
 import Button from "@/Components/Button";
 import { Transition } from "@headlessui/react";
-import { Inertia } from "@inertiajs/inertia";
+import { router } from "@inertiajs/react";
 import Alert from "@/Components/Alert";
 import { startAuthentication } from "@simplewebauthn/browser";
 import axios from "@/Utils/axios";
@@ -67,7 +67,7 @@ const WebAuthnHandler = ({ setAC, show }) => {
         }
 
         if (verificationResponse.data.success) {
-            Inertia.visit(verificationResponse.data.redirect_url);
+            router.visit(verificationResponse.data.redirect_url);
         } else {
             setError(webAuthnError);
             // console.error(error);

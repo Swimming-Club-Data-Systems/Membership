@@ -1,20 +1,4 @@
-/*
-  This example requires Tailwind CSS v2.0+
-
-  This example requires some changes to your config:
-
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
-import { Fragment } from "react";
+import React, { Fragment, ReactNode } from "react";
 import { Menu, Popover, Transition } from "@headlessui/react";
 import {
     ArrowLongLeftIcon,
@@ -22,19 +6,15 @@ import {
     HomeIcon,
 } from "@heroicons/react/24/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
-import Footer from "./Components/Footer";
-import ApplicationLogo from "@/Components/ApplicationLogo";
-import { Head, usePage } from "@inertiajs/inertia-react";
-import Link from "@/Components/BaseLink";
-import MainHeader from "./Components/MainHeader";
-import Container from "@/Components/Container";
-import TenantLogo from "@/Components/TenantLogo";
+import Footer from "./Components/Footer.jsx";
+import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
+import { Head, usePage } from "@inertiajs/react";
+import Link from "@/Components/BaseLink.jsx";
+import MainHeader from "./Components/MainHeader.jsx";
+import Container from "@/Components/Container.jsx";
+import TenantLogo from "@/Components/TenantLogo.jsx";
+import { connect } from "react-redux";
 
-const breadcrumbs = [
-    { name: "Jobs", href: "#", current: false },
-    { name: "Front End Developer", href: "#", current: false },
-    { name: "Applicants", href: "#", current: true },
-];
 const userNavigation = [
     { name: "My Account", href: route("my_account.index") },
     { name: "Help", href: "https://docs.myswimmingclub.uk/", external: true },
@@ -45,7 +25,28 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
-const MainLayout = ({ title, subtitle, children }) => {
+interface Props {
+    title: string;
+    subtitle?: string;
+    children: ReactNode;
+    breadcrumbs?: {
+        name: string;
+        route: string;
+        routeParams?: never;
+    }[];
+    buttons: ReactNode;
+    hideHeader?: boolean;
+}
+
+const MainLayout: React.FC<Props> = ({
+    title,
+    subtitle,
+    children,
+    breadcrumbs,
+    buttons,
+    hideHeader = false,
+}) => {
+    console.log(title);
     const userObject = usePage().props.auth.user;
 
     const navigation = usePage().props.tenant.menu;
@@ -530,22 +531,39 @@ const MainLayout = ({ title, subtitle, children }) => {
                         </Popover>
                     </Container>
 
-                    {false && (
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+                    {breadcrumbs && (
+                        <Container>
                             <div className="border-t border-gray-200 py-3">
                                 <nav className="flex" aria-label="Breadcrumb">
-                                    <div className="flex sm:hidden">
-                                        <Link
-                                            href="#"
-                                            className="group inline-flex space-x-3 text-sm font-medium text-gray-500 hover:text-gray-700"
-                                        >
-                                            <ArrowLongLeftIcon
-                                                className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-600"
-                                                aria-hidden="true"
-                                            />
-                                            <span>Back to Applicants</span>
-                                        </Link>
-                                    </div>
+                                    {breadcrumbs.length > 1 && (
+                                        <div className="flex sm:hidden">
+                                            <Link
+                                                href={route(
+                                                    breadcrumbs[
+                                                        breadcrumbs.length - 2
+                                                    ].route,
+                                                    breadcrumbs[
+                                                        breadcrumbs.length - 2
+                                                    ].routeParams
+                                                )}
+                                                className="group inline-flex space-x-3 text-sm font-medium text-gray-500 hover:text-gray-700"
+                                            >
+                                                <ArrowLongLeftIcon
+                                                    className="flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-600"
+                                                    aria-hidden="true"
+                                                />
+                                                <span>
+                                                    Back to{" "}
+                                                    {
+                                                        breadcrumbs[
+                                                            breadcrumbs.length -
+                                                                2
+                                                        ].name
+                                                    }
+                                                </span>
+                                            </Link>
+                                        </div>
+                                    )}
                                     <div className="hidden sm:block">
                                         <ol
                                             role="list"
@@ -554,7 +572,7 @@ const MainLayout = ({ title, subtitle, children }) => {
                                             <li>
                                                 <div>
                                                     <Link
-                                                        href="#"
+                                                        href={route("index")}
                                                         className="text-gray-400 hover:text-gray-500"
                                                     >
                                                         <HomeIcon
@@ -580,10 +598,22 @@ const MainLayout = ({ title, subtitle, children }) => {
                                                             <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
                                                         </svg>
                                                         <Link
-                                                            href={item.href}
+                                                            href={
+                                                                item.route ===
+                                                                "this"
+                                                                    ? usePage()
+                                                                          .url
+                                                                    : route(
+                                                                          item.route,
+                                                                          item.routeParams
+                                                                      )
+                                                            }
                                                             className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                                                             aria-current={
-                                                                item.current
+                                                                route().current(
+                                                                    item.route,
+                                                                    item.routeParams
+                                                                )
                                                                     ? "page"
                                                                     : undefined
                                                             }
@@ -597,13 +627,21 @@ const MainLayout = ({ title, subtitle, children }) => {
                                     </div>
                                 </nav>
                             </div>
-                        </div>
+                        </Container>
                     )}
                 </header>
 
                 <main className="py-10 min-h-screen">
                     {/* Page header */}
-                    <MainHeader title={title} subtitle={subtitle}></MainHeader>
+                    {!hideHeader && (
+                        <Container>
+                            <MainHeader
+                                title={title}
+                                subtitle={subtitle}
+                                buttons={buttons}
+                            ></MainHeader>
+                        </Container>
+                    )}
 
                     {children}
                 </main>
@@ -614,4 +652,16 @@ const MainLayout = ({ title, subtitle, children }) => {
     );
 };
 
-export default MainLayout;
+const mapStateToProps = (state, ownProps) => {
+    // console.log(state, ownProps);
+
+    const newProps = { ...ownProps };
+
+    newProps.title = state?.main?.title || ownProps.title;
+    newProps.subtitle = state?.main?.subtitle || ownProps.subtitle;
+    newProps.breadcrumbs = state?.main?.breadcrumbs || ownProps.breadcrumbs;
+
+    return newProps;
+};
+
+export default connect(mapStateToProps)(MainLayout);

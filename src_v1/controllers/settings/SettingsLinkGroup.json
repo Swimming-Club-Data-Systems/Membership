@@ -3,14 +3,6 @@
   "title": "System Options",
   "links": [
     {
-      "id": "settings-home",
-      "name": "Settings menu",
-      "title": "Settings home",
-      "link": "settings",
-      "target": "_self",
-      "external": false
-    },
-    {
       "id": "settings-vars",
       "name": "System variables",
       "title": "Edit system variables such as club name",

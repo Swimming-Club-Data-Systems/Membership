@@ -1,5 +1,5 @@
 import React from "react";
-import { Head } from "@inertiajs/inertia-react";
+import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import Link from "@/Components/Link";

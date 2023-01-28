@@ -1,6 +1,6 @@
 import React, { ReactNode, useState } from "react";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
-import { Head } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Layout from "@/Pages/Central/Tenants/Layout";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
@@ -11,7 +11,6 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import { UserPlusIcon } from "@heroicons/react/24/outline";
 import BasicList from "@/Components/BasicList";
-import { Inertia } from "@inertiajs/inertia";
 
 type TenantAdminstrator = {
     id: number;
@@ -43,7 +42,7 @@ const Index: Layout<Props> = (props: Props) => {
         useState<TenantAdminstrator | null>(null);
 
     const removeUser = async () => {
-        Inertia.delete(
+        router.delete(
             route("central.tenants.administrators.delete", [
                 props.id,
                 removeUserModalData.id,

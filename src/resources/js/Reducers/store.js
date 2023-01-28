@@ -7,6 +7,11 @@ const mainSlice = createSlice({
         setKey: (state, action) => {
             state[action.payload.key] = action.payload.value;
         },
+        setKeys: (state, action) => {
+            action.payload.forEach((item) => {
+                state[item[0]] = item[1];
+            });
+        },
     },
 });
 
@@ -25,7 +30,7 @@ const apiCountSlice = createSlice({
     },
 });
 
-export const { setKey } = mainSlice.actions;
+export const { setKey, setKeys } = mainSlice.actions;
 export const { increment, decrement } = apiCountSlice.actions;
 
 export const apiCount = (state) => state.apiCount.value;

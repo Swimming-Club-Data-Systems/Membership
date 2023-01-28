@@ -1,4 +1,3 @@
-import Container from "@/Components/Container";
 import React from "react";
 
 const MainHeader = (props) => {
@@ -13,11 +12,10 @@ const MainHeader = (props) => {
     }
 
     return (
-        <Container>
-            <div className="pb-10 md:flex md:items-center md:justify-between md:space-x-5">
-                <div className="flex items-center space-x-5">
-                    {/* Optional image section */}
-                    {/* <div className="flex-shrink-0">
+        <div className="pb-10 md:flex md:items-center md:justify-between md:space-x-5">
+            <div className="flex items-center space-x-5">
+                {/* Optional image section */}
+                {/* <div className="flex-shrink-0">
                     <div className="relative">
                         <img
                             className="h-16 w-16 rounded-full"
@@ -30,22 +28,21 @@ const MainHeader = (props) => {
                         />
                     </div>
                 </div> */}
-                    <div>
-                        {props.title && (
-                            <h1 className="text-2xl font-bold text-gray-900">
-                                {props.title}
-                            </h1>
-                        )}
-                        {props.subtitle && (
-                            <p className="text-sm font-medium text-gray-500">
-                                {props.subtitle}
-                            </p>
-                        )}
-                    </div>
+                <div>
+                    {props.title && (
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            {props.title}
+                        </h1>
+                    )}
+                    {props.subtitle && (
+                        <p className="text-sm font-medium text-gray-500">
+                            {props.subtitle}
+                        </p>
+                    )}
                 </div>
-                {buttons}
             </div>
-        </Container>
+            {buttons}
+        </div>
     );
 };
 

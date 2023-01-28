@@ -97,6 +97,7 @@
     cd {{ $v2_dir }}
     php artisan migrate --force
     php artisan deploy:post
+    php artisan horizon:terminate
 @endtask
 
 @task('list', ['on' => 'localhost'])

@@ -1,9 +1,8 @@
 import React from "react";
-import { Head, InertiaLink } from "@inertiajs/inertia-react";
+import { Head, router } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
-import { Inertia } from "@inertiajs/inertia";
 import { format, formatISO9075, parse } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
 
@@ -50,26 +49,26 @@ const Dashboard = (props) => {
 
             <Container>
                 <div className="grid gap-y-8">
-                    <div
-                        className={`bg-gradient-to-r text-white rounded-lg p-6 from-violet-500 to-fuchsia-500 shadow`}
-                    >
-                        <h2 className="font-bold text-xl mb-1">
-                            Welcome to the revamped membership system!
-                        </h2>
-                        <p className="font-semibold text-lg mb-4">
-                            Things look a little bit different around here.
-                        </p>
+                    {/*<div*/}
+                    {/*    className={`bg-gradient-to-r text-white rounded-lg p-6 from-violet-500 to-fuchsia-500 shadow`}*/}
+                    {/*>*/}
+                    {/*    <h2 className="font-bold text-xl mb-1">*/}
+                    {/*        Welcome to the revamped membership system!*/}
+                    {/*    </h2>*/}
+                    {/*    <p className="font-semibold text-lg mb-4">*/}
+                    {/*        Things look a little bit different around here.*/}
+                    {/*    </p>*/}
 
-                        <p>
-                            <Button
-                                onClick={() => {
-                                    Inertia.get(route("about_changes"));
-                                }}
-                            >
-                                Find out why
-                            </Button>
-                        </p>
-                    </div>
+                    {/*    <p>*/}
+                    {/*        <Button*/}
+                    {/*            onClick={() => {*/}
+                    {/*                router.get(route("about_changes"));*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            Find out why*/}
+                    {/*        </Button>*/}
+                    {/*    </p>*/}
+                    {/*</div>*/}
 
                     {props.onboarding_sessions.length > 0 && (
                         <div id="members">

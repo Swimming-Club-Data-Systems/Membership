@@ -47,6 +47,14 @@ class CentralAppMenu
                 ];
             }
 
+            if (Gate::check('viewHorizon', [$user])) {
+                $menu[] = [
+                    'name' => 'Horizon',
+                    'href' => '/horizon',
+                    'external' => true,
+                ];
+            }
+
             if (Gate::forUser($user)->allows('manage')) {
                 $menu[] = [
                     'name' => 'Notify',
