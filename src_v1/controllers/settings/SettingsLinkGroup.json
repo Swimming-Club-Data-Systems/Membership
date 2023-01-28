@@ -11,14 +11,6 @@
       "external": false
     },
     {
-      "id": "settings-payments",
-      "name": "Payments",
-      "title": "Edit global payment settings",
-      "link": "/settings/payments",
-      "target": "_self",
-      "external": true
-    },
-    {
       "id": "settings-logo",
       "name": "Club logo",
       "title": "Upload your club's logo",
