@@ -84,7 +84,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 
 		$hasNoDD = ($hasNoSDD && $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) || ($hasNoGCDD && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT'));
 
-		if ($amount > 0 && $amount <= 15000 && !$hasNoDD) {
+		if ($amount > 0 && $amount <= 20000 && !$hasNoDD) {
 			$count = 0;
 
 			$swimsList = '<ul>';
@@ -162,7 +162,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 				$db->rollBack();
 				$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'] = true;
 			}
-		} else if ($amount > 15000) {
+		} else if ($amount > 20000) {
 			$_SESSION['TENANT-' . app()->tenant->getId()]['OverhighChargeAmount'][$entry['EntryID']] = true;
 		}
 	}

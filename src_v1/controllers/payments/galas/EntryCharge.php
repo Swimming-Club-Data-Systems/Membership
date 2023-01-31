@@ -127,7 +127,7 @@ include BASE_PATH . 'views/header.php';
 			</p>
 
 			<p>
-				This software will not let you charge more than &pound;150 for any individual gala entry.
+				This software will not let you charge more than &pound;200 for any individual gala entry.
 			</p>
 
 			<h2>Entries for this gala</h2>
@@ -232,7 +232,7 @@ include BASE_PATH . 'views/header.php';
 											</label>
 											<div class="input-group">
 												<div class="input-group-text font-monospace">&pound;</div>
-												<input type="number" pattern="[0-9]*([\.,][0-9]*)?" class="form-control font-monospace" id="<?= $entry['EntryID'] ?>-amount" name="<?= $entry['EntryID'] ?>-amount" placeholder="0.00" value="<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $entry['FeeToPay'])->toScale(2))) ?>" <?php if ($hasNoDD || $entry['Charged'] || $notReady) { ?> disabled <?php } ?> min="0" max="150" step="0.01">
+												<input type="number" pattern="[0-9]*([\.,][0-9]*)?" class="form-control font-monospace" id="<?= $entry['EntryID'] ?>-amount" name="<?= $entry['EntryID'] ?>-amount" placeholder="0.00" value="<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $entry['FeeToPay'])->toScale(2))) ?>" <?php if ($hasNoDD || $entry['Charged'] || $notReady) { ?> disabled <?php } ?> min="0" max="200" step="0.01">
 											</div>
 										</div>
 									</div>
