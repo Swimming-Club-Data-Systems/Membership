@@ -52,6 +52,8 @@ class MoveMembers implements ShouldQueue
                             'Paying' => $move->Paying,
                         ]);
                     }
+
+                    $move->delete();
                 }
             });
         }
