@@ -43,6 +43,18 @@ class Squad extends Model
             ]);
     }
 
+    public function pendingJoiners(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'squadMoves', 'New', 'Member')
+            ->using(SquadMove::class);
+    }
+
+    public function pendingLeavers(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'squadMoves', 'Old', 'Member')
+            ->using(SquadMove::class);
+    }
+
     /**
      * Get or set the fee as an integer.
      *
