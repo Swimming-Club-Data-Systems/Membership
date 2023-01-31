@@ -77,6 +77,18 @@ class Member extends Model
             ->withTimestamps();
     }
 
+    public function joiningSquads(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'squadMoves', 'Member', 'New')
+            ->using(SquadMove::class);
+    }
+
+    public function leavingSquads(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class, 'squadMoves', 'Member', 'Old')
+            ->using(SquadMove::class);
+    }
+
     public function toSearchableArray(): array
     {
         $array = $this->toArray();
