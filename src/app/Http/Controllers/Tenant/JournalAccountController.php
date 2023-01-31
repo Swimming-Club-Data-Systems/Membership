@@ -19,6 +19,7 @@ class JournalAccountController extends Controller
         return Inertia::render('Payments/Ledgers/Journals/New', [
             'ledger_id' => $ledger->id,
             'ledger_name' => $ledger->name,
+            'ledger_is_system' => $ledger->is_system,
         ]);
     }
 
@@ -53,6 +54,7 @@ class JournalAccountController extends Controller
             'ledger_id' => $ledger->id,
             'ledger_name' => $ledger->name,
             'name' => $journal->name,
+            'is_system' => $journal->is_system,
         ]);
     }
 }

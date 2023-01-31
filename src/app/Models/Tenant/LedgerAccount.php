@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string name
  * @property string type
  * @property Ledger ledger
+ * @property bool is_system
  */
 class LedgerAccount extends Model
 {

@@ -56,6 +56,7 @@ class LedgerAccountController extends Controller
             'id' => $ledger->id,
             'name' => $ledger->name,
             'type' => $ledger->type,
+            'is_system' => $ledger->is_system,
         ]);
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string name
  * @property int id
  * @property LedgerAccount ledgerAccount
+ * @property bool is_system
  */
 class JournalAccount extends Model
 {
