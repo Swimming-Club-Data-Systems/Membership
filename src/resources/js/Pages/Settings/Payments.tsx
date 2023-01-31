@@ -131,7 +131,7 @@ const Payments = (props) => {
                                     Basic settings
                                 </h3>
                                 <p className="mt-1 text-sm text-gray-500">
-                                    Change your account password.
+                                    Generic payments settings.
                                 </p>
                             </div>
 
@@ -163,7 +163,7 @@ const Payments = (props) => {
                                     New payments system options
                                 </h3>
                                 <p className="mt-1 text-sm text-gray-500">
-                                    Change your account password.
+                                    Settings for Payments V2.
                                 </p>
                             </div>
 
@@ -220,7 +220,8 @@ const Payments = (props) => {
                                     Payment methods
                                 </h3>
                                 <p className="mt-1 text-sm text-gray-500">
-                                    Change your account password.
+                                    Choose available payment methods for
+                                    Payments V2.
                                 </p>
                             </div>
 

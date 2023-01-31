@@ -175,7 +175,7 @@ Route::middleware([
 
     Route::prefix('settings')->group(function () {
         Route::name('settings.')->group(function () {
-            // Route::get('/', [SettingsController::class, 'index'])->name('index');
+            Route::get('/', [SettingsController::class, 'index'])->name('index');
             Route::get('/payments', [SettingsController::class, 'showPaymentSettings'])->name('payments');
             Route::put('/payments', [SettingsController::class, 'updatePaymentSettings']);
         });
