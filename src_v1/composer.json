@@ -21,7 +21,7 @@
         "whichbrowser/parser": "^2.1",
         "stripe/stripe-php": "^7.0",
         "pragmarx/google2fa": "^4.0",
-        "dompdf/dompdf": "^1.0.0",
+        "dompdf/dompdf": "^2.0.2",
         "erusev/parsedown-extra": "^0.7.1",
         "twilio/sdk": "^5.33",
         "brick/phonenumber": "^0.2.1",
