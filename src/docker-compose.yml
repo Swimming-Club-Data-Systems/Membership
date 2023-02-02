@@ -9,7 +9,7 @@ services:
                 WWWGROUP: '${WWWGROUP}'
                 XDEBUG: '${XDEBUG}'
                 XDEBUG_PORT: '${XDEBUG_PORT}'
-        image: sail-8.1/app
+        image: sail-8.2/app
         extra_hosts:
             - 'host.docker.internal:host-gateway'
         ports:

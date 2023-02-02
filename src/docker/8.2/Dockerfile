@@ -5,6 +5,8 @@ LABEL maintainer="Taylor Otwell"
 ARG WWWGROUP
 ARG NODE_VERSION=18
 ARG POSTGRES_VERSION=14
+ARG XDEBUG
+ARG XDEBUG_PORT
 
 WORKDIR /var/www/html
 
@@ -43,6 +45,16 @@ RUN apt-get update \
     && apt-get -y autoremove \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+RUN if [ "${XDEBUG}" = 'true' ]; then \
+    apt-get install -y php-xdebug \
+    && echo "xdebug.client_port = ${XDEBUG_PORT}" >> /etc/php/8.2/mods-available/xdebug.ini \
+    && echo "xdebug.mode = debug" >> /etc/php/8.2/mods-available/xdebug.ini \
+    # && echo "xdebug.discover_client_host = 1" >> /etc/php/8.2/mods-available/xdebug.ini \
+    && echo "xdebug.start_with_request = yes" >> /etc/php/8.2/mods-available/xdebug.ini \
+    && echo "xdebug.client_host = host.docker.internal" >> /etc/php/8.2/mods-available/xdebug.ini \
+    ;\
+fi;
 
 RUN setcap "cap_net_bind_service=+ep" /usr/bin/php8.2
 
