@@ -19,6 +19,13 @@ class LedgerAccount extends Model
     use HasFactory, BelongsToTenant;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'type', 'is_system'];
+
+    /**
      * The "booted" method of the model.
      *
      * @return void

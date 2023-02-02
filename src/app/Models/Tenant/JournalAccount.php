@@ -23,6 +23,13 @@ class JournalAccount extends Model
         journal as protected traitJournal;
     }
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['name', 'is_system'];
+
     protected static function booted()
     {
         static::created(function (JournalAccount $account) {
