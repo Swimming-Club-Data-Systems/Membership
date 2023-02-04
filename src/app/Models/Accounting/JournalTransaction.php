@@ -57,9 +57,9 @@ class JournalTransaction extends Model
             $transaction->id = \Ramsey\Uuid\Uuid::uuid4()->toString();
         });
 
-//        static::saved(function ($transaction) {
-//            $transaction->journal->resetCurrentBalances();
-//        });
+        static::saved(function ($transaction) {
+            $transaction->journal->resetCurrentBalances();
+        });
 
         static::deleted(function ($transaction) {
             $transaction->journal->resetCurrentBalances();

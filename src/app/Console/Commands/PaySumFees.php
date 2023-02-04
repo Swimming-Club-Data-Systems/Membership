@@ -37,14 +37,7 @@ class PaySumFees extends Command
             /** @var Tenant $tenant */
             $tenant->run(function () use ($tenant) {
 
-                $users = User::all();
-                foreach ($users as $user) {
-                    /** @var User $user */
-                    $balance = $user->journal->getBalance();
-                    if ($balance > 100) {
-                        // Balance greater than Stripe minimum, create an invoice for it
-                    }
-                }
+                \App\Jobs\PaySumFees::dispatchSync($tenant);
 
             });
         }
