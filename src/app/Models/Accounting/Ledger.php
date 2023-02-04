@@ -10,6 +10,7 @@ use Money\Currency;
 use Money\Money;
 
 /**
+ * @property    integer $id
  * @property    Money $balance
  * @property    Carbon $updated_at
  * @property    Carbon $post_date

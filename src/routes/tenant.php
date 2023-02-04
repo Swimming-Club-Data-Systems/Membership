@@ -159,15 +159,31 @@ Route::middleware([
 
             Route::prefix('ledgers')->group(function () {
                 Route::name('ledgers.')->group(function () {
-                    Route::get('/', [LedgerAccountController::class, 'index'])->name('index');
-                    Route::get('/new', [LedgerAccountController::class, 'new'])->name('new');
-                    Route::post('/new', [LedgerAccountController::class, 'create']);
-                    Route::get('/{ledger}', [LedgerAccountController::class, 'show'])->whereNumber('ledger')->name('show');
+                    Route::get('/', [LedgerAccountController::class, 'index'])
+                        ->name('index')
+                        ->can('view', App\Models\Tenant\LedgerAccount::class);
+                    Route::get('/new', [LedgerAccountController::class, 'new'])
+                        ->name('new')
+                        ->can('create', App\Models\Tenant\LedgerAccount::class);
+                    Route::post('/new', [LedgerAccountController::class, 'create'])
+                        ->can('create', App\Models\Tenant\LedgerAccount::class);
+                    Route::get('/{ledger}', [LedgerAccountController::class, 'show'])
+                        ->whereNumber('ledger')->name('show')
+                        ->can('view', 'ledger');
                     // Route::put('/{ledger}', [LedgerAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
-                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'new'])->whereNumber('ledger')->name('journals.new');
-                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'create'])->whereNumber('ledger');
-                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'show'])->whereNumber(['ledger', 'journal'])->name('journals.show');
-                    Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])->whereNumber('ledger');
+                    Route::get('/{ledger}/journals/new', [JournalAccountController::class, 'new'])
+                        ->whereNumber('ledger')
+                        ->name('journals.new')
+                        ->can('create', App\Models\Tenant\JournalAccount::class);
+                    Route::post('/{ledger}/journals/new', [JournalAccountController::class, 'create'])
+                        ->whereNumber('ledger')
+                        ->can('create', App\Models\Tenant\JournalAccount::class);
+                    Route::get('/{ledger}/journals/{journal}', [JournalAccountController::class, 'show'])
+                        ->whereNumber(['ledger', 'journal'])
+                        ->name('journals.show')
+                        ->can('view', 'journal');
+                    // Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])
+                    //    ->whereNumber('ledger');
                 });
             });
         });

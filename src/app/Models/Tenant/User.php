@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -46,9 +47,7 @@ use function Illuminate\Events\queueable;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal {
-        journal as protected traitJournal;
-    }
+    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal;
 
     protected bool $configOptionsCached = false;
     protected array $configOptions = [];
@@ -445,18 +444,29 @@ class User extends Authenticatable implements MustVerifyEmail
         }
     }
 
-    public function journal(): MorphOne
+    public function getJournal(): MorphOne
     {
-        if (!$this->traitJournal()) {
+        if (!$this->journal()->exists()) {
             try {
-                $this->initJournal();
+                /** @var LedgerAccount $ledger */
+                $ledger = LedgerAccount::where('name', 'Customer Income')->where('is_system', true)->first();
+
+                if (!$ledger) {
+                    // Can not proceed
+                    // throw an error
+                    throw new ModelNotFoundException("The System Customer Income Ledger could not be found");
+                }
+
+                $this->initJournal('GBP', $ledger->ledger->id);
+
+                // Refresh as the journal is not always consistently returned straight away
                 $this->refresh();
             } catch (JournalAlreadyExists $e) {
                 // Ignore, we already checked existence
             }
         }
 
-        return $this->traitJournal();
+        return $this->journal();
     }
 
     /**
