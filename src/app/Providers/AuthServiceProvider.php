@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use App\Models\Tenant\Passport\Client;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
-use App\Models\Tenant\Passport\Client;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -44,7 +44,7 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('manage', function (\App\Models\Central\User $user) {
             return $user->id === 1
                 ? Response::allow()
-                : Response::denyWithStatus(404);
+                : Response::denyAsNotFound(404);
         });
 
         Passport::useClientModel(Client::class);
@@ -56,5 +56,11 @@ class AuthServiceProvider extends ServiceProvider
         Passport::setDefaultScope([
             'view-user',
         ]);
+
+        Gate::define('manage-settings', function (\App\Models\Tenant\User $user) {
+            return $user->hasPermission('Admin')
+                ? Response::allow()
+                : Response::deny('You are not authorised to manage system settings');
+        });
     }
 }

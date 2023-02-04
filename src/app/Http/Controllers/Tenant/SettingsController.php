@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
@@ -12,11 +13,14 @@ class SettingsController extends Controller
 {
     public function index()
     {
+        Gate::authorize('manage-settings');
         return Redirect::to('/v1/settings');
     }
 
     public function showPaymentSettings()
     {
+        Gate::authorize('manage-settings');
+
         /** @var Tenant $tenant */
         $tenant = tenant();
 
@@ -51,6 +55,8 @@ class SettingsController extends Controller
 
     public function updatePaymentSettings(Request $request)
     {
+        Gate::authorize('manage-settings');
+
         $request->validate([
             'use_payments_v2' => ['boolean'],
             'enable_automated_billing_system' => ['boolean'],
