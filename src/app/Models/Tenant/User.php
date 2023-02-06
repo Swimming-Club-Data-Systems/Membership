@@ -10,6 +10,7 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
 use App\Traits\Accounting\AccountingJournal;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -44,6 +46,8 @@ use function Illuminate\Events\queueable;
  * @property string $email
  * @property StripeCustomer $stripeCustomer
  * @property Journal $journal
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -313,9 +317,14 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Permission::class, 'User');
     }
 
-    public function onboardingSessions()
+    public function onboardingSessions(): HasMany
     {
         return $this->hasMany(OnboardingSession::class, 'user', 'UserID');
+    }
+
+    public function statements(): HasMany
+    {
+        return $this->hasMany(CustomerStatement::class);
     }
 
     /**

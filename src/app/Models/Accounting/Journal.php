@@ -200,10 +200,10 @@ class Journal extends Model
      * Calculate the dollar amount debited to a journal today
      * @return float|int
      */
-    public function getDollarsDebitedToday()
+    public function getAmountDebitedToday()
     {
         $today = Carbon::now();
-        return $this->getDollarsDebitedOn($today);
+        return $this->getAmountDebitedOn($today);
     }
 
     /**
@@ -211,7 +211,7 @@ class Journal extends Model
      * @param Carbon $date
      * @return float|int
      */
-    public function getDollarsDebitedOn(Carbon $date)
+    public function getAmountDebitedOn(Carbon $date)
     {
         return $this
                 ->transactions()
@@ -226,10 +226,10 @@ class Journal extends Model
      * Calculate the dollar amount credited to a journal today
      * @return float|int
      */
-    public function getDollarsCreditedToday()
+    public function getAmountCreditedToday()
     {
         $today = Carbon::now();
-        return $this->getDollarsCreditedOn($today);
+        return $this->getAmountCreditedOn($today);
     }
 
     /**
@@ -237,7 +237,7 @@ class Journal extends Model
      * @param Carbon $date
      * @return float|int
      */
-    public function getDollarsCreditedOn(Carbon $date)
+    public function getAmountCreditedOn(Carbon $date)
     {
         return $this
                 ->transactions()
