@@ -5,7 +5,7 @@
  * Displays list of users and their primary mandate
  */
 
-if (!app()->tenant->getStripeAccount() || !app()->tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) {
+if (!app()->tenant->getStripeAccount()) {
   http_response_code(302);
   header('location: ' . autoUrl('payments/user-mandates/go-cardless'));
   return;
