@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property    int $credit
  * @property    string $currency
  * @property    string memo
+ * @property    Journal $journal
  * @property    \Carbon\Carbon $post_date
  * @property    \Carbon\Carbon $updated_at
  * @property    \Carbon\Carbon $created_at
