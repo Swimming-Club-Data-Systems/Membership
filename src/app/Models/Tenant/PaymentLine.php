@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $id
@@ -26,7 +27,7 @@ use Illuminate\Support\Str;
  */
 class PaymentLine extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToPrimaryModel;
 
     protected $table = 'v2_payment_lines';
 
@@ -45,7 +46,7 @@ class PaymentLine extends Model
      */
     public function payment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Payment::class);
+        return $this->belongsTo(Payment::class, 'v2_payment_id');
     }
 
     /**
@@ -81,5 +82,10 @@ class PaymentLine extends Model
         return Attribute::make(
             set: fn($value) => Str::lower($value),
         );
+    }
+
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'payment';
     }
 }

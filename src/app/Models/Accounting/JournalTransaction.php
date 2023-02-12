@@ -2,6 +2,7 @@
 
 namespace App\Models\Accounting;
 
+use App\Models\Tenant\CustomerStatement;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -113,6 +114,11 @@ class JournalTransaction extends Model
     public function setCurrency($currency)
     {
         $this->currency = $currency;
+    }
+
+    public function customerStatements(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(CustomerStatement::class);
     }
 
 }

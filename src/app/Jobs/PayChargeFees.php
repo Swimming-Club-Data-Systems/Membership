@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Business\Helpers\ApplicationFeeAmount;
+use App\Enums\BalanceTopUpStatus;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\BalanceTopUp;
 use App\Models\Tenant\Payment;
@@ -54,9 +55,9 @@ class PayChargeFees implements ShouldQueue
         $lineItem->quantity = 1;
         $lineItem->currency = 'gbp';
         $lineItem->associated()->associate($this->topUp);
-        $lineItem->save();
+        $payment->lines()->save($lineItem);
 
-        $lineItem->payment()->associate($payment);
+        $payment->refresh();
 
         try {
             $intent = \Stripe\PaymentIntent::create([
@@ -81,9 +82,15 @@ class PayChargeFees implements ShouldQueue
 
             $payment->stripe_id = $intent->id;
             $payment->save();
+
+            $this->topUp->status = BalanceTopUpStatus::IN_PROGRESS;
+            $this->topUp->save();
         } catch (\Exception $e) {
+            report($e);
             $payment->status = 'failed';
             $payment->save();
+            $this->topUp->status = BalanceTopUpStatus::FAILED;
+            $this->topUp->save();
         }
     }
 

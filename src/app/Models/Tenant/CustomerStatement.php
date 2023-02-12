@@ -2,11 +2,13 @@
 
 namespace App\Models\Tenant;
 
+use App\Models\Accounting\JournalTransaction;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Date;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $id
@@ -20,7 +22,17 @@ use Illuminate\Support\Facades\Date;
  */
 class CustomerStatement extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToPrimaryModel;
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime',
+    ];
 
     /**
      * Automatically generate a new statement for a given user
@@ -48,8 +60,8 @@ class CustomerStatement extends Model
         $statement->start = $start;
         $statement->end = Date::now();
         $statement->user()->associate($user);
-        $statement->opening_balance = $journal->getBalanceOn($statement->start);
-        $statement->closing_balance = $journal->getBalanceOn($statement->end);
+        $statement->opening_balance = $journal->getBalanceOn($statement->start)->getAmount();
+        $statement->closing_balance = $journal->getBalanceOn($statement->end)->getAmount();
 
         $credits = $journal->getCreditBalanceOn($statement->end)->getAmount() - $journal->getCreditBalanceOn($statement->start)->getAmount();
         $debits = $journal->getDebitBalanceOn($statement->end)->getAmount() - $journal->getDebitBalanceOn($statement->start)->getAmount();
@@ -57,6 +69,14 @@ class CustomerStatement extends Model
         $statement->credits = $credits;
         $statement->debits = $debits;
         $statement->save();
+
+        $transactions = $journal->transactions()
+            ->where('post_date', '>', $statement->start)
+            ->where('post_date', '<=', $statement->end)
+            ->get();
+        foreach ($transactions as $transaction) {
+            $statement->transactions()->attach($transaction);
+        }
 
         return $statement;
     }
@@ -66,26 +86,13 @@ class CustomerStatement extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function transactionsQuery(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        $this->user->getJournal();
-        return $this->user->journal->transactions()
-            ->where('post_date', '>', $this->start)
-            ->where('post_date', '<=', $this->end);
+        return $this->belongsToMany(JournalTransaction::class);
     }
 
-    public function transactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function getRelationshipToPrimaryModel(): string
     {
-        return $this->transactionsQuery();
+        return 'user';
     }
-
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'start' => 'datetime',
-        'end' => 'datetime',
-    ];
 }

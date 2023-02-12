@@ -18,7 +18,8 @@ return new class extends Migration {
                 ->nullable();
             $table->foreign('user_UserID')
                 ->references('UserID')
-                ->on('users');
+                ->on('users')
+                ->nullOnDelete();
             $table->string('stripe_id')->nullable();
             $table->string('stripe_status')->nullable();
             $table->bigInteger('amount')

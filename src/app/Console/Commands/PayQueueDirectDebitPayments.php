@@ -32,7 +32,7 @@ class PayQueueDirectDebitPayments extends Command
     {
         $tenants = Tenant::where('data->use_payments_v2', true)->get();
 
-        $now = Carbon::now();
+        $now = Carbon::now()->endOfDay();
 
         foreach ($tenants as $tenant) {
             /** @var Tenant $tenant */
@@ -41,7 +41,7 @@ class PayQueueDirectDebitPayments extends Command
                 // Get BalanceTopUps where the charge date is <= now
                 $topups = BalanceTopUp::where('status', 'pending')
                     ->where('scheduled_for', '<=', $now)
-                    ->with('payment_method')
+                    ->with('paymentMethod')
                     ->get();
 
                 foreach ($topups as $topup) {

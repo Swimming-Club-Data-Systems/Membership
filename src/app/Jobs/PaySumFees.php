@@ -76,11 +76,11 @@ class PaySumFees implements ShouldQueue
                     ->orderBy('created_at', 'asc')
                     ->first();
 
-                if ($paymentMethod && $statement->closing_balance >= 100) {
+                if ($paymentMethod && $statement->closing_balance <= -100) {
                     // Create a balance top up if g.t.e. £1 and user has a usable payment method
                     $balanceTopUp = new BalanceTopUp();
                     $balanceTopUp->user()->associate($user);
-                    $balanceTopUp->amount = $statement->closing_balance;
+                    $balanceTopUp->amount = abs($statement->closing_balance);
                     $balanceTopUp->scheduled_for = $scheduledForDate;
                     $balanceTopUp->paymentMethod()->associate($paymentMethod);
                     $balanceTopUp->save();

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -30,7 +31,7 @@ use Illuminate\Support\Str;
  */
 class Payment extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToTenant;
 
     protected $table = 'v2_payments';
 
@@ -40,7 +41,7 @@ class Payment extends Model
 
     public function lines(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PaymentLine::class);
+        return $this->hasMany(PaymentLine::class, 'v2_payment_id');
     }
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
