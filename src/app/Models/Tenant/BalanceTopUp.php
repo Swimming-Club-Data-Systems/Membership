@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Enums\BalanceTopUpStatus;
+use App\Interfaces\PaidObject;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class BalanceTopUp extends Model
+class BalanceTopUp extends Model implements PaidObject
 {
     use HasFactory, BelongsToPrimaryModel;
 
@@ -71,6 +72,26 @@ class BalanceTopUp extends Model
     public function getRelationshipToPrimaryModel(): string
     {
         return 'user';
+    }
+
+    public function handlePaid(): void
+    {
+        // TODO: Implement handlePaid() method.
+    }
+
+    public function handleChargedBack(): void
+    {
+        // TODO: Implement handleChargedBack() method.
+    }
+
+    public function handleRefund(int $refundAmount): void
+    {
+        // TODO: Implement handleRefund() method.
+    }
+
+    public function getPaymentLineDescriptor(): string
+    {
+        return 'Payment to Account Balance';
     }
 
 }

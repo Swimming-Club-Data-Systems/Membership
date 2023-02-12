@@ -2,6 +2,8 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\ApplicationFeeAmount;
+use App\Enums\PaymentStatus;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -35,9 +37,9 @@ class Payment extends Model
 
     protected $table = 'v2_payments';
 
-    public function paymentIntent() {
-        // Create and return payment intent
-    }
+    protected $casts = [
+        'status' => PaymentStatus::class,
+    ];
 
     public function lines(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
@@ -52,6 +54,21 @@ class Payment extends Model
     public function paymentMethod(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function applicationFeeAmount(): int
+    {
+        return ApplicationFeeAmount::calculateAmount($this->amount);
+    }
+
+    public function paymentIntent(): \Stripe\PaymentIntent
+    {
+        return \Stripe\PaymentIntent::retrieve([
+            'id' => $this->stripe_id,
+            'expand' => ['customer', 'payment_method', 'charges.data.balance_transaction'],
+        ], [
+            'stripe_account' => $this->tenant->stripeAccount(),
+        ]);
     }
 
     protected function currency(): Attribute
