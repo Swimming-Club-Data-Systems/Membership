@@ -19,14 +19,21 @@ return new class extends Migration {
             $table->foreign('user_UserID')
                 ->references('UserID')
                 ->on('users');
+            $table->string('stripe_id')->nullable();
+            $table->string('stripe_status')->nullable();
             $table->bigInteger('amount')
                 ->default(0);
             $table->bigInteger('amount_refunded')
                 ->default(0);
+            $table->bigInteger('stripe_fee')
+                ->default(0);
+            $table->bigInteger('application_fee_amount')
+                ->default(0);
             $table->foreignIdFor(\App\Models\Tenant\PaymentMethod::class)
                 ->nullable()
                 ->constrained();
-            $table->string('currency', 3);
+            $table->string('currency', 3)
+                ->default('gbp');
             $table->enum('status', ['pending', 'succeeded', 'failed', 'charged_back']);
             $table->string('return_link')
                 ->nullable();
@@ -61,10 +68,14 @@ return new class extends Migration {
             $table->bigInteger('amount_tax')->default(0);
             $table->bigInteger('amount_refunded')->default(0);
             $table->bigInteger('quantity')->default(0);
-            $table->string('currency', 3);
+            $table->string('currency', 3)->default('gbp');
             $table->string('associated_type')->nullable();
             $table->bigInteger('associated_id')->nullable();
             $table->timestamps();
+        });
+
+        Schema::table('balance_top_ups', function (Blueprint $table) {
+            $table->string('currency', 3)->default('gbp');
         });
     }
 
@@ -75,6 +86,10 @@ return new class extends Migration {
      */
     public function down()
     {
+        Schema::table('balance_top_ups', function (Blueprint $table) {
+            $table->dropColumn('currency');
+        });
+
         Schema::dropIfExists('v2_payment_lines');
 
         Schema::dropIfExists('v2_payments');

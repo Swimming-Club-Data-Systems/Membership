@@ -20,7 +20,7 @@ class PaySumFees extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sum up all fees and create statements';
 
     /**
      * Execute the console command.

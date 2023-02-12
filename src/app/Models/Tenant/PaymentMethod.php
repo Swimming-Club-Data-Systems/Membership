@@ -116,4 +116,9 @@ class PaymentMethod extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
 }

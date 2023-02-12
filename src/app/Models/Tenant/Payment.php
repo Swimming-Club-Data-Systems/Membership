@@ -11,8 +11,12 @@ use Illuminate\Support\Str;
 /**
  * @property int $id
  * @property User $user
+ * @property string $stripe_id
+ * @property string $stripe_status
  * @property int $amount
  * @property int $amount_refunded
+ * @property int $stripe_fee
+ * @property int $application_fee_amount
  * @property PaymentMethod $paymentMethod
  * @property string $currency
  * @property string $status
@@ -42,6 +46,11 @@ class Payment extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function paymentMethod(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(PaymentMethod::class);
     }
 
     protected function currency(): Attribute

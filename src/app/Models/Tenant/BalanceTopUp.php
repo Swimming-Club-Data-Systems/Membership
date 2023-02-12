@@ -7,11 +7,13 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $id
  * @property User $user
  * @property int $amount
+ * @property string $currency
  * @property PaymentMethod $paymentMethod
  * @property User $initiator
  * @property Carbon $scheduled_for
@@ -21,7 +23,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class BalanceTopUp extends Model
 {
-    use HasFactory;
+    use HasFactory, BelongsToPrimaryModel;
 
     /**
      * The attributes that should be cast.
@@ -64,6 +66,11 @@ class BalanceTopUp extends Model
     public function paymentMethod(): BelongsTo
     {
         return $this->belongsTo(PaymentMethod::class);
+    }
+
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'user';
     }
 
 }
