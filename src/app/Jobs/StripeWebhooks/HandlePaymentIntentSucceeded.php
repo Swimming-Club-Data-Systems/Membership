@@ -5,6 +5,7 @@ namespace App\Jobs\StripeWebhooks;
 use App\Enums\PaymentStatus;
 use App\Interfaces\PaidObject;
 use App\Models\Central\Tenant;
+use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
 use Illuminate\Bus\Queueable;
@@ -58,12 +59,28 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                     DB::beginTransaction();
 
                     $payment->status = PaymentStatus::SUCCEEDED;
+                    $payment->stripe_status = $intent->status;
                     foreach ($payment->lines()->get() as $line) {
                         /** @var PaymentLine $line */
                         if ($line->associated && $line->associated instanceof PaidObject) {
                             $line->associated->handlePaid();
                         }
                     }
+
+                    // Credit the user's journal with the amount paid
+                    if ($payment->user) {
+                        $payment->user->getJournal();
+                        $journal = $payment->user->journal;
+                        $transaction = $journal->credit($payment->amount);
+                    } else {
+                        // Credit the guest journal
+                        $guestIncomeJournal = JournalAccount::firstWhere([
+                            'name' => 'Guest Customers',
+                            'is_system' => true
+                        ]);
+                        $transaction = $guestIncomeJournal->credit($payment->amount);
+                    }
+                    $transaction->referencesObject($payment);
 
                     DB::commit();
                 }

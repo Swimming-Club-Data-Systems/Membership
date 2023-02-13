@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Business\Helpers\ApplicationFeeAmount;
 use App\Enums\PaymentStatus;
+use App\Enums\StripePaymentIntentStatus;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -39,6 +40,7 @@ class Payment extends Model
 
     protected $casts = [
         'status' => PaymentStatus::class,
+        'stripe_status' => StripePaymentIntentStatus::class,
     ];
 
     public function lines(): \Illuminate\Database\Eloquent\Relations\HasMany

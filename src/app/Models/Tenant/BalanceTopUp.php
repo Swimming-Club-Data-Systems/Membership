@@ -76,7 +76,8 @@ class BalanceTopUp extends Model implements PaidObject
 
     public function handlePaid(): void
     {
-        // TODO: Implement handlePaid() method.
+        $this->status = BalanceTopUpStatus::COMPLETE;
+        $this->save();
     }
 
     public function handleChargedBack(): void
@@ -92,6 +93,18 @@ class BalanceTopUp extends Model implements PaidObject
     public function getPaymentLineDescriptor(): string
     {
         return 'Payment to Account Balance';
+    }
+
+    public function handleFailed(): void
+    {
+        $this->status = BalanceTopUpStatus::FAILED;
+        $this->save();
+    }
+
+    public function handleCanceled(): void
+    {
+        $this->status = BalanceTopUpStatus::FAILED;
+        $this->save();
     }
 
 }
