@@ -2,12 +2,9 @@
 
 namespace App\Jobs\StripeWebhooks;
 
-use App\Enums\PaymentStatus;
-use App\Interfaces\PaidObject;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\Payment;
-use App\Models\Tenant\PaymentLine;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +13,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Spatie\WebhookClient\Models\WebhookCall;
 
-class HandlePaymentIntentSucceeded implements ShouldQueue
+class HandleChargeDisputeCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -43,51 +40,39 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
 
         $tenant->run(function () {
 
-            $intent = \Stripe\PaymentIntent::retrieve([
+            $dispute = \Stripe\Dispute::retrieve([
                 'id' => $this->webhookCall->payload['data']['object']['id'],
-                'expand' => ['customer', 'payment_method', 'charges.data.balance_transaction'],
+                'expand' => ['payment_intent'],
             ], [
                 'stripe_account' => $this->webhookCall->payload['account']
             ]);
 
-            if ($intent?->metadata?->payment_id) {
+            if ($dispute?->payment_intent?->metadata?->payment_id) {
                 // Try and find a payment with this id
                 /** @var Payment $payment */
-                $payment = Payment::findOrFail($intent->metadata->payment_id);
+                $payment = Payment::find($dispute?->payment_intent?->metadata?->payment_id);
 
-                if ($payment->status != PaymentStatus::SUCCEEDED) {
+                if ($payment) {
                     DB::beginTransaction();
 
-                    $payment->status = PaymentStatus::SUCCEEDED;
-                    $payment->stripe_status = $intent->status;
-                    foreach ($payment->lines()->get() as $line) {
-                        /** @var PaymentLine $line */
-                        if ($line->associated && $line->associated instanceof PaidObject) {
-                            $line->associated->handlePaid();
-                        }
-                    }
-                    $payment->save();
-
-                    // Credit the user's journal with the amount paid
+                    // We will immediately debit the appropriate journal with the dispute amount
                     if ($payment->user) {
                         $payment->user->getJournal();
                         $journal = $payment->user->journal;
-                        $transaction = $journal->credit($payment->amount, 'Payment received with thanks');
+                        $transaction = $journal->debit($dispute->amount, 'Payment Disputed');
                     } else {
                         // Credit the guest journal
                         $guestIncomeJournal = JournalAccount::firstWhere([
                             'name' => 'Guest Customers',
                             'is_system' => true
                         ]);
-                        $transaction = $guestIncomeJournal->credit($payment->amount, 'Payment received with thanks');
+                        $transaction = $guestIncomeJournal->debit($dispute->amount, 'Payment Disputed');
                     }
                     $transaction->referencesObject($payment);
 
                     DB::commit();
                 }
             }
-
-            // TODO Trigger Email Receipt
 
         });
     }
