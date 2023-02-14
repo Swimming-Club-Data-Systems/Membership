@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class JournalTransaction
  *
  * @package Scottlaurent\Accounting
+ * @property    int $id
  * @property    string $journal_id
  * @property    int $debit
  * @property    int $credit

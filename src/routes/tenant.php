@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
 use App\Http\Controllers\Tenant\LedgerAccountController;
@@ -184,6 +185,16 @@ Route::middleware([
                         ->can('view', 'journal');
                     // Route::put('/{ledger}/journals/{journal}', [JournalAccountController::class, 'addPaymentMethod'])
                     //    ->whereNumber('ledger');
+                });
+            });
+
+            Route::prefix('statements')->group(function () {
+                Route::name('statements.')->group(function () {
+                    Route::get('/', [CustomerStatementController::class, 'index'])
+                        ->name('index');
+                    Route::get('/{statement}', [CustomerStatementController::class, 'show'])
+                        ->whereNumber('statement')
+                        ->name('show');
                 });
             });
         });
