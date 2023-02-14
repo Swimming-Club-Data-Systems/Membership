@@ -13,6 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use Spatie\WebhookClient\Models\WebhookCall;
 
 class HandleChargeDisputeClosed implements ShouldQueue
 {
@@ -23,7 +24,9 @@ class HandleChargeDisputeClosed implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(
+        public WebhookCall $webhookCall
+    )
     {
         //
     }
