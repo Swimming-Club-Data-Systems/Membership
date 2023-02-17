@@ -61,6 +61,12 @@ Route::middleware([
         return Inertia::render('Dev');
     });
 
+    Route::get('/component-testing', function () {
+        return Inertia::render('ComponentTesting');
+    });
+
+    Route::get('/component-testing-user-search', [UserController::class, 'combobox']);
+
     Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->group(function () {
         Route::get('/', 'create')->name('report_an_error');
         Route::post('/', 'store');
