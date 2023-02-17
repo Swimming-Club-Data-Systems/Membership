@@ -49,39 +49,40 @@ class UserController extends Controller
             $users = User::search($request->query('query'))
                 ->where('Tenant', tenant('ID'))
                 ->paginate(50);
-        } else {
-            $users = User::orderBy('Forename', 'asc')
-                ->orderBy('Surname', 'asc')
-                ->paginate(config('50'));
         }
 
         $usersArray = [];
 
         $selectedUser = null;
-        if ($request->query('selected')) {
-            $selectedUser = User::find($request->query('selected'));
+        if ($request->query('id')) {
+            /** @var User $selectedUser */
+            $selectedUser = User::find($request->query('id'));
             if ($selectedUser) {
                 $usersArray[] = [
                     'id' => $selectedUser->UserID,
                     'name' => $selectedUser->name,
-                    'gravitar_url' => $selectedUser->gravitar_url,
+                    'image_url' => $selectedUser->gravatar_url,
                 ];
             }
         }
 
-        foreach ($users as $user) {
-            /** @var User $user */
-            $usersArray[] = [
-                'id' => $user->UserID,
-                'name' => $user->name,
-                'gravitar_url' => $user->gravitar_url,
-            ];
+        if ($users) {
+            foreach ($users as $user) {
+                /** @var User $user */
+                if ($selectedUser == null || $selectedUser->UserID !== $user->UserID) {
+                    $usersArray[] = [
+                        'id' => $user->UserID,
+                        'name' => $user->name,
+                        'image_url' => $user->gravatar_url,
+                    ];
+                }
+            }
         }
 
         $responseData = [
             'data' => $usersArray,
-            'has_more_pages' => $users->hasMorePages(),
-            'total' => $users->total(),
+            'has_more_pages' => $users && $users->hasMorePages(),
+            'total' => $users ? $users->total() : sizeof($usersArray),
         ];
 
         return \response()->json($responseData);

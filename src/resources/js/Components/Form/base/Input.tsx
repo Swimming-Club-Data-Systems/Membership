@@ -47,7 +47,7 @@ export interface InputProps extends CommonInputProps {
     type?: string;
 }
 
-function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
+export function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
     // setTimeout is required so the dom has a chance to place the cursor in the input
     setTimeout(() => {
         if (input?.current) {
@@ -139,9 +139,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             // if (groupContext.onFocus) {
             //     groupContext.onFocus();
             // }
-            if (type === "text") {
-                selectTextOnFocus(input);
-            }
+            // if (type === "text") {
+            selectTextOnFocus(input);
+            // }
         };
 
         const handleBlur = (ev: React.FocusEvent<HTMLInputElement>) => {

@@ -30,7 +30,7 @@ class TenantAdministratorsController extends Controller
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'email' => $user->email,
-                    'gravitar_url' => $user->gravitar_url,
+                    'gravatar_url' => $user->gravatar_url,
                 ];
             }),
         ]);

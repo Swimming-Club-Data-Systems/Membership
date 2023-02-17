@@ -33,6 +33,7 @@ use Stripe\Exception\InvalidRequestException;
 use function Illuminate\Events\queueable;
 
 /**
+ * @property int $id
  * @property int $UserID
  * @property string $Forename
  * @property string $Surname
@@ -48,6 +49,7 @@ use function Illuminate\Events\queueable;
  * @property Journal $journal
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property string $gravatar_url
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -94,7 +96,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @var array
      */
-    protected $appends = ['gravitar_url'];
+    protected $appends = ['gravatar_url'];
 
     protected static function booted()
     {
@@ -360,7 +362,7 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return  Attribute
      */
-    public function gravitarUrl(): Attribute
+    public function gravatarUrl(): Attribute
     {
         return new Attribute(
             get: fn() => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->EmailAddress))) . "?d=mp",

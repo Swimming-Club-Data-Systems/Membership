@@ -37,7 +37,7 @@ const PageHeader = (props) => {
     const user = {
         name: `${auth.user.first_name} ${auth.user.last_name}`,
         email: `${auth.user.email}`,
-        imageUrl: `${auth.user.gravitar_url}`,
+        imageUrl: `${auth.user.gravatar_url}`,
     };
 
     return (

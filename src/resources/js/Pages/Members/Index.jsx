@@ -14,7 +14,7 @@ const ItemContent = (props) => {
                     {/*<div className="">*/}
                     {/*    <img*/}
                     {/*        className="h-8 w-8 rounded-full"*/}
-                    {/*        src={props.gravitar_url}*/}
+                    {/*        src={props.gravatar_url}*/}
                     {/*        alt=""*/}
                     {/*    />*/}
                     {/*</div>*/}

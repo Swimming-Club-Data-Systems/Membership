@@ -55,14 +55,14 @@ class User extends Authenticatable
     ];
     protected string $guard = 'central';
     protected $table = 'central_users';
-    protected $appends = ['gravitar_url'];
+    protected $appends = ['gravatar_url'];
 
     /**
      * Get the user's profile image url.
      *
      * @return  Attribute
      */
-    public function gravitarUrl(): Attribute
+    public function gravatarUrl(): Attribute
     {
         return new Attribute(
             get: fn() => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->email))) . "?d=mp",

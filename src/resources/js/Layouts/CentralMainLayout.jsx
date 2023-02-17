@@ -37,7 +37,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
         ? {
               name: `${userObject.first_name} ${userObject.last_name}`,
               email: userObject.EmailAddress,
-              imageUrl: userObject.gravitar_url,
+              imageUrl: userObject.gravatar_url,
           }
         : null;
 

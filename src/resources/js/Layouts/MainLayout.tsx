@@ -55,7 +55,7 @@ const MainLayout: React.FC<Props> = ({
         ? {
               name: `${userObject.Forename} ${userObject.Surname}`,
               email: userObject.EmailAddress,
-              imageUrl: userObject.gravitar_url,
+              imageUrl: userObject.gravatar_url,
           }
         : null;
 
