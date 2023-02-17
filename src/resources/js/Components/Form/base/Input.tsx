@@ -51,9 +51,8 @@ export function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
     // setTimeout is required so the dom has a chance to place the cursor in the input
     setTimeout(() => {
         if (input?.current) {
-            const originalType = input.current.type;
-            input.current.type = "text";
-            console.log(input.current);
+            // const originalType = input.current.type;
+            // input.current.type = "text";
             const { selectionStart, selectionEnd, value } = input.current;
             const { length } = value;
             // only select text if cursor is at the very end or the very start of the value
@@ -65,7 +64,7 @@ export function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
                     input.current.setSelectionRange(0, length);
                 }
             }
-            input.current.type = originalType;
+            // input.current.type = originalType;
         }
     });
 }
