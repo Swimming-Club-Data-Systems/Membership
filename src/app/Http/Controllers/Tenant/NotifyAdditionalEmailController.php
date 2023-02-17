@@ -12,6 +12,16 @@ use Inertia\Inertia;
 
 class NotifyAdditionalEmailController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function show(Request $request, $data)
     {
         $data = json_decode(urldecode($data));

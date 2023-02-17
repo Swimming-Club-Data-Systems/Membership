@@ -11,6 +11,16 @@ use Inertia\Inertia;
 
 class SettingsController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         Gate::authorize('manage-settings');
