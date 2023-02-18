@@ -10,6 +10,16 @@ use Inertia\Inertia;
 
 class LedgerAccountController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index()
     {
         $ledgers = LedgerAccount::orderBy('name', 'asc')->paginate(config('app.per_page'));

@@ -12,6 +12,16 @@ use Inertia\Inertia;
 
 class NotifyHistoryController extends Controller
 {
+    /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Request $request)
     {
         $this->authorize('view', NotifyHistory::class);
