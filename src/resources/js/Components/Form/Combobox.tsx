@@ -1,14 +1,11 @@
 import React, { ReactNode, useContext } from "react";
 import { useField, useFormikContext } from "formik";
-import {
-    Combobox as BaseCombobox,
-    Props as BaseProps,
-} from "@/Components/Form/base/combobox/Combobox";
+import { Combobox as BaseCombobox } from "@/Components/Form/base/combobox/Combobox";
 import { FormSpecialContext } from "@/Components/Form/Form";
 import { name } from "@tailwindcss/typography";
 
 interface Props {
-    id: string;
+    id?: string;
     disabled?: boolean;
     type?: string;
     leftText?: string;

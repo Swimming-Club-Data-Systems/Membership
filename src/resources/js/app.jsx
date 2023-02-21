@@ -1,7 +1,7 @@
 import "./bootstrap";
 import "../css/app.css";
 import React from "react";
-import { render } from "react-dom";
+import { createRoot } from "react-dom/client";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Provider } from "react-redux";
@@ -38,13 +38,13 @@ createInertiaApp({
             ),
         ]),
     setup({ el, App, props }) {
-        return render(
+        const root = createRoot(el);
+        return root.render(
             <ErrorBoundary>
                 <Wrapper>
                     <App {...props} />
                 </Wrapper>
-            </ErrorBoundary>,
-            el
+            </ErrorBoundary>
         );
     },
 });

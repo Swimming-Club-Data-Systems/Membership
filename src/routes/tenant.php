@@ -9,6 +9,7 @@ use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
 use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\NotifyHistoryController;
+use App\Http\Controllers\Tenant\PaymentEntryController;
 use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
@@ -201,6 +202,14 @@ Route::middleware([
                     Route::get('/{statement}', [CustomerStatementController::class, 'show'])
                         ->whereNumber('statement')
                         ->name('show');
+                });
+            });
+
+            Route::prefix('manual-entries')->group(function () {
+                Route::name('entries.')->group(function () {
+                    Route::get('/', [PaymentEntryController::class, 'new'])
+                        ->name('index');
+                    Route::post('/', [PaymentEntryController::class, 'create']);
                 });
             });
         });
