@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\ManualPaymentEntry;
+use App\Models\Tenant\User;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PaymentEntryController extends Controller
@@ -17,10 +20,29 @@ class PaymentEntryController extends Controller
         $this->middleware('auth');
     }
 
-    public function new()
+    public function new(Request $request)
     {
-        return Inertia::render('Payments/Entry', [
+        $this->authorize('create');
 
+        /** @var User $user */
+        $user = $request->user();
+
+        // Create a ManualPaymentEntry record to update in real time
+        // Uncomplete manual payment entries are prunable
+
+        $entry = new ManualPaymentEntry();
+        $entry->user()->associate($user);
+        $entry->save();
+
+        return redirect()->route('payments.entries.amend', $entry);
+    }
+
+    public function amend(ManualPaymentEntry $entry)
+    {
+        $this->authorize('amend', $entry);
+
+        return Inertia::render('Payments/Entry', [
+            'id' => $entry->id,
         ]);
     }
 

@@ -38,6 +38,14 @@ const Index: Layout<Props> = (props: Props) => {
                 })}
                 hideDefaultButtons
                 submitTitle="Add user"
+                formName="new_admin_user"
+                // action={route("central.tenants.administrators", props.id)}
+                method="post"
+                inertiaOptions={{
+                    onSuccess: () => {
+                        return;
+                    },
+                }}
             >
                 <div className="grid gap-4">
                     <Card
@@ -141,7 +149,7 @@ Index.layout = (page) => (
     <MainLayout
         breadcrumbs={[
             { name: "Payments", route: "my_account.index" },
-            { name: "Manual Payment Entry", route: "payments.entries.index" },
+            { name: "Manual Payment Entry", route: "payments.entries.new" },
         ]}
     >
         <Container noMargin>{page}</Container>

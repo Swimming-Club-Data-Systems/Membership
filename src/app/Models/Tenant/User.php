@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
@@ -47,6 +46,7 @@ use function Illuminate\Events\queueable;
  * @property string $email
  * @property StripeCustomer $stripeCustomer
  * @property Journal $journal
+ * @property Carbon $Edit
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $gravatar_url
@@ -89,6 +89,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'edit' => 'datetime',
     ];
     protected $primaryKey = 'UserID';
     /**
@@ -285,6 +286,11 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Gala::class, 'teamManagers', 'User', 'Gala')
             ->withTimestamps();
+    }
+
+    public function manualPaymentEntries(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(ManualPaymentEntry::class);
     }
 
     public function hasPermission(string|array $name)

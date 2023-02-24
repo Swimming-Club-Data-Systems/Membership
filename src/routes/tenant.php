@@ -207,8 +207,11 @@ Route::middleware([
 
             Route::prefix('manual-entries')->group(function () {
                 Route::name('entries.')->group(function () {
-                    Route::get('/', [PaymentEntryController::class, 'new'])
-                        ->name('index');
+                    Route::get('/new', [PaymentEntryController::class, 'new'])
+                        ->name('new');
+                    Route::get('/{entry}', [PaymentEntryController::class, 'amend'])
+                        ->whereNumber('entry')
+                        ->name('amend');
                     Route::post('/', [PaymentEntryController::class, 'create']);
                 });
             });
