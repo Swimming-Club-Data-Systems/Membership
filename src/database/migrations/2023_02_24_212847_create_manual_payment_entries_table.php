@@ -44,6 +44,7 @@ return new class extends Migration {
                 ->references('UserID')
                 ->on('users')
                 ->cascadeOnDelete();
+            $table->unique(['manual_payment_entry_id', 'user_UserID']);
             $table->timestamps();
         });
     }
