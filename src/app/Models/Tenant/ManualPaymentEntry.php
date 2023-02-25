@@ -20,6 +20,15 @@ class ManualPaymentEntry extends Model
 {
     use HasFactory, Prunable, BelongsToTenant;
 
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'posted' => false,
+    ];
+
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);

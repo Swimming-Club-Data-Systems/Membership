@@ -66,7 +66,7 @@ class Handler extends ExceptionHandler
             return redirect(route('central.home'));
         }
 
-        if (!$debug && in_array($response->status(), [500, 503, 404, 403])) {
+        if (!$debug && in_array($response->status(), [500, 503, 400, 401, 404, 403])) {
             return Inertia::render('Errors/Error', ['status' => $response->status(), 'message' => $response->statusText()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
