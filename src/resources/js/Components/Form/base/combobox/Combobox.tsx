@@ -22,6 +22,7 @@ export interface Props {
     className?: string;
     isInvalid?: string;
     help?: string;
+    nullable?: boolean;
 }
 
 export const Combobox: React.FC<Props> = ({
@@ -92,6 +93,7 @@ export const Combobox: React.FC<Props> = ({
             disabled={props.disabled}
             onBlur={props.onBlur}
             name={props.name}
+            nullable={props.nullable}
         >
             <HeadlessCombobox.Label className="block text-sm font-medium text-gray-700">
                 {props.label}

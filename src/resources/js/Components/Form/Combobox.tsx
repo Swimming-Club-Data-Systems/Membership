@@ -17,6 +17,7 @@ interface Props {
     endpoint: string;
     keyField?: string;
     help?: string;
+    nullable?: boolean;
 }
 
 const Combobox: React.FC<Props> = ({

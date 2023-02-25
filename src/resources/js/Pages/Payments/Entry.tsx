@@ -10,10 +10,8 @@ import Form, {
 import * as yup from "yup";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
-import Modal from "@/Components/Modal";
 import Button from "@/Components/Button";
 import Combobox from "@/Components/Form/Combobox";
-import { BanknotesIcon, UserIcon } from "@heroicons/react/24/outline";
 import TextInput from "@/Components/Form/TextInput";
 import Radio from "@/Components/Form/Radio";
 import BasicList from "@/Components/BasicList";
@@ -89,28 +87,30 @@ const Index: Layout<Props> = (props: Props) => {
                 subtitle="Create a manual payment entry"
             />
 
-            <Form
-                initialValues={{
-                    user_select: null,
-                }}
-                validationSchema={yup.object().shape({
-                    user_select: yup
-                        .number()
-                        .typeError("You must choose a user")
-                        .required("You must choose a user"),
-                })}
-                hideDefaultButtons
-                submitTitle="Add user"
-                formName="manage_users"
-                action={route("payments.entries.add_user", { entry: props.id })}
-                method="post"
-                inertiaOptions={{
-                    preserveScroll: true,
-                    preserveState: true,
-                }}
-                hideErrors
-            >
-                <div className="grid gap-4">
+            <div className="grid gap-4">
+                <Form
+                    initialValues={{
+                        user_select: null,
+                    }}
+                    validationSchema={yup.object().shape({
+                        user_select: yup
+                            .number()
+                            .typeError("You must choose a user")
+                            .required("You must choose a user"),
+                    })}
+                    hideDefaultButtons
+                    submitTitle="Add user"
+                    formName="manage_users"
+                    action={route("payments.entries.add_user", {
+                        entry: props.id,
+                    })}
+                    method="post"
+                    inertiaOptions={{
+                        preserveScroll: true,
+                        preserveState: true,
+                    }}
+                    hideErrors
+                >
                     <Card
                         title="Users"
                         subtitle="Choose users to create manual payment entries for."
@@ -130,85 +130,90 @@ const Index: Layout<Props> = (props: Props) => {
                             help="Start typing to find a user"
                         />
                     </Card>
+                </Form>
 
+                <Form
+                    initialValues={{
+                        description: "",
+                        amount: 0,
+                        type: "debit",
+                        user_select: null,
+                    }}
+                    validationSchema={yup.object().shape({
+                        description: yup
+                            .string()
+                            .required("A description is required")
+                            .max(
+                                255,
+                                "Description must be 255 characters or less"
+                            ),
+                        amount: yup
+                            .number()
+                            .typeError("You must enter an amount")
+                            .required("You must enter an amount")
+                            .min(
+                                0,
+                                "You must enter an amount greater than £0.00"
+                            )
+                            .max(
+                                1000,
+                                "You must enter an amount less than or equal to £1000.00"
+                            ),
+                        type: yup
+                            .string()
+                            .oneOf(
+                                ["credit", "debit"],
+                                "The payment type must be one of Credit or Debit"
+                            ),
+                        journal_select: yup.number().nullable(),
+                    })}
+                    hideDefaultButtons
+                    submitTitle="Add line"
+                    formName="manage_lines"
+                    action={route("payments.entries.add_line", {
+                        entry: props.id,
+                    })}
+                    method="post"
+                    inertiaOptions={{
+                        preserveScroll: true,
+                        preserveState: true,
+                    }}
+                    hideErrors
+                >
                     <Card
-                        title="Payment Lines"
-                        subtitle="Create payment lines."
-                        footer={
-                            <Button
-                                onClick={() => setShowCreateLineModal(true)}
-                            >
-                                Add line
-                            </Button>
-                        }
+                        title="Line Items"
+                        subtitle="Add multiple line items to this manual payment entry."
+                        footer={<SubmissionButtons />}
                     >
-                        <FlashAlert className="mb-4" bag="direct_debit" />
-                    </Card>
-                </div>
-            </Form>
+                        <RenderServerErrors />
+                        <FlashAlert className="mb-4" bag="manage_lines" />
 
-            <Form
-                initialValues={{}}
-                validationSchema={yup.object().shape({})}
-                hideDefaultButtons
-            >
-                <Modal
-                    show={showUserSelectModal}
-                    onClose={() => {
-                        // Call formik clear
-                        setShowUserSelectModal(false);
-                    }}
-                    variant="primary"
-                    title="Select user"
-                    buttons={<SubmissionButtons />}
-                    Icon={UserIcon}
-                >
-                    <Combobox
-                        endpoint="/component-testing-user-search"
-                        name="user_select"
-                        label="User"
-                        help="Start typing to find a user"
-                    />
-                </Modal>
-            </Form>
+                        {props.users.length > 0 && (
+                            <BasicList items={props.users.map(User)} />
+                        )}
 
-            <Form
-                initialValues={{
-                    line_description: "",
-                    line_price: "",
-                    type: "debit",
-                }}
-                validationSchema={yup.object().shape({
-                    line_description: yup.string().required().max(255),
-                    line_price: yup.number().required().min(0).max(1000),
-                    type: yup.string().oneOf(["credit", "debit"]),
-                })}
-                hideDefaultButtons
-            >
-                <Modal
-                    show={showCreateLineModal}
-                    onClose={() => {
-                        // Call formik clear
-                        setShowCreateLineModal(false);
-                    }}
-                    variant="primary"
-                    title="Create line"
-                    buttons={<SubmissionButtons />}
-                    Icon={BanknotesIcon}
-                >
-                    <div className="">
                         <TextInput
-                            name="line_description"
+                            name="description"
                             label="Line description"
                         />
 
-                        <TextInput name="line_price" label="Line price" />
+                        <TextInput name="amount" label="Line amount (£ GBP)" />
 
-                        <Radio name="type" value="debit" label="Debit" />
-                        <Radio name="type" value="credit" label="Credit" />
-                    </div>
-                </Modal>
-            </Form>
+                        <div>
+                            <Radio name="type" value="debit" label="Debit" />
+                            <Radio name="type" value="credit" label="Credit" />
+                        </div>
+
+                        <Combobox
+                            endpoint="/component-testing-user-search"
+                            name="user_select"
+                            label="Journal account"
+                            help="Start typing to find a journal account"
+                            nullable
+                        />
+                    </Card>
+                </Form>
+            </div>
         </>
     );
 };
