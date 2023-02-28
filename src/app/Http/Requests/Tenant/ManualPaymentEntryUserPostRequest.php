@@ -41,10 +41,10 @@ class ManualPaymentEntryUserPostRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_select.required' => 'A user is required',
-            'user_select.integer' => 'The provided user id must be an integer',
-            'user_select.exists:users,UserID' => 'A user is required',
-            'user_select.unique' => 'The selected user is already assigned to this manual payment entry',
+            'user_select.required' => 'A user is required.',
+            'user_select.integer' => 'The provided user id must be an integer.',
+            'user_select.exists:users,UserID' => 'A user is required.',
+            'user_select.unique' => 'The selected user is already assigned to this manual payment entry.',
         ];
     }
 }

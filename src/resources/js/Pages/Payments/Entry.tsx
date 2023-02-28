@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
@@ -24,10 +24,23 @@ type User = {
     email: string;
 };
 
+type Line = {
+    manual_payment_entry_id: number;
+    line_id: number;
+    description: string;
+    credit: number;
+    debit: number;
+    credit_formatted: string;
+    debit_formatted: string;
+    type: string;
+    journal_account_name: string;
+};
+
 type Props = {
     id: number;
     users: User[];
-    lines: [];
+    lines: Line[];
+    can_post: boolean;
 };
 
 const deleteUser = async (entry, user) => {
@@ -35,6 +48,20 @@ const deleteUser = async (entry, user) => {
         route("payments.entries.delete_user", { entry: entry, user: user }),
         {
             only: ["users", "flash"],
+            preserveScroll: true,
+            preserveState: true,
+        }
+    );
+};
+
+const deleteLine = async (entry, line) => {
+    router.delete(
+        route("payments.entries.delete_line", {
+            entry: entry,
+            line: line,
+        }),
+        {
+            only: ["lines", "flash"],
             preserveScroll: true,
             preserveState: true,
         }
@@ -63,6 +90,49 @@ const User = (item: User) => {
                                     deleteUser(
                                         item.manual_payment_entry_id,
                                         item.user_id
+                                    );
+                                }}
+                            >
+                                Delete
+                            </Button>
+                        </>
+                    </div>
+                </div>
+            </>
+        ),
+    };
+};
+
+const Line = (item: Line) => {
+    return {
+        id: item.line_id,
+        content: (
+            <>
+                <div
+                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 text-sm"
+                    key={item.line_id}
+                >
+                    <div className="">
+                        <div className="text-gray-900">{item.description}</div>
+                        <div className="text-gray-500">
+                            {item.type === "debit" && (
+                                <>£{item.debit_formatted} (debit)</>
+                            )}
+                            {item.type === "credit" && (
+                                <>£{item.credit_formatted} (credit)</>
+                            )}{" "}
+                            &middot; {item.journal_account_name}
+                        </div>
+                    </div>
+                    <div className="block">
+                        <>
+                            <Button
+                                variant="danger"
+                                className="ml-3"
+                                onClick={() => {
+                                    deleteLine(
+                                        item.manual_payment_entry_id,
+                                        item.line_id
                                     );
                                 }}
                             >
@@ -181,15 +251,15 @@ const Index: Layout<Props> = (props: Props) => {
                     hideErrors
                 >
                     <Card
-                        title="Line Items"
+                        title="Line items"
                         subtitle="Add multiple line items to this manual payment entry."
                         footer={<SubmissionButtons />}
                     >
                         <RenderServerErrors />
                         <FlashAlert className="mb-4" bag="manage_lines" />
 
-                        {props.users.length > 0 && (
-                            <BasicList items={props.users.map(User)} />
+                        {props.lines.length > 0 && (
+                            <BasicList items={props.lines.map(Line)} />
                         )}
 
                         <TextInput
@@ -200,8 +270,16 @@ const Index: Layout<Props> = (props: Props) => {
                         <TextInput name="amount" label="Line amount (£ GBP)" />
 
                         <div>
-                            <Radio name="type" value="debit" label="Debit" />
-                            <Radio name="type" value="credit" label="Credit" />
+                            <Radio
+                                name="type"
+                                value="debit"
+                                label="Debit (add a charge to the user's account)"
+                            />
+                            <Radio
+                                name="type"
+                                value="credit"
+                                label="Credit (add a refund to the user's account)"
+                            />
                         </div>
 
                         <Combobox
@@ -209,11 +287,41 @@ const Index: Layout<Props> = (props: Props) => {
                                 "payments.ledgers.journals.combobox"
                             )}
                             name="journal_select"
-                            label="Journal account"
+                            label="Journal account (payment category)"
                             help="Start typing to find a journal"
                         />
                     </Card>
                 </Form>
+
+                {props.can_post && (
+                    <Card
+                        title="Post transactions"
+                        subtitle="Post transactions to journals."
+                        footer={
+                            <Button
+                                onClick={() => {
+                                    router.put(
+                                        route("payments.entries.post", {
+                                            entry: props.id,
+                                        }),
+                                        {
+                                            preserveScroll: true,
+                                            preserveState: true,
+                                        }
+                                    );
+                                }}
+                            >
+                                Post
+                            </Button>
+                        }
+                    >
+                        <p className="text-sm">
+                            Are you finished? Post transactions to user journals
+                            and journal accounts to complete your manual payment
+                            entry.
+                        </p>
+                    </Card>
+                )}
             </div>
         </>
     );

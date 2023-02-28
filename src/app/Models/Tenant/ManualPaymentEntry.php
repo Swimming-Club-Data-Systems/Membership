@@ -21,6 +21,13 @@ class ManualPaymentEntry extends Model
     use HasFactory, Prunable, BelongsToTenant;
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['user', 'users', 'lines'];
+
+    /**
      * The model's default values for attributes.
      *
      * @var array

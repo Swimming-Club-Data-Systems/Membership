@@ -214,6 +214,9 @@ Route::middleware([
                 Route::name('entries.')->group(function () {
                     Route::get('/new', [PaymentEntryController::class, 'new'])
                         ->name('new');
+                    Route::put('/{entry}', [PaymentEntryController::class, 'post'])
+                        ->whereNumber('entry')
+                        ->name('post');
                     Route::get('/{entry}/edit', [PaymentEntryController::class, 'amend'])
                         ->whereNumber('entry')
                         ->name('amend');
@@ -228,9 +231,9 @@ Route::middleware([
                     Route::post('/{entry}/lines', [PaymentEntryController::class, 'addLine'])
                         ->whereNumber('entry')
                         ->name('add_line');
-                    Route::delete('/{entry}/lines/{manual_payment_entry_line}', [PaymentEntryController::class, 'deleteLine'])
+                    Route::delete('/{entry}/lines/{line}', [PaymentEntryController::class, 'deleteLine'])
                         ->whereNumber('entry')
-                        ->whereNumber('user')
+                        ->whereNumber('line')
                         ->name('delete_line')
                         ->scopeBindings();
                 });

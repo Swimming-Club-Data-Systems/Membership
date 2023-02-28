@@ -33,7 +33,13 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(ManualPaymentEntry::class)->constrained()->cascadeOnDelete();
             $table->string('description', 255);
-            $table->integer('amount');
+            $table->integer('credit')->default(0);
+            $table->integer('debit')->default(0);
+            $table->foreignId('accounting_journal_id');
+            $table->foreign('accounting_journal_id')
+                ->references('id')
+                ->on('accounting_journals')
+                ->cascadeOnDelete();
             $table->timestamps();
         });
 
@@ -44,7 +50,7 @@ return new class extends Migration {
                 ->references('UserID')
                 ->on('users')
                 ->cascadeOnDelete();
-            $table->unique(['manual_payment_entry_id', 'user_UserID']);
+            $table->unique(['manual_payment_entry_id', 'user_UserID'], 'unique_user_and_payment_entry');
             $table->timestamps();
         });
     }
