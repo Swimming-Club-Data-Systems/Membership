@@ -145,7 +145,7 @@ try {
             }
             $message_content .= '<p>Your bill for ' . date("F Y") . ' is now available. The total amount payable for this month is <strong>&pound;' . (string)\Brick\Math\BigDecimal::of((string)$row['Amount'])->withPointMovedLeft(2)->toScale(2) . '</strong>.</p>';
 
-            $message_content .= '<p>You can <a href="' . autoUrl("payments/statements/" . $paymentID) . '">view a full itemised statement for this payment online</a>. Statements show each item you have been charged or credited for.</p>';
+            $message_content .= '<p>You can view a full itemised statement for this payment online in your club account. Statements show each item you have been charged or credited for.</p>';
 
             $message_content .= '<p>Squad fees were calculated using the squads your members were in as of on 1 ' . date("F Y") . '.</p><hr>';
 
