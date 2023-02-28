@@ -66,8 +66,6 @@ Route::middleware([
         return Inertia::render('ComponentTesting');
     });
 
-    Route::get('/component-testing-user-search', [UserController::class, 'combobox']);
-
     Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->group(function () {
         Route::get('/', 'create')->name('report_an_error');
         Route::post('/', 'store');
@@ -135,10 +133,15 @@ Route::middleware([
 
     Route::prefix('/users')->group(function () {
         Route::get('/', [UserController::class, 'index']);
-        Route::get('/{user}', [UserController::class, 'show'])->whereNumber('user')->name('users.show');
+        Route::get('/combobox', [UserController::class, 'combobox'])
+            ->name('users.combobox');
+        Route::get('/{user}', [UserController::class, 'show'])
+            ->whereNumber('user')
+            ->name('users.show');
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/users/' . $path);
-        })->where('path', '.*');
+        })
+            ->where('path', '.*');
     });
 
     Route::prefix('notify')->group(function () {
@@ -167,6 +170,8 @@ Route::middleware([
 
             Route::prefix('ledgers')->group(function () {
                 Route::name('ledgers.')->group(function () {
+                    Route::get('/journals-combobox', [JournalAccountController::class, 'combobox'])
+                        ->name('journals.combobox');
                     Route::get('/', [LedgerAccountController::class, 'index'])
                         ->name('index')
                         ->can('view', App\Models\Tenant\LedgerAccount::class);

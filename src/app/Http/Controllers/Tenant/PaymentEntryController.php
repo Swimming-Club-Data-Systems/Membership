@@ -7,10 +7,8 @@ use App\Http\Requests\Tenant\ManualPaymentEntryUserPostRequest;
 use App\Models\Tenant\ManualPaymentEntry;
 use App\Models\Tenant\ManualPaymentEntryLine;
 use App\Models\Tenant\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class PaymentEntryController extends Controller
@@ -27,7 +25,7 @@ class PaymentEntryController extends Controller
 
     public function new(Request $request)
     {
-        $this->authorize('create');
+        $this->authorize('create', ManualPaymentEntry::class);
 
         /** @var User $user */
         $user = $request->user();

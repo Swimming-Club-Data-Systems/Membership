@@ -77,9 +77,6 @@ const User = (item: User) => {
 };
 
 const Index: Layout<Props> = (props: Props) => {
-    const [showUserSelectModal, setShowUserSelectModal] = useState(false);
-    const [showCreateLineModal, setShowCreateLineModal] = useState(false);
-
     return (
         <>
             <Head
@@ -124,7 +121,7 @@ const Index: Layout<Props> = (props: Props) => {
                         )}
 
                         <Combobox
-                            endpoint="/component-testing-user-search"
+                            endpoint={route("users.combobox")}
                             name="user_select"
                             label="User"
                             help="Start typing to find a user"
@@ -165,7 +162,10 @@ const Index: Layout<Props> = (props: Props) => {
                                 ["credit", "debit"],
                                 "The payment type must be one of Credit or Debit"
                             ),
-                        journal_select: yup.number().nullable(),
+                        journal_select: yup
+                            .number()
+                            .typeError("You must select a Journal Account")
+                            .required("You must select a Journal Account"),
                     })}
                     hideDefaultButtons
                     submitTitle="Add line"
@@ -205,11 +205,12 @@ const Index: Layout<Props> = (props: Props) => {
                         </div>
 
                         <Combobox
-                            endpoint="/component-testing-user-search"
-                            name="user_select"
+                            endpoint={route(
+                                "payments.ledgers.journals.combobox"
+                            )}
+                            name="journal_select"
                             label="Journal account"
-                            help="Start typing to find a journal account"
-                            nullable
+                            help="Start typing to find a journal"
                         />
                     </Card>
                 </Form>

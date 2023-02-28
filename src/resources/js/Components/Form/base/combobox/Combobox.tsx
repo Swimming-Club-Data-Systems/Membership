@@ -75,7 +75,9 @@ export const Combobox: React.FC<Props> = ({
                 },
             })
             .then((value) => {
-                setItems(value.data.data);
+                if (value?.data?.data) {
+                    setItems(value.data.data);
+                }
             });
     }, [query]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Tenant\JournalAccount;
 use Illuminate\Console\Command;
 use MeiliSearch\Client;
 
@@ -34,6 +35,8 @@ class UpdateMeilisearch extends Command
         $client->index(config('scout.prefix').'users')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'sms')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'notifyHistory')->updateFilterableAttributes(['Tenant']);
+        $client->index(config('scout.prefix').'journal_accounts')->updateFilterableAttributes(['Tenant']);
+        JournalAccount::all()->searchable();
 
         return 0;
     }

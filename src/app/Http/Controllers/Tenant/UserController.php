@@ -42,7 +42,7 @@ class UserController extends Controller
         return Inertia::location('/v1/users/' . $user->UserID);
     }
 
-    public function combobox(Request $request)
+    public function combobox(Request $request): \Illuminate\Http\JsonResponse
     {
         $users = null;
         if ($request->query('query')) {
