@@ -419,15 +419,15 @@ class AppMenu
 
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
-                'name' => 'Billing History',
+                'name' => 'Statements',
                 'href' => '/payments/statements',
             ];
         }
 
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
-                'name' => 'Latest Statement',
-                'href' => '/payments/statements/latest',
+                'name' => 'Account Activity',
+                'href' => '/payments/activity',
             ];
         }
 

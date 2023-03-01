@@ -51,6 +51,7 @@ class Tenant extends BaseTenant
      * @var array
      */
     protected $appends = ['logo_path'];
+    protected $primaryKey = 'ID';
 
     public static function getCustomColumns(): array
     {
@@ -238,6 +239,11 @@ class Tenant extends BaseTenant
             return $accountId;
         }
         throw new NoStripeAccountException();
+    }
+
+    public function domains(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(config('tenancy.domain_model'), 'tenant_id');
     }
 
     /**

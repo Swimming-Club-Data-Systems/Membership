@@ -3,20 +3,18 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Enums\ManualPaymentEntryLineType;
+use App\Exceptions\ManualPaymentEntryNotReady;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\ManualPaymentEntryLinePostRequest;
 use App\Http\Requests\Tenant\ManualPaymentEntryUserPostRequest;
-use App\Models\Accounting\Journal;
 use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\ManualPaymentEntry;
 use App\Models\Tenant\ManualPaymentEntryLine;
 use App\Models\Tenant\User;
-use App\Services\Accounting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
-use Money\Money;
 
 class PaymentEntryController extends Controller
 {
@@ -100,41 +98,22 @@ class PaymentEntryController extends Controller
     {
         $this->authoriseAmendment($entry);
 
-        if (!($entry->lines()->exists() && $entry->users()->exists())) {
-            // Either no lines or users, abort
-            abort(400, 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
-        }
-
         try {
             DB::beginTransaction();
 
-            foreach ($entry->users()->get() as $user) {
-                /** @var User $user */
-
-                // Get the user journal
-                /** @var Journal $userJournal */
-                $userJournal = $user->getJournal();
-
-                foreach ($entry->lines()->get() as $line) {
-                    /** @var ManualPaymentEntryLine $line */
-                    $doubleEntryGroup = Accounting::newDoubleEntryTransactionGroup();
-                    $amount = Money::GBP($line->getAttribute($line->line_type));
-                    $doubleEntryGroup->addTransaction($userJournal, $line->line_type, $amount, $line->description);
-                    $doubleEntryGroup->addTransaction($line->accountingJournal, $line->line_opposite_type, $amount, $line->description);
-                    $doubleEntryGroup->commit();
-                }
-            }
+            $entry->post();
 
             DB::commit();
 
             $request->session()->flash('flash_bag.post.success', 'The Manual Payment Entry has been successfully posted.');
-
+            return Redirect::route('payments.entries.amend', $entry);
+        } catch (ManualPaymentEntryNotReady) {
+            $request->session()->flash('flash_bag.post.danger', 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
             return Redirect::route('payments.entries.amend', $entry);
         } catch (\Exception $e) {
             DB::rollBack();
 
             $request->session()->flash('flash_bag.post.danger', 'The Manual Payment Entry could not be posted posted.');
-
             return Redirect::route('payments.entries.amend', $entry);
         }
     }
