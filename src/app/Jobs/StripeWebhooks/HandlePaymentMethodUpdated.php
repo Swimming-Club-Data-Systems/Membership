@@ -2,10 +2,10 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,6 +27,7 @@ class HandlePaymentMethodUpdated implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

@@ -3,9 +3,9 @@
 namespace App\Jobs\StripeWebhooks;
 
 use App\Enums\PaymentStatus;
+use App\Enums\Queue;
 use App\Interfaces\PaidObject;
 use App\Models\Central\Tenant;
-use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
 use Illuminate\Bus\Queueable;
@@ -29,7 +29,7 @@ class HandlePaymentIntentPaymentFailed implements ShouldQueue
         public WebhookCall $webhookCall
     )
     {
-        //
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

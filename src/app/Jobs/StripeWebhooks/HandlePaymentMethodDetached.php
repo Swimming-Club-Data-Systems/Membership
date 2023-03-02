@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use Illuminate\Bus\Queueable;
@@ -26,6 +27,7 @@ class HandlePaymentMethodDetached implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

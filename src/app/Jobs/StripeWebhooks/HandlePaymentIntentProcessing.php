@@ -3,6 +3,7 @@
 namespace App\Jobs\StripeWebhooks;
 
 use App\Enums\PaymentStatus;
+use App\Enums\Queue;
 use App\Enums\StripePaymentIntentStatus;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Payment;
@@ -27,7 +28,7 @@ class HandlePaymentIntentProcessing implements ShouldQueue
         public WebhookCall $webhookCall
     )
     {
-        //
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Business\Helpers\Recipient;
+use App\Enums\Queue;
 use App\Models\Tenant\NotifyHistory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
@@ -23,9 +24,10 @@ class NotifyMail extends Mailable
      */
     public function __construct(
         public NotifyHistory $email,
-        public Recipient $recipient,
+        public Recipient     $recipient,
     )
     {
+        $this->onQueue(Queue::NOTIFY->value);
     }
 
     /**

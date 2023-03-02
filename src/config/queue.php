@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\Queue;
+
 return [
 
     /*
@@ -65,7 +67,11 @@ return [
         'redis' => [
             'driver' => 'redis',
             'connection' => 'default',
-            'queue' => env('REDIS_QUEUE', 'default'),
+            'queue' => [
+                env('REDIS_QUEUE', 'default'),
+                Queue::NOTIFY->value,
+                Queue::STRIPE->value
+            ],
             'retry_after' => 90,
             'block_for' => null,
             'after_commit' => false,

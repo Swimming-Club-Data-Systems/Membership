@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use App\Enums\StripeDisputeStatus;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\JournalAccount;
@@ -28,7 +29,7 @@ class HandleChargeDisputeClosed implements ShouldQueue
         public WebhookCall $webhookCall
     )
     {
-        //
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

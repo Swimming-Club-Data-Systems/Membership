@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -27,7 +28,7 @@ class HandlePaymentIntentPartiallyFunded implements ShouldQueue
         public WebhookCall $webhookCall
     )
     {
-        //
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

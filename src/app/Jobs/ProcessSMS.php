@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
+use App\Enums\Queue;
 use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Mail\SmsSent;
 use App\Models\Central\Tenant;
@@ -32,6 +33,7 @@ class ProcessSMS implements ShouldQueue
     public function __construct(Sms $sms)
     {
         $this->sms = $sms->withoutRelations();
+        $this->onQueue(Queue::NOTIFY->value);
     }
 
     /**
