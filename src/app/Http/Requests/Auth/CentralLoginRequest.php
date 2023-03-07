@@ -52,9 +52,11 @@ class CentralLoginRequest extends FormRequest
         if (!$user || !Hash::check($this->input('password'), $user->password)) {
             RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
+            $validationException = ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
+            $validationException->redirectTo(route('central.login'));
+            throw $validationException;
         }
 
         RateLimiter::clear($this->throttleKey());

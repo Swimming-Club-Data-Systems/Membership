@@ -52,9 +52,11 @@ class LoginRequest extends FormRequest
         if (!$user || !Hash::check($this->input('password'), $user->Password)) {
             RateLimiter::hit($this->throttleKey());
 
-            throw ValidationException::withMessages([
+            $validationException = ValidationException::withMessages([
                 'email' => trans('auth.failed'),
             ]);
+            $validationException->redirectTo(route('login'));
+            throw $validationException;
         }
 
         RateLimiter::clear($this->throttleKey());

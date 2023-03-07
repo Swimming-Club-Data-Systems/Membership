@@ -35,12 +35,12 @@ use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 |
 */
 
-Route::middleware([
-    InitializeTenancyByDomain::class,
-    PreventAccessFromCentralDomains::class,
-])->group(function () {
-    Passport::routes();
-});
+//Route::middleware([
+//    InitializeTenancyByDomain::class,
+//    PreventAccessFromCentralDomains::class,
+//])->group(function () {
+//    Passport::routes();
+//});
 
 Route::middleware([
     'web',

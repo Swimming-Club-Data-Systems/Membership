@@ -23,6 +23,9 @@ class Kernel extends ConsoleKernel
         // Clean up pruneable models
         $schedule->command('model:prune')->daily();
 
+        // Prune stale cache tag entries
+        $schedule->command('cache:prune-stale-tags')->hourly();
+
         // Update Meilisearch records
         $schedule->command(UpdateMeilisearchDocuments::class)->everyFifteenMinutes();
 
