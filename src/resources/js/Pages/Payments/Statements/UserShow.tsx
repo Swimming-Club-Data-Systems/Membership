@@ -5,10 +5,6 @@ import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { formatDate } from "@/Utils/date-utils";
-import Table from "@/Components/Table";
-import Card from "@/Components/Card";
-import Stats from "@/Components/Stats";
-import Stat from "@/Components/Stat";
 import {
     StatementContent,
     StatementContentProps,
@@ -22,19 +18,35 @@ const Show: Layout<StatementContentProps> = (props: StatementContentProps) => {
                     props.start
                 )} - ${formatDate(props.end)})`}
                 breadcrumbs={[
-                    { name: "Payments", route: "my_account.index" },
-                    { name: "Statements", route: "payments.statements.index" },
+                    { name: "Users", route: "users.index" },
+                    {
+                        name: props.user.name,
+                        route: "users.show",
+                        routeParams: {
+                            user: props.user.id,
+                        },
+                    },
+                    {
+                        name: "Statements",
+                        route: "users.statements.index",
+                        routeParams: {
+                            user: props.user.id,
+                        },
+                    },
                     {
                         name: `#${props.id}`,
-                        route: "payments.statements.show",
-                        routeParams: props.id,
+                        route: "users.statements.show",
+                        routeParams: {
+                            user: props.user.id,
+                            statement: props.id,
+                        },
                     },
                 ]}
             />
 
             <MainHeader
                 title={`${formatDate(props.start)} - ${formatDate(props.end)}`}
-                subtitle="Statement information"
+                subtitle={`Statement information for ${props.user.name}`}
             ></MainHeader>
 
             <StatementContent {...props} />

@@ -12,11 +12,20 @@ use Inertia\Inertia;
 
 class CustomerStatementController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): \Inertia\Response
     {
         /** @var User $user */
         $user = $request->user();
 
+        $statements = $this->getPaginatedStatements($user);
+
+        return Inertia::render('Payments/Statements/Index', [
+            'statements' => $statements
+        ]);
+    }
+
+    private function getPaginatedStatements(User $user): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
         $statements = $user->statements()->orderBy('end', 'desc')->paginate();
 
         $statements->getCollection()->transform(function (CustomerStatement $statement) {
@@ -35,15 +44,41 @@ class CustomerStatementController extends Controller
             ];
         });
 
-        return Inertia::render('Payments/Statements/Index', [
+        return $statements;
+    }
+
+    public function userStatementIndex(User $user, Request $request): \Inertia\Response
+    {
+        $statements = $this->getPaginatedStatements($user);
+
+        return Inertia::render('Payments/Statements/UserIndex', [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ],
             'statements' => $statements
         ]);
     }
 
-    public function show(Request $request, CustomerStatement $statement)
+    public function show(Request $request, CustomerStatement $statement): \Inertia\Response
     {
         $this->authorize('view', $statement);
 
+        /** @var User $user */
+        $user = $request->user();
+
+        return Inertia::render('Payments/Statements/Show', $this->getStatementData($statement, $user));
+    }
+
+    public function userShow(Request $request, User $user, CustomerStatement $statement): \Inertia\Response
+    {
+        $this->authorize('view', $statement);
+
+        return Inertia::render('Payments/Statements/UserShow', $this->getStatementData($statement, $user));
+    }
+
+    private function getStatementData(CustomerStatement $statement, User $user): array
+    {
         $transactions = [];
         foreach ($statement->transactions()->get() as $transaction) {
             /** @var JournalTransaction $transaction */
@@ -59,7 +94,7 @@ class CustomerStatementController extends Controller
             ];
         }
 
-        return Inertia::render('Payments/Statements/Show', [
+        return [
             'id' => $statement->id,
             'start' => $statement->start,
             'end' => $statement->end,
@@ -72,6 +107,10 @@ class CustomerStatementController extends Controller
             'debits' => $statement->debits,
             'debits_formatted' => Money::formatCurrency($statement->debits),
             'transactions' => $transactions,
-        ]);
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ]
+        ];
     }
 }

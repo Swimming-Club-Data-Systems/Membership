@@ -132,16 +132,26 @@ Route::middleware([
     });
 
     Route::prefix('/users')->group(function () {
-        Route::get('/', [UserController::class, 'index']);
-        Route::get('/combobox', [UserController::class, 'combobox'])
-            ->name('users.combobox');
-        Route::get('/{user}', [UserController::class, 'show'])
-            ->whereNumber('user')
-            ->name('users.show');
-        Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/users/' . $path);
-        })
-            ->where('path', '.*');
+        Route::name('users.')->group(function () {
+            Route::get('/', [UserController::class, 'index'])
+                ->name('index');
+            Route::get('/combobox', [UserController::class, 'combobox'])
+                ->name('users.combobox');
+            Route::get('/{user}', [UserController::class, 'show'])
+                ->whereNumber('user')
+                ->name('show');
+            Route::get('/{user}/statements', [CustomerStatementController::class, 'userStatementIndex'])
+                ->whereNumber('user')
+                ->name('statements.index');
+            Route::get('/{user}/statements/{statement}', [CustomerStatementController::class, 'userShow'])
+                ->whereNumber('user')
+                ->whereNumber('statement')
+                ->name('statements.show');
+            Route::any('/{path}', function ($path) {
+                return Inertia::location('/v1/users/' . $path);
+            })
+                ->where('path', '.*');
+        });
     });
 
     Route::prefix('notify')->group(function () {
