@@ -42,9 +42,8 @@ const UserIndex: Layout<Props> = (props: Props) => {
             <Collection
                 {...props.statements}
                 itemRenderer={StatementIndexItemContent}
-                route="payments.statements.show"
-                // route="users.statements.show"
-                // routeParams={["user.id", "id"]}
+                route="users.statements.show"
+                routeParams={[props.user.id]}
             />
         </>
     );
