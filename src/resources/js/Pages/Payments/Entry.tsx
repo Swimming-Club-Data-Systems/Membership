@@ -294,33 +294,39 @@ const Index: Layout<Props> = (props: Props) => {
                 </Form>
 
                 {props.can_post && (
-                    <Card
-                        title="Post transactions"
-                        subtitle="Post transactions to journals."
-                        footer={
-                            <Button
-                                onClick={() => {
-                                    router.put(
-                                        route("payments.entries.post", {
-                                            entry: props.id,
-                                        }),
-                                        {
-                                            preserveScroll: true,
-                                            preserveState: true,
-                                        }
-                                    );
-                                }}
-                            >
-                                Post
-                            </Button>
-                        }
+                    <Form
+                        initialValues={{}}
+                        validationSchema={yup.object().shape({})}
+                        hideErrors
+                        hideDefaultButtons
+                        hideClear
+                        submitTitle="Post"
+                        action={route("payments.entries.post", props.id)}
+                        method="put"
+                        inertiaOptions={{
+                            preserveScroll: true,
+                            preserveState: true,
+                        }}
+                        formName="post_transactions"
                     >
-                        <p className="text-sm">
-                            Are you finished? Post transactions to user journals
-                            and journal accounts to complete your manual payment
-                            entry.
-                        </p>
-                    </Card>
+                        <Card
+                            title="Post transactions"
+                            subtitle="Post transactions to journals."
+                            footer={<SubmissionButtons />}
+                        >
+                            <RenderServerErrors />
+                            <FlashAlert
+                                className="mb-4"
+                                bag="post_transactions"
+                            />
+
+                            <p className="text-sm">
+                                Are you finished? Post transactions to user
+                                journals and journal accounts to complete your
+                                manual payment entry.
+                            </p>
+                        </Card>
+                    </Form>
                 )}
             </div>
         </>

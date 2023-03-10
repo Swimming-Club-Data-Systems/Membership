@@ -136,7 +136,7 @@ Route::middleware([
             Route::get('/', [UserController::class, 'index'])
                 ->name('index');
             Route::get('/combobox', [UserController::class, 'combobox'])
-                ->name('users.combobox');
+                ->name('combobox');
             Route::get('/{user}', [UserController::class, 'show'])
                 ->whereNumber('user')
                 ->name('show');

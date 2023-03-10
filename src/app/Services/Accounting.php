@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Carbon\Carbon;
-use App\Models\Accounting\Journal;
-use Money\Money;
-use Money\Currency;
-use App\Exceptions\Accounting\{InvalidJournalEntryValue,
+use App\Exceptions\Accounting\{DebitsAndCreditsDoNotEqual,
+    InvalidJournalEntryValue,
     InvalidJournalMethod,
-    DebitsAndCreditsDoNotEqual,
     TransactionCouldNotBeProcessed
 };
+use App\Models\Accounting\Journal;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Money\Currency;
+use Money\Money;
 
 class Accounting
 {
@@ -30,6 +30,30 @@ class Accounting
     /**
      * @param Journal $journal
      * @param string $method
+     * @param $value
+     * @param string|null $memo
+     * @param null $referenced_object
+     * @param Carbon|null $postdate
+     * @throws InvalidJournalEntryValue
+     * @throws InvalidJournalMethod
+     */
+    function addDollarTransaction(
+        Journal $journal,
+        string  $method,
+                $value,
+        string  $memo = null,
+                $referenced_object = null,
+        Carbon  $postdate = null
+    ): void
+    {
+        $value = (int)($value * 100);
+        $money = new Money($value, new Currency('USD'));
+        $this->addTransaction($journal, $method, $money, $memo, $referenced_object, $postdate);
+    }
+
+    /**
+     * @param Journal $journal
+     * @param string $method
      * @param Money $money
      * @param string|null $memo
      * @param null $referenced_object
@@ -40,12 +64,13 @@ class Accounting
      */
     function addTransaction(
         Journal $journal,
-        string $method,
-        Money $money,
-        string $memo = null,
-        $referenced_object = null,
-        Carbon $postdate = null
-    ): void {
+        string  $method,
+        Money   $money,
+        string  $memo = null,
+                $referenced_object = null,
+        Carbon  $postdate = null
+    ): void
+    {
 
         if (!in_array($method, ['credit', 'debit'])) {
             throw new InvalidJournalMethod;
@@ -65,41 +90,24 @@ class Accounting
         ];
     }
 
-    /**
-     * @param Journal $journal
-     * @param string $method
-     * @param $value
-     * @param string|null $memo
-     * @param null $referenced_object
-     * @param Carbon|null $postdate
-     * @throws InvalidJournalEntryValue
-     * @throws InvalidJournalMethod
-     */
-    function addDollarTransaction(
-        Journal $journal,
-        string $method,
-        $value,
-        string $memo = null,
-        $referenced_object = null,
-        Carbon $postdate = null
-    ): void {
-        $value = (int)($value * 100);
-        $money = new Money($value, new Currency('USD'));
-        $this->addTransaction($journal, $method, $money, $memo, $referenced_object, $postdate);
-    }
-
     function getTransactionsPending(): array
     {
         return $this->transactions_pending;
     }
 
-    public function commit(): string
+    /**
+     * @throws DebitsAndCreditsDoNotEqual
+     * @throws TransactionCouldNotBeProcessed
+     */
+    public function commit($handleDatabaseTransactions = true): string
     {
         $this->verifyTransactionCreditsEqualDebits();
         try {
             $transactionGroupUUID = \Ramsey\Uuid\Uuid::uuid4()->toString();
 
-            DB::beginTransaction();
+            if ($handleDatabaseTransactions) {
+                DB::beginTransaction();
+            }
 
             foreach ($this->transactions_pending as $transaction_pending) {
                 $transaction = $transaction_pending['journal']->{$transaction_pending['method']}($transaction_pending['money'],
@@ -109,13 +117,19 @@ class Accounting
                 }
             }
 
-            DB::commit();
+            if ($handleDatabaseTransactions) {
+                DB::commit();
+            }
 
             return $transactionGroupUUID;
 
         } catch (\Exception $e) {
-            DB::rollBack();
-            throw new TransactionCouldNotBeProcessed('Rolling Back Database. Message: ' . $e->getMessage());
+            if ($handleDatabaseTransactions) {
+                DB::rollBack();
+                throw new TransactionCouldNotBeProcessed('Rolling Back Database. Message: ' . $e->getMessage());
+            } else {
+                throw $e;
+            }
         }
     }
 

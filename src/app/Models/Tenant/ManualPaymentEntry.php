@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Exceptions\Accounting\DebitsAndCreditsDoNotEqual;
 use App\Exceptions\Accounting\InvalidJournalEntryValue;
 use App\Exceptions\Accounting\InvalidJournalMethod;
 use App\Exceptions\Accounting\TransactionCouldNotBeProcessed;
@@ -14,6 +15,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Money\Money;
 
 /**
@@ -61,6 +64,8 @@ class ManualPaymentEntry extends Model
      * @throws InvalidJournalMethod
      * @throws TransactionCouldNotBeProcessed
      * @throws ManualPaymentEntryNotReady
+     * @throws ValidationException
+     * @throws DebitsAndCreditsDoNotEqual
      */
     public function post()
     {
@@ -68,21 +73,41 @@ class ManualPaymentEntry extends Model
             throw new ManualPaymentEntryNotReady();
         }
 
-        foreach ($this->users()->get() as $user) {
-            /** @var User $user */
+        try {
+            DB::beginTransaction();
+            foreach ($this->users()->get() as $user) {
+                /** @var User $user */
 
-            // Get the user journal
-            /** @var Journal $userJournal */
-            $userJournal = $user->getJournal();
+                // Get the user journal
+                /** @var Journal $userJournal */
+                $userJournal = $user->getJournal();
 
-            foreach ($this->lines()->get() as $line) {
-                /** @var ManualPaymentEntryLine $line */
-                $doubleEntryGroup = Accounting::newDoubleEntryTransactionGroup();
-                $amount = Money::GBP($line->getAttribute($line->line_type));
-                $doubleEntryGroup->addTransaction($userJournal, $line->line_type, $amount, $line->description);
-                $doubleEntryGroup->addTransaction($line->accountingJournal, $line->line_opposite_type, $amount, $line->description);
-                $doubleEntryGroup->commit();
+                foreach ($this->lines()->get() as $line) {
+                    /** @var ManualPaymentEntryLine $line */
+                    $doubleEntryGroup = Accounting::newDoubleEntryTransactionGroup();
+                    $amount = Money::GBP($line->getAttribute($line->line_type));
+                    $doubleEntryGroup->addTransaction($userJournal, $line->line_type, $amount, $line->description);
+                    $doubleEntryGroup->addTransaction($line->accountingJournal, $line->line_opposite_type, $amount, $line->description);
+                    $doubleEntryGroup->commit(false);
+                }
             }
+
+            $this->posted = true;
+            $this->save();
+
+            DB::commit();
+        } catch (DebitsAndCreditsDoNotEqual) {
+            // Credits and debits are not equal
+            // Through a new validation exception
+
+            DB::rollBack();
+
+            throw ValidationException::withMessages([
+                'errors' => 'Unable to post transactions. Debits and credits are not equal.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw $e;
         }
     }
 

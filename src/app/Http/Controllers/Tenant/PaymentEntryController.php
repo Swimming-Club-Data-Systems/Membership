@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Enums\ManualPaymentEntryLineType;
+use App\Exceptions\Accounting\DebitsAndCreditsDoNotEqual;
 use App\Exceptions\ManualPaymentEntryNotReady;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\ManualPaymentEntryLinePostRequest;
@@ -14,6 +15,7 @@ use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class PaymentEntryController extends Controller
@@ -94,26 +96,28 @@ class PaymentEntryController extends Controller
         }
     }
 
+    /**
+     * @throws ValidationException
+     */
     public function post(ManualPaymentEntry $entry, Request $request)
     {
         $this->authoriseAmendment($entry);
 
         try {
-            DB::beginTransaction();
-
             $entry->post();
 
-            DB::commit();
-
-            $request->session()->flash('flash_bag.post.success', 'The Manual Payment Entry has been successfully posted.');
+            $request->session()->flash('flash_bag.post_transactions.success', 'The Manual Payment Entry has been successfully posted.');
             return Redirect::route('payments.entries.amend', $entry);
         } catch (ManualPaymentEntryNotReady) {
-            $request->session()->flash('flash_bag.post.danger', 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
+            $request->session()->flash('flash_bag.post_transactions.error', 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
             return Redirect::route('payments.entries.amend', $entry);
+        } catch (ValidationException $e) {
+            // Re-throw this exception
+            throw $e;
         } catch (\Exception $e) {
             DB::rollBack();
 
-            $request->session()->flash('flash_bag.post.danger', 'The Manual Payment Entry could not be posted posted.');
+            $request->session()->flash('flash_bag.post_transactions.error', 'The Manual Payment Entry could not be posted.');
             return Redirect::route('payments.entries.amend', $entry);
         }
     }
