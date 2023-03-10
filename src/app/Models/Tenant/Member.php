@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -116,6 +117,28 @@ class Member extends Model
         return Attribute::make(
             get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
         );
+    }
+
+    /**
+     * Get the member's age at the supplied date
+     *
+     * @param Carbon $date
+     * @return int
+     */
+    public function ageAt(Carbon $date): int
+    {
+        $diff = $this->DateOfBirth->diff($date);
+        return $diff->y;
+    }
+
+    /**
+     * Get the member's age today
+     *
+     * @return int
+     */
+    public function age(): int
+    {
+        return $this->ageAt(Carbon::now());
     }
 
 }
