@@ -92,8 +92,10 @@ class HandleMandateUpdated implements ShouldQueue
                     // Find a new default bacs_debit for the user
                     /** @var PaymentMethod $newDefault */
                     $newDefault = $user->paymentMethods()->where('type', '=', 'bacs_debit')->first();
-                    $newDefault->default = true;
-                    $newDefault->save();
+                    if ($newDefault) {
+                        $newDefault->default = true;
+                        $newDefault->save();
+                    }
                 }
 
                 // Now send the user an email stating the DDI has been cancelled.
