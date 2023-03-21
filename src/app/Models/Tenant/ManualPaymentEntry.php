@@ -80,14 +80,15 @@ class ManualPaymentEntry extends Model
 
                 // Get the user journal
                 /** @var Journal $userJournal */
-                $userJournal = $user->getJournal();
+                $user->getJournal();
+                $userJournal = $user->journal;
 
                 foreach ($this->lines()->get() as $line) {
                     /** @var ManualPaymentEntryLine $line */
                     $doubleEntryGroup = Accounting::newDoubleEntryTransactionGroup();
-                    $amount = Money::GBP($line->getAttribute($line->line_type));
-                    $doubleEntryGroup->addTransaction($userJournal, $line->line_type, $amount, $line->description);
-                    $doubleEntryGroup->addTransaction($line->accountingJournal, $line->line_opposite_type, $amount, $line->description);
+                    $amount = Money::GBP($line->getAttribute($line->line_type->value));
+                    $doubleEntryGroup->addTransaction($userJournal, $line->line_type->value, $amount, $line->description);
+                    $doubleEntryGroup->addTransaction($line->accountingJournal, $line->line_opposite_type->value, $amount, $line->description);
                     $doubleEntryGroup->commit(false);
                 }
             }
@@ -119,5 +120,25 @@ class ManualPaymentEntry extends Model
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    public function credits(): int
+    {
+        $total = 0;
+        foreach ($this->lines()->get() as $line) {
+            /** @var ManualPaymentEntryLine $line */
+            $total += $line->credit;
+        }
+        return $total * $this->users()->count();
+    }
+
+    public function debits(): int
+    {
+        $total = 0;
+        foreach ($this->lines()->get() as $line) {
+            /** @var ManualPaymentEntryLine $line */
+            $total += $line->debit;
+        }
+        return $total * $this->users()->count();
     }
 }

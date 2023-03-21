@@ -84,7 +84,7 @@ class ManualPaymentEntryLine extends Model
     protected function lineOppositeType(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['debit'] > 0 ? ManualPaymentEntryLineType::DEBIT : ManualPaymentEntryLineType::CREDIT,
+            get: fn($value, $attributes) => $attributes['debit'] > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
         );
     }
 

@@ -167,6 +167,11 @@ Route::middleware([
 
     Route::prefix('payments')->group(function () {
         Route::name('payments.')->group(function () {
+
+            Route::get('/', function () {
+                return Inertia::location('/v1/payments');
+            })->name('index');
+
             Route::prefix('payment-methods')->group(function () {
                 Route::name('methods.')->group(function () {
                     Route::get('/', [PaymentMethodController::class, 'index'])->name('index');
@@ -227,6 +232,9 @@ Route::middleware([
                     Route::put('/{entry}', [PaymentEntryController::class, 'post'])
                         ->whereNumber('entry')
                         ->name('post');
+                    Route::get('/{entry}', [PaymentEntryController::class, 'view'])
+                        ->whereNumber('entry')
+                        ->name('view');
                     Route::get('/{entry}/edit', [PaymentEntryController::class, 'amend'])
                         ->whereNumber('entry')
                         ->name('amend');

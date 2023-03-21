@@ -16,12 +16,16 @@ import TextInput from "@/Components/Form/TextInput";
 import Radio from "@/Components/Form/Radio";
 import BasicList from "@/Components/BasicList";
 import { router } from "@inertiajs/react";
+import Alert from "@/Components/Alert";
+import Stat from "@/Components/Stat";
+import Stats from "@/Components/Stats";
 
 type User = {
     manual_payment_entry_id: number;
     user_id: number;
     name: string;
     email: string;
+    posted: boolean;
 };
 
 type Line = {
@@ -34,6 +38,7 @@ type Line = {
     debit_formatted: string;
     type: string;
     journal_account_name: string;
+    posted: boolean;
 };
 
 type Props = {
@@ -41,6 +46,9 @@ type Props = {
     users: User[];
     lines: Line[];
     can_post: boolean;
+    posted: boolean;
+    debits: string;
+    credits: string;
 };
 
 const deleteUser = async (entry, user) => {
@@ -81,22 +89,24 @@ const User = (item: User) => {
                         <div className="text-gray-900">{item.name}</div>
                         <div className="text-gray-500">{item.email}</div>
                     </div>
-                    <div className="block">
-                        <>
-                            <Button
-                                variant="danger"
-                                className="ml-3"
-                                onClick={() => {
-                                    deleteUser(
-                                        item.manual_payment_entry_id,
-                                        item.user_id
-                                    );
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </>
-                    </div>
+                    {!item.posted && (
+                        <div className="block">
+                            <>
+                                <Button
+                                    variant="danger"
+                                    className="ml-3"
+                                    onClick={() => {
+                                        deleteUser(
+                                            item.manual_payment_entry_id,
+                                            item.user_id
+                                        );
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </>
+                        </div>
+                    )}
                 </div>
             </>
         ),
@@ -124,22 +134,24 @@ const Line = (item: Line) => {
                             &middot; {item.journal_account_name}
                         </div>
                     </div>
-                    <div className="block">
-                        <>
-                            <Button
-                                variant="danger"
-                                className="ml-3"
-                                onClick={() => {
-                                    deleteLine(
-                                        item.manual_payment_entry_id,
-                                        item.line_id
-                                    );
-                                }}
-                            >
-                                Delete
-                            </Button>
-                        </>
-                    </div>
+                    {!item.posted && (
+                        <div className="block">
+                            <>
+                                <Button
+                                    variant="danger"
+                                    className="ml-3"
+                                    onClick={() => {
+                                        deleteLine(
+                                            item.manual_payment_entry_id,
+                                            item.line_id
+                                        );
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            </>
+                        </div>
+                    )}
                 </div>
             </>
         ),
@@ -151,10 +163,54 @@ const Index: Layout<Props> = (props: Props) => {
         <>
             <Head
                 title="Manual Payment Entry"
-                subtitle="Create a manual payment entry"
+                subtitle={
+                    props.posted
+                        ? "View a historic manual payment entry"
+                        : "Create a manual payment entry"
+                }
+                breadcrumbs={[
+                    { name: "Payments", route: "payments.index" },
+                    {
+                        name: "Manual Payment Entry",
+                        route: "payments.entries.new",
+                    },
+                    {
+                        name: `#${props.id}`,
+                        route: props.posted
+                            ? "payments.entries.view"
+                            : "payments.entries.amend",
+                        routeParams: props.id,
+                    },
+                ]}
             />
 
             <div className="grid gap-4">
+                <Stats title="Statistics">
+                    <Stat name="Total credits" stat={props.credits} />
+                    <Stat name="Total debits" stat={props.debits} />
+                    <Stat name="Users" stat={props.users.length} />
+                </Stats>
+
+                {props.posted && (
+                    <>
+                        <Card title="Transactions have been posted">
+                            <div className="prose prose-sm">
+                                <p>
+                                    This manual payment entry has been posted to
+                                    journals. You can no longer make any
+                                    adjustments to it.
+                                </p>
+
+                                <p>
+                                    If you find you need to make a correction,
+                                    you should make an additional Manual Payment
+                                    Entry to correct the amount.
+                                </p>
+                            </div>
+                        </Card>
+                    </>
+                )}
+
                 <Form
                     initialValues={{
                         user_select: null,
@@ -181,7 +237,7 @@ const Index: Layout<Props> = (props: Props) => {
                     <Card
                         title="Users"
                         subtitle="Choose users to create manual payment entries for."
-                        footer={<SubmissionButtons />}
+                        footer={!props.posted ? <SubmissionButtons /> : null}
                     >
                         <RenderServerErrors />
                         <FlashAlert className="mb-4" bag="manage_users" />
@@ -190,12 +246,14 @@ const Index: Layout<Props> = (props: Props) => {
                             <BasicList items={props.users.map(User)} />
                         )}
 
-                        <Combobox
-                            endpoint={route("users.combobox")}
-                            name="user_select"
-                            label="User"
-                            help="Start typing to find a user"
-                        />
+                        {!props.posted && (
+                            <Combobox
+                                endpoint={route("users.combobox")}
+                                name="user_select"
+                                label="User"
+                                help="Start typing to find a user"
+                            />
+                        )}
                     </Card>
                 </Form>
 
@@ -253,7 +311,7 @@ const Index: Layout<Props> = (props: Props) => {
                     <Card
                         title="Line items"
                         subtitle="Add multiple line items to this manual payment entry."
-                        footer={<SubmissionButtons />}
+                        footer={!props.posted ? <SubmissionButtons /> : null}
                     >
                         <RenderServerErrors />
                         <FlashAlert className="mb-4" bag="manage_lines" />
@@ -262,34 +320,41 @@ const Index: Layout<Props> = (props: Props) => {
                             <BasicList items={props.lines.map(Line)} />
                         )}
 
-                        <TextInput
-                            name="description"
-                            label="Line description"
-                        />
+                        {!props.posted && (
+                            <>
+                                <TextInput
+                                    name="description"
+                                    label="Line description"
+                                />
 
-                        <TextInput name="amount" label="Line amount (£ GBP)" />
+                                <TextInput
+                                    name="amount"
+                                    label="Line amount (£ GBP)"
+                                />
 
-                        <div>
-                            <Radio
-                                name="type"
-                                value="debit"
-                                label="Debit (add a charge to the user's account)"
-                            />
-                            <Radio
-                                name="type"
-                                value="credit"
-                                label="Credit (add a refund to the user's account)"
-                            />
-                        </div>
+                                <div>
+                                    <Radio
+                                        name="type"
+                                        value="debit"
+                                        label="Debit (add a charge to the user's account)"
+                                    />
+                                    <Radio
+                                        name="type"
+                                        value="credit"
+                                        label="Credit (add a refund to the user's account)"
+                                    />
+                                </div>
 
-                        <Combobox
-                            endpoint={route(
-                                "payments.ledgers.journals.combobox"
-                            )}
-                            name="journal_select"
-                            label="Journal account (payment category)"
-                            help="Start typing to find a journal"
-                        />
+                                <Combobox
+                                    endpoint={route(
+                                        "payments.ledgers.journals.combobox"
+                                    )}
+                                    name="journal_select"
+                                    label="Journal account (payment category)"
+                                    help="Start typing to find a journal"
+                                />
+                            </>
+                        )}
                     </Card>
                 </Form>
 
@@ -334,12 +399,7 @@ const Index: Layout<Props> = (props: Props) => {
 };
 
 Index.layout = (page) => (
-    <MainLayout
-        breadcrumbs={[
-            { name: "Payments", route: "my_account.index" },
-            { name: "Manual Payment Entry", route: "payments.entries.new" },
-        ]}
-    >
+    <MainLayout>
         <Container noMargin>{page}</Container>
     </MainLayout>
 );

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Money;
 use App\Enums\ManualPaymentEntryLineType;
 use App\Exceptions\Accounting\DebitsAndCreditsDoNotEqual;
 use App\Exceptions\ManualPaymentEntryNotReady;
@@ -12,6 +13,8 @@ use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\ManualPaymentEntry;
 use App\Models\Tenant\ManualPaymentEntryLine;
 use App\Models\Tenant\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
@@ -47,10 +50,34 @@ class PaymentEntryController extends Controller
         return redirect()->route('payments.entries.amend', $entry);
     }
 
-    public function amend(ManualPaymentEntry $entry)
+    /**
+     * @throws AuthorizationException
+     */
+    public function view(ManualPaymentEntry $entry): \Inertia\Response|RedirectResponse
     {
-        $this->authoriseAmendment($entry);
+        $authorise = $this->authoriseView($entry);
+        if ($authorise) {
+            return $authorise;
+        }
 
+        return $this->renderViewAmendPage($entry);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function amend(ManualPaymentEntry $entry): \Inertia\Response|RedirectResponse
+    {
+        $authorise = $this->authoriseAmendment($entry);
+        if ($authorise) {
+            return $authorise;
+        }
+
+        return $this->renderViewAmendPage($entry);
+    }
+
+    private function renderViewAmendPage(ManualPaymentEntry $entry): \Inertia\Response
+    {
         $users = $entry->users()->orderBy('created_at')->get();
         $users->transform(function (User $user) use ($entry) {
             return [
@@ -58,6 +85,7 @@ class PaymentEntryController extends Controller
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
+                'posted' => (bool)$entry->posted,
             ];
         });
 
@@ -76,6 +104,7 @@ class PaymentEntryController extends Controller
                 'debit_formatted' => $line->debit_string,
                 'type' => $line->credit > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
                 'journal_account_name' => $journalAccountName,
+                'posted' => (bool)$entry->posted,
             ];
         });
 
@@ -83,21 +112,40 @@ class PaymentEntryController extends Controller
             'id' => $entry->id,
             'users' => $users,
             'lines' => $lines,
-            'can_post' => $lines->count() > 0 && $users->count() > 0,
+            'can_post' => $lines->count() > 0 && $users->count() > 0 && !$entry->posted,
+            'posted' => (bool)$entry->posted,
+            'credits' => Money::formatCurrency($entry->credits()),
+            'debits' => Money::formatCurrency($entry->debits()),
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     private function authoriseAmendment($entry)
     {
         $this->authorize('amend', $entry);
 
         if ($entry->posted) {
-            abort(400, 'The Manual Payment Entry you are trying to amend has already been posted.');
+            return Inertia::location(route('payments.entries.view', $entry));
+        }
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    private function authoriseView($entry)
+    {
+        $this->authorize('view', $entry);
+
+        if (!$entry->posted) {
+            return Inertia::location(route('payments.entries.amend', $entry));
         }
     }
 
     /**
      * @throws ValidationException
+     * @throws AuthorizationException
      */
     public function post(ManualPaymentEntry $entry, Request $request)
     {
@@ -106,7 +154,7 @@ class PaymentEntryController extends Controller
         try {
             $entry->post();
 
-            $request->session()->flash('flash_bag.post_transactions.success', 'The Manual Payment Entry has been successfully posted.');
+            $request->session()->flash('flash_bag.posted.success', 'This Manual Payment Entry has been successfully posted.');
             return Redirect::route('payments.entries.amend', $entry);
         } catch (ManualPaymentEntryNotReady) {
             $request->session()->flash('flash_bag.post_transactions.error', 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
@@ -122,7 +170,10 @@ class PaymentEntryController extends Controller
         }
     }
 
-    public function addUser(ManualPaymentEntry $entry, ManualPaymentEntryUserPostRequest $request)
+    /**
+     * @throws AuthorizationException
+     */
+    public function addUser(ManualPaymentEntry $entry, ManualPaymentEntryUserPostRequest $request): RedirectResponse
     {
         $this->authoriseAmendment($entry);
 
@@ -136,7 +187,10 @@ class PaymentEntryController extends Controller
         return Redirect::route('payments.entries.amend', $entry);
     }
 
-    public function deleteUser(ManualPaymentEntry $entry, User $user, Request $request)
+    /**
+     * @throws AuthorizationException
+     */
+    public function deleteUser(ManualPaymentEntry $entry, User $user, Request $request): RedirectResponse
     {
         $this->authoriseAmendment($entry);
 
@@ -147,7 +201,10 @@ class PaymentEntryController extends Controller
         return Redirect::route('payments.entries.amend', $entry);
     }
 
-    public function addLine(ManualPaymentEntry $entry, ManualPaymentEntryLinePostRequest $request)
+    /**
+     * @throws AuthorizationException
+     */
+    public function addLine(ManualPaymentEntry $entry, ManualPaymentEntryLinePostRequest $request): RedirectResponse
     {
         $this->authoriseAmendment($entry);
 
@@ -173,7 +230,10 @@ class PaymentEntryController extends Controller
         return Redirect::route('payments.entries.amend', $entry);
     }
 
-    public function deleteLine(ManualPaymentEntry $entry, ManualPaymentEntryLine $line, Request $request)
+    /**
+     * @throws AuthorizationException
+     */
+    public function deleteLine(ManualPaymentEntry $entry, ManualPaymentEntryLine $line, Request $request): RedirectResponse
     {
         $this->authoriseAmendment($entry);
 

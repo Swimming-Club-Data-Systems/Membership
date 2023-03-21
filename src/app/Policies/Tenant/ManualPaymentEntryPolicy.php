@@ -29,4 +29,15 @@ class ManualPaymentEntryPolicy
     {
         return $user->id === $entry->user?->id ? true : $this->denyAsNotFound();
     }
+
+    public function view(User $user, ManualPaymentEntry $entry): true|\Illuminate\Auth\Access\Response
+    {
+        // All admins can view
+        if ($user->hasPermission('Admin')) {
+            return true;
+        }
+
+        // Authors can view, else deny as not found
+        return $user->id === $entry->user?->id ? true : $this->denyAsNotFound();
+    }
 }
