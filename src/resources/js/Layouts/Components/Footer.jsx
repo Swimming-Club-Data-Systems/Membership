@@ -12,15 +12,17 @@ const Footer = (props) => {
             <Container>
                 <div className="grid grid-cols-1 gap-16 border-b border-gray-300 py-5 dark:border-slate-200 md:grid-cols-3 lg:grid-cols-5">
                     <div className="md:col-span-3 lg:col-span-2">
-                        <ApplicationLogo />
+                        <a href="https://myswimmingclub.uk">
+                            <ApplicationLogo />
+                        </a>
 
                         <p className="pt-5">
                             Helping swimming clubs across the UK run
                             efficiently.
                         </p>
                     </div>
-                    <div className="space-y-4">
-                        <p className="font-semibold text-gray-600 dark:text-slate-300">
+                    <div className="space-y-4 text-sm">
+                        <p className="font-semibold text-base text-gray-600 dark:text-slate-300">
                             Help and Support
                         </p>
                         {tenant && (
@@ -30,7 +32,7 @@ const Footer = (props) => {
                                         window?.location?.href
                                     )}`}
                                 >
-                                    Report an issue
+                                    Report a technical issue
                                 </Link>
                             </div>
                         )}
@@ -57,8 +59,8 @@ const Footer = (props) => {
                     </div>
 
                     {!tenant && (
-                        <div className="space-y-4">
-                            <p className="font-semibold text-gray-600 dark:text-slate-300">
+                        <div className="space-y-4 text-sm">
+                            <p className="font-semibold text-base text-gray-600 dark:text-slate-300">
                                 Organisation
                             </p>
                             {!usePage().props.auth?.user && (
@@ -92,8 +94,8 @@ const Footer = (props) => {
                     )}
 
                     {tenant && (
-                        <div className="space-y-4">
-                            <p className="font-semibold text-gray-600 dark:text-slate-300">
+                        <div className="space-y-4 text-sm">
+                            <p className="font-semibold text-base text-gray-600 dark:text-slate-300">
                                 {tenant.name}
                             </p>
 
@@ -107,8 +109,8 @@ const Footer = (props) => {
                         </div>
                     )}
 
-                    <div className="space-y-4">
-                        <p className="font-semibold text-gray-600 dark:text-slate-300">
+                    <div className="space-y-4 text-sm">
+                        <p className="font-semibold text-base text-gray-600 dark:text-slate-300">
                             Related Sites
                         </p>
                         <div>

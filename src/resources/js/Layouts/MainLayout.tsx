@@ -46,7 +46,6 @@ const MainLayout: React.FC<Props> = ({
     buttons,
     hideHeader = false,
 }) => {
-    console.log(title);
     const userObject = usePage().props.auth.user;
 
     const navigation = usePage().props.tenant.menu;
