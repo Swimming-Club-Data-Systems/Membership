@@ -89,7 +89,7 @@ try {
                         'Requested',
                         $paymentID
                     ]);
-                } catch (\Stripe\Error\InvalidRequest|\Stripe\Error\Authentication|\Stripe\Error\Api|Stripe\Exception\CardException $e) {
+                } catch (\Stripe\Exception\InvalidRequestException|\Stripe\Exception\AuthenticationException|\Stripe\Exception\UnknownApiErrorException|Stripe\Exception\CardException $e) {
                     $paymentID = $row['PaymentID'];
                     $id = "CASH-DDFAIL" . $paymentID;
                     $email_statment_id = $id;
