@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\NotifyHistoryController;
 use App\Http\Controllers\Tenant\PaymentEntryController;
 use App\Http\Controllers\Tenant\PaymentMethodController;
+use App\Http\Controllers\Tenant\PaymentTransactionController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
@@ -147,6 +148,9 @@ Route::middleware([
                 ->whereNumber('user')
                 ->whereNumber('statement')
                 ->name('statements.show');
+            Route::get('/{user}/transactions', [PaymentTransactionController::class, 'userIndex'])
+                ->whereNumber('user')
+                ->name('transactions.index');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/users/' . $path);
             })
@@ -254,6 +258,13 @@ Route::middleware([
                         ->whereNumber('line')
                         ->name('delete_line')
                         ->scopeBindings();
+                });
+            });
+
+            Route::prefix('transactions')->group(function () {
+                Route::name('transactions.')->group(function () {
+                    Route::get('/', [PaymentTransactionController::class, 'index'])
+                        ->name('index');
                 });
             });
         });

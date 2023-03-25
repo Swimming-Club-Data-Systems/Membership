@@ -28,6 +28,11 @@ class CustomerStatementPolicy
         }
     }
 
+    public function viewIndex(User $user): Response
+    {
+        return Response::denyAsNotFound();
+    }
+
     public function view(User $user, CustomerStatement $statement): Response
     {
         if ($user->UserID == $statement->user->UserID) {

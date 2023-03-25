@@ -49,6 +49,8 @@ class CustomerStatementController extends Controller
 
     public function userStatementIndex(User $user, Request $request): \Inertia\Response
     {
+        $this->authorize('viewIndex', CustomerStatement::class);
+
         $statements = $this->getPaginatedStatements($user);
 
         return Inertia::render('Payments/Statements/UserIndex', [
