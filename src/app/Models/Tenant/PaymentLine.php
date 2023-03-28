@@ -31,6 +31,16 @@ class PaymentLine extends Model
 
     protected $table = 'v2_payment_lines';
 
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'quantity' => 1,
+        'currency' => 'gbp',
+    ];
+
     protected static function boot()
     {
         static::saved(function ($line) {

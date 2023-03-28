@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
@@ -265,6 +266,16 @@ Route::middleware([
                 Route::name('transactions.')->group(function () {
                     Route::get('/', [PaymentTransactionController::class, 'index'])
                         ->name('index');
+                });
+            });
+
+            Route::prefix('checkout')->group(function () {
+                Route::name('checkout.')->group(function () {
+//                    Route::get('/', [CheckoutController::class, 'index'])
+//                        ->name('index');
+                    Route::get('/{payment}', [CheckoutController::class, 'show'])
+                        ->whereNumber('payment')
+                        ->name('show');
                 });
             });
         });

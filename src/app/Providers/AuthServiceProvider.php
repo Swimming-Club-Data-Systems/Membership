@@ -28,6 +28,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Tenant\JournalAccount::class => \App\Policies\Tenant\JournalAccountPolicy::class,
         \App\Models\Tenant\CustomerStatement::class => \App\Policies\Tenant\CustomerStatementPolicy::class,
         \App\Models\Tenant\ManualPaymentEntry::class => \App\Policies\Tenant\ManualPaymentEntryPolicy::class,
+        \App\Models\Tenant\Payment::class => \App\Policies\Tenant\PaymentPolicy::class,
     ];
 
     /**

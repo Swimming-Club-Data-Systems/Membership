@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 
 /**
  * @property int $id
+ * @property int $user_UserID
  * @property User $user
  * @property string $stripe_id
  * @property string $stripe_status
@@ -37,6 +38,15 @@ class Payment extends Model
     use HasFactory, BelongsToTenant;
 
     protected $table = 'v2_payments';
+
+    /**
+     * The model's default values for attributes.
+     *
+     * @var array
+     */
+    protected $attributes = [
+        'currency' => 'gbp',
+    ];
 
     protected $casts = [
         'status' => PaymentStatus::class,
@@ -78,5 +88,15 @@ class Payment extends Model
         return Attribute::make(
             set: fn($value) => Str::lower($value),
         );
+    }
+
+    /**
+     * Determine if the payment can be paid
+     *
+     * @return bool
+     */
+    public function payable(): bool
+    {
+        return $this->stripe_status == StripePaymentIntentStatus::REQUIRES_PAYMENT_METHOD;
     }
 }
