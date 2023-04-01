@@ -6,6 +6,7 @@ use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use ArrayObject;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,6 +20,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property ArrayObject $billing_address
  * @property Tenant $tenant
  * @property boolean $default
+ * @property string $description
+ * @property string $information_line
  */
 class PaymentMethod extends Model
 {
@@ -120,5 +123,25 @@ class PaymentMethod extends Model
     public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Get the payment method description.
+     */
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => \App\Business\Helpers\PaymentMethod::formatNameFromData($this->type, $this->pm_type_data),
+        );
+    }
+
+    /**
+     * Get the payment method description.
+     */
+    protected function informationLine(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($this->type, $this->pm_type_data),
+        );
     }
 }

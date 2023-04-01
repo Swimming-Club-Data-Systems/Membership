@@ -3,7 +3,7 @@ import { useField, useFormikContext } from "formik";
 import BaseInput from "./BaseInput";
 
 const Select = ({
-    options,
+    options = [],
     disabled,
     type,
     leftText,

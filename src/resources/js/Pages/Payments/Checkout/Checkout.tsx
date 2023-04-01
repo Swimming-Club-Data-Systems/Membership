@@ -7,12 +7,15 @@ import MainHeader from "@/Layouts/Components/MainHeader";
 import {
     Elements,
     PaymentElement,
+    PaymentRequestButtonElement,
     useElements,
     useStripe,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import Form from "@/Components/Form/Form";
 import * as yup from "yup";
+import Alert from "@/Components/Alert";
+import Select from "@/Components/Form/Select";
 
 type Props = {
     id: number;
@@ -21,9 +24,35 @@ type Props = {
     stripe_account: string;
 };
 
-const CheckoutForm: React.FC = () => {
+const CheckoutForm: React.FC<Props> = (props: Props) => {
     const stripe = useStripe();
     const elements = useElements();
+
+    const [paymentRequest, setPaymentRequest] = useState(null);
+
+    useEffect(() => {
+        if (stripe) {
+            const pr = stripe.paymentRequest({
+                country: props.country,
+                currency: props.currency,
+                total: {
+                    label: "Total",
+                    amount: props.total,
+                },
+                requestPayerName: true,
+                requestPayerEmail: true,
+            });
+
+            // Check the availability of the Payment Request API.
+            pr.canMakePayment().then((result) => {
+                if (result) {
+                    setPaymentRequest(pr);
+                }
+            });
+        }
+    }, [stripe]);
+
+    const [alert, setAlert] = useState(null);
 
     const handleStripeSubmit = async (ev) => {
         if (!stripe || !elements) {
@@ -47,6 +76,42 @@ const CheckoutForm: React.FC = () => {
         } else if (result.paymentIntent) {
             // We need to handle redirects if the payment was successful
             // Doing it this way allows us to use the Inertia SPA routing rather than a reload
+            switch (result.paymentIntent.status) {
+                case "succeeded":
+                    // setMessage('Success! Payment received.');
+                    setAlert({
+                        variant: "success",
+                        title: "Success",
+                        message: "Payment received.",
+                    });
+                    break;
+
+                case "processing":
+                    setAlert({
+                        variant: "success",
+                        title: "Payment processing",
+                        message:
+                            "We'll update you when payment is confirmed as received.",
+                    });
+                    break;
+
+                case "requires_payment_method":
+                    setAlert({
+                        variant: "danger",
+                        title: "Payment failed",
+                        message: "Please try another payment method.",
+                    });
+                    break;
+
+                default:
+                    setAlert({
+                        variant: "danger",
+                        title: "Something went wrong",
+                        message: "Please try again.",
+                    });
+                    // setMessage('Something went wrong.');
+                    break;
+            }
         } else {
             // Your customer will be redirected to your `return_url`. For some payment
             // methods like iDEAL, your customer will be redirected to an intermediate
@@ -55,17 +120,60 @@ const CheckoutForm: React.FC = () => {
     };
 
     return (
-        <Form
-            initialValues={{}}
-            validationSchema={yup.object({})}
-            onSubmit={handleStripeSubmit}
-            submitTitle="Pay"
-            hideClear
-        >
+        <>
             <div className="grid gap-4">
-                <PaymentElement options={{ layout: "accordion" }} />
+                {paymentRequest && (
+                    <PaymentRequestButtonElement options={{ paymentRequest }} />
+                )}
+
+                <Form
+                    initialValues={{}}
+                    validationSchema={yup.object({})}
+                    onSubmit={handleStripeSubmit}
+                    submitTitle="Pay Now"
+                    hideClear
+                >
+                    <div className="grid gap-4">
+                        {alert && (
+                            <Alert title={alert.title} variant={alert.variant}>
+                                <p>{alert.message}</p>
+                            </Alert>
+                        )}
+
+                        <Select
+                            name="payment_methods"
+                            options={props.payment_methods.map(
+                                (payment_method) => {
+                                    return {
+                                        key: payment_method.stripe_id,
+                                        name: payment_method.description,
+                                    };
+                                }
+                            )}
+                            label="Payment Methods"
+                        />
+                    </div>
+                </Form>
+
+                <Form
+                    initialValues={{}}
+                    validationSchema={yup.object({})}
+                    onSubmit={handleStripeSubmit}
+                    submitTitle="Pay Now"
+                    hideClear
+                >
+                    <div className="grid gap-4">
+                        {alert && (
+                            <Alert title={alert.title} variant={alert.variant}>
+                                <p>{alert.message}</p>
+                            </Alert>
+                        )}
+
+                        <PaymentElement options={{ layout: "accordion" }} />
+                    </div>
+                </Form>
             </div>
-        </Form>
+        </>
     );
 };
 
@@ -126,7 +234,7 @@ const Checkout: Layout<Props> = (props: Props) => {
 
             {stripe && (
                 <Elements stripe={stripe} options={options}>
-                    <CheckoutForm />
+                    <CheckoutForm {...props} />
                 </Elements>
             )}
         </>
