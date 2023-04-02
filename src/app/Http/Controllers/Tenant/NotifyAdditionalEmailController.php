@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\NotifyAdditionalEmail;
 use App\Models\Tenant\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Redirect;
@@ -12,19 +13,10 @@ use Inertia\Inertia;
 
 class NotifyAdditionalEmailController extends Controller
 {
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function show(Request $request, $data)
     {
         $data = json_decode(urldecode($data));
+        /** @var User $user */
         $user = User::find($data->user);
 
         // Has the email already been added?
@@ -50,6 +42,7 @@ class NotifyAdditionalEmailController extends Controller
         ]);
 
         $data = json_decode(Crypt::decryptString($request->input('data')));
+        /** @var User $user */
         $user = User::find($data->user);
 
         // Has the email already been added?
@@ -67,6 +60,9 @@ class NotifyAdditionalEmailController extends Controller
         return Redirect::back();
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function delete(Request $request, NotifyAdditionalEmail $additionalEmail)
     {
         $this->authorize('delete', $additionalEmail);
