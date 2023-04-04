@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\CustomerStatement;
 use App\Models\Tenant\Payment;
+use App\Models\Tenant\PaymentLine;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\User;
 use Illuminate\Support\Facades\Auth;
@@ -41,6 +42,18 @@ class CheckoutController extends Controller
                 'information_line' => $method->information_line,
             ];
         }
+
+        $lines = [];
+        foreach ($payment->lines()->get() as $line) {
+            /** @var PaymentLine $line */
+            $lines[] = [
+                'id' => $line->id,
+                'description' => $line->description,
+                'quantity' => $line->quantity,
+                'formatted_amount' => $line->formatted_amount_total,
+            ];
+        }
+
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
         $paymentIntent = $stripe->paymentIntents->create([
@@ -63,6 +76,8 @@ class CheckoutController extends Controller
             'country' => 'GB',
             'currency' => $paymentIntent->currency,
             'total' => $paymentIntent->amount,
+            'return_url' => route("payments.checkout.show", $payment),
+            'lines' => $lines,
         ]);
     }
 }

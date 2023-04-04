@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\Money;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property int $amount_discount
  * @property int $amount_tax
  * @property int $amount_refunded
+ * @property string $formatted_unit_amount
+ * @property string $formatted_amount_subtotal
+ * @property string $formatted_amount_total
+ * @property string $formatted_amount_discount
+ * @property string $formatted_amount_tax
+ * @property string $formatted_amount_refunded
  * @property int $quantity
  * @property string $currency
  * @property Model $associated
@@ -67,6 +74,11 @@ class PaymentLine extends Model
         return $this->morphTo();
     }
 
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'payment';
+    }
+
     protected function unitAmount(): Attribute
     {
         return Attribute::make(
@@ -94,8 +106,52 @@ class PaymentLine extends Model
         );
     }
 
-    public function getRelationshipToPrimaryModel(): string
+    protected function formattedUnitAmount(): Attribute
     {
-        return 'payment';
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->unit_amount, $this->currency),
+        );
+    }
+
+    protected function formattedAmountSubtotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_subtotal, $this->currency),
+        );
+    }
+
+    protected function formattedAmountTotal(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_total, $this->currency),
+        );
+    }
+
+    protected function formattedAmountDiscount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_discount, $this->currency),
+        );
+    }
+
+    protected function formattedAmountTax(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_tax, $this->currency),
+        );
+    }
+
+    protected function formattedAmountRefunded(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+        );
+    }
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value) => $value ?? "Line Item",
+        );
     }
 }

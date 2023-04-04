@@ -47,7 +47,11 @@ const Select = ({
                     >
                         {options.map((option) => {
                             return (
-                                <option key={option.key} value={option.key}>
+                                <option
+                                    key={option.key}
+                                    value={option.key}
+                                    disabled={option.disabled}
+                                >
                                     {option.name}
                                 </option>
                             );
