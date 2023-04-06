@@ -3,7 +3,7 @@ import _ from "lodash";
 
 const Table = (props) => {
     return (
-        <div className="mt-8 flex flex-col">
+        <div className="flex flex-col">
             <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
                 <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
                     <table className="min-w-full divide-y divide-gray-300">
@@ -32,7 +32,7 @@ const Table = (props) => {
                                             return (
                                                 <td
                                                     key={column.field}
-                                                    className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0"
+                                                    className="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6 md:pl-0"
                                                 >
                                                     {_.get(
                                                         row,

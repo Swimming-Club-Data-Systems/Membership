@@ -18,6 +18,7 @@ import Alert from "@/Components/Alert";
 import Select from "@/Components/Form/Select";
 import Card from "@/Components/Card";
 import Table from "@/Components/Table";
+import { router } from "@inertiajs/react";
 
 type Props = {
     id: number;
@@ -29,6 +30,7 @@ type Props = {
     total: number;
     payment_methods: object[];
     return_url: string;
+    formatted_total: string;
 };
 
 const CheckoutForm: React.FC<Props> = (props: Props) => {
@@ -126,21 +128,14 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
             switch (result.paymentIntent.status) {
                 case "succeeded":
                     // setMessage('Success! Payment received.');
-                    setAlert({
-                        variant: "success",
-                        title: "Success",
-                        message: "Payment received.",
-                        name: alertName,
+                    router.visit(route("payments.checkout.success", props.id), {
+                        replace: true,
                     });
                     break;
 
                 case "processing":
-                    setAlert({
-                        variant: "success",
-                        title: "Payment processing",
-                        message:
-                            "We'll update you when payment is confirmed as received.",
-                        name: alertName,
+                    router.visit(route("payments.checkout.success", props.id), {
+                        replace: true,
                     });
                     break;
 
@@ -210,7 +205,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                 }),
                         })}
                         onSubmit={handleStripeSubmit}
-                        submitTitle="Pay Now"
+                        submitTitle={`Pay ${props.formatted_total} Now`}
                         hideClear
                         hideDefaultButtons
                         disabled={submitting}
@@ -263,7 +258,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                         initialValues={{}}
                         validationSchema={yup.object({})}
                         onSubmit={handleStripeSubmit}
-                        submitTitle="Pay Now"
+                        submitTitle={`Pay ${props.formatted_total} Now`}
                         hideClear
                         hideDefaultButtons
                         disabled={submitting}

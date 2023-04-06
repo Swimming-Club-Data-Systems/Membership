@@ -276,6 +276,11 @@ Route::middleware([
                     Route::get('/{payment}', [CheckoutController::class, 'show'])
                         ->whereNumber('payment')
                         ->name('show');
+                    Route::get('/{payment}/success', [CheckoutController::class, 'success'])
+                        ->whereNumber('payment')
+                        ->name('success');
+                    Route::get('/create-gala-payment', [CheckoutController::class, 'create'])
+                        ->name('create');
                 });
             });
         });

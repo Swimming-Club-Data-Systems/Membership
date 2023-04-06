@@ -5,7 +5,7 @@ namespace App\Models\Tenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use App\Traits\BelongsToTenant;
 
 /**
  * @property int GalaID
@@ -33,5 +33,10 @@ class Gala extends Model
     {
         return $this->belongsToMany(User::class, 'teamManagers', 'Gala', 'User')
             ->withTimestamps();
+    }
+
+    public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(GalaEntry::class, 'GalaID', 'GalaID');
     }
 }

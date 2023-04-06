@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Money;
+use App\Interfaces\PaidObject;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -151,7 +152,8 @@ class PaymentLine extends Model
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $value ?? "Line Item",
+            get: fn($value) => $this->associated instanceof PaidObject ?
+                $this->associated->getPaymentLineDescriptor() : $value ?? "Line Item",
         );
     }
 }

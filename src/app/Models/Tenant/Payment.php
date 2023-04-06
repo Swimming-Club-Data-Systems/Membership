@@ -46,6 +46,7 @@ class Payment extends Model
      */
     protected $attributes = [
         'currency' => 'gbp',
+        'stripe_status' => StripePaymentIntentStatus::REQUIRES_PAYMENT_METHOD->value,
     ];
 
     protected $casts = [
