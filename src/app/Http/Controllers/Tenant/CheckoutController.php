@@ -20,7 +20,7 @@ use Inertia\Inertia;
 
 class CheckoutController extends Controller
 {
-    public function show(Payment $payment): \Inertia\Response
+    public function show(Payment $payment): \Illuminate\Http\RedirectResponse|\Inertia\Response
     {
         $this->authorize('pay', $payment);
 
@@ -76,6 +76,11 @@ class CheckoutController extends Controller
 //        ], [
 //            'stripe_account' => $tenant->stripeAccount(),
 //        ]);
+
+        if ($paymentIntent->status == StripePaymentIntentStatus::PROCESSING->value ||
+            $paymentIntent->status == StripePaymentIntentStatus::SUCCEEDED->value) {
+            return redirect(route("payments.checkout.success", $payment));
+        }
 
         return Inertia::render('Payments/Checkout/Checkout', [
             'id' => $payment->id,
@@ -151,6 +156,13 @@ class CheckoutController extends Controller
                     'enabled' => true,
                 ],
                 'customer' => $payment->user?->stripeCustomerId(),
+                'description' => "SCDS Checkout Payment",
+                'metadata' => [
+                    'payment_category' => 'scds_checkout_v3',
+                    'payment_id' => $payment->id,
+                    'user_id' => $payment->user?->UserID,
+                ],
+                'application_fee_amount' => $payment->applicationFeeAmount(),
             ], [
                 'stripe_account' => $tenant->stripeAccount(),
             ]);

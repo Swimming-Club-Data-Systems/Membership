@@ -21,7 +21,7 @@ class PaymentMethod
             case 'bacs_debit':
                 return 'Bacs Direct Debit ···· ' . $typeData->last4;
             default:
-                return $type . ': ' . $typeData->id;
+                return $type;
         }
     }
 

@@ -27,6 +27,19 @@ class PaymentMethod extends Model
 {
     use HasFactory, SoftDeletes, BelongsToTenant;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'stripe_id',
+        'type',
+        'pm_type_data',
+        'billing_address',
+        'created_at',
+    ];
+
     protected $casts = [
         'pm_type_data' => AsArrayObject::class,
         'billing_address' => AsArrayObject::class,
