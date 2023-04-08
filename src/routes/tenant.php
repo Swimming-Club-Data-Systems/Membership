@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\NotifyAdditionalEmailController;
 use App\Http\Controllers\Tenant\NotifyHistoryController;
 use App\Http\Controllers\Tenant\PaymentEntryController;
 use App\Http\Controllers\Tenant\PaymentMethodController;
+use App\Http\Controllers\Tenant\PaymentsController;
 use App\Http\Controllers\Tenant\PaymentTransactionController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
@@ -266,6 +267,15 @@ Route::middleware([
                 Route::name('transactions.')->group(function () {
                     Route::get('/', [PaymentTransactionController::class, 'index'])
                         ->name('index');
+                });
+            });
+
+            Route::prefix('payments')->group(function () {
+                Route::name('payments.')->group(function () {
+                    Route::get('/', [PaymentsController::class, 'index'])
+                        ->name('index');
+                    Route::get('/{payment}', [PaymentsController::class, 'show'])
+                        ->name('show');
                 });
             });
 

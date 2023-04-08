@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\ApplicationFeeAmount;
+use App\Business\Helpers\Money;
 use App\Enums\PaymentStatus;
 use App\Enums\StripePaymentIntentStatus;
 use App\Traits\BelongsToTenant;
@@ -20,6 +21,8 @@ use Illuminate\Support\Str;
  * @property string $stripe_status
  * @property int $amount
  * @property int $amount_refunded
+ * @property string $formatted_amount
+ * @property string $formatted_amount_refunded
  * @property int $stripe_fee
  * @property int $application_fee_amount
  * @property PaymentMethod $paymentMethod
@@ -99,5 +102,19 @@ class Payment extends Model
     public function payable(): bool
     {
         return $this->stripe_status == StripePaymentIntentStatus::REQUIRES_PAYMENT_METHOD;
+    }
+
+    protected function formattedAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount, $this->currency),
+        );
+    }
+
+    protected function formattedAmountRefunded(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+        );
     }
 }

@@ -14,8 +14,9 @@ You have paid for the following items;
 
 Payment method details;
 
-{{$payment->paymentMethod->description}}<br>
+{{$payment->paymentMethod->description}}@if($payment->paymentMethod->information_line)<br>
 {{$payment->paymentMethod->information_line}}
+@endif
 
 Kind regards,<br>
 The {{ tenant()->getOption("CLUB_NAME") }} Team
