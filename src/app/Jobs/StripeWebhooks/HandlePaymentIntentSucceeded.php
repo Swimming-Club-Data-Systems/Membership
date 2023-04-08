@@ -70,6 +70,28 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                             if ($line->associated && $line->associated instanceof PaidObject) {
                                 $line->associated->handlePaid();
                             }
+
+                            $associate = $line->associated ?? $line;
+
+                            // Debit the user/guest journal (already done if monthly fees)
+                            if ($intent->metadata->payment_category != "monthly_fee") {
+                                if ($payment->user) {
+                                    $payment->user->getJournal();
+                                    $journal = $payment->user->journal;
+                                    $transaction = $journal->debit($line->amount_total, $line->description);
+                                    $transaction->referencesObject($associate);
+                                } else {
+                                    /** @var JournalAccount $guestIncomeJournal */
+                                    $guestIncomeJournal = JournalAccount::firstWhere([
+                                        'name' => 'Guest Customers',
+                                        'is_system' => true
+                                    ]);
+                                    $transaction = $guestIncomeJournal
+                                        ->journal
+                                        ->debit($line->amount_total, $line->description);
+                                    $transaction->referencesObject($associate);
+                                }
+                            }
                         }
                         $type = $intent->payment_method->type;
 
@@ -96,11 +118,12 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                             Mail::to($payment->user)->send(new PaymentSucceeded($payment));
                         } else {
                             // Credit the guest journal
+                            /** @var JournalAccount $guestIncomeJournal */
                             $guestIncomeJournal = JournalAccount::firstWhere([
                                 'name' => 'Guest Customers',
                                 'is_system' => true
                             ]);
-                            $transaction = $guestIncomeJournal->credit($payment->amount, 'Payment received with thanks');
+                            $transaction = $guestIncomeJournal->journal->credit($payment->amount, 'Payment received with thanks');
                         }
                         $transaction->referencesObject($payment);
 

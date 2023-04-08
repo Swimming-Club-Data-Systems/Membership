@@ -18,7 +18,7 @@ import Alert from "@/Components/Alert";
 import Select from "@/Components/Form/Select";
 import Card from "@/Components/Card";
 import Table from "@/Components/Table";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 type Props = {
     id: number;
@@ -31,6 +31,16 @@ type Props = {
     payment_methods: object[];
     return_url: string;
     formatted_total: string;
+    customer_name: string;
+    customer_email: string;
+    customer_phone: string;
+    customer_address: {
+        line1: string;
+        line2: string;
+        city: string;
+        country: string;
+        postal_code: string;
+    };
 };
 
 const CheckoutForm: React.FC<Props> = (props: Props) => {
@@ -276,7 +286,41 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                 </Alert>
                             )}
 
-                            <PaymentElement options={{ layout: "accordion" }} />
+                            <PaymentElement
+                                options={{
+                                    layout: "accordion",
+                                    defaultValues: {
+                                        billingDetails: {
+                                            name: props.customer_name,
+                                            email: props.customer_email,
+                                            phone: props.customer_phone,
+                                            address: {
+                                                line1: props.customer_address
+                                                    .line1,
+                                                line2: props.customer_address
+                                                    .line2,
+                                                city: props.customer_address
+                                                    .city,
+                                                country:
+                                                    props.customer_address
+                                                        .country,
+                                                postal_code:
+                                                    props.customer_address
+                                                        .postal_code,
+                                            },
+                                        },
+                                    },
+                                    business: {
+                                        name: usePage().props?.tenant?.name,
+                                    },
+                                    paymentMethodOrder: ["card", "bacs_debit"],
+                                    wallets: {
+                                        // We use a separate Payment Request button at the top of the page
+                                        applePay: "never",
+                                        googlePay: "never",
+                                    },
+                                }}
+                            />
 
                             <SubmissionButtons />
                         </div>

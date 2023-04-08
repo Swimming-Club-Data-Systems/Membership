@@ -94,6 +94,16 @@ class CheckoutController extends Controller
             'formatted_total' => Money::formatCurrency($paymentIntent->amount),
             'return_url' => route("payments.checkout.show", $payment),
             'lines' => $lines,
+            'customer_email' => $user?->email,
+            'customer_phone' => $user?->Mobile,
+            'customer_name' => $user?->name,
+            'customer_address' => [
+                'line1' => $user?->getAddress()?->address_line_1,
+                'line2' => $user?->getAddress()?->address_line_2,
+                'city' => $user?->getAddress()?->city,
+                'country' => $user?->getAddress()?->country_name,
+                'postal_code' => $user?->getAddress()?->post_code,
+            ]
         ]);
     }
 
