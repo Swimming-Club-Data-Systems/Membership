@@ -180,7 +180,7 @@ export const RenderServerErrors = () => {
 };
 
 type FormProps = {
-    initialValues: Record<string, unknown>;
+    initialValues?: Record<string, unknown>;
     validationSchema: AnyObjectSchema | (() => AnyObjectSchema);
     onSubmit?: (
         values: Record<string, unknown>,

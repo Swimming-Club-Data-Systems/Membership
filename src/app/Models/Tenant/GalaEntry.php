@@ -136,9 +136,8 @@ class GalaEntry extends Model implements PaidObject
     public function handleRefund(int $refundAmount): void
     {
         $this->Refunded = true;
-        $this->AmountRefunded = $refundAmount;
+        $this->AmountRefunded = $this->AmountRefunded + $refundAmount;
         $this->save();
-        // TODO: Need to handle refund amounts properly - is this amount the total or just new amount?
     }
 
     public function getPaymentLineDescriptor(): string

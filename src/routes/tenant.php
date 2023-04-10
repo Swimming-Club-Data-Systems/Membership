@@ -276,6 +276,8 @@ Route::middleware([
                         ->name('index');
                     Route::get('/{payment}', [PaymentsController::class, 'show'])
                         ->name('show');
+                    Route::post('/{payment}/refund', [PaymentsController::class, 'refund'])
+                        ->name('refund');
                 });
             });
 
