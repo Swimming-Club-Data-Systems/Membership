@@ -75,6 +75,15 @@ class PaymentLine extends Model
         return $this->morphTo();
     }
 
+    public function refunds(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Refund::class,
+            'refund_v2_payment_line',
+            'v2_payment_line_id',
+            'refund_id')
+            ->withPivot(['amount', 'description']);
+    }
+
     public function getRelationshipToPrimaryModel(): string
     {
         return 'payment';

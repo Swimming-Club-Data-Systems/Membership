@@ -6,12 +6,15 @@ use App\Business\Helpers\Money;
 use App\Enums\StripePaymentIntentStatus;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PaidObject;
+use App\Mail\Payments\PaymentRefunded;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
+use App\Models\Tenant\Refund;
 use App\Models\Tenant\User;
 use Brick\Math\BigDecimal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -73,6 +76,7 @@ class PaymentsController extends Controller
     public function show(Payment $payment): \Inertia\Response
     {
         $lines = [];
+        $refunds = [];
 
         $formInitialValues = [
             'reason' => 'n/a',
@@ -104,6 +108,21 @@ class PaymentsController extends Controller
             ];
         }
 
+        foreach ($payment->refunds()->get() as $refund) {
+            /** @var Refund $refund */
+            $refunds[] = [
+                'id' => $refund->id,
+                'stripe_id' => $refund->stripe_id,
+                'status' => $refund->status,
+                'reason' => $refund->reason,
+                'failure_reason' => $refund->failure_reason,
+                'amount' => $refund->amount,
+                'formatted_amount' => $refund->formatted_amount,
+                'currency' => $refund->currency,
+                'created_at' => $refund->created_at,
+            ];
+        }
+
         return Inertia::render('Payments/Payments/Payment', [
             'id' => $payment->id,
             'payment_method' => [
@@ -125,6 +144,7 @@ class PaymentsController extends Controller
                 'name' => $payment->user?->name,
             ],
             'line_items' => $lines,
+            'refunds' => $refunds,
             'form_initial_values' => $formInitialValues,
         ]);
     }
@@ -187,6 +207,19 @@ class PaymentsController extends Controller
             ]);
 
             if ($refund->status == 'succeeded' || $refund->status == 'pending') {
+                /** @var Refund $dbRefund */
+                $dbRefund = Refund::firstOrNew([
+                    'stripe_id' => $refund->id,
+                ], [
+                    'payment' => $payment,
+                    'amount' => $refund->amount,
+                    'status' => $refund->status,
+                    'currency' => $refund->currency,
+                ]);
+                $dbRefund->created_at = $refund->created;
+                $dbRefund->payment()->associate($payment);
+                $dbRefund->save();
+
                 // Refund all paid objects and save changes in the database
                 foreach ($payment->lines()->get() as $line) {
                     /** @var PaymentLine $line */
@@ -199,6 +232,10 @@ class PaymentsController extends Controller
                                 $line->associated->handleRefund($amount);
                             }
                             $line->save();
+
+                            $dbRefund->lines()->attach($line, [
+                                'amount' => $amount,
+                            ]);
                         }
                     }
                 }
@@ -209,6 +246,10 @@ class PaymentsController extends Controller
                 $refundFormatted = Money::formatCurrency($refund->amount, $refund->currency);
                 $totalRefundedFormatted = Money::formatCurrency($payment->amount_refunded, $refund->currency);
                 $request->session()->flash('success', "We've refunded {$refundFormatted} to the original payment method ({$payment->paymentMethod->description}). The total amount refunded is {$totalRefundedFormatted}.");
+
+                if ($payment->user) {
+                    Mail::to($payment->user)->send(new PaymentRefunded($payment, $refund->amount));
+                }
             }
 
         } catch (ApiErrorException $e) {

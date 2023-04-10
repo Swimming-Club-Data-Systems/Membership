@@ -44,6 +44,12 @@ type Props = {
         formatted_unit_amount: string;
         quantity: number;
     }[];
+    refunds: {
+        id: number;
+        formatted_amount: string;
+        amount: number;
+        created_at: string;
+    }[];
 };
 
 export const PaymentContent: React.FC<Props> = (props) => {
@@ -166,6 +172,39 @@ export const PaymentContent: React.FC<Props> = (props) => {
                         />
                     </Card>
                 </Form>
+
+                {props.refunds.length > 0 && (
+                    <Card title="Refunds">
+                        <FlashAlert className="mb-4" />
+
+                        <BasicList
+                            items={props.refunds.map((item, idx) => {
+                                return {
+                                    id: item.id,
+                                    content: (
+                                        <>
+                                            <div
+                                                className="flex align-middle justify-between text-sm"
+                                                key={item.id}
+                                            >
+                                                <div className="">
+                                                    <div className="text-gray-900">
+                                                        {item.formatted_amount}
+                                                    </div>
+                                                    <div className="text-gray-500">
+                                                        {formatDateTime(
+                                                            item.created_at
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </>
+                                    ),
+                                };
+                            })}
+                        />
+                    </Card>
+                )}
             </div>
         </>
     );

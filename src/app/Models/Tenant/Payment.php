@@ -72,6 +72,12 @@ class Payment extends Model
         return $this->belongsTo(PaymentMethod::class);
     }
 
+    public function refunds(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Refund::class, 'v2_payment_id')
+            ->orderBy('created_at', 'desc');
+    }
+
     public function applicationFeeAmount(): int
     {
         return ApplicationFeeAmount::calculateAmount($this->amount);
@@ -87,13 +93,6 @@ class Payment extends Model
         ]);
     }
 
-    protected function currency(): Attribute
-    {
-        return Attribute::make(
-            set: fn($value) => Str::lower($value),
-        );
-    }
-
     /**
      * Determine if the payment can be paid
      *
@@ -102,6 +101,13 @@ class Payment extends Model
     public function payable(): bool
     {
         return $this->stripe_status == StripePaymentIntentStatus::REQUIRES_PAYMENT_METHOD;
+    }
+
+    protected function currency(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Str::lower($value),
+        );
     }
 
     protected function formattedAmount(): Attribute
