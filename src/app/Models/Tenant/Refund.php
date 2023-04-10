@@ -8,10 +8,12 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
  * @property Payment $payment
+ * @property User $refunder
  * @property int $amount
  * @property string $formatted_amount
  * @property string $stripe_id
@@ -47,6 +49,11 @@ class Refund extends Model
     public function payment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Payment::class, 'v2_payment_id');
+    }
+
+    public function refunder(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_UserID');
     }
 
     public function lines(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

@@ -112,6 +112,10 @@ class PaymentsController extends Controller
             /** @var Refund $refund */
             $refunds[] = [
                 'id' => $refund->id,
+                'refunder' => [
+                    'id' => $refund->refunder->id,
+                    'name' => $refund->refunder->name,
+                ],
                 'stripe_id' => $refund->stripe_id,
                 'status' => $refund->status,
                 'reason' => $refund->reason,
@@ -216,6 +220,7 @@ class PaymentsController extends Controller
                     'status' => $refund->status,
                     'currency' => $refund->currency,
                 ]);
+                $dbRefund->refunder()->associate(Auth::user());
                 $dbRefund->created_at = $refund->created;
                 $dbRefund->payment()->associate($payment);
                 $dbRefund->save();

@@ -49,6 +49,10 @@ type Props = {
         formatted_amount: string;
         amount: number;
         created_at: string;
+        refunder: {
+            id: number;
+            name: string;
+        };
     }[];
 };
 
@@ -192,6 +196,8 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                         {item.formatted_amount}
                                                     </div>
                                                     <div className="text-gray-500">
+                                                        Refunded by{" "}
+                                                        {item.refunder.name} at{" "}
                                                         {formatDateTime(
                                                             item.created_at
                                                         )}

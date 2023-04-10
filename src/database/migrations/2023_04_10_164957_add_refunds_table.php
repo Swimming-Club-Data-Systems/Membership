@@ -28,6 +28,11 @@ return new class extends Migration {
             $table->string('reason')->nullable();
             $table->string('description')->nullable();
             $table->foreignIdFor(\App\Models\Central\Tenant::class, 'Tenant');
+            $table->foreignId('user_UserID');
+            $table->foreign('user_UserID')
+                ->references('UserID')
+                ->on('users')
+                ->cascadeOnDelete();
             $table->timestamps();
             $table->unique('stripe_id');
         });
