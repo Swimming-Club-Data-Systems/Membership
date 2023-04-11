@@ -37,7 +37,15 @@ class PaymentsController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $payments = Payment::where('stripe_status', StripePaymentIntentStatus::SUCCEEDED)
+        $data = $this->indexData($user);
+
+        return Inertia::render('Payments/Payments/Index', $data);
+    }
+
+    private function indexData(User $user): array
+    {
+        $payments = $user->payments()
+            ->where('stripe_status', StripePaymentIntentStatus::SUCCEEDED)
             ->orderBy('created_at', 'desc')
             ->with(['paymentMethod'])
             ->paginate();
@@ -62,18 +70,34 @@ class PaymentsController extends Controller
             ];
         });
 
-        $data = [
+        return [
             'payments' => $payments->onEachSide(3),
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
             ],
         ];
+    }
 
-        return Inertia::render('Payments/Payments/Index', $data);
+    public function userIndex(User $user): \Inertia\Response
+    {
+        $this->authorize('viewIndex', Payment::class);
+
+        $data = $this->indexData($user);
+
+        return Inertia::render('Payments/Payments/UserIndex', $data);
     }
 
     public function show(Payment $payment): \Inertia\Response
+    {
+        $this->authorize('view', $payment);
+
+        $data = $this->showData($payment);
+
+        return Inertia::render('Payments/Payments/Payment', $data);
+    }
+
+    private function showData(Payment $payment): array
     {
         $lines = [];
         $refunds = [];
@@ -94,6 +118,8 @@ class PaymentsController extends Controller
                 'formatted_amount_subtotal' => $line->formatted_amount_subtotal,
                 'formatted_amount_tax' => $line->formatted_amount_tax,
                 'formatted_unit_amount' => $line->formatted_unit_amount,
+                'amount_refundable' => Money::formatDecimal($line->amount_total - $line->amount_refunded),
+                'amount_refundable_int' => $line->amount_total - $line->amount_refunded,
                 'quantity' => $line->quantity,
             ];
 
@@ -127,7 +153,10 @@ class PaymentsController extends Controller
             ];
         }
 
-        return Inertia::render('Payments/Payments/Payment', [
+        /** @var User $loggedInUser */
+        $loggedInUser = Auth::user();
+
+        return [
             'id' => $payment->id,
             'payment_method' => [
                 'id' => $payment->paymentMethod?->id,
@@ -150,7 +179,17 @@ class PaymentsController extends Controller
             'line_items' => $lines,
             'refunds' => $refunds,
             'form_initial_values' => $formInitialValues,
-        ]);
+            'is_administrator' => $loggedInUser->can('refund', $payment),
+        ];
+    }
+
+    public function userShow(User $user, Payment $payment): \Inertia\Response
+    {
+        $this->authorize('view', $payment);
+
+        $data = $this->showData($payment);
+
+        return Inertia::render('Payments/Payments/UserPayment', $data);
     }
 
     /**

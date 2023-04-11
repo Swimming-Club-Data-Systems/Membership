@@ -2,14 +2,12 @@ import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
-import Collection from "@/Components/Collection";
+import { Props } from "./Payment";
+import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import {
-    PaymentItemContent,
-    PaymentIndexProps,
-} from "@/Pages/Payments/Payments/Index";
+import { PaymentContent } from "@/Pages/Payments/Payments/Payment";
 
-const Index: Layout<PaymentIndexProps> = (props: PaymentIndexProps) => {
+const UserPayment: Layout<Props> = (props: Props) => {
     return (
         <>
             <Head
@@ -30,22 +28,30 @@ const Index: Layout<PaymentIndexProps> = (props: PaymentIndexProps) => {
                             user: props.user.id,
                         },
                     },
+                    {
+                        name: `#${props.id}`,
+                        route: "users.payments.show",
+                        routeParams: {
+                            user: props.user.id,
+                            payment: props.id,
+                        },
+                    },
                 ]}
                 subtitle={`View payments for ${props.user.name}`}
             />
 
             <Container noMargin>
-                <Collection
-                    {...props.payments}
-                    route="users.payments.show"
-                    routeParams={[props.user.id]}
-                    itemRenderer={PaymentItemContent}
-                />
+                <MainHeader
+                    title={`Payment #${props.id}`}
+                    subtitle={props.formatted_amount}
+                ></MainHeader>
+
+                <PaymentContent {...props} />
             </Container>
         </>
     );
 };
 
-Index.layout = (page) => <MainLayout>{page}</MainLayout>;
+UserPayment.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
-export default Index;
+export default UserPayment;

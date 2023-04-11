@@ -30,6 +30,10 @@ class CustomerStatementPolicy
 
     public function viewIndex(User $user): Response
     {
+        if ($user->hasPermission('Admin')) {
+            return Response::allow();
+        }
+
         return Response::denyAsNotFound();
     }
 

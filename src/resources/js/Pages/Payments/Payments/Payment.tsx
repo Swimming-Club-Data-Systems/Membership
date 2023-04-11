@@ -13,8 +13,9 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import FlashAlert from "@/Components/FlashAlert";
 
-type Props = {
+export type Props = {
     id: number;
+    is_administrator: boolean;
     formatted_amount: string;
     formatted_amount_refunded: string;
     payment_method: {
@@ -43,6 +44,8 @@ type Props = {
         formatted_amount_tax: string;
         formatted_unit_amount: string;
         quantity: number;
+        amount_refundable: string;
+        amount_refundable_int: number;
     }[];
     refunds: {
         id: number;
@@ -90,9 +93,6 @@ export const PaymentContent: React.FC<Props> = (props) => {
         },
     ];
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     return (
         <>
             <div className="grid gap-4">
@@ -106,13 +106,14 @@ export const PaymentContent: React.FC<Props> = (props) => {
                             yup.object().shape({
                                 refund_amount: yup
                                     .number()
+                                    .typeError("The amount must be a number.")
                                     .min(
                                         0,
-                                        "The amount to refund must be greater than zero"
+                                        "The amount to refund must be greater than zero."
                                     )
                                     .max(
                                         yup.ref("amount_refundable"),
-                                        "The amount to refund must be less than or equal to £${max}"
+                                        "The amount to refund must be less than or equal to £${max}."
                                     ),
                             })
                         ),
@@ -133,7 +134,10 @@ export const PaymentContent: React.FC<Props> = (props) => {
                     action={route("payments.payments.refund", props.id)}
                     hideDefaultButtons
                 >
-                    <Card title="Line Items" footer={<SubmissionButtons />}>
+                    <Card
+                        title="Line Items"
+                        footer={props.is_administrator && <SubmissionButtons />}
+                    >
                         <FlashAlert className="mb-4" />
 
                         <BasicList
@@ -162,12 +166,16 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                         )
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <TextInput
-                                                        name={`lines[${idx}].refund_amount`}
-                                                        label="Refund amount"
-                                                    />
-                                                </div>
+                                                {props.is_administrator &&
+                                                    item.amount_refundable_int >
+                                                        0 && (
+                                                        <div className="w-full md:w-96">
+                                                            <TextInput
+                                                                name={`lines[${idx}].refund_amount`}
+                                                                label="Refund amount"
+                                                            />
+                                                        </div>
+                                                    )}
                                             </div>
                                         </>
                                     ),

@@ -153,6 +153,13 @@ Route::middleware([
             Route::get('/{user}/transactions', [PaymentTransactionController::class, 'userIndex'])
                 ->whereNumber('user')
                 ->name('transactions.index');
+            Route::get('/{user}/payments', [PaymentsController::class, 'userIndex'])
+                ->whereNumber('user')
+                ->name('payments.index');
+            Route::get('/{user}/payments/{payment}', [PaymentsController::class, 'userShow'])
+                ->whereNumber('user')
+                ->whereNumber('payment')
+                ->name('payments.show');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/users/' . $path);
             })

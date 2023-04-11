@@ -30,7 +30,7 @@ export type PaymentIndexProps = {
         id: number;
         name: string;
     };
-    transactions: PaymentItemContentProps[];
+    payments: PaymentItemContentProps[];
 };
 
 export const PaymentItemContent: React.FC<PaymentItemContentProps> = (
@@ -64,11 +64,11 @@ export const PaymentItemContent: React.FC<PaymentItemContentProps> = (
     );
 };
 
-const Index: Layout<PaymentIndexProps> = (props) => {
+const Index: Layout<PaymentIndexProps> = (props: PaymentIndexProps) => {
     return (
         <>
             <Head
-                title="Transactions"
+                title="Payments"
                 breadcrumbs={[
                     { name: "Payments", route: "payments.index" },
                     {
