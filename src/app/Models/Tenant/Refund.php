@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $receipt_number
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property RefundPaymentLine $pivot
  */
 class Refund extends Model
 {
@@ -62,7 +63,8 @@ class Refund extends Model
             'refund_v2_payment_line',
             'refund_id',
             'v2_payment_line_id')
-            ->withPivot(['amount', 'description']);
+            ->withPivot(['amount', 'description'])
+            ->using(RefundPaymentLine::class);
     }
 
     protected function formattedAmount(): Attribute

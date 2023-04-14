@@ -107,8 +107,22 @@ class PaymentsController extends Controller
             'lines' => [],
         ];
 
-        foreach ($payment->lines()->get() as $line) {
+        foreach ($payment->lines()->with(['refunds'])->get() as $line) {
             /** @var PaymentLine $line */
+
+            $lineRefunds = [];
+            foreach ($line->refunds()->get() as $refund) {
+                /** @var Refund $refund */
+                $lineRefunds[] = [
+                    'id' => $refund->id,
+                    'amount' => $refund->amount,
+                    'formatted_amount' => $refund->formatted_amount,
+                    'line_refund_amount' => $refund->pivot->amount,
+                    'formatted_line_refund_amount' => $refund->pivot->formatted_amount,
+                    'line_refund_description' => $refund->pivot->description,
+                ];
+            }
+
             $lines[] = [
                 'id' => $line->id,
                 'description' => $line->description,
@@ -120,7 +134,9 @@ class PaymentsController extends Controller
                 'formatted_unit_amount' => $line->formatted_unit_amount,
                 'amount_refundable' => Money::formatDecimal($line->amount_total - $line->amount_refunded),
                 'amount_refundable_int' => $line->amount_total - $line->amount_refunded,
+                'amount_refunded_int' => $line->amount_refunded,
                 'quantity' => $line->quantity,
+                'refunds' => $lineRefunds,
             ];
 
             $formInitialValues['lines'][] = [
@@ -134,8 +150,17 @@ class PaymentsController extends Controller
             ];
         }
 
-        foreach ($payment->refunds()->get() as $refund) {
+        foreach ($payment->refunds()->with(['lines'])->get() as $refund) {
             /** @var Refund $refund */
+
+            $refundLines = [];
+            foreach ($refund->lines()->get() as $line) {
+                /** @var PaymentLine $line */
+                $refundLines[] = [
+                    'id' => $line->id,
+                ];
+            }
+
             $refunds[] = [
                 'id' => $refund->id,
                 'refunder' => [
@@ -150,6 +175,7 @@ class PaymentsController extends Controller
                 'formatted_amount' => $refund->formatted_amount,
                 'currency' => $refund->currency,
                 'created_at' => $refund->created_at,
+                'lines' => $refundLines,
             ];
         }
 

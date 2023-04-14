@@ -21,17 +21,20 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property int $amount_discount
  * @property int $amount_tax
  * @property int $amount_refunded
+ * @property int $amount_refundable
  * @property string $formatted_unit_amount
  * @property string $formatted_amount_subtotal
  * @property string $formatted_amount_total
  * @property string $formatted_amount_discount
  * @property string $formatted_amount_tax
  * @property string $formatted_amount_refunded
+ * @property string $formatted_amount_refundable
  * @property int $quantity
  * @property string $currency
  * @property Model $associated
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property RefundPaymentLine $pivot
  */
 class PaymentLine extends Model
 {
@@ -81,7 +84,8 @@ class PaymentLine extends Model
             'refund_v2_payment_line',
             'v2_payment_line_id',
             'refund_id')
-            ->withPivot(['amount', 'description']);
+            ->withPivot(['amount', 'description'])
+            ->using(RefundPaymentLine::class);
     }
 
     public function getRelationshipToPrimaryModel(): string
@@ -155,6 +159,20 @@ class PaymentLine extends Model
     {
         return Attribute::make(
             get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+        );
+    }
+
+    protected function amountRefundable(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->amount_total - $this->amount_refunded,
+        );
+    }
+
+    protected function formattedAmountRefundable(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_refundable, $this->currency),
         );
     }
 

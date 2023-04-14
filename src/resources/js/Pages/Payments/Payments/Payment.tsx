@@ -13,6 +13,19 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import FlashAlert from "@/Components/FlashAlert";
 
+type LineRefund = {
+    id: number;
+    amount: number;
+    formatted_amount: string;
+    line_refund_amount: number;
+    formatted_line_refund_amount: string;
+    line_refund_description: string;
+};
+
+type LineRefundProps = {
+    refunds: LineRefund[];
+};
+
 export type Props = {
     id: number;
     is_administrator: boolean;
@@ -46,6 +59,8 @@ export type Props = {
         quantity: number;
         amount_refundable: string;
         amount_refundable_int: number;
+        amount_refunded_int: number;
+        refunds: LineRefund[];
     }[];
     refunds: {
         id: number;
@@ -57,6 +72,22 @@ export type Props = {
             name: string;
         };
     }[];
+};
+
+const PaymentLineRefunds: React.FC<LineRefundProps> = ({ refunds }) => {
+    if (refunds.length > 0) {
+        return (
+            <ul>
+                {refunds.map((refund) => (
+                    <li key={refund.id}>
+                        {refund.formatted_line_refund_amount}
+                    </li>
+                ))}
+            </ul>
+        );
+    }
+
+    return <></>;
 };
 
 export const PaymentContent: React.FC<Props> = (props) => {
@@ -163,8 +194,26 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                         {
                                                             item.formatted_amount_total
                                                         }
+                                                        {item.amount_refunded_int >
+                                                            0 && (
+                                                            <>
+                                                                ,{" "}
+                                                                {
+                                                                    item.formatted_amount_refunded
+                                                                }{" "}
+                                                                refunded
+                                                            </>
+                                                        )}
                                                         )
                                                     </div>
+                                                    {item.refunds.length >
+                                                        0 && (
+                                                        <PaymentLineRefunds
+                                                            refunds={
+                                                                item.refunds
+                                                            }
+                                                        />
+                                                    )}
                                                 </div>
                                                 {props.is_administrator &&
                                                     item.amount_refundable_int >

@@ -25,6 +25,8 @@ use Illuminate\Support\Str;
  * @property string $formatted_amount_refunded
  * @property int $stripe_fee
  * @property int $application_fee_amount
+ * @property int $amount_refundable
+ * @property string $formatted_amount_refundable
  * @property PaymentMethod $paymentMethod
  * @property string $currency
  * @property string $status
@@ -121,6 +123,20 @@ class Payment extends Model
     {
         return Attribute::make(
             get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+        );
+    }
+
+    protected function amountRefundable(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->amount - $this->amount_refunded,
+        );
+    }
+
+    protected function formattedAmountRefundable(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount_refundable, $this->currency),
         );
     }
 }
