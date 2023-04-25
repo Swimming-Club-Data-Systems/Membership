@@ -7,6 +7,7 @@ use App\Enums\StripePaymentIntentStatus;
 use App\Http\Controllers\Controller;
 use App\Interfaces\PaidObject;
 use App\Mail\Payments\PaymentRefunded;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
 use App\Models\Tenant\Refund;
@@ -14,6 +15,7 @@ use App\Models\Tenant\User;
 use Brick\Math\BigDecimal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
@@ -120,6 +122,7 @@ class PaymentsController extends Controller
                     'line_refund_amount' => $refund->pivot->amount,
                     'formatted_line_refund_amount' => $refund->pivot->formatted_amount,
                     'line_refund_description' => $refund->pivot->description,
+                    'created_at' => $refund->created_at,
                 ];
             }
 
@@ -255,16 +258,32 @@ class PaymentsController extends Controller
             ]);
         }
 
+        if ($refundTotal <= 0) {
+            throw ValidationException::withMessages([
+                'total' => 'The total to refund must be greater than zero.',
+            ]);
+        }
+
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+        $stripe = new \Stripe\StripeClient([
+            'api_key' => config('cashier.secret'),
+            'stripe_version' => '2022-11-15'
+        ]);
+
+        DB::beginTransaction();
+
         try {
             $data = [
                 'payment_intent' => $payment->stripe_id,
                 'amount' => $refundTotal,
-                'instructions_email' => $payment->user?->email ?? $payment->receipt_email,
             ];
+
+            // Set instruction email if required by payment method
+            // if (some_condition) {
+            //     $data['instructions_email'] = $payment->user?->email ?? $payment->receipt_email;
+            // }
 
             // Add a reason if provided
             if ($request->input('reason') != "n/a") {
@@ -322,7 +341,10 @@ class PaymentsController extends Controller
                 }
             }
 
+            DB::commit();
+
         } catch (ApiErrorException $e) {
+            DB::rollBack();
             $request->session()->flash('error', "Something went wrong which meant we could not refund this payment. Please try again later.");
         }
 

@@ -12,6 +12,9 @@ import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import FlashAlert from "@/Components/FlashAlert";
+import Table from "@/Components/Table";
+import BigNumber from "bignumber.js";
+import ArrayErrorMessage from "@/Components/Form/ArrayErrorMessage";
 
 type LineRefund = {
     id: number;
@@ -20,6 +23,7 @@ type LineRefund = {
     line_refund_amount: number;
     formatted_line_refund_amount: string;
     line_refund_description: string;
+    created_at: string;
 };
 
 type LineRefundProps = {
@@ -77,13 +81,23 @@ export type Props = {
 const PaymentLineRefunds: React.FC<LineRefundProps> = ({ refunds }) => {
     if (refunds.length > 0) {
         return (
-            <ul>
-                {refunds.map((refund) => (
-                    <li key={refund.id}>
-                        {refund.formatted_line_refund_amount}
-                    </li>
-                ))}
-            </ul>
+            <>
+                <hr />
+                <Table
+                    columns={[
+                        {
+                            headerName: "Date",
+                            field: "created_at",
+                            render: (value: string) => formatDateTime(value),
+                        },
+                        {
+                            headerName: "Amount refunded",
+                            field: "formatted_line_refund_amount",
+                        },
+                    ]}
+                    data={refunds}
+                />
+            </>
         );
     }
 
@@ -99,7 +113,7 @@ export const PaymentContent: React.FC<Props> = (props) => {
         },
         {
             key: "payment_method",
-            term: "Payment method",
+            term: "Paid with",
             definition: (
                 <>
                     <p>{props.payment_method.description}</p>
@@ -107,11 +121,17 @@ export const PaymentContent: React.FC<Props> = (props) => {
                 </>
             ),
         },
-        {
+    ];
+
+    if (props.is_administrator) {
+        items.push({
             key: "stripe_id",
             term: "Stripe Payment Intent ID",
             definition: props.stripe_id,
-        },
+        });
+    }
+
+    items.push(
         {
             key: "amount",
             term: "Amount",
@@ -121,8 +141,8 @@ export const PaymentContent: React.FC<Props> = (props) => {
             key: "amount_refunded",
             term: "Amount refunded",
             definition: props.formatted_amount_refunded,
-        },
-    ];
+        }
+    );
 
     return (
         <>
@@ -133,21 +153,52 @@ export const PaymentContent: React.FC<Props> = (props) => {
 
                 <Form
                     validationSchema={yup.object().shape({
-                        lines: yup.array().of(
-                            yup.object().shape({
-                                refund_amount: yup
-                                    .number()
-                                    .typeError("The amount must be a number.")
-                                    .min(
-                                        0,
-                                        "The amount to refund must be greater than zero."
-                                    )
-                                    .max(
-                                        yup.ref("amount_refundable"),
-                                        "The amount to refund must be less than or equal to £${max}."
-                                    ),
-                            })
-                        ),
+                        lines: yup
+                            .array()
+                            .of(
+                                yup.object().shape({
+                                    refund_amount: yup
+                                        .number()
+                                        .typeError(
+                                            "The amount must be a number."
+                                        )
+                                        .min(
+                                            0,
+                                            "The amount to refund must be greater than zero."
+                                        )
+                                        .max(
+                                            yup.ref("amount_refundable"),
+                                            "The amount to refund must be less than or equal to £${max}."
+                                        ),
+                                })
+                            )
+                            .test(
+                                "total-gt-zero",
+                                "The total to refund must be greater than zero.",
+                                (value) => {
+                                    const sum = value.reduce(
+                                        (accumulator, currentValue) => {
+                                            if (currentValue.refund_amount) {
+                                                try {
+                                                    const value = new BigNumber(
+                                                        currentValue.refund_amount
+                                                    );
+                                                    return accumulator.plus(
+                                                        value
+                                                    );
+                                                } catch {
+                                                    // If error return old value
+                                                    return accumulator;
+                                                }
+                                            } else {
+                                                return accumulator;
+                                            }
+                                        },
+                                        new BigNumber("0")
+                                    );
+                                    return sum.gt(new BigNumber("0"));
+                                }
+                            ),
                         reason: yup
                             .string()
                             .oneOf(
@@ -164,6 +215,13 @@ export const PaymentContent: React.FC<Props> = (props) => {
                     method="post"
                     action={route("payments.payments.refund", props.id)}
                     hideDefaultButtons
+                    confirm={{
+                        type: "danger",
+                        message: (
+                            <>Are you sure you want to refund these payments?</>
+                        ),
+                        confirmText: "Refund items",
+                    }}
                 >
                     <Card
                         title="Line Items"
@@ -231,13 +289,13 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                 };
                             })}
                         />
+
+                        <ArrayErrorMessage name="lines" />
                     </Card>
                 </Form>
 
                 {props.refunds.length > 0 && (
                     <Card title="Refunds">
-                        <FlashAlert className="mb-4" />
-
                         <BasicList
                             items={props.refunds.map((item, idx) => {
                                 return {

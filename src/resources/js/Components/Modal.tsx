@@ -1,12 +1,24 @@
 /* This example requires Tailwind CSS v2.0+ */
-import React, { Fragment } from "react";
+import React, { Fragment, ReactNode } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import {
     ExclamationTriangleIcon,
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 
-const Modal = ({
+export type ModalVariantProps = "success" | "warning" | "danger";
+
+type ModalProps = {
+    variant?: ModalVariantProps;
+    Icon?: never;
+    show?: boolean;
+    onClose: () => void;
+    title: string | ReactNode;
+    children: string | ReactNode;
+    buttons: ReactNode;
+};
+
+const Modal: React.FC<ModalProps> = ({
     variant,
     Icon = ExclamationTriangleIcon,
     show,

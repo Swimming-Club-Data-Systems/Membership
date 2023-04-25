@@ -4,7 +4,7 @@ import { apiCount } from "@/Reducers/store";
 
 export interface Props extends React.ComponentProps<"button"> {
     className?: string;
-    variant?: string;
+    variant?: "primary" | "secondary" | "danger" | "warning";
     disabled?: boolean;
 }
 

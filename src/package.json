@@ -37,6 +37,7 @@
         "@stripe/react-stripe-js": "^1.16.5",
         "@stripe/stripe-js": "^1.52.0",
         "@web-auth/webauthn-helper": "^0.0.13",
+        "bignumber.js": "^9.0.1",
         "date-fns": "^2.29.3",
         "focus-trap-react": "^10.0.2",
         "formik": "^2.2.9",

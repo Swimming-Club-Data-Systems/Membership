@@ -9,11 +9,13 @@ import {
     FormikBag,
     useFormikContext,
 } from "formik";
-import { usePage, router, VisitOptions } from "@inertiajs/react";
-import Button from "../Button";
-import Alert, { AlertList } from "../Alert";
+import type { VisitOptions } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
+import Button from "../Button.js";
+import Alert, { AlertList } from "../Alert.js";
 import { merge } from "lodash";
 import { AnyObjectSchema } from "yup";
+import Modal, { ModalVariantProps } from "@/Components/Modal";
 
 interface FormSpecialContextInterface {
     submitClass?: string;
@@ -203,6 +205,11 @@ type FormProps = {
     children?: ReactNode;
     disabled?: boolean;
     readOnly?: boolean;
+    confirm?: {
+        type?: ModalVariantProps;
+        message: string | ReactNode;
+        confirmText?: string;
+    };
 };
 
 const Form = (props: FormProps) => {
@@ -233,6 +240,8 @@ const Form = (props: FormProps) => {
     const handleNetErrorDismiss = () => {
         setHasErrors(false);
     };
+    const [showConfirm, setShowConfirm] = useState(false);
+    const [confirmed, setConfirmed] = useState(false);
 
     useEffect(() => {
         // If we get an invalid response, don't show any of the response
@@ -246,7 +255,7 @@ const Form = (props: FormProps) => {
         });
     }, []);
 
-    const onSubmitHandler = (values, formikBag) => {
+    const onSubmitHandler = async (values, formikBag) => {
         formikBag.setStatus({});
         if (onSubmit) {
             // Escape hatch override
@@ -257,17 +266,22 @@ const Form = (props: FormProps) => {
                 inertiaOptions.errorBag = formName;
             }
 
-            router[method](action, values, {
-                onSuccess: () => formikBag.resetForm(),
-                ...inertiaOptions,
-                // onError: (error) => {
-                //     console.log(error);
-                // },
-                onFinish: () => {
-                    // Always mark as not submitting once done
-                    formikBag.setSubmitting(false);
-                },
-            });
+            if (props.confirm && !confirmed) {
+                setShowConfirm(true);
+            } else {
+                setConfirmed(false);
+                router[method](action, values, {
+                    onSuccess: () => formikBag.resetForm(),
+                    ...inertiaOptions,
+                    // onError: (error) => {
+                    //     console.log(error);
+                    // },
+                    onFinish: () => {
+                        // Always mark as not submitting once done
+                        formikBag.setSubmitting(false);
+                    },
+                });
+            }
         }
     };
 
@@ -280,6 +294,8 @@ const Form = (props: FormProps) => {
           pageProps[formName]?.form_initial_values
         : pageProps.form_initial_values;
     const mergedValues = merge(initialValues, newInitialValues);
+
+    const defaultConfirmVariant: ModalVariantProps = "danger";
 
     return (
         <FormSpecialContext.Provider
@@ -303,21 +319,73 @@ const Form = (props: FormProps) => {
                 onSubmit={onSubmitHandler}
                 enableReinitialize
             >
-                <FormikForm {...otherProps}>
-                    <HandleServerErrors />
+                {(formikProps) => {
+                    const onConfirm = async () => {
+                        setConfirmed(true);
+                        setShowConfirm(false);
+                        try {
+                            await formikProps.submitForm();
+                        } catch {
+                            // Ignore
+                        }
+                    };
 
-                    {!hideErrors && <RenderServerErrors />}
+                    const onConfirmReject = () => {
+                        setConfirmed(false);
+                        setShowConfirm(false);
+                    };
 
-                    {!hideErrors && <UnknownError />}
+                    return (
+                        <FormikForm {...otherProps}>
+                            {props.confirm && (
+                                <Modal
+                                    variant={
+                                        props.confirm.type ||
+                                        defaultConfirmVariant
+                                    }
+                                    show={showConfirm}
+                                    onClose={onConfirmReject}
+                                    title="Are you sure?"
+                                    buttons={
+                                        <>
+                                            <Button
+                                                id="confirm-yes"
+                                                variant="danger"
+                                                onClick={onConfirm}
+                                            >
+                                                {props.confirm.confirmText ||
+                                                    "Confirm"}
+                                            </Button>
+                                            <Button
+                                                id="confirm-no"
+                                                variant="secondary"
+                                                onClick={onConfirmReject}
+                                            >
+                                                Cancel
+                                            </Button>
+                                        </>
+                                    }
+                                >
+                                    {props.confirm.message}
+                                </Modal>
+                            )}
 
-                    {props.children}
+                            <HandleServerErrors />
 
-                    {!hideDefaultButtons && (
-                        <div className="mt-5 sm:mt-4">
-                            <SubmissionButtons onClear={onClear} />
-                        </div>
-                    )}
-                </FormikForm>
+                            {!hideErrors && <RenderServerErrors />}
+
+                            {!hideErrors && <UnknownError />}
+
+                            {props.children}
+
+                            {!hideDefaultButtons && (
+                                <div className="mt-5 sm:mt-4">
+                                    <SubmissionButtons onClear={onClear} />
+                                </div>
+                            )}
+                        </FormikForm>
+                    );
+                }}
             </Formik>
         </FormSpecialContext.Provider>
     );
