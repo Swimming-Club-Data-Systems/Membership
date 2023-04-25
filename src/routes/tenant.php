@@ -178,7 +178,7 @@ Route::middleware([
         });
     });
 
-    Route::prefix('payments')->group(function () {
+    Route::prefix('billing')->group(function () {
         Route::name('payments.')->group(function () {
 
             Route::get('/', function () {

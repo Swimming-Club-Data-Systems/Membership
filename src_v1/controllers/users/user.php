@@ -44,6 +44,19 @@ if (stripeDirectDebit()) {
 }
 $stripeDD = $getStripeDD->fetch(PDO::FETCH_ASSOC);
 
+// Get Stripe direct debit info
+$getStripeDD2 = $db->prepare("SELECT * FROM payment_methods WHERE `user_UserID` = ? AND `default`;");
+$getStripeDD2->execute([
+    $id
+]);
+$stripeDD2 = $getStripeDD->fetch(PDO::FETCH_ASSOC);
+
+$getBalance = $db->prepare("SELECT `balance` FROM `accounting_journals` WHERE `morphed_type` = 'App\Models\Tenant\User' AND `morphed_id` = ?;");
+$getBalance->execute([
+    $id
+]);
+$balanceV2 = $getBalance->fetchColumn();
+
 $bankName = $bank = $has_logo = $logo_path = null;
 if (userHasMandates($id)) {
   $bankName = mb_strtoupper(bankDetails($id, "account_holder_name"));
@@ -326,7 +339,7 @@ include BASE_PATH . "views/header.php";
           <div class="row">
             <div class="col-md-6 col-lg-8">
               <h2 id="payment-information">
-                Payment information
+                Payment information (Legacy payment and billing systems)
               </h2>
               <p class="lead">
                 Account details and monthly fees paid by this user.
@@ -424,6 +437,87 @@ include BASE_PATH . "views/header.php";
                     <?php if ($stripeDD || userHasMandates($id)) { ?>
                       <button id="trigger-early-payment" data-info-url="<?= htmlspecialchars(autoUrl("users/$id/direct-debit/force-run-info")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Trigger early payment <span class="fa fa-chevron-right"></span></button>
                     <?php } ?>
+                  </div>
+                </div>
+              <?php } ?>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="mb-4">
+          <div class="row">
+            <div class="col-md-6 col-lg-8">
+              <h2 id="payment-information">
+                Billing and Payment (V2) information
+              </h2>
+              <p class="lead">
+                Account details and monthly fees paid by this user.
+              </p>
+
+              <div class="card card-body mb-3">
+
+                <h3 class="mb-3">
+                  Payment Information
+                </h3>
+
+                <div class="row">
+                  <div class="col-lg-6">
+                    <h3 class="h6">Squad Fees</h3>
+                    <p><?= monthlyFeeCost($db, $id, "string") ?></p>
+                  </div>
+                  <div class="col-lg-6">
+                    <h3 class="h6">Extra Fees</h3>
+                    <p><?= monthlyExtraCost($db, $id, "string") ?></p>
+                  </div>
+                  <div class="col-lg-6">
+                    <h3 class="h6">Account balance</h3>
+                    <p class="mb-0">
+                      &pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $balanceV2))->withPointMovedLeft(2)->toScale(2) ?>
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card card-body">
+                <h3 class="mb-3">
+                  Current Direct Debit Instruction
+                </h3>
+
+                <div class="row">
+                  <div class="col-lg">
+                    <h4>Default Direct Debit</h4>
+                    <?php if ($stripeDD2 && $stripeDD2['type'] == 'bacs_debit') {
+                      $jsonData = json_decode($stripeDD2['pm_type_data']);
+                      ?>
+                      <p class="mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split($jsonData->sort_code, 2))) ?></span>
+                      </p>
+                      <p class="mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($jsonData->last4) ?></span></p>
+                    <?php } else { ?>
+                      <p class="mb-0">No Direct Debit Instruction is set up</p>
+                    <?php } ?>
+                    <div class="mb-3 d-lg-none"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-3 d-md-none"></div>
+
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
+                <div class="card position-sticky top-3">
+                  <div class="card-header">
+                    Billing links
+                  </div>
+                  <div class="list-group list-group-flush">
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/membership-fees") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Annual membership fees <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/transactions") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Journal transaction history <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/statements") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Statements <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/payments") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Payment history <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/payment-methods") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Payment methods <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars("/users/" . $id . "/balance-top-ups/new") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Create balance top up <span class="fa fa-chevron-right"></span></a>
                   </div>
                 </div>
               <?php } ?>
