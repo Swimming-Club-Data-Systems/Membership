@@ -238,8 +238,8 @@ class AppMenu
 
             if (App::isLocal()) {
                 $menu[] = [
-                    'name' => 'Pay (V2)',
-                    'href' => '/payments',
+                    'name' => 'Billing',
+                    'href' => '/billing',
                     'children' => $this->paymentsV2(),
                 ];
             }
@@ -398,101 +398,6 @@ class AppMenu
         return $menu;
     }
 
-    public function paymentsV2()
-    {
-        $menu = [];
-
-        $menu[] = [
-            'name' => 'Home',
-            'href' => '/payments',
-        ];
-
-        $menu[] = [
-            'name' => 'Payment Methods',
-            'href' => route('payments.methods.index'),
-        ];
-
-        $menu[] = [
-            'name' => 'Ledgers and Journals',
-            'href' => route('payments.ledgers.index'),
-        ];
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Statements',
-                'href' => '/payments/statements',
-            ];
-        }
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Account Activity',
-                'href' => '/payments/activity',
-            ];
-        }
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Squad and Extra Fees',
-                'href' => '/payments/squad-fees',
-            ];
-        }
-
-        if ($this->user->hasPermission('Parent')) {
-            $menu[] = [
-                'name' => 'Annual Membership Fees',
-                'href' => '/payments/membership-fees',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Payment Status',
-                'href' => '/payments/history',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Extra Fees',
-                'href' => '/payments/extrafees',
-            ];
-        }
-
-        if ($this->user->hasPermission(['Admin', 'Galas'])) {
-            $menu[] = [
-                'name' => 'Charge or Refund Gala Entries',
-                'href' => '/payments/galas',
-            ];
-        }
-
-        $today = new \DateTime('now', new \DateTimeZone(config('app.timezone')));
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'This Months Squad Fees',
-                'href' => '/payments/history/squads/' . $today->format('Y') . '/' . $today->format('m'),
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'This Months Extra Fees',
-                'href' => '/payments/history/extras/' . $today->format('Y') . '/' . $today->format('m'),
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Stripe Dashboard',
-                'href' => 'https://dashboard.stripe.com/',
-                'external' => true,
-            ];
-        }
-
-        return $menu;
-    }
-
     public function payments()
     {
         $menu = [];
@@ -611,6 +516,101 @@ class AppMenu
             'name' => 'Add Card',
             'href' => '/payments/cards/add',
         ];
+
+        return $menu;
+    }
+
+    public function paymentsV2()
+    {
+        $menu = [];
+
+        $menu[] = [
+            'name' => 'Home',
+            'href' => '/payments',
+        ];
+
+        $menu[] = [
+            'name' => 'Payment Methods',
+            'href' => route('payments.methods.index'),
+        ];
+
+        $menu[] = [
+            'name' => 'Ledgers and Journals',
+            'href' => route('payments.ledgers.index'),
+        ];
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Statements',
+                'href' => route('payments.statements.index'),
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Transactions',
+                'href' => route('payments.transactions.index'),
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Payments',
+                'href' => route('payments.payments.index'),
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Squad and Extra Fees',
+                'href' => '/payments/squad-fees',
+            ];
+        }
+
+        if ($this->user->hasPermission('Parent')) {
+            $menu[] = [
+                'name' => 'Annual Membership Fees',
+                'href' => '/payments/membership-fees',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Payment Status',
+                'href' => '/payments/history',
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Extra Fees',
+                'href' => '/payments/extrafees',
+            ];
+        }
+
+        $today = new \DateTime('now', new \DateTimeZone(config('app.timezone')));
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'This Months Squad Fees',
+                'href' => '/payments/history/squads/' . $today->format('Y') . '/' . $today->format('m'),
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'This Months Extra Fees',
+                'href' => '/payments/history/extras/' . $today->format('Y') . '/' . $today->format('m'),
+            ];
+        }
+
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'Stripe Dashboard',
+                'href' => 'https://dashboard.stripe.com/',
+                'external' => true,
+            ];
+        }
 
         return $menu;
     }
