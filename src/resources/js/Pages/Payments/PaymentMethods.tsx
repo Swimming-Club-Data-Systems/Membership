@@ -5,18 +5,25 @@ import BasicList from "@/Components/BasicList.jsx";
 import Button from "@/Components/Button.jsx";
 import Card from "@/Components/Card.jsx";
 import MainLayout from "@/Layouts/MainLayout.jsx";
-import { router, Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import Modal from "@/Components/Modal";
 
-type Props = {
+export type PaymentMethodDetailsProps = {
     payment_methods: [];
     direct_debits: [];
     payment_method: {};
+    is_admin?: boolean;
+    user?: {
+        id: number;
+        name: string;
+    };
 };
 
-const Index: Layout<Props> = (props: Props) => {
+export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
+    props: PaymentMethodDetailsProps
+) => {
     const [showPaymentMethodDeleteModal, setShowPaymentMethodDeleteModal] =
         useState(false);
     const [paymentMethodDeleteModalData, setPaymentMethodDeleteModalData] =
@@ -122,155 +129,166 @@ const Index: Layout<Props> = (props: Props) => {
     };
 
     return (
-        <>
-            <Head title="Payment Methods" />
-
-            <div className="grid gap-4">
-                <Card
-                    footer={
+        <div className="grid gap-4">
+            <Card
+                footer={
+                    props.is_admin ? null : (
                         <ButtonLink
                             href={route("payments.methods.new_direct_debit")}
                         >
                             Add a Direct Debit
                         </ButtonLink>
-                    }
-                    title="Direct Debit"
-                    subtitle="Manage your Direct Debit."
-                >
-                    <FlashAlert className="mb-4" bag="direct_debit" />
+                    )
+                }
+                title="Direct Debit"
+                subtitle="Manage your Direct Debit."
+            >
+                <FlashAlert className="mb-4" bag="direct_debit" />
 
-                    {props.payment_method && (
-                        <div>
-                            <p className="text-sm">
-                                You can change your default Direct Debit at any
-                                time. Direct Debit payments are covered by the
-                                Direct Debit Guarantee.
-                            </p>
-                        </div>
-                    )}
+                {props.payment_method && (
+                    <div>
+                        <p className="text-sm">
+                            You can change your default Direct Debit at any
+                            time. Direct Debit payments are covered by the
+                            Direct Debit Guarantee.
+                        </p>
+                    </div>
+                )}
 
-                    {props.direct_debits.length > 0 && (
-                        <BasicList
-                            items={props.direct_debits.map(PaymentMethod)}
-                        />
-                    )}
+                {props.direct_debits.length > 0 && (
+                    <BasicList items={props.direct_debits.map(PaymentMethod)} />
+                )}
 
-                    {!props.direct_debits.length && (
-                        <div>
-                            <p className="text-sm">
-                                You have no Direct Debit Instruction set up.
-                            </p>
-                        </div>
-                    )}
-                </Card>
+                {!props.direct_debits.length && (
+                    <div>
+                        <p className="text-sm">
+                            {props.is_admin
+                                ? "No Direct Debit Instruction set up"
+                                : "You have no Direct Debit Instruction set up."}
+                        </p>
+                    </div>
+                )}
+            </Card>
 
-                <Card
-                    footer={
+            <Card
+                footer={
+                    props.is_admin ? null : (
                         <ButtonLink href={route("payments.methods.new")}>
                             Add a payment method
                         </ButtonLink>
-                    }
-                    title="Card and other payment methods"
-                    subtitle="Manage credit and debit cards."
-                >
-                    <FlashAlert className="mb-4" bag="payment_method" />
+                    )
+                }
+                title="Card and other payment methods"
+                subtitle="Manage credit and debit cards."
+            >
+                <FlashAlert className="mb-4" bag="payment_method" />
 
-                    {props.payment_method && (
-                        <div>
-                            <p className="text-sm">
-                                You can change your default payment method at
-                                any time.
-                            </p>
-                        </div>
-                    )}
-
-                    {props.payment_methods.length > 0 && (
-                        <BasicList
-                            items={props.payment_methods.map(PaymentMethod)}
-                        />
-                    )}
-
-                    {!props.payment_methods.length && (
-                        <div>
-                            <p className="text-sm">
-                                You have no payment methods set up.
-                            </p>
-                        </div>
-                    )}
-                </Card>
-
-                <Modal
-                    show={showPaymentMethodDeleteModal}
-                    onClose={() => setShowPaymentMethodDeleteModal(false)}
-                    variant="danger"
-                    title="Delete payment method"
-                    buttons={
-                        <>
-                            <Button
-                                variant="danger"
-                                onClick={deletePaymentMethod}
-                            >
-                                Confirm
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                onClick={() =>
-                                    setShowPaymentMethodDeleteModal(false)
-                                }
-                            >
-                                Cancel
-                            </Button>
-                        </>
-                    }
-                >
-                    {paymentMethodDeleteModalData && (
-                        <p>
-                            Are you sure you want to delete{" "}
-                            {paymentMethodDeleteModalData.description}?
+                {props.payment_method && !props.is_admin && (
+                    <div>
+                        <p className="text-sm">
+                            You can change your default payment method at any
+                            time.
                         </p>
-                    )}
-                </Modal>
+                    </div>
+                )}
 
-                <Modal
-                    show={showPaymentMethodDefaultModal}
-                    onClose={() => setShowPaymentMethodDefaultModal(false)}
-                    variant="primary"
-                    title="Change default payment method"
-                    buttons={
-                        <>
-                            <Button
-                                variant="primary"
-                                onClick={setDefaultPaymentMethod}
-                            >
-                                Confirm
-                            </Button>
-                            <Button
-                                variant="secondary"
-                                onClick={() =>
-                                    setShowPaymentMethodDefaultModal(false)
-                                }
-                            >
-                                Cancel
-                            </Button>
-                        </>
-                    }
-                >
-                    {paymentMethodDefaultModalData && (
-                        <>
-                            <p className="mb-3">
-                                Are you sure you want to make{" "}
-                                {paymentMethodDefaultModalData.description} your
-                                default payment method?
-                            </p>
+                {props.payment_methods.length > 0 && (
+                    <BasicList
+                        items={props.payment_methods.map(PaymentMethod)}
+                    />
+                )}
 
-                            <p>
-                                We will automatically charge all future monthly
-                                payments to this payment method.
-                            </p>
-                        </>
-                    )}
-                </Modal>
-            </div>
+                {!props.payment_methods.length && (
+                    <div>
+                        <p className="text-sm">
+                            {props.is_admin
+                                ? "No payment methods set up"
+                                : "You have no payment methods set up."}
+                        </p>
+                    </div>
+                )}
+            </Card>
+
+            <Modal
+                show={showPaymentMethodDeleteModal}
+                onClose={() => setShowPaymentMethodDeleteModal(false)}
+                variant="danger"
+                title="Delete payment method"
+                buttons={
+                    <>
+                        <Button variant="danger" onClick={deletePaymentMethod}>
+                            Confirm
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={() =>
+                                setShowPaymentMethodDeleteModal(false)
+                            }
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
+            >
+                {paymentMethodDeleteModalData && (
+                    <p>
+                        Are you sure you want to delete{" "}
+                        {paymentMethodDeleteModalData.description}?
+                    </p>
+                )}
+            </Modal>
+
+            <Modal
+                show={showPaymentMethodDefaultModal}
+                onClose={() => setShowPaymentMethodDefaultModal(false)}
+                variant="primary"
+                title="Change default payment method"
+                buttons={
+                    <>
+                        <Button
+                            variant="primary"
+                            onClick={setDefaultPaymentMethod}
+                        >
+                            Confirm
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={() =>
+                                setShowPaymentMethodDefaultModal(false)
+                            }
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
+            >
+                {paymentMethodDefaultModalData && (
+                    <>
+                        <p className="mb-3">
+                            Are you sure you want to make{" "}
+                            {paymentMethodDefaultModalData.description} your
+                            default payment method?
+                        </p>
+
+                        <p>
+                            We will automatically charge all future monthly
+                            payments to this payment method.
+                        </p>
+                    </>
+                )}
+            </Modal>
+        </div>
+    );
+};
+
+const Index: Layout<PaymentMethodDetailsProps> = (
+    props: PaymentMethodDetailsProps
+) => {
+    return (
+        <>
+            <Head title="Payment Methods" />
+
+            <PaymentMethodDetails {...props} />
         </>
     );
 };

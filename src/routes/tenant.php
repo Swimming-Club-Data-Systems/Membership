@@ -156,6 +156,9 @@ Route::middleware([
             Route::get('/{user}/payments', [PaymentsController::class, 'userIndex'])
                 ->whereNumber('user')
                 ->name('payments.index');
+            Route::get('/{user}/payment-methods', [PaymentMethodController::class, 'userIndex'])
+                ->whereNumber('user')
+                ->name('payment_methods.index');
             Route::get('/{user}/payments/{payment}', [PaymentsController::class, 'userShow'])
                 ->whereNumber('user')
                 ->whereNumber('payment')

@@ -27,11 +27,8 @@ class PaymentMethodController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    private function paymentMethodData(User $user): array
     {
-        /** @var User $user */
-        $user = Auth::user();
-
         $directDebits = $user->paymentMethods()->where('type', '=', 'bacs_debit')->get();
         $otherMethods = $user->paymentMethods()->where('type', '!=', 'bacs_debit')->get();
 
@@ -54,14 +51,34 @@ class PaymentMethodController extends Controller
             $default = $map($defaultPm);
         }
 
-        return Inertia::render('Payments/PaymentMethods', [
+        return [
             'direct_debits' => $directDebits->map($map),
             'payment_methods' => $otherMethods->map($map),
             'payment_method' => $default,
-        ]);
+        ];
     }
 
-    public function addPaymentMethod()
+    public function index(): \Inertia\Response
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        return Inertia::render('Payments/PaymentMethods', $this->paymentMethodData($user));
+    }
+
+    public function userIndex(User $user): \Inertia\Response
+    {
+        $data = $this->paymentMethodData($user);
+        $data['is_admin'] = true;
+        $data['user'] = [
+            'id' => $user->id,
+            'name' => $user->name,
+        ];
+
+        return Inertia::render('Payments/UserPaymentMethods', $data);
+    }
+
+    public function addPaymentMethod(): \Symfony\Component\HttpFoundation\Response
     {
         /** @var Tenant $tenant */
         $tenant = tenant();
@@ -90,7 +107,7 @@ class PaymentMethodController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function addDirectDebit()
+    public function addDirectDebit(): \Symfony\Component\HttpFoundation\Response
     {
         /** @var Tenant $tenant */
         $tenant = tenant();
@@ -119,7 +136,7 @@ class PaymentMethodController extends Controller
         return Inertia::location($session->url);
     }
 
-    public function addPaymentMethodSuccess(Request $request)
+    public function addPaymentMethodSuccess(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
@@ -202,8 +219,7 @@ class PaymentMethodController extends Controller
         return Inertia::location(route('payments.methods.index'));
     }
 
-    public
-    function update(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request)
+    public function update(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request): \Illuminate\Http\RedirectResponse
     {
         $type = $paymentMethod->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
 
@@ -224,8 +240,7 @@ class PaymentMethodController extends Controller
     /**
      * @throws ValidationException
      */
-    public
-    function delete(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request)
+    public function delete(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request): \Illuminate\Http\RedirectResponse
     {
         /** @var Tenant $tenant */
         $tenant = tenant();

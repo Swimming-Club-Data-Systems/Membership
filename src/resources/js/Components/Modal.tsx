@@ -6,7 +6,7 @@ import {
     XMarkIcon,
 } from "@heroicons/react/24/outline";
 
-export type ModalVariantProps = "success" | "warning" | "danger";
+export type ModalVariantProps = "primary" | "success" | "warning" | "danger";
 
 type ModalProps = {
     variant?: ModalVariantProps;
