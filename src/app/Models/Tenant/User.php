@@ -278,6 +278,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Payment::class, 'user_UserID');
     }
 
+    public function balanceTopUps(): HasMany
+    {
+        return $this->hasMany(BalanceTopUp::class, 'user_UserID');
+    }
+
     public function representedSquads(): BelongsToMany
     {
         return $this->belongsToMany(Squad::class, 'squadReps', 'User', 'Squad')

@@ -2,20 +2,26 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\Money;
 use App\Enums\BalanceTopUpStatus;
 use App\Interfaces\PaidObject;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Support\Str;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property int $id
  * @property User $user
  * @property int $amount
+ * @property string $formatted_amount
  * @property string $currency
  * @property PaymentMethod $paymentMethod
+ * @property PaymentLine $paymentLine
  * @property User $initiator
  * @property Carbon $scheduled_for
  * @property BalanceTopUpStatus $status
@@ -69,9 +75,28 @@ class BalanceTopUp extends Model implements PaidObject
         return $this->belongsTo(PaymentMethod::class);
     }
 
+    public function paymentLine(): MorphOne
+    {
+        return $this->morphOne(PaymentLine::class, 'associated');
+    }
+
     public function getRelationshipToPrimaryModel(): string
     {
         return 'user';
+    }
+
+    protected function currency(): Attribute
+    {
+        return Attribute::make(
+            set: fn($value) => Str::lower($value),
+        );
+    }
+
+    protected function formattedAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Money::formatCurrency($this->amount, $this->currency),
+        );
     }
 
     public function handlePaid(): void

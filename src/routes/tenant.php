@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
+use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -163,6 +164,13 @@ Route::middleware([
                 ->whereNumber('user')
                 ->whereNumber('payment')
                 ->name('payments.show');
+            Route::get('/{user}/balance-top-ups', [BalanceTopUpController::class, 'userIndex'])
+                ->whereNumber('user')
+                ->name('top_up.index');
+            Route::get('/{user}/balance-top-ups/{top_up}', [BalanceTopUpController::class, 'userShow'])
+                ->whereNumber('user')
+                ->whereNumber('top_up')
+                ->name('top_up.show');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/users/' . $path);
             })
@@ -303,6 +311,12 @@ Route::middleware([
                         ->name('success');
                     Route::get('/create-gala-payment', [CheckoutController::class, 'create'])
                         ->name('create');
+                });
+            });
+
+            Route::prefix('balance-top-ups')->group(function () {
+                Route::name('top_ups.')->group(function () {
+                    Route::get('/', [BalanceTopUpController::class, 'index'])->name('index');
                 });
             });
         });
