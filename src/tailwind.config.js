@@ -8,6 +8,10 @@ module.exports = {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.jsx",
         "./resources/js/**/*.tsx",
+        "./stories/**/*.tsx",
+        "./stories/**/*.jsx",
+        "./stories/**/*.ts",
+        "./stories/**/*.js",
     ],
 
     theme: {
