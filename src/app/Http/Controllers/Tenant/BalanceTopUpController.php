@@ -29,6 +29,27 @@ class BalanceTopUpController extends Controller
         return Inertia::render('Payments/BalanceTopUps/UserIndex', $data);
     }
 
+    public function new(Request $request, User $user): \Inertia\Response
+    {
+        /** @var User $authUser */
+        $authUser = $request->user();
+
+        return Inertia::render('Payments/BalanceTopUps/New', [
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+            ],
+            'initiator' => [
+                'id' => $authUser->id,
+                'name' => $authUser->name,
+            ]
+        ]);
+    }
+
+    public function create(Request $request) {
+
+    }
+
     private function indexData(User $user) {
         $balanceTopUps = $user
             ->balanceTopUps()

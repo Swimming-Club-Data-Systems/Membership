@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 // import "react-day-picker/dist/style.css";
-// import "./DateInput.css";
+// import "./DateInputOld.css";
 import BaseInput from "@/Components/Form/base/BaseInput";
 import DatePicker from "@/Components/Form/base/date/DatePicker";
 import {
@@ -13,12 +13,13 @@ import {
     isDateValid,
     parseDate,
     parseISODate,
-} from "./DateInputUtils";
+} from "@/Components/Form/base/date/DateInputUtils";
 import { enGB } from "date-fns/locale";
 import getFormatData from "@/Components/Form/base/date/DateInputFormats";
 import useClickAwayListener from "@/Components/Form/base/useClickAwayListener";
 import Events from "@/Components/Form/base/events";
 import Input from "@/Components/Form/base/Input";
+import { formatISO } from "date-fns/fp";
 
 const DateInput = ({
     adaptiveLabelBreakpoint,
@@ -42,7 +43,7 @@ const DateInput = ({
     readOnly,
     size = "medium",
     tooltipPosition,
-    value,
+    value = formatISO(Date.now()),
     className = "",
     leftText,
     rightButton,

@@ -167,6 +167,11 @@ Route::middleware([
             Route::get('/{user}/balance-top-ups', [BalanceTopUpController::class, 'userIndex'])
                 ->whereNumber('user')
                 ->name('top_up.index');
+            Route::get('/{user}/balance-top-ups/new', [BalanceTopUpController::class, 'new'])
+                ->whereNumber('user')
+                ->name('top_up.new');
+            Route::post('/{user}/balance-top-ups', [BalanceTopUpController::class, 'create'])
+                ->whereNumber('user');
             Route::get('/{user}/balance-top-ups/{top_up}', [BalanceTopUpController::class, 'userShow'])
                 ->whereNumber('user')
                 ->whereNumber('top_up')
