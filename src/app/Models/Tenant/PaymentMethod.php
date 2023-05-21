@@ -90,7 +90,9 @@ class PaymentMethod extends Model
                     $pm->save();
                 }
             }
+        });
 
+        static::created(function (self $paymentMethod) {
             // Clean up other instances of the same underlying PaymentMethod if it's added again
             if ($paymentMethod->fingerprint && $paymentMethod->user) {
                 /** @var PaymentMethod $newPm */
@@ -103,6 +105,7 @@ class PaymentMethod extends Model
                         ->where('id', '!=', $newPm->id)
                         ->get();
 
+                    $clearedOthers = false;
                     foreach ($sameUnderlyingPaymentMethods as $otherPM) {
                         /** @var Tenant $tenant */
                         $tenant = tenant();
@@ -119,6 +122,13 @@ class PaymentMethod extends Model
                         } catch (ApiErrorException|NoStripeAccountException) {
                             // Ignore Stripe Error, this is just us trying to house keep
                         }
+
+                        $clearedOthers = true;
+                    }
+
+                    // Trigger a save to force update of the default BACS Debit method if required
+                    if ($clearedOthers) {
+                        $newPm->save();
                     }
                 });
             }
