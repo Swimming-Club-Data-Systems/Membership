@@ -4,7 +4,7 @@ import { apiCount } from "@/Reducers/store";
 
 export interface Props extends React.ComponentProps<"button"> {
     className?: string;
-    variant?: "primary" | "secondary" | "danger" | "warning";
+    variant?: "primary" | "secondary" | "danger" | "warning" | "success";
     disabled?: boolean;
 }
 
@@ -28,6 +28,10 @@ const Button: React.FC<Props> = ({
         case "warning":
             variantStyle =
                 "border-transparent text-black bg-amber-400 hover:bg-amber-500 focus:ring-amber-300 disabled:bg-amber-200";
+            break;
+        case "success":
+            variantStyle =
+                "border-transparent text-black bg-green-400 hover:bg-green-500 focus:ring-green-300 disabled:bg-green-200";
             break;
         case "primary":
         default:

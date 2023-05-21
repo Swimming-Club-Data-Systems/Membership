@@ -54,6 +54,7 @@
         "date-fns": "^2.29.3",
         "focus-trap-react": "^10.0.2",
         "formik": "^2.2.9",
+        "invariant": "^2.2.4",
         "react-day-picker": "^8.3.7",
         "react-popper": "^2.3.0",
         "react-redux": "^8.0.2",

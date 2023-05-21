@@ -425,11 +425,6 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->morphToMany(Sms::class, 'smsable');
     }
 
-    public function paymentMethods()
-    {
-        return $this->hasMany(PaymentMethod::class);
-    }
-
     public function extraFees(): BelongsToMany
     {
         return $this->belongsToMany(ExtraFee::class, 'extrasRelations', 'UserID', 'ExtraID')
@@ -494,6 +489,21 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->journal();
+    }
+
+    public function preferredDirectDebit()
+    {
+        return $this
+            ->paymentMethods()
+            ->where('type', '=', 'bacs_debit')
+            ->where('default', '=', true)
+            ->orderBy('created_at', 'asc')
+            ->first();
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
     }
 
     /**

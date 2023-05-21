@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Business\Helpers\Money;
 use App\Enums\BalanceTopUpStatus;
 use App\Interfaces\PaidObject;
+use Brick\Math\BigDecimal;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -27,6 +28,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property BalanceTopUpStatus $status
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property string $amount_string
  */
 class BalanceTopUp extends Model implements PaidObject
 {
@@ -130,6 +132,21 @@ class BalanceTopUp extends Model implements PaidObject
     {
         $this->status = BalanceTopUpStatus::FAILED;
         $this->save();
+    }
+
+    /**
+     * Get or set the credit amount as a string.
+     *
+     * @return Attribute
+     */
+    protected function amountString(): Attribute
+    {
+        return Attribute::make(
+            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['amount'])->withPointMovedLeft(2),
+            set: fn($value, $attributes) => [
+                'amount' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            ],
+        );
     }
 
 }

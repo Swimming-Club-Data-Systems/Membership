@@ -70,11 +70,7 @@ class PaySumFees implements ShouldQueue
                 $statement = CustomerStatement::createStatement($user);
 
                 // Get a direct debit payment method for this user
-                $paymentMethod = $user
-                    ->paymentMethods()
-                    ->where('type', 'bacs_debit')
-                    ->orderBy('created_at', 'asc')
-                    ->first();
+                $paymentMethod = $user->preferredDirectDebit();
 
                 if ($paymentMethod && $statement->closing_balance <= -100) {
                     // Create a balance top up if g.t.e. £1 and user has a usable payment method

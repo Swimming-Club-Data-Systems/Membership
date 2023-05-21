@@ -30,9 +30,9 @@ const DatePicker = React.forwardRef(
         ref
     ) => {
         const handleDayClick = (date, { disabled }, ev) => {
-            console.log(date, { disabled }, ev);
-            if (!disabled) {
-                const { id, name } = inputElement?.current?.firstChild;
+            // console.log(date, { disabled }, ev);
+            if (!disabled && inputElement?.current?.firstChild) {
+                const { id, name } = inputElement.current.firstChild;
                 ev.target = {
                     ...ev.target,
                     id,

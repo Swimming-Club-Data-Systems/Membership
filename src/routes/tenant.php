@@ -171,7 +171,8 @@ Route::middleware([
                 ->whereNumber('user')
                 ->name('top_up.new');
             Route::post('/{user}/balance-top-ups', [BalanceTopUpController::class, 'create'])
-                ->whereNumber('user');
+                ->whereNumber('user')
+                ->name('top_up.create');
             Route::get('/{user}/balance-top-ups/{top_up}', [BalanceTopUpController::class, 'userShow'])
                 ->whereNumber('user')
                 ->whereNumber('top_up')

@@ -16,17 +16,16 @@ interface Props extends InputProps {
     autoComplete?: string;
 }
 
-const TextInput: React.FC<Props> = ({
+const NativeDateInput: React.FC<Props> = ({
     label,
     disabled,
-    type,
     leftText,
     rightButton,
     // rightText,
     className = "",
     ...props
 }) => {
-    const [field, meta] = useField(props);
+    const [{ ...field }, meta] = useField(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
@@ -34,9 +33,7 @@ const TextInput: React.FC<Props> = ({
     const controlId =
         (formName ? formName + "_" : "") + (props.id || props.name);
 
-    if (!type) {
-        type = "text";
-    }
+    const type = "date";
 
     let errorClasses = "";
     if (isInvalid) {
@@ -73,4 +70,4 @@ const TextInput: React.FC<Props> = ({
     );
 };
 
-export default TextInput;
+export default NativeDateInput;

@@ -90,7 +90,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={isSubmitting || !dirty}
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>
@@ -350,7 +350,10 @@ const Form = (props: FormProps) => {
                                         <>
                                             <Button
                                                 id="confirm-yes"
-                                                variant="danger"
+                                                variant={
+                                                    props.confirm.type ||
+                                                    defaultConfirmVariant
+                                                }
                                                 onClick={onConfirm}
                                             >
                                                 {props.confirm.confirmText ||
