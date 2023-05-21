@@ -24,7 +24,6 @@ use App\Http\Controllers\Tenant\WebauthnRegistrationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use Laravel\Passport\Passport;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
@@ -323,6 +322,9 @@ Route::middleware([
             Route::prefix('balance-top-ups')->group(function () {
                 Route::name('top_ups.')->group(function () {
                     Route::get('/', [BalanceTopUpController::class, 'index'])->name('index');
+                    Route::get('/{top_up}', [BalanceTopUpController::class, 'index'])
+                        ->whereNumber('top_up')
+                        ->name('show');
                 });
             });
         });

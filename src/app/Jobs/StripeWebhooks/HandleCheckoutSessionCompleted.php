@@ -77,6 +77,7 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                         $paymentMethod->type = $type;
                         $paymentMethod->pm_type_data = $setupIntent->payment_method->$type;
                         $paymentMethod->billing_address = $setupIntent->payment_method->billing_details;
+                        $paymentMethod->fingerprint = $paymentMethod->pm_type_data?->fingerprint;
 
                         if ($setupIntent->customer) {
                             /** @var StripeCustomer $customer */

@@ -87,6 +87,9 @@ class BalanceTopUpController extends Controller
 
     public function create(Request $request, User $user)
     {
+        /** @var User $initiator */
+        $initiator = $request->user();
+
         $validated = $request->validate([
             'scheduled_for' => [
                 'required',
@@ -114,10 +117,21 @@ class BalanceTopUpController extends Controller
         $balanceTopUp->user()->associate($user);
         $balanceTopUp->amount_string = $request->string('amount');
         $balanceTopUp->scheduled_for = $request->date('scheduled_for');
+        $balanceTopUp->initiator()->associate($initiator);
         $balanceTopUp->paymentMethod()->associate($paymentMethod);
         $balanceTopUp->save();
 
         $request->session()->flash('flash_bag.success', 'The balance top up has been scheduled successfully.');
         return redirect()->route('users.top_up.index', $user);
+    }
+
+    public function show(BalanceTopUp $topUp): \Illuminate\Http\JsonResponse
+    {
+        return response()->json($topUp->toArray());
+    }
+
+    public function userShow(User $user, BalanceTopUp $topUp): \Illuminate\Http\JsonResponse
+    {
+        return response()->json($topUp->toArray());
     }
 }

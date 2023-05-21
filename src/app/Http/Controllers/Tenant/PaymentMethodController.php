@@ -177,6 +177,7 @@ class PaymentMethodController extends Controller
                     $paymentMethod->type = $type;
                     $paymentMethod->pm_type_data = $checkoutSession->setup_intent->payment_method->$type;
                     $paymentMethod->billing_address = $checkoutSession->setup_intent->payment_method->billing_details;
+                    $paymentMethod->fingerprint = $paymentMethod->pm_type_data?->fingerprint;
 
                     if ($checkoutSession->setup_intent->customer) {
                         /** @var StripeCustomer $customer */

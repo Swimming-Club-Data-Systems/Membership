@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\System\PopulatePaymentMethodFingerprints;
 use App\Jobs\System\SeedTenants;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
@@ -32,6 +33,7 @@ class PostDeployTasks extends Command
         Artisan::call(UpdateMeilisearch::class);
         Artisan::call('queue:restart');
         SeedTenants::dispatchSync();
+        PopulatePaymentMethodFingerprints::dispatchSync();
         return 0;
     }
 }

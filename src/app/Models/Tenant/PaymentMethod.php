@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Exceptions\NoStripeAccountException;
 use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use ArrayObject;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stripe\Exception\ApiErrorException;
+use function Illuminate\Events\queueable;
 
 /**
  * @property int $id
@@ -22,6 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property boolean $default
  * @property string $description
  * @property string $information_line
+ * @property string $fingerprint
  */
 class PaymentMethod extends Model
 {
@@ -38,6 +42,7 @@ class PaymentMethod extends Model
         'pm_type_data',
         'billing_address',
         'created_at',
+        'fingerprint'
     ];
 
     protected $casts = [
@@ -85,7 +90,44 @@ class PaymentMethod extends Model
                     $pm->save();
                 }
             }
+
+            // Clean up other instances of the same underlying PaymentMethod if it's added again
+            if ($paymentMethod->fingerprint && $paymentMethod->user) {
+                /** @var PaymentMethod $newPm */
+                $newPm = PaymentMethod::find($paymentMethod->id);
+                dispatch(function () use ($newPm) {
+                    $sameUnderlyingPaymentMethods = $newPm
+                        ->user
+                        ->paymentMethods()
+                        ->where('fingerprint', '=', $newPm->fingerprint)
+                        ->where('id', '!=', $newPm->id)
+                        ->get();
+
+                    foreach ($sameUnderlyingPaymentMethods as $otherPM) {
+                        /** @var Tenant $tenant */
+                        $tenant = tenant();
+
+                        /** @var PaymentMethod $otherPM */
+                        $otherPM->user()->dissociate();
+                        $otherPM->save();
+
+                        try {
+                            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+                            $stripe->paymentMethods->detach($otherPM->stripe_id, null, [
+                                'stripe_account' => $tenant->stripeAccount(),
+                            ]);
+                        } catch (ApiErrorException|NoStripeAccountException) {
+                            // Ignore Stripe Error, this is just us trying to house keep
+                        }
+                    }
+                });
+            }
         });
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function mandate(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -126,11 +168,6 @@ class PaymentMethod extends Model
         $this->created_at = $paymentMethod->created;
 
         $this->save();
-    }
-
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany

@@ -3,6 +3,7 @@
 namespace App\Jobs\StripeWebhooks;
 
 use App\Enums\Queue;
+use App\Exceptions\NoStripeAccountException;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Spatie\WebhookClient\Models\WebhookCall;
+use Stripe\Exception\ApiErrorException;
 
 class HandlePaymentMethodAttached implements ShouldQueue
 {
@@ -46,7 +48,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
         /** @var Tenant $tenant */
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
-        $tenant->run(function () {
+        $tenant->run(function () use ($tenant) {
             try {
                 \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
@@ -76,6 +78,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                     $paymentMethod->type = $type;
                     $paymentMethod->pm_type_data = $pm->$type;
                     $paymentMethod->billing_address = $pm->billing_details;
+                    $paymentMethod->fingerprint = $paymentMethod->pm_type_data?->fingerprint;
                     $paymentMethod->user()->associate($customer->user);
                     $paymentMethod->created_at = $pm->created;
 
