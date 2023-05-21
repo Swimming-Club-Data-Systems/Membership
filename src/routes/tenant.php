@@ -19,6 +19,7 @@ use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\UserController;
+use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
 use Illuminate\Http\Request;
@@ -327,6 +328,14 @@ Route::middleware([
                         ->name('show');
                 });
             });
+        });
+    });
+
+    Route::prefix('venues')->group(function () {
+        Route::name('venues.')->group(function () {
+            Route::get('/', [VenueController::class, 'index'])->name('index');
+            Route::get('/new', [VenueController::class, 'new'])->name('new');
+            Route::post('/', [VenueController::class, 'create']);
         });
     });
 
