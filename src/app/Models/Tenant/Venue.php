@@ -4,8 +4,8 @@ namespace App\Models\Tenant;
 
 use App\Business\Helpers\PhoneNumber;
 use App\Traits\BelongsToTenant;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -20,7 +20,7 @@ use Laravel\Scout\Searchable;
  * @property float $long
  * @property float $lat
  * @property string $website
- * @property string $phone
+ * @property PhoneNumber $phone
  * @property string $google_maps_url
  * @property string $place_id
  * @property string $plus_code_global
@@ -79,13 +79,37 @@ class Venue extends Model
         'html_attributions' => '[]',
     ];
 
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array<string, mixed>
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'website' => $this->website,
+            'phone' => $this->phone?->toE164(),
+            'place_id' => $this->place_id,
+            'plus_code_global' => $this->plus_code_global,
+            'plus_code_compound' => $this->plus_code_compound,
+            'formatted_address' => $this->formatted_address,
+            '_geo' => (object) [
+                'lat' => $this->lat,
+                'lng' => $this->long,
+            ],
+            'Tenant' => $this->Tenant,
+        ];
+    }
+
     protected function phone(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value) => $value ? PhoneNumber::create($value) : null,
-            set: fn (mixed $value) => PhoneNumber::toDatabaseFormat($value),
+            get: fn(mixed $value) => $value ? PhoneNumber::create($value) : null,
+            set: fn(mixed $value) => $value instanceof PhoneNumber ? $value : PhoneNumber::toDatabaseFormat($value),
         );
     }
-
 
 }
