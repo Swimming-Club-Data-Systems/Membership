@@ -78,17 +78,32 @@ const Search: React.FC<SearchProps> = (props) => {
     );
 };
 
-type CollectonProps = {
+export interface LaravelPaginatorProps {
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: [];
+    next_page_url: string;
+    path: string;
+    per_page: number;
+    prev_page_url: string;
+    to: number;
+    total: number;
+    data: Array<unknown>;
+}
+
+interface CollectonProps extends LaravelPaginatorProps {
     route: string;
-    data: [];
     routeIdName?: string;
     routeParams?: [number | string];
     searchable?: boolean;
     path: string;
     current_page: number;
     last_page: number;
-    itemRenderer: (item: never) => React.FC;
-};
+    itemRenderer: (item: unknown) => JSX.Element;
+}
 
 const Collection: React.FC<CollectonProps> = (props) => {
     const items = props.data.map((item, idx) => {

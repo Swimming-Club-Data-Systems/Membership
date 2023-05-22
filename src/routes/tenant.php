@@ -336,6 +336,7 @@ Route::middleware([
             Route::get('/', [VenueController::class, 'index'])->name('index');
             Route::get('/new', [VenueController::class, 'new'])->name('new');
             Route::post('/', [VenueController::class, 'create']);
+            Route::get('/{venue}', [VenueController::class, 'show'])->name('show');
         });
     });
 
