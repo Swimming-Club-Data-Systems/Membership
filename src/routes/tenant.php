@@ -3,6 +3,7 @@
 use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
+use App\Http\Controllers\Tenant\CompetitionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
@@ -337,6 +338,15 @@ Route::middleware([
             Route::get('/new', [VenueController::class, 'new'])->name('new');
             Route::post('/', [VenueController::class, 'create']);
             Route::get('/{venue}', [VenueController::class, 'show'])->name('show');
+        });
+    });
+
+    Route::prefix('competitions')->group(function () {
+        Route::name('competitions.')->group(function () {
+            Route::get('/', [CompetitionController::class, 'index'])->name('index');
+            Route::get('/new', [CompetitionController::class, 'new'])->name('new');
+            Route::post('/', [CompetitionController::class, 'create']);
+            Route::get('/{competition}', [CompetitionController::class, 'show'])->name('show');
         });
     });
 
