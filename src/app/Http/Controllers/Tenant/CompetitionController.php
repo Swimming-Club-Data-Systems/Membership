@@ -134,6 +134,28 @@ class CompetitionController extends Controller
     public function show(Competition $competition): \Inertia\Response
     {
         return Inertia::render('Competitions/Show', [
+            'google_maps_api_key' => config('google.maps.clientside'),
+            'id' => $competition->id,
+            'name' => $competition->name,
+            'description' => $competition->description,
+            'pool_course' => $competition->pool_course,
+            'mode' => $competition->mode,
+            'require_times' => $competition->require_times,
+            'coach_enters' => $competition->coach_enters,
+            'requires_approval' => $competition->requires_approval,
+            'status' => $competition->status,
+            'public' => $competition->public,
+            'processing_fee' => $competition->processing_fee,
+            'processing_fee_string' => $competition->processing_fee_string,
+            'closing_date' => $competition->closing_date,
+            'gala_date' => $competition->gala_date,
+            'age_at_date' => $competition->age_at_date,
+            'venue' => [
+                'id' => $competition->venue->id,
+                'name' => $competition->venue->name,
+                'place_id' => $competition->venue->place_id,
+                'formatted_address' => $competition->venue->formatted_address,
+            ]
         ]);
     }
 }
