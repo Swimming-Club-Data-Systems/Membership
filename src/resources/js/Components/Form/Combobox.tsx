@@ -2,7 +2,6 @@ import React, { ReactNode, useContext } from "react";
 import { useField, useFormikContext } from "formik";
 import { Combobox as BaseCombobox } from "@/Components/Form/base/combobox/Combobox";
 import { FormSpecialContext } from "@/Components/Form/Form";
-import { name } from "@tailwindcss/typography";
 
 interface Props {
     id?: string;
@@ -18,11 +17,13 @@ interface Props {
     keyField?: string;
     help?: string;
     nullable?: boolean;
+    mb?: string;
 }
 
 const Combobox: React.FC<Props> = ({
     label,
     disabled,
+    mb,
     type,
     leftText,
     rightButton,
@@ -38,6 +39,9 @@ const Combobox: React.FC<Props> = ({
     const isInvalid = meta.touched && meta.error;
     const controlId =
         (formName ? formName + "_" : "") + (props.id || props.name);
+    const formSpecialContext = useContext(FormSpecialContext);
+    const marginBotton =
+        mb || formSpecialContext.removeDefaultInputMargin ? "" : "mb-6";
 
     if (!type) {
         type = "text";
@@ -62,29 +66,33 @@ const Combobox: React.FC<Props> = ({
     };
 
     return (
-        <BaseCombobox
-            keyField={keyField}
-            label={label}
-            name={name}
-            disabled={isSubmitting || disabled || context.disabled || readOnly}
-            {...field}
-            onChange={changeHandler}
-            className={className}
-            isInvalid={isInvalid}
-            // input={
-            //     <input
-            //         readOnly={readOnly}
-            //         disabled={isSubmitting || disabled || context.disabled}
-            //         className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
-            //         id={controlId}
-            //         type={type}
-            //         {...field}
-            //         {...props}
-            //     />
-            // }
-            // rightButton={rightButton}
-            {...props}
-        />
+        <div className={marginBotton}>
+            <BaseCombobox
+                keyField={keyField}
+                label={label}
+                name={name}
+                disabled={
+                    isSubmitting || disabled || context.disabled || readOnly
+                }
+                {...field}
+                onChange={changeHandler}
+                className={className}
+                isInvalid={isInvalid}
+                // input={
+                //     <input
+                //         readOnly={readOnly}
+                //         disabled={isSubmitting || disabled || context.disabled}
+                //         className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
+                //         id={controlId}
+                //         type={type}
+                //         {...field}
+                //         {...props}
+                //     />
+                // }
+                // rightButton={rightButton}
+                {...props}
+            />
+        </div>
     );
 };
 

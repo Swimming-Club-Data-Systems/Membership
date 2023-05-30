@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Business\CollectionTransforms\NotifyHistoryTransform;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\NotifyHistory;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Venue;
 use App\Rules\ValidPhone;
 use Illuminate\Http\Request;
@@ -106,5 +107,49 @@ class VenueController extends Controller
             'formatted_address' => $venue->formatted_address,
             'place_id' => $venue->place_id,
         ]);
+    }
+
+    public function combobox(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $venues = null;
+        if ($request->query('query')) {
+            $venues = Venue::search($request->query('query'))
+                ->where('Tenant', tenant('ID'))
+                ->paginate(50);
+        }
+
+        $venuesArray = [];
+
+        $selectedVenue = null;
+        if ($request->query('id')) {
+            /** @var Venue $selectedVenue */
+            $selectedVenue = Venue::find($request->query('id'));
+            if ($selectedVenue) {
+                $venuesArray[] = [
+                    'id' => $selectedVenue->id,
+                    'name' => $selectedVenue->name,
+                ];
+            }
+        }
+
+        if ($venues) {
+            foreach ($venues as $venue) {
+                /** @var Venue $venue */
+                if ($selectedVenue == null || $selectedVenue->id !== $venue->id) {
+                    $venuesArray[] = [
+                        'id' => $venue->id,
+                        'name' => $venue->name,
+                    ];
+                }
+            }
+        }
+
+        $responseData = [
+            'data' => $venuesArray,
+            'has_more_pages' => $venues && $venues->hasMorePages(),
+            'total' => $venues ? $venues->total() : sizeof($venuesArray),
+        ];
+
+        return \response()->json($responseData);
     }
 }

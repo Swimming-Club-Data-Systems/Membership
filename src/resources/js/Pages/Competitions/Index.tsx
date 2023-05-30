@@ -4,15 +4,27 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Form from "@/Components/Form/Form";
-import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
-import { Status, Wrapper } from "@googlemaps/react-wrapper";
+import { Status } from "@googlemaps/react-wrapper";
 import Alert from "@/Components/Alert";
 import { useFormikContext } from "formik";
+import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
+import { formatDateTime } from "@/Utils/date-utils";
+import ButtonLink from "@/Components/ButtonLink";
+
+interface VenueProps {
+    id: number;
+    name: string;
+    formatted_address: string;
+}
+
+interface Venues extends LaravelPaginatorProps {
+    data: VenueProps[];
+}
 
 export type Props = {
     google_maps_api_key: string;
+    venues: Venues;
 };
 
 const MapComponent: React.FC = () => {
@@ -71,7 +83,26 @@ const MapComponent: React.FC = () => {
     // return <div ref={ref} id="map" className="h-64" />;
 };
 
-const New: Layout<Props> = (props: Props) => {
+const VenueRenderer = (props: VenueProps): JSX.Element => {
+    return (
+        <>
+            <div className="flex items-center justify-between">
+                <div className="flex items-center min-w-0">
+                    <div className="min-w-0 truncate overflow-ellipsis flex-shrink">
+                        <div className="truncate text-sm font-medium text-indigo-600 group-hover:text-indigo-700">
+                            {props.name}
+                        </div>
+                        <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
+                            {props.formatted_address}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+};
+
+const Index: Layout<Props> = (props: Props) => {
     const render = (status) => {
         switch (status) {
             case Status.LOADING:
@@ -90,78 +121,30 @@ const New: Layout<Props> = (props: Props) => {
     return (
         <>
             <Head
-                title="New Venue"
-                breadcrumbs={[
-                    { name: "Venues", route: "venues.index" },
-                    {
-                        name: "New",
-                        route: "venues.new",
-                    },
-                ]}
+                title="Venues"
+                breadcrumbs={[{ name: "Venues", route: "venues.index" }]}
             />
 
             <Container noMargin>
                 <MainHeader
-                    title={"Create Venue"}
-                    subtitle={`Create a new venue`}
+                    title={"Venues"}
+                    subtitle={`Venues for competitions and training sessions`}
+                    buttons={
+                        <ButtonLink href={route("venues.new")}>New</ButtonLink>
+                    }
                 ></MainHeader>
 
-                <Form
-                    validationSchema={yup.object().shape({})}
-                    initialValues={{
-                        search: "",
-                        address_components: [],
-                        long: "",
-                        lat: "",
-                        name: "",
-                        phone: "",
-                        website: "",
-                        google_maps_url: "",
-                        vicinity: "",
-                        place_id: "",
-                        plus_code_global: "",
-                        plus_code_compound: "",
-                        formatted_address: "",
-                        html_attributions: [],
-                    }}
-                    submitTitle="Create"
-                    action={route("venues.index")}
-                    method="post"
-                >
-                    <Wrapper
-                        apiKey={props.google_maps_api_key}
-                        render={render}
-                        libraries={["places"]}
-                    >
-                        <MapComponent />
-                    </Wrapper>
-
-                    <TextInput
-                        name="formatted_address"
-                        label="Formatted address"
-                    />
-                    <TextInput name="long" label="Longitude" />
-                    <TextInput name="lat" label="Latitude" />
-                    <TextInput name="name" label="Name" />
-                    <TextInput name="phone" label="Phone number" />
-                    <TextInput name="website" label="Website" />
-                    <TextInput name="url" label="URL" />
-                    <TextInput name="vicinity" label="Vicinity" />
-                    <TextInput name="place_id" label="Place ID" />
-                    <TextInput
-                        name="plus_code.compound_code"
-                        label="Plus Code (Compound)"
-                    />
-                    <TextInput
-                        name="plus_code.global_code"
-                        label="Plus Code (Global)"
-                    />
-                </Form>
+                <Collection
+                    searchable
+                    {...props.venues}
+                    route="venues.show"
+                    itemRenderer={VenueRenderer}
+                />
             </Container>
         </>
     );
 };
 
-New.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
+Index.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
-export default New;
+export default Index;

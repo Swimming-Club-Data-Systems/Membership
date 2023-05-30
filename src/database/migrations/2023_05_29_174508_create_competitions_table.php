@@ -15,13 +15,15 @@ return new class extends Migration
             $table->id();
             $table->string('name', 255);
             $table->text('description');
-            $table->string('pool_course');
-            $table->string('pool_length');
+            $table->string('pool_course', 255);
             $table->foreignIdFor(\App\Models\Tenant\Venue::class)->constrained()->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('mode', 255);
             $table->boolean('require_times')->default(false);
             $table->boolean('coach_enters')->default(false);
             $table->boolean('requires_approval')->default(false);
+            $table->string('status', 255);
             $table->boolean('public')->default(true);
+            $table->bigInteger('default_entry_fee')->default(0);
             $table->bigInteger('processing_fee')->default(0);
             $table->dateTimeTz('closing_date');
             $table->dateTimeTz('gala_date')->nullable();

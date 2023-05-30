@@ -16,6 +16,7 @@ type Props = {
     name: string;
     label: string;
     autoComplete?: string;
+    help?: string;
     precision?:
         | 0
         | 1

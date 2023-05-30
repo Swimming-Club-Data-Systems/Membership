@@ -337,7 +337,11 @@ Route::middleware([
             Route::get('/', [VenueController::class, 'index'])->name('index');
             Route::get('/new', [VenueController::class, 'new'])->name('new');
             Route::post('/', [VenueController::class, 'create']);
-            Route::get('/{venue}', [VenueController::class, 'show'])->name('show');
+            Route::get('/{venue}', [VenueController::class, 'show'])
+                ->whereNumber('venue')
+                ->name('show');
+            Route::get('/combobox', [VenueController::class, 'combobox'])
+                ->name('combobox');
         });
     });
 
@@ -346,7 +350,9 @@ Route::middleware([
             Route::get('/', [CompetitionController::class, 'index'])->name('index');
             Route::get('/new', [CompetitionController::class, 'new'])->name('new');
             Route::post('/', [CompetitionController::class, 'create']);
-            Route::get('/{competition}', [CompetitionController::class, 'show'])->name('show');
+            Route::get('/{competition}', [CompetitionController::class, 'show'])
+                ->whereNumber('competition')
+                ->name('show');
         });
     });
 

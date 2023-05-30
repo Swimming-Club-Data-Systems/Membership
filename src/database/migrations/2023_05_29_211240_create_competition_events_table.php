@@ -20,6 +20,9 @@ return new class extends Migration
             $table->bigInteger('event_code')->nullable();
             $table->bigInteger('sequence');
             $table->json('ages');
+            $table->bigInteger('entry_fee')->default(0);
+            $table->bigInteger('processing_fee')->default(0);
+            $table->string('category');
             $table->foreignIdFor(\App\Models\Tenant\CompetitionSession::class)
                 ->constrained()
                 ->cascadeOnDelete()

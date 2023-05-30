@@ -3,7 +3,6 @@
 namespace App\Enums\Concerns;
 
 use App\Enums\Attributes\Description;
-use Illuminate\Support\Enumerable;
 use Illuminate\Support\Str;
 use ReflectionClassConstant;
 

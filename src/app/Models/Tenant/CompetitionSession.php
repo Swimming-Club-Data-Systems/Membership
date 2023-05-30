@@ -31,6 +31,13 @@ class CompetitionSession extends Model
         'end_time' => 'datetime',
     ];
 
+    protected $fillable = [
+        'name',
+        'sequence',
+        'start_time',
+        'end_time',
+    ];
+
     public function competition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Competition::class);
