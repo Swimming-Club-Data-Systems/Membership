@@ -39,7 +39,7 @@ class Venue extends Model
     /**
      * The attributes that should be cast.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected $casts = [
         'address_components' => 'array',
@@ -49,7 +49,7 @@ class Venue extends Model
     /**
      * The fillable attributes
      *
-     * @var array
+     * @var array<string>
      */
     protected $fillable = [
         'name',
