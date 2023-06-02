@@ -3,9 +3,6 @@
 namespace App\Models\Tenant;
 
 use App\Enums\CompetitionCategory;
-use App\Enums\CompetitionCourse;
-use App\Enums\CompetitionMode;
-use App\Enums\CompetitionStatus;
 use App\Enums\DistanceUnits;
 use App\Enums\EventCode;
 use App\Enums\Stroke;
@@ -87,6 +84,28 @@ class CompetitionEvent extends Model
     public function competition(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
         return $this->hasOneThrough(Competition::class, CompetitionSession::class);
+    }
+
+    public function toArray()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'stroke' => $this->stroke,
+            'units' => $this->units,
+            'distance' => $this->distance,
+            'event_code' => $this->event_code,
+            'sequence' => $this->sequence,
+            'ages' => $this->ages,
+            'entry_fee' => $this->entry_fee,
+            'entry_fee_string' => $this->entry_fee_string,
+            'processing_fee' => $this->processing_fee,
+            'processing_fee_string' => $this->processing_fee_string,
+            'category' => $this->category,
+            'competition_session_id' => $this->competition_session_id,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+        ];
     }
 
     /**

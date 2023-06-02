@@ -4,6 +4,7 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
+use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
@@ -347,12 +348,23 @@ Route::middleware([
 
     Route::prefix('competitions')->group(function () {
         Route::name('competitions.')->group(function () {
-            Route::get('/', [CompetitionController::class, 'index'])->name('index');
-            Route::get('/new', [CompetitionController::class, 'new'])->name('new');
+            Route::get('/', [CompetitionController::class, 'index'])
+                ->name('index');
+            Route::get('/new', [CompetitionController::class, 'new'])
+                ->name('new');
             Route::post('/', [CompetitionController::class, 'create']);
-            Route::get('/{competition}', [CompetitionController::class, 'show'])
-                ->whereNumber('competition')
-                ->name('show');
+            Route::prefix('{competition}')->group(function () {
+                Route::get('/', [CompetitionController::class, 'show'])
+                    ->name('show');
+                Route::prefix('sessions')->group(function () {
+                    Route::name('sessions.')->group(function () {
+                        Route::get('/', [CompetitionSessionController::class, 'show'])
+                            ->name('index');
+                        Route::get('/{session}', [CompetitionSessionController::class, 'show'])
+                            ->name('show');
+                    });
+                });
+            })->whereNumber('competition');;
         });
     });
 
