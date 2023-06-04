@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Business\Helpers\Money;
 use App\Enums\ManualPaymentEntryLineType;
-use App\Exceptions\Accounting\DebitsAndCreditsDoNotEqual;
 use App\Exceptions\ManualPaymentEntryNotReady;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\ManualPaymentEntryLinePostRequest;
@@ -85,7 +84,7 @@ class PaymentEntryController extends Controller
                 'user_id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'posted' => (bool)$entry->posted,
+                'posted' => (bool) $entry->posted,
             ];
         });
 
@@ -104,7 +103,7 @@ class PaymentEntryController extends Controller
                 'debit_formatted' => $line->debit_string,
                 'type' => $line->credit > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
                 'journal_account_name' => $journalAccountName,
-                'posted' => (bool)$entry->posted,
+                'posted' => (bool) $entry->posted,
             ];
         });
 
@@ -112,8 +111,8 @@ class PaymentEntryController extends Controller
             'id' => $entry->id,
             'users' => $users,
             'lines' => $lines,
-            'can_post' => $lines->count() > 0 && $users->count() > 0 && !$entry->posted,
-            'posted' => (bool)$entry->posted,
+            'can_post' => $lines->count() > 0 && $users->count() > 0 && ! $entry->posted,
+            'posted' => (bool) $entry->posted,
             'credits' => Money::formatCurrency($entry->credits()),
             'debits' => Money::formatCurrency($entry->debits()),
         ]);
@@ -138,7 +137,7 @@ class PaymentEntryController extends Controller
     {
         $this->authorize('view', $entry);
 
-        if (!$entry->posted) {
+        if (! $entry->posted) {
             return Inertia::location(route('payments.entries.amend', $entry));
         }
     }
@@ -155,9 +154,11 @@ class PaymentEntryController extends Controller
             $entry->post();
 
             $request->session()->flash('flash_bag.posted.success', 'This Manual Payment Entry has been successfully posted.');
+
             return Redirect::route('payments.entries.amend', $entry);
         } catch (ManualPaymentEntryNotReady) {
             $request->session()->flash('flash_bag.post_transactions.error', 'You can not post a Manual Payment Entry unless you have at least one valid user and at least one valid line.');
+
             return Redirect::route('payments.entries.amend', $entry);
         } catch (ValidationException $e) {
             // Re-throw this exception
@@ -166,6 +167,7 @@ class PaymentEntryController extends Controller
             DB::rollBack();
 
             $request->session()->flash('flash_bag.post_transactions.error', 'The Manual Payment Entry could not be posted.');
+
             return Redirect::route('payments.entries.amend', $entry);
         }
     }

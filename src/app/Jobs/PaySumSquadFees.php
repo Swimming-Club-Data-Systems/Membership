@@ -25,8 +25,7 @@ class PaySumSquadFees implements ShouldQueue
      */
     public function __construct(
         public Tenant $tenant
-    )
-    {
+    ) {
         //
     }
 
@@ -60,18 +59,17 @@ class PaySumSquadFees implements ShouldQueue
                     $squads = $member->squads()->get();
                     foreach ($squads as $squad) {
                         /** @var Squad $squad */
-
                         if ($squad->pivot->Paying) {
                             $paying = true;
                         }
 
                         // Add transaction
-                        $journal->debit($squad->fee, $member->name . ' - ' . $squad->SquadName . ' Squad Fees');
+                        $journal->debit($squad->fee, $member->name.' - '.$squad->SquadName.' Squad Fees');
                         $memberTotal += $squad->fee;
 
                         // Credit if we're not paying
-                        if (!$squad->pivot->Paying) {
-                            $journal->credit($squad->fee, $member->name . ' - ' . $squad->SquadName . ' Squad Fee Exemption');
+                        if (! $squad->pivot->Paying) {
+                            $journal->credit($squad->fee, $member->name.' - '.$squad->SquadName.' Squad Fee Exemption');
                             $memberTotal -= $squad->fee;
                         }
                     }
@@ -80,7 +78,7 @@ class PaySumSquadFees implements ShouldQueue
                         $numberOfPayingMembers++;
                     }
 
-                    if ($paying && $this->tenant->Code == "CLSE") {
+                    if ($paying && $this->tenant->Code == 'CLSE') {
                         $memberFees = [
                             'fee' => $memberTotal,
                             'member' => $member->name,
@@ -91,7 +89,7 @@ class PaySumSquadFees implements ShouldQueue
 
                 // If CLS deal with discounts in code
                 // To be removed when configurable discounts codes
-                if ($this->tenant->Code == "CLSE") {
+                if ($this->tenant->Code == 'CLSE') {
                     usort($discountMembers, function ($item1, $item2) {
                         return $item2['fee'] <=> $item1['fee'];
                     });
@@ -110,7 +108,7 @@ class PaySumSquadFees implements ShouldQueue
                                 // 20% discount applies
                                 $swimmerDiscount = $memberTotalDec->multipliedBy('0.20')->toInt(); // TODO check multiply code results
                                 $discountPercent = '20';
-                            } else if ($number > 3) {
+                            } elseif ($number > 3) {
                                 // 40% discount applies
                                 $swimmerDiscount = $memberTotalDec->multipliedBy('0.40')->toInt(); // TODO check multiply code results
                                 $discountPercent = '40';
@@ -123,7 +121,7 @@ class PaySumSquadFees implements ShouldQueue
 
                         if ($swimmerDiscount > 0) {
                             // Apply credit to account for discount
-                            $journal->credit($swimmerDiscount, $member['member'] . ' - Multi swimmer squad fee discount (' . $discountPercent . '%)');
+                            $journal->credit($swimmerDiscount, $member['member'].' - Multi swimmer squad fee discount ('.$discountPercent.'%)');
                         }
                     }
                 }
@@ -134,9 +132,9 @@ class PaySumSquadFees implements ShouldQueue
                     foreach ($member->extraFees()->get() as $extra) {
                         /** @var ExtraFee $extra */
                         if ($extra->Type == 'Payment') {
-                            $journal->debit($extra->fee, $member->name . ' - ' . $extra->ExtraName);
-                        } else if ($extra->Type == 'Refund') {
-                            $journal->credit($extra->fee, $member->name . ' - ' . $extra->ExtraName);
+                            $journal->debit($extra->fee, $member->name.' - '.$extra->ExtraName);
+                        } elseif ($extra->Type == 'Refund') {
+                            $journal->credit($extra->fee, $member->name.' - '.$extra->ExtraName);
                         }
                     }
                 }

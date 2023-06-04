@@ -8,7 +8,6 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\Payment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,8 +26,7 @@ class HandleChargeDisputeClosed implements ShouldQueue
      */
     public function __construct(
         public WebhookCall $webhookCall
-    )
-    {
+    ) {
         $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -47,7 +45,7 @@ class HandleChargeDisputeClosed implements ShouldQueue
                 'id' => $this->webhookCall->payload['data']['object']['id'],
                 'expand' => ['payment_intent'],
             ], [
-                'stripe_account' => $this->webhookCall->payload['account']
+                'stripe_account' => $this->webhookCall->payload['account'],
             ]);
 
             if ($dispute?->payment_intent?->metadata?->payment_id) {
@@ -67,7 +65,7 @@ class HandleChargeDisputeClosed implements ShouldQueue
                         // Credit the guest journal
                         $guestIncomeJournal = JournalAccount::firstWhere([
                             'name' => 'Guest Customers',
-                            'is_system' => true
+                            'is_system' => true,
                         ]);
                         $transaction = $guestIncomeJournal->credit($dispute->amount, 'Payment Dispute Lost');
                     }

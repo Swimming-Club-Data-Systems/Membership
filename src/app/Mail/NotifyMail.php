@@ -24,16 +24,13 @@ class NotifyMail extends Mailable
      */
     public function __construct(
         public NotifyHistory $email,
-        public Recipient     $recipient,
-    )
-    {
+        public Recipient $recipient,
+    ) {
         $this->onQueue(Queue::NOTIFY->value);
     }
 
     /**
      * Get the message envelope.
-     *
-     * @return Envelope
      */
     public function envelope(): Envelope
     {
@@ -48,8 +45,6 @@ class NotifyMail extends Mailable
 
     /**
      * Get the message content definition.
-     *
-     * @return Content
      */
     public function content(): Content
     {

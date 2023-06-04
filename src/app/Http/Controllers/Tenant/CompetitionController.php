@@ -38,7 +38,7 @@ class CompetitionController extends Controller
     public function new(): \Inertia\Response
     {
         return Inertia::render('Competitions/New', [
-            'google_maps_api_key' => config('google.maps.clientside')
+            'google_maps_api_key' => config('google.maps.clientside'),
         ]);
     }
 
@@ -56,11 +56,11 @@ class CompetitionController extends Controller
                 }),
             ],
             'description' => [
-                'string'
+                'string',
             ],
             'pool_course' => [
                 'required',
-                new Enum(CompetitionCourse::class)
+                new Enum(CompetitionCourse::class),
             ],
             'require_times' => [
                 'required',
@@ -102,8 +102,8 @@ class CompetitionController extends Controller
             ],
             'setup_type' => [
                 'required',
-                new Enum(CompetitionMode::class)
-            ]
+                new Enum(CompetitionMode::class),
+            ],
         ]);
 
         $competition = new Competition();
@@ -155,7 +155,7 @@ class CompetitionController extends Controller
                 'name' => $competition->venue->name,
                 'place_id' => $competition->venue->place_id,
                 'formatted_address' => $competition->venue->formatted_address,
-            ]
+            ],
         ]);
     }
 }

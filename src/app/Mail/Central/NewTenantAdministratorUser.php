@@ -14,22 +14,16 @@ class NewTenantAdministratorUser extends Mailable
 
     /**
      * The tenant instance
-     *
-     * @var Tenant $tenant
      */
     public Tenant $tenant;
 
     /**
      * The user instance
-     *
-     * @var User
      */
     public User $user;
 
     /**
      * The link
-     *
-     * @var string
      */
     public string $link;
 
@@ -53,7 +47,7 @@ class NewTenantAdministratorUser extends Mailable
     public function build()
     {
         return $this->setDefaultFromAndReply()
-            ->subject('You\'ve been invited to become an administrator of ' . $this->tenant->Name)
+            ->subject('You\'ve been invited to become an administrator of '.$this->tenant->Name)
             ->markdown('emails.central.new_tenant_administrator_user');
     }
 }

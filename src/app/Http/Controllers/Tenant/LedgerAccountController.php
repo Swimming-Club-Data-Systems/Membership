@@ -48,7 +48,7 @@ class LedgerAccountController extends Controller
             'type' => [
                 'required',
                 Rule::in(['asset', 'liability', 'equity', 'income', 'expense']),
-            ]
+            ],
         ]);
 
         $ledgerAccount = new LedgerAccount();

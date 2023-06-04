@@ -18,7 +18,6 @@ class NewPasswordController extends Controller
     /**
      * Display the password reset view.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Inertia\Response
      */
     public function create(Request $request)
@@ -32,7 +31,6 @@ class NewPasswordController extends Controller
     /**
      * Handle an incoming new password request.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      *
      * @throws \Illuminate\Validation\ValidationException
@@ -50,7 +48,7 @@ class NewPasswordController extends Controller
          */
         $user = User::query()->where('email', $request->input('email'))->first();
 
-        if (!$user) {
+        if (! $user) {
             throw ValidationException::withMessages([
                 'email' => [trans(Password::INVALID_USER)],
             ]);
@@ -61,7 +59,7 @@ class NewPasswordController extends Controller
         // database. Otherwise we will parse the error and return the response.
         $exists = Password::tokenExists($user, $request->input('token'));
 
-        if (!$exists) {
+        if (! $exists) {
             throw ValidationException::withMessages([
                 'email' => [trans(Password::INVALID_TOKEN)],
             ]);

@@ -26,7 +26,6 @@ class Stripe extends AbstractProvider
     /**
      * Get access token url to retrieve token
      *
-     * @param array $params
      *
      * @return string
      */
@@ -38,7 +37,6 @@ class Stripe extends AbstractProvider
     /**
      * Get provider url to fetch user details
      *
-     * @param AccessToken $token
      *
      * @return string
      */
@@ -48,8 +46,7 @@ class Stripe extends AbstractProvider
     }
 
     /**
-     * @param string $stripeUserId stripe account ID
-     *
+     * @param  string  $stripeUserId stripe account ID
      * @return mixed
      */
     public function deauthorize($stripeUserId)
@@ -93,8 +90,7 @@ class Stripe extends AbstractProvider
     /**
      * Check a provider response for errors.
      *
-     * @param ResponseInterface $response
-     * @param array|string $data
+     * @param  array|string  $data
      *
      * @throws IdentityProviderException
      */
@@ -112,8 +108,6 @@ class Stripe extends AbstractProvider
     /**
      * Generate a user object from a successful user details request.
      *
-     * @param array $response
-     * @param AccessToken $token
      *
      * @return StripeResourceOwner
      */
@@ -128,7 +122,7 @@ class Stripe extends AbstractProvider
 
         // create the parent access token and add properties from response
         foreach ($response as $k => $v) {
-            if (!property_exists($accessToken, $k)) {
+            if (! property_exists($accessToken, $k)) {
                 $accessToken->$k = $v;
             }
         }

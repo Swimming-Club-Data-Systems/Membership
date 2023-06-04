@@ -8,9 +8,6 @@ use ReflectionClassConstant;
 
 trait GetsAttributes
 {
-    /**
-     * @param self $enum
-     */
     public static function getDescription(self $enum): string
     {
         $ref = new ReflectionClassConstant(self::class, $enum->name);

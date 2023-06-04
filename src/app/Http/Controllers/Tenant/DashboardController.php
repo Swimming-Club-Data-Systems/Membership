@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\OnboardingSession;
 use App\Models\Tenant\Session;
 use App\Models\Tenant\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
-use Illuminate\Database\Eloquent\Builder;
 
 class DashboardController extends Controller
 {
@@ -19,6 +19,7 @@ class DashboardController extends Controller
         if (Auth::check()) {
             /** @var User $user */
             $user = Auth::user();
+
             return Inertia::render('Dashboard', [
                 'members' => $user->members()->with(['squads' => function ($query) {
                     $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
@@ -60,6 +61,7 @@ class DashboardController extends Controller
                                 'date' => $item['date_gmt'],
                             ];
                         }
+
                         return $data;
                     } catch (\Exception $e) {
                         return [];
@@ -71,14 +73,15 @@ class DashboardController extends Controller
                         $response = Http::get('https://asaner.org.uk/feed')->body();
                         $response = new \SimpleXMLElement($response);
 
-                        for ($i = 0; $i < min(sizeof($response->channel->item), 6); $i++) {
+                        for ($i = 0; $i < min(count($response->channel->item), 6); $i++) {
                             $data[] = [
-                                'id' => (string)$response->channel->item[$i]->guid,
-                                'title' => (string)$response->channel->item[$i]->title,
-                                'link' => (string)$response->channel->item[$i]->link,
-                                'date' => (string)$response->channel->item[$i]->pubDate,
+                                'id' => (string) $response->channel->item[$i]->guid,
+                                'title' => (string) $response->channel->item[$i]->title,
+                                'link' => (string) $response->channel->item[$i]->link,
+                                'date' => (string) $response->channel->item[$i]->pubDate,
                             ];
                         }
+
                         return $data;
                     } catch (\Exception $e) {
                         return [];
@@ -87,6 +90,7 @@ class DashboardController extends Controller
                 'now' => now()->toDateString(),
             ]);
         }
+
         return Inertia::render('Index');
     }
 }

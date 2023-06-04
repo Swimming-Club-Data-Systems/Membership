@@ -26,7 +26,7 @@ class MemberController extends Controller
         $members = null;
 
         if ($request->query('query')) {
-            $members = Member::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['squads' => function ($query) {
+            $members = Member::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn ($query) => $query->with(['squads' => function ($query) {
                 $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
             }]))->paginate(config('app.per_page'));
         } else {
@@ -34,6 +34,7 @@ class MemberController extends Controller
                 $query->orderBy('SquadFee', 'desc')->orderBy('SquadName', 'asc');
             }])->paginate(config('app.per_page'));
         }
+
         return Inertia::render('Members/Index', [
             'members' => $members->onEachSide(3),
         ]);
@@ -43,7 +44,6 @@ class MemberController extends Controller
     {
         $this->authorize('view', $member);
 
-        return Inertia::location('/v1/members/' . $member->MemberID);
+        return Inertia::location('/v1/members/'.$member->MemberID);
     }
-
 }

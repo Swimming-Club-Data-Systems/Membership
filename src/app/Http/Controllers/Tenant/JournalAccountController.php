@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\LedgerAccount;
-use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -22,11 +21,13 @@ class JournalAccountController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index()
+    {
 
     }
 
-    public function new(LedgerAccount $ledger) {
+    public function new(LedgerAccount $ledger)
+    {
         return Inertia::render('Payments/Ledgers/Journals/New', [
             'ledger_id' => $ledger->id,
             'ledger_name' => $ledger->name,
@@ -47,7 +48,7 @@ class JournalAccountController extends Controller
             'currency' => [
                 'required',
                 Rule::in(['GBP']),
-            ]
+            ],
         ]);
 
         $journalAccount = new JournalAccount();
@@ -107,7 +108,7 @@ class JournalAccountController extends Controller
         $responseData = [
             'data' => $journalsArray,
             'has_more_pages' => $journals && $journals->hasMorePages(),
-            'total' => $journals ? $journals->total() : sizeof($journalsArray),
+            'total' => $journals ? $journals->total() : count($journalsArray),
         ];
 
         return \response()->json($responseData);

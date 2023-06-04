@@ -111,7 +111,6 @@ class PaymentsController extends Controller
 
         foreach ($payment->lines()->with(['refunds'])->get() as $line) {
             /** @var PaymentLine $line */
-
             $lineRefunds = [];
             foreach ($line->refunds()->get() as $refund) {
                 /** @var Refund $refund */
@@ -144,7 +143,7 @@ class PaymentsController extends Controller
 
             $formInitialValues['lines'][] = [
                 'id' => $line->id,
-                'refund_amount' => "",
+                'refund_amount' => '',
                 'currency' => $line->currency,
                 'amount_refunded' => Money::formatDecimal($line->amount_refunded, $line->currency),
                 'amount_refunded_int' => $line->amount_refunded,
@@ -155,7 +154,6 @@ class PaymentsController extends Controller
 
         foreach ($payment->refunds()->with(['lines'])->get() as $refund) {
             /** @var Refund $refund */
-
             $refundLines = [];
             foreach ($refund->lines()->get() as $line) {
                 /** @var PaymentLine $line */
@@ -269,7 +267,7 @@ class PaymentsController extends Controller
 
         $stripe = new \Stripe\StripeClient([
             'api_key' => config('cashier.secret'),
-            'stripe_version' => '2022-11-15'
+            'stripe_version' => '2022-11-15',
         ]);
 
         DB::beginTransaction();
@@ -286,7 +284,7 @@ class PaymentsController extends Controller
             // }
 
             // Add a reason if provided
-            if ($request->input('reason') != "n/a") {
+            if ($request->input('reason') != 'n/a') {
                 $data['reason'] = $request->input('reason');
             }
 
@@ -345,7 +343,7 @@ class PaymentsController extends Controller
 
         } catch (ApiErrorException $e) {
             DB::rollBack();
-            $request->session()->flash('error', "Something went wrong which meant we could not refund this payment. Please try again later.");
+            $request->session()->flash('error', 'Something went wrong which meant we could not refund this payment. Please try again later.');
         }
 
         return redirect(route('payments.payments.show', $payment));

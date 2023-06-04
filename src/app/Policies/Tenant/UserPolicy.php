@@ -22,7 +22,6 @@ class UserPolicy
     /**
      * Perform pre-authorization checks.
      *
-     * @param User $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -36,7 +35,6 @@ class UserPolicy
     /**
      * Can the user view the list?
      *
-     * @param User $user
      * @return void|bool
      */
     public function viewAll(User $user)
@@ -49,8 +47,6 @@ class UserPolicy
     /**
      * Can the current user view the user?
      *
-     * @param User $user
-     * @param User $modelUser
      * @return void|bool
      */
     public function view(User $user, User $modelUser)

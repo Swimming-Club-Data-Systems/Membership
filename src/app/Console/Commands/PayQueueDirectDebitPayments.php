@@ -36,7 +36,7 @@ class PayQueueDirectDebitPayments extends Command
 
         foreach ($tenants as $tenant) {
             /** @var Tenant $tenant */
-            $tenant->run(function () use ($tenant, $now) {
+            $tenant->run(function () use ($now) {
 
                 // Get BalanceTopUps where the charge date is <= now
                 $topups = BalanceTopUp::where('status', 'pending')

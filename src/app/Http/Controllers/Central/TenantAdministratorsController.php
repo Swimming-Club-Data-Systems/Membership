@@ -52,12 +52,12 @@ class TenantAdministratorsController extends Controller
 
         /** @var User $user */
         $user = User::firstOrNew([
-            'email' => trim($request->input('email'))
+            'email' => trim($request->input('email')),
         ]);
 
         $addingToExisting = $user->exists;
 
-        if (!$addingToExisting) {
+        if (! $addingToExisting) {
             $user->first_name = $request->input('first_name');
             $user->last_name = $request->input('last_name');
             $user->password = Hash::make(Str::random());
@@ -81,7 +81,8 @@ class TenantAdministratorsController extends Controller
             Mail::to($user)->send(new NewTenantAdministratorUser($user, $tenant, $link));
         }
 
-        $request->session()->flash('success', $user->first_name . ' has been added as an administrator for ' . $tenant->Name . '.');
+        $request->session()->flash('success', $user->first_name.' has been added as an administrator for '.$tenant->Name.'.');
+
         return Redirect::route('central.tenants.administrators', [$tenant]);
     }
 
@@ -93,14 +94,14 @@ class TenantAdministratorsController extends Controller
 
         $user->tenants()->detach($tenant);
 
-        $request->session()->flash('success', 'We have deleted ' . $user->first_name . ' from your list of administrators.');
+        $request->session()->flash('success', 'We have deleted '.$user->first_name.' from your list of administrators.');
 
         return Redirect::route('central.tenants.administrators', $tenant);
     }
 
     public function signUp(Request $request, User $user)
     {
-        if (!$request->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             abort(401);
         }
 
@@ -113,7 +114,7 @@ class TenantAdministratorsController extends Controller
 
     public function update(Request $request, User $user)
     {
-        if (!$request->hasValidSignature()) {
+        if (! $request->hasValidSignature()) {
             abort(401);
         }
 

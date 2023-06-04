@@ -26,8 +26,7 @@ class PayChargeFees implements ShouldQueue
      */
     public function __construct(
         public BalanceTopUp $topUp
-    )
-    {
+    ) {
         //
     }
 
@@ -77,7 +76,7 @@ class PayChargeFees implements ShouldQueue
                 'application_fee_amount' => $payment->application_fee_amount,
             ], [
                 'stripe_account' => $tenant->stripeAccount(),
-                'idempotency_key' => 'balance_top_up_' . $this->topUp->id,
+                'idempotency_key' => 'balance_top_up_'.$this->topUp->id,
             ]);
 
             $payment->stripe_id = $intent->id;
@@ -107,7 +106,7 @@ class PayChargeFees implements ShouldQueue
         return [
             (new WithoutOverlapping($this->topUp->user->UserID))
                 ->releaseAfter(60)
-                ->expireAfter(180)
+                ->expireAfter(180),
         ];
     }
 }

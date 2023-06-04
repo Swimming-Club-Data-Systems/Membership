@@ -96,7 +96,7 @@ class PaymentLine extends Model
     protected function unitAmount(): Attribute
     {
         return Attribute::make(
-            set: fn(int $value, $attributes) => [
+            set: fn (int $value, $attributes) => [
                 'unit_amount' => $value,
                 'amount_total' => $value * ($attributes['quantity'] ?? 0),
             ],
@@ -106,7 +106,7 @@ class PaymentLine extends Model
     protected function quantity(): Attribute
     {
         return Attribute::make(
-            set: fn(int $value, $attributes) => [
+            set: fn (int $value, $attributes) => [
                 'quantity' => $value,
                 'amount_total' => $value * ($attributes['unit_amount'] ?? 0),
             ],
@@ -116,71 +116,71 @@ class PaymentLine extends Model
     protected function currency(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Str::lower($value),
+            set: fn ($value) => Str::lower($value),
         );
     }
 
     protected function formattedUnitAmount(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->unit_amount, $this->currency),
+            get: fn () => Money::formatCurrency($this->unit_amount, $this->currency),
         );
     }
 
     protected function formattedAmountSubtotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_subtotal, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_subtotal, $this->currency),
         );
     }
 
     protected function formattedAmountTotal(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_total, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_total, $this->currency),
         );
     }
 
     protected function formattedAmountDiscount(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_discount, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_discount, $this->currency),
         );
     }
 
     protected function formattedAmountTax(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_tax, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_tax, $this->currency),
         );
     }
 
     protected function formattedAmountRefunded(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_refunded, $this->currency),
         );
     }
 
     protected function amountRefundable(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->amount_total - $this->amount_refunded,
+            get: fn () => $this->amount_total - $this->amount_refunded,
         );
     }
 
     protected function formattedAmountRefundable(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_refundable, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_refundable, $this->currency),
         );
     }
 
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $this->associated instanceof PaidObject ?
-                $this->associated->getPaymentLineDescriptor() : $value ?? "Line Item",
+            get: fn ($value) => $this->associated instanceof PaidObject ?
+                $this->associated->getPaymentLineDescriptor() : $value ?? 'Line Item',
         );
     }
 }

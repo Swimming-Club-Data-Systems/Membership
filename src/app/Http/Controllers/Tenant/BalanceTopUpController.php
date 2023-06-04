@@ -42,7 +42,7 @@ class BalanceTopUpController extends Controller
                     'description' => $balanceTopUp->paymentMethod->description,
                     'information_line' => $balanceTopUp->paymentMethod->information_line,
                     'type' => $balanceTopUp->paymentMethod->type,
-                ] : null
+                ] : null,
             ];
         });
 
@@ -102,14 +102,14 @@ class BalanceTopUpController extends Controller
                 'decimal:0,2',
                 'min:1',
                 'max:1000',
-            ]
+            ],
         ]);
 
         $paymentMethod = $user->preferredDirectDebit();
 
-        if (!$paymentMethod) {
+        if (! $paymentMethod) {
             throw \Illuminate\Validation\ValidationException::withMessages([
-                'payment_method' => 'The selected user does not have any usable payment methods.'
+                'payment_method' => 'The selected user does not have any usable payment methods.',
             ]);
         }
 
@@ -122,6 +122,7 @@ class BalanceTopUpController extends Controller
         $balanceTopUp->save();
 
         $request->session()->flash('flash_bag.success', 'The balance top up has been scheduled successfully.');
+
         return redirect()->route('users.top_up.index', $user);
     }
 

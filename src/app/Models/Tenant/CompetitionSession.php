@@ -2,7 +2,6 @@
 
 namespace App\Models\Tenant;
 
-use App\Enums\CompetitionCourse;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

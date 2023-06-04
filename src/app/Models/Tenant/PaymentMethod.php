@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stripe\Exception\ApiErrorException;
-use function Illuminate\Events\queueable;
 
 /**
  * @property int $id
@@ -22,7 +21,7 @@ use function Illuminate\Events\queueable;
  * @property ArrayObject $pm_type_data
  * @property ArrayObject $billing_address
  * @property Tenant $tenant
- * @property boolean $default
+ * @property bool $default
  * @property string $description
  * @property string $information_line
  * @property string $fingerprint
@@ -42,7 +41,7 @@ class PaymentMethod extends Model
         'pm_type_data',
         'billing_address',
         'created_at',
-        'fingerprint'
+        'fingerprint',
     ];
 
     protected $casts = [
@@ -191,7 +190,7 @@ class PaymentMethod extends Model
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn() => \App\Business\Helpers\PaymentMethod::formatNameFromData($this->type, $this->pm_type_data),
+            get: fn () => \App\Business\Helpers\PaymentMethod::formatNameFromData($this->type, $this->pm_type_data),
         );
     }
 
@@ -201,7 +200,7 @@ class PaymentMethod extends Model
     protected function informationLine(): Attribute
     {
         return Attribute::make(
-            get: fn() => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($this->type, $this->pm_type_data),
+            get: fn () => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($this->type, $this->pm_type_data),
         );
     }
 }

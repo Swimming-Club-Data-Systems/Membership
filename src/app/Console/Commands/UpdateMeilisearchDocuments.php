@@ -38,6 +38,7 @@ class UpdateMeilisearchDocuments extends Command
         Member::where('Active', false)->unsearchable();
         Tenant::where('Verified', false)->unsearchable();
         NotifyHistory::all()->searchable();
+
         return 0;
     }
 }

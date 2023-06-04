@@ -3,10 +3,9 @@
 namespace App\Mail;
 
 use App\Business\Helpers\Mailable;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Models\Tenant\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
 
 class VerifyEmailChange extends Mailable
 {
@@ -21,15 +20,11 @@ class VerifyEmailChange extends Mailable
 
     /**
      * The signed url to visit and confirm
-     *
-     * @var $url
      */
     public $url;
 
     /**
      * The user's new email address
-     *
-     * @var $email
      */
     public $email;
 

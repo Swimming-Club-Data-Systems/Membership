@@ -24,8 +24,7 @@ class PaySumFees implements ShouldQueue
      */
     public function __construct(
         public Tenant $tenant
-    )
-    {
+    ) {
         //
     }
 

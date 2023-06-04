@@ -25,8 +25,7 @@ class HandleChargeDisputeCreated implements ShouldQueue
      */
     public function __construct(
         public WebhookCall $webhookCall
-    )
-    {
+    ) {
         $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -45,7 +44,7 @@ class HandleChargeDisputeCreated implements ShouldQueue
                 'id' => $this->webhookCall->payload['data']['object']['id'],
                 'expand' => ['payment_intent'],
             ], [
-                'stripe_account' => $this->webhookCall->payload['account']
+                'stripe_account' => $this->webhookCall->payload['account'],
             ]);
 
             if ($dispute?->payment_intent?->metadata?->payment_id) {
@@ -65,7 +64,7 @@ class HandleChargeDisputeCreated implements ShouldQueue
                         // Credit the guest journal
                         $guestIncomeJournal = JournalAccount::firstWhere([
                             'name' => 'Guest Customers',
-                            'is_system' => true
+                            'is_system' => true,
                         ]);
                         $transaction = $guestIncomeJournal->debit($dispute->amount, 'Payment Disputed');
                     }

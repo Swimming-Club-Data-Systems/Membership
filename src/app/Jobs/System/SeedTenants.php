@@ -4,7 +4,6 @@ namespace App\Jobs\System;
 
 use App\Models\Central\Tenant;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -36,7 +35,7 @@ class SeedTenants implements ShouldQueue
     {
         $tenants = Tenant::all();
         foreach ($tenants as $tenant) {
-             /** @var Tenant $tenant */
+            /** @var Tenant $tenant */
             SeedTenant::dispatch($tenant);
         }
     }

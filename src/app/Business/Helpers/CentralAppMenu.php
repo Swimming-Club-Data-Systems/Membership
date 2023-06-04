@@ -68,7 +68,7 @@ class CentralAppMenu
                             'name' => 'SMS',
                             'href' => route('central.notify-sms'),
                         ],
-                    ]
+                    ],
                 ];
             }
 

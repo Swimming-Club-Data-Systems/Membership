@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Tenant;
 
-use App\Models\Tenant\ManualPaymentEntry;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;

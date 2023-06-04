@@ -2,11 +2,10 @@
 
 namespace App\Mail\Central;
 
+use App\Business\Helpers\Mailable;
 use App\Models\Central\Tenant;
 use App\Models\Central\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Business\Helpers\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class NewTenantAdministrator extends Mailable
@@ -15,15 +14,11 @@ class NewTenantAdministrator extends Mailable
 
     /**
      * The tenant instance
-     *
-     * @var Tenant
      */
     public Tenant $tenant;
 
     /**
      * The user instance
-     *
-     * @var User
      */
     public User $user;
 
@@ -45,6 +40,6 @@ class NewTenantAdministrator extends Mailable
      */
     public function build()
     {
-        return $this->setDefaultFromAndReply()->subject('You\'ve been made an administrator of ' . $this->tenant->Name)->markdown('emails.central.new_tenant_administrator');
+        return $this->setDefaultFromAndReply()->subject('You\'ve been made an administrator of '.$this->tenant->Name)->markdown('emails.central.new_tenant_administrator');
     }
 }

@@ -5,7 +5,6 @@ namespace App\Mail\Payments;
 use App\Business\Helpers\Money;
 use App\Models\Tenant\Payment;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
@@ -22,10 +21,9 @@ class PaymentRefunded extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public Payment        $payment,
-        public int            $amount,
-    )
-    {
+        public Payment $payment,
+        public int $amount,
+    ) {
         $this->amountRefunded = Money::formatCurrency($this->amount, $this->payment->currency);
     }
 

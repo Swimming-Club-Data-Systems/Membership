@@ -27,11 +27,12 @@ class Session extends Model
         return $this->belongsToMany(Squad::class, 'sessionsSquads', 'Session', 'Squad')
             ->withTimestamps()
             ->withPivot([
-                'ForAllMembers'
+                'ForAllMembers',
             ]);
     }
 
-    public function venue(): HasOne {
+    public function venue(): HasOne
+    {
         return $this->hasOne(SessionVenue::class, 'VenueID', 'VenueID');
     }
 

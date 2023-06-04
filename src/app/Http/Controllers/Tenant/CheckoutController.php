@@ -24,7 +24,7 @@ class CheckoutController extends Controller
     {
         $this->authorize('pay', $payment);
 
-        if (!$payment->payable()) {
+        if (! $payment->payable()) {
             abort(404, 'A Payment Method is not required at this time.');
         }
 
@@ -66,20 +66,20 @@ class CheckoutController extends Controller
             'stripe_account' => $tenant->stripeAccount(),
         ]);
 
-//        $paymentIntent = $stripe->paymentIntents->create([
-//            'currency' => 'gbp',
-//            'amount' => 999,
-//            'automatic_payment_methods' => [
-//                'enabled' => true,
-//            ],
-//            'customer' => $user?->stripeCustomerId(),
-//        ], [
-//            'stripe_account' => $tenant->stripeAccount(),
-//        ]);
+        //        $paymentIntent = $stripe->paymentIntents->create([
+        //            'currency' => 'gbp',
+        //            'amount' => 999,
+        //            'automatic_payment_methods' => [
+        //                'enabled' => true,
+        //            ],
+        //            'customer' => $user?->stripeCustomerId(),
+        //        ], [
+        //            'stripe_account' => $tenant->stripeAccount(),
+        //        ]);
 
         if ($paymentIntent->status == StripePaymentIntentStatus::PROCESSING->value ||
             $paymentIntent->status == StripePaymentIntentStatus::SUCCEEDED->value) {
-            return redirect(route("payments.checkout.success", $payment));
+            return redirect(route('payments.checkout.success', $payment));
         }
 
         return Inertia::render('Payments/Checkout/Checkout', [
@@ -92,7 +92,7 @@ class CheckoutController extends Controller
             'currency' => $paymentIntent->currency,
             'total' => $paymentIntent->amount,
             'formatted_total' => Money::formatCurrency($paymentIntent->amount),
-            'return_url' => route("payments.checkout.show", $payment),
+            'return_url' => route('payments.checkout.show', $payment),
             'lines' => $lines,
             'customer_email' => $user?->email,
             'customer_phone' => $user?->Mobile,
@@ -103,7 +103,7 @@ class CheckoutController extends Controller
                 'city' => $user?->getAddress()?->city,
                 'country' => $user?->getAddress()?->country_name,
                 'postal_code' => $user?->getAddress()?->post_code,
-            ]
+            ],
         ]);
     }
 
@@ -118,9 +118,9 @@ class CheckoutController extends Controller
             $tenant = tenant();
 
             $gala = new Gala();
-            $gala->GalaName = "Chester-le-Street Open Meet 2023";
-            $gala->CourseLength = "SHORT";
-            $gala->GalaVenue = "Chester-le-Street Leisure Centre";
+            $gala->GalaName = 'Chester-le-Street Open Meet 2023';
+            $gala->CourseLength = 'SHORT';
+            $gala->GalaVenue = 'Chester-le-Street Leisure Centre';
             $gala->GalaFee = 8.00;
             $gala->GalaFeeConstant = true;
             $gala->ClosingDate = Carbon::today();
@@ -128,13 +128,13 @@ class CheckoutController extends Controller
             $gala->HyTek = true;
             $gala->CoachEnters = false;
             $gala->RequiresApproval = false;
-            $gala->Description = "";
+            $gala->Description = '';
             $gala->ProcessingFee = 50;
             $gala->save();
 
             $galaEntry = new GalaEntry();
             $galaEntry->member()->associate(Member::find(17));
-//            $galaEntry->gala = $gala;
+            //            $galaEntry->gala = $gala;
             $galaEntry->setAttribute('50Free', true);
             $galaEntry->setAttribute('50Back', true);
             $galaEntry->setAttribute('50Breast', true);
@@ -166,7 +166,7 @@ class CheckoutController extends Controller
                     'enabled' => true,
                 ],
                 'customer' => $payment->user?->stripeCustomerId(),
-                'description' => "SCDS Checkout Payment",
+                'description' => 'SCDS Checkout Payment',
                 'metadata' => [
                     'payment_category' => 'scds_checkout_v3',
                     'payment_id' => $payment->id,
@@ -180,7 +180,8 @@ class CheckoutController extends Controller
             $payment->save();
 
             DB::commit();
-            return redirect(route("payments.checkout.show", $payment));
+
+            return redirect(route('payments.checkout.show', $payment));
         } catch (\Exception $e) {
             ddd($e);
         }
@@ -192,9 +193,9 @@ class CheckoutController extends Controller
     {
         $this->authorize('pay', $payment);
 
-//        if ($payment->payable()) {
-//            abort(404, 'This payment is not complete.');
-//        }
+        //        if ($payment->payable()) {
+        //            abort(404, 'This payment is not complete.');
+        //        }
 
         /** @var Tenant $tenant */
         $tenant = tenant();
@@ -208,12 +209,12 @@ class CheckoutController extends Controller
             return Inertia::render('Payments/Checkout/Success', [
                 'id' => $payment->id,
             ]);
-        } else if ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {
+        } elseif ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {
             return Inertia::render('Payments/Checkout/InProgress', [
                 'id' => $payment->id,
             ]);
         } else {
-            return Inertia::location(route("payments.checkout.show", $payment));
+            return Inertia::location(route('payments.checkout.show', $payment));
         }
     }
 }

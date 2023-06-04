@@ -8,17 +8,17 @@ uses(RefreshDatabase::class);
 beforeEach(function () {
     $tenant = new Tenant();
 
-    $tenant->Name = "Test Tenant";
-    $tenant->Code = "XSHF";
-    $tenant->Website = "https://myswimmingclub.uk";
-    $tenant->Email = "test@myswimmingclub.uk";
+    $tenant->Name = 'Test Tenant';
+    $tenant->Code = 'XSHF';
+    $tenant->Website = 'https://myswimmingclub.uk';
+    $tenant->Email = 'test@myswimmingclub.uk';
     $tenant->Verified = true;
     $tenant->UniqueID = Ramsey\Uuid\v4();
 
     $tenant->save();
 
     $tenant->createDomain([
-        'domain' => 'test.localhost'
+        'domain' => 'test.localhost',
     ]);
 
     tenancy()->initialize($tenant);

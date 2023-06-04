@@ -46,8 +46,6 @@ class BalanceTopUp extends Model implements PaidObject
 
     /**
      * Get the user who this balance to up belongs to.
-     *
-     * @return BelongsTo
      */
     public function user(): BelongsTo
     {
@@ -58,8 +56,6 @@ class BalanceTopUp extends Model implements PaidObject
      * Get the user who initiated this balance to up. Null if created automatically by the system to clear a balance.
      * Otherwise, may be the user the balance top up belongs to, or a member of club staff who initiated the payment
      * on their behalf.
-     *
-     * @return BelongsTo
      */
     public function initiator(): BelongsTo
     {
@@ -69,8 +65,6 @@ class BalanceTopUp extends Model implements PaidObject
     /**
      * Gets the PaymentMethod for this BalanceTopUp. If the top-up is scheduled for the future, it may be possible to
      * change the payment method to be used before we request the payment from Stripe.
-     *
-     * @return BelongsTo
      */
     public function paymentMethod(): BelongsTo
     {
@@ -90,14 +84,14 @@ class BalanceTopUp extends Model implements PaidObject
     protected function currency(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Str::lower($value),
+            set: fn ($value) => Str::lower($value),
         );
     }
 
     protected function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount, $this->currency),
         );
     }
 
@@ -136,17 +130,14 @@ class BalanceTopUp extends Model implements PaidObject
 
     /**
      * Get or set the credit amount as a string.
-     *
-     * @return Attribute
      */
     protected function amountString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['amount'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'amount' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['amount'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'amount' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }
-
 }

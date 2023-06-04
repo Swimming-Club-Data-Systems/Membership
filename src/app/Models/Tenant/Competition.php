@@ -22,10 +22,10 @@ use Laravel\Scout\Searchable;
  * @property Venue $venue
  * @property CompetitionMode $mode
  * @property CompetitionStatus $status
- * @property boolean $require_times
- * @property boolean $coach_enters
- * @property boolean $requires_approval
- * @property boolean $public
+ * @property bool $require_times
+ * @property bool $coach_enters
+ * @property bool $requires_approval
+ * @property bool $public
  * @property int $processing_fee
  * @property int $default_entry_fee
  * @property string $processing_fee_string
@@ -97,30 +97,26 @@ class Competition extends Model
 
     /**
      * Get or set the default entry fee amount as a string.
-     *
-     * @return Attribute
      */
     protected function defaultEntryFeeString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['default_entry_fee'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'default_entry_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['default_entry_fee'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'default_entry_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }
 
     /**
      * Get or set the processing fee amount as a string.
-     *
-     * @return Attribute
      */
     protected function processingFeeString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['processing_fee'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'processing_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['processing_fee'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'processing_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }

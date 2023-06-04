@@ -3,10 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Central\Tenant;
-use App\Models\Tenant\ExtraFee;
-use App\Models\Tenant\Member;
-use App\Models\Tenant\Squad;
-use App\Models\Tenant\User;
 use Illuminate\Console\Command;
 
 class PaySumSquadFees extends Command

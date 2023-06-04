@@ -24,6 +24,7 @@ class SettingsController extends Controller
     public function index()
     {
         Gate::authorize('manage-settings');
+
         return Redirect::to('/v1/settings');
     }
 
@@ -36,30 +37,30 @@ class SettingsController extends Controller
 
         return Inertia::render('Settings/Payments', [
             'form_initial_values' => [
-                'use_payments_v2' => (bool)$tenant->use_payments_v2,
-                'enable_automated_billing_system' => (bool)$tenant->getOption('ENABLE_BILLING_SYSTEM'),
-                'hide_squad_fees_from_move_emails' => (bool)$tenant->getOption('HIDE_MOVE_FEE_INFO'),
+                'use_payments_v2' => (bool) $tenant->use_payments_v2,
+                'enable_automated_billing_system' => (bool) $tenant->getOption('ENABLE_BILLING_SYSTEM'),
+                'hide_squad_fees_from_move_emails' => (bool) $tenant->getOption('HIDE_MOVE_FEE_INFO'),
                 'squad_fee_calculation_date' => $tenant->squad_fee_calculation_date ?? 1,
                 'fee_calculation_date' => $tenant->fee_calculation_date ?? 1,
                 'billing_date' => $tenant->billing_date ?? 1,
-                'allow_user_billing_date_override_by_admin' => (bool)$tenant->allow_user_billing_date_override_by_admin,
-                'allow_user_billing_date_override_by_user' => (bool)$tenant->allow_user_billing_date_override_by_user,
-                'allow_account_top_up' => (bool)$tenant->allow_account_top_up,
+                'allow_user_billing_date_override_by_admin' => (bool) $tenant->allow_user_billing_date_override_by_admin,
+                'allow_user_billing_date_override_by_user' => (bool) $tenant->allow_user_billing_date_override_by_user,
+                'allow_account_top_up' => (bool) $tenant->allow_account_top_up,
                 'membership_payment_methods' => [
-                    'account' => (bool)$tenant->membership_payment_methods_account,
-                    'card' => (bool)$tenant->membership_payment_methods_card,
-                    'bacs_debit' => (bool)$tenant->membership_payment_methods_bacs_debit,
+                    'account' => (bool) $tenant->membership_payment_methods_account,
+                    'card' => (bool) $tenant->membership_payment_methods_card,
+                    'bacs_debit' => (bool) $tenant->membership_payment_methods_bacs_debit,
                 ],
                 'gala_entry_payment_methods' => [
-                    'account' => (bool)$tenant->gala_entry_payment_methods_account,
-                    'card' => (bool)$tenant->gala_entry_payment_methods_card,
-                    'bacs_debit' => (bool)$tenant->gala_entry_payment_methods_bacs_debit,
+                    'account' => (bool) $tenant->gala_entry_payment_methods_account,
+                    'card' => (bool) $tenant->gala_entry_payment_methods_card,
+                    'bacs_debit' => (bool) $tenant->gala_entry_payment_methods_bacs_debit,
                 ],
                 'balance_payment_methods' => [
-                    'card' => (bool)$tenant->balance_payment_methods_card,
-                    'bacs_debit' => (bool)$tenant->balance_payment_methods_bacs_debit,
-                ]
-            ]
+                    'card' => (bool) $tenant->balance_payment_methods_card,
+                    'bacs_debit' => (bool) $tenant->balance_payment_methods_bacs_debit,
+                ],
+            ],
         ]);
     }
 

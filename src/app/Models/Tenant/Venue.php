@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
 /**
- *
  * Model to represent venues (locations) for training sessions, galas and more
  *
  * @property int $id
@@ -107,9 +106,8 @@ class Venue extends Model
     protected function phone(): Attribute
     {
         return Attribute::make(
-            get: fn(mixed $value) => $value ? PhoneNumber::create($value) : null,
-            set: fn(mixed $value) => $value instanceof PhoneNumber ? $value : PhoneNumber::toDatabaseFormat($value),
+            get: fn (mixed $value) => $value ? PhoneNumber::create($value) : null,
+            set: fn (mixed $value) => $value instanceof PhoneNumber ? $value : PhoneNumber::toDatabaseFormat($value),
         );
     }
-
 }

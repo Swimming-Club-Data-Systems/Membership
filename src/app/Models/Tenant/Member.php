@@ -3,7 +3,6 @@
 namespace App\Models\Tenant;
 
 use Carbon\Carbon;
-use DateInterval;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,7 +14,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 /**
  * @property int MemberID
  * @property int UserID
- * @property boolean Status
+ * @property bool Status
  * @property string AccessKey
  * @property string MForename
  * @property string MSurname
@@ -25,14 +24,14 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property \DateTime DateOfBirth
  * @property string Gender
  * @property string OtherNotes
- * @property boolean ASAPrimary
- * @property boolean ASAPaid
- * @property boolean ClubPaid
+ * @property bool ASAPrimary
+ * @property bool ASAPaid
+ * @property bool ClubPaid
  * @property string Country
- * @property boolean Active
+ * @property bool Active
  * @property string GenderIdentity
  * @property string GenderPronouns
- * @property boolean GenderDisplay
+ * @property bool GenderDisplay
  * @property User user
  */
 class Member extends Model
@@ -47,6 +46,7 @@ class Member extends Model
     protected $casts = [
         'DateOfBirth' => 'datetime',
     ];
+
     protected $primaryKey = 'MemberID';
 
     /**
@@ -69,7 +69,7 @@ class Member extends Model
         return $this->belongsToMany(Squad::class, 'squadMembers', 'Member', 'Squad')
             ->withTimestamps()
             ->withPivot([
-                'Paying'
+                'Paying',
             ]);
     }
 
@@ -110,36 +110,29 @@ class Member extends Model
 
     /**
      * Get the member name.
-     *
-     * @return Attribute
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
+            get: fn ($value, $attributes) => $attributes['MForename'].' '.$attributes['MSurname'],
         );
     }
 
     /**
      * Get the member's age at the supplied date
-     *
-     * @param Carbon $date
-     * @return int
      */
     public function ageAt(Carbon $date): int
     {
         $diff = $this->DateOfBirth->diff($date);
+
         return $diff->y;
     }
 
     /**
      * Get the member's age today
-     *
-     * @return int
      */
     public function age(): int
     {
         return $this->ageAt(Carbon::now());
     }
-
 }

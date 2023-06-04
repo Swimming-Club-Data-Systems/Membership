@@ -67,14 +67,14 @@ class NotifyHistoryTransform
                 'last_name' => $item->author->Surname,
                 'id' => $item->author->UserID,
             ] : null,
-            'force_send' => (bool)$item->JSONData['Metadata']['ForceSend'],
+            'force_send' => (bool) $item->JSONData['Metadata']['ForceSend'],
             'sent_as' => isset($item->JSONData['NamedSender']) ? [
                 'name' => $item->JSONData['NamedSender']['Name'],
-                'email' => $item->JSONData['NamedSender']['Email']
+                'email' => $item->JSONData['NamedSender']['Email'],
             ] : null,
             'reply_to' => isset($item->JSONData['ReplyToMe']) ? [
                 'name' => $item->JSONData['ReplyToMe']['Name'],
-                'email' => $item->JSONData['ReplyToMe']['Email']
+                'email' => $item->JSONData['ReplyToMe']['Email'],
             ] : null,
             'attachments' => $attachments,
             'sent_to' => $sentTo,

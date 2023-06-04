@@ -30,7 +30,7 @@ class CustomerStatementController extends Controller
         $statements = $this->getPaginatedStatements($user);
 
         return Inertia::render('Payments/Statements/Index', [
-            'statements' => $statements
+            'statements' => $statements,
         ]);
     }
 
@@ -68,7 +68,7 @@ class CustomerStatementController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
             ],
-            'statements' => $statements
+            'statements' => $statements,
         ]);
     }
 
@@ -122,7 +122,7 @@ class CustomerStatementController extends Controller
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
-            ]
+            ],
         ];
     }
 }

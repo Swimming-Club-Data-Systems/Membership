@@ -9,7 +9,6 @@ use App\Models\Tenant\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -41,7 +40,7 @@ class ConfirmablePasswordController extends Controller
         $ssoUrl = null;
 
         if ($tenant->getOption('TENANT_ENABLE_STAFF_OAUTH') && Str::endsWith($user->EmailAddress, $tenant->getOption('TENANT_OAUTH_EMAIL_DOMAIN'))) {
-            $ssoUrl = url("login/oauth?email=" . urlencode($user->EmailAddress));
+            $ssoUrl = url('login/oauth?email='.urlencode($user->EmailAddress));
         }
 
         return Inertia::render('Auth/ConfirmPassword', [
@@ -53,12 +52,11 @@ class ConfirmablePasswordController extends Controller
     /**
      * Confirm the user's password.
      *
-     * @param \Illuminate\Http\Request $request
      * @return mixed
      */
     public function store(Request $request)
     {
-        if (!Auth::guard('web')->validate([
+        if (! Auth::guard('web')->validate([
             'EmailAddress' => $request->user()->email,
             'password' => $request->password,
         ])) {
@@ -115,12 +113,13 @@ class ConfirmablePasswordController extends Controller
          */
         $reauthenticatedUser = User::query()->where('EmailAddress', $idpUser->getMail())->first();
 
-        if (!$reauthenticatedUser) {
+        if (! $reauthenticatedUser) {
             abort(404);
         }
 
         if ($reauthenticatedUser->UserID != $user->UserID) {
             $request->session()->flash('error', 'You did not sign in with the same user. Please try again.');
+
             return redirect(route('password.confirm'));
         }
 

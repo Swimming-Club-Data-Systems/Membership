@@ -47,5 +47,4 @@ class PaymentPolicy
 
         return $user->id === $payment->user_UserID ? Response::allow() : Response::denyAsNotFound();
     }
-
 }

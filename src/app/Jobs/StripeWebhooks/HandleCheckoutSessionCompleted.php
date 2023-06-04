@@ -68,7 +68,7 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                     // See if it's already in the database
                     $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $setupIntent->payment_method->id);
 
-                    if (!$paymentMethod) {
+                    if (! $paymentMethod) {
                         // Add to the database
 
                         $paymentMethod = new PaymentMethod();
@@ -95,7 +95,7 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                     if ($setupIntent->mandate) {
                         $mandate = Mandate::firstWhere('stripe_id', '=', $setupIntent->mandate->id);
 
-                        if (!$mandate) {
+                        if (! $mandate) {
                             $mandate = new Mandate();
                             $mandate->paymentMethod()->associate($paymentMethod);
                             $mandate->stripe_id = $setupIntent->mandate->id;
@@ -123,9 +123,9 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
                                 'Reference' => $setupIntent->mandate->payment_method_details->bacs_debit->reference,
                                 'URL' => $setupIntent->mandate->payment_method_details->bacs_debit->url,
                             ], [
-                                'ID'
+                                'ID',
                             ], [
-                                'Reference', 'Status', 'MandateStatus', 'URL', 'SortCode', 'Last4', 'Address'
+                                'Reference', 'Status', 'MandateStatus', 'URL', 'SortCode', 'Last4', 'Address',
                             ]);
                         } catch (\Exception $e) {
                             report($e);

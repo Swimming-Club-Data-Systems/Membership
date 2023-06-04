@@ -53,19 +53,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
     protected string $guard = 'central';
+
     protected $table = 'central_users';
+
     protected $appends = ['gravatar_url'];
 
     /**
      * Get the user's profile image url.
-     *
-     * @return  Attribute
      */
     public function gravatarUrl(): Attribute
     {
         return new Attribute(
-            get: fn() => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->email))) . "?d=mp",
+            get: fn () => 'https://www.gravatar.com/avatar/'.md5(mb_strtolower(trim($this->email))).'?d=mp',
         );
     }
 
@@ -79,13 +80,11 @@ class User extends Authenticatable
 
     /**
      * Get the user name via expected attribute.
-     *
-     * @return Attribute
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['first_name'] . ' ' . $attributes['last_name'],
+            get: fn ($value, $attributes) => $attributes['first_name'].' '.$attributes['last_name'],
         );
     }
 

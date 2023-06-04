@@ -58,15 +58,15 @@ class WebAuthnLoginController extends Controller
 
         $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::create(random_bytes(32))->setUserVerification(PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED)->setRpId(tenant('Domain'));
 
-        if (sizeof($allowedCredentials) > 0) {
+        if (count($allowedCredentials) > 0) {
             $publicKeyCredentialRequestOptions = $publicKeyCredentialRequestOptions->allowCredentials(...$allowedCredentials);
         }
 
         $publicKeyCredentialRequestOptionsJson = json_encode($publicKeyCredentialRequestOptions);
         $publicKeyCredentialRequestOptions = json_decode($publicKeyCredentialRequestOptionsJson, true);
 
-        if ($request->input('mediation') == "conditional") {
-            $publicKeyCredentialRequestOptions['mediation'] = "conditional";
+        if ($request->input('mediation') == 'conditional') {
+            $publicKeyCredentialRequestOptions['mediation'] = 'conditional';
         }
 
         $request->session()->put('webauthn_credential_request_options', json_encode($publicKeyCredentialRequestOptions));
@@ -94,14 +94,14 @@ class WebAuthnLoginController extends Controller
             );
 
             $input = $request->input();
-//        if ($request->input('response.userHandle')) {
-//            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
-//        }
+            //        if ($request->input('response.userHandle')) {
+            //            $input['response']['userHandle'] = Base64UrlSafe::encodeUnpadded($request->input('response.userHandle'));
+            //        }
 
             $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
             $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
-            if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+            if (! $authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
                 //e.g. process here with a redirection to the public key login/MFA page.
             }
 
@@ -135,7 +135,7 @@ class WebAuthnLoginController extends Controller
                 $authenticatorAssertionResponse,
                 $publicKeyCredentialRequestOptions,
                 $serverRequest,
-//            $userHandle
+                //            $userHandle
                 null,
                 ['testclub.localhost', 'localhost'],
             );
@@ -152,11 +152,11 @@ class WebAuthnLoginController extends Controller
             // Otherwise the user is hit with confirm immediately if heading to profile routes.
             $request->session()->put('auth.password_confirmed_at', time());
 
-            $url = $request->session()->get('url.intended') ?? "";
+            $url = $request->session()->get('url.intended') ?? '';
 
             $redirectUrl = RouteServiceProvider::HOME;
 
-            if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
+            if (Route::getRoutes()->match(Request::create($url))->getName() == 'login.v1') {
                 $request->session()->forget('url.intended');
                 $redirectUrl = V1LoginController::getUrl($user);
             } else {

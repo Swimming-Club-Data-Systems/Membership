@@ -41,7 +41,7 @@ class JournalAccount extends Model
 
     public function journal(): MorphOne
     {
-        if (!$this->traitJournal()) {
+        if (! $this->traitJournal()) {
             try {
                 $this->initJournal();
                 $this->refresh();

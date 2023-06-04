@@ -2,7 +2,6 @@
 
 namespace App\Business\Helpers;
 
-
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
@@ -15,9 +14,13 @@ use Illuminate\Support\Facades\App;
 class AppMenu
 {
     private ?bool $isTeamManager;
+
     private ?bool $isSquadRep;
+
     private ?bool $hasSquadReps;
+
     private ?bool $hasMembers;
+
     private ?User $user;
 
     private function __construct(?User $user)
@@ -181,6 +184,7 @@ class AppMenu
     public static function asArray(User|null $user): array
     {
         $object = new AppMenu($user);
+
         return $object->getMenu();
     }
 
@@ -475,14 +479,14 @@ class AppMenu
         if ($this->user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Squad Fees',
-                'href' => '/payments/history/squads/' . $today->format('Y') . '/' . $today->format('m'),
+                'href' => '/payments/history/squads/'.$today->format('Y').'/'.$today->format('m'),
             ];
         }
 
         if ($this->user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Extra Fees',
-                'href' => '/payments/history/extras/' . $today->format('Y') . '/' . $today->format('m'),
+                'href' => '/payments/history/extras/'.$today->format('Y').'/'.$today->format('m'),
             ];
         }
 
@@ -593,14 +597,14 @@ class AppMenu
         if ($this->user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Squad Fees',
-                'href' => '/payments/history/squads/' . $today->format('Y') . '/' . $today->format('m'),
+                'href' => '/payments/history/squads/'.$today->format('Y').'/'.$today->format('m'),
             ];
         }
 
         if ($this->user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'This Months Extra Fees',
-                'href' => '/payments/history/extras/' . $today->format('Y') . '/' . $today->format('m'),
+                'href' => '/payments/history/extras/'.$today->format('Y').'/'.$today->format('m'),
             ];
         }
 

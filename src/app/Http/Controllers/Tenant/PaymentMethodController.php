@@ -34,14 +34,14 @@ class PaymentMethodController extends Controller
 
         $default = null;
 
-        $map = function (\App\Models\Tenant\PaymentMethod $item) use ($default) {
+        $map = function (\App\Models\Tenant\PaymentMethod $item) {
             return [
                 'id' => $item->id,
                 'type' => $item->type,
                 'description' => PaymentMethod::formatNameFromData($item->type, $item->pm_type_data),
                 'created' => $item->created_at,
                 'info_line' => PaymentMethod::formatInfoLineFromData($item->type, $item->pm_type_data),
-                'default' => (bool)$item->default,
+                'default' => (bool) $item->default,
             ];
         };
 
@@ -94,14 +94,14 @@ class PaymentMethodController extends Controller
             'payment_method_types' => ['card'],
             'mode' => 'setup',
             'customer' => $user->stripeCustomerId(),
-            'success_url' => route('payments.methods.new_success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('payments.methods.new_success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.methods.index'),
             'locale' => 'en-GB',
             'metadata' => [
                 'session_type' => 'direct_debit_setup',
             ],
         ], [
-            'stripe_account' => $tenant->stripeAccount()
+            'stripe_account' => $tenant->stripeAccount(),
         ]);
 
         return Inertia::location($session->url);
@@ -123,14 +123,14 @@ class PaymentMethodController extends Controller
             'payment_method_types' => ['bacs_debit'],
             'mode' => 'setup',
             'customer' => $user->stripeCustomerId(),
-            'success_url' => route('payments.methods.new_success') . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('payments.methods.new_success').'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.methods.index'),
             'locale' => 'en-GB',
             'metadata' => [
                 'session_type' => 'direct_debit_setup',
             ],
         ], [
-            'stripe_account' => $tenant->stripeAccount()
+            'stripe_account' => $tenant->stripeAccount(),
         ]);
 
         return Inertia::location($session->url);
@@ -154,13 +154,13 @@ class PaymentMethodController extends Controller
                     'stripe_account' => $tenant->stripeAccount(),
                 ]);
 
-                $flashBag = $checkoutSession->setup_intent->payment_method->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
+                $flashBag = $checkoutSession->setup_intent->payment_method->type == 'bacs_debit' ? 'direct_debit' : 'payment_method';
 
                 // Get a user if they exist
                 /** @var StripeCustomer $customer */
                 $customer = StripeCustomer::firstWhere('CustomerID', '=', $checkoutSession->customer);
 
-                if (!$customer) {
+                if (! $customer) {
                     // Stop executing
                     throw new \Exception('No user was found');
                 }
@@ -168,7 +168,7 @@ class PaymentMethodController extends Controller
                 // See if it's already in the database
                 $paymentMethod = \App\Models\Tenant\PaymentMethod::firstWhere('stripe_id', '=', $checkoutSession->setup_intent->payment_method->id);
 
-                if (!$paymentMethod) {
+                if (! $paymentMethod) {
                     // Add to the database
 
                     $paymentMethod = new \App\Models\Tenant\PaymentMethod();
@@ -195,7 +195,7 @@ class PaymentMethodController extends Controller
                 if ($checkoutSession->setup_intent->mandate) {
                     $mandate = Mandate::firstWhere('stripe_id', '=', $checkoutSession->setup_intent->mandate->id);
 
-                    if (!$mandate) {
+                    if (! $mandate) {
                         $mandate = new Mandate();
                         $mandate->paymentMethod()->associate($paymentMethod);
                         $mandate->stripe_id = $checkoutSession->setup_intent->mandate->id;
@@ -214,7 +214,7 @@ class PaymentMethodController extends Controller
                 throw $e;
             }
 
-            $request->session()->flash('flash_bag.' . $flashBag . '.success', 'We have saved ' . PaymentMethod::formatName($checkoutSession->setup_intent->payment_method) . ' to your list of payment methods.');
+            $request->session()->flash('flash_bag.'.$flashBag.'.success', 'We have saved '.PaymentMethod::formatName($checkoutSession->setup_intent->payment_method).' to your list of payment methods.');
         }
 
         return Inertia::location(route('payments.methods.index'));
@@ -222,17 +222,17 @@ class PaymentMethodController extends Controller
 
     public function update(\App\Models\Tenant\PaymentMethod $paymentMethod, Request $request): \Illuminate\Http\RedirectResponse
     {
-        $type = $paymentMethod->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
+        $type = $paymentMethod->type == 'bacs_debit' ? 'direct_debit' : 'payment_method';
 
         try {
             if ($request->input('set_default')) {
                 $paymentMethod->default = true;
                 $paymentMethod->save();
 
-                $request->session()->flash('flash_bag.' . $type . '.success', 'We have set ' . PaymentMethod::formatNameFromData($paymentMethod->type, $paymentMethod->pm_type_data) . ' as your default Direct Debit.');
+                $request->session()->flash('flash_bag.'.$type.'.success', 'We have set '.PaymentMethod::formatNameFromData($paymentMethod->type, $paymentMethod->pm_type_data).' as your default Direct Debit.');
             }
         } catch (\Exception $e) {
-            $request->session()->flash('flash_bag.' . $type . '.error', $e->getMessage());
+            $request->session()->flash('flash_bag.'.$type.'.error', $e->getMessage());
         }
 
         return Redirect::route('payments.methods.index');
@@ -246,10 +246,11 @@ class PaymentMethodController extends Controller
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        $type = $paymentMethod->type == "bacs_debit" ? 'direct_debit' : 'payment_method';
+        $type = $paymentMethod->type == 'bacs_debit' ? 'direct_debit' : 'payment_method';
 
         if ($paymentMethod->default) {
-            $request->session()->flash('flash_bag.' . $type . '.error', 'You can not delete a default payment method');
+            $request->session()->flash('flash_bag.'.$type.'.error', 'You can not delete a default payment method');
+
             return Redirect::route('payments.methods.index');
         }
 
@@ -262,16 +263,16 @@ class PaymentMethodController extends Controller
                 $paymentMethod->stripe_id,
                 [],
                 [
-                    'stripe_account' => $tenant->stripeAccount()
+                    'stripe_account' => $tenant->stripeAccount(),
                 ]
             );
 
             $paymentMethod->user()->dissociate();
             $paymentMethod->save();
 
-            $request->session()->flash('flash_bag.' . $type . '.success', 'We have deleted ' . PaymentMethod::formatName($pm) . ' from your list of payment methods.');
+            $request->session()->flash('flash_bag.'.$type.'.success', 'We have deleted '.PaymentMethod::formatName($pm).' from your list of payment methods.');
         } catch (\Exception $e) {
-            $request->session()->flash('flash_bag.' . $type . '.error', $e->getMessage());
+            $request->session()->flash('flash_bag.'.$type.'.error', $e->getMessage());
         }
 
         return Redirect::route('payments.methods.index');

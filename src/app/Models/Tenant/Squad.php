@@ -30,7 +30,7 @@ class Squad extends Model
         return $this->belongsToMany(Member::class, 'squadMembers', 'Squad', 'Member')
             ->withTimestamps()
             ->withPivot([
-                'Paying'
+                'Paying',
             ]);
     }
 
@@ -39,7 +39,7 @@ class Squad extends Model
         return $this->belongsToMany(User::class, 'squadReps', 'Squad', 'User')
             ->withTimestamps()
             ->withPivot([
-                'ContactDescription'
+                'ContactDescription',
             ]);
     }
 
@@ -57,15 +57,13 @@ class Squad extends Model
 
     /**
      * Get or set the fee as an integer.
-     *
-     * @return Attribute
      */
     protected function fee(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => BigDecimal::of((string)$attributes['SquadFee'])->withPointMovedRight(2)->toInt(),
-            set: fn($value) => [
-                'SquadFee' => BigDecimal::of($value)->withPointMovedLeft(2)
+            get: fn ($value, $attributes) => BigDecimal::of((string) $attributes['SquadFee'])->withPointMovedRight(2)->toInt(),
+            set: fn ($value) => [
+                'SquadFee' => BigDecimal::of($value)->withPointMovedLeft(2),
             ],
         );
     }

@@ -37,8 +37,7 @@ class CustomerStatement extends Model
     /**
      * Automatically generate a new statement for a given user
      *
-     * @param User $user The user to create a statement for
-     *
+     * @param  User  $user The user to create a statement for
      */
     public static function createStatement(User $user): self
     {

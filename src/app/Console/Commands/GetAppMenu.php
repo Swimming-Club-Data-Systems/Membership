@@ -5,8 +5,6 @@ namespace App\Console\Commands;
 use App\Business\Helpers\AppMenu;
 use App\Models\Tenant\User;
 use Illuminate\Console\Command;
-use Stancl\Tenancy\Concerns\HasATenantArgument;
-use Stancl\Tenancy\Concerns\TenantAwareCommand;
 
 class GetAppMenu extends Command
 {

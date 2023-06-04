@@ -18,18 +18,18 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property int $EntryID
  * @property int $GalaID
  * @property int $MemberID
- * @property boolean $EntryProcessed
- * @property boolean $TimesRequired
- * @property boolean $TimesProvided
- * @property double $FeeToPay
+ * @property bool $EntryProcessed
+ * @property bool $TimesRequired
+ * @property bool $TimesProvided
+ * @property float $FeeToPay
  * @property int $amount
- * @property boolean $Charged
- * @property boolean $Refunded
- * @property boolean $Locked
- * @property boolean $Vetoable
+ * @property bool $Charged
+ * @property bool $Refunded
+ * @property bool $Locked
+ * @property bool $Vetoable
  * @property int $AmountRefunded
  * @property int $StripePayment
- * @property boolean $Approved
+ * @property bool $Approved
  * @property int $PaymentID
  * @property int $ProcessingFee
  * @property Carbon $created_at
@@ -147,27 +147,25 @@ class GalaEntry extends Model implements PaidObject
 
     public function handleFailed(): void
     {
-//        $this->status = BalanceTopUpStatus::FAILED;
-//        $this->save();
+        //        $this->status = BalanceTopUpStatus::FAILED;
+        //        $this->save();
     }
 
     public function handleCanceled(): void
     {
-//        $this->status = BalanceTopUpStatus::FAILED;
-//        $this->save();
+        //        $this->status = BalanceTopUpStatus::FAILED;
+        //        $this->save();
     }
 
     /**
      * Get or set the fee as an integer.
-     *
-     * @return Attribute
      */
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => BigDecimal::of((string)$attributes['FeeToPay'])->withPointMovedRight(2)->toInt(),
-            set: fn($value) => [
-                'FeeToPay' => BigDecimal::of($value)->withPointMovedLeft(2)
+            get: fn ($value, $attributes) => BigDecimal::of((string) $attributes['FeeToPay'])->withPointMovedRight(2)->toInt(),
+            set: fn ($value) => [
+                'FeeToPay' => BigDecimal::of($value)->withPointMovedLeft(2),
             ],
         );
     }

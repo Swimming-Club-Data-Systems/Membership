@@ -3,11 +3,8 @@
 namespace App\Events\Tenant;
 
 use App\Models\Tenant\Competition;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -20,8 +17,7 @@ class CompetitionCreated
      */
     public function __construct(
         public Competition $competition
-    )
-    {
+    ) {
         //
     }
 

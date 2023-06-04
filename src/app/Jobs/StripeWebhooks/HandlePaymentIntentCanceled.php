@@ -27,8 +27,7 @@ class HandlePaymentIntentCanceled implements ShouldQueue
      */
     public function __construct(
         public WebhookCall $webhookCall
-    )
-    {
+    ) {
         $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -47,7 +46,7 @@ class HandlePaymentIntentCanceled implements ShouldQueue
                 'id' => $this->webhookCall->payload['data']['object']['id'],
                 'expand' => ['customer', 'payment_method', 'charges.data.balance_transaction'],
             ], [
-                'stripe_account' => $this->webhookCall->payload['account']
+                'stripe_account' => $this->webhookCall->payload['account'],
             ]);
 
             if ($intent?->metadata?->payment_id) {

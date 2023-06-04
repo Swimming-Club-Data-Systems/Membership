@@ -97,8 +97,6 @@ class Payment extends Model
 
     /**
      * Determine if the payment can be paid
-     *
-     * @return bool
      */
     public function payable(): bool
     {
@@ -108,35 +106,35 @@ class Payment extends Model
     protected function currency(): Attribute
     {
         return Attribute::make(
-            set: fn($value) => Str::lower($value),
+            set: fn ($value) => Str::lower($value),
         );
     }
 
     protected function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount, $this->currency),
         );
     }
 
     protected function formattedAmountRefunded(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_refunded, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_refunded, $this->currency),
         );
     }
 
     protected function amountRefundable(): Attribute
     {
         return Attribute::make(
-            get: fn() => $this->amount - $this->amount_refunded,
+            get: fn () => $this->amount - $this->amount_refunded,
         );
     }
 
     protected function formattedAmountRefundable(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount_refundable, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount_refundable, $this->currency),
         );
     }
 }

@@ -27,7 +27,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         CompetitionCreated::class => [
             PopulateBasicCompetition::class,
-        ]
+        ],
     ];
 
     /**

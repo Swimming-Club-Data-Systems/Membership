@@ -13,11 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
- * @property integer $id
+ * @property int $id
  * @property ManualPaymentEntry $manualPaymentEntry
  * @property string $description
- * @property integer $credit
- * @property integer $debit
+ * @property int $credit
+ * @property int $debit
  * @property string $credit_string
  * @property string $debit_string
  * @property ManualPaymentEntryLineType $line_type
@@ -66,54 +66,46 @@ class ManualPaymentEntryLine extends Model
 
     /**
      * Get the transaction type.
-     *
-     * @return Attribute
      */
     protected function lineType(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['credit'] > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
+            get: fn ($value, $attributes) => $attributes['credit'] > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
         );
     }
 
     /**
      * Get the opposite transaction type (for the other journal in a double entry transaction).
-     *
-     * @return Attribute
      */
     protected function lineOppositeType(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['debit'] > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
+            get: fn ($value, $attributes) => $attributes['debit'] > 0 ? ManualPaymentEntryLineType::CREDIT : ManualPaymentEntryLineType::DEBIT,
         );
     }
 
     /**
      * Get or set the credit amount as a string.
-     *
-     * @return Attribute
      */
     protected function creditString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['credit'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'credit' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['credit'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'credit' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }
 
     /**
      * Get or set the debit amount as a string.
-     *
-     * @return Attribute
      */
     protected function debitString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['debit'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'debit' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['debit'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'debit' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }

@@ -3,7 +3,6 @@
 namespace App\Jobs\StripeWebhooks;
 
 use App\Enums\Queue;
-use App\Exceptions\NoStripeAccountException;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
@@ -14,7 +13,6 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Spatie\WebhookClient\Models\WebhookCall;
-use Stripe\Exception\ApiErrorException;
 
 class HandlePaymentMethodAttached implements ShouldQueue
 {
@@ -48,7 +46,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
         /** @var Tenant $tenant */
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
-        $tenant->run(function () use ($tenant) {
+        $tenant->run(function () {
             try {
                 \Stripe\Stripe::setApiKey(config('cashier.secret'));
 
@@ -56,7 +54,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                 /** @var StripeCustomer $customer */
                 $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
 
-                if (!$customer) {
+                if (! $customer) {
                     // Stop executing
                     return;
                 }
@@ -64,7 +62,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                 // See if it's already in the database
                 $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
 
-                if (!$paymentMethod) {
+                if (! $paymentMethod) {
                     $pm = \Stripe\PaymentMethod::retrieve([
                         'id' => $this->webhookCall->payload['data']['object']['id'],
                         'expand' => ['billing_details.address'],

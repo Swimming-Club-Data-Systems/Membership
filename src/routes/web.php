@@ -29,7 +29,7 @@ Route::stripeWebhooks('stripe/connect-webhook');
 
 Route::get('/', function () {
     return Inertia::render('Central/Index', [
-        'canLogin' => Route::has('central.login') && !Auth::guard('central')->check(),
+        'canLogin' => Route::has('central.login') && ! Auth::guard('central')->check(),
         'canRegister' => false,
     ]);
 })->name('central.home');
@@ -43,6 +43,7 @@ Route::prefix('report-an-issue')->controller(ReportAnErrorController::class)->gr
 
 Route::get('/dev/require-confirm', function (Request $request) {
     $request->session()->put('auth.password_confirmed_at', 0);
+
     return redirect('/');
 });
 
@@ -135,7 +136,7 @@ Route::middleware('auth:central')->group(function () {
     });
 });
 
-require __DIR__ . '/central-auth.php';
+require __DIR__.'/central-auth.php';
 
 //Route::get('/dev', function () {
 //    return Inertia::render('Dev');

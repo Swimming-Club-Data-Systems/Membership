@@ -18,9 +18,8 @@ class PaymentSucceeded extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        public Payment        $payment,
-    )
-    {
+        public Payment $payment,
+    ) {
         //
     }
 

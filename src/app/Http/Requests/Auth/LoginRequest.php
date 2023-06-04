@@ -49,7 +49,7 @@ class LoginRequest extends FormRequest
         // Find user
         $user = User::where('Active', 1)->where('EmailAddress', $this->string('email')->trim())->first();
 
-        if (!$user || !Hash::check($this->input('password'), $user->Password)) {
+        if (! $user || ! Hash::check($this->input('password'), $user->Password)) {
             RateLimiter::hit($this->throttleKey());
 
             $validationException = ValidationException::withMessages([
@@ -73,7 +73,7 @@ class LoginRequest extends FormRequest
      */
     public function ensureIsNotRateLimited()
     {
-        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
         }
 
@@ -96,6 +96,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey()
     {
-        return Str::lower($this->input('email')) . '|' . $this->ip();
+        return Str::lower($this->input('email')).'|'.$this->ip();
     }
 }

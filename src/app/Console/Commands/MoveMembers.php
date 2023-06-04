@@ -28,6 +28,7 @@ class MoveMembers extends Command
     public function handle()
     {
         \App\Jobs\MoveMembers::dispatchSync();
+
         return Command::SUCCESS;
     }
 }

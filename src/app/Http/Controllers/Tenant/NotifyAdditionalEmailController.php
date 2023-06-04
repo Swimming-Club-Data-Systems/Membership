@@ -48,13 +48,13 @@ class NotifyAdditionalEmailController extends Controller
         // Has the email already been added?
         $already = $user->notifyAdditionalEmails()->where('EmailAddress', $data->email)->first();
 
-        if (!$already) {
+        if (! $already) {
             $additionalEmail = new NotifyAdditionalEmail();
             $additionalEmail->Name = $data->name;
             $additionalEmail->EmailAddress = $data->email;
             $additionalEmail->Verified = true;
             $user->notifyAdditionalEmails()->save($additionalEmail);
-            $request->session()->flash('success', 'Your email address has been verified. You will now receive copies of squad update emails sent to ' . $user->name . '.');
+            $request->session()->flash('success', 'Your email address has been verified. You will now receive copies of squad update emails sent to '.$user->name.'.');
         }
 
         return Redirect::back();
@@ -69,7 +69,7 @@ class NotifyAdditionalEmailController extends Controller
 
         $additionalEmail->delete();
 
-        $request->session()->flash('flash_bag.delete_additional_emails.success', 'We have removed ' . $additionalEmail->Name . ' from your list of additional recipients.');
+        $request->session()->flash('flash_bag.delete_additional_emails.success', 'We have removed '.$additionalEmail->Name.' from your list of additional recipients.');
 
         return Redirect::route('my_account.email');
     }

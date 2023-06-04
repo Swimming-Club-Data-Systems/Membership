@@ -13,25 +13,26 @@ class IssueReport extends Mailable implements ShouldQueue
     use Queueable, SerializesModels;
 
     public $user;
+
     public $userId;
+
     public $url;
+
     public $description;
+
     public $userAgent;
+
     public $userAgentBrands;
+
     public $userAgentPlatform;
+
     public $userAgentMobile;
+
     public $tenant;
 
     /**
      * Create a new message instance.
      *
-     * @param $user
-     * @param $url
-     * @param $description
-     * @param $userAgent
-     * @param $userAgentBrands
-     * @param $userAgentPlatform
-     * @param $userAgentMobile
      * @return void
      */
     public function __construct($user, $url, $description, $userAgent, $userAgentBrands, $userAgentPlatform, $userAgentMobile)
@@ -56,7 +57,7 @@ class IssueReport extends Mailable implements ShouldQueue
         $this->userAgentPlatform = $userAgentPlatform;
         $this->userAgentMobile = $userAgentMobile;
 
-        $this->subject = "User Issue Report";
+        $this->subject = 'User Issue Report';
     }
 
     /**

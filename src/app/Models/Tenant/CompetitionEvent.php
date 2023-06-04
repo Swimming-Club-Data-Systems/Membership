@@ -110,30 +110,26 @@ class CompetitionEvent extends Model
 
     /**
      * Get or set the default entry fee amount as a string.
-     *
-     * @return Attribute
      */
     protected function entryFeeString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['entry_fee'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'entry_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['entry_fee'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'entry_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }
 
     /**
      * Get or set the processing fee amount as a string.
-     *
-     * @return Attribute
      */
     protected function processingFeeString(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => (string)BigDecimal::of((string)$attributes['processing_fee'])->withPointMovedLeft(2),
-            set: fn($value, $attributes) => [
-                'processing_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt()
+            get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['processing_fee'])->withPointMovedLeft(2),
+            set: fn ($value, $attributes) => [
+                'processing_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
     }

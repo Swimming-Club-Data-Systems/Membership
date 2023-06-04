@@ -4,7 +4,6 @@ namespace App\Models\Tenant;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
@@ -23,5 +22,6 @@ class SessionVenue extends Model
     }
 
     protected $primaryKey = 'SessionID';
+
     protected $table = 'sessionsVenues';
 }

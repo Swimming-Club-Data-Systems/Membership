@@ -3,11 +3,11 @@
 namespace App\Rules;
 
 use App\Business\Helpers\Countries;
-use Illuminate\Contracts\Validation\InvokableRule;
+use Brick\Postcode\InvalidPostcodeException;
 use Brick\Postcode\PostcodeFormatter;
 use Brick\Postcode\UnknownCountryException;
-use Brick\Postcode\InvalidPostcodeException;
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Illuminate\Contracts\Validation\InvokableRule;
 
 class ValidPostCode implements InvokableRule, DataAwareRule
 {
@@ -40,7 +40,7 @@ class ValidPostCode implements InvokableRule, DataAwareRule
         } catch (UnknownCountryException $e) {
             // Country may not support post codes, can ignore this exception
         } catch (InvalidPostcodeException $e) {
-            $fail('The postal code you entered is not a valid ' . Countries::getCountryName($country) . ' postal code.');
+            $fail('The postal code you entered is not a valid '.Countries::getCountryName($country).' postal code.');
         }
     }
 

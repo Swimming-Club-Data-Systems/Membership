@@ -35,15 +35,13 @@ class ExtraFee extends Model
 
     /**
      * Get or set the fee as an integer.
-     *
-     * @return Attribute
      */
     protected function fee(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => BigDecimal::of((string)$attributes['ExtraFee'])->withPointMovedRight(2)->toInt(),
-            set: fn($value) => [
-                'ExtraFee' => BigDecimal::of($value)->withPointMovedLeft(2)
+            get: fn ($value, $attributes) => BigDecimal::of((string) $attributes['ExtraFee'])->withPointMovedRight(2)->toInt(),
+            set: fn ($value) => [
+                'ExtraFee' => BigDecimal::of($value)->withPointMovedLeft(2),
             ],
         );
     }

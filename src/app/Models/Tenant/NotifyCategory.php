@@ -18,6 +18,7 @@ class NotifyCategory extends Model
     use HasFactory, BelongsToTenant, UuidIdentifier;
 
     protected $primaryKey = 'ID';
+
     protected $table = 'notifyCategories';
 
     /**
@@ -29,7 +30,7 @@ class NotifyCategory extends Model
             ->as('subscription')
             ->withTimestamps()
             ->withPivot([
-                'Subscribed'
+                'Subscribed',
             ]);
     }
 }

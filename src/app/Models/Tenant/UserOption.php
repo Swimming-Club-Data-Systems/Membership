@@ -16,6 +16,7 @@ class UserOption extends Model
     use HasFactory;
 
     protected $table = 'userOptions';
+
     protected $primaryKey = 'ID';
 
     /**

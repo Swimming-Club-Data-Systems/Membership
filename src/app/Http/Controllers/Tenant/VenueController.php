@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
-use App\Business\CollectionTransforms\NotifyHistoryTransform;
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\NotifyHistory;
-use App\Models\Tenant\User;
 use App\Models\Tenant\Venue;
 use App\Rules\ValidPhone;
 use Illuminate\Http\Request;
@@ -37,7 +34,7 @@ class VenueController extends Controller
     public function new(): \Inertia\Response
     {
         return Inertia::render('Venues/New', [
-            'google_maps_api_key' => config('google.maps.clientside')
+            'google_maps_api_key' => config('google.maps.clientside'),
         ]);
     }
 
@@ -147,7 +144,7 @@ class VenueController extends Controller
         $responseData = [
             'data' => $venuesArray,
             'has_more_pages' => $venues && $venues->hasMorePages(),
-            'total' => $venues ? $venues->total() : sizeof($venuesArray),
+            'total' => $venues ? $venues->total() : count($venuesArray),
         ];
 
         return \response()->json($responseData);

@@ -47,7 +47,7 @@ class Refund extends Model
     /**
      * The associated payment header information
      */
-    public function payment(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class, 'v2_payment_id');
     }
@@ -70,7 +70,7 @@ class Refund extends Model
     protected function formattedAmount(): Attribute
     {
         return Attribute::make(
-            get: fn() => Money::formatCurrency($this->amount, $this->currency),
+            get: fn () => Money::formatCurrency($this->amount, $this->currency),
         );
     }
 }

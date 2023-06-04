@@ -3,9 +3,9 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Inertia\Inertia;
 use Stancl\Tenancy\Exceptions\TenantCouldNotBeIdentifiedOnDomainException;
 use Throwable;
-use Inertia\Inertia;
 
 class Handler extends ExceptionHandler
 {
@@ -52,9 +52,6 @@ class Handler extends ExceptionHandler
 
     /**
      * Prepare exception for rendering.
-     *
-     * @param  \Throwable  $e
-     *
      */
     public function render($request, Throwable $e)
     {
@@ -62,15 +59,15 @@ class Handler extends ExceptionHandler
 
         $debug = app()->environment(['local', 'testing', 'debug']);
 
-        if (!$debug && $e instanceof TenantCouldNotBeIdentifiedOnDomainException) {
+        if (! $debug && $e instanceof TenantCouldNotBeIdentifiedOnDomainException) {
             return redirect(route('central.home'));
         }
 
-        if (!$debug && in_array($response->status(), [500, 503, 400, 401, 404, 403])) {
+        if (! $debug && in_array($response->status(), [500, 503, 400, 401, 404, 403])) {
             return Inertia::render('Errors/Error', ['status' => $response->status(), 'message' => $response->statusText()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
-        } else if ($response->status() === 419) {
+        } elseif ($response->status() === 419) {
             return back()->with([
                 'error' => 'The page expired, please try again.',
             ]);

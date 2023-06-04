@@ -57,7 +57,7 @@ return [
 
     'prefix' => env(
         'HORIZON_PREFIX',
-        Str::slug(env('APP_NAME', 'laravel'), '_') . '_horizon:'
+        Str::slug(env('APP_NAME', 'laravel'), '_').'_horizon:'
     ),
 
     /*
@@ -120,7 +120,7 @@ return [
     */
 
     'silenced' => [
-        \Laravel\Scout\Jobs\MakeSearchable::class
+        \Laravel\Scout\Jobs\MakeSearchable::class,
     ],
 
     /*
@@ -186,7 +186,7 @@ return [
             'queue' => [
                 'default',
                 Queue::NOTIFY->value,
-                Queue::STRIPE->value
+                Queue::STRIPE->value,
             ],
             'balance' => 'auto',
             'maxProcesses' => 1,

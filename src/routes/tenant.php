@@ -61,7 +61,7 @@ Route::middleware([
     });
 
     Route::get('/about-the-changes', function () {
-        return Inertia::location("https://docs.myswimmingclub.uk/docs/technical-and-tenant/scds-next");
+        return Inertia::location('https://docs.myswimmingclub.uk/docs/technical-and-tenant/scds-next');
     })->name('about_changes');
 
     Route::get('/dev', function () {
@@ -79,10 +79,11 @@ Route::middleware([
 
     Route::get('/dev/require-confirm', function (Request $request) {
         $request->session()->put('auth.password_confirmed_at', 0);
+
         return redirect('/dev');
     });
 
-    require __DIR__ . '/auth.php';
+    require __DIR__.'/auth.php';
 
     Route::get('verify-email-update/{user}/{email}', [VerifyEmailChangeController::class, '__invoke'])
         ->middleware(['signed', 'throttle:6,1'])
@@ -133,7 +134,7 @@ Route::middleware([
         Route::get('/', [MemberController::class, 'index']);
         Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
         Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/members/' . $path);
+            return Inertia::location('/v1/members/'.$path);
         })->where('path', '.*');
     });
 
@@ -180,7 +181,7 @@ Route::middleware([
                 ->whereNumber('top_up')
                 ->name('top_up.show');
             Route::any('/{path}', function ($path) {
-                return Inertia::location('/v1/users/' . $path);
+                return Inertia::location('/v1/users/'.$path);
             })
                 ->where('path', '.*');
         });
@@ -309,8 +310,8 @@ Route::middleware([
 
             Route::prefix('checkout')->group(function () {
                 Route::name('checkout.')->group(function () {
-//                    Route::get('/', [CheckoutController::class, 'index'])
-//                        ->name('index');
+                    //                    Route::get('/', [CheckoutController::class, 'index'])
+                    //                        ->name('index');
                     Route::get('/{payment}', [CheckoutController::class, 'show'])
                         ->whereNumber('payment')
                         ->name('show');
@@ -364,7 +365,7 @@ Route::middleware([
                             ->name('show');
                     });
                 });
-            })->whereNumber('competition');;
+            })->whereNumber('competition');
         });
     });
 
@@ -375,7 +376,6 @@ Route::middleware([
             Route::put('/payments', [SettingsController::class, 'updatePaymentSettings']);
         });
     });
-
 
     Route::get('/notify-additional-emails/{data}', [NotifyAdditionalEmailController::class, 'show'])
         ->middleware(['signed', 'throttle:6,1'])
@@ -388,11 +388,10 @@ Route::middleware([
         ->middleware('auth')
         ->name('notify_additional_emails.delete');
 
-
     // Fallback route
     // If not defined here, it's probs in the V1 app so lets send the user there
     // Until V1 App is removed, it will handle 404 cases
     Route::any('/{path}', function (Request $request) {
-        return Inertia::location(url('/v1' . $request->getRequestUri()));
+        return Inertia::location(url('/v1'.$request->getRequestUri()));
     })->where('path', '.*');
 });

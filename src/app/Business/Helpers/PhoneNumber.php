@@ -29,18 +29,18 @@ class PhoneNumber
         return new self($numberObj);
     }
 
-    public static function toDatabaseFormat(string $number, string $country = "GB")
+    public static function toDatabaseFormat(string $number, string $country = 'GB')
     {
         try {
             $number = BrickPhoneNumber::parse($number, $country);
         } catch (PhoneNumberParseException $e) {
             // 'The string supplied is too short to be a phone number.'
-            return "";
+            return '';
         }
 
-        if (!$number->isValidNumber()) {
+        if (! $number->isValidNumber()) {
             // strict check relying on up-to-date metadata library
-            return "";
+            return '';
         }
 
         return $number->format(PhoneNumberFormat::E164);
@@ -73,7 +73,7 @@ class PhoneNumber
         return $this->number->format(PhoneNumberFormat::RFC3966);
     }
 
-    public function forCallingFrom($isoCode = "GB")
+    public function forCallingFrom($isoCode = 'GB')
     {
         return $this->number->formatForCallingFrom($isoCode);
     }

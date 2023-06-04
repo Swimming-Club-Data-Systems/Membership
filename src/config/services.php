@@ -34,6 +34,6 @@ return [
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'client_id' => env('STRIPE_CLIENT_ID'),
-    ]
+    ],
 
 ];

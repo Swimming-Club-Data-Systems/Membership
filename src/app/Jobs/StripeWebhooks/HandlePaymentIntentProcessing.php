@@ -26,8 +26,7 @@ class HandlePaymentIntentProcessing implements ShouldQueue
      */
     public function __construct(
         public WebhookCall $webhookCall
-    )
-    {
+    ) {
         $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -46,7 +45,7 @@ class HandlePaymentIntentProcessing implements ShouldQueue
                 'id' => $this->webhookCall->payload['data']['object']['id'],
                 'expand' => ['customer', 'payment_method', 'charges.data.balance_transaction'],
             ], [
-                'stripe_account' => $this->webhookCall->payload['account']
+                'stripe_account' => $this->webhookCall->payload['account'],
             ]);
 
             if ($intent?->metadata?->payment_id) {
@@ -59,12 +58,12 @@ class HandlePaymentIntentProcessing implements ShouldQueue
 
                     $payment->status = PaymentStatus::PENDING;
                     $payment->stripe_status = $intent->status;
-//                    foreach ($payment->lines()->get() as $line) {
-//                        /** @var PaymentLine $line */
-//                        if ($line->associated && $line->associated instanceof PaidObject) {
-//                            $line->associated->handleFailed();
-//                        }
-//                    }
+                    //                    foreach ($payment->lines()->get() as $line) {
+                    //                        /** @var PaymentLine $line */
+                    //                        if ($line->associated && $line->associated instanceof PaidObject) {
+                    //                            $line->associated->handleFailed();
+                    //                        }
+                    //                    }
 
                     DB::commit();
                 }

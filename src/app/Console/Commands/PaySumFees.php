@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Central\Tenant;
-use App\Models\Tenant\User;
 use Illuminate\Console\Command;
 
 class PaySumFees extends Command
@@ -41,6 +40,7 @@ class PaySumFees extends Command
 
             });
         }
+
         return Command::SUCCESS;
     }
 }

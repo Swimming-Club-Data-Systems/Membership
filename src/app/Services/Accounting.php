@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Exceptions\Accounting\{DebitsAndCreditsDoNotEqual,
-    InvalidJournalEntryValue,
-    InvalidJournalMethod,
-    TransactionCouldNotBeProcessed
-};
+use App\Exceptions\Accounting\DebitsAndCreditsDoNotEqual;
+use App\Exceptions\Accounting\InvalidJournalEntryValue;
+use App\Exceptions\Accounting\InvalidJournalMethod;
+use App\Exceptions\Accounting\TransactionCouldNotBeProcessed;
 use App\Models\Accounting\Journal;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -28,51 +27,42 @@ class Accounting
     }
 
     /**
-     * @param Journal $journal
-     * @param string $method
-     * @param $value
-     * @param string|null $memo
-     * @param null $referenced_object
-     * @param Carbon|null $postdate
+     * @param  null  $referenced_object
+     *
      * @throws InvalidJournalEntryValue
      * @throws InvalidJournalMethod
      */
-    function addDollarTransaction(
+    public function addDollarTransaction(
         Journal $journal,
-        string  $method,
-                $value,
-        string  $memo = null,
-                $referenced_object = null,
-        Carbon  $postdate = null
-    ): void
-    {
-        $value = (int)($value * 100);
+        string $method,
+        $value,
+        string $memo = null,
+        $referenced_object = null,
+        Carbon $postdate = null
+    ): void {
+        $value = (int) ($value * 100);
         $money = new Money($value, new Currency('USD'));
         $this->addTransaction($journal, $method, $money, $memo, $referenced_object, $postdate);
     }
 
     /**
-     * @param Journal $journal
-     * @param string $method
-     * @param Money $money
-     * @param string|null $memo
-     * @param null $referenced_object
-     * @param Carbon|null $postdate
+     * @param  null  $referenced_object
+     *
      * @throws InvalidJournalEntryValue
      * @throws InvalidJournalMethod
+     *
      * @internal param int $value
      */
-    function addTransaction(
+    public function addTransaction(
         Journal $journal,
-        string  $method,
-        Money   $money,
-        string  $memo = null,
-                $referenced_object = null,
-        Carbon  $postdate = null
-    ): void
-    {
+        string $method,
+        Money $money,
+        string $memo = null,
+        $referenced_object = null,
+        Carbon $postdate = null
+    ): void {
 
-        if (!in_array($method, ['credit', 'debit'])) {
+        if (! in_array($method, ['credit', 'debit'])) {
             throw new InvalidJournalMethod;
         }
 
@@ -86,11 +76,11 @@ class Accounting
             'money' => $money,
             'memo' => $memo,
             'referenced_object' => $referenced_object,
-            'postdate' => $postdate
+            'postdate' => $postdate,
         ];
     }
 
-    function getTransactionsPending(): array
+    public function getTransactionsPending(): array
     {
         return $this->transactions_pending;
     }
@@ -126,7 +116,7 @@ class Accounting
         } catch (\Exception $e) {
             if ($handleDatabaseTransactions) {
                 DB::rollBack();
-                throw new TransactionCouldNotBeProcessed('Rolling Back Database. Message: ' . $e->getMessage());
+                throw new TransactionCouldNotBeProcessed('Rolling Back Database. Message: '.$e->getMessage());
             } else {
                 throw $e;
             }
@@ -150,7 +140,7 @@ class Accounting
         }
 
         if ($credits !== $debits) {
-            throw new DebitsAndCreditsDoNotEqual('In this transaction, credits == ' . $credits . ' and debits == ' . $debits);
+            throw new DebitsAndCreditsDoNotEqual('In this transaction, credits == '.$credits.' and debits == '.$debits);
         }
     }
 }

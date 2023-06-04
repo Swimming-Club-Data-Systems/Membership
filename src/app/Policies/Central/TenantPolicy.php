@@ -24,8 +24,7 @@ class TenantPolicy
     /**
      * Perform pre-authorization checks.
      *
-     * @param User $user
-     * @param string $ability
+     * @param  string  $ability
      * @return Response
      */
     public function before(User $user, $ability)
@@ -38,8 +37,6 @@ class TenantPolicy
     /**
      * Can the current user view the member?
      *
-     * @param User $user
-     * @param Tenant $tenant
      * @return Response
      */
     public function manage(User $user, Tenant $tenant)
@@ -47,14 +44,13 @@ class TenantPolicy
         if ($user->tenants()->where('ID', $tenant->id)->exists()) {
             return Response::allow();
         }
+
         return Response::denyAsNotFound();
     }
 
     /**
      * Can the current user update the tenant details page?
      *
-     * @param User $user
-     * @param Tenant $tenant
      * @return Response
      */
     public function update(User $user, Tenant $tenant)

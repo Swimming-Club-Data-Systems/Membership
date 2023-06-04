@@ -20,7 +20,7 @@ trait UuidIdentifier
     protected static function bootUuidIdentifier()
     {
         static::creating(function ($model) {
-            if (!$model->getKey()) {
+            if (! $model->getKey()) {
                 $model->{$model->getKeyName()} = (string) \Ramsey\Uuid\Uuid::uuid4();
             }
         });

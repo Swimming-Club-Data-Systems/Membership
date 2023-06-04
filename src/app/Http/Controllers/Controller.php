@@ -11,16 +11,16 @@ use Illuminate\Support\Facades\Auth;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
-//    use AuthorizesRequests {
-//        authorize as protected baseAuthorize;
-//    }
+    //    use AuthorizesRequests {
+    //        authorize as protected baseAuthorize;
+    //    }
 
-//    public function authorize($ability, $arguments = [])
-//    {
-//        if (Auth::guard('central')->check()) {
-//            $this->authorizeForUser(Auth::guard('central')->user(), $ability, $arguments);
-//        } else {
-//            $this->baseAuthorize($ability, $arguments);
-//        }
-//    }
+    //    public function authorize($ability, $arguments = [])
+    //    {
+    //        if (Auth::guard('central')->check()) {
+    //            $this->authorizeForUser(Auth::guard('central')->user(), $ability, $arguments);
+    //        } else {
+    //            $this->baseAuthorize($ability, $arguments);
+    //        }
+    //    }
 }

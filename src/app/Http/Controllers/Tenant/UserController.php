@@ -30,6 +30,7 @@ class UserController extends Controller
         } else {
             $users = User::orderBy('Forename', 'asc')->orderBy('Surname', 'asc')->paginate(config('app.per_page'));
         }
+
         return Inertia::render('Users/Index', [
             'users' => $users->onEachSide(3),
         ]);
@@ -39,7 +40,7 @@ class UserController extends Controller
     {
         $this->authorize('view', $user);
 
-        return Inertia::location('/v1/users/' . $user->UserID);
+        return Inertia::location('/v1/users/'.$user->UserID);
     }
 
     public function combobox(Request $request): \Illuminate\Http\JsonResponse
@@ -82,7 +83,7 @@ class UserController extends Controller
         $responseData = [
             'data' => $usersArray,
             'has_more_pages' => $users && $users->hasMorePages(),
-            'total' => $users ? $users->total() : sizeof($usersArray),
+            'total' => $users ? $users->total() : count($usersArray),
         ];
 
         return \response()->json($responseData);

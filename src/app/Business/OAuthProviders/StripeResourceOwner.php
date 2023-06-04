@@ -15,8 +15,6 @@ class StripeResourceOwner implements ResourceOwnerInterface
 
     /**
      * Set response
-     *
-     * @param array $response
      */
     public function __construct(array $response)
     {
@@ -199,6 +197,7 @@ class StripeResourceOwner implements ResourceOwnerInterface
      * Updatable Stripe objects
      *
      * @see https://stripe.com/docs/api/curl#metadata
+     *
      * @return array
      */
     public function getMetaData()

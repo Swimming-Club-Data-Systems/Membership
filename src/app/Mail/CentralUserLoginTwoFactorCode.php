@@ -3,10 +3,9 @@
 namespace App\Mail;
 
 use App\Business\Helpers\Mailable;
-use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\SerializesModels;
 use App\Models\Central\User;
+use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
 
 class CentralUserLoginTwoFactorCode extends Mailable
 {
@@ -21,16 +20,13 @@ class CentralUserLoginTwoFactorCode extends Mailable
 
     /**
      * The login auth code
-     *
-     * @var $code
      */
     public $code;
 
     /**
      * Create a new message instance.
      *
-     * @param \App\Models\Central\User $user the logging in user
-     *
+     * @param  \App\Models\Central\User  $user the logging in user
      * @return void
      */
     public function __construct(User $user, $code)

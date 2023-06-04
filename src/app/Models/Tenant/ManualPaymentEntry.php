@@ -22,7 +22,7 @@ use Money\Money;
 /**
  * @property int $id
  * @property User $user
- * @property boolean $posted
+ * @property bool $posted
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -69,7 +69,7 @@ class ManualPaymentEntry extends Model
      */
     public function post()
     {
-        if (!($this->lines()->exists() && $this->users()->exists())) {
+        if (! ($this->lines()->exists() && $this->users()->exists())) {
             throw new ManualPaymentEntryNotReady();
         }
 
@@ -104,7 +104,7 @@ class ManualPaymentEntry extends Model
             DB::rollBack();
 
             throw ValidationException::withMessages([
-                'errors' => 'Unable to post transactions. Debits and credits are not equal.'
+                'errors' => 'Unable to post transactions. Debits and credits are not equal.',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -129,6 +129,7 @@ class ManualPaymentEntry extends Model
             /** @var ManualPaymentEntryLine $line */
             $total += $line->credit;
         }
+
         return $total * $this->users()->count();
     }
 
@@ -139,6 +140,7 @@ class ManualPaymentEntry extends Model
             /** @var ManualPaymentEntryLine $line */
             $total += $line->debit;
         }
+
         return $total * $this->users()->count();
     }
 }

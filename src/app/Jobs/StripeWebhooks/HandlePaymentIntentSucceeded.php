@@ -31,8 +31,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
      */
     public function __construct(
         public WebhookCall $webhookCall
-    )
-    {
+    ) {
         $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -53,7 +52,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                     'id' => $this->webhookCall->payload['data']['object']['id'],
                     'expand' => ['customer', 'payment_method', 'charges.data.balance_transaction'],
                 ], [
-                    'stripe_account' => $this->webhookCall->payload['account']
+                    'stripe_account' => $this->webhookCall->payload['account'],
                 ]);
 
                 if ($intent?->metadata?->payment_id) {
@@ -74,7 +73,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                             $associate = $line->associated ?? $line;
 
                             // Debit the user/guest journal (already done if monthly fees)
-                            if ($intent->metadata->payment_category != "monthly_fee") {
+                            if ($intent->metadata->payment_category != 'monthly_fee') {
                                 if ($payment->user) {
                                     $payment->user->getJournal();
                                     $journal = $payment->user->journal;
@@ -84,7 +83,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                                     /** @var JournalAccount $guestIncomeJournal */
                                     $guestIncomeJournal = JournalAccount::firstWhere([
                                         'name' => 'Guest Customers',
-                                        'is_system' => true
+                                        'is_system' => true,
                                     ]);
                                     $transaction = $guestIncomeJournal
                                         ->journal
@@ -121,7 +120,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                             /** @var JournalAccount $guestIncomeJournal */
                             $guestIncomeJournal = JournalAccount::firstWhere([
                                 'name' => 'Guest Customers',
-                                'is_system' => true
+                                'is_system' => true,
                             ]);
                             $transaction = $guestIncomeJournal->journal->credit($payment->amount, 'Payment received with thanks');
                         }

@@ -28,8 +28,7 @@ class CreateDefaultLedgersAndJournals implements ShouldQueue
      */
     public function __construct(
         public Tenant $tenant
-    )
-    {
+    ) {
     }
 
     /**
@@ -57,14 +56,14 @@ class CreateDefaultLedgersAndJournals implements ShouldQueue
             // Check for Journal Existence
             $guestIncomeJournal = JournalAccount::firstOrNew([
                 'name' => 'Guest Customers',
-                'is_system' => true
+                'is_system' => true,
             ]);
             $guestIncomeJournal->ledgerAccount()->associate($generalIncomeLedger);
             $guestIncomeJournal->save();
 
             $stripeFeesJournal = JournalAccount::firstOrNew([
                 'name' => 'Stripe Fees',
-                'is_system' => true
+                'is_system' => true,
             ]);
             $stripeFeesJournal->ledgerAccount()->associate($bankFeesLedger);
             $stripeFeesJournal->save();

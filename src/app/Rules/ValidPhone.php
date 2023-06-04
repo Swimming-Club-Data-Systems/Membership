@@ -2,10 +2,10 @@
 
 namespace App\Rules;
 
-use Illuminate\Contracts\Validation\InvokableRule;
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;
 use Illuminate\Contracts\Validation\DataAwareRule;
+use Illuminate\Contracts\Validation\InvokableRule;
 
 class ValidPhone implements InvokableRule, DataAwareRule
 {
@@ -40,7 +40,7 @@ class ValidPhone implements InvokableRule, DataAwareRule
             $fail('The :attribute is not a valid phone number.');
         }
 
-        if (!$number->isValidNumber()) {
+        if (! $number->isValidNumber()) {
             // strict check relying on up-to-date metadata library
             $fail('The :attribute is not a valid phone number.');
         }

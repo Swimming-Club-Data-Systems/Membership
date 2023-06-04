@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * Class JournalTransaction
  *
- * @package Scottlaurent\Accounting
  * @property    int $id
  * @property    string $journal_id
  * @property    int $debit
@@ -22,21 +21,23 @@ use Illuminate\Database\Eloquent\Model;
  */
 class JournalTransaction extends Model
 {
-
     /**
      * @var bool
      */
     public $incrementing = false;
+
     /**
      * @var string
      */
     protected $table = 'accounting_journal_transactions';
+
     /**
      * Currency.
      *
-     * @var string $currency
+     * @var string
      */
     protected $currency;
+
     /**
      * @var array
      */
@@ -82,7 +83,7 @@ class JournalTransaction extends Model
     /**
      * Set reference object.
      *
-     * @param Model $object
+     * @param  Model  $object
      * @return JournalTransaction
      */
     public function referencesObject($object)
@@ -90,6 +91,7 @@ class JournalTransaction extends Model
         $this->ref_class = $object::class;
         $this->ref_class_id = $object->id;
         $this->save();
+
         return $this;
     }
 
@@ -104,13 +106,14 @@ class JournalTransaction extends Model
          * @var Model $_class
          */
         $_class = new $this->ref_class;
+
         return $_class->find($this->ref_class_id);
     }
 
     /**
      * Set currency.
      *
-     * @param string $currency
+     * @param  string  $currency
      */
     public function setCurrency($currency)
     {
@@ -121,5 +124,4 @@ class JournalTransaction extends Model
     {
         return $this->belongsToMany(CustomerStatement::class);
     }
-
 }

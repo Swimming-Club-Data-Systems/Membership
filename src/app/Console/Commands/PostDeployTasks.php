@@ -34,6 +34,7 @@ class PostDeployTasks extends Command
         Artisan::call('queue:restart');
         SeedTenants::dispatchSync();
         PopulatePaymentMethodFingerprints::dispatchSync();
+
         return 0;
     }
 }
