@@ -237,7 +237,6 @@ const BaseDecimalInput: React.FC<BaseDecimalInputProps> = React.forwardRef(
             const { value: val } = ev.target;
             setStateValue(val);
             if (onChange) onChange(createEvent(val));
-            console.log(createEvent(val));
         };
 
         const handleOnBlur = (ev: React.FocusEvent<HTMLInputElement>) => {

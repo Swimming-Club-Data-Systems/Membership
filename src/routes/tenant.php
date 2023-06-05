@@ -362,7 +362,13 @@ Route::middleware([
                         Route::get('/', [CompetitionSessionController::class, 'show'])
                             ->name('index');
                         Route::get('/{session}', [CompetitionSessionController::class, 'show'])
+                            ->whereNumber('session')
                             ->name('show');
+                        Route::put('/{session}', [CompetitionSessionController::class, 'update'])
+                            ->whereNumber('session');
+                        Route::get('/{session}/edit', [CompetitionSessionController::class, 'edit'])
+                            ->whereNumber('session')
+                            ->name('edit');
                     });
                 });
             })->whereNumber('competition');

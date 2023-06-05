@@ -10,13 +10,13 @@ import TextInput from "@/Components/Form/TextInput";
 import TextArea from "@/Components/Form/TextArea";
 import formatISO from "date-fns/formatISO";
 import NativeDateInput from "@/Components/Form/NativeDateInput";
-import Combobox from "@/Components/Form/Combobox";
 import Checkbox from "@/Components/Form/Checkbox";
 import DecimalInput from "@/Components/Form/DecimalInput";
 import Radio from "@/Components/Form/Radio";
 import Card from "@/Components/Card";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import { useField } from "formik";
+import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 
 export type Props = {
     google_maps_api_key: string;
@@ -127,12 +127,7 @@ const New: Layout<Props> = (props: Props) => {
                             footer={<SubmissionButtons />}
                         >
                             <TextInput name="name" label="Name" />
-                            <Combobox
-                                endpoint={route("venues.combobox")}
-                                name="venue_select"
-                                label="Venue"
-                                help="Start typing to find a venue"
-                            />
+                            <VenueCombobox name="venue_select" />
                             <RadioGroup label="Pool length">
                                 <Radio
                                     name="pool_course"

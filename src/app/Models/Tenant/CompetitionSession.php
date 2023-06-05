@@ -42,6 +42,11 @@ class CompetitionSession extends Model
         return $this->belongsTo(Competition::class);
     }
 
+    public function venue(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Venue::class);
+    }
+
     public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CompetitionEvent::class);

@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
 import Card from "@/Components/Card";
-import {
-    DefinitionList,
-    DefinitionListItemProps,
-} from "@/Components/DefinitionList";
 import Button from "@/Components/Button";
-import { RenderServerErrors } from "@/Components/Form/Form";
+import Form, {
+    RenderServerErrors,
+    SubmissionButtons,
+} from "@/Components/Form/Form";
 import FlashAlert from "@/Components/FlashAlert";
 import BasicList from "@/Components/BasicList";
+import * as yup from "yup";
+import TextInput from "@/Components/Form/TextInput";
+import RadioGroup from "@/Components/Form/RadioGroup";
+import Radio from "@/Components/Form/Radio";
+import DecimalInput from "@/Components/Form/DecimalInput";
+import Modal from "@/Components/Modal";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
+import Alert from "@/Components/Alert";
+import NativeDateInput from "@/Components/Form/NativeDateInput";
+import DateTimeInput from "@/Components/Form/DateTimeInput";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -63,65 +73,73 @@ export type Props = {
     sequence_number: number;
     number_of_sessions: number;
     events: Event[];
-};
-
-const Event = (item: Event) => {
-    const deleteEvent = (session, event) => {};
-
-    return {
-        id: item.id,
-        content: (
-            <>
-                <div
-                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 text-sm"
-                    key={item.id}
-                >
-                    <div className="">
-                        <div className="text-gray-900">
-                            <strong>{getCategoryName(item.category)}</strong>{" "}
-                            {item.name}
-                        </div>
-                        <div className="text-gray-500">
-                            <>
-                                Age group{item.ages.length > 1 ? "s" : null}:{" "}
-                                {item.ages.join(", ")}
-                            </>
-                        </div>
-                        <div className="text-gray-500">
-                            <>
-                                £{item.entry_fee_string}
-                                {item.processing_fee > 0 && (
-                                    <>
-                                        {" "}
-                                        plus £{item.processing_fee_string}{" "}
-                                        processing fee
-                                    </>
-                                )}
-                            </>
-                        </div>
-                    </div>
-                    {
-                        <div className="block">
-                            <>
-                                <Button
-                                    variant="danger"
-                                    className="ml-3"
-                                    onClick={() => {
-                                        deleteEvent(item.session, item.id);
-                                    }}
-                                >
-                                    Delete
-                                </Button>
-                            </>
-                        </div>
-                    }
-                </div>
-            </>
-        ),
-    };
+    editable: boolean;
+    different_venue_to_competition_venue: boolean;
 };
 
 const Show: Layout<Props> = (props: Props) => {
+    const Event = (item: Event) => {
+        const deleteEvent = (session, event) => {};
+
+        return {
+            id: item.id,
+            content: (
+                <>
+                    <div
+                        className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 text-sm"
+                        key={item.id}
+                    >
+                        <div className="">
+                            <div className="text-gray-900">
+                                <strong>
+                                    {getCategoryName(item.category)}
+                                </strong>{" "}
+                                {item.name}
+                            </div>
+                            <div className="text-gray-500">
+                                <>
+                                    Age group{item.ages.length > 1 ? "s" : null}
+                                    : {item.ages.join(", ")}
+                                </>
+                            </div>
+                            <div className="text-gray-500">
+                                <>
+                                    £{item.entry_fee_string}
+                                    {item.processing_fee > 0 && (
+                                        <>
+                                            {" "}
+                                            plus £{
+                                                item.processing_fee_string
+                                            }{" "}
+                                            processing fee
+                                        </>
+                                    )}
+                                </>
+                            </div>
+                        </div>
+                        {props.editable && (
+                            <div className="block">
+                                <>
+                                    <Button
+                                        variant="danger"
+                                        className="ml-3"
+                                        onClick={() => {
+                                            deleteEvent(item.session, item.id);
+                                        }}
+                                    >
+                                        Delete
+                                    </Button>
+                                </>
+                            </div>
+                        )}
+                    </div>
+                </>
+            ),
+        };
+    };
+
+    const [showAddEventModal, setShowAddEventModal] = useState(false);
+
     return (
         <>
             <Head
@@ -157,21 +175,107 @@ const Show: Layout<Props> = (props: Props) => {
                 <MainHeader
                     title={props.name}
                     subtitle={`Session ${props.sequence_number} of ${props.number_of_sessions}`}
+                    buttons={
+                        <Button
+                            variant="primary"
+                            onClick={() => {
+                                setShowAddEventModal(true);
+                            }}
+                            type="button"
+                        >
+                            Add event
+                        </Button>
+                    }
                 ></MainHeader>
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-start-1 col-span-7 flex flex-col gap-6">
-                        <Card title="Events">
+                        {props.editable && (
+                            <Form
+                                initialValues={{}}
+                                validationSchema={yup.object().shape({})}
+                                hideDefaultButtons
+                                formName="edit_session"
+                                submitTitle="Save"
+                                method="put"
+                                action={route("competitions.sessions.show", {
+                                    competition: props.competition.id,
+                                    session: props.id,
+                                })}
+                                hideErrors
+                            >
+                                <Card
+                                    title="Session details"
+                                    footer={<SubmissionButtons />}
+                                >
+                                    <RenderServerErrors />
+                                    <TextInput name="name" label="Name" />
+                                    <VenueCombobox name="venue" />
+                                    <DateTimeInput name="start" label="Start" />
+                                    <DateTimeInput name="end" label="End" />
+                                    {/*<div className="flex gap-6">*/}
+                                    {/*    <NativeDateInput*/}
+                                    {/*        name="start_date"*/}
+                                    {/*        label="Start date"*/}
+                                    {/*        mb="mb-0"*/}
+                                    {/*    />*/}
+                                    {/*    <TextInput*/}
+                                    {/*        name="start_time"*/}
+                                    {/*        label="Start time"*/}
+                                    {/*        type="time"*/}
+                                    {/*        mb="mb-0"*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
+                                    {/*<div className="flex gap-6">*/}
+                                    {/*    <NativeDateInput*/}
+                                    {/*        name="end_date"*/}
+                                    {/*        label="End date"*/}
+                                    {/*        mb="mb-0"*/}
+                                    {/*    />*/}
+                                    {/*    <TextInput*/}
+                                    {/*        name="end_time"*/}
+                                    {/*        label="End time"*/}
+                                    {/*        type="time"*/}
+                                    {/*        mb="mb-0"*/}
+                                    {/*    />*/}
+                                    {/*</div>*/}
+                                </Card>
+                            </Form>
+                        )}
+
+                        <Card
+                            title="Events"
+                            footer={
+                                <Button
+                                    variant="primary"
+                                    onClick={() => {
+                                        setShowAddEventModal(true);
+                                    }}
+                                    type="button"
+                                >
+                                    Add event
+                                </Button>
+                            }
+                        >
                             {/*<RenderServerErrors />*/}
                             <FlashAlert className="mb-4" bag="manage_lines" />
 
                             {props.events.length > 0 && (
                                 <BasicList items={props.events.map(Event)} />
                             )}
+
+                            {props.events.length === 0 && <></>}
                         </Card>
                     </div>
                     <div className="row-start-1 col-start-8 col-span-5">
                         <Card title="Venue" subtitle={props.venue.name}>
+                            {props.different_venue_to_competition_venue && (
+                                <Alert title="Please note" variant="warning">
+                                    This session is at a different venue than
+                                    the default venue for this competition.
+                                </Alert>
+                            )}
+
                             <p className="text-sm">
                                 {props.venue.formatted_address}
                             </p>
@@ -191,6 +295,178 @@ const Show: Layout<Props> = (props: Props) => {
                         </Card>
                     </div>
                 </div>
+
+                <Form
+                    formName="new_event"
+                    validationSchema={yup.object().shape({
+                        name: yup.string().required().max(255),
+                        category: yup
+                            .string()
+                            .required()
+                            .oneOf([
+                                "open",
+                                "male",
+                                "female",
+                                "mixed",
+                                "boy",
+                                "girl",
+                            ]),
+                        stroke: yup
+                            .string()
+                            .required()
+                            .oneOf([
+                                "butterfly",
+                                "backstroke",
+                                "breaststroke",
+                                "freestyle",
+                                "medley",
+                                "individual_medley",
+                                "custom",
+                            ]),
+                        distance: yup.number().required().min(0),
+                        units: yup
+                            .string()
+                            .required()
+                            .oneOf(["metres", "yards", "feet"]),
+                        entry_fee: yup.number().required().min(0),
+                        processing_fee: yup.number().required().min(0),
+                    })}
+                    hideDefaultButtons
+                    initialValues={{
+                        name: "",
+                        category: "",
+                        stroke: "freestyle",
+                        distance: 0,
+                        units: "metres",
+                        entry_fee: 0,
+                        processing_fee: 0,
+                    }}
+                    alwaysClearable
+                    onClear={() => setShowAddEventModal(false)}
+                    clearTitle="Cancel"
+                    submitTitle="Add event"
+                >
+                    <Modal
+                        show={showAddEventModal}
+                        title="Add event"
+                        buttons={<SubmissionButtons />}
+                        onClose={() => {
+                            setShowAddEventModal(false);
+                        }}
+                        Icon={PlusCircleIcon}
+                    >
+                        <TextInput name="name" label="Name" />
+
+                        <RadioGroup label="Category">
+                            <div className="grid grid-cols-2 lg:grid-cols-3">
+                                <Radio
+                                    label="Open"
+                                    name="category"
+                                    value="open"
+                                />
+                                <Radio
+                                    label="Male"
+                                    name="category"
+                                    value="male"
+                                />
+                                <Radio
+                                    label="Female"
+                                    name="category"
+                                    value="female"
+                                />
+                                <Radio
+                                    label="Mixed"
+                                    name="category"
+                                    value="mixed"
+                                />
+                                <Radio
+                                    label="Boy"
+                                    name="category"
+                                    value="boy"
+                                />
+                                <Radio
+                                    label="Girl"
+                                    name="category"
+                                    value="girl"
+                                />
+                            </div>
+                        </RadioGroup>
+
+                        <RadioGroup label="Stroke">
+                            <div className="grid grid-cols-2 lg:grid-cols-3">
+                                <Radio
+                                    label="Butterfly"
+                                    name="stroke"
+                                    value="butterfly"
+                                />
+                                <Radio
+                                    label="Backstroke"
+                                    name="stroke"
+                                    value="backstroke"
+                                />
+                                <Radio
+                                    label="Breaststroke"
+                                    name="stroke"
+                                    value="breaststroke"
+                                />
+                                <Radio
+                                    label="Freestyle"
+                                    name="stroke"
+                                    value="freestyle"
+                                />
+                                <Radio
+                                    label="Individual Medley"
+                                    name="stroke"
+                                    value="individual_medley"
+                                />
+                                <Radio
+                                    label="Medley"
+                                    name="stroke"
+                                    value="medley"
+                                />
+                                <Radio
+                                    label="Other"
+                                    name="stroke"
+                                    value="other"
+                                />
+                            </div>
+                        </RadioGroup>
+
+                        <DecimalInput
+                            name="distance"
+                            label="Distance"
+                            precision={0}
+                        />
+
+                        <RadioGroup label="Units">
+                            <div className="grid grid-cols-2 lg:grid-cols-3">
+                                <Radio
+                                    label="Metres"
+                                    name="units"
+                                    value="metres"
+                                />
+                                <Radio
+                                    label="Yards"
+                                    name="units"
+                                    value="yards"
+                                />
+                                <Radio label="Feet" name="units" value="feet" />
+                            </div>
+                        </RadioGroup>
+
+                        <DecimalInput
+                            name="entry_fee"
+                            label="Entry fee (£)"
+                            precision={2}
+                        />
+
+                        <DecimalInput
+                            name="processing_fee"
+                            label="Processing fee (£)"
+                            precision={2}
+                        />
+                    </Modal>
+                </Form>
             </Container>
         </>
     );

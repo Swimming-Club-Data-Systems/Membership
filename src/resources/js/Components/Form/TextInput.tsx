@@ -30,7 +30,7 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>(
         }: Props,
         ref
     ): JSX.Element => {
-        const [field, meta] = useField(props);
+        const [{ onBlur, ...field }, meta] = useField(props);
         const { isSubmitting } = useFormikContext();
         const { formName, readOnly, ...context } =
             useContext(FormSpecialContext);
@@ -68,6 +68,12 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>(
                         className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
                         id={controlId}
                         type={type}
+                        onBlur={(ev) => {
+                            onBlur(ev);
+                            if (props.onBlur) {
+                                props.onBlur(ev);
+                            }
+                        }}
                         {...field}
                         {...props}
                         ref={ref}

@@ -29,6 +29,7 @@ interface FormSpecialContextInterface {
     disabled?: boolean;
     readOnly?: boolean;
     hasErrors?: boolean;
+    onClear?: () => void;
 }
 
 export const FormSpecialContext =
@@ -47,6 +48,9 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
     const clearForm = () => {
         if (props.onClear) {
             props.onClear();
+        }
+        if (formSpecialContext.onClear) {
+            formSpecialContext.onClear();
         }
         handleReset();
     };
@@ -90,7 +94,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                 <Button
                     className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
                     type="submit"
-                    disabled={isSubmitting || !dirty}
+                    disabled={isSubmitting}
                 >
                     {formSpecialContext.submitTitle || "Submit"}
                 </Button>
@@ -311,6 +315,7 @@ const Form = (props: FormProps) => {
                 disabled: disabled,
                 readOnly: readOnly,
                 hasErrors: hasErrors,
+                onClear: onClear,
             }}
         >
             <Formik

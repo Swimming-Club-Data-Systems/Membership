@@ -45,6 +45,7 @@ export interface InputProps extends CommonInputProps {
     rows?: number;
     /** HTML type attribute of the input */
     type?: string;
+    mb?: string;
 }
 
 export function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
