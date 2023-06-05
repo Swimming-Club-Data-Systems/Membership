@@ -47,12 +47,12 @@ class CompetitionSessionPutRequest extends FormRequest
                     return $query->where('Tenant', tenant('id'));
                 }),
             ],
-            'start' => [
+            'start_date' => [
                 'required',
                 'date',
                 'after_or_equal:today',
             ],
-            'end' => [
+            'end_date' => [
                 'required',
                 'date',
                 'after:start',

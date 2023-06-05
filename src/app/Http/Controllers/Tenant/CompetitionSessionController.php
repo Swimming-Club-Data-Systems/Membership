@@ -59,12 +59,12 @@ class CompetitionSessionController extends Controller
             'edit_session' => [
                 'form_initial_values' => [
                     'name' => $session->name,
-                    'start' => $session->start_time,
-                    'end' => $session->end_time,
-                    'start_date' => $session->start_time->toDateString(),
-                    'start_time' => $session->start_time->toTimeString(),
-                    'end_date' => $session->end_time->toDateString(),
-                    'end_time' => $session->end_time->toTimeString(),
+                    'start_date' => $session->start_time,
+                    'end_date' => $session->end_time,
+                    //                    'start_date' => $session->start_time->toDateString(),
+                    //                    'start_time' => $session->start_time->toTimeString(),
+                    //                    'end_date' => $session->end_time->toDateString(),
+                    //                    'end_time' => $session->end_time->toTimeString(),
                     'venue' => $venue->id,
                 ],
             ],
@@ -75,7 +75,6 @@ class CompetitionSessionController extends Controller
 
     public function update(Competition $competition, CompetitionSession $session, CompetitionSessionPutRequest $request): \Illuminate\Http\RedirectResponse
     {
-        dd($request->validated());
         $validated = $request->validated();
 
         $session->fill($validated);

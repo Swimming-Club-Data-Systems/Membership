@@ -10,7 +10,8 @@ export type ModalVariantProps = "primary" | "success" | "warning" | "danger";
 
 type ModalProps = {
     variant?: ModalVariantProps;
-    Icon?: never;
+    // eslint-disable-next-line
+    Icon?: any;
     show?: boolean;
     onClose: () => void;
     title: string | ReactNode;

@@ -86,7 +86,7 @@ const Show: Layout<Props> = (props: Props) => {
             content: (
                 <>
                     <div
-                        className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-3 text-sm"
+                        className="flex md:flex-row items-center justify-between gap-y-3 text-sm"
                         key={item.id}
                     >
                         <div className="">
@@ -171,7 +171,7 @@ const Show: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title={props.name}
                     subtitle={`Session ${props.sequence_number} of ${props.number_of_sessions}`}
@@ -187,13 +187,42 @@ const Show: Layout<Props> = (props: Props) => {
                         </Button>
                     }
                 ></MainHeader>
+            </Container>
 
-                <div className="grid grid-cols-12 gap-6">
-                    <div className="col-start-1 col-span-7 flex flex-col gap-6">
+            <Container noMargin>
+                <div className="grid lg:grid-cols-12 gap-6">
+                    <div className="md:col-start-1 md:col-span-7 flex flex-col gap-6">
                         {props.editable && (
                             <Form
                                 initialValues={{}}
-                                validationSchema={yup.object().shape({})}
+                                validationSchema={yup.object().shape({
+                                    name: yup
+                                        .string()
+                                        .required(
+                                            "A name is required for this session."
+                                        )
+                                        .max(
+                                            255,
+                                            "The session name must not exceed 255 characters."
+                                        ),
+                                    venue: yup.number().required().integer(),
+                                    start_date: yup
+                                        .date()
+                                        .typeError("Start date must be a date.")
+                                        .required(
+                                            "A start date and time is required."
+                                        ),
+                                    end_date: yup
+                                        .date()
+                                        .typeError("End date must be a date.")
+                                        .required(
+                                            "An end date and time is required."
+                                        )
+                                        .min(
+                                            yup.ref("start_date"),
+                                            "End time must be after the start time."
+                                        ),
+                                })}
                                 hideDefaultButtons
                                 formName="edit_session"
                                 submitTitle="Save"
@@ -211,34 +240,18 @@ const Show: Layout<Props> = (props: Props) => {
                                     <RenderServerErrors />
                                     <TextInput name="name" label="Name" />
                                     <VenueCombobox name="venue" />
-                                    <DateTimeInput name="start" label="Start" />
-                                    <DateTimeInput name="end" label="End" />
-                                    {/*<div className="flex gap-6">*/}
-                                    {/*    <NativeDateInput*/}
-                                    {/*        name="start_date"*/}
-                                    {/*        label="Start date"*/}
-                                    {/*        mb="mb-0"*/}
-                                    {/*    />*/}
-                                    {/*    <TextInput*/}
-                                    {/*        name="start_time"*/}
-                                    {/*        label="Start time"*/}
-                                    {/*        type="time"*/}
-                                    {/*        mb="mb-0"*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
-                                    {/*<div className="flex gap-6">*/}
-                                    {/*    <NativeDateInput*/}
-                                    {/*        name="end_date"*/}
-                                    {/*        label="End date"*/}
-                                    {/*        mb="mb-0"*/}
-                                    {/*    />*/}
-                                    {/*    <TextInput*/}
-                                    {/*        name="end_time"*/}
-                                    {/*        label="End time"*/}
-                                    {/*        type="time"*/}
-                                    {/*        mb="mb-0"*/}
-                                    {/*    />*/}
-                                    {/*</div>*/}
+                                    <div className="grid md:grid-cols-2 gap-6">
+                                        <DateTimeInput
+                                            name="start_date"
+                                            label="Start date and time"
+                                            mb="mb-0"
+                                        />
+                                        <DateTimeInput
+                                            name="end_date"
+                                            label="End date and time"
+                                            mb="mb-0"
+                                        />
+                                    </div>
                                 </Card>
                             </Form>
                         )}
@@ -267,7 +280,7 @@ const Show: Layout<Props> = (props: Props) => {
                             {props.events.length === 0 && <></>}
                         </Card>
                     </div>
-                    <div className="row-start-1 col-start-8 col-span-5">
+                    <div className="md:row-start-1 md:col-start-8 md:col-span-5">
                         <Card title="Venue" subtitle={props.venue.name}>
                             {props.different_venue_to_competition_venue && (
                                 <Alert title="Please note" variant="warning">
