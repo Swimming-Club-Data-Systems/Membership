@@ -46,6 +46,8 @@ class CompetitionSessionController extends Controller
             'id' => $session->id,
             'name' => $session->name,
             'different_venue_to_competition_venue' => $venue->id != $competition->venue->id,
+            'start_time' => $session->start_time,
+            'end_time' => $session->end_time,
         ];
     }
 

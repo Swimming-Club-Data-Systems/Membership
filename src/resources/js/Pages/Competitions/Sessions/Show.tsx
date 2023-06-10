@@ -24,6 +24,12 @@ import Alert from "@/Components/Alert";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import { router } from "@inertiajs/react";
 import { useFormikContext } from "formik";
+import ButtonLink from "@/Components/ButtonLink";
+import {
+    DefinitionList,
+    DefinitionListItemProps,
+} from "@/Components/DefinitionList";
+import { formatDateTime } from "@/Utils/date-utils";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -76,6 +82,8 @@ export type Props = {
     events: Event[];
     editable: boolean;
     different_venue_to_competition_venue: boolean;
+    start_time: string;
+    end_time: string;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -160,6 +168,29 @@ const Show: Layout<Props> = (props: Props) => {
         };
     };
 
+    const items: DefinitionListItemProps[] = [
+        {
+            key: "number",
+            term: "Session number",
+            definition: `${props.sequence_number} of ${props.number_of_sessions}`,
+        },
+        {
+            key: "name",
+            term: "Session name",
+            definition: props.name,
+        },
+        {
+            key: "starts",
+            term: "Starts at",
+            definition: formatDateTime(props.start_time),
+        },
+        {
+            key: "ends",
+            term: "Ends at",
+            definition: formatDateTime(props.end_time),
+        },
+    ];
+
     return (
         <>
             <Head
@@ -173,13 +204,13 @@ const Show: Layout<Props> = (props: Props) => {
                             competition: props.id,
                         },
                     },
-                    {
-                        name: "Sessions",
-                        route: "competitions.sessions.index",
-                        routeParams: {
-                            competition: props.id,
-                        },
-                    },
+                    // {
+                    //     name: "Sessions",
+                    //     route: "competitions.sessions.index",
+                    //     routeParams: {
+                    //         competition: props.id,
+                    //     },
+                    // },
                     {
                         name: props.name,
                         route: "competitions.sessions.show",
@@ -196,15 +227,30 @@ const Show: Layout<Props> = (props: Props) => {
                     title={props.name}
                     subtitle={`Session ${props.sequence_number} of ${props.number_of_sessions}`}
                     buttons={
-                        <Button
-                            variant="primary"
-                            onClick={() => {
-                                setShowAddEventModal(true);
-                            }}
-                            type="button"
-                        >
-                            Add event
-                        </Button>
+                        <>
+                            {props.editable && (
+                                <Button
+                                    variant="primary"
+                                    onClick={() => {
+                                        setShowAddEventModal(true);
+                                    }}
+                                    type="button"
+                                >
+                                    Add event
+                                </Button>
+                            )}
+                            {!props.editable && (
+                                <ButtonLink
+                                    href={route("competitions.sessions.edit", {
+                                        competition: props.competition.id,
+                                        session: props.id,
+                                    })}
+                                    variant="primary"
+                                >
+                                    Edit
+                                </ButtonLink>
+                            )}
+                        </>
                     }
                 ></MainHeader>
             </Container>
@@ -276,18 +322,43 @@ const Show: Layout<Props> = (props: Props) => {
                             </Form>
                         )}
 
+                        {!props.editable && (
+                            <Card title="Session details">
+                                <DefinitionList
+                                    items={items}
+                                    verticalPadding={2}
+                                />
+                                {/*<TextInput name="name" label="Name" />*/}
+                                {/*<VenueCombobox name="venue" />*/}
+                                {/*<div className="grid md:grid-cols-2 gap-6">*/}
+                                {/*    <DateTimeInput*/}
+                                {/*        name="start_date"*/}
+                                {/*        label="Start date and time"*/}
+                                {/*        mb="mb-0"*/}
+                                {/*    />*/}
+                                {/*    <DateTimeInput*/}
+                                {/*        name="end_date"*/}
+                                {/*        label="End date and time"*/}
+                                {/*        mb="mb-0"*/}
+                                {/*    />*/}
+                                {/*</div>*/}
+                            </Card>
+                        )}
+
                         <Card
                             title="Events"
                             footer={
-                                <Button
-                                    variant="primary"
-                                    onClick={() => {
-                                        setShowAddEventModal(true);
-                                    }}
-                                    type="button"
-                                >
-                                    Add event
-                                </Button>
+                                props.editable && (
+                                    <Button
+                                        variant="primary"
+                                        onClick={() => {
+                                            setShowAddEventModal(true);
+                                        }}
+                                        type="button"
+                                    >
+                                        Add event
+                                    </Button>
+                                )
                             }
                         >
                             {/*<RenderServerErrors />*/}

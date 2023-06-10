@@ -37,6 +37,13 @@ class CompetitionSession extends Model
         'end_time',
     ];
 
+    /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['events'];
+
     public function competition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Competition::class);

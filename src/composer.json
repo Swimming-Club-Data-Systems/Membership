@@ -54,6 +54,7 @@
         "friendsofphp/php-cs-fixer": "^3.10",
         "laravel/breeze": "^1.11",
         "laravel/envoy": "^2.8",
+        "laravel/pint": "^1.10",
         "laravel/sail": "^1.15",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",

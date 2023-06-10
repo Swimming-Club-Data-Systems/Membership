@@ -9,6 +9,16 @@ import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
+import { formatDate, formatDateTime } from "@/Utils/date-utils";
+import BasicList from "@/Components/BasicList";
+import Link from "@/Components/Link";
+
+type Session = {
+    id: number;
+    name: string;
+    start_time: string;
+    end_time: string;
+};
 
 export type Props = {
     google_maps_api_key: string;
@@ -32,14 +42,43 @@ export type Props = {
         formatted_address: string;
         place_id: string;
     };
+    sessions: Session[];
 };
 
 const Show: Layout<Props> = (props: Props) => {
+    const Session = (item: Session) => {
+        return {
+            id: item.id,
+            content: (
+                <>
+                    <Link
+                        className="flex md:flex-row items-center justify-between gap-y-3 text-sm"
+                        key={item.id}
+                        href={route("competitions.sessions.show", {
+                            competition: props.id,
+                            session: item.id,
+                        })}
+                    >
+                        <div>
+                            <div>
+                                <strong>{item.name}</strong>
+                            </div>
+                            <div>
+                                {formatDateTime(item.start_time)} -{" "}
+                                {formatDateTime(item.end_time)}
+                            </div>
+                        </div>
+                    </Link>
+                </>
+            ),
+        };
+    };
+
     const items: DefinitionListItemProps[] = [
         {
             key: "closing_date",
             term: "Closing date",
-            definition: props.closing_date,
+            definition: formatDateTime(props.closing_date),
         },
         {
             key: "length",
@@ -49,7 +88,7 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "age_at_date",
             term: "Age at",
-            definition: props.age_at_date,
+            definition: formatDate(props.age_at_date),
         },
         {
             key: "status",
@@ -59,17 +98,17 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "require_times",
             term: "Require times",
-            definition: props.require_times,
+            definition: props.require_times ? "Yes" : "No",
         },
         {
             key: "requires_approval",
-            term: "Requires approval",
-            definition: props.requires_approval,
+            term: "Entries require approval",
+            definition: props.requires_approval ? "Yes" : "No",
         },
         {
             key: "coach_enters",
             term: "Coach selects swims",
-            definition: props.coach_enters,
+            definition: props.coach_enters ? "Yes" : "No",
         },
     ];
 
@@ -100,7 +139,9 @@ const Show: Layout<Props> = (props: Props) => {
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />
                         </Card>
-                        <Card title="Schedule">Sessions and events</Card>
+                        <Card title="Schedule">
+                            <BasicList items={props.sessions.map(Session)} />
+                        </Card>
                         <Card title="Entrants">
                             Shows info about your members and entrants
                         </Card>

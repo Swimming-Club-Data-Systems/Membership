@@ -72,6 +72,13 @@ class Competition extends Model
     ];
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['venue', 'sessions'];
+
+    /**
      * The event map for the model.
      *
      * @var array
@@ -87,7 +94,7 @@ class Competition extends Model
 
     public function sessions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(CompetitionSession::class);
+        return $this->hasMany(CompetitionSession::class)->orderBy('sequence', 'asc');
     }
 
     public function events(): \Illuminate\Database\Eloquent\Relations\HasManyThrough

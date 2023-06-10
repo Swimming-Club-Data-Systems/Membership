@@ -156,6 +156,7 @@ class CompetitionController extends Controller
                 'place_id' => $competition->venue->place_id,
                 'formatted_address' => $competition->venue->formatted_address,
             ],
+            'sessions' => $competition->sessions()->get()->toArray(),
         ]);
     }
 }
