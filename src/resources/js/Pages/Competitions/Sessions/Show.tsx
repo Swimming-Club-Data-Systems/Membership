@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -21,8 +21,9 @@ import Modal from "@/Components/Modal";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import Alert from "@/Components/Alert";
-import NativeDateInput from "@/Components/Form/NativeDateInput";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
+import { router } from "@inertiajs/react";
+import { useFormikContext } from "formik";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -78,9 +79,30 @@ export type Props = {
 };
 
 const Show: Layout<Props> = (props: Props) => {
+    const [deleteEvent, setDeleteEvent] = useState<Event>(null);
+    const [showDeleteEventModal, setShowDeleteEventModal] =
+        useState<boolean>(false);
+    const [showAddEventModal, setShowAddEventModal] = useState<boolean>(false);
+    const deleteOnClick = (item: Event) => {
+        setDeleteEvent(item);
+        setShowDeleteEventModal(true);
+    };
+    const confirmDeleteEvent = async () => {
+        router.delete(
+            route("competitions.sessions.events.delete", {
+                competition: props.competition.id,
+                session: props.id,
+                event: deleteEvent.id,
+            }),
+            {
+                preserveScroll: true,
+                onFinish: () => {
+                    setShowDeleteEventModal(false);
+                },
+            }
+        );
+    };
     const Event = (item: Event) => {
-        const deleteEvent = (session, event) => {};
-
         return {
             id: item.id,
             content: (
@@ -124,7 +146,7 @@ const Show: Layout<Props> = (props: Props) => {
                                         variant="danger"
                                         className="ml-3"
                                         onClick={() => {
-                                            deleteEvent(item.session, item.id);
+                                            deleteOnClick(item);
                                         }}
                                     >
                                         Delete
@@ -137,8 +159,6 @@ const Show: Layout<Props> = (props: Props) => {
             ),
         };
     };
-
-    const [showAddEventModal, setShowAddEventModal] = useState(false);
 
     return (
         <>
@@ -279,6 +299,200 @@ const Show: Layout<Props> = (props: Props) => {
 
                             {props.events.length === 0 && <></>}
                         </Card>
+
+                        <Modal
+                            onClose={() => setShowAddEventModal(false)}
+                            title="Add event"
+                            buttons={<></>}
+                            show={showAddEventModal}
+                            Icon={PlusCircleIcon}
+                        >
+                            <Form
+                                formName="new_event"
+                                validationSchema={yup.object().shape({
+                                    name: yup
+                                        .string()
+                                        .required(
+                                            "A name is required for this event."
+                                        )
+                                        .max(
+                                            255,
+                                            "The event name must be less than 255 characters."
+                                        ),
+                                    category: yup
+                                        .string()
+                                        .required(
+                                            "An event category is required."
+                                        )
+                                        .oneOf(
+                                            [
+                                                "open",
+                                                "male",
+                                                "female",
+                                                "mixed",
+                                                "boy",
+                                                "girl",
+                                            ],
+                                            "The event category must be one of the supported types."
+                                        ),
+                                    stroke: yup
+                                        .string()
+                                        .required("A stroke is required.")
+                                        .oneOf(
+                                            [
+                                                "butterfly",
+                                                "backstroke",
+                                                "breaststroke",
+                                                "freestyle",
+                                                "medley",
+                                                "individual_medley",
+                                                "custom",
+                                            ],
+                                            "The stroke must be one of the supported types."
+                                        ),
+                                    distance: yup
+                                        .number()
+                                        .required("Distance is required")
+                                        .moreThan(
+                                            0,
+                                            "Distance must be more than 0."
+                                        ),
+                                    units: yup
+                                        .string()
+                                        .required(
+                                            "A distance unit is required."
+                                        )
+                                        .oneOf(
+                                            ["metres", "yards", "feet"],
+                                            "The distance unit must be one of the supported types."
+                                        ),
+                                    entry_fee_string: yup
+                                        .number()
+                                        .required(
+                                            "An entry fee is required, but may be £0."
+                                        )
+                                        .min(
+                                            0,
+                                            "Entry fee must be £0 or more."
+                                        ),
+                                    processing_fee_string: yup
+                                        .number()
+                                        .required(
+                                            "An processing fee is required, but may be £0."
+                                        )
+                                        .min(
+                                            0,
+                                            "Processing fee must be £0 or more."
+                                        ),
+                                })}
+                                // hideDefaultButtons
+                                initialValues={{
+                                    name: "",
+                                    category: "",
+                                    stroke: "freestyle",
+                                    distance: 0,
+                                    units: "metres",
+                                    entry_fee_string: 0,
+                                    processing_fee_string: 0,
+                                }}
+                                alwaysClearable
+                                onClear={() => setShowAddEventModal(false)}
+                                clearTitle="Cancel"
+                                submitTitle="Add event"
+                                method="post"
+                                action={route(
+                                    "competitions.sessions.events.create",
+                                    {
+                                        competition: props.competition.id,
+                                        session: props.id,
+                                    }
+                                )}
+                            >
+                                {/*<Card*/}
+                                {/*    show={showAddEventModal}*/}
+                                {/*    title="Add event"*/}
+                                {/*    footer={<SubmissionButtons />}*/}
+                                {/*    Icon={PlusCircleIcon}*/}
+                                {/*>*/}
+                                <TextInput name="name" label="Name" />
+
+                                <RadioGroup label="Category" name="category">
+                                    <div className="grid grid-cols-2 lg:grid-cols-3">
+                                        <Radio label="Open" value="open" />
+                                        <Radio label="Male" value="male" />
+                                        <Radio label="Female" value="female" />
+                                        <Radio label="Mixed" value="mixed" />
+                                        <Radio label="Boy" value="boy" />
+                                        <Radio label="Girl" value="girl" />
+                                    </div>
+                                </RadioGroup>
+
+                                <RadioGroup label="Stroke" name="stroke">
+                                    <div className="grid grid-cols-2 lg:grid-cols-3">
+                                        <Radio
+                                            label="Butterfly"
+                                            value="butterfly"
+                                        />
+                                        <Radio
+                                            label="Backstroke"
+                                            value="backstroke"
+                                        />
+                                        <Radio
+                                            label="Breaststroke"
+                                            value="breaststroke"
+                                        />
+                                        <Radio
+                                            label="Freestyle"
+                                            value="freestyle"
+                                        />
+                                        <Radio
+                                            label="Individual Medley"
+                                            value="individual_medley"
+                                        />
+                                        <Radio label="Medley" value="medley" />
+                                        <Radio label="Other" value="other" />
+                                    </div>
+                                </RadioGroup>
+
+                                <DecimalInput
+                                    name="distance"
+                                    label="Distance"
+                                    precision={0}
+                                />
+
+                                <RadioGroup label="Units">
+                                    <div className="grid grid-cols-2 lg:grid-cols-3">
+                                        <Radio
+                                            label="Metres"
+                                            name="units"
+                                            value="metres"
+                                        />
+                                        <Radio
+                                            label="Yards"
+                                            name="units"
+                                            value="yards"
+                                        />
+                                        <Radio
+                                            label="Feet"
+                                            name="units"
+                                            value="feet"
+                                        />
+                                    </div>
+                                </RadioGroup>
+
+                                <DecimalInput
+                                    name="entry_fee_string"
+                                    label="Entry fee (£)"
+                                    precision={2}
+                                />
+
+                                <DecimalInput
+                                    name="processing_fee_string"
+                                    label="Processing fee (£)"
+                                    precision={2}
+                                />
+                            </Form>
+                        </Modal>
                     </div>
                     <div className="md:row-start-1 md:col-start-8 md:col-span-5">
                         <Card title="Venue" subtitle={props.venue.name}>
@@ -309,177 +523,34 @@ const Show: Layout<Props> = (props: Props) => {
                     </div>
                 </div>
 
-                <Form
-                    formName="new_event"
-                    validationSchema={yup.object().shape({
-                        name: yup.string().required().max(255),
-                        category: yup
-                            .string()
-                            .required()
-                            .oneOf([
-                                "open",
-                                "male",
-                                "female",
-                                "mixed",
-                                "boy",
-                                "girl",
-                            ]),
-                        stroke: yup
-                            .string()
-                            .required()
-                            .oneOf([
-                                "butterfly",
-                                "backstroke",
-                                "breaststroke",
-                                "freestyle",
-                                "medley",
-                                "individual_medley",
-                                "custom",
-                            ]),
-                        distance: yup.number().required().min(0),
-                        units: yup
-                            .string()
-                            .required()
-                            .oneOf(["metres", "yards", "feet"]),
-                        entry_fee: yup.number().required().min(0),
-                        processing_fee: yup.number().required().min(0),
-                    })}
-                    hideDefaultButtons
-                    initialValues={{
-                        name: "",
-                        category: "",
-                        stroke: "freestyle",
-                        distance: 0,
-                        units: "metres",
-                        entry_fee: 0,
-                        processing_fee: 0,
-                    }}
-                    alwaysClearable
-                    onClear={() => setShowAddEventModal(false)}
-                    clearTitle="Cancel"
-                    submitTitle="Add event"
+                <Modal
+                    show={showDeleteEventModal}
+                    onClose={() => setShowDeleteEventModal(false)}
+                    variant="danger"
+                    title="Delete event"
+                    buttons={
+                        <>
+                            <Button
+                                variant="danger"
+                                onClick={confirmDeleteEvent}
+                            >
+                                Confirm
+                            </Button>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowDeleteEventModal(false)}
+                            >
+                                Cancel
+                            </Button>
+                        </>
+                    }
                 >
-                    <Modal
-                        show={showAddEventModal}
-                        title="Add event"
-                        buttons={<SubmissionButtons />}
-                        onClose={() => {
-                            setShowAddEventModal(false);
-                        }}
-                        Icon={PlusCircleIcon}
-                    >
-                        <TextInput name="name" label="Name" />
-
-                        <RadioGroup label="Category">
-                            <div className="grid grid-cols-2 lg:grid-cols-3">
-                                <Radio
-                                    label="Open"
-                                    name="category"
-                                    value="open"
-                                />
-                                <Radio
-                                    label="Male"
-                                    name="category"
-                                    value="male"
-                                />
-                                <Radio
-                                    label="Female"
-                                    name="category"
-                                    value="female"
-                                />
-                                <Radio
-                                    label="Mixed"
-                                    name="category"
-                                    value="mixed"
-                                />
-                                <Radio
-                                    label="Boy"
-                                    name="category"
-                                    value="boy"
-                                />
-                                <Radio
-                                    label="Girl"
-                                    name="category"
-                                    value="girl"
-                                />
-                            </div>
-                        </RadioGroup>
-
-                        <RadioGroup label="Stroke">
-                            <div className="grid grid-cols-2 lg:grid-cols-3">
-                                <Radio
-                                    label="Butterfly"
-                                    name="stroke"
-                                    value="butterfly"
-                                />
-                                <Radio
-                                    label="Backstroke"
-                                    name="stroke"
-                                    value="backstroke"
-                                />
-                                <Radio
-                                    label="Breaststroke"
-                                    name="stroke"
-                                    value="breaststroke"
-                                />
-                                <Radio
-                                    label="Freestyle"
-                                    name="stroke"
-                                    value="freestyle"
-                                />
-                                <Radio
-                                    label="Individual Medley"
-                                    name="stroke"
-                                    value="individual_medley"
-                                />
-                                <Radio
-                                    label="Medley"
-                                    name="stroke"
-                                    value="medley"
-                                />
-                                <Radio
-                                    label="Other"
-                                    name="stroke"
-                                    value="other"
-                                />
-                            </div>
-                        </RadioGroup>
-
-                        <DecimalInput
-                            name="distance"
-                            label="Distance"
-                            precision={0}
-                        />
-
-                        <RadioGroup label="Units">
-                            <div className="grid grid-cols-2 lg:grid-cols-3">
-                                <Radio
-                                    label="Metres"
-                                    name="units"
-                                    value="metres"
-                                />
-                                <Radio
-                                    label="Yards"
-                                    name="units"
-                                    value="yards"
-                                />
-                                <Radio label="Feet" name="units" value="feet" />
-                            </div>
-                        </RadioGroup>
-
-                        <DecimalInput
-                            name="entry_fee"
-                            label="Entry fee (£)"
-                            precision={2}
-                        />
-
-                        <DecimalInput
-                            name="processing_fee"
-                            label="Processing fee (£)"
-                            precision={2}
-                        />
-                    </Modal>
-                </Form>
+                    {deleteEvent && (
+                        <p>
+                            Are you sure you want to delete {deleteEvent.name}?
+                        </p>
+                    )}
+                </Modal>
             </Container>
         </>
     );

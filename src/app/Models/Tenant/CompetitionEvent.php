@@ -78,7 +78,7 @@ class CompetitionEvent extends Model
 
     public function session(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(CompetitionSession::class);
+        return $this->belongsTo(CompetitionSession::class, 'competition_session_id');
     }
 
     public function competition(): \Illuminate\Database\Eloquent\Relations\HasOneThrough

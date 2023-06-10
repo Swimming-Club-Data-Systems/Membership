@@ -185,7 +185,7 @@ export const RenderServerErrors = () => {
     return null;
 };
 
-type FormProps = {
+export type FormProps = {
     initialValues?: Record<string, unknown>;
     validationSchema: AnyObjectSchema | (() => AnyObjectSchema);
     onSubmit?: (
@@ -260,6 +260,7 @@ const Form = (props: FormProps) => {
     }, []);
 
     const onSubmitHandler = async (values, formikBag) => {
+        console.log(values, formikBag);
         formikBag.setStatus({});
         if (onSubmit) {
             // Escape hatch override

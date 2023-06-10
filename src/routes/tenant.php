@@ -4,6 +4,7 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
+use App\Http\Controllers\Tenant\CompetitionEventController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -369,6 +370,13 @@ Route::middleware([
                         Route::get('/{session}/edit', [CompetitionSessionController::class, 'edit'])
                             ->whereNumber('session')
                             ->name('edit');
+                        Route::post('/{session}/events', [CompetitionEventController::class, 'create'])
+                            ->whereNumber('session')
+                            ->name('events.create');
+                        Route::delete('/{session}/events/{event}', [CompetitionEventController::class, 'delete'])
+                            ->whereNumber('session')
+                            ->whereNumber('event')
+                            ->name('events.delete');
                     });
                 });
             })->whereNumber('competition');
