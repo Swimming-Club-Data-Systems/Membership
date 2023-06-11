@@ -2,7 +2,13 @@
  * Form component
  */
 
-import React, { ReactNode, useContext, useEffect, useState } from "react";
+import React, {
+    ReactNode,
+    useContext,
+    useEffect,
+    useState,
+    useCallback,
+} from "react";
 import {
     Form as FormikForm,
     Formik,
@@ -30,6 +36,10 @@ interface FormSpecialContextInterface {
     readOnly?: boolean;
     hasErrors?: boolean;
     onClear?: () => void;
+    status?: {
+        [key: string]: never;
+    };
+    setStatus?: (state) => void;
 }
 
 export const FormSpecialContext =
@@ -146,11 +156,11 @@ const HandleServerErrors = () => {
         ? usePage().props?.errors[formSpecialContext.formName]
         : usePage().props.errors;
 
-    const { setStatus, setSubmitting } = useFormikContext();
+    const { setSubmitting } = useFormikContext();
 
     useEffect(() => {
         if (errors) {
-            setStatus(errors);
+            formSpecialContext.setStatus(errors);
             setSubmitting(false);
         }
     }, [errors]);
@@ -159,7 +169,8 @@ const HandleServerErrors = () => {
 };
 
 export const RenderServerErrors = () => {
-    const errors = useFormikContext().status;
+    const context = useContext(FormSpecialContext);
+    const errors = context.status;
 
     if (errors) {
         const errorList = [];
@@ -209,6 +220,7 @@ export type FormProps = {
     children?: ReactNode;
     disabled?: boolean;
     readOnly?: boolean;
+    onSuccess?: () => void;
     confirm?: {
         type?: ModalVariantProps;
         message: string | ReactNode;
@@ -237,6 +249,7 @@ const Form = (props: FormProps) => {
         alwaysDirty = false,
         disabled = false,
         readOnly = false,
+        onSuccess,
         ...otherProps
     } = props;
 
@@ -260,8 +273,7 @@ const Form = (props: FormProps) => {
     }, []);
 
     const onSubmitHandler = async (values, formikBag) => {
-        console.log(values, formikBag);
-        formikBag.setStatus({});
+        setStatus({});
         if (onSubmit) {
             // Escape hatch override
             onSubmit(values, formikBag);
@@ -276,7 +288,12 @@ const Form = (props: FormProps) => {
             } else {
                 setConfirmed(false);
                 router[method](action, values, {
-                    onSuccess: () => formikBag.resetForm(),
+                    onSuccess: () => {
+                        if (onSuccess) {
+                            onSuccess();
+                        }
+                        formikBag.resetForm();
+                    },
                     ...inertiaOptions,
                     // onError: (error) => {
                     //     console.log(error);
@@ -302,6 +319,11 @@ const Form = (props: FormProps) => {
 
     const defaultConfirmVariant: ModalVariantProps = "danger";
 
+    const [status, setStatusState] = useState(null);
+    const setStatus = useCallback((state) => {
+        setStatusState(state);
+    }, []);
+
     return (
         <FormSpecialContext.Provider
             value={{
@@ -317,6 +339,8 @@ const Form = (props: FormProps) => {
                 readOnly: readOnly,
                 hasErrors: hasErrors,
                 onClear: onClear,
+                status: status,
+                setStatus: setStatus,
             }}
         >
             <Formik

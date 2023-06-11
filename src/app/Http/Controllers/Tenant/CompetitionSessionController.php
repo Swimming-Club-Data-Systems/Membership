@@ -9,7 +9,9 @@ use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -57,6 +59,48 @@ class CompetitionSessionController extends Controller
             'start_time' => $session->start_time,
             'end_time' => $session->end_time,
         ];
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function create(Competition $competition, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorize('create', CompetitionSession::class);
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'max:255',
+            ],
+            'venue' => [
+                'required',
+                Rule::exists('venues', 'id')->where(function (Builder $query) {
+                    return $query->where('Tenant', tenant('id'));
+                }),
+            ],
+            'start_time' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+            ],
+            'end_time' => [
+                'required',
+                'date',
+                'after:start',
+            ],
+        ]);
+
+        $session = new CompetitionSession($validated);
+        /** @var Venue $venue */
+        $venue = Venue::find($validated['venue']);
+        if ($venue->id != $competition->venue->id) {
+            $session->venue()->associate($venue);
+        }
+        $session->sequence = $competition->sessions()->max('sequence') + 1;
+        $competition->sessions()->save($session);
+
+        return redirect()->route('competitions.show', [$competition]);
     }
 
     /**

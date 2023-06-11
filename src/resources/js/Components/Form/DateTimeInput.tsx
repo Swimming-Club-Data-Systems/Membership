@@ -91,12 +91,20 @@ const DateTimeInput: React.FC<Props> = ({
                             });
                         }}
                         onBlur={(event) => {
-                            field.onBlur({
-                                target: {
-                                    name: props.name,
-                                    value: formatISO(event.target.value),
-                                },
-                            });
+                            try {
+                                const value = formatISO(
+                                    new Date(event.target.value)
+                                );
+
+                                field.onBlur({
+                                    target: {
+                                        name: props.name,
+                                        value: value,
+                                    },
+                                });
+                            } catch (error) {
+                                // Ignore
+                            }
                         }}
                         showTimeInput={showTimeInput}
                         locale="en-GB"

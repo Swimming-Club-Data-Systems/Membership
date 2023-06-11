@@ -51,7 +51,11 @@ const Modal: React.FC<ModalProps> = ({
             form.type.name
         ) {
             const { children: formChildren, ...newProps } = form.props;
-            panelWrapperProps = { hideDefaultButtons: true, ...newProps };
+            panelWrapperProps = {
+                hideDefaultButtons: true,
+                hideErrors: true,
+                ...newProps,
+            };
             PanelWrapper = Form;
             children = formChildren;
             buttons = <SubmissionButtons />;
@@ -137,7 +141,7 @@ const Modal: React.FC<ModalProps> = ({
                                                 aria-hidden="true"
                                             />
                                         </div>
-                                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex-grow">
                                             <Dialog.Title
                                                 as="h3"
                                                 className="text-lg leading-6 font-medium text-gray-900"

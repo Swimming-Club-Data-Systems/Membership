@@ -365,6 +365,7 @@ Route::middleware([
                     Route::name('sessions.')->group(function () {
                         Route::get('/', [CompetitionSessionController::class, 'show'])
                             ->name('index');
+                        Route::post('/', [CompetitionSessionController::class, 'create']);
                         Route::get('/{session}', [CompetitionSessionController::class, 'show'])
                             ->whereNumber('session')
                             ->name('show');

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -13,6 +13,17 @@ import { formatDate, formatDateTime } from "@/Utils/date-utils";
 import BasicList from "@/Components/BasicList";
 import Link from "@/Components/Link";
 import ButtonLink from "@/Components/ButtonLink";
+import Button from "@/Components/Button";
+import { PlusCircleIcon } from "@heroicons/react/24/outline";
+import Form, { RenderServerErrors } from "@/Components/Form/Form";
+import * as yup from "yup";
+import TextInput from "@/Components/Form/TextInput";
+import Modal from "@/Components/Modal";
+import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
+import DateTimeInput from "@/Components/Form/DateTimeInput";
+import formatISO from "date-fns/formatISO";
+import ValidationErrors from "@/Components/ValidationErrors";
+import FlashAlert from "@/Components/FlashAlert";
 
 type Session = {
     id: number;
@@ -48,6 +59,9 @@ export type Props = {
 };
 
 const Show: Layout<Props> = (props: Props) => {
+    const [showAddSessionModal, setShowAddSessionModal] =
+        useState<boolean>(false);
+
     const Session = (item: Session) => {
         return {
             id: item.id,
@@ -74,6 +88,85 @@ const Show: Layout<Props> = (props: Props) => {
                 </>
             ),
         };
+    };
+
+    const AddSessionForm = () => {
+        const [time, setTime] = useState<string>(null);
+
+        useEffect(() => {
+            setTime(formatISO(new Date()));
+        }, []);
+
+        return (
+            <Modal
+                onClose={() => setShowAddSessionModal(false)}
+                title="Add session"
+                buttons={<></>}
+                show={showAddSessionModal}
+                Icon={PlusCircleIcon}
+            >
+                <Form
+                    formName="new_session"
+                    validationSchema={yup.object().shape({
+                        name: yup
+                            .string()
+                            .required("A name is required for this session.")
+                            .max(
+                                255,
+                                "The session name must be less than 255 characters."
+                            ),
+                        venue: yup
+                            .number()
+                            .required("A venue is required for this session."),
+                        start_time: yup
+                            .date()
+                            .required(
+                                "A start time is required for this session."
+                            ),
+                        end_time: yup
+                            .date()
+                            .required(
+                                "An end time is required for this session."
+                            )
+                            .min(
+                                yup.ref("start_time"),
+                                "The end time for this session must be after the start time."
+                            ),
+                    })}
+                    initialValues={{
+                        name: `Session ${props.sessions.length + 1}`,
+                        venue: props.venue.id,
+                        start_time: time,
+                        end_time: time,
+                    }}
+                    alwaysClearable
+                    onClear={() => setShowAddSessionModal(false)}
+                    onSuccess={() => setShowAddSessionModal(false)}
+                    clearTitle="Cancel"
+                    submitTitle="Add session"
+                    method="post"
+                    action={route("competitions.sessions.index", {
+                        competition: props.id,
+                    })}
+                >
+                    <RenderServerErrors />
+                    <FlashAlert className="mb-4" />
+
+                    <TextInput name="name" label="Name" />
+                    <VenueCombobox name="venue" />
+                    <DateTimeInput
+                        name="start_time"
+                        label="Start time"
+                        showTimeInput
+                    />
+                    <DateTimeInput
+                        name="end_time"
+                        label="End time"
+                        showTimeInput
+                    />
+                </Form>
+            </Modal>
+        );
     };
 
     const items: DefinitionListItemProps[] = [
@@ -154,7 +247,20 @@ const Show: Layout<Props> = (props: Props) => {
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />
                         </Card>
-                        <Card title="Schedule">
+                        <Card
+                            title="Schedule"
+                            footer={
+                                props.editable && (
+                                    <Button
+                                        onClick={() => {
+                                            setShowAddSessionModal(true);
+                                        }}
+                                    >
+                                        Add session
+                                    </Button>
+                                )
+                            }
+                        >
                             <BasicList items={props.sessions.map(Session)} />
                         </Card>
                         <Card title="Entrants">
@@ -182,6 +288,8 @@ const Show: Layout<Props> = (props: Props) => {
                         </Card>
                     </div>
                 </div>
+
+                <AddSessionForm />
             </Container>
         </>
     );
