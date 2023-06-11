@@ -12,6 +12,7 @@ import {
 import { formatDate, formatDateTime } from "@/Utils/date-utils";
 import BasicList from "@/Components/BasicList";
 import Link from "@/Components/Link";
+import ButtonLink from "@/Components/ButtonLink";
 
 type Session = {
     id: number;
@@ -43,6 +44,7 @@ export type Props = {
         place_id: string;
     };
     sessions: Session[];
+    editable: boolean;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -132,6 +134,19 @@ const Show: Layout<Props> = (props: Props) => {
                 <MainHeader
                     title={props.name}
                     subtitle="Competition"
+                    buttons={
+                        <>
+                            {props.editable && (
+                                <ButtonLink
+                                    href={route("competitions.edit", {
+                                        competition: props.id,
+                                    })}
+                                >
+                                    Edit
+                                </ButtonLink>
+                            )}
+                        </>
+                    }
                 ></MainHeader>
 
                 <div className="grid grid-cols-12 gap-6">

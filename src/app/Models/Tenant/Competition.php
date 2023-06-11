@@ -40,6 +40,20 @@ class Competition extends Model
 {
     use HasFactory, Searchable, BelongsToTenant;
 
+    protected $fillable = [
+        'name',
+        'description',
+        'pool_course',
+        'require_times',
+        'coach_enters',
+        'requires_approval',
+        'public',
+        'default_entry_fee_string',
+        'processing_fee_string',
+        'closing_date',
+        'age_at_date',
+    ];
+
     /**
      * The attributes that should be cast.
      *

@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property CompetitionCategory $category
  * @property int $processing_fee
  * @property string $processing_fee_string
+ * @property Competition $competition
  */
 class CompetitionEvent extends Model
 {

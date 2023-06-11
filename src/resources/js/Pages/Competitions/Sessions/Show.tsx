@@ -30,6 +30,7 @@ import {
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { formatDateTime } from "@/Utils/date-utils";
+import { bool } from "yup";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -81,6 +82,7 @@ export type Props = {
     number_of_sessions: number;
     events: Event[];
     editable: boolean;
+    edit_mode: boolean;
     different_venue_to_competition_venue: boolean;
     start_time: string;
     end_time: string;
@@ -147,7 +149,7 @@ const Show: Layout<Props> = (props: Props) => {
                                 </>
                             </div>
                         </div>
-                        {props.editable && (
+                        {props.edit_mode && (
                             <div className="block">
                                 <>
                                     <Button
@@ -227,30 +229,36 @@ const Show: Layout<Props> = (props: Props) => {
                     title={props.name}
                     subtitle={`Session ${props.sequence_number} of ${props.number_of_sessions}`}
                     buttons={
-                        <>
-                            {props.editable && (
-                                <Button
-                                    variant="primary"
-                                    onClick={() => {
-                                        setShowAddEventModal(true);
-                                    }}
-                                    type="button"
-                                >
-                                    Add event
-                                </Button>
-                            )}
-                            {!props.editable && (
-                                <ButtonLink
-                                    href={route("competitions.sessions.edit", {
-                                        competition: props.competition.id,
-                                        session: props.id,
-                                    })}
-                                    variant="primary"
-                                >
-                                    Edit
-                                </ButtonLink>
-                            )}
-                        </>
+                        props.editable && (
+                            <>
+                                {props.edit_mode && (
+                                    <Button
+                                        variant="primary"
+                                        onClick={() => {
+                                            setShowAddEventModal(true);
+                                        }}
+                                        type="button"
+                                    >
+                                        Add event
+                                    </Button>
+                                )}
+                                {!props.edit_mode && (
+                                    <ButtonLink
+                                        href={route(
+                                            "competitions.sessions.edit",
+                                            {
+                                                competition:
+                                                    props.competition.id,
+                                                session: props.id,
+                                            }
+                                        )}
+                                        variant="primary"
+                                    >
+                                        Edit
+                                    </ButtonLink>
+                                )}
+                            </>
+                        )
                     }
                 ></MainHeader>
             </Container>
@@ -258,7 +266,7 @@ const Show: Layout<Props> = (props: Props) => {
             <Container noMargin>
                 <div className="grid lg:grid-cols-12 gap-6">
                     <div className="md:col-start-1 md:col-span-7 flex flex-col gap-6">
-                        {props.editable && (
+                        {props.edit_mode && (
                             <Form
                                 initialValues={{}}
                                 validationSchema={yup.object().shape({
@@ -322,7 +330,7 @@ const Show: Layout<Props> = (props: Props) => {
                             </Form>
                         )}
 
-                        {!props.editable && (
+                        {!props.edit_mode && (
                             <Card title="Session details">
                                 <DefinitionList
                                     items={items}
@@ -348,7 +356,7 @@ const Show: Layout<Props> = (props: Props) => {
                         <Card
                             title="Events"
                             footer={
-                                props.editable && (
+                                props.edit_mode && (
                                     <Button
                                         variant="primary"
                                         onClick={() => {

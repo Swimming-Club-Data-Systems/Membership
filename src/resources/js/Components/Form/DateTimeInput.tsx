@@ -19,6 +19,7 @@ interface Props extends InputProps {
     autoComplete?: string;
     leftText?: ReactNode;
     rightButton?: ReactNode;
+    showTimeInput?: boolean;
 }
 
 const DateTimeInput: React.FC<Props> = ({
@@ -28,6 +29,7 @@ const DateTimeInput: React.FC<Props> = ({
     leftText,
     rightButton,
     className = "",
+    showTimeInput = false,
     ...props
 }) => {
     const [{ ...field }, meta] = useField(props);
@@ -55,6 +57,8 @@ const DateTimeInput: React.FC<Props> = ({
     if (!rightButton) {
         className += " rounded-r-md ";
     }
+
+    const dateFormat = showTimeInput ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
 
     return (
         <>
@@ -94,9 +98,9 @@ const DateTimeInput: React.FC<Props> = ({
                                 },
                             });
                         }}
-                        showTimeInput
+                        showTimeInput={showTimeInput}
                         locale="en-GB"
-                        dateFormat="dd/MM/yyyy HH:mm"
+                        dateFormat={dateFormat}
                     />
                 }
                 rightButton={rightButton}

@@ -358,6 +358,9 @@ Route::middleware([
             Route::prefix('{competition}')->group(function () {
                 Route::get('/', [CompetitionController::class, 'show'])
                     ->name('show');
+                Route::get('/edit', [CompetitionController::class, 'edit'])
+                    ->name('edit');
+                Route::put('/', [CompetitionController::class, 'update']);
                 Route::prefix('sessions')->group(function () {
                     Route::name('sessions.')->group(function () {
                         Route::get('/', [CompetitionSessionController::class, 'show'])

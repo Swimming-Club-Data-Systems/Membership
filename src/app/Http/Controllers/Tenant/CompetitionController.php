@@ -7,6 +7,7 @@ use App\Enums\CompetitionMode;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\Venue;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -35,15 +36,25 @@ class CompetitionController extends Controller
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function new(): \Inertia\Response
     {
+        $this->authorize('create', Competition::class);
+
         return Inertia::render('Competitions/New', [
             'google_maps_api_key' => config('google.maps.clientside'),
         ]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function create(Request $request): \Illuminate\Http\RedirectResponse
     {
+        $this->authorize('create', Competition::class);
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -131,8 +142,13 @@ class CompetitionController extends Controller
         return redirect()->route('competitions.show', $competition);
     }
 
-    public function show(Competition $competition): \Inertia\Response
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(Competition $competition, Request $request): \Inertia\Response
     {
+        $this->authorize('view', $competition);
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
@@ -157,6 +173,109 @@ class CompetitionController extends Controller
                 'formatted_address' => $competition->venue->formatted_address,
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
+            'editable' => $request->user()?->can('update', $competition),
         ]);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function edit(Competition $competition): \Inertia\Response
+    {
+        $this->authorize('update', $competition);
+
+        return Inertia::render('Competitions/Edit', [
+            'form_initial_values' => [
+                'name' => $competition->name,
+                'description' => $competition->description,
+                'pool_course' => $competition->pool_course,
+                'require_times' => $competition->require_times,
+                'coach_enters' => $competition->coach_enters,
+                'requires_approval' => $competition->requires_approval,
+                'status' => $competition->status,
+                'public' => $competition->public,
+                'default_entry_fee_string' => $competition->default_entry_fee_string,
+                'processing_fee_string' => $competition->processing_fee_string,
+                'closing_date' => $competition->closing_date,
+                'age_at_date' => $competition->age_at_date,
+                'venue' => $competition->venue->id,
+            ],
+            'id' => $competition->id,
+            'name' => $competition->name,
+            'venue' => [
+                'id' => $competition->venue->id,
+                'name' => $competition->venue->name,
+                'place_id' => $competition->venue->place_id,
+                'formatted_address' => $competition->venue->formatted_address,
+            ],
+        ]);
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function update(Competition $competition, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorize('update', $competition);
+
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'max:255',
+            ],
+            'venue' => [
+                'required',
+                Rule::exists('venues', 'id')->where(function (Builder $query) {
+                    return $query->where('Tenant', tenant('id'));
+                }),
+            ],
+            'description' => [
+                'string',
+            ],
+            'pool_course' => [
+                'required',
+                new Enum(CompetitionCourse::class),
+            ],
+            'require_times' => [
+                'required',
+                'boolean',
+            ],
+            'coach_enters' => [
+                'required',
+                'boolean',
+            ],
+            'requires_approval' => [
+                'required',
+                'boolean',
+            ],
+            'public' => [
+                'required',
+                'boolean',
+            ],
+            'default_entry_fee' => [
+                'decimal:0,2',
+                'min:0',
+            ],
+            'processing_fee' => [
+                'decimal:0,2',
+                'min:0',
+            ],
+            'closing_date' => [
+                'required',
+                'date',
+            ],
+            'age_at_date' => [
+                'required',
+                'date',
+            ],
+        ]);
+
+        $competition->fill($validated);
+        $competition->venue()->associate($validated['venue']);
+        $competition->save();
+
+        // Flash message
+
+        return redirect()->route('competitions.show', $competition);
     }
 }

@@ -9,13 +9,19 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEvent;
 use App\Models\Tenant\CompetitionSession;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Enum;
 
 class CompetitionEventController extends Controller
 {
+    /**
+     * @throws AuthorizationException
+     */
     public function create(Competition $competition, CompetitionSession $session, Request $request): \Illuminate\Http\RedirectResponse
     {
+        $this->authorize('create', CompetitionEvent::class);
+
         $validated = $request->validate([
             'name' => ['required'],
             'category' => ['required', new Enum(CompetitionCategory::class)],
@@ -38,8 +44,13 @@ class CompetitionEventController extends Controller
         return redirect()->route('competitions.sessions.edit', [$competition, $session]);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function delete(Competition $competition, CompetitionSession $session, CompetitionEvent $event): \Illuminate\Http\RedirectResponse
     {
+        $this->authorize('delete', $event);
+
         $event->delete();
 
         // Flash message

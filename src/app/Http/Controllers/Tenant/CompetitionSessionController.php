@@ -8,16 +8,24 @@ use App\Http\Requests\Tenant\CompetitionSessionPutRequest;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\Venue;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class CompetitionSessionController extends Controller
 {
-    public function show(Competition $competition, CompetitionSession $session): Response
+    /**
+     * @throws AuthorizationException
+     */
+    public function show(Competition $competition, CompetitionSession $session, Request $request): Response
     {
+        $this->authorize('view', $session);
+
         $data = [
             ...$this->getData($competition, $session),
-            'editable' => false,
+            'editable' => $request->user()?->can('update', $session),
+            'edit_mode' => false,
         ];
 
         return Inertia::render('Competitions/Sessions/Show', $data);
@@ -51,13 +59,19 @@ class CompetitionSessionController extends Controller
         ];
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function edit(Competition $competition, CompetitionSession $session): Response
     {
+        $this->authorize('update', $session);
+
         $venue = $session->venue ?? $competition->venue;
 
         $data = [
             ...$this->getData($competition, $session),
             'editable' => true,
+            'edit_mode' => true,
             'edit_session' => [
                 'form_initial_values' => [
                     'name' => $session->name,
@@ -75,8 +89,13 @@ class CompetitionSessionController extends Controller
         return Inertia::render('Competitions/Sessions/Show', $data);
     }
 
+    /**
+     * @throws AuthorizationException
+     */
     public function update(Competition $competition, CompetitionSession $session, CompetitionSessionPutRequest $request): \Illuminate\Http\RedirectResponse
     {
+        $this->authorize('update', $session);
+
         $validated = $request->validated();
 
         $session->fill($validated);
