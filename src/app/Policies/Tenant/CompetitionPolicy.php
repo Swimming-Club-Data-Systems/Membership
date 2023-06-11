@@ -31,6 +31,11 @@ class CompetitionPolicy
         // Handled in before
     }
 
+    public function viewAny(?User $user)
+    {
+
+    }
+
     public function view(?User $user, Competition $competition): Response
     {
         $isPublished = $competition->status !== CompetitionStatus::DRAFT;

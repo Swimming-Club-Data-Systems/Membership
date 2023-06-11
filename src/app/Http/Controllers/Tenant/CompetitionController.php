@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
+use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
@@ -18,21 +20,65 @@ class CompetitionController extends Controller
 {
     public function index(Request $request): \Inertia\Response
     {
-        if ($request->query('query')) {
-            $competitions = Competition::search($request->query('query'))->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
+        if ($request->user()?->can('create', Competition::class)) {
+            if ($request->query('query')) {
+                $competitions = Competition::search($request->query('query'))
+                    ->where('Tenant', tenant('ID'))
+                    ->paginate(config('app.per_page'));
+            } else {
+                $competitions = Competition::orderBy('gala_date', 'desc')
+                    ->paginate(config('app.per_page'));
+            }
+        } elseif ($request->user()) {
+            if ($request->query('query')) {
+                $competitions = Competition::search($request->query('query'))
+                    ->where('status', CompetitionStatus::PUBLISHED)
+                    ->where('Tenant', tenant('ID'))
+                    ->paginate(config('app.per_page'));
+            } else {
+                $competitions = Competition::where('status', '!=', CompetitionStatus::DRAFT)
+                    ->orderBy('gala_date', 'desc')
+                    ->paginate(config('app.per_page'));
+            }
         } else {
-            $competitions = Competition::orderBy('name', 'asc')->paginate(config('app.per_page'));
+            if ($request->query('query')) {
+                $competitions = Competition::search($request->query('query'))
+                    ->where('public', true)
+                    ->where('status', CompetitionStatus::PUBLISHED)
+                    ->where('Tenant', tenant('ID'))
+                    ->paginate(config('app.per_page'));
+            } else {
+                $competitions = Competition::where('public')
+                    ->where('status', '!=', CompetitionStatus::DRAFT)
+                    ->orderBy('gala_date', 'desc')
+                    ->paginate(config('app.per_page'));
+            }
         }
 
         $competitions->getCollection()->transform(function (Competition $item) {
             return [
                 'id' => $item->id,
                 'name' => $item->name,
+                'pool_course' => $item->pool_course,
+                'venue' => [
+                    'id' => $item->venue->id,
+                    'name' => $item->venue->name,
+                    'formatted_address' => $item->venue->formatted_address,
+                ],
+                'sessions' => $item->sessions()->get()->map(function (CompetitionSession $item) {
+                    return [
+                        'id' => $item->id,
+                        'name' => $item->name,
+                        'start_time' => $item->start_time,
+                        'end_time' => $item->end_time,
+                    ];
+                }),
             ];
         });
 
         return Inertia::render('Competitions/Index', [
             'competitions' => $competitions->onEachSide(3),
+            'can_create' => $request->user()?->can('create', Competition::class),
         ]);
     }
 

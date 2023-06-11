@@ -37,6 +37,7 @@ class UpdateMeilisearch extends Command
         $client->index(config('scout.prefix').'notifyHistory')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'journal_accounts')->updateFilterableAttributes(['Tenant']);
         $client->index(config('scout.prefix').'venues')->updateFilterableAttributes(['Tenant', '_geo']);
+        $client->index(config('scout.prefix').'competitions')->updateFilterableAttributes(['public', 'status', 'Tenant']);
         JournalAccount::all()->searchable();
 
         return 0;
