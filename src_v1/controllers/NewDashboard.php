@@ -71,10 +71,10 @@ include BASE_PATH . "views/header.php";
 		<?php if (app()->user->hasPermission('Admin') && $tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
 			<div class="alert alert-info">
 				<p class="mb-0">
-					<strong>Plan your migration to Stripe for your Direct Debit payments</strong>
+					<strong>SCDS has started planning the switch off of our GoCardless integration</strong>
 				</p>
 				<p class="mb-0">
-					The GoCardless service is deprecated and will eventually be turned off. To start planning your migration to the Stripe powered service, please talk to SCDS for help and support.
+                    You must start to plan your migration to Stripe for your Direct Debit payments. To start planning your migration to the Stripe powered service, please talk to SCDS for help and support.
 				</p>
 			</div>
 		<?php } ?>

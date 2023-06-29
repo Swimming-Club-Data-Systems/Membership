@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\OnboardingSession;
 use App\Models\Tenant\Session;
 use App\Models\Tenant\User;
@@ -17,6 +18,10 @@ class DashboardController extends Controller
     public function index()
     {
         if (Auth::check()) {
+
+            /** @var Tenant $tenant */
+            $tenant = tenant();
+
             /** @var User $user */
             $user = Auth::user();
 
@@ -88,6 +93,8 @@ class DashboardController extends Controller
                     }
                 }),
                 'now' => now()->toDateString(),
+                'gocardless_switch_off' => Auth::user()->hasPermission('Admin') &&
+                    $tenant->getOption('GOCARDLESS_ACCESS_TOKEN') && ! $tenant->getOption('USE_STRIPE_DIRECT_DEBIT'),
             ]);
         }
 
