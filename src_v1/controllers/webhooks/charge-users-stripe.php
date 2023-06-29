@@ -13,7 +13,7 @@ try {
 
     $sendEmail = $db->prepare("INSERT INTO notify (UserID, Status, Subject, Message, ForceSend, EmailType) VALUES (:user, 'Queued', :subject, :message, 0, 'Payments')");
 
-    $hasMandateQuery = $db->prepare("SELECT stripeMandates.Mandate, stripeMandates.ID, stripeMandates.Customer, stripeMandates.Reference, stripeMandates.Last4, stripeMandates.SortCode FROM `stripeMandates` INNER JOIN `stripeCustomers` ON stripeMandates.Customer = stripeCustomers.CustomerID WHERE stripeCustomers.User = ? AND stripeMandates.MandateStatus = 'active'");
+    $hasMandateQuery = $db->prepare("SELECT stripeMandates.Mandate, stripeMandates.ID, stripeMandates.Customer, stripeMandates.Reference, stripeMandates.Last4, stripeMandates.SortCode FROM `stripeMandates` INNER JOIN `stripeCustomers` ON stripeMandates.Customer = stripeCustomers.CustomerID WHERE stripeCustomers.User = ? AND stripeMandates.MandateStatus = 'active' ORDER BY stripeMandates.CreationTime DESC;");
 
     $date = date("Y-m") . "-01";
     $day = date("d");
