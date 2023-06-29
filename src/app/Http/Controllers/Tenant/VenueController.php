@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Venue;
 use App\Rules\ValidPhone;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class VenueController extends Controller
 {
     public function index(Request $request): \Inertia\Response
     {
+        $this->authorize('viewAny', Venue::class);
+
         if ($request->query('query')) {
             $venues = Venue::search($request->query('query'))->where('Tenant', tenant('ID'))->paginate(config('app.per_page'));
         } else {
@@ -28,11 +31,14 @@ class VenueController extends Controller
 
         return Inertia::render('Venues/Index', [
             'venues' => $venues->onEachSide(3),
+            'can_create' => $request->user()?->can('create', Venue::class),
         ]);
     }
 
     public function new(): \Inertia\Response
     {
+        $this->authorize('create', Venue::class);
+
         return Inertia::render('Venues/New', [
             'google_maps_api_key' => config('google.maps.clientside'),
         ]);
@@ -40,6 +46,8 @@ class VenueController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize('create', Venue::class);
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -67,6 +75,8 @@ class VenueController extends Controller
             ],
             'place_id' => [
                 'max:255',
+                Rule::unique('venues', 'place_id')
+                    ->where(fn ($query) => $query->where('Tenant', tenant('ID'))),
             ],
             'plus_code_global' => [
                 'max:255',
@@ -97,6 +107,8 @@ class VenueController extends Controller
 
     public function show(Venue $venue): \Inertia\Response
     {
+        $this->authorize('view', $venue);
+
         return Inertia::render('Venues/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $venue->id,
@@ -108,6 +120,8 @@ class VenueController extends Controller
 
     public function combobox(Request $request): \Illuminate\Http\JsonResponse
     {
+        $this->authorize('viewAny', Venue::class);
+
         $venues = null;
         if ($request->query('query')) {
             $venues = Venue::search($request->query('query'))

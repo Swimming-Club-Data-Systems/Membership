@@ -25,6 +25,7 @@ interface Venues extends LaravelPaginatorProps {
 export type Props = {
     google_maps_api_key: string;
     venues: Venues;
+    can_create: boolean;
 };
 
 const MapComponent: React.FC = () => {
@@ -130,7 +131,11 @@ const Index: Layout<Props> = (props: Props) => {
                     title={"Venues"}
                     subtitle={`Venues for competitions and training sessions`}
                     buttons={
-                        <ButtonLink href={route("venues.new")}>New</ButtonLink>
+                        props.can_create && (
+                            <ButtonLink href={route("venues.new")}>
+                                New
+                            </ButtonLink>
+                        )
                     }
                 ></MainHeader>
 

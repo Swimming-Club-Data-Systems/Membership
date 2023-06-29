@@ -3,7 +3,7 @@ import Alert from "./Alert";
 import { usePage } from "@inertiajs/react";
 import { FormSpecialContext } from "@/Components/Form/Form";
 
-const FlashAlert = ({ className, bag = null }) => {
+const FlashAlert = ({ className = "", bag = null }) => {
     const formContext = useContext(FormSpecialContext);
 
     const bagName = bag || formContext?.formName;

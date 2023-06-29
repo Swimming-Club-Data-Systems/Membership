@@ -4,12 +4,17 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Form from "@/Components/Form/Form";
+import Form, {
+    RenderServerErrors,
+    SubmissionButtons,
+} from "@/Components/Form/Form";
 import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import { Status, Wrapper } from "@googlemaps/react-wrapper";
 import Alert from "@/Components/Alert";
 import { useFormikContext } from "formik";
+import Card from "@/Components/Card";
+import FlashAlert from "@/Components/FlashAlert";
 
 export type Props = {
     google_maps_api_key: string;
@@ -67,8 +72,44 @@ const MapComponent: React.FC = () => {
         autocomplete.current.addListener("place_changed", autocompleteChanged);
     }, []);
 
-    return <TextInput ref={ref} name="search" label="Search" />;
+    return (
+        <TextInput
+            ref={ref}
+            name="search"
+            label="Search"
+            help="Start typing to search for a location."
+        />
+    );
     // return <div ref={ref} id="map" className="h-64" />;
+};
+
+const Map = ({ google_maps_api_key }: { google_maps_api_key: string }) => {
+    const {
+        values,
+    }: {
+        values: {
+            place_id: string;
+        };
+    } = useFormikContext();
+
+    if (values.place_id) {
+        return (
+            <>
+                <iframe
+                    className="mb-3"
+                    width="100%"
+                    height="450"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
+                        google_maps_api_key
+                    )}&q=place_id:${encodeURIComponent(values.place_id)}`}
+                ></iframe>
+            </>
+        );
+    }
 };
 
 const New: Layout<Props> = (props: Props) => {
@@ -100,12 +141,14 @@ const New: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title={"Create Venue"}
                     subtitle={`Create a new venue`}
                 ></MainHeader>
+            </Container>
 
+            <Container noMargin>
                 <Form
                     validationSchema={yup.object().shape({})}
                     initialValues={{
@@ -127,35 +170,52 @@ const New: Layout<Props> = (props: Props) => {
                     submitTitle="Create"
                     action={route("venues.index")}
                     method="post"
+                    hideDefaultButtons
+                    hideErrors
                 >
-                    <Wrapper
-                        apiKey={props.google_maps_api_key}
-                        render={render}
-                        libraries={["places"]}
-                    >
-                        <MapComponent />
-                    </Wrapper>
+                    <Card footer={<SubmissionButtons />}>
+                        <div className="grid grid-cols-12 gap-4">
+                            <div className="col-span-full md:col-span-6">
+                                <FlashAlert />
+                                <RenderServerErrors />
 
-                    <TextInput
-                        name="formatted_address"
-                        label="Formatted address"
-                    />
-                    <TextInput name="long" label="Longitude" />
-                    <TextInput name="lat" label="Latitude" />
-                    <TextInput name="name" label="Name" />
-                    <TextInput name="phone" label="Phone number" />
-                    <TextInput name="website" label="Website" />
-                    <TextInput name="url" label="URL" />
-                    <TextInput name="vicinity" label="Vicinity" />
-                    <TextInput name="place_id" label="Place ID" />
-                    <TextInput
-                        name="plus_code.compound_code"
-                        label="Plus Code (Compound)"
-                    />
-                    <TextInput
-                        name="plus_code.global_code"
-                        label="Plus Code (Global)"
-                    />
+                                <Wrapper
+                                    apiKey={props.google_maps_api_key}
+                                    render={render}
+                                    libraries={["places"]}
+                                >
+                                    <MapComponent />
+                                </Wrapper>
+                                <TextInput name="name" label="Venue name" />
+
+                                <TextInput
+                                    name="formatted_address"
+                                    label="Formatted address"
+                                    readOnly
+                                    help="This field is read only."
+                                />
+
+                                <p className="text-sm mb-3">
+                                    Please check you&apos;re happy that this
+                                    location is correct before you continue. If
+                                    you aren&apos;t, please search again.
+                                </p>
+
+                                <p className="text-sm">
+                                    We&apos;ll populate and periodically update
+                                    information for this venue with data from
+                                    Google Maps
+                                </p>
+                            </div>
+                            <div className="col-span-full md:col-span-6">
+                                <Map
+                                    google_maps_api_key={
+                                        props.google_maps_api_key
+                                    }
+                                />
+                            </div>
+                        </div>
+                    </Card>
                 </Form>
             </Container>
         </>
