@@ -5,6 +5,7 @@ import MainLayout from "@/Layouts/MainLayout";
 import Button from "@/Components/Button";
 import { format, formatISO9075, parse } from "date-fns";
 import BaseLink from "@/Components/BaseLink";
+import Alert from "@/Components/Alert";
 
 const Card = (props) => {
     return (
@@ -69,6 +70,28 @@ const Dashboard = (props) => {
                     {/*        </Button>*/}
                     {/*    </p>*/}
                     {/*</div>*/}
+
+                    {props.gocardless_switch_off && (
+                        <Alert
+                            variant="warning"
+                            title="SCDS has started planning the switch off of our GoCardless integration"
+                        >
+                            <p className="mb-3">
+                                You must start to plan your migration to Stripe
+                                for your Direct Debit payments. To start
+                                planning your migration to the Stripe powered
+                                service, please talk to SCDS for help and
+                                support.
+                            </p>
+
+                            <p>
+                                If you do not migrate, you may find yourself
+                                unable to bill your users. Our new Billing and
+                                Competition tools will not support the legacy
+                                GoCardless system.
+                            </p>
+                        </Alert>
+                    )}
 
                     {props.onboarding_sessions.length > 0 && (
                         <div id="members">

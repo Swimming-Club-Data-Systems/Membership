@@ -30,6 +30,19 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
 <?php } ?>
 
+<?php if (app()->user->hasPermission('Admin') && $tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+    <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
+        <div class="<?= $container_class ?>">
+            <p class="mb-0">
+                <strong>SCDS has started planning to switch off our GoCardless integration</strong>
+            </p>
+            <p class="mb-0">
+                You must start to plan your migration to Stripe for your Direct Debit payments. To start planning your migration to the Stripe powered service, please talk to SCDS for help and support.
+            </p>
+        </div>
+    </div>
+<?php } ?>
+
 <?php if (app()->tenant->getBooleanKey('PAYMENT_METHOD_INVALID') && app()->user && app()->user->hasPermission('Admin')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
         <div class="<?= $container_class ?>">
