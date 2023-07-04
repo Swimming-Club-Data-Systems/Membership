@@ -22,8 +22,8 @@ import Modal from "@/Components/Modal";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import formatISO from "date-fns/formatISO";
-import ValidationErrors from "@/Components/ValidationErrors";
 import FlashAlert from "@/Components/FlashAlert";
+import ActionPanel from "@/Components/ActionPanel";
 
 type Session = {
     id: number;
@@ -244,6 +244,28 @@ const Show: Layout<Props> = (props: Props) => {
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-start-1 col-span-7 flex flex-col gap-6">
+                        <ActionPanel
+                            title="This competition is open for entries"
+                            buttons={
+                                <>
+                                    <ButtonLink href="" className="mr-3">
+                                        Enter now
+                                    </ButtonLink>
+                                    <Link
+                                        href={route(
+                                            "competitions.enter_as_guest",
+                                            props.id
+                                        )}
+                                    >
+                                        Enter as guest{" "}
+                                        <span aria-hidden="true"> &rarr;</span>
+                                    </Link>
+                                </>
+                            }
+                        >
+                            <p>You can enter this competition until XX</p>
+                        </ActionPanel>
+
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />
                         </Card>

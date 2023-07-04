@@ -48,7 +48,7 @@ class CompetitionController extends Controller
                     ->where('Tenant', tenant('ID'))
                     ->paginate(config('app.per_page'));
             } else {
-                $competitions = Competition::where('public')
+                $competitions = Competition::where('public', true)
                     ->where('status', '!=', CompetitionStatus::DRAFT)
                     ->orderBy('gala_date', 'desc')
                     ->paginate(config('app.per_page'));

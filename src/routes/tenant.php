@@ -5,6 +5,7 @@ use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -383,6 +384,9 @@ Route::middleware([
                             ->name('events.delete');
                     });
                 });
+                Route::get('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'new'])
+                    ->name('enter_as_guest');
+                Route::post('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'create']);
             })->whereNumber('competition');
         });
     });
