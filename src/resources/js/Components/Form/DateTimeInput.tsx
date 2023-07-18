@@ -6,7 +6,8 @@ import Input, { InputProps } from "@/Components/Form/base/Input";
 import formatISO from "date-fns/formatISO";
 import DatePicker from "react-datepicker";
 import { registerLocale } from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
+// import "react-datepicker/dist/react-datepicker.css";
+import "./DateTimeInput.css";
 import { enGB } from "date-fns/locale";
 registerLocale("en-GB", enGB);
 
@@ -20,6 +21,8 @@ interface Props extends InputProps {
     leftText?: ReactNode;
     rightButton?: ReactNode;
     showTimeInput?: boolean;
+    min: string;
+    max: string;
 }
 
 const DateTimeInput: React.FC<Props> = ({
@@ -30,15 +33,19 @@ const DateTimeInput: React.FC<Props> = ({
     rightButton,
     className = "",
     showTimeInput = false,
+    min,
+    max,
     ...props
 }) => {
-    const [{ ...field }, meta] = useField(props);
+    const [{ ...field }, meta, helpers] = useField(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
     const controlId =
         (formName ? formName + "_" : "") + (props.id || props.name);
+    const minDate = typeof min === "string" ? new Date(min) : min;
+    const maxDate = typeof max === "string" ? new Date(max) : max;
 
     if (!type) {
         type = "text";
@@ -65,6 +72,7 @@ const DateTimeInput: React.FC<Props> = ({
             <BaseInput
                 label={label}
                 type={type}
+                inputClassName="w-44"
                 input={
                     <DatePicker
                         id={controlId}
@@ -91,24 +99,45 @@ const DateTimeInput: React.FC<Props> = ({
                             });
                         }}
                         onBlur={(event) => {
-                            try {
-                                const value = formatISO(
-                                    new Date(event.target.value)
-                                );
+                            field.onBlur({
+                                target: {
+                                    name: props.name,
+                                },
+                            });
 
+                            /*
+                            if (event.target.value) {
+                                try {
+                                    const value = formatISO(
+                                        new Date(event.target.value)
+                                    );
+
+                                    field.onBlur({
+                                        target: {
+                                            name: props.name,
+                                            value: value,
+                                        },
+                                    });
+                                } catch (error) {
+                                    // Ignore
+                                    console.log(error);
+                                }
+                            } else {
                                 field.onBlur({
                                     target: {
                                         name: props.name,
-                                        value: value,
                                     },
                                 });
-                            } catch (error) {
-                                // Ignore
                             }
+                            */
                         }}
                         showTimeInput={showTimeInput}
                         locale="en-GB"
                         dateFormat={dateFormat}
+                        minDate={minDate}
+                        maxDate={maxDate}
+                        showMonthDropdown
+                        showYearDropdown
                     />
                 }
                 rightButton={rightButton}

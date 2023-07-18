@@ -19,6 +19,7 @@ type Props = {
     endIcon?: ReactNode;
     cornerHint?: string;
     className?: string;
+    inputClassName?: string;
     input: ReactNode;
     maxLength?: number;
 };
@@ -37,6 +38,7 @@ const BaseInput: React.FC<Props> = ({
     endIcon,
     cornerHint,
     className = "",
+    inputClassName = "",
     input,
     maxLength,
     ...props
@@ -89,7 +91,9 @@ const BaseInput: React.FC<Props> = ({
                     )}
                 </div>
 
-                <div className="relative mt-1 flex rounded-md shadow-sm focus-within:z-10">
+                <div
+                    className={`relative mt-1 flex rounded-md shadow-sm focus-within:z-10 ${inputClassName}`}
+                >
                     {leftText && !leftSelect && (
                         <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
                             {leftText}

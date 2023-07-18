@@ -10,6 +10,10 @@ import TextInput from "@/Components/Form/TextInput";
 import Card from "@/Components/Card";
 import { FieldArray, useField } from "formik";
 import Button from "@/Components/Button";
+import DateTimeInput from "@/Components/Form/DateTimeInput";
+import { formatISO } from "date-fns";
+import RadioGroup from "@/Components/Form/RadioGroup";
+import Radio from "@/Components/Form/Radio";
 
 export type Props = {
     google_maps_api_key: string;
@@ -38,6 +42,8 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
     const swimmerInitialValues = {
         first_name: "",
         last_name: "",
+        date_of_birth: formatISO(new Date()),
+        sex: "",
     };
 
     return (
@@ -57,12 +63,14 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title={"Guest Entry"}
                     subtitle={`Enter a competition as a guest`}
                 ></MainHeader>
+            </Container>
 
+            <Container noMargin>
                 <Form
                     removeDefaultInputMargin={true}
                     hideDefaultButtons
@@ -101,6 +109,24 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         50,
                                         "Last name must be at most 50 characters."
                                     ),
+                                date_of_birth: yup
+                                    .date()
+                                    .required("A date of birth is required.")
+                                    .min(
+                                        "1900-01-01",
+                                        "Date of birth must be at least 1 January 1900."
+                                    )
+                                    .max(
+                                        new Date(),
+                                        "Date of birth must be in the past."
+                                    ),
+                                sex: yup
+                                    .string()
+                                    .required("A sex is required.")
+                                    .oneOf(
+                                        ["Male", "Female"],
+                                        "Sex must be Female or Open."
+                                    ),
                             })
                         ),
                     })}
@@ -120,38 +146,45 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                     <div className="grid gap-6">
                         <Card
                             title="Tell us about yourself"
-                            subtitle="You'll tell us about your swimmers in the next step"
+                            subtitle="You'll tell us about your swimmers in the next step."
                         >
-                            <div className="grid grid-cols-2 gap-4">
-                                <TextInput
-                                    name="first_name"
-                                    label="First name"
-                                    autoComplete="given-name"
-                                />
-                                <TextInput
-                                    name="last_name"
-                                    label="Last name"
-                                    autoComplete="family-name"
-                                />
+                            <div className="grid grid-cols-12 gap-4">
+                                <div className="col-start-1 col-end-7 md:col-start-1 md:col-end-5">
+                                    <TextInput
+                                        name="first_name"
+                                        label="First name"
+                                        autoComplete="given-name"
+                                    />
+                                </div>
+                                <div className="col-start-7 col-end-13 md:col-start-5 md:col-end-9">
+                                    <TextInput
+                                        name="last_name"
+                                        label="Last name"
+                                        autoComplete="family-name"
+                                    />
+                                </div>
+                                <div className="col-start-1 col-end-13 md:col-start-1 md:col-end-7">
+                                    <TextInput
+                                        name="email"
+                                        label="Email address"
+                                        autoComplete="email"
+                                    />
+                                </div>
                             </div>
-                            <TextInput
-                                name="email"
-                                label="Email address"
-                                autoComplete="email"
-                            />
                         </Card>
 
                         <FieldArray name="swimmers">
                             {({ insert, remove, push }) => (
                                 <Card
                                     title="Swimmer details"
+                                    subtitle="Tell us about your swimmers."
                                     footer={
                                         <Button
                                             onClick={() =>
                                                 push(swimmerInitialValues)
                                             }
                                         >
-                                            Add swimmer
+                                            Add another swimmer
                                         </Button>
                                     }
                                 >
@@ -159,30 +192,67 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         name="swimmers"
                                         render={(index, count) => (
                                             <>
-                                                <div className="grid grid-cols-2 gap-4">
-                                                    <TextInput
-                                                        label="First name"
-                                                        name={`swimmers[${index}].first_name`}
-                                                    />
-                                                    <TextInput
-                                                        label="Last name"
-                                                        name={`swimmers[${index}].last_name`}
-                                                    />
-                                                    {count > 1 && (
-                                                        <div>
-                                                            <Button
-                                                                variant="danger"
-                                                                onClick={() => {
-                                                                    remove(
-                                                                        index
-                                                                    );
-                                                                }}
-                                                            >
-                                                                Remove
-                                                            </Button>
-                                                        </div>
-                                                    )}
+                                                {count > 1 && (
+                                                    <div className="flex justify-between items-center mb-3">
+                                                        <h4 className="font-semibold text-gray-900">
+                                                            Swimmer {index + 1}
+                                                        </h4>
+
+                                                        <Button
+                                                            variant="danger"
+                                                            onClick={() => {
+                                                                remove(index);
+                                                            }}
+                                                        >
+                                                            Remove swimmer
+                                                        </Button>
+                                                    </div>
+                                                )}
+                                                <div className="grid grid-cols-12 gap-4 mb-4">
+                                                    <div className="col-start-1 col-end-7 md:col-start-1 md:col-end-5">
+                                                        <TextInput
+                                                            label="First name"
+                                                            name={`swimmers[${index}].first_name`}
+                                                        />
+                                                    </div>
+                                                    <div className="col-start-7 col-end-13 md:col-start-5 md:col-end-9">
+                                                        <TextInput
+                                                            label="Last name"
+                                                            name={`swimmers[${index}].last_name`}
+                                                        />
+                                                    </div>
+                                                    <div className="col-start-1 col-end-13">
+                                                        <DateTimeInput
+                                                            name={`swimmers[${index}].date_of_birth`}
+                                                            label="Date of birth"
+                                                            min="1900-01-01"
+                                                            max={formatISO(
+                                                                new Date()
+                                                            )}
+                                                        />
+                                                    </div>
+                                                    <div className="col-start-1 col-end-13 md:col-start-1 md:col-end-9">
+                                                        <RadioGroup
+                                                            label="Sex"
+                                                            name={`swimmers[${index}].sex`}
+                                                        >
+                                                            <Radio
+                                                                value="Female"
+                                                                label="Female"
+                                                            />
+                                                            <Radio
+                                                                value="Male"
+                                                                label="Open"
+                                                                help="For athletes with a birth sex of male, trans or non-binary competitors and any competitor not eligible for the female category."
+                                                            />
+                                                        </RadioGroup>
+                                                    </div>
                                                 </div>
+
+                                                {count > 1 &&
+                                                    index < count - 1 && (
+                                                        <hr className="border-gray-300 my-5" />
+                                                    )}
                                             </>
                                         )}
                                     />

@@ -263,7 +263,10 @@ const Show: Layout<Props> = (props: Props) => {
                                 </>
                             }
                         >
-                            <p>You can enter this competition until XX</p>
+                            <p>
+                                You can enter this competition until{" "}
+                                {formatDateTime(props.closing_date)}.
+                            </p>
                         </ActionPanel>
 
                         <Card title="Basic details">

@@ -65,12 +65,23 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
         handleReset();
     };
 
-    const numErrors = Object.keys(errors).reduce((total, current) => {
-        if (errors[current].length > 0 && touched[current]) {
-            total += 1;
-        }
-        return total;
-    }, 0);
+    const calculateNumberOfErrors = (errors, touched) => {
+        return Object.keys(errors).reduce((total, current) => {
+            if (Array.isArray(errors[current])) {
+                for (let i = 0; i < errors[current].length; i++) {
+                    total += calculateNumberOfErrors(
+                        errors[current][i],
+                        touched?.[current]?.[i] || {}
+                    );
+                }
+            } else if (errors[current].length > 0 && touched?.[current]) {
+                total += 1;
+            }
+            return total;
+        }, 0);
+    };
+
+    const numErrors = calculateNumberOfErrors(errors, touched);
 
     return (
         <div className="flex gap-4 items-center justify-between">
