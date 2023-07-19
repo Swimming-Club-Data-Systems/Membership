@@ -21,8 +21,8 @@ interface Props extends InputProps {
     leftText?: ReactNode;
     rightButton?: ReactNode;
     showTimeInput?: boolean;
-    min: string;
-    max: string;
+    min?: string;
+    max?: string;
 }
 
 const DateTimeInput: React.FC<Props> = ({

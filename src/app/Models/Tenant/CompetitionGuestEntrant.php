@@ -32,6 +32,10 @@ class CompetitionGuestEntrant extends Model
         'sex' => Sex::class,
     ];
 
+    protected $attributes = [
+        'custom_form_data' => '[]',
+    ];
+
     public function competitionGuestEntryHeader(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(CompetitionGuestEntryHeader::class);

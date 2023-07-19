@@ -81,6 +81,7 @@
     border-radius: 0.325rem;
     display: inline-block;
     position: relative;
+    font-feature-settings: "cv11", "ss01";
 }
 
 .react-datepicker--time-only .react-datepicker__triangle {

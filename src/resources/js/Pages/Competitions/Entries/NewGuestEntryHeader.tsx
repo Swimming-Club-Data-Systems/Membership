@@ -4,7 +4,10 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Form, { SubmissionButtons } from "@/Components/Form/Form";
+import Form, {
+    RenderServerErrors,
+    SubmissionButtons,
+} from "@/Components/Form/Form";
 import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import Card from "@/Components/Card";
@@ -14,12 +17,21 @@ import DateTimeInput from "@/Components/Form/DateTimeInput";
 import { formatISO } from "date-fns";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import Radio from "@/Components/Form/Radio";
+import FlashAlert from "@/Components/FlashAlert";
 
 export type Props = {
     google_maps_api_key: string;
     competition: {
         name: string;
         id: number;
+    };
+    user?: {
+        first_name: string;
+        last_name: string;
+        email: string;
+    };
+    tenant: {
+        name: string;
     };
 };
 
@@ -131,9 +143,9 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                         ),
                     })}
                     initialValues={{
-                        first_name: "",
-                        last_name: "",
-                        email: "",
+                        first_name: props.user?.first_name || "",
+                        last_name: props.user?.last_name || "",
+                        email: props.user?.email || "",
                         swimmers: [swimmerInitialValues],
                     }}
                     submitTitle="Next step"
@@ -142,7 +154,11 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                         props.competition.id
                     )}
                     method="post"
+                    hideErrors
                 >
+                    <FlashAlert />
+                    <RenderServerErrors />
+
                     <div className="grid gap-6">
                         <Card
                             title="Tell us about yourself"
@@ -154,6 +170,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         name="first_name"
                                         label="First name"
                                         autoComplete="given-name"
+                                        readOnly={Boolean(props.user)}
                                     />
                                 </div>
                                 <div className="col-start-7 col-end-13 md:col-start-5 md:col-end-9">
@@ -161,6 +178,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         name="last_name"
                                         label="Last name"
                                         autoComplete="family-name"
+                                        readOnly={Boolean(props.user)}
                                     />
                                 </div>
                                 <div className="col-start-1 col-end-13 md:col-start-1 md:col-end-7">
@@ -168,6 +186,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         name="email"
                                         label="Email address"
                                         autoComplete="email"
+                                        readOnly={Boolean(props.user)}
                                     />
                                 </div>
                             </div>
@@ -259,6 +278,40 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                 </Card>
                             )}
                         </FieldArray>
+
+                        <Card title={`${props.tenant.name} and your data`}>
+                            <div className="prose prose-sm">
+                                <p>
+                                    By continuing, you consent to the storage
+                                    and use of your personal data by{" "}
+                                    {props.tenant.name} for the purposes of
+                                    processing your entry. You may request that{" "}
+                                    {props.tenant.name} delete your personally
+                                    identifiable data at any time. Personally
+                                    identifiable data will be automatically
+                                    deleted 3 months after the end of the
+                                    competition you are entering.
+                                </p>
+
+                                <p>
+                                    By proceeding, you also confirm that you
+                                    accept the {props.tenant.name} terms and
+                                    conditions relating to use of their
+                                    services, competition entries and more. ADD
+                                    LINK TO TERMS.
+                                </p>
+
+                                <p>
+                                    Use of this software is subject to the
+                                    Swimming Club Data Systems (SCDS) terms and
+                                    conditions, license agreements and
+                                    responsible use policies, details of which
+                                    can be found on the SCDS website. SCDS
+                                    reserves the right to make changes to these
+                                    terms and policies at any time.
+                                </p>
+                            </div>
+                        </Card>
 
                         <SubmissionButtons />
                     </div>
