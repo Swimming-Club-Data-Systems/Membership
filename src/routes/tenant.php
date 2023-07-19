@@ -387,7 +387,15 @@ Route::middleware([
                 Route::get('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'new'])
                     ->name('enter_as_guest');
                 Route::post('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'create']);
-            })->whereNumber('competition');
+                Route::prefix('/guest-entries')->group(function () {
+                    Route::get('/{header}', [CompetitionGuestEntryHeaderController::class, 'show'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.show');
+                    Route::get('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'editEntry'])
+                        ->whereUuid(['header', 'entrant'])
+                        ->name('enter_as_guest.edit_entry');
+                });
+            });
         });
     });
 

@@ -8,7 +8,7 @@ export type DefinitionListItemProps = {
 
 export type DefinitionListProps = {
     items: DefinitionListItemProps[];
-    verticalPadding: number;
+    verticalPadding?: number;
 };
 
 export const DefinitionList: React.FC<DefinitionListProps> = ({

@@ -5,11 +5,13 @@ namespace App\Models\Tenant;
 use App\Enums\CompetitionCategory;
 use App\Enums\DistanceUnits;
 use App\Enums\EventCode;
+use App\Enums\Sex;
 use App\Enums\Stroke;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -133,5 +135,60 @@ class CompetitionEvent extends Model
                 'processing_fee' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
+    }
+
+    public function categoryMatches(Sex $sex): bool
+    {
+        if ($sex == Sex::FEMALE) {
+            return in_array($this->category, [
+                CompetitionCategory::FEMALE,
+                CompetitionCategory::GIRL,
+                CompetitionCategory::MIXED,
+            ]);
+        } else {
+            return in_array($this->category, [
+                CompetitionCategory::MALE,
+                CompetitionCategory::OPEN,
+                CompetitionCategory::BOY,
+                CompetitionCategory::MIXED,
+            ]);
+        }
+    }
+
+    public function ageMatches(int $age)
+    {
+        for ($i = 0; $i < count($this->ages); $i++) {
+            if ($this->ages[$i] == 'OPEN') {
+                return true;
+            } elseif (Str::startsWith($this->ages[$i], '-')) {
+                // Up to age $this->ages[$i]
+                $ages = Str::of($this->ages[$i])->explode('-');
+
+                if ($age <= $ages[0]) {
+                    return true;
+                }
+            } elseif (Str::endsWith($this->ages[$i], '-')) {
+                // Age $this->ages[$i] and up
+                $ages = Str::of($this->ages[$i])->explode('-');
+
+                if ($age >= $ages[0]) {
+                    return true;
+                }
+            } elseif (Str::contains($this->ages[$i], '-')) {
+                // Ages between [0] and [1]
+                $ages = Str::of($this->ages[$i])->explode('-');
+
+                if ($age >= $ages[0] && $age <= $ages[0]) {
+                    return true;
+                }
+            } else {
+                // Single age group
+                if ($age == $this->ages[$i]) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 }

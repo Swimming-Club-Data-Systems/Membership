@@ -3,11 +3,11 @@
 namespace App\Models\Tenant;
 
 use App\Enums\Sex;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Carbon;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
@@ -17,6 +17,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $name
  * @property Carbon $date_of_birth
  * @property Sex $sex
+ * @property int $age
  * @property CompetitionGuestEntryHeader $competition_guest_entry_header
  */
 class CompetitionGuestEntrant extends Model
@@ -54,5 +55,25 @@ class CompetitionGuestEntrant extends Model
         return Attribute::make(
             get: fn (mixed $value, array $attributes) => $attributes['first_name'].' '.$attributes['last_name'],
         );
+    }
+
+    /**
+     * Get the entrant's name.
+     */
+    protected function age(): Attribute
+    {
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => $this->ageAt(Carbon::now()),
+        );
+    }
+
+    /**
+     * Get the member's age at the supplied date
+     */
+    public function ageAt(Carbon $date): int
+    {
+        $diff = $this->date_of_birth->diff($date);
+
+        return $diff->y;
     }
 }
