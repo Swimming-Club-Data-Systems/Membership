@@ -89,6 +89,11 @@ class CompetitionEvent extends Model
         return $this->hasOneThrough(Competition::class, CompetitionSession::class);
     }
 
+    public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        //        return $this->hasMany(CompetitionEntry::class);
+    }
+
     public function toArray()
     {
         return [

@@ -159,6 +159,9 @@ class CompetitionGuestEntryHeaderController extends Controller
                                     'processing_fee' => $event->processing_fee,
                                     'processing_fee_string' => $event->processing_fee_string,
                                     'category' => $event->category,
+                                    'entry' => [
+                                        'id' => $event->entries()->where(''),
+                                    ],
                                 ];
                             })
                             ->toArray(),
