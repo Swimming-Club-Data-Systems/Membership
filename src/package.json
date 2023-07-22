@@ -73,5 +73,10 @@
   "name": "",
   "version": "",
   "readme": "ERROR: No README data found!",
-  "_id": "@"
+  "_id": "@",
+  "overrides": {
+      "yup-phone": {
+          "yup": "^1.2.0"
+      }
+  }
 }
