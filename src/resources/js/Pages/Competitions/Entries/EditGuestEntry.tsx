@@ -34,16 +34,17 @@ export type Props = {
     first_name: string;
     last_name: string;
     email: string;
-    entrants: {
+    entrant: {
         id: string;
         first_name: string;
         last_name: string;
         date_of_birth: string;
         sex: string;
-    }[];
+    };
     tenant: {
         name: string;
     };
+    sessions: {}[];
 };
 
 type FieldArrayItemsProps = {
@@ -77,7 +78,14 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
             </Container>
 
             <Container noMargin>
-                <EntryForm sessions={props.sessions} />
+                <EntryForm
+                    sessions={props.sessions}
+                    action={route("competitions.enter_as_guest.edit_entry", {
+                        competition: props.competition.id,
+                        header: props.id,
+                        entrant: props.entrant.id,
+                    })}
+                />
             </Container>
         </>
     );

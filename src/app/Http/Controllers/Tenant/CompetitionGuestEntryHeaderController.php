@@ -5,14 +5,19 @@ namespace App\Http\Controllers\Tenant;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionEvent;
+use App\Models\Tenant\CompetitionEventEntry;
 use App\Models\Tenant\CompetitionGuestEntrant;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\User;
+use Closure;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
 
@@ -115,6 +120,70 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function editEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request)
     {
+        // Get existing entries
+        /** @var CompetitionEntry $entry */
+        $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('events')->first();
+
+        $sessions = $competition
+            ->sessions()
+            ->with('events')
+            ->get();
+
+        $swimsFormData = [];
+
+        $sessionData = $sessions
+            ->map(function (CompetitionSession $session) use ($entrant, $competition, $entry, &$swimsFormData) {
+                return [
+                    'id' => $session->id,
+                    'name' => $session->name,
+                    'sequence' => $session->sequence,
+                    'events' => $session
+                        ->events
+                        ->filter(function (CompetitionEvent $event) use ($entrant, $competition) {
+                            return $event->categoryMatches($entrant->sex) && $event->ageMatches($entrant->ageAt($competition->age_at_date));
+                        })
+                        ->map(function (CompetitionEvent $event) use ($entry, &$swimsFormData) {
+
+                            // Get event entry if exists
+                            /** @var CompetitionEventEntry $eventEntry */
+                            $eventEntry = $entry?->events->where('competition_event_id', '=', $event->id)->first();
+
+                            $swimsFormData[] = [
+                                'event_id' => $event->id,
+                                'sequence' => $event->sequence,
+                                'entering' => $eventEntry != null,
+                                'entry_time' => $eventEntry?->entry_time,
+                                'id' => $eventEntry?->id,
+                            ];
+
+                            return [
+                                'id' => $event->id,
+                                'name' => $event->name,
+                                'sequence' => $event->sequence,
+                                'distance' => $event->distance,
+                                'stroke' => $event->stroke,
+                                'units' => $event->units,
+                                'event_code' => $event->event_code,
+                                'entry_fee' => $event->entry_fee,
+                                'entry_fee_string' => $event->entry_fee_string,
+                                'processing_fee' => $event->processing_fee,
+                                'processing_fee_string' => $event->processing_fee_string,
+                                'category' => $event->category,
+                                'event_entry' => $eventEntry ? [
+                                    'id' => $eventEntry->id,
+                                    'entry_time' => $eventEntry->entry_time,
+                                    'amount' => $eventEntry->amount,
+                                    'amount_refunded' => $eventEntry->amount_refunded,
+                                    'cancellation_reason' => $eventEntry->cancellation_reason,
+                                    'notes' => $eventEntry->notes,
+                                ] : null,
+                            ];
+                        })
+                        ->toArray(),
+                ];
+            })
+            ->toArray();
+
         return Inertia::render('Competitions/Entries/EditGuestEntry', [
             'id' => $header->id,
             'competition' => [
@@ -130,44 +199,83 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'age' => $entrant->age,
                 'age_on_day' => $entrant->ageAt($competition->age_at_date),
             ],
-            'sessions' => $competition
-                ->sessions()
-                ->get()
-                ->map(function (CompetitionSession $session) use ($entrant, $competition) {
-                    return [
-                        'id' => $session->id,
-                        'name' => $session->name,
-                        'sequence' => $session->sequence,
-                        'events' => $session
-                            ->events()
-                            ->orderBy('sequence', 'asc')
-                            ->get()
-                            ->filter(function (CompetitionEvent $event) use ($entrant, $competition) {
-                                return $event->categoryMatches($entrant->sex) && $event->ageMatches($entrant->ageAt($competition->age_at_date));
-                            })
-                            ->map(function (CompetitionEvent $event) {
-                                return [
-                                    'id' => $event->id,
-                                    'name' => $event->name,
-                                    'sequence' => $event->sequence,
-                                    'distance' => $event->distance,
-                                    'stroke' => $event->stroke,
-                                    'units' => $event->units,
-                                    'event_code' => $event->event_code,
-                                    'entry_fee' => $event->entry_fee,
-                                    'entry_fee_string' => $event->entry_fee_string,
-                                    'processing_fee' => $event->processing_fee,
-                                    'processing_fee_string' => $event->processing_fee_string,
-                                    'category' => $event->category,
-                                    'entry' => [
-                                        'id' => $event->entries()->where(''),
-                                    ],
-                                ];
-                            })
-                            ->toArray(),
-                    ];
-                })
-                ->toArray(),
+            'sessions' => $sessionData,
+            'form_initial_values' => [
+                'entries' => $swimsFormData,
+            ],
         ]);
+    }
+
+    public function updateEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request)
+    {
+        // Get existing entries
+        /** @var CompetitionEntry $entry */
+        $entry = CompetitionEntry::firstOrCreate(
+            [
+                'competition_guest_entrant_id' => $entrant->id,
+                'competition_id' => $competition->id,
+            ]
+        );
+
+        if ($entry->locked) {
+            // return, can't edit
+        }
+
+        $validated = $request->validate([
+            'entries.*.entering' => ['boolean'],
+            'entries.*.id' => [
+                'nullable',
+                Rule::exists('competition_event_entries', 'id')->where(function (Builder $query) use ($entry) {
+                    return $query->where('competition_entry_id', $entry->id);
+                }),
+            ],
+            'entries.*.event_id' => [
+                'required',
+                function (string $attribute, mixed $value, Closure $fail) use ($competition) {
+                    $doesntExist = DB::table('competition_events')
+                        ->join('competition_sessions', 'competition_events.competition_session_id', '=', 'competition_sessions.id')
+                        ->where('competition_events.id', $value)
+                        ->where('competition_sessions.competition_id', $competition->id)
+                        ->doesntExist();
+
+                    if ($doesntExist) {
+                        $fail("The {$attribute} is invalid.");
+                    }
+                },
+            ],
+            'entries.*.entry_time' => [
+                'nullable',
+            ],
+        ]);
+
+        foreach ($validated['entries'] as $event) {
+            if ($event['entering']) {
+                // Create or update
+                $eventEntry = CompetitionEventEntry::firstOrNew(
+                    [
+                        'competition_entry_id' => $entry->id,
+                        'competition_event_id' => $event['event_id'],
+                    ],
+                    [
+                        'entry_time' => $event['entry_time'],
+                    ]
+                );
+
+                // In future add logic for amending price before save
+
+                $eventEntry->save();
+
+            } else {
+                // Delete
+                if ($event['id']) {
+                    CompetitionEventEntry::destroy($event['id']);
+                }
+            }
+        }
+
+        // Sum the totals
+        $entry->calculateTotals();
+        $entry->save();
+
     }
 }

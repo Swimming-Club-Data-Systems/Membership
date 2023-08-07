@@ -53,6 +53,24 @@ class CreateDefaultLedgersAndJournals implements ShouldQueue
                 'is_system' => true,
             ]);
 
+            $squadIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Squad Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
+            $extraFeeIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Extra Fee Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
+            $competitionIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Competition Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
             // Check for Journal Existence
             $guestIncomeJournal = JournalAccount::firstOrNew([
                 'name' => 'Guest Customers',

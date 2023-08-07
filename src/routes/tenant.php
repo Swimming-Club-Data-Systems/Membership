@@ -394,6 +394,8 @@ Route::middleware([
                     Route::get('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'editEntry'])
                         ->whereUuid(['header', 'entrant'])
                         ->name('enter_as_guest.edit_entry');
+                    Route::put('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'updateEntry'])
+                        ->whereUuid(['header', 'entrant']);
                 });
             });
         });

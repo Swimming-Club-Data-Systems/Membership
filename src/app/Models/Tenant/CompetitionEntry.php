@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Business\Helpers\Money;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -24,19 +25,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $refundable
  * @property bool $approved
  * @property bool $locked
+ * @property Collection $events
  */
 class CompetitionEntry extends Model
 {
     use HasFactory, HasUuids;
+
+    protected $fillable = [
+        'competition_id',
+        'competition_guest_entrant_id',
+        'member_MemberID',
+    ];
 
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function competitionGuestEntrant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function guest(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(CompetitionGuestEntrant::class);
+    }
+
+    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CompetitionEventEntry::class);
     }
 
     protected function formattedAmount(): Attribute
@@ -77,5 +90,14 @@ class CompetitionEntry extends Model
                 'amount_refunded' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
         );
+    }
+
+    /**
+     * Calculate the totals for the associated event entries. Does not save the model.
+     */
+    public function calculateTotals(): void
+    {
+        $this->amount = $this->events()->sum('amount');
+        $this->amount_refunded = $this->events()->sum('amount_refunded');
     }
 }

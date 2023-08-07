@@ -29,9 +29,10 @@ type Props = {
             category: string;
         }[];
     }[];
+    action: string;
 };
 
-export const EntryForm = ({ sessions }: Props) => {
+export const EntryForm = ({ sessions, action }: Props) => {
     return (
         <>
             <Form
@@ -39,13 +40,13 @@ export const EntryForm = ({ sessions }: Props) => {
                 validationSchema={yup.object().shape({
                     entries: yup.array().of(
                         yup.object().shape({
-                            entered: yup.boolean(),
+                            entering: yup.boolean(),
                         })
                     ),
                 })}
+                action={action}
+                method="put"
             >
-                {/*  Loop over each session rendering checkboxes  */}
-
                 <div className="grid gap-4">
                     {sessions.map((session) => (
                         <Card key={session.id} title={session.name}>
@@ -56,7 +57,9 @@ export const EntryForm = ({ sessions }: Props) => {
                                         content: (
                                             <div key={event.id}>
                                                 <Checkbox
-                                                    name={`event${event.id}.enter`}
+                                                    name={`entries.${
+                                                        event.sequence - 1
+                                                    }.entering`}
                                                     label={event.name}
                                                     help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
                                                 />
