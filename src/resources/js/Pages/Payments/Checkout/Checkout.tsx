@@ -200,75 +200,80 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                         </>
                     )}
 
-                    <Form
-                        initialValues={{
-                            payment_method: "n/a",
-                        }}
-                        validationSchema={yup.object({
-                            payment_method: yup
-                                .string()
-                                .required()
-                                .test({
-                                    name: "test_valid_pm",
-                                    test: (value) => value !== "n/a",
-                                    message: "Please select a payment method.",
-                                }),
-                        })}
-                        onSubmit={handleStripeSubmit}
-                        submitTitle={`Pay ${props.formatted_total} Now`}
-                        hideClear
-                        hideDefaultButtons
-                        disabled={submitting}
-                    >
-                        <div className="grid gap-4">
-                            <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
-                                Use a saved payment method
-                            </h2>
-                            {alert && alert.name === "saved_cards" && (
-                                <Alert
-                                    title={alert.title}
-                                    variant={alert.variant}
-                                >
-                                    <p>{alert.message}</p>
-                                </Alert>
-                            )}
+                    {props.payment_methods.length > 0 && (
+                        <>
+                            <Form
+                                initialValues={{
+                                    payment_method: "n/a",
+                                }}
+                                validationSchema={yup.object({
+                                    payment_method: yup
+                                        .string()
+                                        .required()
+                                        .test({
+                                            name: "test_valid_pm",
+                                            test: (value) => value !== "n/a",
+                                            message:
+                                                "Please select a payment method.",
+                                        }),
+                                })}
+                                onSubmit={handleStripeSubmit}
+                                submitTitle={`Pay ${props.formatted_total} now`}
+                                hideClear
+                                hideDefaultButtons
+                                disabled={submitting}
+                            >
+                                <div className="grid gap-4">
+                                    <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
+                                        Use a saved payment method
+                                    </h2>
+                                    {alert && alert.name === "saved_cards" && (
+                                        <Alert
+                                            title={alert.title}
+                                            variant={alert.variant}
+                                        >
+                                            <p>{alert.message}</p>
+                                        </Alert>
+                                    )}
 
-                            <Select
-                                name="payment_method"
-                                options={paymentMethods.map(
-                                    (payment_method) => {
-                                        return {
-                                            disabled:
-                                                payment_method.stripe_id ===
-                                                "n/a",
-                                            key: payment_method.stripe_id,
-                                            name: payment_method.description,
-                                        };
-                                    }
-                                )}
-                                label="Choose a saved payment method"
-                            />
+                                    <Select
+                                        name="payment_method"
+                                        options={paymentMethods.map(
+                                            (payment_method) => {
+                                                return {
+                                                    disabled:
+                                                        payment_method.stripe_id ===
+                                                        "n/a",
+                                                    key: payment_method.stripe_id,
+                                                    name: payment_method.description,
+                                                };
+                                            }
+                                        )}
+                                        label="Choose a saved payment method"
+                                    />
 
-                            <SubmissionButtons />
-                        </div>
-                    </Form>
+                                    <SubmissionButtons />
+                                </div>
+                            </Form>
 
-                    <div className="relative mb-4">
-                        <div className="absolute inset-0 flex items-center">
-                            <div className="w-full border-t border-gray-300" />
-                        </div>
-                        <div className="relative flex justify-center text-sm">
-                            <span className="bg-gray-100 px-2 text-gray-500">
-                                Or
-                            </span>
-                        </div>
-                    </div>
+                            <div className="relative mb-4">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-gray-300" />
+                                </div>
+                                <div className="relative flex justify-center text-sm">
+                                    <span className="bg-gray-100 px-2 text-gray-500">
+                                        Or
+                                    </span>
+                                </div>
+                            </div>
+                        </>
+                    )}
 
                     <Form
                         initialValues={{}}
                         validationSchema={yup.object({})}
                         onSubmit={handleStripeSubmit}
-                        submitTitle={`Pay ${props.formatted_total} Now`}
+                        submitTitle={`Pay ${props.formatted_total} now`}
                         hideClear
                         hideDefaultButtons
                         disabled={submitting}

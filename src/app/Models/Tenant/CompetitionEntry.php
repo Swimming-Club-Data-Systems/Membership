@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $approved
  * @property bool $locked
  * @property Collection $events
+ * @property bool $processing_fee_paid
  */
 class CompetitionEntry extends Model
 {
@@ -37,12 +38,22 @@ class CompetitionEntry extends Model
         'member_MemberID',
     ];
 
+    protected $casts = [
+        'paid' => 'boolean',
+        'processing_fee_paid' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'paid' => false,
+        'processing_fee_paid' => false,
+    ];
+
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Member::class);
     }
 
-    public function guest(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function competitionGuestEntrant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(CompetitionGuestEntrant::class);
     }

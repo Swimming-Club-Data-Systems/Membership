@@ -4,8 +4,25 @@ import * as yup from "yup";
 import Card from "@/Components/Card";
 import BasicList from "@/Components/BasicList";
 import Checkbox from "@/Components/Form/Checkbox";
+import { EntryAdditionalDetails } from "@/Components/Competitions/EntryAdditionalDetails";
 
-type Props = {
+export type Event = {
+    id: number;
+    name: string;
+    stroke: string;
+    units: string;
+    distance: number;
+    event_code: number;
+    sequence: number;
+    ages: string[];
+    entry_fee: number;
+    processing_fee: number;
+    entry_fee_string: string;
+    processing_fee_string: string;
+    category: string;
+};
+
+type EntryFormProps = {
     sessions: {
         id: number;
         name: string;
@@ -13,26 +30,12 @@ type Props = {
             id: number;
             name: string;
         };
-        events: {
-            id: number;
-            name: string;
-            stroke: string;
-            units: string;
-            distance: number;
-            event_code: number;
-            sequence: number;
-            ages: string[];
-            entry_fee: number;
-            processing_fee: number;
-            entry_fee_string: string;
-            processing_fee_string: string;
-            category: string;
-        }[];
+        events: Event[];
     }[];
     action: string;
 };
 
-export const EntryForm = ({ sessions, action }: Props) => {
+export const EntryForm = ({ sessions, action }: EntryFormProps) => {
     return (
         <>
             <Form
@@ -41,11 +44,25 @@ export const EntryForm = ({ sessions, action }: Props) => {
                     entries: yup.array().of(
                         yup.object().shape({
                             entering: yup.boolean(),
+                            entry_time: yup
+                                .string()
+                                .nullable()
+                                .matches(/^\d{0,2}:?\d{0,2}[.]\d{0,2}$/, {
+                                    message:
+                                        "Entry time must be of the format MM:SS.HH.",
+                                    excludeEmptyString: true,
+                                }),
+                            amount: yup
+                                .number()
+                                .typeError("Amount must be a number.")
+                                .min(0),
                         })
                     ),
                 })}
                 action={action}
                 method="put"
+                removeDefaultInputMargin
+                submitTitle="Save"
             >
                 <div className="grid gap-4">
                     {sessions.map((session) => (
@@ -62,6 +79,10 @@ export const EntryForm = ({ sessions, action }: Props) => {
                                                     }.entering`}
                                                     label={event.name}
                                                     help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
+                                                />
+
+                                                <EntryAdditionalDetails
+                                                    event={event}
                                                 />
                                             </div>
                                         ),

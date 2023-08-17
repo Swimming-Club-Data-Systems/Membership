@@ -66,6 +66,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
     };
 
     const calculateNumberOfErrors = (errors, touched) => {
+        if (errors === undefined) return 0;
         return Object.keys(errors).reduce((total, current) => {
             if (Array.isArray(errors[current])) {
                 for (let i = 0; i < errors[current].length; i++) {

@@ -39,14 +39,16 @@ class CheckoutController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
         $paymentMethodsArray = [];
-        foreach ($paymentMethods as $method) {
-            /** @var PaymentMethod $method */
-            $paymentMethodsArray[] = [
-                'id' => $method->id,
-                'stripe_id' => $method->stripe_id,
-                'description' => $method->description,
-                'information_line' => $method->information_line,
-            ];
+        if ($paymentMethods) {
+            foreach ($paymentMethods as $method) {
+                /** @var PaymentMethod $method */
+                $paymentMethodsArray[] = [
+                    'id' => $method->id,
+                    'stripe_id' => $method->stripe_id,
+                    'description' => $method->description,
+                    'information_line' => $method->information_line,
+                ];
+            }
         }
 
         $lines = [];

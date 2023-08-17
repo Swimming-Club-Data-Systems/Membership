@@ -6,6 +6,7 @@ use App\Business\Helpers\ApplicationFeeAmount;
 use App\Business\Helpers\Money;
 use App\Enums\PaymentStatus;
 use App\Enums\StripePaymentIntentStatus;
+use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -136,5 +137,40 @@ class Payment extends Model
         return Attribute::make(
             get: fn () => Money::formatCurrency($this->amount_refundable, $this->currency),
         );
+    }
+
+    public function createStripePaymentIntent()
+    {
+        if ($this->stripe_id) {
+            return;
+        }
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        $data = [
+            'currency' => 'gbp',
+            'amount' => $this->amount,
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
+            'description' => 'SCDS Checkout Payment',
+            'metadata' => [
+                'payment_category' => 'scds_checkout_v3',
+                'payment_id' => $this->id,
+                'user_id' => $this->user?->UserID,
+            ],
+            'application_fee_amount' => $this->applicationFeeAmount(),
+        ];
+
+        if ($this->user?->stripeCustomerId()) {
+            $data['customer'] = $this->user?->stripeCustomerId();
+        }
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+        $paymentIntent = $stripe->paymentIntents->create($data, [
+            'stripe_account' => $tenant->stripeAccount(),
+        ]);
+        $this->stripe_id = $paymentIntent->id;
     }
 }

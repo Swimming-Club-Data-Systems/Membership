@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Money;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
@@ -153,6 +154,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                                 'sequence' => $event->sequence,
                                 'entering' => $eventEntry != null,
                                 'entry_time' => $eventEntry?->entry_time,
+                                'amount' => $eventEntry ? $eventEntry->amount_string : Money::formatDecimal($event->entry_fee + $event->processing_fee),
                                 'id' => $eventEntry?->id,
                             ];
 
@@ -251,6 +253,7 @@ class CompetitionGuestEntryHeaderController extends Controller
         foreach ($validated['entries'] as $event) {
             if ($event['entering']) {
                 // Create or update
+                /** @var CompetitionEventEntry $eventEntry */
                 $eventEntry = CompetitionEventEntry::firstOrNew(
                     [
                         'competition_entry_id' => $entry->id,
@@ -261,7 +264,14 @@ class CompetitionGuestEntryHeaderController extends Controller
                     ]
                 );
 
-                // In future add logic for amending price before save
+                if (! $eventEntry->exists) {
+                    /** @var CompetitionEvent $competitionEvent */
+                    $competitionEvent = $competition->events->find($event['event_id']);
+                    $eventEntry->populateFromEvent($competitionEvent);
+
+                    // If the user has permission,
+                    // add logic for amending price before save
+                }
 
                 $eventEntry->save();
 

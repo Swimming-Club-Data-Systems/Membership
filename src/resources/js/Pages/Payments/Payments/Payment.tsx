@@ -15,6 +15,7 @@ import FlashAlert from "@/Components/FlashAlert";
 import Table from "@/Components/Table";
 import BigNumber from "bignumber.js";
 import ArrayErrorMessage from "@/Components/Form/ArrayErrorMessage";
+import DecimalInput from "@/Components/Form/DecimalInput";
 
 type LineRefund = {
     id: number;
@@ -277,9 +278,10 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                     item.amount_refundable_int >
                                                         0 && (
                                                         <div className="w-full md:w-96">
-                                                            <TextInput
+                                                            <DecimalInput
                                                                 name={`lines[${idx}].refund_amount`}
                                                                 label="Refund amount"
+                                                                precision={2}
                                                             />
                                                         </div>
                                                     )}

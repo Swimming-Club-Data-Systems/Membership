@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -391,6 +392,9 @@ Route::middleware([
                     Route::get('/{header}', [CompetitionGuestEntryHeaderController::class, 'show'])
                         ->whereUuid('header')
                         ->name('enter_as_guest.show');
+                    Route::get('/{header}/pay-now', [CompetitionGuestEntryPaymentController::class, 'start'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.pay');
                     Route::get('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'editEntry'])
                         ->whereUuid(['header', 'entrant'])
                         ->name('enter_as_guest.edit_entry');

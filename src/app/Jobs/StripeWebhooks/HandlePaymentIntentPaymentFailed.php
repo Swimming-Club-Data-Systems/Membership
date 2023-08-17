@@ -63,6 +63,8 @@ class HandlePaymentIntentPaymentFailed implements ShouldQueue
                         /** @var PaymentLine $line */
                         if ($line->associated && $line->associated instanceof PaidObject) {
                             $line->associated->handleFailed();
+                        } elseif ($line->associatedUuid && $line->associatedUuid instanceof PaidObject) {
+                            $line->associatedUuid->handleFailed();
                         }
                     }
 

@@ -22,6 +22,7 @@ import BasicList from "@/Components/BasicList";
 import { formatDate } from "@/Utils/date-utils";
 import { DefinitionList } from "@/Components/DefinitionList";
 import Link from "@/Components/Link";
+import ButtonLink from "@/Components/ButtonLink";
 
 export type Props = {
     google_maps_api_key: string;
@@ -39,6 +40,7 @@ export type Props = {
         last_name: string;
         date_of_birth: string;
         sex: string;
+        age: number;
     }[];
     tenant: {
         name: string;
@@ -105,7 +107,8 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                                             <div>
                                                 <div>
                                                     {entrant.first_name}{" "}
-                                                    {entrant.last_name}{" "}
+                                                    {entrant.last_name} (
+                                                    {entrant.age})
                                                 </div>
                                                 <div>
                                                     {formatDate(
@@ -141,9 +144,28 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                         ></BasicList>
                     </Card>
 
-                    <Card title="Payment">
-                        <div className="text-sm">
-                            You can&apos;t make payment right now.
+                    <Card
+                        title="Payment"
+                        footer={
+                            <ButtonLink
+                                href={route("competitions.enter_as_guest.pay", {
+                                    competition: props.competition.id,
+                                    header: props.id,
+                                })}
+                            >
+                                Pay now
+                            </ButtonLink>
+                        }
+                    >
+                        <div className="prose prose-sm">
+                            <p>Ready to pay?</p>
+
+                            <p>
+                                Once you pay, you&apos;ll no longer be able to
+                                amend your entry. If you need to make changes,
+                                you&apos;ll need to contact {props.tenant.name}{" "}
+                                directly.
+                            </p>
                         </div>
                     </Card>
                 </div>

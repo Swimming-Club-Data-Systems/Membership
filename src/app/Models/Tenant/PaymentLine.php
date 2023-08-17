@@ -32,6 +32,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property int $quantity
  * @property string $currency
  * @property Model $associated
+ * @property Model $associatedUuid
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property RefundPaymentLine $pivot
@@ -74,6 +75,14 @@ class PaymentLine extends Model
      * Get the associated model
      */
     public function associated(): \Illuminate\Database\Eloquent\Relations\MorphTo
+    {
+        return $this->morphTo();
+    }
+
+    /**
+     * Get the associated uuid model
+     */
+    public function associatedUuid(): \Illuminate\Database\Eloquent\Relations\MorphTo
     {
         return $this->morphTo();
     }
@@ -179,8 +188,15 @@ class PaymentLine extends Model
     protected function description(): Attribute
     {
         return Attribute::make(
-            get: fn ($value) => $this->associated instanceof PaidObject ?
-                $this->associated->getPaymentLineDescriptor() : $value ?? 'Line Item',
+            get: function ($value) {
+                if ($this->associated instanceof PaidObject) {
+                    return $this->associated->getPaymentLineDescriptor();
+                } elseif ($this->associatedUuid instanceof PaidObject) {
+                    return $this->associatedUuid->getPaymentLineDescriptor();
+                } else {
+                    return 'Line Item';
+                }
+            }
         );
     }
 }
