@@ -19,6 +19,7 @@ import Select from "@/Components/Form/Select";
 import Card from "@/Components/Card";
 import Table from "@/Components/Table";
 import { router, usePage } from "@inertiajs/react";
+import { PaymentLineItemsSummary } from "@/Components/Payments/Checkout/PaymentLineItemsSummary";
 
 type Props = {
     id: number;
@@ -337,25 +338,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                         <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
                             Payment Summary
                         </h2>
-                        <Card>
-                            <Table
-                                data={props.lines}
-                                columns={[
-                                    {
-                                        headerName: "Description",
-                                        field: "description",
-                                    },
-                                    {
-                                        headerName: "Quantity",
-                                        field: "quantity",
-                                    },
-                                    {
-                                        headerName: "Total",
-                                        field: "formatted_amount",
-                                    },
-                                ]}
-                            />
-                        </Card>
+                        <PaymentLineItemsSummary data={props.lines} />
                     </div>
                 </div>
             </div>

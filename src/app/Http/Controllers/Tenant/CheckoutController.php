@@ -208,8 +208,27 @@ class CheckoutController extends Controller
         ]);
 
         if ($paymentIntent->status === StripePaymentIntentStatus::SUCCEEDED->value) {
+            $lines = [];
+            foreach ($payment->lines()->get() as $line) {
+                /** @var PaymentLine $line */
+                $lines[] = [
+                    'id' => $line->id,
+                    'description' => $line->description,
+                    'quantity' => $line->quantity,
+                    'formatted_amount' => $line->formatted_amount_total,
+                ];
+            }
+
             return Inertia::render('Payments/Checkout/Success', [
                 'id' => $payment->id,
+                'formatted_total' => Money::formatCurrency($paymentIntent->amount),
+                'statement_descriptor' => $paymentIntent->charges->data[0]->calculated_statement_descriptor,
+                'lines' => $lines,
+                'payment_method' => $payment->paymentMethod ? [
+                    'id' => $payment->paymentMethod->id,
+                    'description' => \App\Business\Helpers\PaymentMethod::formatNameFromData($payment->paymentMethod->type, $payment->paymentMethod->pm_type_data),
+                    'info_line' => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($payment->paymentMethod->type, $payment->paymentMethod->pm_type_data),
+                ] : null,
             ]);
         } elseif ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {
             return Inertia::render('Payments/Checkout/InProgress', [

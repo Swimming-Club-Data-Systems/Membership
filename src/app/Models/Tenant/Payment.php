@@ -28,7 +28,7 @@ use Illuminate\Support\Str;
  * @property int $application_fee_amount
  * @property int $amount_refundable
  * @property string $formatted_amount_refundable
- * @property PaymentMethod $paymentMethod
+ * @property PaymentMethod|null $paymentMethod
  * @property string $currency
  * @property string $status
  * @property string $return_link
