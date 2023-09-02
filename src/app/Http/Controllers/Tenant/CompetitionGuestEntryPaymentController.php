@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\ApplicationFeeAmount;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
@@ -23,9 +24,13 @@ class CompetitionGuestEntryPaymentController extends Controller
 
             // Prepare the payment
             $payment = new Payment();
-            // $payment->user()->associate($user);
-            // $payment->paymentMethod()->associate($user);
-            // $payment->application_fee_amount = ApplicationFeeAmount::calculateAmount($this->topUp->amount);
+            if ($header->user) {
+                $payment->user()->associate($header->user);
+            } else {
+                $payment->receipt_email = $header->email;
+                $payment->customer_name = $header->name;
+            }
+
             $payment->save();
 
             foreach ($header->competitionGuestEntrants()->get() as $entrant) {
@@ -47,6 +52,8 @@ class CompetitionGuestEntryPaymentController extends Controller
             }
 
             $payment->refresh();
+
+            $payment->application_fee_amount = ApplicationFeeAmount::calculateAmount($payment->amount);
 
             $payment->createStripePaymentIntent();
 

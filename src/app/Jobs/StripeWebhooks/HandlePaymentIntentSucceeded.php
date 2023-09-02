@@ -125,6 +125,13 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                                 'is_system' => true,
                             ]);
                             $transaction = $guestIncomeJournal->journal->credit($payment->amount, 'Payment received with thanks');
+
+                            try {
+                                // Trigger Email Receipt
+                                Mail::to($payment)->send(new PaymentSucceeded($payment));
+                            } catch (\Exception $e) {
+                                // Can't send, ignore silently
+                            }
                         }
                         $transaction->referencesObject($payment);
 

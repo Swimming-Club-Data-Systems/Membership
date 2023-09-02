@@ -56,7 +56,7 @@ const Checkout: Layout<Props> = (props: Props) => {
                     </p>
 
                     <p>
-                        This transaction will appear on your statement as
+                        This transaction will appear on your statement as{" "}
                         {props.statement_descriptor}, {props.formatted_total}.
                     </p>
                 </div>

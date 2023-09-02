@@ -38,6 +38,9 @@ use Illuminate\Support\Str;
  * @property string $receipt_email
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property string $customer_name
+ * @property string $name
+ * @property string $email
  */
 class Payment extends Model
 {
@@ -172,5 +175,25 @@ class Payment extends Model
             'stripe_account' => $tenant->stripeAccount(),
         ]);
         $this->stripe_id = $paymentIntent->id;
+    }
+
+    /**
+     * Get the customer full name via expected attribute.
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['customer_name'],
+        );
+    }
+
+    /**
+     * Get the customer email via expected attribute.
+     */
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['receipt_email'],
+        );
     }
 }

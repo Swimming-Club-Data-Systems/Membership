@@ -94,32 +94,42 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     }
 
-    public function show(Competition $competition, CompetitionGuestEntryHeader $header, Request $request)
+    public function show(Competition $competition, CompetitionGuestEntryHeader $header, Request $request): \Inertia\Response
     {
+        $payable = false;
+        $entrants = $header->competitionGuestEntrants()->get()->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable) {
+            /** @var CompetitionEntry|null $entry */
+            $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->first();
+            if ($entry && ! $entry->paid) {
+                $payable = true;
+            }
+
+            return [
+                'id' => $entrant->id,
+                'first_name' => $entrant->first_name,
+                'last_name' => $entrant->last_name,
+                'date_of_birth' => $entrant->date_of_birth,
+                'sex' => $entrant->sex,
+                'age' => $entrant->age,
+                'age_on_day' => $entrant->ageAt($competition->age_at_date),
+            ];
+        })->toArray();
+
         return Inertia::render('Competitions/Entries/GuestEntryShow', [
             'id' => $header->id,
             'competition' => [
                 'id' => $competition->id,
                 'name' => $competition->name,
             ],
+            'payable' => $payable,
             'first_name' => $header->first_name,
             'last_name' => $header->last_name,
             'email' => $header->email,
-            'entrants' => $header->competitionGuestEntrants()->get()->map(function (CompetitionGuestEntrant $entrant) use ($competition) {
-                return [
-                    'id' => $entrant->id,
-                    'first_name' => $entrant->first_name,
-                    'last_name' => $entrant->last_name,
-                    'date_of_birth' => $entrant->date_of_birth,
-                    'sex' => $entrant->sex,
-                    'age' => $entrant->age,
-                    'age_on_day' => $entrant->ageAt($competition->age_at_date),
-                ];
-            })->toArray(),
+            'entrants' => $entrants,
         ]);
     }
 
-    public function editEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request)
+    public function editEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request): \Inertia\Response
     {
         // Get existing entries
         /** @var CompetitionEntry $entry */

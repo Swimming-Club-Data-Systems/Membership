@@ -8,8 +8,9 @@ You have paid for the following items;
 <x-mail::table>
 | Item       | Quantity         | Unit Price | Total Price  |
 | ------------- |:-------------:| --------:| --------:|
-@foreach($payment->lines()->get() as $line) @endforeach
+@foreach($payment->lines as $line)
 | {{$line->description}} | {{$line->quantity}} | {{$line->formatted_unit_amount}} | {{$line->formatted_amount_total}} |
+@endforeach
 </x-mail::table>
 
 Payment method details;

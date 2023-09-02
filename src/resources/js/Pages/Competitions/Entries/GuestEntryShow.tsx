@@ -30,6 +30,7 @@ export type Props = {
         name: string;
         id: number;
     };
+    payable: boolean;
     id: string;
     first_name: string;
     last_name: string;
@@ -144,30 +145,35 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                         ></BasicList>
                     </Card>
 
-                    <Card
-                        title="Payment"
-                        footer={
-                            <ButtonLink
-                                href={route("competitions.enter_as_guest.pay", {
-                                    competition: props.competition.id,
-                                    header: props.id,
-                                })}
-                            >
-                                Pay now
-                            </ButtonLink>
-                        }
-                    >
-                        <div className="prose prose-sm">
-                            <p>Ready to pay?</p>
+                    {props.payable && (
+                        <Card
+                            title="Payment"
+                            footer={
+                                <ButtonLink
+                                    href={route(
+                                        "competitions.enter_as_guest.pay",
+                                        {
+                                            competition: props.competition.id,
+                                            header: props.id,
+                                        }
+                                    )}
+                                >
+                                    Pay now
+                                </ButtonLink>
+                            }
+                        >
+                            <div className="prose prose-sm">
+                                <p>Ready to pay?</p>
 
-                            <p>
-                                Once you pay, you&apos;ll no longer be able to
-                                amend your entry. If you need to make changes,
-                                you&apos;ll need to contact {props.tenant.name}{" "}
-                                directly.
-                            </p>
-                        </div>
-                    </Card>
+                                <p>
+                                    Once you pay, you&apos;ll no longer be able
+                                    to amend your entry. If you need to make
+                                    changes, you&apos;ll need to contact{" "}
+                                    {props.tenant.name} directly.
+                                </p>
+                            </div>
+                        </Card>
+                    )}
                 </div>
             </Container>
         </>

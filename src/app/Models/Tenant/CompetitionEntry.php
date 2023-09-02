@@ -58,7 +58,12 @@ class CompetitionEntry extends Model
         return $this->belongsTo(CompetitionGuestEntrant::class);
     }
 
-    public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function competitionEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CompetitionEvent::class, CompetitionEventEntry::class);
+    }
+
+    public function competitionEventEntries()
     {
         return $this->hasMany(CompetitionEventEntry::class);
     }
@@ -108,7 +113,7 @@ class CompetitionEntry extends Model
      */
     public function calculateTotals(): void
     {
-        $this->amount = $this->events()->sum('amount');
-        $this->amount_refunded = $this->events()->sum('amount_refunded');
+        $this->amount = $this->competitionEventEntries()->sum('amount');
+        $this->amount_refunded = $this->competitionEventEntries()->sum('amount_refunded');
     }
 }

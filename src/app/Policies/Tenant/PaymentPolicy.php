@@ -23,7 +23,7 @@ class PaymentPolicy
             return Response::allow();
         }
 
-        return $user->id === $payment->user_UserID ? Response::allow() : Response::denyAsNotFound();
+        return $user?->id === $payment->user_UserID ? Response::allow() : Response::denyAsNotFound();
     }
 
     public function view(User $user, Payment $payment): Response

@@ -4,7 +4,9 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
+use App\Http\Controllers\Tenant\CompetitionEntryController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
@@ -363,6 +365,16 @@ Route::middleware([
                 Route::get('/edit', [CompetitionController::class, 'edit'])
                     ->name('edit');
                 Route::put('/', [CompetitionController::class, 'update']);
+                Route::prefix('entries')->group(function () {
+                    Route::get('/', [CompetitionEntryController::class, 'index']);
+                    Route::get('/{entry}', [CompetitionEntryController::class, 'show']);
+                });
+                Route::prefix('guest-entries')->group(function () {
+                    Route::get('/', [CompetitionGuestEntryController::class, 'index'])
+                        ->name('guest_entries.index');
+                    Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
+                        ->name('guest_entries.show');
+                });
                 Route::prefix('sessions')->group(function () {
                     Route::name('sessions.')->group(function () {
                         Route::get('/', [CompetitionSessionController::class, 'show'])

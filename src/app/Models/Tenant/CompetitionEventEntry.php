@@ -99,8 +99,6 @@ class CompetitionEventEntry extends Model implements PaidObject
 
     public function handlePaid(): void
     {
-        echo 'Hi!';
-
         $this->paid = true;
         $this->save();
 

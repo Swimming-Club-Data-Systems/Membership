@@ -7,7 +7,9 @@ use App\Enums\CompetitionMode;
 use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
@@ -194,6 +196,17 @@ class CompetitionController extends Controller
     public function show(Competition $competition, Request $request): \Inertia\Response
     {
         $this->authorize('view', $competition);
+
+        // Get entries for this user
+        //        /** @var User $user */
+        //        $user = $request->user();
+        //        $competitionEntryHeaders = $user->competitionGuestEntryHeaders()->with(['competitionGuestEntrants']);
+        //        foreach ($competitionEntryHeaders as $competitionEntryHeader) {
+        //            /** @var CompetitionGuestEntryHeader $competitionEntryHeader */
+        //            foreach ($competitionEntryHeader->competitionGuestEntrant as $competitionGuestEntrant) {
+        //
+        //            }
+        //        }
 
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
