@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $locked
  * @property Collection $events
  * @property bool $processing_fee_paid
+ * @property bool $vetoable
+ * @property Collection $competitionEventEntries
  */
 class CompetitionEntry extends Model
 {
@@ -40,6 +42,11 @@ class CompetitionEntry extends Model
 
     protected $casts = [
         'paid' => 'boolean',
+        'processed' => 'boolean',
+        'approved' => 'boolean',
+        'locked' => 'boolean',
+        'refundable' => 'boolean',
+        'vetoable' => 'boolean',
         'processing_fee_paid' => 'boolean',
     ];
 
