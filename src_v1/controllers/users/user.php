@@ -56,6 +56,9 @@ $getBalance->execute([
     $id
 ]);
 $balanceV2 = $getBalance->fetchColumn();
+if (!$balanceV2) {
+    $balanceV2 = 0;
+}
 
 $bankName = $bank = $has_logo = $logo_path = null;
 if (userHasMandates($id)) {
