@@ -290,7 +290,9 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                     identifiable data at any time. Personally
                                     identifiable data will be automatically
                                     deleted 3 months after the end of the
-                                    competition you are entering.
+                                    competition you are entering. All data will
+                                    also be deleted 24 hours after starting this
+                                    entry if you don't complete payment.
                                 </p>
 
                                 <p>

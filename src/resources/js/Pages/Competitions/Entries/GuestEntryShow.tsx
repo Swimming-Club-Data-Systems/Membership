@@ -107,7 +107,9 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                             <p>
                                 Once you have selected events for each entrant,
                                 you will be brought back to this page where you
-                                can proceed to payment.
+                                can proceed to payment. Your details will be
+                                deleted if you don't pay within 24 hours of
+                                starting your entry.
                             </p>
 
                             <p>

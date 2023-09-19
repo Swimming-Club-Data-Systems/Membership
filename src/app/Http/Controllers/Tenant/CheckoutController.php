@@ -203,7 +203,11 @@ class CheckoutController extends Controller
         $tenant = tenant();
 
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
-        $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [], [
+        $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [
+            'expand' => [
+                'payment_method',
+            ],
+        ], [
             'stripe_account' => $tenant->stripeAccount(),
         ]);
 
@@ -219,15 +223,17 @@ class CheckoutController extends Controller
                 ];
             }
 
+            $type = $paymentIntent->payment_method->type;
+
             return Inertia::render('Payments/Checkout/Success', [
                 'id' => $payment->id,
                 'formatted_total' => Money::formatCurrency($paymentIntent->amount),
                 'statement_descriptor' => $paymentIntent->charges->data[0]->calculated_statement_descriptor,
                 'lines' => $lines,
-                'payment_method' => $payment->paymentMethod ? [
-                    'id' => $payment->paymentMethod->id,
-                    'description' => \App\Business\Helpers\PaymentMethod::formatNameFromData($payment->paymentMethod->type, $payment->paymentMethod->pm_type_data),
-                    'info_line' => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($payment->paymentMethod->type, $payment->paymentMethod->pm_type_data),
+                'payment_method' => $paymentIntent->payment_method ? [
+                    'id' => $payment->paymentMethod?->id,
+                    'description' => \App\Business\Helpers\PaymentMethod::formatNameFromData($type, $paymentIntent->payment_method->$type),
+                    'info_line' => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($type, $paymentIntent->payment_method->$type),
                 ] : null,
             ]);
         } elseif ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {

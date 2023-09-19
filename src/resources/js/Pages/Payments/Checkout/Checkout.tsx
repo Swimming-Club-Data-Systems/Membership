@@ -11,7 +11,7 @@ import {
     useElements,
     useStripe,
 } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
+import { PaymentIntentResult, loadStripe } from "@stripe/stripe-js";
 import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Alert from "@/Components/Alert";
@@ -79,7 +79,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                 }
             });
         }
-    }, [stripe]);
+    }, [props.country, props.currency, props.total, stripe]);
 
     const [alert, setAlert] = useState(null);
 
@@ -94,7 +94,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
 
         setSubmitting(true);
 
-        let result;
+        let result: PaymentIntentResult;
         if (values.payment_method) {
             alertName = "saved_cards";
             // Try to charge the specified payment method
@@ -515,26 +515,19 @@ const Checkout: Layout<Props> = (props: Props) => {
                 setStripe(value);
             }
         });
-    }, []);
+    }, [props.stripe_account, props.stripe_publishable_key]);
+
+    const routes = props.auth?.user
+        ? [{ name: "Payments", route: "payments.index" }]
+        : [];
 
     return (
         <>
-            <Head
-                title={`Checkout`}
-                breadcrumbs={[
-                    { name: "Payments", route: "my_account.index" },
-                    // { name: "Checkout", route: "payments.statements.index" },
-                    // {
-                    //     name: `#${props.id}`,
-                    //     route: "payments.statements.show",
-                    //     routeParams: props.id,
-                    // },
-                ]}
-            />
+            <Head title={`Checkout`} breadcrumbs={routes} />
 
             <MainHeader
-                title={`SCDS Checkout`}
-                subtitle="Pay for stuff"
+                title={`Pay ${props.formatted_total}`}
+                subtitle="with SCDS Checkout"
             ></MainHeader>
 
             {stripe && (

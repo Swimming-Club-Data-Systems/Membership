@@ -25,21 +25,14 @@ type Props = {
     statement_descriptor: string;
 };
 
-const Checkout: Layout<Props> = (props: Props) => {
+const Success: Layout<Props> = (props: Props) => {
+    const routes = props.auth?.user
+        ? [{ name: "Payments", route: "payments.index" }]
+        : [];
+
     return (
         <>
-            <Head
-                title={`Payment Successful`}
-                breadcrumbs={[
-                    { name: "Payments", route: "my_account.index" },
-                    // { name: "Checkout", route: "payments.statements.index" },
-                    // {
-                    //     name: `#${props.id}`,
-                    //     route: "payments.statements.show",
-                    //     routeParams: props.id,
-                    // },
-                ]}
-            />
+            <Head title={`Payment Successful`} breadcrumbs={routes} />
 
             <Container>
                 <MainHeader
@@ -101,6 +94,6 @@ const Checkout: Layout<Props> = (props: Props) => {
     );
 };
 
-Checkout.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
+Success.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
-export default Checkout;
+export default Success;

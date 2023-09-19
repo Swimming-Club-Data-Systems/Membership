@@ -38,9 +38,9 @@ class CompetitionGuestEntryPaymentController extends Controller
                 // Get entries
 
                 /** @var CompetitionEntry $entry */
-                $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('events')->first();
+                $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('competitionEventEntries')->first();
 
-                foreach ($entry->events as $event) {
+                foreach ($entry->competitionEventEntries as $event) {
                     /** @var CompetitionEventEntry $event */
                     $lineItem = new PaymentLine();
                     $lineItem->unit_amount = $event->amount;
