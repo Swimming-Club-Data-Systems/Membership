@@ -29,6 +29,7 @@ export type Props = {
     competition: {
         name: string;
         id: number;
+        require_times: boolean;
     };
     payable: boolean;
     id: string;
@@ -67,7 +68,14 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                             competition: props.competition.id,
                         },
                     },
-                    { name: "Guest Entry", route: "competitions.index" },
+                    {
+                        name: "Guest Entry",
+                        route: "competitions.enter_as_guest.show",
+                        routeParams: {
+                            competition: props.competition.id,
+                            header: props.id,
+                        },
+                    },
                 ]}
             />
 
@@ -80,6 +88,35 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
 
             <Container noMargin>
                 <div className="grid gap-4">
+                    <Card title="What to do?">
+                        <div className="prose prose-sm">
+                            <p>
+                                For each of your entrants, you will now need to
+                                select events to enter.{" "}
+                                {props.competition.require_times && (
+                                    <>
+                                        You will need to provide an entry time
+                                        for each event you select. This will be
+                                        used to seed competitors into heats.{" "}
+                                    </>
+                                )}{" "}
+                                Press the link next to each entrant&apos;s name
+                                to get started.
+                            </p>
+
+                            <p>
+                                Once you have selected events for each entrant,
+                                you will be brought back to this page where you
+                                can proceed to payment.
+                            </p>
+
+                            <p>
+                                If you need further assistance, please contact{" "}
+                                {props.tenant.name}.
+                            </p>
+                        </div>
+                    </Card>
+
                     <Card title="Your details">
                         <DefinitionList
                             verticalPadding={2}

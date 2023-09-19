@@ -30,6 +30,9 @@ export type Props = {
         name: string;
         id: number;
     };
+    header: {
+        id: string;
+    };
     id: string;
     first_name: string;
     last_name: string;
@@ -66,14 +69,30 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
                             competition: props.competition.id,
                         },
                     },
-                    { name: "Guest Entry", route: "competitions.index" },
+                    {
+                        name: "Guest Entry",
+                        route: "competitions.enter_as_guest.show",
+                        routeParams: {
+                            competition: props.competition.id,
+                            header: props.header.id,
+                        },
+                    },
+                    {
+                        name: "Select Events",
+                        route: "competitions.enter_as_guest.edit_entry",
+                        routeParams: {
+                            competition: props.competition.id,
+                            header: props.header.id,
+                            entrant: props.entrant.id,
+                        },
+                    },
                 ]}
             />
 
             <Container>
                 <MainHeader
-                    title={"Manage your entries"}
-                    subtitle={`Hi ${props.first_name}, you can enter, update details and pay from here.`}
+                    title={`Manage ${props.entrant.first_name}'s entry`}
+                    subtitle={`For ${props.competition.name}.`}
                 ></MainHeader>
             </Container>
 

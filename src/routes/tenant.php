@@ -372,7 +372,7 @@ Route::middleware([
                 Route::prefix('guest-entries')->group(function () {
                     Route::get('/', [CompetitionGuestEntryController::class, 'index'])
                         ->name('guest_entries.index');
-                    Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
+                    Route::get('/{header}', [CompetitionGuestEntryController::class, 'show'])
                         ->name('guest_entries.show');
                 });
                 Route::prefix('sessions')->group(function () {
@@ -397,10 +397,10 @@ Route::middleware([
                             ->name('events.delete');
                     });
                 });
-                Route::get('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'new'])
-                    ->name('enter_as_guest');
-                Route::post('/enter-as-guest', [CompetitionGuestEntryHeaderController::class, 'create']);
-                Route::prefix('/guest-entries')->group(function () {
+                Route::prefix('/enter-as-guest')->group(function () {
+                    Route::get('/', [CompetitionGuestEntryHeaderController::class, 'new'])
+                        ->name('enter_as_guest');
+                    Route::post('/', [CompetitionGuestEntryHeaderController::class, 'create']);
                     Route::get('/{header}', [CompetitionGuestEntryHeaderController::class, 'show'])
                         ->whereUuid('header')
                         ->name('enter_as_guest.show');
@@ -413,6 +413,7 @@ Route::middleware([
                     Route::put('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'updateEntry'])
                         ->whereUuid(['header', 'entrant']);
                 });
+
             });
         });
     });

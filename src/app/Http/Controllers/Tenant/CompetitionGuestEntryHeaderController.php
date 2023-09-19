@@ -120,6 +120,7 @@ class CompetitionGuestEntryHeaderController extends Controller
             'competition' => [
                 'id' => $competition->id,
                 'name' => $competition->name,
+                'require_times' => $competition->require_times,
             ],
             'payable' => $payable,
             'first_name' => $header->first_name,
@@ -133,7 +134,7 @@ class CompetitionGuestEntryHeaderController extends Controller
     {
         // Get existing entries
         /** @var CompetitionEntry $entry */
-        $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('events')->first();
+        $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('competitionEventEntries')->first();
 
         $sessions = $competition
             ->sessions()
@@ -157,7 +158,7 @@ class CompetitionGuestEntryHeaderController extends Controller
 
                             // Get event entry if exists
                             /** @var CompetitionEventEntry $eventEntry */
-                            $eventEntry = $entry?->events->where('competition_event_id', '=', $event->id)->first();
+                            $eventEntry = $entry?->competitionEventEntries->where('competition_event_id', '=', $event->id)->first();
 
                             $swimsFormData[] = [
                                 'event_id' => $event->id,
@@ -191,7 +192,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                                 ] : null,
                             ];
                         })
-                        ->toArray(),
+                        ->values(),
                 ];
             })
             ->toArray();
@@ -201,6 +202,10 @@ class CompetitionGuestEntryHeaderController extends Controller
             'competition' => [
                 'id' => $competition->id,
                 'name' => $competition->name,
+                'require_times' => $competition->require_times,
+            ],
+            'header' => [
+                'id' => $header->id,
             ],
             'entrant' => [
                 'id' => $entrant->id,

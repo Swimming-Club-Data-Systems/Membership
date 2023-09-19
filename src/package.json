@@ -29,6 +29,7 @@
     "chromatic": "^6.19.9",
     "eslint": "^8.26.0",
     "eslint-config-prettier": "^8.5.0",
+    "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-react": "^7.30.1",
     "eslint-plugin-storybook": "^0.6.12",
     "laravel-vite-plugin": "^0.7.0",
@@ -75,8 +76,8 @@
   "readme": "ERROR: No README data found!",
   "_id": "@",
   "overrides": {
-      "yup-phone": {
-          "yup": "^1.2.0"
-      }
+    "yup-phone": {
+      "yup": "^1.2.0"
+    }
   }
 }

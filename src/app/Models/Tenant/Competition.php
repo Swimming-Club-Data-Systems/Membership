@@ -68,6 +68,10 @@ class Competition extends Model
         'closing_date' => 'datetime',
         'gala_date' => 'datetime',
         'age_at_date' => 'datetime',
+        'require_times' => 'boolean',
+        'coach_enters' => 'boolean',
+        'requires_approval' => 'boolean',
+        'public' => 'boolean',
     ];
 
     /**
