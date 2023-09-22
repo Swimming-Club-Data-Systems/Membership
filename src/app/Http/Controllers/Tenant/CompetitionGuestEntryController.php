@@ -75,6 +75,7 @@ class CompetitionGuestEntryController extends Controller
             'competitionGuestEntrant',
             'competitionEventEntries',
             'competitionEventEntries.competitionEvent',
+            'competitionGuestEntrant.competitionGuestEntryHeader',
         ]);
 
         $data = [
@@ -82,6 +83,7 @@ class CompetitionGuestEntryController extends Controller
             'competition' => [
                 'id' => $competition->id,
                 'name' => $competition->name,
+                'age_at_date' => $competition->age_at_date,
             ],
             'amount' => $entry->amount,
             'amount_string' => $entry->amount_string,
@@ -93,6 +95,11 @@ class CompetitionGuestEntryController extends Controller
             'processed' => $entry->processed,
             'processing_fee_paid' => $entry->processing_fee_paid,
             'vetoable' => $entry->vetoable,
+            'header' => [
+                'id' => $entry->competitionGuestEntrant->competitionGuestEntryHeader->id,
+                'name' => $entry->competitionGuestEntrant->competitionGuestEntryHeader->name,
+                'email' => $entry->competitionGuestEntrant->competitionGuestEntryHeader->email,
+            ],
             'entrant' => [
                 'id' => $entry->competitionGuestEntrant->id,
                 'name' => $entry->competitionGuestEntrant->name,
@@ -100,6 +107,7 @@ class CompetitionGuestEntryController extends Controller
                 'last_name' => $entry->competitionGuestEntrant->last_name,
                 'date_of_birth' => $entry->competitionGuestEntrant->date_of_birth,
                 'age' => $entry->competitionGuestEntrant->age,
+                'age_on_day' => $entry->competitionGuestEntrant->ageAt($competition->age_at_date),
                 'sex' => $entry->competitionGuestEntrant->sex,
             ],
             'entries' => $entry->competitionEventEntries->map(function (CompetitionEventEntry $entry) {
@@ -119,6 +127,8 @@ class CompetitionGuestEntryController extends Controller
                     ],
                 ];
             }),
+            'created_at' => $entry->created_at,
+            'updated_at' => $entry->updated_at,
         ];
 
         return Inertia::render('Competitions/Entries/GuestEntryReadOnly', $data);

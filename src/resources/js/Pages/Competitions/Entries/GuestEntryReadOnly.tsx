@@ -25,6 +25,7 @@ interface EntryProps {
     competition: {
         id: number;
         name: string;
+        age_at_date: string;
     };
     entrant: {
         first_name: string;
@@ -32,6 +33,12 @@ interface EntryProps {
         date_of_birth: string;
         sex: string;
         age: number;
+        age_on_day: number;
+    };
+    header: {
+        id: string;
+        name: string;
+        email: string;
     };
     amount: number;
     amount_refunded: number;
@@ -49,6 +56,8 @@ interface EntryProps {
             name: string;
         };
     }[];
+    created_at: string;
+    updated_at: string;
 }
 
 const GuestEntryReadOnly = (props: EntryProps) => {
@@ -106,7 +115,64 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                     hideDefaultButtons
                 >
                     <div className="grid gap-4">
-                        <Card footer={<SubmissionButtons />}>
+                        <Card title="Entry information">
+                            <DefinitionList
+                                verticalPadding={2}
+                                items={[
+                                    {
+                                        key: "name",
+                                        term: "Name",
+                                        definition: `${props.entrant.first_name} ${props.entrant.last_name}`,
+                                    },
+                                    {
+                                        key: "dob",
+                                        term: "Date of birth",
+                                        definition: formatDate(
+                                            props.entrant.date_of_birth
+                                        ),
+                                    },
+                                    {
+                                        key: "age",
+                                        term: "Age",
+                                        definition: props.entrant.age,
+                                    },
+                                    {
+                                        key: "age_on_day",
+                                        term: "Age on day",
+                                        definition: `${
+                                            props.entrant.age_on_day
+                                        } (${formatDate(
+                                            props.competition.age_at_date
+                                        )})`,
+                                    },
+                                    {
+                                        key: "sex",
+                                        term: "Sex (for the purposes of competition)",
+                                        definition: props.entrant.sex,
+                                    },
+                                ]}
+                            />
+                        </Card>
+
+                        <Card title="Entry maker information">
+                            <DefinitionList
+                                verticalPadding={2}
+                                items={[
+                                    {
+                                        key: "header_name",
+                                        term: "Entry maker name",
+                                        definition: props.header.name,
+                                    },
+                                    {
+                                        key: "header_email",
+                                        term: "Entry maker email",
+                                        definition: props.header.email,
+                                    },
+                                ]}
+                            />
+                        </Card>
+
+                        <Card title="Events" footer={<SubmissionButtons />}>
                             <div className="grid grid-cols-12 gap-4">
                                 <div className="col-span-full">
                                     <div className="flex items-center justify-between">
@@ -183,6 +249,28 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                         content: <>{item.event.name}</>,
                                     };
                                 })}
+                            />
+                        </Card>
+
+                        <Card title="Entry metadata">
+                            <DefinitionList
+                                verticalPadding={2}
+                                items={[
+                                    {
+                                        key: "created_at",
+                                        term: "Created at",
+                                        definition: formatDateTime(
+                                            props.created_at
+                                        ),
+                                    },
+                                    {
+                                        key: "updated_at",
+                                        term: "Updated at",
+                                        definition: formatDateTime(
+                                            props.updated_at
+                                        ),
+                                    },
+                                ]}
                             />
                         </Card>
                     </div>

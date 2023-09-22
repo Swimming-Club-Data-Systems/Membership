@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
@@ -29,6 +30,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property bool $processing_fee_paid
  * @property bool $vetoable
  * @property Collection $competitionEventEntries
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class CompetitionEntry extends Model
 {
@@ -41,6 +44,8 @@ class CompetitionEntry extends Model
     ];
 
     protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
         'paid' => 'boolean',
         'processed' => 'boolean',
         'approved' => 'boolean',

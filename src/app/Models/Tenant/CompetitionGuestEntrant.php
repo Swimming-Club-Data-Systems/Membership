@@ -18,7 +18,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property Carbon $date_of_birth
  * @property Sex $sex
  * @property int $age
- * @property CompetitionGuestEntryHeader $competition_guest_entry_header
+ * @property CompetitionGuestEntryHeader $competitionGuestEntryHeader
  */
 class CompetitionGuestEntrant extends Model
 {
