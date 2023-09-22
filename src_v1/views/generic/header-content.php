@@ -30,7 +30,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
     </div>
 <?php } ?>
 
-<?php if (app()->user->hasPermission('Admin') && $tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
+<?php if (app()->user && app()->user->hasPermission('Admin') && $tenant->getKey('GOCARDLESS_ACCESS_TOKEN') && !$tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?>
     <div class="bg-danger text-light text-light-d bg-striped py-1 d-print-none">
         <div class="<?= $container_class ?>">
             <p class="mb-0">
