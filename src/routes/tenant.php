@@ -372,7 +372,7 @@ Route::middleware([
                 Route::prefix('guest-entries')->group(function () {
                     Route::get('/', [CompetitionGuestEntryController::class, 'index'])
                         ->name('guest_entries.index');
-                    Route::get('/{header}', [CompetitionGuestEntryController::class, 'show'])
+                    Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
                         ->name('guest_entries.show');
                 });
                 Route::prefix('sessions')->group(function () {
