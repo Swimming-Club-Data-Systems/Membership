@@ -48,7 +48,7 @@ try {
   $filesystem = new League\Flysystem\Filesystem($adapter);
 
   if ($_FILES['file']['error'] != 0) {
-    throw new Exception('File error');
+    throw new Exception('File error: ' . $_FILES['file']['error']);
   }
 
   if (!$tenant->getFilePath()) {
@@ -86,6 +86,7 @@ try {
     'size' => $_FILES['file']['size']
   ];
 } catch (Exception $e) {
+    http_response_code(500);
   $json = [
     'status' => 500,
     'error' => $e->getMessage(),
