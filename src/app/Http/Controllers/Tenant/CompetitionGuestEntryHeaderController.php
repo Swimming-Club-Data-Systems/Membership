@@ -97,11 +97,14 @@ class CompetitionGuestEntryHeaderController extends Controller
     public function show(Competition $competition, CompetitionGuestEntryHeader $header, Request $request): \Inertia\Response
     {
         $payable = false;
-        $entrants = $header->competitionGuestEntrants()->get()->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable) {
+        $paid = false;
+        $entrants = $header->competitionGuestEntrants->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable, &$paid) {
             /** @var CompetitionEntry|null $entry */
             $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->first();
             if ($entry && ! $entry->paid) {
                 $payable = true;
+            } elseif ($entry && $entry->paid) {
+                $paid = true;
             }
 
             return [
@@ -123,6 +126,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'require_times' => $competition->require_times,
             ],
             'payable' => $payable,
+            'paid' => $paid,
             'first_name' => $header->first_name,
             'last_name' => $header->last_name,
             'email' => $header->email,
@@ -220,6 +224,7 @@ class CompetitionGuestEntryHeaderController extends Controller
             'form_initial_values' => [
                 'entries' => $swimsFormData,
             ],
+            'paid' => $entry?->paid,
         ]);
     }
 

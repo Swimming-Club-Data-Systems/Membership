@@ -344,6 +344,7 @@ class PaymentsController extends Controller
         } catch (ApiErrorException $e) {
             DB::rollBack();
             $request->session()->flash('error', 'Something went wrong which meant we could not refund this payment. Please try again later.');
+            report($e);
         }
 
         return redirect(route('payments.payments.show', $payment));

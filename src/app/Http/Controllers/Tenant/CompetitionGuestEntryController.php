@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionEventEntry;
+use App\Models\Tenant\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class CompetitionGuestEntryController extends Controller
@@ -26,8 +28,12 @@ class CompetitionGuestEntryController extends Controller
             'entries' => $entries->onEachSide(3),
         ];
 
-        $entries->getCollection()->transform(function (CompetitionEntry $item) {
+        $entries->getCollection()->transform(function (CompetitionEntry $item) use ($competition) {
             return [
+                'competition' => [
+                    'id' => $competition->id,
+                    'name' => $competition->name,
+                ],
                 'id' => $item->id,
                 'amount' => $item->amount,
                 'amount_string' => $item->amount_string,
@@ -46,6 +52,7 @@ class CompetitionGuestEntryController extends Controller
                     'last_name' => $item->competitionGuestEntrant->last_name,
                     'date_of_birth' => $item->competitionGuestEntrant->date_of_birth,
                     'age' => $item->competitionGuestEntrant->age,
+                    'age_on_day' => $item->competitionGuestEntrant->ageAt($competition->age_at_date),
                     'sex' => $item->competitionGuestEntrant->sex,
                 ],
                 'entries' => $item->competitionEventEntries->map(function (CompetitionEventEntry $entry) {
@@ -79,6 +86,11 @@ class CompetitionGuestEntryController extends Controller
             'competitionEventEntries.competitionEvent',
             'competitionGuestEntrant.competitionGuestEntryHeader',
         ]);
+
+        /** @var CompetitionEventEntry $firstEntry */
+        $firstEntry = $entry->competitionEventEntries->first();
+        /** @var Payment $payment */
+        $payment = $firstEntry?->paymentLine?->payment;
 
         $data = [
             'id' => $entry->id,
@@ -129,6 +141,20 @@ class CompetitionGuestEntryController extends Controller
                     ],
                 ];
             }),
+            'payment' => $payment ? [
+                'id' => $payment->id,
+                'stripe_id' => $payment->stripe_id,
+                'stripe_status' => $payment->stripe_status,
+                'stripe_fee' => $payment->stripe_fee,
+                'amount' => $payment->amount,
+                'formatted_amount' => $payment->formatted_amount,
+                'payment_method' => $payment->paymentMethod ? [
+                    'id' => $payment->paymentMethod->id,
+                    'stripe_id' => $payment->paymentMethod->stripe_id,
+                    'description' => $payment->paymentMethod->description,
+                    'information_line' => $payment->paymentMethod->information_line,
+                ] : null,
+            ] : null,
             'created_at' => $entry->created_at,
             'updated_at' => $entry->updated_at,
         ];
@@ -146,10 +172,22 @@ class CompetitionGuestEntryController extends Controller
 
         $entry->approved = $request->boolean('approved');
         $entry->processed = $request->boolean('processed');
-        // TODO Only allow unchecking paid if paying manually
-        $entry->paid = $request->boolean('paid');
+        if (! $entry->paid) {
+            // Entries can not be marked as unpaid
+            $entry->paid = $request->boolean('paid');
+        }
 
         $entry->save();
+
+        $returnUrl = $request->string('return_url');
+        if (Str::length($returnUrl) > 0) {
+            // Redirect to return_url if provided, e.g. for if editing from the entry list
+            $request->session()->flash('flash_bag.'.$entry->id.'.success', 'Changes saved successfully.');
+
+            return Redirect::to($request->string('return_url'));
+        }
+
+        $request->session()->flash('success', 'Changes saved successfully.');
 
         return Redirect::route('competitions.guest_entries.show', [$competition, $entry]);
     }

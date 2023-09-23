@@ -20,6 +20,7 @@ const RadioCheck = ({
     type,
     label,
     mb,
+    readOnly: propsReadOnly,
     disabled: propsDisabled,
     inContext,
     ...props
@@ -42,7 +43,7 @@ const RadioCheck = ({
     }
 
     const disabled = propsDisabled || contextDisabled;
-    const readOnly = contextReadOnly;
+    const readOnly = propsReadOnly || contextReadOnly;
 
     const [id] = useState(v4());
 
@@ -66,8 +67,7 @@ const RadioCheck = ({
                     id={id}
                     {...field}
                     {...props}
-                    readOnly={readOnly}
-                    disabled={isSubmitting || disabled}
+                    disabled={isSubmitting || disabled || readOnly}
                     type={type}
                     className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles} ${invalidCheckStyles}`}
                 />

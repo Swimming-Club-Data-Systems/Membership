@@ -33,9 +33,10 @@ type EntryFormProps = {
         events: Event[];
     }[];
     action: string;
+    readOnly: boolean;
 };
 
-export const EntryForm = ({ sessions, action }: EntryFormProps) => {
+export const EntryForm = ({ sessions, action, readOnly }: EntryFormProps) => {
     return (
         <>
             <Form
@@ -63,6 +64,7 @@ export const EntryForm = ({ sessions, action }: EntryFormProps) => {
                 method="put"
                 removeDefaultInputMargin
                 submitTitle="Save"
+                readOnly={readOnly}
             >
                 <div className="grid gap-4">
                     {sessions.map((session) => (

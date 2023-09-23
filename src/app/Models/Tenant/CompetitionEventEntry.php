@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property CompetitionEntryCancellationReason $cancellation_reason
  * @property string $notes
  * @property bool $paid
+ * @property PaymentLine|null $paymentLine
  */
 class CompetitionEventEntry extends Model implements PaidObject
 {
@@ -64,6 +65,11 @@ class CompetitionEventEntry extends Model implements PaidObject
     public function competitionGuestEntrant(): ?CompetitionGuestEntrant
     {
         return $this->competitionEntry->competitionGuestEntrant;
+    }
+
+    public function paymentLine(): \Illuminate\Database\Eloquent\Relations\MorphOne
+    {
+        return $this->morphOne(PaymentLine::class, 'associated_uuid');
     }
 
     public function populateFromEvent(CompetitionEvent $event): void

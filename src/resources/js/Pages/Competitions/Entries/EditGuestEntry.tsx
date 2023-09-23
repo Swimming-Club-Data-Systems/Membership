@@ -23,6 +23,7 @@ import { formatDate } from "@/Utils/date-utils";
 import { DefinitionList } from "@/Components/DefinitionList";
 import Link from "@/Components/Link";
 import { EntryForm } from "@/Components/Competitions/EntryForm";
+import Alert from "@/Components/Alert";
 
 export type Props = {
     google_maps_api_key: string;
@@ -48,6 +49,7 @@ export type Props = {
         name: string;
     };
     sessions: {}[];
+    paid: boolean;
 };
 
 type FieldArrayItemsProps = {
@@ -97,14 +99,30 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
             </Container>
 
             <Container noMargin>
-                <EntryForm
-                    sessions={props.sessions}
-                    action={route("competitions.enter_as_guest.edit_entry", {
-                        competition: props.competition.id,
-                        header: props.id,
-                        entrant: props.entrant.id,
-                    })}
-                />
+                <div className="grid gap-4">
+                    {props.paid && (
+                        <Alert title="Entry locked" variant="warning">
+                            This entry has been paid for and can now no longer
+                            be amended. You can amend some of{" "}
+                            {props.entrant.first_name}'s personal details if
+                            required. For any other changes, you must contact{" "}
+                            {props.tenant.name} directly.
+                        </Alert>
+                    )}
+
+                    <EntryForm
+                        sessions={props.sessions}
+                        action={route(
+                            "competitions.enter_as_guest.edit_entry",
+                            {
+                                competition: props.competition.id,
+                                header: props.id,
+                                entrant: props.entrant.id,
+                            }
+                        )}
+                        readOnly={props.paid}
+                    />
+                </div>
             </Container>
         </>
     );

@@ -16,9 +16,13 @@ import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import Badge from "@/Components/Badge";
 import PlainCollection from "@/Components/PlainCollection";
 import { usePage } from "@inertiajs/react";
-import Form, { SubmissionButtons } from "@/Components/Form/Form";
+import Form, {
+    RenderServerErrors,
+    SubmissionButtons,
+} from "@/Components/Form/Form";
 import * as yup from "yup";
 import Checkbox from "@/Components/Form/Checkbox";
+import FlashAlert from "@/Components/FlashAlert";
 
 interface EntryProps {
     id: string;
@@ -28,6 +32,7 @@ interface EntryProps {
         date_of_birth: string;
         sex: string;
         age: number;
+        age_on_day: number;
     };
     amount: number;
     amount_refunded: number;
@@ -45,6 +50,10 @@ interface EntryProps {
             name: string;
         };
     }[];
+    competition: {
+        id: number;
+        name: string;
+    };
 }
 
 interface Entries extends LaravelPaginatorProps {
@@ -66,6 +75,7 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                 approved: props.processed,
                 locked: props.locked,
                 paid: props.paid,
+                return_url: usePage().url,
             }}
             validationSchema={yup.object().shape({
                 processed: yup.boolean(),
@@ -75,7 +85,20 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
             })}
             submitTitle="Save"
             hideDefaultButtons
+            method="put"
+            action={route("competitions.guest_entries.show", [
+                props.competition.id,
+                props.id,
+            ])}
+            inertiaOptions={{
+                preserveState: true,
+                preserveScroll: true,
+            }}
         >
+            <div>
+                <FlashAlert bag={props.id} className="mb-4" />
+                <RenderServerErrors />
+            </div>
             <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-full">
                     <div className="flex items-center justify-between">
@@ -87,7 +110,7 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                                 </div>
                                 <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
                                     {formatDate(props.entrant.date_of_birth)}{" "}
-                                    (Age {props.entrant.age})
+                                    (Age {props.entrant.age_on_day} on day)
                                 </div>
                             </div>
                         </div>
@@ -118,7 +141,16 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                     <div>Amount refunded £{props.amount_refunded_string}</div>
                     <Checkbox name="approved" label="Approved" />
                     <Checkbox name="locked" label="Locked" />
-                    <Checkbox name="paid" label="Paid" />
+                    <Checkbox
+                        name="paid"
+                        label="Paid"
+                        readOnly={props.paid}
+                        help={
+                            props.paid
+                                ? "Entries can not be marked as unpaid once marked as paid"
+                                : null
+                        }
+                    />
                     <Checkbox name="processed" label="Processed" />
                 </div>
                 <div className="col-start-1 col-span-6 text-sm">

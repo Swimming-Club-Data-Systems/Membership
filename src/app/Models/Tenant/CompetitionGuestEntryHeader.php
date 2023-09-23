@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $email
  * @property User $user
  * @property array $custom_form_data
+ * @property Collection $competitionGuestEntrants
  */
 class CompetitionGuestEntryHeader extends Model
 {

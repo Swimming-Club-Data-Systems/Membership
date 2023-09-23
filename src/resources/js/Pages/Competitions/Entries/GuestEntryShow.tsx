@@ -23,6 +23,7 @@ import { formatDate } from "@/Utils/date-utils";
 import { DefinitionList } from "@/Components/DefinitionList";
 import Link from "@/Components/Link";
 import ButtonLink from "@/Components/ButtonLink";
+import Alert from "@/Components/Alert";
 
 export type Props = {
     google_maps_api_key: string;
@@ -31,6 +32,7 @@ export type Props = {
         id: number;
         require_times: boolean;
     };
+    paid: boolean;
     payable: boolean;
     id: string;
     first_name: string;
@@ -88,36 +90,47 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
 
             <Container noMargin>
                 <div className="grid gap-4">
-                    <Card title="What to do?">
-                        <div className="prose prose-sm">
-                            <p>
-                                For each of your entrants, you will now need to
-                                select events to enter.{" "}
-                                {props.competition.require_times && (
-                                    <>
-                                        You will need to provide an entry time
-                                        for each event you select. This will be
-                                        used to seed competitors into heats.{" "}
-                                    </>
-                                )}{" "}
-                                Press the link next to each entrant&apos;s name
-                                to get started.
-                            </p>
+                    {props.paid && (
+                        <Alert title="Entries paid">
+                            Thank you for paying for your entries. Should you
+                            need to make any changes to your entry, please
+                            contact {props.tenant.name}.
+                        </Alert>
+                    )}
 
-                            <p>
-                                Once you have selected events for each entrant,
-                                you will be brought back to this page where you
-                                can proceed to payment. Your details will be
-                                deleted if you don't pay within 24 hours of
-                                starting your entry.
-                            </p>
+                    {!props.paid && (
+                        <Card title="What to do?">
+                            <div className="prose prose-sm">
+                                <p>
+                                    For each of your entrants, you will now need
+                                    to select events to enter.{" "}
+                                    {props.competition.require_times && (
+                                        <>
+                                            You will need to provide an entry
+                                            time for each event you select. This
+                                            will be used to seed competitors
+                                            into heats.{" "}
+                                        </>
+                                    )}{" "}
+                                    Press the link next to each entrant&apos;s
+                                    name to get started.
+                                </p>
 
-                            <p>
-                                If you need further assistance, please contact{" "}
-                                {props.tenant.name}.
-                            </p>
-                        </div>
-                    </Card>
+                                <p>
+                                    Once you have selected events for each
+                                    entrant, you will be brought back to this
+                                    page where you can proceed to payment. Your
+                                    details will be deleted if you don't pay
+                                    within 24 hours of starting your entry.
+                                </p>
+
+                                <p>
+                                    If you need further assistance, please
+                                    contact {props.tenant.name}.
+                                </p>
+                            </div>
+                        </Card>
+                    )}
 
                     <Card title="Your details">
                         <DefinitionList
@@ -170,7 +183,9 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                                                         }
                                                     )}
                                                 >
-                                                    Select swims{" "}
+                                                    {props.paid
+                                                        ? "View swims"
+                                                        : "Select swims"}{" "}
                                                     <span aria-hidden="true">
                                                         {" "}
                                                         &rarr;
