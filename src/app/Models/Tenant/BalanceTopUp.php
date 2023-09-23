@@ -106,7 +106,7 @@ class BalanceTopUp extends Model implements PaidObject
         // TODO: Implement handleChargedBack() method.
     }
 
-    public function handleRefund(int $refundAmount): void
+    public function handleRefund(int $refundAmount, int $totalAmountRefunded): void
     {
         // TODO: Implement handleRefund() method.
     }

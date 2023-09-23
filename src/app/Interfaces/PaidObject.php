@@ -10,7 +10,7 @@ interface PaidObject
 
     public function getPaymentLineDescriptor(): string;
 
-    public function handleRefund(int $refundAmount): void;
+    public function handleRefund(int $refundAmount, int $totalAmountRefunded): void;
 
     public function handleFailed(): void;
 

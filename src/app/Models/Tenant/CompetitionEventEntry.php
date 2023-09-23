@@ -23,6 +23,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $notes
  * @property bool $paid
  * @property PaymentLine|null $paymentLine
+ * @property bool $refunded
+ * @property bool $fully_refunded
  */
 class CompetitionEventEntry extends Model implements PaidObject
 {
@@ -41,6 +43,8 @@ class CompetitionEventEntry extends Model implements PaidObject
     protected $casts = [
         'cancellation_reason' => CompetitionEntryCancellationReason::class,
         'paid' => 'boolean',
+        'refunded' => 'boolean',
+        'fully_refunded' => 'boolean',
     ];
 
     protected $attributes = [
@@ -103,6 +107,26 @@ class CompetitionEventEntry extends Model implements PaidObject
         );
     }
 
+    /**
+     * Get refunded status.
+     */
+    protected function refunded(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['amount_refunded'] > 0,
+        );
+    }
+
+    /**
+     * Get fully refunded status.
+     */
+    protected function fullyRefunded(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['amount_refunded'] == $attributes['amount'],
+        );
+    }
+
     public function handlePaid(): void
     {
         $this->paid = true;
@@ -124,9 +148,18 @@ class CompetitionEventEntry extends Model implements PaidObject
         return $name.' - '.$this->competitionEvent->name;
     }
 
-    public function handleRefund(int $refundAmount): void
+    public function handleRefund(int $refundAmount, int $totalAmountRefunded): void
     {
-        // TODO: Implement handleRefund() method.
+        $this->amount_refunded = $totalAmountRefunded;
+
+        if (! $this->cancellation_reason) {
+            $this->cancellation_reason = CompetitionEntryCancellationReason::GENERIC_REFUND;
+        }
+
+        $this->save();
+
+        $this->competitionEntry->calculateTotals();
+        $this->competitionEntry->save();
     }
 
     public function handleFailed(): void

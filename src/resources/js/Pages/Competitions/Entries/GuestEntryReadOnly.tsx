@@ -1,28 +1,20 @@
-import React, { JSX, ReactNode } from "react";
+import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
-import ButtonLink from "@/Components/ButtonLink";
-import ActionPanel from "@/Components/ActionPanel";
 import Link from "@/Components/Link";
 import { formatDate, formatDateTime } from "@/Utils/date-utils";
 import Card from "@/Components/Card";
 import { DefinitionList } from "@/Components/DefinitionList";
-import Button from "@/Components/Button";
 import BasicList from "@/Components/BasicList";
 import MainLayout from "@/Layouts/MainLayout";
-import GuestEntryShow from "@/Pages/Competitions/Entries/GuestEntryShow";
-import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import Badge from "@/Components/Badge";
-import PlainCollection from "@/Components/PlainCollection";
-import { usePage } from "@inertiajs/react";
 import Form, {
     RenderServerErrors,
     SubmissionButtons,
 } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Checkbox from "@/Components/Form/Checkbox";
-import Alert from "@/Components/Alert";
 import FlashAlert from "@/Components/FlashAlert";
 
 interface EntryProps {
@@ -56,6 +48,8 @@ interface EntryProps {
     entries: {
         id: string;
         entry_time: string;
+        refunded: boolean;
+        fully_refunded: boolean;
         event: {
             id: number;
             name: string;
@@ -195,6 +189,20 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                                         .event
                                                                         .name
                                                                 }{" "}
+                                                                {event_entry.fully_refunded && (
+                                                                    <Badge colour="red">
+                                                                        Fully
+                                                                        refunded
+                                                                    </Badge>
+                                                                )}
+                                                                {!event_entry.fully_refunded &&
+                                                                    event_entry.refunded && (
+                                                                        <Badge colour="yellow">
+                                                                            Part
+                                                                            refunded
+                                                                        </Badge>
+                                                                    )}
+                                                                <br />
                                                                 {event_entry.entry_time && (
                                                                     <>
                                                                         (
@@ -211,10 +219,10 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                             </ul>
                                         </div>
                                         <div className="col-start-7 col-span-6 text-sm">
-                                            <div>
+                                            <div className="mb-2">
                                                 Amount £{props.amount_string}
                                             </div>
-                                            <div>
+                                            <div className="mb-4">
                                                 Amount refunded £
                                                 {props.amount_refunded_string}
                                             </div>

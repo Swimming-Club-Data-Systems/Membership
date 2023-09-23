@@ -66,6 +66,8 @@ class CompetitionGuestEntryController extends Controller
                         'entry_time' => $entry->entry_time,
                         'notes' => $entry->notes,
                         'paid' => $entry->paid,
+                        'refunded' => $entry->refunded,
+                        'fully_refunded' => $entry->fully_refunded,
                         'event' => [
                             'id' => $entry->competitionEvent->id,
                             'name' => $entry->competitionEvent->name,
@@ -135,6 +137,8 @@ class CompetitionGuestEntryController extends Controller
                     'entry_time' => $entry->entry_time,
                     'notes' => $entry->notes,
                     'paid' => $entry->paid,
+                    'refunded' => $entry->refunded,
+                    'fully_refunded' => $entry->fully_refunded,
                     'event' => [
                         'id' => $entry->competitionEvent->id,
                         'name' => $entry->competitionEvent->name,

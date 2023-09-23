@@ -289,7 +289,16 @@ const Show: Layout<Props> = (props: Props) => {
                             <BasicList items={props.sessions.map(Session)} />
                         </Card>
                         <Card title="Entrants">
-                            Shows info about your members and entrants
+                            <div className="text-sm">
+                                <Link
+                                    href={route(
+                                        "competitions.guest_entries.index",
+                                        [props.id]
+                                    )}
+                                >
+                                    View guest entries
+                                </Link>
+                            </div>
                         </Card>
                     </div>
                     <div className="row-start-1 col-start-8 col-span-5">

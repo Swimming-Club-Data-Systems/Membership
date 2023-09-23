@@ -45,6 +45,8 @@ interface EntryProps {
     entries: {
         id: string;
         entry_time: string;
+        refunded: boolean;
+        fully_refunded: boolean;
         event: {
             id: number;
             name: string;
@@ -128,6 +130,18 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                             return (
                                 <li key={event_entry.id}>
                                     {event_entry.event.name}{" "}
+                                    {event_entry.fully_refunded && (
+                                        <Badge colour="red">
+                                            Fully refunded
+                                        </Badge>
+                                    )}
+                                    {!event_entry.fully_refunded &&
+                                        event_entry.refunded && (
+                                            <Badge colour="yellow">
+                                                Part refunded
+                                            </Badge>
+                                        )}
+                                    <br />
                                     {event_entry.entry_time && (
                                         <>({event_entry.entry_time})</>
                                     )}
