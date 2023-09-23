@@ -374,6 +374,7 @@ Route::middleware([
                         ->name('guest_entries.index');
                     Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
                         ->name('guest_entries.show');
+                    Route::put('/{entry}', [CompetitionGuestEntryController::class, 'update']);
                 });
                 Route::prefix('sessions')->group(function () {
                     Route::name('sessions.')->group(function () {

@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionEventEntry;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 
 class CompetitionGuestEntryController extends Controller
@@ -132,5 +134,23 @@ class CompetitionGuestEntryController extends Controller
         ];
 
         return Inertia::render('Competitions/Entries/GuestEntryReadOnly', $data);
+    }
+
+    public function update(Competition $competition, CompetitionEntry $entry, Request $request): \Illuminate\Http\RedirectResponse
+    {
+        $request->validate([
+            'approved' => ['boolean'],
+            'paid' => ['boolean'],
+            'processed' => ['boolean'],
+        ]);
+
+        $entry->approved = $request->boolean('approved');
+        $entry->processed = $request->boolean('processed');
+        // TODO Only allow unchecking paid if paying manually
+        $entry->paid = $request->boolean('paid');
+
+        $entry->save();
+
+        return Redirect::route('competitions.guest_entries.show', [$competition, $entry]);
     }
 }
