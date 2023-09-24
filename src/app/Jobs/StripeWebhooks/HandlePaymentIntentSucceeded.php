@@ -130,6 +130,7 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                                 // Trigger Email Receipt
                                 Mail::to($payment)->send(new PaymentSucceeded($payment));
                             } catch (\Exception $e) {
+                                report($e);
                                 // Can't send, ignore silently
                             }
                         }

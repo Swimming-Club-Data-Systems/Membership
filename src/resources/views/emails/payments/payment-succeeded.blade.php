@@ -1,5 +1,5 @@
 @component('mail::message')
-# Hello {{$payment->user->name}},
+# Hello {{$payment->name}},
 
 Your payment to {{ tenant()->getOption("CLUB_NAME") }} has been successful. This is your payment receipt.
 

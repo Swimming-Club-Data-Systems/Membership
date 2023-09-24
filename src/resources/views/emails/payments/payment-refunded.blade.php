@@ -1,5 +1,5 @@
 @component('mail::message')
-# Hello {{$payment->user->name}},
+# Hello {{$payment->name}},
 
 We have issued a {{$amountRefunded}} refund for payment reference #{{$payment->id}}. The total amount refunded for this payment is {{$payment->formatted_amount_refunded}}.
 
