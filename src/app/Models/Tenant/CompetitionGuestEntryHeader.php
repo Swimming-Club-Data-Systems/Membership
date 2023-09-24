@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $last_name
  * @property string $name
  * @property string $email
- * @property User $user
+ * @property User|null $user
  * @property array $custom_form_data
  * @property Collection $competitionGuestEntrants
  */

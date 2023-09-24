@@ -26,6 +26,8 @@ class CompetitionGuestEntryHeaderController extends Controller
 {
     public function new(Competition $competition, Request $request)
     {
+        $this->authorize('create', CompetitionGuestEntryHeader::class);
+
         /** @var User $user */
         $user = $request->user();
 
@@ -44,6 +46,8 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function create(Competition $competition, Request $request)
     {
+        $this->authorize('create', CompetitionGuestEntryHeader::class);
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
@@ -81,7 +85,7 @@ class CompetitionGuestEntryHeaderController extends Controller
 
             DB::commit();
 
-            $request->session()->put('competition_guest_entry_header_id', $guestEntryHeader->id);
+            $request->session()->push('competition_guest_entry_header_ids', $guestEntryHeader->id);
 
             return Redirect::route('competitions.enter_as_guest.show', [$competition, $guestEntryHeader]);
         } catch (\Exception $e) {
@@ -96,6 +100,8 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function show(Competition $competition, CompetitionGuestEntryHeader $header, Request $request): \Inertia\Response
     {
+        $this->authorize('view', $header);
+
         $payable = false;
         $paid = false;
         $entrants = $header->competitionGuestEntrants->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable, &$paid) {
@@ -136,6 +142,8 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function editEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request): \Inertia\Response
     {
+        $this->authorize('update', $header);
+
         // Get existing entries
         /** @var CompetitionEntry $entry */
         $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('competitionEventEntries')->first();
@@ -230,6 +238,8 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function updateEntry(Competition $competition, CompetitionGuestEntryHeader $header, CompetitionGuestEntrant $entrant, Request $request)
     {
+        $this->authorize('update', $header);
+
         // Get existing entries
         /** @var CompetitionEntry $entry */
         $entry = CompetitionEntry::firstOrCreate(
@@ -307,5 +317,8 @@ class CompetitionGuestEntryHeaderController extends Controller
         $entry->calculateTotals();
         $entry->save();
 
+        $request->session()->flash('success', 'Changes to '.$entrant->name.'\'s entry saved successfully.');
+
+        return Redirect::route('competitions.enter_as_guest.show', [$competition, $header]);
     }
 }

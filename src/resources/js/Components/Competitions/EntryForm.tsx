@@ -74,18 +74,29 @@ export const EntryForm = ({ sessions, action, readOnly }: EntryFormProps) => {
                                     return {
                                         id: event.id,
                                         content: (
-                                            <div key={event.id}>
-                                                <Checkbox
-                                                    name={`entries.${
-                                                        event.sequence - 1
-                                                    }.entering`}
-                                                    label={event.name}
-                                                    help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
-                                                />
+                                            <div
+                                                key={event.id}
+                                                className="@container"
+                                            >
+                                                <div className="grid gap-4 grid-cols-12">
+                                                    <div className="col-span-full @lg:col-span-5">
+                                                        <Checkbox
+                                                            name={`entries.${
+                                                                event.sequence -
+                                                                1
+                                                            }.entering`}
+                                                            label={event.name}
+                                                            help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
+                                                            mb="mb-0"
+                                                        />
+                                                    </div>
 
-                                                <EntryAdditionalDetails
-                                                    event={event}
-                                                />
+                                                    <div className="col-span-full @lg:col-span-7">
+                                                        <EntryAdditionalDetails
+                                                            event={event}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
                                         ),
                                     };

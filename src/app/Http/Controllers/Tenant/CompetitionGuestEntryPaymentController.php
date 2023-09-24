@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Business\Helpers\ApplicationFeeAmount;
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionEventEntry;
@@ -11,12 +12,19 @@ use App\Models\Tenant\CompetitionGuestEntrant;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redirect;
 
 class CompetitionGuestEntryPaymentController extends Controller
 {
-    public function start(Competition $competition, CompetitionGuestEntryHeader $header)
+    public function start(Request $request, Competition $competition, CompetitionGuestEntryHeader $header)
     {
+        $this->authorize('update', $header);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         try {
             DB::beginTransaction();
 
@@ -67,7 +75,11 @@ class CompetitionGuestEntryPaymentController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
 
-            ddd($e);
+            report($e);
+
+            $request->session()->flash('error', 'We can\'t take you to the checkout page right now. Please try again later. If the issue persists, please contact '.$tenant->Name.' for help.');
+
+            return Redirect::route('competitions.enter_as_guest.show', [$competition, $header]);
         }
     }
 }

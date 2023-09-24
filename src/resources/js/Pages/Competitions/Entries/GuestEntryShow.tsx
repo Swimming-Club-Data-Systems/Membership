@@ -98,6 +98,8 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                         </Alert>
                     )}
 
+                    <FlashAlert />
+
                     {!props.paid && (
                         <Card title="What to do?">
                             <div className="prose prose-sm">

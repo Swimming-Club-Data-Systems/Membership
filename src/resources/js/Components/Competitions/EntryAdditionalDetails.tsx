@@ -27,13 +27,15 @@ export const EntryAdditionalDetails = ({
                     />
                 </div>
 
-                <div>
-                    <DecimalInput
-                        name={`entries.${event.sequence - 1}.amount`}
-                        label="Amount (£)"
-                        help={`Edit the combined event and processing fees.`}
-                    />
-                </div>
+                {false && (
+                    <div>
+                        <DecimalInput
+                            name={`entries.${event.sequence - 1}.amount`}
+                            label="Amount (£)"
+                            help={`Edit the combined event and processing fees.`}
+                        />
+                    </div>
+                )}
             </div>
         );
     }

@@ -24,6 +24,7 @@ import { DefinitionList } from "@/Components/DefinitionList";
 import Link from "@/Components/Link";
 import { EntryForm } from "@/Components/Competitions/EntryForm";
 import Alert from "@/Components/Alert";
+import ButtonLink from "@/Components/ButtonLink";
 
 export type Props = {
     google_maps_api_key: string;
@@ -95,6 +96,16 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
                 <MainHeader
                     title={`Manage ${props.entrant.first_name}'s entry`}
                     subtitle={`For ${props.competition.name}.`}
+                    buttons={
+                        <ButtonLink
+                            href={route("competitions.enter_as_guest.show", [
+                                props.competition.id,
+                                props.header.id,
+                            ])}
+                        >
+                            Back
+                        </ButtonLink>
+                    }
                 ></MainHeader>
             </Container>
 
