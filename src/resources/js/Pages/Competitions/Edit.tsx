@@ -18,6 +18,7 @@ import RadioGroup from "@/Components/Form/RadioGroup";
 import { useField } from "formik";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
+import Select from "@/Components/Form/Select";
 
 export type Props = {
     name: string;
@@ -91,10 +92,12 @@ const New: Layout<Props> = (props: Props) => {
                                 "irregular",
                                 "not_applicable",
                             ]),
+                        state: yup.string().oneOf(["draft", "published"]),
                     })}
                     initialValues={{
                         name: "",
                         description: "",
+                        state: null,
                         venue: null,
                         pool_course: "short",
                         require_times: false,
@@ -119,6 +122,14 @@ const New: Layout<Props> = (props: Props) => {
                         >
                             <TextInput name="name" label="Name" />
                             <VenueCombobox name="venue" />
+                            <Select
+                                name="state"
+                                label="State"
+                                items={[
+                                    { value: "draft", name: "Draft" },
+                                    { value: "published", name: "Published" },
+                                ]}
+                            />
                             <RadioGroup label="Pool length">
                                 <Radio
                                     name="pool_course"

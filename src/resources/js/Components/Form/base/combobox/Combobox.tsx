@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import axios from "@/Utils/axios";
 import { Combobox as HeadlessCombobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 import { selectTextOnFocus } from "@/Components/Form/base/Input";
+import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -16,7 +17,7 @@ export interface Props {
     id?: string;
     disabled?: boolean;
     name: string;
-    onBlur: () => void;
+    onBlur: (ev: any) => void;
     onChange: (value: any) => void;
     multiple?: boolean;
     className?: string;
@@ -28,6 +29,10 @@ export interface Props {
 export const Combobox: React.FC<Props> = ({
     keyField = "id",
     className = "",
+    name,
+    id,
+    endpoint,
+    onBlur: onBlurProps,
     ...props
 }) => {
     const [query, setQuery] = useState("");
@@ -42,13 +47,28 @@ export const Combobox: React.FC<Props> = ({
         return false;
     };
 
+    const onBlur = useCallback(
+        (e) => {
+            if (onBlurProps) {
+                onBlurProps({
+                    target: {
+                        name: name,
+                        id: id,
+                        outerHTML: e?.target?.outerHTML,
+                    },
+                });
+            }
+        },
+        [onBlurProps, name, id]
+    );
+
     /**
      * Get the initial value if id provided
      */
     useEffect(() => {
         if (props.value) {
             axios
-                .get(props.endpoint, {
+                .get(endpoint, {
                     params: {
                         id: props.value,
                     },
@@ -62,14 +82,14 @@ export const Combobox: React.FC<Props> = ({
         } else {
             setSelectedItem(null);
         }
-    }, [props.value]);
+    }, [props.value, endpoint]);
 
     /**
      * Get updated search results as the user types
      */
     useEffect(() => {
         axios
-            .get(props.endpoint, {
+            .get(endpoint, {
                 params: {
                     query: query,
                 },
@@ -79,7 +99,7 @@ export const Combobox: React.FC<Props> = ({
                     setItems(value.data.data);
                 }
             });
-    }, [query]);
+    }, [query, endpoint]);
 
     return (
         <HeadlessCombobox
@@ -93,8 +113,8 @@ export const Combobox: React.FC<Props> = ({
             }}
             by={compareItems}
             disabled={props.disabled}
-            onBlur={props.onBlur}
-            name={props.name}
+            onBlur={onBlur}
+            name={name}
             nullable={props.nullable}
         >
             <HeadlessCombobox.Label className="block text-sm font-medium text-gray-700">
@@ -112,6 +132,12 @@ export const Combobox: React.FC<Props> = ({
                     displayValue={(person) => person?.name}
                 />
                 <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-2 focus:outline-none">
+                    {props.isInvalid && (
+                        <ExclamationCircleIcon
+                            className="h-5 w-5 mr-1 text-red-500"
+                            aria-hidden="true"
+                        />
+                    )}
                     <ChevronUpDownIcon
                         className="h-5 w-5 text-gray-400"
                         aria-hidden="true"
