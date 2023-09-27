@@ -54,6 +54,7 @@ class Competition extends Model
         'processing_fee_string',
         'closing_date',
         'age_at_date',
+        'status',
     ];
 
     /**

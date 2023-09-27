@@ -244,6 +244,8 @@ const Show: Layout<Props> = (props: Props) => {
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-start-1 col-span-7 flex flex-col gap-6">
+                        <FlashAlert />
+
                         <ActionPanel
                             title="This competition is open for entries"
                             buttons={

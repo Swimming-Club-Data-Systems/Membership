@@ -16,7 +16,6 @@ interface Props extends Pick<BaseSelectProps, "items"> {
     name: string;
     label: string;
     autoComplete?: string;
-    endpoint: string;
     keyField?: string;
     help?: string;
     nullable?: boolean;

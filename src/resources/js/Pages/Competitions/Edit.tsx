@@ -25,6 +25,14 @@ export type Props = {
     id: number;
 };
 
+const CompetitionStatusSelectValues = [
+    { value: "draft", name: "Draft" },
+    { value: "published", name: "Published" },
+    { value: "paused", name: "Paused" },
+    { value: "closed", name: "Closed" },
+    { value: "cancelled", name: "Cancelled" },
+];
+
 const New: Layout<Props> = (props: Props) => {
     const todaysDate = formatISO(Date.now(), {
         representation: "date",
@@ -92,7 +100,15 @@ const New: Layout<Props> = (props: Props) => {
                                 "irregular",
                                 "not_applicable",
                             ]),
-                        state: yup.string().oneOf(["draft", "published"]),
+                        status: yup
+                            .string()
+                            .oneOf([
+                                "draft",
+                                "published",
+                                "paused",
+                                "closed",
+                                "cancelled",
+                            ]),
                     })}
                     initialValues={{
                         name: "",
@@ -108,6 +124,7 @@ const New: Layout<Props> = (props: Props) => {
                         processing_fee_string: 0,
                         closing_date: "",
                         age_at_date: "",
+                        status: "draft",
                     }}
                     submitTitle="Save"
                     action={route("competitions.show", {
@@ -123,12 +140,10 @@ const New: Layout<Props> = (props: Props) => {
                             <TextInput name="name" label="Name" />
                             <VenueCombobox name="venue" />
                             <Select
-                                name="state"
-                                label="State"
-                                items={[
-                                    { value: "draft", name: "Draft" },
-                                    { value: "published", name: "Published" },
-                                ]}
+                                name="status"
+                                label="Publication status"
+                                items={CompetitionStatusSelectValues}
+                                help="Competitions won't be visible or open to users or guests until the competition state has been set to published."
                             />
                             <RadioGroup label="Pool length">
                                 <Radio

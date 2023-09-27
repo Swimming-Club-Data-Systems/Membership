@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -23,14 +23,12 @@ import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import Alert from "@/Components/Alert";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import { router } from "@inertiajs/react";
-import { useFormikContext } from "formik";
 import ButtonLink from "@/Components/ButtonLink";
 import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { formatDateTime } from "@/Utils/date-utils";
-import { bool } from "yup";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -280,20 +278,20 @@ const Show: Layout<Props> = (props: Props) => {
                                             "The session name must not exceed 255 characters."
                                         ),
                                     venue: yup.number().required().integer(),
-                                    start_date: yup
+                                    start_time: yup
                                         .date()
                                         .typeError("Start date must be a date.")
                                         .required(
                                             "A start date and time is required."
                                         ),
-                                    end_date: yup
+                                    end_time: yup
                                         .date()
                                         .typeError("End date must be a date.")
                                         .required(
                                             "An end date and time is required."
                                         )
                                         .min(
-                                            yup.ref("start_date"),
+                                            yup.ref("start_time"),
                                             "End time must be after the start time."
                                         ),
                                 })}
@@ -316,14 +314,16 @@ const Show: Layout<Props> = (props: Props) => {
                                     <VenueCombobox name="venue" />
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <DateTimeInput
-                                            name="start_date"
+                                            name="start_time"
                                             label="Start date and time"
                                             mb="mb-0"
+                                            showTimeInput
                                         />
                                         <DateTimeInput
-                                            name="end_date"
+                                            name="end_time"
                                             label="End date and time"
                                             mb="mb-0"
+                                            showTimeInput
                                         />
                                     </div>
                                 </Card>
@@ -336,20 +336,6 @@ const Show: Layout<Props> = (props: Props) => {
                                     items={items}
                                     verticalPadding={2}
                                 />
-                                {/*<TextInput name="name" label="Name" />*/}
-                                {/*<VenueCombobox name="venue" />*/}
-                                {/*<div className="grid md:grid-cols-2 gap-6">*/}
-                                {/*    <DateTimeInput*/}
-                                {/*        name="start_date"*/}
-                                {/*        label="Start date and time"*/}
-                                {/*        mb="mb-0"*/}
-                                {/*    />*/}
-                                {/*    <DateTimeInput*/}
-                                {/*        name="end_date"*/}
-                                {/*        label="End date and time"*/}
-                                {/*        mb="mb-0"*/}
-                                {/*    />*/}
-                                {/*</div>*/}
                             </Card>
                         )}
 

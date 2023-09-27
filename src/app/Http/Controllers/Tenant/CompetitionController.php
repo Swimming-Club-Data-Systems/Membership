@@ -327,6 +327,10 @@ class CompetitionController extends Controller
                 'required',
                 'date',
             ],
+            'status' => [
+                'required',
+                new Enum(CompetitionStatus::class),
+            ],
         ]);
 
         $competition->fill($validated);
@@ -334,6 +338,7 @@ class CompetitionController extends Controller
         $competition->save();
 
         // Flash message
+        $request->session()->flash('success', 'Changes saved successfully.');
 
         return redirect()->route('competitions.show', $competition);
     }

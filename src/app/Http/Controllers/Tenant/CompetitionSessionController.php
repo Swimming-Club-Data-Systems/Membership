@@ -119,12 +119,8 @@ class CompetitionSessionController extends Controller
             'edit_session' => [
                 'form_initial_values' => [
                     'name' => $session->name,
-                    'start_date' => $session->start_time,
-                    'end_date' => $session->end_time,
-                    //                    'start_date' => $session->start_time->toDateString(),
-                    //                    'start_time' => $session->start_time->toTimeString(),
-                    //                    'end_date' => $session->end_time->toDateString(),
-                    //                    'end_time' => $session->end_time->toTimeString(),
+                    'start_time' => $session->start_time,
+                    'end_time' => $session->end_time,
                     'venue' => $venue->id,
                 ],
             ],
