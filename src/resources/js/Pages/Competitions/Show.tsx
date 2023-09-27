@@ -56,6 +56,8 @@ export type Props = {
     };
     sessions: Session[];
     editable: boolean;
+    members_can_enter: boolean;
+    guests_can_enter: boolean;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -246,30 +248,43 @@ const Show: Layout<Props> = (props: Props) => {
                     <div className="col-start-1 col-span-7 flex flex-col gap-6">
                         <FlashAlert />
 
-                        <ActionPanel
-                            title="This competition is open for entries"
-                            buttons={
-                                <>
-                                    <ButtonLink href="" className="mr-3">
-                                        Enter now
-                                    </ButtonLink>
-                                    <Link
-                                        href={route(
-                                            "competitions.enter_as_guest",
-                                            props.id
+                        {(props.members_can_enter ||
+                            props.guests_can_enter) && (
+                            <ActionPanel
+                                title="This competition is open for entries"
+                                buttons={
+                                    <>
+                                        {props.members_can_enter && (
+                                            <ButtonLink
+                                                href=""
+                                                className="mr-3"
+                                            >
+                                                Enter now
+                                            </ButtonLink>
                                         )}
-                                    >
-                                        Enter as guest{" "}
-                                        <span aria-hidden="true"> &rarr;</span>
-                                    </Link>
-                                </>
-                            }
-                        >
-                            <p>
-                                You can enter this competition until{" "}
-                                {formatDateTime(props.closing_date)}.
-                            </p>
-                        </ActionPanel>
+                                        {props.guests_can_enter && (
+                                            <Link
+                                                href={route(
+                                                    "competitions.enter_as_guest",
+                                                    props.id
+                                                )}
+                                            >
+                                                Enter as guest{" "}
+                                                <span aria-hidden="true">
+                                                    {" "}
+                                                    &rarr;
+                                                </span>
+                                            </Link>
+                                        )}
+                                    </>
+                                }
+                            >
+                                <p>
+                                    You can enter this competition until{" "}
+                                    {formatDateTime(props.closing_date)}.
+                                </p>
+                            </ActionPanel>
+                        )}
 
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />

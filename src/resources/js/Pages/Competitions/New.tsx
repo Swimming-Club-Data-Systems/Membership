@@ -17,6 +17,8 @@ import Card from "@/Components/Card";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import { useField } from "formik";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
+import Select from "@/Components/Form/Select";
+import { CompetitionOpenToSelectValues } from "@/Pages/Competitions/Edit";
 
 export type Props = {
     google_maps_api_key: string;
@@ -101,6 +103,10 @@ const New: Layout<Props> = (props: Props) => {
                             then: (schema) => schema.required().min(todaysDate),
                             otherwise: (schema) => schema.notRequired(),
                         }),
+                        open_to: yup
+                            .string()
+                            .required()
+                            .oneOf(["members", "guests", "members_and_guests"]),
                     })}
                     initialValues={{
                         name: "",
@@ -116,6 +122,7 @@ const New: Layout<Props> = (props: Props) => {
                         closing_date: "",
                         age_at_date: "",
                         setup_type: "basic",
+                        open_to: "members",
                     }}
                     submitTitle="Next step"
                     action={route("competitions.index")}
@@ -181,6 +188,11 @@ const New: Layout<Props> = (props: Props) => {
                             <Checkbox
                                 name="requires_approval"
                                 label="Entries require approval"
+                            />
+                            <Select
+                                name="open_to"
+                                label="Open to"
+                                items={CompetitionOpenToSelectValues}
                             />
                             <Checkbox
                                 name="public"

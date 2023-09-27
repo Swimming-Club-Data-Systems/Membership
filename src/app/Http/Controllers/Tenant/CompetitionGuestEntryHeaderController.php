@@ -26,6 +26,7 @@ class CompetitionGuestEntryHeaderController extends Controller
 {
     public function new(Competition $competition, Request $request)
     {
+        $this->authorize('enterAsGuest', $competition);
         $this->authorize('create', CompetitionGuestEntryHeader::class);
 
         /** @var User $user */
@@ -46,6 +47,7 @@ class CompetitionGuestEntryHeaderController extends Controller
 
     public function create(Competition $competition, Request $request)
     {
+        $this->authorize('enterAsGuest', $competition);
         $this->authorize('create', CompetitionGuestEntryHeader::class);
 
         $validated = $request->validate([

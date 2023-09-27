@@ -33,6 +33,12 @@ const CompetitionStatusSelectValues = [
     { value: "cancelled", name: "Cancelled" },
 ];
 
+export const CompetitionOpenToSelectValues = [
+    { value: "members", name: "Members" },
+    { value: "guests", name: "Guests" },
+    { value: "members_and_guests", name: "Members and Guests" },
+];
+
 const New: Layout<Props> = (props: Props) => {
     const todaysDate = formatISO(Date.now(), {
         representation: "date",
@@ -102,6 +108,7 @@ const New: Layout<Props> = (props: Props) => {
                             ]),
                         status: yup
                             .string()
+                            .required()
                             .oneOf([
                                 "draft",
                                 "published",
@@ -109,6 +116,10 @@ const New: Layout<Props> = (props: Props) => {
                                 "closed",
                                 "cancelled",
                             ]),
+                        open_to: yup
+                            .string()
+                            .required()
+                            .oneOf(["members", "guests", "members_and_guests"]),
                     })}
                     initialValues={{
                         name: "",
@@ -125,6 +136,7 @@ const New: Layout<Props> = (props: Props) => {
                         closing_date: "",
                         age_at_date: "",
                         status: "draft",
+                        open_to: "members",
                     }}
                     submitTitle="Save"
                     action={route("competitions.show", {
@@ -198,6 +210,11 @@ const New: Layout<Props> = (props: Props) => {
                             <Checkbox
                                 name="requires_approval"
                                 label="Entries require approval"
+                            />
+                            <Select
+                                name="open_to"
+                                label="Open to"
+                                items={CompetitionOpenToSelectValues}
                             />
                             <Checkbox
                                 name="public"

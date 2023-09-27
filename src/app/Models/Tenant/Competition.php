@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
+use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Events\Tenant\CompetitionCreated;
 use App\Traits\BelongsToTenant;
@@ -23,6 +24,7 @@ use Laravel\Scout\Searchable;
  * @property Venue $venue
  * @property CompetitionMode $mode
  * @property CompetitionStatus $status
+ * @property CompetitionOpenTo $open_to
  * @property bool $require_times
  * @property bool $coach_enters
  * @property bool $requires_approval
@@ -55,6 +57,7 @@ class Competition extends Model
         'closing_date',
         'age_at_date',
         'status',
+        'open_to',
     ];
 
     /**
@@ -66,6 +69,7 @@ class Competition extends Model
         'pool_course' => CompetitionCourse::class,
         'status' => CompetitionStatus::class,
         'mode' => CompetitionMode::class,
+        'open_to' => CompetitionOpenTo::class,
         'closing_date' => 'datetime',
         'gala_date' => 'datetime',
         'age_at_date' => 'datetime',
@@ -84,6 +88,7 @@ class Competition extends Model
         'pool_course' => CompetitionCourse::SHORT,
         'mode' => CompetitionMode::BASIC,
         'status' => CompetitionStatus::DRAFT,
+        'open_to' => CompetitionOpenTo::MEMBERS,
         'require_times' => false,
         'coach_enters' => false,
         'requires_approval' => false,

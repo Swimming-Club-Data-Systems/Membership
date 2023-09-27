@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
+use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
@@ -163,6 +164,10 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionMode::class),
             ],
+            'open_to' => [
+                'required',
+                new Enum(CompetitionOpenTo::class),
+            ],
         ]);
 
         $competition = new Competition();
@@ -208,6 +213,9 @@ class CompetitionController extends Controller
         //            }
         //        }
 
+        /** @var User $user */
+        $user = $request->user() ?? new User();
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
@@ -232,7 +240,10 @@ class CompetitionController extends Controller
                 'formatted_address' => $competition->venue->formatted_address,
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
-            'editable' => $request->user()?->can('update', $competition),
+            'editable' => $user->can('update', $competition),
+            'members_can_enter' => $user->can('enter', $competition),
+            'guests_can_enter' => $user->can('enterAsGuest', $competition),
+            'open_to' => $competition->open_to,
         ]);
     }
 
@@ -258,6 +269,7 @@ class CompetitionController extends Controller
                 'closing_date' => $competition->closing_date,
                 'age_at_date' => $competition->age_at_date,
                 'venue' => $competition->venue->id,
+                'open_to' => $competition->open_to,
             ],
             'id' => $competition->id,
             'name' => $competition->name,
@@ -330,6 +342,10 @@ class CompetitionController extends Controller
             'status' => [
                 'required',
                 new Enum(CompetitionStatus::class),
+            ],
+            'open_to' => [
+                'required',
+                new Enum(CompetitionOpenTo::class),
             ],
         ]);
 
