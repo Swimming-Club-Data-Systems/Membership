@@ -9,7 +9,7 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import TextArea from "@/Components/Form/TextArea";
 import formatISO from "date-fns/formatISO";
-import NativeDateInput from "@/Components/Form/NativeDateInput";
+import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Checkbox from "@/Components/Form/Checkbox";
 import DecimalInput from "@/Components/Form/DecimalInput";
 import Radio from "@/Components/Form/Radio";
@@ -36,7 +36,7 @@ const LastDay = () => {
     }
 
     return (
-        <NativeDateInput name="gala_date" label="Final day" min={todaysDate} />
+        <DateTimeInput name="gala_date" label="Final day" min={todaysDate} />
     );
 };
 
@@ -76,8 +76,20 @@ const New: Layout<Props> = (props: Props) => {
                             .number()
                             .typeError("You must choose a venue.")
                             .required("You must choose a venue."),
-                        closing_date: yup.date().required().min(todaysDate),
-                        age_at_date: yup.date().required().min(todaysDate),
+                        closing_date: yup
+                            .date()
+                            .required("A closing date is required.")
+                            .min(
+                                todaysDate,
+                                "The closing date must be in the future."
+                            ),
+                        age_at_date: yup
+                            .date()
+                            .required("An age at date is required.")
+                            .min(
+                                todaysDate,
+                                "The age at date must be in the future."
+                            ),
                         default_entry_fee: yup.number().required().min(0),
                         processing_fee: yup.number().required().min(0),
                         require_times: yup.boolean(),
@@ -119,8 +131,9 @@ const New: Layout<Props> = (props: Props) => {
                         public: true,
                         default_entry_fee: 0,
                         processing_fee: 0,
-                        closing_date: "",
-                        age_at_date: "",
+                        closing_date: todaysDate,
+                        age_at_date: todaysDate,
+                        gala_date: todaysDate,
                         setup_type: "basic",
                         open_to: "members",
                     }}
@@ -167,12 +180,12 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Description"
                                 help="You may use Markdown formatting in this field."
                             />
-                            <NativeDateInput
+                            <DateTimeInput
                                 name="closing_date"
                                 label="Closing date"
                                 min={todaysDate}
                             />
-                            <NativeDateInput
+                            <DateTimeInput
                                 name="age_at_date"
                                 label="Ages at"
                                 min={todaysDate}

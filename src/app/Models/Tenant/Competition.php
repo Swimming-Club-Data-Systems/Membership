@@ -95,6 +95,7 @@ class Competition extends Model
         'public' => true,
         'default_entry_fee' => 0,
         'processing_fee' => 0,
+        'description' => '',
     ];
 
     /**

@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+    useDeferredValue,
+} from "react";
 import axios from "@/Utils/axios";
 import { Combobox as HeadlessCombobox } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
@@ -36,6 +42,7 @@ export const Combobox: React.FC<Props> = ({
     ...props
 }) => {
     const [query, setQuery] = useState("");
+    const deferredQuery = useDeferredValue(query);
     const [items, setItems] = useState([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const inputRef = useRef(null);
@@ -91,7 +98,7 @@ export const Combobox: React.FC<Props> = ({
         axios
             .get(endpoint, {
                 params: {
-                    query: query,
+                    query: deferredQuery,
                 },
             })
             .then((value) => {
@@ -99,7 +106,7 @@ export const Combobox: React.FC<Props> = ({
                     setItems(value.data.data);
                 }
             });
-    }, [query, endpoint]);
+    }, [deferredQuery, endpoint]);
 
     return (
         <HeadlessCombobox
