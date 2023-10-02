@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
@@ -31,6 +31,12 @@ interface EntryProps {
         sex: string;
         age: number;
         age_on_day: number;
+        custom_fields: {
+            friendly_name: string;
+            friendly_value?: string;
+            name: string;
+            value?: string;
+        }[];
     };
     header: {
         id: string;
@@ -74,6 +80,20 @@ interface EntryProps {
 }
 
 const GuestEntryReadOnly = (props: EntryProps) => {
+    const customFields = useMemo(
+        () =>
+            props.entrant.custom_fields.map((field) => {
+                return {
+                    key: `custom_field_${field.name}`,
+                    term: field.friendly_name,
+                    definition: field.friendly_value
+                        ? field.friendly_value
+                        : "Not given",
+                };
+            }),
+        [props.entrant.custom_fields]
+    );
+
     return (
         <>
             <Head
@@ -362,6 +382,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                 term: "Competition category (sex)",
                                                 definition: props.entrant.sex,
                                             },
+                                            ...customFields,
                                         ]}
                                     />
                                 </Card>

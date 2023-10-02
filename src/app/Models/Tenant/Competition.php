@@ -78,7 +78,7 @@ class Competition extends Model
         'coach_enters' => 'boolean',
         'requires_approval' => 'boolean',
         'public' => 'boolean',
-        'custom_fields' => 'array',
+        'custom_fields' => 'object',
     ];
 
     /**

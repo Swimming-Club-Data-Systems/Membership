@@ -19,6 +19,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property Sex $sex
  * @property int $age
  * @property CompetitionGuestEntryHeader $competitionGuestEntryHeader
+ * @property array-key|null $custom_form_data
  */
 class CompetitionGuestEntrant extends Model
 {
@@ -28,13 +29,13 @@ class CompetitionGuestEntrant extends Model
      * The attributes that should be cast.
      */
     protected $casts = [
-        'custom_form_data' => 'array',
+        'custom_form_data' => 'object',
         'date_of_birth' => 'datetime',
         'sex' => Sex::class,
     ];
 
     protected $attributes = [
-        'custom_form_data' => '[]',
+        'custom_form_data' => '{}',
     ];
 
     public function competitionGuestEntryHeader(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -85,8 +86,36 @@ class CompetitionGuestEntrant extends Model
         foreach ($fields as $field) {
             if ($field->name) {
                 // Try and find in guest entrant data
+                $fieldName = $field->name;
+                $fieldValue = property_exists($this->custom_form_data, $fieldName) ? $this->custom_form_data->$fieldName : null;
+                $fieldFriendlyName = $field->label ?? $field->name;
 
+                $friendlyValue = $fieldValue;
+
+                if ($field->type === 'select') {
+                    try {
+                        // Find the value label
+                        foreach ($field->items as $item) {
+                            if ($item->value === $fieldValue) {
+                                $friendlyValue = $item->name;
+                                break;
+                            }
+                        }
+                    } catch (\Exception $e) {
+                        report($e);
+                        // Ignore
+                    }
+                }
+
+                $data[] = [
+                    'name' => $field->name,
+                    'friendly_name' => $fieldFriendlyName,
+                    'value' => $fieldValue,
+                    'friendly_value' => $friendlyValue,
+                ];
             }
         }
+
+        return $data;
     }
 }
