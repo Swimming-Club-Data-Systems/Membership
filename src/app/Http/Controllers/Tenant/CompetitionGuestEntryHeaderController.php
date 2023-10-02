@@ -42,6 +42,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'id' => $competition->id,
                 'name' => $competition->name,
             ],
+            'custom_fields' => $competition->custom_fields,
         ]);
     }
 

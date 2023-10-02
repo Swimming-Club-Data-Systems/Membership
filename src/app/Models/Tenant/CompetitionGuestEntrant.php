@@ -76,4 +76,17 @@ class CompetitionGuestEntrant extends Model
 
         return $diff->y;
     }
+
+    public function getCustomFieldData(Competition $competition)
+    {
+        $fields = $competition->custom_fields?->guest_entrant_fields;
+
+        $data = [];
+        foreach ($fields as $field) {
+            if ($field->name) {
+                // Try and find in guest entrant data
+
+            }
+        }
+    }
 }

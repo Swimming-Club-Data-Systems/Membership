@@ -39,6 +39,7 @@ use Laravel\Scout\Searchable;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Collection $events
+ * @property $custom_fields
  */
 class Competition extends Model
 {
@@ -77,6 +78,7 @@ class Competition extends Model
         'coach_enters' => 'boolean',
         'requires_approval' => 'boolean',
         'public' => 'boolean',
+        'custom_fields' => 'array',
     ];
 
     /**
@@ -96,6 +98,7 @@ class Competition extends Model
         'default_entry_fee' => 0,
         'processing_fee' => 0,
         'description' => '',
+        'custom_fields' => '{}',
     ];
 
     /**

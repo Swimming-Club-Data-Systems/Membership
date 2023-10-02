@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useMemo } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -18,6 +18,10 @@ import { formatISO } from "date-fns";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import Radio from "@/Components/Form/Radio";
 import FlashAlert from "@/Components/FlashAlert";
+import getCustomInitialValues from "@/Utils/Form/getCustomInitialValues";
+import generateFields from "@/Utils/Form/generateFields";
+import { Field } from "@/Utils/Form/Field";
+import generateYupFields from "@/Utils/Form/generateYupFields";
 
 export type Props = {
     google_maps_api_key: string;
@@ -32,6 +36,10 @@ export type Props = {
     };
     tenant: {
         name: string;
+    };
+    custom_fields: {
+        guest_header_fields?: Field[];
+        guest_entrant_fields?: Field[];
     };
 };
 
@@ -51,12 +59,80 @@ const FieldArrayItems = ({ name, render }: FieldArrayItemsProps) => {
 };
 
 const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
-    const swimmerInitialValues = {
-        first_name: "",
-        last_name: "",
-        date_of_birth: formatISO(new Date()),
-        sex: "",
-    };
+    const headerFields = props.custom_fields.guest_header_fields;
+    const swimmerFields = props.custom_fields.guest_entrant_fields;
+
+    const swimmerInitialValues = useMemo(() => {
+        return {
+            ...getCustomInitialValues(swimmerFields),
+            first_name: "",
+            last_name: "",
+            date_of_birth: formatISO(new Date()),
+            sex: "",
+        };
+    }, [swimmerFields]);
+
+    const initialValues = useMemo(() => {
+        return {
+            ...getCustomInitialValues(headerFields),
+            first_name: props.user?.first_name || "",
+            last_name: props.user?.last_name || "",
+            email: props.user?.email || "",
+            swimmers: [swimmerInitialValues],
+        };
+    }, [
+        props.user?.email,
+        props.user?.first_name,
+        props.user?.last_name,
+        headerFields,
+        swimmerInitialValues,
+    ]);
+
+    const validationSchema = useMemo(() => {
+        return yup.object().shape({
+            ...generateYupFields(headerFields),
+            first_name: yup
+                .string()
+                .required("A first name is required.")
+                .max(50, "First name must be at most 50 characters."),
+            last_name: yup
+                .string()
+                .required("A last name is required.")
+                .max(50, "Last name must be at most 50 characters."),
+            email: yup
+                .string()
+                .required("An email address is required")
+                .email("A valid email address is required"),
+            swimmers: yup.array().of(
+                yup.object().shape({
+                    ...generateYupFields(swimmerFields),
+                    first_name: yup
+                        .string()
+                        .required("A first name is required.")
+                        .max(50, "First name must be at most 50 characters."),
+                    last_name: yup
+                        .string()
+                        .required("A last name is required.")
+                        .max(50, "Last name must be at most 50 characters."),
+                    date_of_birth: yup
+                        .date()
+                        .required("A date of birth is required.")
+                        .min(
+                            "1900-01-01",
+                            "Date of birth must be at least 1 January 1900."
+                        )
+                        .max(new Date(), "Date of birth must be in the past."),
+                    sex: yup
+                        .string()
+                        .required("A sex is required.")
+                        .oneOf(
+                            ["Male", "Female"],
+                            "Sex must be Female or Open."
+                        ),
+                })
+            ),
+        });
+    }, [headerFields, swimmerFields]);
 
     return (
         <>
@@ -86,68 +162,8 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                 <Form
                     removeDefaultInputMargin={true}
                     hideDefaultButtons
-                    validationSchema={yup.object().shape({
-                        first_name: yup
-                            .string()
-                            .required("A first name is required.")
-                            .max(
-                                50,
-                                "First name must be at most 50 characters."
-                            ),
-                        last_name: yup
-                            .string()
-                            .required("A last name is required.")
-                            .max(
-                                50,
-                                "Last name must be at most 50 characters."
-                            ),
-                        email: yup
-                            .string()
-                            .required("An email address is required")
-                            .email("A valid email address is required"),
-                        swimmers: yup.array().of(
-                            yup.object().shape({
-                                first_name: yup
-                                    .string()
-                                    .required("A first name is required.")
-                                    .max(
-                                        50,
-                                        "First name must be at most 50 characters."
-                                    ),
-                                last_name: yup
-                                    .string()
-                                    .required("A last name is required.")
-                                    .max(
-                                        50,
-                                        "Last name must be at most 50 characters."
-                                    ),
-                                date_of_birth: yup
-                                    .date()
-                                    .required("A date of birth is required.")
-                                    .min(
-                                        "1900-01-01",
-                                        "Date of birth must be at least 1 January 1900."
-                                    )
-                                    .max(
-                                        new Date(),
-                                        "Date of birth must be in the past."
-                                    ),
-                                sex: yup
-                                    .string()
-                                    .required("A sex is required.")
-                                    .oneOf(
-                                        ["Male", "Female"],
-                                        "Sex must be Female or Open."
-                                    ),
-                            })
-                        ),
-                    })}
-                    initialValues={{
-                        first_name: props.user?.first_name || "",
-                        last_name: props.user?.last_name || "",
-                        email: props.user?.email || "",
-                        swimmers: [swimmerInitialValues],
-                    }}
+                    validationSchema={validationSchema}
+                    initialValues={initialValues}
                     submitTitle="Next step"
                     action={route(
                         "competitions.enter_as_guest",
@@ -189,6 +205,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                         readOnly={Boolean(props.user)}
                                     />
                                 </div>
+                                {generateFields(headerFields)}
                             </div>
                         </Card>
 
@@ -266,6 +283,10 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                                             />
                                                         </RadioGroup>
                                                     </div>
+                                                    {generateFields(
+                                                        swimmerFields,
+                                                        `swimmers[${index}]`
+                                                    )}
                                                 </div>
 
                                                 {count > 1 &&

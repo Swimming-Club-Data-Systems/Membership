@@ -17,7 +17,6 @@ function classNames(...classes) {
 
 export interface Props {
     keyField?: string;
-    endpoint: string;
     value?: string | number;
     label: string;
     id?: string;
