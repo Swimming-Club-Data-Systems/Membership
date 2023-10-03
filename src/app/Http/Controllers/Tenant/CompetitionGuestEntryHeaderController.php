@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Form\CustomFields;
 use App\Business\Helpers\Money;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,7 @@ use App\Models\Tenant\User;
 use Closure;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
@@ -51,16 +53,25 @@ class CompetitionGuestEntryHeaderController extends Controller
         $this->authorize('enterAsGuest', $competition);
         $this->authorize('create', CompetitionGuestEntryHeader::class);
 
+        // Create validation code for custom fields
+        $headerRules = CustomFields::getValidationRules(
+            Arr::get($competition->custom_fields, 'guest_header_fields')
+        );
+        $entrantRules = CustomFields::getValidationRules(
+            Arr::get($competition->custom_fields, 'guest_entrant_fields'),
+            'swimmers.*.'
+        );
+
         $validated = $request->validate([
             'first_name' => ['required', 'string', 'max:50'],
             'last_name' => ['required', 'string', 'max:50'],
             'email' => ['required', 'email:rfc,dns'],
-            'swimmers' => [
-                'first_name' => ['required', 'string', 'max:50'],
-                'last_name' => ['required', 'string', 'max:50'],
-                'date_of_birth' => ['required', 'date', 'after_or_equal:1900-01-01', 'before_or_equal:today'],
-                'sex' => ['required', new Enum(Sex::class)],
-            ],
+            ...$headerRules,
+            'swimmers.*.first_name' => ['required', 'string', 'max:50'],
+            'swimmers.*.last_name' => ['required', 'string', 'max:50'],
+            'swimmers.*.date_of_birth' => ['required', 'date', 'after_or_equal:1900-01-01', 'before_or_equal:today'],
+            'swimmers.*.sex' => ['required', new Enum(Sex::class)],
+            ...$entrantRules,
         ]);
 
         DB::beginTransaction();
@@ -74,14 +85,16 @@ class CompetitionGuestEntryHeaderController extends Controller
                 $guestEntryHeader->last_name = $request->string('last_name');
                 $guestEntryHeader->email = $request->string('email');
             }
+            CustomFields::setValues(Arr::get($competition->custom_fields, 'guest_header_fields'), $guestEntryHeader->custom_form_data, $validated);
             $guestEntryHeader->save();
 
-            $request->collect('swimmers')->each(function ($swimmer) use ($guestEntryHeader) {
+            $request->collect('swimmers')->each(function ($swimmer) use ($guestEntryHeader, $competition) {
                 $entrant = new CompetitionGuestEntrant();
                 $entrant->first_name = $swimmer['first_name'];
                 $entrant->last_name = $swimmer['last_name'];
                 $entrant->date_of_birth = $swimmer['date_of_birth'];
                 $entrant->sex = $swimmer['sex'];
+                CustomFields::setValues(Arr::get($competition->custom_fields, 'guest_entrant_fields'), $entrant->custom_form_data, $swimmer);
                 $entrant->competitionGuestEntryHeader()->associate($guestEntryHeader);
                 $entrant->save();
             });
@@ -92,6 +105,7 @@ class CompetitionGuestEntryHeaderController extends Controller
 
             return Redirect::route('competitions.enter_as_guest.show', [$competition, $guestEntryHeader]);
         } catch (\Exception $e) {
+            report($e);
             DB::rollBack();
             // Report error in flash message
             $request->session()->flash('error', 'An error occurred and we were unable to save your data. Please try again.');

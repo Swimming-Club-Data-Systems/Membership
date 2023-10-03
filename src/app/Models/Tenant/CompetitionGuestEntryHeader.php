@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
@@ -27,11 +28,11 @@ class CompetitionGuestEntryHeader extends Model
      * The attributes that should be cast.
      */
     protected $casts = [
-        'custom_form_data' => 'array',
+        'custom_form_data' => AsArrayObject::class,
     ];
 
     protected $attributes = [
-        'custom_form_data' => '[]',
+        'custom_form_data' => '{}',
     ];
 
     public function competitionGuestEntrants(): \Illuminate\Database\Eloquent\Relations\HasMany

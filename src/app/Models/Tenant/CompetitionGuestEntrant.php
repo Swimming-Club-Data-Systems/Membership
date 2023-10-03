@@ -4,6 +4,7 @@ namespace App\Models\Tenant;
 
 use App\Enums\Sex;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -29,7 +30,7 @@ class CompetitionGuestEntrant extends Model
      * The attributes that should be cast.
      */
     protected $casts = [
-        'custom_form_data' => 'object',
+        'custom_form_data' => AsArrayObject::class,
         'date_of_birth' => 'datetime',
         'sex' => Sex::class,
     ];
