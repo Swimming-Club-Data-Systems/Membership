@@ -33,7 +33,7 @@ export const DefinitionList: React.FC<DefinitionListProps> = ({
                                 {item.term}
                             </dt>
                             <dd
-                                className={`mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0 ${
+                                className={`mt-1 text-sm text-gray-900 @sm:col-span-2 @sm:mt-0 ${
                                     item.truncate ? "truncate" : ""
                                 }`}
                             >

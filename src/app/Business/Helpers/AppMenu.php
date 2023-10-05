@@ -6,6 +6,7 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Venue;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -687,6 +688,13 @@ class AppMenu
             'name' => 'System Settings',
             'href' => '/settings',
         ];
+
+        if ($this->user->can('create', Venue::class)) {
+            $menu[] = [
+                'name' => 'Venues (Competitions)',
+                'href' => route('venues.index', [], false),
+            ];
+        }
 
         return $menu;
     }
