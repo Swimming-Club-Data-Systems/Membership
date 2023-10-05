@@ -106,6 +106,10 @@ class CheckoutController extends Controller
                 'country' => $user?->getAddress()?->country_name,
                 'postal_code' => $user?->getAddress()?->post_code,
             ],
+            'cancel_link' => $payment->cancel_link,
+            'cancel_link_text' => $payment->cancel_link_text,
+            'return_link' => $payment->return_link,
+            'return_link_text' => $payment->return_link_text,
         ]);
     }
 
@@ -235,6 +239,10 @@ class CheckoutController extends Controller
                     'description' => \App\Business\Helpers\PaymentMethod::formatNameFromData($type, $paymentIntent->payment_method->$type),
                     'info_line' => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($type, $paymentIntent->payment_method->$type),
                 ] : null,
+                'cancel_link' => $payment->cancel_link,
+                'cancel_link_text' => $payment->cancel_link_text,
+                'return_link' => $payment->return_link,
+                'return_link_text' => $payment->return_link_text,
             ]);
         } elseif ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {
             return Inertia::render('Payments/Checkout/InProgress', [

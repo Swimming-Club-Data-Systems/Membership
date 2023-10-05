@@ -6,8 +6,14 @@ import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import Card from "@/Components/Card";
 import { PaymentLineItemsSummary } from "@/Components/Payments/Checkout/PaymentLineItemsSummary";
+import ButtonLink from "@/Components/ButtonLink";
 
 type Props = {
+    auth: {
+        user?: {
+            name: string;
+        };
+    };
     id: number;
     payment_method: {
         id: number;
@@ -20,7 +26,10 @@ type Props = {
         quantity: number;
         formatted_amount: string;
     }[];
-    return_url: string;
+    return_link?: string;
+    return_link_text?: string;
+    cancel_link?: string;
+    cancel_link_text?: string;
     formatted_total: string;
     statement_descriptor: string;
 };
@@ -52,6 +61,22 @@ const Success: Layout<Props> = (props: Props) => {
                         This transaction will appear on your statement as{" "}
                         {props.statement_descriptor}, {props.formatted_total}.
                     </p>
+
+                    {props.return_link && (
+                        <p>
+                            <ButtonLink href={props.return_link}>
+                                {props.return_link_text || "Return"}
+                            </ButtonLink>
+                        </p>
+                    )}
+
+                    {!props.return_link && (
+                        <p>
+                            <ButtonLink href={route("index")}>
+                                Back to home
+                            </ButtonLink>
+                        </p>
+                    )}
                 </div>
 
                 <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight mb-4">
