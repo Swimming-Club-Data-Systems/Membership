@@ -3,6 +3,7 @@
 namespace App\Business\Helpers;
 
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Competition;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
@@ -94,6 +95,13 @@ class AppMenu
             $menu[] = [
                 'name' => 'Team Manager Dashboard',
                 'href' => '/team-managers',
+            ];
+        }
+
+        if ($this->user->can('create', Competition::class)) {
+            $menu[] = [
+                'name' => 'Guest Competitions',
+                'href' => route('competitions.index'),
             ];
         }
 
@@ -226,6 +234,14 @@ class AppMenu
                 'href' => '/galas',
                 'children' => $this->galas(),
             ];
+
+            if (App::isLocal()) {
+                $menu[] = [
+                    'name' => 'Competitions',
+                    'href' => '/competitions',
+                    'children' => $this->competitions(),
+                ];
+            }
 
             if ($this->user->hasPermission(['Admin', 'Galas'])) {
                 $menu[] = [
@@ -695,6 +711,18 @@ class AppMenu
                 'href' => route('venues.index', [], false),
             ];
         }
+
+        return $menu;
+    }
+
+    public function competitions()
+    {
+        $menu = [];
+
+        $menu[] = [
+            'name' => 'Home',
+            'href' => route('competitions.index'),
+        ];
 
         return $menu;
     }
