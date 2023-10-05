@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
@@ -81,24 +82,24 @@ class CompetitionGuestEntrant extends Model
 
     public function getCustomFieldData(Competition $competition)
     {
-        $fields = $competition->custom_fields?->guest_entrant_fields;
+        $fields = Arr::get($competition->custom_fields, 'guest_entrant_fields', []);
 
         $data = [];
         foreach ($fields as $field) {
-            if ($field->name) {
+            if (Arr::get($field, 'name')) {
                 // Try and find in guest entrant data
-                $fieldName = $field->name;
+                $fieldName = Arr::get($field, 'name');
                 $fieldValue = property_exists($this->custom_form_data, $fieldName) ? $this->custom_form_data->$fieldName : null;
-                $fieldFriendlyName = $field->label ?? $field->name;
+                $fieldFriendlyName = Arr::get($field, 'label') ?? Arr::get($field, 'name');
 
                 $friendlyValue = $fieldValue;
 
-                if ($field->type === 'select') {
+                if (Arr::get($field, 'type') === 'select') {
                     try {
                         // Find the value label
-                        foreach ($field->items as $item) {
-                            if ($item->value === $fieldValue) {
-                                $friendlyValue = $item->name;
+                        foreach (Arr::get($field, 'items') as $item) {
+                            if (Arr::get($item, 'value') === $fieldValue) {
+                                $friendlyValue = Arr::get($item, 'name');
                                 break;
                             }
                         }
@@ -109,7 +110,7 @@ class CompetitionGuestEntrant extends Model
                 }
 
                 $data[] = [
-                    'name' => $field->name,
+                    'name' => Arr::get($field, 'name'),
                     'friendly_name' => $fieldFriendlyName,
                     'value' => $fieldValue,
                     'friendly_value' => $friendlyValue,

@@ -10,12 +10,13 @@ import { DefinitionList } from "@/Components/DefinitionList";
 import BasicList from "@/Components/BasicList";
 import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import * as yup from "yup";
-import TextInput from "@/Components/Form/TextInput";
 import FlashAlert from "@/Components/FlashAlert";
 import Table from "@/Components/Table";
 import BigNumber from "bignumber.js";
 import ArrayErrorMessage from "@/Components/Form/ArrayErrorMessage";
 import DecimalInput from "@/Components/Form/DecimalInput";
+import Select from "@/Components/Form/Select";
+import { RefundReasonsSelectItems } from "@/Utils/Payments/RefundReasons";
 
 type LineRefund = {
     id: number;
@@ -237,10 +238,10 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                     content: (
                                         <>
                                             <div
-                                                className="flex align-middle justify-between text-sm"
+                                                className="grid gap-4 grid-cols-12 text-sm"
                                                 key={item.id}
                                             >
-                                                <div className="">
+                                                <div className="md:col-start-1 md:col-span-8">
                                                     <div className="text-gray-900">
                                                         {item.description}
                                                     </div>
@@ -265,6 +266,24 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                         )}
                                                         )
                                                     </div>
+                                                </div>
+                                                <div className="md:col-start-9 md:col-span-4">
+                                                    {props.is_administrator && (
+                                                        <div>
+                                                            {item.amount_refundable_int >
+                                                                0 && (
+                                                                <div className="">
+                                                                    <DecimalInput
+                                                                        name={`lines[${idx}].refund_amount`}
+                                                                        label="Refund amount"
+                                                                        precision={
+                                                                            2
+                                                                        }
+                                                                    />
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
                                                     {item.refunds.length >
                                                         0 && (
                                                         <PaymentLineRefunds
@@ -274,17 +293,6 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                                         />
                                                     )}
                                                 </div>
-                                                {props.is_administrator &&
-                                                    item.amount_refundable_int >
-                                                        0 && (
-                                                        <div className="w-full md:w-96">
-                                                            <DecimalInput
-                                                                name={`lines[${idx}].refund_amount`}
-                                                                label="Refund amount"
-                                                                precision={2}
-                                                            />
-                                                        </div>
-                                                    )}
                                             </div>
                                         </>
                                     ),
@@ -293,6 +301,13 @@ export const PaymentContent: React.FC<Props> = (props) => {
                         />
 
                         <ArrayErrorMessage name="lines" />
+
+                        <Select
+                            name="reason"
+                            label="Refund reason"
+                            items={RefundReasonsSelectItems}
+                            help="You are not required to select a refund reason."
+                        />
                     </Card>
                 </Form>
 

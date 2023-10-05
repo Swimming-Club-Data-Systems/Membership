@@ -13,6 +13,7 @@ use App\Models\Tenant\PaymentLine;
 use App\Models\Tenant\Refund;
 use App\Models\Tenant\User;
 use Brick\Math\BigDecimal;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -101,6 +102,14 @@ class PaymentsController extends Controller
 
     private function showData(Payment $payment): array
     {
+        $payment->load([
+            'lines',
+            'lines.refunds' => function (Builder $query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'refunds.lines',
+        ]);
+
         $lines = [];
         $refunds = [];
 
@@ -109,10 +118,10 @@ class PaymentsController extends Controller
             'lines' => [],
         ];
 
-        foreach ($payment->lines()->with(['refunds'])->get() as $line) {
+        foreach ($payment->lines as $line) {
             /** @var PaymentLine $line */
             $lineRefunds = [];
-            foreach ($line->refunds()->get() as $refund) {
+            foreach ($line->refunds as $refund) {
                 /** @var Refund $refund */
                 $lineRefunds[] = [
                     'id' => $refund->id,
@@ -152,10 +161,10 @@ class PaymentsController extends Controller
             ];
         }
 
-        foreach ($payment->refunds()->with(['lines'])->get() as $refund) {
+        foreach ($payment->refunds as $refund) {
             /** @var Refund $refund */
             $refundLines = [];
-            foreach ($refund->lines()->get() as $line) {
+            foreach ($refund->lines as $line) {
                 /** @var PaymentLine $line */
                 $refundLines[] = [
                     'id' => $line->id,
