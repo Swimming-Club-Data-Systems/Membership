@@ -168,6 +168,15 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
+            'closing_date_timezone' => [
+                'timezone:all',
+            ],
+            'age_at_date_timezone' => [
+                'timezone:all',
+            ],
+            'gala_date_timezone' => [
+                'timezone:all',
+            ],
         ]);
 
         $competition = new Competition();
@@ -181,11 +190,23 @@ class CompetitionController extends Controller
         $competition->public = $request->boolean('public');
         $competition->default_entry_fee_string = $request->string('default_entry_fee');
         $competition->processing_fee_string = $request->string('processing_fee');
-        $competition->closing_date = $request->date('closing_date');
-        $competition->age_at_date = $request->date('age_at_date');
+        $competition->closing_date = $request->date(
+            'closing_date',
+            //            null,
+            //            $request->string('closing_date_timezone', 'Europe/London')
+        );
+        $competition->age_at_date = $request->date(
+            'age_at_date',
+            //            null,
+            //            $request->string('age_at_date_timezone', 'Europe/London')
+        );
         $competition->mode = $request->enum('setup_type', CompetitionMode::class);
         if ($competition->mode == CompetitionMode::BASIC) {
-            $competition->gala_date = $request->date('gala_date');
+            $competition->gala_date = $request->date(
+                'gala_date',
+                //                null,
+                //                $request->string('gala_date_timezone', 'Europe/London'),
+            );
         } else {
             $competition->gala_date = $competition->age_at_date;
         }
@@ -347,9 +368,40 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
+            'closing_date_timezone' => [
+                'timezone:all',
+            ],
+            'age_at_date_timezone' => [
+                'timezone:all',
+            ],
+            'gala_date_timezone' => [
+                'timezone:all',
+            ],
         ]);
 
         $competition->fill($validated);
+
+        //        ddd([
+        //            $request->date('closing_date'),
+        //            $request->date(
+        //                'closing_date',
+        //                null,
+        //                'Europe/Berlin'
+        //            ),
+        //        ]);
+
+        $competition->closing_date = $request->date(
+            'closing_date',
+            null,
+            $request->string('closing_date_timezone', 'Europe/London')
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $competition->age_at_date = $request->date(
+            'age_at_date',
+            //            null,
+            //            $request->string('age_at_date_timezone', 'Europe/London')
+        );
+
         $competition->venue()->associate($validated['venue']);
         $competition->save();
 

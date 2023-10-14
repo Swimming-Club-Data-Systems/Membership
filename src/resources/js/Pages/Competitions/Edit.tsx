@@ -190,13 +190,9 @@ const New: Layout<Props> = (props: Props) => {
                             <DateTimeInput
                                 name="closing_date"
                                 label="Closing date"
-                                min={todaysDate}
+                                showTimeInput
                             />
-                            <DateTimeInput
-                                name="age_at_date"
-                                label="Ages at"
-                                min={todaysDate}
-                            />
+                            <DateTimeInput name="age_at_date" label="Ages at" />
                             <Checkbox
                                 name="require_times"
                                 label="Require times"

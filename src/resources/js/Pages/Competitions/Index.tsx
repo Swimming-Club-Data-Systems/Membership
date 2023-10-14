@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef } from "react";
+import React, { ReactNode } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -8,6 +8,7 @@ import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import { formatDateTime } from "@/Utils/date-utils";
 import ButtonLink from "@/Components/ButtonLink";
 import Badge from "@/Components/Badge";
+import { courseLength } from "@/Utils/Competitions/CourseLength";
 
 interface CompetitionProps {
     id: number;
@@ -15,8 +16,7 @@ interface CompetitionProps {
     pool_course: string;
     venue: {
         id: number;
-        name;
-        string;
+        name: string;
         formatted_address: string;
     };
     sessions: {
@@ -61,7 +61,9 @@ const CompetitionRenderer = (props: CompetitionProps): ReactNode => {
                         </ul>
                     </div>
                 </div>
-                <Badge colour="indigo">{props.pool_course}</Badge>
+                <Badge colour="indigo">
+                    {courseLength(props.pool_course).toUpperCase()}
+                </Badge>
             </div>
         </>
     );

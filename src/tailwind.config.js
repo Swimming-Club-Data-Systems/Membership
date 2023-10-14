@@ -12,6 +12,7 @@ module.exports = {
         "./stories/**/*.jsx",
         "./stories/**/*.ts",
         "./stories/**/*.js",
+        "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
     ],
 
     theme: {

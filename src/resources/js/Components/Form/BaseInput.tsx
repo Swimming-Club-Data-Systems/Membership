@@ -22,6 +22,7 @@ type Props = {
     inputClassName?: string;
     input: ReactNode;
     maxLength?: number;
+    shadow?: boolean;
 };
 
 const BaseInput: React.FC<Props> = ({
@@ -41,6 +42,7 @@ const BaseInput: React.FC<Props> = ({
     inputClassName = "",
     input,
     maxLength,
+    shadow = true,
     ...props
 }) => {
     const [field, meta] = useField(props);
@@ -92,7 +94,9 @@ const BaseInput: React.FC<Props> = ({
                 </div>
 
                 <div
-                    className={`relative mt-1 flex rounded-md shadow-sm focus-within:z-10 ${inputClassName}`}
+                    className={`relative mt-1 flex rounded-md ${
+                        shadow ? "shadow-sm" : ""
+                    } focus-within:z-10 ${inputClassName}`}
                 >
                     {leftText && !leftSelect && (
                         <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">

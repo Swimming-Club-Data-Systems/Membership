@@ -24,6 +24,8 @@ import DateTimeInput from "@/Components/Form/DateTimeInput";
 import formatISO from "date-fns/formatISO";
 import FlashAlert from "@/Components/FlashAlert";
 import ActionPanel from "@/Components/ActionPanel";
+import { courseLength } from "@/Utils/Competitions/CourseLength";
+import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
 
 type Session = {
     id: number;
@@ -180,7 +182,7 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "length",
             term: "Pool length",
-            definition: props.pool_course,
+            definition: courseLength(props.pool_course),
         },
         {
             key: "age_at_date",
@@ -190,7 +192,7 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "status",
             term: "Status",
-            definition: props.status,
+            definition: competitionStatus(props.status),
         },
         {
             key: "require_times",

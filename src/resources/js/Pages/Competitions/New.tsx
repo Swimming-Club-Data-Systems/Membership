@@ -184,6 +184,7 @@ const New: Layout<Props> = (props: Props) => {
                                 name="closing_date"
                                 label="Closing date"
                                 min={todaysDate}
+                                showTimeInput
                             />
                             <DateTimeInput
                                 name="age_at_date"

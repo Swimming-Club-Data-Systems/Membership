@@ -89,6 +89,9 @@ class CompetitionSessionController extends Controller
                 'date',
                 'after:start',
             ],
+            'timezone' => [
+                'timezone:all',
+            ],
         ]);
 
         $session = new CompetitionSession($validated);
@@ -98,6 +101,18 @@ class CompetitionSessionController extends Controller
             $session->venue()->associate($venue);
         }
         $session->sequence = $competition->sessions()->max('sequence') + 1;
+
+        //        $session->start_time = $request->date(
+        //            'start_time',
+        //            null,
+        //            $request->string('timezone', 'Europe/London')
+        //        );
+        //        $session->end_time = $request->date(
+        //            'end_time',
+        //            null,
+        //            $request->string('timezone', 'Europe/London')
+        //        );
+
         $competition->sessions()->save($session);
 
         return redirect()->route('competitions.show', [$competition]);

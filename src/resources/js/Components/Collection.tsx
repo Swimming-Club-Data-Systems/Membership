@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -102,7 +102,7 @@ interface CollectonProps extends LaravelPaginatorProps {
     path: string;
     current_page: number;
     last_page: number;
-    itemRenderer: (item: unknown) => JSX.Element;
+    itemRenderer: (item: unknown) => ReactNode;
 }
 
 const Collection: React.FC<CollectonProps> = (props) => {
