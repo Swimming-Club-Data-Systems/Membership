@@ -20,7 +20,9 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import Modal from "@/Components/Modal";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
+import DateTimeInput, {
+    DateTimeInputTimezones,
+} from "@/Components/Form/DateTimeInput";
 import formatISO from "date-fns/formatISO";
 import FlashAlert from "@/Components/FlashAlert";
 import ActionPanel from "@/Components/ActionPanel";
@@ -60,6 +62,7 @@ export type Props = {
     editable: boolean;
     members_can_enter: boolean;
     guests_can_enter: boolean;
+    timezones: DateTimeInputTimezones;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -127,6 +130,7 @@ const Show: Layout<Props> = (props: Props) => {
                             .required(
                                 "A start time is required for this session."
                             ),
+                        start_time_timezone: yup.string().required(),
                         end_time: yup
                             .date()
                             .required(
@@ -141,6 +145,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: `Session ${props.sessions.length + 1}`,
                         venue: props.venue.id,
                         start_time: time,
+                        start_time_timezone: props.timezones,
                         end_time: time,
                     }}
                     alwaysClearable

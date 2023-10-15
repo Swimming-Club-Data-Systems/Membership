@@ -118,7 +118,7 @@ export const Select: React.FC<Props> = ({
                         </HeadlessListbox.Label>
                         <div className="relative mt-1">
                             <HeadlessListbox.Button
-                                className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm"
                                 onBlur={onBlur}
                             >
                                 <span className="block truncate">
@@ -151,7 +151,9 @@ export const Select: React.FC<Props> = ({
                                             key={person.value}
                                             className={({ active }) =>
                                                 classNames(
-                                                    active
+                                                    person.disabled
+                                                        ? "text-gray-300"
+                                                        : active
                                                         ? "bg-indigo-600 text-white"
                                                         : "text-gray-900",
                                                     "relative cursor-default select-none py-2 pl-3 pr-9"

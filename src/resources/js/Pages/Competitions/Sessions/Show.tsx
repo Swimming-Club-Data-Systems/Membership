@@ -201,7 +201,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: props.competition.name,
                         route: "competitions.show",
                         routeParams: {
-                            competition: props.id,
+                            competition: props.competition.id,
                         },
                     },
                     // {
@@ -215,7 +215,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: props.name,
                         route: "competitions.sessions.show",
                         routeParams: {
-                            competition: props.competition.id,
+                            competition: props.id,
                             session: props.id,
                         },
                     },

@@ -13,6 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $name
  * @property int $sequence
  * @property Carbon $start_time
+ * @property string $timezone
  * @property Carbon $end_time
  * @property Venue $venue
  * @property Competition $competition

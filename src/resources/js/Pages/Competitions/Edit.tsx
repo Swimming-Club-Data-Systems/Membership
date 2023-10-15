@@ -32,9 +32,9 @@ const CompetitionStatusSelectValues = [
 ];
 
 export const CompetitionOpenToSelectValues = [
-    { value: "members", name: "Members" },
+    { value: "members", name: "Members", disabled: true },
     { value: "guests", name: "Guests" },
-    { value: "members_and_guests", name: "Members and Guests" },
+    { value: "members_and_guests", name: "Members and Guests", disabled: true },
 ];
 
 const New: Layout<Props> = (props: Props) => {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\CompetitionSessionPutRequest;
@@ -29,6 +30,10 @@ class CompetitionSessionController extends Controller
             'editable' => $request->user()?->can('update', $session),
             'edit_mode' => false,
         ];
+
+        if ($request->user()?->can('update', $session)) {
+            $data['timezones'] = Timezones::getTimezoneSelectList();
+        }
 
         return Inertia::render('Competitions/Sessions/Show', $data);
     }
@@ -135,10 +140,12 @@ class CompetitionSessionController extends Controller
                 'form_initial_values' => [
                     'name' => $session->name,
                     'start_time' => $session->start_time,
+                    'start_time_timezone' => $session->timezone,
                     'end_time' => $session->end_time,
                     'venue' => $venue->id,
                 ],
             ],
+            'timezones' => Timezones::getTimezoneSelectList(),
         ];
 
         return Inertia::render('Competitions/Sessions/Show', $data);
@@ -162,6 +169,20 @@ class CompetitionSessionController extends Controller
         } else {
             $session->venue()->dissociate();
         }
+
+        $session->start_time = $request->date(
+            'start_time',
+            null,
+            $request->string('start_time_timezone', 'Europe/London')
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->end_time = $request->date(
+            'end_time',
+            null,
+            $request->string('start_time_timezone', 'Europe/London')
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->timezone = $request->string('start_time_timezone', 'Europe/London');
 
         $session->save();
 
