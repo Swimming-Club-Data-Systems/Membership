@@ -235,13 +235,14 @@ class AppMenu
                 'children' => $this->galas(),
             ];
 
-            if (App::isLocal()) {
-                $menu[] = [
-                    'name' => 'Competitions',
-                    'href' => '/competitions',
-                    'children' => $this->competitions(),
-                ];
-            }
+            // Disabled
+            //            if (App::isLocal()) {
+            //                $menu[] = [
+            //                    'name' => 'Competitions',
+            //                    'href' => '/competitions',
+            //                    'children' => $this->competitions(),
+            //                ];
+            //            }
 
             if ($this->user->hasPermission(['Admin', 'Galas'])) {
                 $menu[] = [

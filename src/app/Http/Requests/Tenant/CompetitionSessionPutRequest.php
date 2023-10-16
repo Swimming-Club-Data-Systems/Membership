@@ -57,7 +57,7 @@ class CompetitionSessionPutRequest extends FormRequest
                 'date',
                 'after:start',
             ],
-            'start_time_timezone' => [
+            'timezone' => [
                 'required',
                 'timezone:all',
             ],

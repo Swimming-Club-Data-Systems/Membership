@@ -28,6 +28,7 @@ import FlashAlert from "@/Components/FlashAlert";
 import ActionPanel from "@/Components/ActionPanel";
 import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
+import Select from "@/Components/Form/Select";
 
 type Session = {
     id: number;
@@ -63,6 +64,7 @@ export type Props = {
     members_can_enter: boolean;
     guests_can_enter: boolean;
     timezones: DateTimeInputTimezones;
+    org_timezone: string;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -130,7 +132,7 @@ const Show: Layout<Props> = (props: Props) => {
                             .required(
                                 "A start time is required for this session."
                             ),
-                        start_time_timezone: yup.string().required(),
+                        timezone: yup.string().required(),
                         end_time: yup
                             .date()
                             .required(
@@ -145,7 +147,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: `Session ${props.sessions.length + 1}`,
                         venue: props.venue.id,
                         start_time: time,
-                        start_time_timezone: props.timezones,
+                        timezone: props.org_timezone,
                         end_time: time,
                     }}
                     alwaysClearable
@@ -172,6 +174,12 @@ const Show: Layout<Props> = (props: Props) => {
                         name="end_time"
                         label="End time"
                         showTimeInput
+                    />
+
+                    <Select
+                        name="timezone"
+                        label="Session timezone"
+                        items={props.timezones}
                     />
                 </Form>
             </Modal>
@@ -201,7 +209,7 @@ const Show: Layout<Props> = (props: Props) => {
         },
         {
             key: "require_times",
-            term: "Require times",
+            term: "Requires times",
             definition: props.require_times ? "Yes" : "No",
         },
         {
@@ -211,7 +219,7 @@ const Show: Layout<Props> = (props: Props) => {
         },
         {
             key: "coach_enters",
-            term: "Coach selects swims",
+            term: "Coaches select swims",
             definition: props.coach_enters ? "Yes" : "No",
         },
     ];

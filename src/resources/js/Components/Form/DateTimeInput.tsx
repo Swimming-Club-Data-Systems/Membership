@@ -164,19 +164,21 @@ const DateTimeInput: React.FC<Props> = ({
 
     return (
         <>
-            <div className="@container flex gap-4">
+            {/*@container class removed due to z-index issues*/}
+            <div className="flex gap-4">
                 <div>
                     <BaseInput
                         label={label}
                         type={type}
                         // inputClassName="w-44"
                         shadow={false}
+                        showErrorIconOnLabel={true}
                         input={
                             <div className="flex flex-col @[17rem]:flex-row gap-4">
                                 <div className="w-full @[17rem]:max-w-44">
                                     <TailwindDatepicker
                                         inputId={controlId}
-                                        inputClassName={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
+                                        inputClassName={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm z-50 ${className} ${errorClasses}`}
                                         primaryColor="indigo"
                                         asSingle={true}
                                         useRange={false}
@@ -190,6 +192,8 @@ const DateTimeInput: React.FC<Props> = ({
                                             disabled ||
                                             context.disabled
                                         }
+                                        startWeekOn="mon"
+                                        startFrom={calculatedValue}
                                     />
                                 </div>
                                 {showTimeInput && (
@@ -214,95 +218,12 @@ const DateTimeInput: React.FC<Props> = ({
                                                     disabled ||
                                                     context.disabled
                                                 }
+                                                step={300}
+                                                pattern="[0-9]{2}:[0-9]{2}"
                                             />
                                         </div>
                                     </div>
                                 )}
-                                {/*<DatePicker*/}
-                                {/*    id={controlId}*/}
-                                {/*    name={props.name}*/}
-                                {/*    customInput={*/}
-                                {/*        <Input*/}
-                                {/*            type={type}*/}
-                                {/*            readOnly={readOnly}*/}
-                                {/*            disabled={*/}
-                                {/*                isSubmitting ||*/}
-                                {/*                disabled ||*/}
-                                {/*                context.disabled*/}
-                                {/*            }*/}
-                                {/*            className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}*/}
-                                {/*            id={controlId}*/}
-                                {/*            {...props}*/}
-                                {/*        />*/}
-                                {/*    }*/}
-                                {/*    selected={calculatedValue}*/}
-                                {/*    onChange={(value) => {*/}
-                                {/*        console.log(*/}
-                                {/*            Intl.DateTimeFormat().resolvedOptions()*/}
-                                {/*        );*/}
-                                {/*        console.log(*/}
-                                {/*            value,*/}
-                                {/*            zonedTimeToUtc(*/}
-                                {/*                value,*/}
-                                {/*                Intl.DateTimeFormat().resolvedOptions()*/}
-                                {/*                    .timeZone*/}
-                                {/*            )*/}
-                                {/*        );*/}
-                                {/*        field.onChange({*/}
-                                {/*            target: {*/}
-                                {/*                name: props.name,*/}
-                                {/*                value: format(*/}
-                                {/*                    value,*/}
-                                {/*                    "yyyy-MM-dd HH:mm:ss",*/}
-                                {/*                    {*/}
-                                {/*                        timeZone:*/}
-                                {/*                            props.timeZone || "UTC",*/}
-                                {/*                    }*/}
-                                {/*                ),*/}
-                                {/*            },*/}
-                                {/*        });*/}
-                                {/*    }}*/}
-                                {/*    onBlur={(event) => {*/}
-                                {/*        field.onBlur({*/}
-                                {/*            target: {*/}
-                                {/*                name: props.name,*/}
-                                {/*            },*/}
-                                {/*        });*/}
-
-                                {/*        /**/}
-                                {/*    if (event.target.value) {*/}
-                                {/*        try {*/}
-                                {/*            const value = formatISO(*/}
-                                {/*                new Date(event.target.value)*/}
-                                {/*            );*/}
-
-                                {/*            field.onBlur({*/}
-                                {/*                target: {*/}
-                                {/*                    name: props.name,*/}
-                                {/*                    value: value,*/}
-                                {/*                },*/}
-                                {/*            });*/}
-                                {/*        } catch (error) {*/}
-                                {/*            // Ignore*/}
-                                {/*            console.log(error);*/}
-                                {/*        }*/}
-                                {/*    } else {*/}
-                                {/*        field.onBlur({*/}
-                                {/*            target: {*/}
-                                {/*                name: props.name,*/}
-                                {/*            },*/}
-                                {/*        });*/}
-                                {/*    }*/}
-                                {/*    */}
-                                {/*    }}*/}
-                                {/*    showTimeInput={showTimeInput}*/}
-                                {/*    locale="en-GB"*/}
-                                {/*    dateFormat={dateFormat}*/}
-                                {/*    minDate={minDate}*/}
-                                {/*    maxDate={maxDate}*/}
-                                {/*    showMonthDropdown*/}
-                                {/*    showYearDropdown*/}
-                                {/*/>*/}
                             </div>
                         }
                         rightButton={rightButton}
@@ -310,15 +231,15 @@ const DateTimeInput: React.FC<Props> = ({
                     />
                 </div>
 
-                {timezones && (
-                    <div className="w-48">
-                        <Select
-                            name={`${props.name}_timezone`}
-                            label={`${label} timezone`}
-                            items={timezones}
-                        />
-                    </div>
-                )}
+                {/*{timezones && (*/}
+                {/*    <div className="w-48">*/}
+                {/*        <Select*/}
+                {/*            name={`${props.name}_timezone`}*/}
+                {/*            label={`${label} timezone`}*/}
+                {/*            items={timezones}*/}
+                {/*        />*/}
+                {/*    </div>*/}
+                {/*)}*/}
             </div>
         </>
     );

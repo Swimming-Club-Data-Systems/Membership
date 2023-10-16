@@ -21,7 +21,9 @@ import Modal from "@/Components/Modal";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import Alert from "@/Components/Alert";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
+import DateTimeInput, {
+    DateTimeInputTimezones,
+} from "@/Components/Form/DateTimeInput";
 import { router } from "@inertiajs/react";
 import ButtonLink from "@/Components/ButtonLink";
 import {
@@ -29,6 +31,7 @@ import {
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { formatDateTime } from "@/Utils/date-utils";
+import Select from "@/Components/Form/Select";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -84,6 +87,7 @@ export type Props = {
     different_venue_to_competition_venue: boolean;
     start_time: string;
     end_time: string;
+    timezones: DateTimeInputTimezones;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -294,6 +298,7 @@ const Show: Layout<Props> = (props: Props) => {
                                             yup.ref("start_time"),
                                             "End time must be after the start time."
                                         ),
+                                    timezone: yup.string().required(),
                                 })}
                                 hideDefaultButtons
                                 formName="edit_session"
@@ -326,6 +331,12 @@ const Show: Layout<Props> = (props: Props) => {
                                             showTimeInput
                                         />
                                     </div>
+
+                                    <Select
+                                        name="timezone"
+                                        label="Session timezone"
+                                        items={props.timezones}
+                                    />
                                 </Card>
                             </Form>
                         )}
@@ -362,7 +373,11 @@ const Show: Layout<Props> = (props: Props) => {
                                 <BasicList items={props.events.map(Event)} />
                             )}
 
-                            {props.events.length === 0 && <></>}
+                            {props.events.length === 0 && (
+                                <Alert variant="warning" title="No events">
+                                    No events exist for this session.
+                                </Alert>
+                            )}
                         </Card>
 
                         <Modal

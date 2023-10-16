@@ -32,6 +32,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  * @property Journal journal
  * @property string application_fee_type
  * @property float application_fee_amount
+ * @property string $timezone
  */
 class Tenant extends BaseTenant
 {
@@ -266,6 +267,16 @@ class Tenant extends BaseTenant
     {
         return Attribute::make(
             get: fn ($value, $attributes) => $this->getOption('LOGO_DIR') ? getUploadedAssetUrl($this->getOption('LOGO_DIR')) : null,
+        );
+    }
+
+    /**
+     * Get the tenant timezone setting.
+     */
+    protected function timezone(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $this->getOption('TIMEZONE') ? $this->getOption('TIMEZONE') : 'Europe/London',
         );
     }
 }

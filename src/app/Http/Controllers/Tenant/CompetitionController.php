@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
 use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
@@ -104,6 +106,9 @@ class CompetitionController extends Controller
     {
         $this->authorize('create', Competition::class);
 
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -168,15 +173,6 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
-            'closing_date_timezone' => [
-                'timezone:all',
-            ],
-            'age_at_date_timezone' => [
-                'timezone:all',
-            ],
-            'gala_date_timezone' => [
-                'timezone:all',
-            ],
         ]);
 
         $competition = new Competition();
@@ -192,20 +188,16 @@ class CompetitionController extends Controller
         $competition->processing_fee_string = $request->string('processing_fee');
         $competition->closing_date = $request->date(
             'closing_date',
-            //            null,
-            //            $request->string('closing_date_timezone', 'Europe/London')
-        );
+            null,
+            $tenant->timezone,
+        )->setTimezone(new \DateTimeZone('UTC'));
         $competition->age_at_date = $request->date(
             'age_at_date',
-            //            null,
-            //            $request->string('age_at_date_timezone', 'Europe/London')
         );
         $competition->mode = $request->enum('setup_type', CompetitionMode::class);
         if ($competition->mode == CompetitionMode::BASIC) {
             $competition->gala_date = $request->date(
                 'gala_date',
-                //                null,
-                //                $request->string('gala_date_timezone', 'Europe/London'),
             );
         } else {
             $competition->gala_date = $competition->age_at_date;
@@ -222,6 +214,9 @@ class CompetitionController extends Controller
     public function show(Competition $competition, Request $request): \Inertia\Response
     {
         $this->authorize('view', $competition);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
         // Get entries for this user
         //        /** @var User $user */
@@ -262,9 +257,11 @@ class CompetitionController extends Controller
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
             'editable' => $user->can('update', $competition),
-            'members_can_enter' => $user->can('enter', $competition),
-            'guests_can_enter' => $user->can('enterAsGuest', $competition),
+            'members_can_enter' => ($competition->open_to === CompetitionOpenTo::MEMBERS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enter', $competition),
+            'guests_can_enter' => ($competition->open_to === CompetitionOpenTo::GUESTS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enterAsGuest', $competition),
             'open_to' => $competition->open_to,
+            'timezones' => $user->can('update', $competition) ? Timezones::getTimezoneSelectList() : [],
+            'org_timezone' => $tenant->timezone,
         ]);
     }
 
@@ -289,6 +286,7 @@ class CompetitionController extends Controller
                 'processing_fee_string' => $competition->processing_fee_string,
                 'closing_date' => $competition->closing_date,
                 'age_at_date' => $competition->age_at_date,
+                'timezone' => $competition->timezone,
                 'venue' => $competition->venue->id,
                 'open_to' => $competition->open_to,
             ],
@@ -309,6 +307,9 @@ class CompetitionController extends Controller
     public function update(Competition $competition, Request $request): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('update', $competition);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
         $validated = $request->validate([
             'name' => [
@@ -368,15 +369,6 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
-            'closing_date_timezone' => [
-                'timezone:all',
-            ],
-            'age_at_date_timezone' => [
-                'timezone:all',
-            ],
-            'gala_date_timezone' => [
-                'timezone:all',
-            ],
         ]);
 
         $competition->fill($validated);
@@ -393,7 +385,7 @@ class CompetitionController extends Controller
         $competition->closing_date = $request->date(
             'closing_date',
             null,
-            $request->string('closing_date_timezone', 'Europe/London')
+            $tenant->timezone
         )->setTimezone(new \DateTimeZone('UTC'));
 
         $competition->age_at_date = $request->date(

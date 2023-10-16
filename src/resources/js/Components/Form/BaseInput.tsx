@@ -23,6 +23,8 @@ type Props = {
     input: ReactNode;
     maxLength?: number;
     shadow?: boolean;
+    /** Whether to show or hide the error icon inside the input or on the label */
+    showErrorIconOnLabel?: boolean;
 };
 
 const BaseInput: React.FC<Props> = ({
@@ -43,6 +45,7 @@ const BaseInput: React.FC<Props> = ({
     input,
     maxLength,
     shadow = true,
+    showErrorIconOnLabel = false,
     ...props
 }) => {
     const [field, meta] = useField(props);
@@ -79,13 +82,21 @@ const BaseInput: React.FC<Props> = ({
     return (
         <>
             <div className={marginBotton}>
-                <div className="flex justify-between">
+                <div className="flex gap-2">
                     <label
                         htmlFor={controlId}
                         className="block text-sm font-medium text-gray-700"
                     >
                         {label}
                     </label>
+                    {showErrorIconOnLabel && isInvalid && (
+                        <div className="flex-shrink">
+                            <ExclamationCircleIcon
+                                className="h-5 w-5 text-red-500 text-sm"
+                                aria-hidden="true"
+                            />
+                        </div>
+                    )}
                     {cornerHint && (
                         <span className="text-sm text-gray-500">
                             {cornerHint}
@@ -119,7 +130,7 @@ const BaseInput: React.FC<Props> = ({
                             endIcon
                         </div>
                     )}
-                    {isInvalid && (
+                    {!showErrorIconOnLabel && isInvalid && (
                         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                             <ExclamationCircleIcon
                                 className="h-5 w-5 text-red-500"
