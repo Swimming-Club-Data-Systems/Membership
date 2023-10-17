@@ -124,7 +124,7 @@ const New: Layout<Props> = (props: Props) => {
                             .optional()
                             .test(
                                 "is-valid-json",
-                                "Custom field description is not valid JSON",
+                                "Custom field description is not valid JSON.",
                                 (value) => {
                                     if (value) {
                                         try {

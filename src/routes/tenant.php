@@ -25,6 +25,7 @@ use App\Http\Controllers\Tenant\PaymentTransactionController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
+use App\Http\Controllers\Tenant\SquadController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
@@ -140,6 +141,14 @@ Route::middleware([
         Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/members/'.$path);
+        })->where('path', '.*');
+    });
+
+    Route::prefix('/squads')->group(function () {
+        Route::get('/', [SquadController::class, 'index']);
+        Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('squads.show');
+        Route::any('/{path}', function ($path) {
+            return Inertia::location('/v1/squads/'.$path);
         })->where('path', '.*');
     });
 
