@@ -17,6 +17,7 @@ import RadioGroup from "@/Components/Form/RadioGroup";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Select from "@/Components/Form/Select";
+import Link from "@/Components/Link";
 
 export type Props = {
     name: string;
@@ -118,6 +119,24 @@ const New: Layout<Props> = (props: Props) => {
                             .string()
                             .required()
                             .oneOf(["members", "guests", "members_and_guests"]),
+                        custom_fields: yup
+                            .string()
+                            .optional()
+                            .test(
+                                "is-valid-json",
+                                "Custom field description is not valid JSON",
+                                (value) => {
+                                    if (value) {
+                                        try {
+                                            JSON.parse(value);
+                                            return true;
+                                        } catch {
+                                            return false;
+                                        }
+                                    }
+                                    return true;
+                                }
+                            ),
                     })}
                     initialValues={{
                         name: "",
@@ -135,6 +154,7 @@ const New: Layout<Props> = (props: Props) => {
                         age_at_date: "",
                         status: "draft",
                         open_to: "members",
+                        custom_fields: "",
                     }}
                     submitTitle="Save"
                     action={route("competitions.show", {
@@ -226,6 +246,25 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Processing fee (£)"
                                 help="Processing fee per swimmer. To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer.  Changes won't be applied to existing events or entries."
                                 precision={2}
+                            />
+
+                            <TextArea
+                                name="custom_fields"
+                                label="Custom field description JSON"
+                                help={
+                                    <>
+                                        Define custom fields for guest
+                                        competition entries.{" "}
+                                        <Link
+                                            external
+                                            href="https://docs.myswimmingclub.uk/docs/competitions/v2/managing-competitions/custom-form-fields"
+                                        >
+                                            Learn more about custom fields
+                                        </Link>
+                                        .
+                                    </>
+                                }
+                                className="font-mono"
                             />
                         </Card>
                     </div>

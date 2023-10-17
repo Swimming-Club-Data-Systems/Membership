@@ -173,6 +173,10 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
+            'custom_fields' => [
+                'nullable',
+                'json',
+            ],
         ]);
 
         $competition = new Competition();
@@ -186,6 +190,7 @@ class CompetitionController extends Controller
         $competition->public = $request->boolean('public');
         $competition->default_entry_fee_string = $request->string('default_entry_fee');
         $competition->processing_fee_string = $request->string('processing_fee');
+        $competition->custom_fields = json_decode($request->json('custom_fields')) ?? [];
         $competition->closing_date = $request->date(
             'closing_date',
             null,
@@ -286,9 +291,9 @@ class CompetitionController extends Controller
                 'processing_fee_string' => $competition->processing_fee_string,
                 'closing_date' => $competition->closing_date,
                 'age_at_date' => $competition->age_at_date,
-                'timezone' => $competition->timezone,
                 'venue' => $competition->venue->id,
                 'open_to' => $competition->open_to,
+                'custom_fields' => json_encode($competition->custom_fields, JSON_PRETTY_PRINT),
             ],
             'id' => $competition->id,
             'name' => $competition->name,
@@ -369,6 +374,10 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionOpenTo::class),
             ],
+            'custom_fields' => [
+                'nullable',
+                'json',
+            ],
         ]);
 
         $competition->fill($validated);
@@ -393,6 +402,8 @@ class CompetitionController extends Controller
             //            null,
             //            $request->string('age_at_date_timezone', 'Europe/London')
         );
+
+        $competition->custom_fields = json_decode($request->json('custom_fields')) ?? [];
 
         $competition->venue()->associate($validated['venue']);
         $competition->save();

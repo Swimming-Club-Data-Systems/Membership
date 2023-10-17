@@ -13,7 +13,7 @@ type Props = {
     autoComplete?: string;
     rows?: number;
     maxLength?: number;
-    help?: string;
+    help?: ReactNode;
 };
 
 const TextArea: React.FC<Props> = ({
