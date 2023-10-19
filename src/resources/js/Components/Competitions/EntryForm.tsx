@@ -65,6 +65,7 @@ export const EntryForm = ({ sessions, action, readOnly }: EntryFormProps) => {
                 removeDefaultInputMargin
                 submitTitle="Save"
                 readOnly={readOnly}
+                enableReinitialize={false}
             >
                 <div className="grid gap-4">
                     {sessions.map((session) => (

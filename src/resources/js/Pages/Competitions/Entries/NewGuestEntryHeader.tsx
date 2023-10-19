@@ -171,6 +171,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                     )}
                     method="post"
                     hideErrors
+                    enableReinitialize={false}
                 >
                     <FlashAlert />
                     <RenderServerErrors />

@@ -238,6 +238,8 @@ export type FormProps = {
         message: string | ReactNode;
         confirmText?: string;
     };
+    /** Default is `false`. Control whether Formik should reset the form if `initialValues` changes (using deep equality). */
+    enableReinitialize?: boolean;
 };
 
 const Form = (props: FormProps) => {
@@ -262,6 +264,7 @@ const Form = (props: FormProps) => {
         disabled = false,
         readOnly = false,
         onSuccess,
+        enableReinitialize = true,
         ...otherProps
     } = props;
 
@@ -359,7 +362,7 @@ const Form = (props: FormProps) => {
                 initialValues={mergedValues}
                 validationSchema={validationSchema}
                 onSubmit={onSubmitHandler}
-                enableReinitialize
+                enableReinitialize={enableReinitialize}
             >
                 {(formikProps) => {
                     const onConfirm = async () => {
