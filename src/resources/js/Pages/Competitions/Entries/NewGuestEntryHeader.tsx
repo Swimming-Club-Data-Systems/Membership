@@ -22,6 +22,7 @@ import getCustomInitialValues from "@/Utils/Form/getCustomInitialValues";
 import generateFields from "@/Utils/Form/generateFields";
 import { Field } from "@/Utils/Form/Field";
 import generateYupFields from "@/Utils/Form/generateYupFields";
+import Link from "@/Components/Link";
 
 export type Props = {
     google_maps_api_key: string;
@@ -319,10 +320,17 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
 
                                 <p>
                                     By proceeding, you also confirm that you
-                                    accept the {props.tenant.name} terms and
-                                    conditions relating to use of their
-                                    services, competition entries and more. ADD
-                                    LINK TO TERMS.
+                                    accept the{" "}
+                                    <Link
+                                        href="/privacy"
+                                        target="_blank"
+                                        external
+                                    >
+                                        {props.tenant.name} terms and conditions
+                                        relating to use of their services,
+                                        competition entries and more
+                                    </Link>
+                                    .
                                 </p>
 
                                 <p>
