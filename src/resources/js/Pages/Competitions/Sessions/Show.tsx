@@ -32,6 +32,7 @@ import {
 } from "@/Components/DefinitionList";
 import { formatDateTime } from "@/Utils/date-utils";
 import Select from "@/Components/Form/Select";
+import { FieldArray, useFormikContext } from "formik";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -88,6 +89,48 @@ export type Props = {
     start_time: string;
     end_time: string;
     timezones: DateTimeInputTimezones;
+};
+
+const Ages = (props) => {
+    const { values } = useFormikContext();
+
+    return (
+        <FieldArray
+            name="ages"
+            render={(arrayHelpers) => (
+                <Card title="Age groups">
+                    {values.ages &&
+                        values.ages.length > 0 &&
+                        values.ages.map((age, index) => (
+                            <div key={index}>
+                                <TextInput
+                                    name={`ages.${index}`}
+                                    label={`Age group ${index + 1}`}
+                                    className="uppercase"
+                                    rightButton={
+                                        values.ages.length > 1 && (
+                                            <Button
+                                                className="rounded-l-none"
+                                                variant="danger"
+                                                onClick={() =>
+                                                    arrayHelpers.remove(index)
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                        )
+                                    }
+                                    showErrorIconOnLabel // Required because of rightButton
+                                />
+                            </div>
+                        ))}
+                    <Button onClick={() => arrayHelpers.push("")}>
+                        Add an age group
+                    </Button>
+                </Card>
+            )}
+        />
+    );
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -464,6 +507,78 @@ const Show: Layout<Props> = (props: Props) => {
                                             0,
                                             "Processing fee must be £0 or more."
                                         ),
+                                    ages: yup
+                                        .array()
+                                        .ensure()
+                                        .of(
+                                            yup
+                                                .string()
+                                                .required(
+                                                    "An age group is required."
+                                                )
+                                                .test(
+                                                    "is-valid-age-group-string",
+                                                    "Age group must be OPEN or of the format X-, -Y or X-Y.",
+                                                    (value) => {
+                                                        if (
+                                                            value.toUpperCase() ===
+                                                            "OPEN"
+                                                        ) {
+                                                            return true;
+                                                        }
+
+                                                        // Check if single value
+                                                        const singleValueExpression =
+                                                            /^\d+$/;
+                                                        if (
+                                                            singleValueExpression.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            return true;
+                                                        }
+
+                                                        // Check if X-, -Y or X-Y
+                                                        const rangeExpression =
+                                                            /^\d*-\d*$/;
+                                                        if (
+                                                            rangeExpression.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            // Regex valid, check second number greater than first
+
+                                                            // Split and convert values to array
+                                                            const values = value
+                                                                .split("-")
+                                                                .filter(
+                                                                    (v) =>
+                                                                        v.length >
+                                                                        0
+                                                                )
+                                                                .map((v) =>
+                                                                    parseInt(v)
+                                                                );
+                                                            if (
+                                                                values.length >
+                                                                1
+                                                            ) {
+                                                                // If two values check first less than eq second
+                                                                return (
+                                                                    values[0] <=
+                                                                    values[1]
+                                                                );
+                                                            } else {
+                                                                // Only one value so valid
+                                                                return true;
+                                                            }
+                                                        } else {
+                                                            return false;
+                                                        }
+                                                    }
+                                                )
+                                        )
+                                        .min(1),
                                 })}
                                 // hideDefaultButtons
                                 initialValues={{
@@ -474,6 +589,7 @@ const Show: Layout<Props> = (props: Props) => {
                                     units: "metres",
                                     entry_fee_string: 0,
                                     processing_fee_string: 0,
+                                    ages: ["OPEN"],
                                 }}
                                 alwaysClearable
                                 onClear={() => setShowAddEventModal(false)}
@@ -571,6 +687,8 @@ const Show: Layout<Props> = (props: Props) => {
                                     label="Processing fee (£)"
                                     precision={2}
                                 />
+
+                                <Ages />
                             </Form>
                         </Modal>
                     </div>

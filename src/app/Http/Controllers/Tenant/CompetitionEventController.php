@@ -30,6 +30,7 @@ class CompetitionEventController extends Controller
             'units' => ['required', new Enum(DistanceUnits::class)],
             'entry_fee_string' => ['required', 'numeric', 'min:0', 'decimal:0,2'],
             'processing_fee_string' => ['required', 'numeric', 'min:0', 'decimal:0,2'],
+            'ages' => ['required', 'array', 'min:1'],
         ]);
 
         $event = new CompetitionEvent($validated);

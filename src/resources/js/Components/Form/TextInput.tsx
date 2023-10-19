@@ -15,6 +15,7 @@ interface Props extends InputProps {
     label: string;
     autoComplete?: string;
     help?: string;
+    showErrorIconOnLabel?: boolean;
 }
 
 const TextInput = React.forwardRef<HTMLInputElement, Props>(
