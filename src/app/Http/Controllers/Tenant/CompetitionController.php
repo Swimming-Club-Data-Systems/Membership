@@ -287,8 +287,8 @@ class CompetitionController extends Controller
                 'requires_approval' => $competition->requires_approval,
                 'status' => $competition->status,
                 'public' => $competition->public,
-                'default_entry_fee_string' => $competition->default_entry_fee_string,
-                'processing_fee_string' => $competition->processing_fee_string,
+                'default_entry_fee' => $competition->default_entry_fee_string,
+                'processing_fee' => $competition->processing_fee_string,
                 'closing_date' => $competition->closing_date,
                 'age_at_date' => $competition->age_at_date,
                 'venue' => $competition->venue->id,
@@ -390,6 +390,9 @@ class CompetitionController extends Controller
         //                'Europe/Berlin'
         //            ),
         //        ]);
+
+        $competition->default_entry_fee_string = $request->string('default_entry_fee');
+        $competition->processing_fee_string = $request->string('processing_fee');
 
         $competition->closing_date = $request->date(
             'closing_date',

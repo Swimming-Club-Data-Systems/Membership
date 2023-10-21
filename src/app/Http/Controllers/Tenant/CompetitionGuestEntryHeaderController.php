@@ -141,6 +141,10 @@ class CompetitionGuestEntryHeaderController extends Controller
                     /** @var CompetitionEventEntry $event */
                     $amount += $event->amount;
                 }
+
+                if ($competition->processing_fee > 0 && $amount > 0) {
+                    $amount += $competition->processing_fee;
+                }
             }
 
             $total += $amount;
@@ -168,6 +172,8 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'id' => $competition->id,
                 'name' => $competition->name,
                 'require_times' => $competition->require_times,
+                'processing_fee' => $competition->processing_fee,
+                'processing_fee_formatted' => Money::formatCurrency($competition->processing_fee),
             ],
             'payable' => $payable,
             'paid' => $paid,

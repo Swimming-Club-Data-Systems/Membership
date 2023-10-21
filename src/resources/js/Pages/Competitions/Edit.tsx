@@ -86,11 +86,8 @@ const New: Layout<Props> = (props: Props) => {
                             .required("You must choose a venue."),
                         closing_date: yup.date().required(),
                         age_at_date: yup.date().required(),
-                        default_entry_fee_string: yup
-                            .number()
-                            .required()
-                            .min(0),
-                        processing_fee_string: yup.number().required().min(0),
+                        default_entry_fee: yup.number().required().min(0),
+                        processing_fee: yup.number().required().min(0),
                         require_times: yup.boolean(),
                         coach_enters: yup.boolean(),
                         requires_approval: yup.boolean(),
@@ -148,8 +145,8 @@ const New: Layout<Props> = (props: Props) => {
                         coach_enters: false,
                         requires_approval: false,
                         public: true,
-                        default_entry_fee_string: 0,
-                        processing_fee_string: 0,
+                        default_entry_fee: 0,
+                        processing_fee: 0,
                         closing_date: "",
                         age_at_date: "",
                         status: "draft",
@@ -236,13 +233,13 @@ const New: Layout<Props> = (props: Props) => {
                                 help="Whether to show information about this competition publicly on the membership system website."
                             />
                             <DecimalInput
-                                name="default_entry_fee_string"
+                                name="default_entry_fee"
                                 label="Default entry fee (£)"
                                 help="The default entry fee to use when creating events for this competition. Changes won't be applied to existing events or entries."
                                 precision={2}
                             />
                             <DecimalInput
-                                name="processing_fee_string"
+                                name="processing_fee"
                                 label="Processing fee (£)"
                                 help="Processing fee per swimmer. To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer.  Changes won't be applied to existing events or entries."
                                 precision={2}

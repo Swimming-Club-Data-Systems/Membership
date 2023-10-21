@@ -4,19 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Form, {
-    RenderServerErrors,
-    SubmissionButtons,
-} from "@/Components/Form/Form";
-import * as yup from "yup";
-import TextInput from "@/Components/Form/TextInput";
 import Card from "@/Components/Card";
-import { FieldArray, useField } from "formik";
-import Button from "@/Components/Button";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
-import { formatISO } from "date-fns";
-import RadioGroup from "@/Components/Form/RadioGroup";
-import Radio from "@/Components/Form/Radio";
 import FlashAlert from "@/Components/FlashAlert";
 import BasicList from "@/Components/BasicList";
 import { formatDate } from "@/Utils/date-utils";
@@ -44,6 +32,8 @@ export type Props = {
         name: string;
         id: number;
         require_times: boolean;
+        processing_fee_formatted: string;
+        processing_fee: number;
     };
     paid: boolean;
     payable: boolean;
@@ -69,11 +59,6 @@ export type Props = {
     amount: number;
     amount_formatted: string;
     currency: string;
-};
-
-type FieldArrayItemsProps = {
-    name: string;
-    render: (index: number, length: number) => ReactNode;
 };
 
 type ExpressCheckoutProps = {
@@ -120,7 +105,7 @@ const ExpressCheckout = ({ createIntentRoute }: ExpressCheckoutProps) => {
         resolve(options);
     };
 
-    const onExpressCheckoutConfirm = async (event) => {
+    const onExpressCheckoutConfirm = async () => {
         if (!stripe) {
             // Stripe.js hasn't loaded yet.
             // Make sure to disable form submission until Stripe.js has loaded.
@@ -377,6 +362,17 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                                     <p>Ready to pay?</p>
 
                                     <p>
+                                        {props.competition.processing_fee && (
+                                            <>
+                                                A processing fee of{" "}
+                                                {
+                                                    props.competition
+                                                        .processing_fee_formatted
+                                                }{" "}
+                                                per entrant applies to this
+                                                competition.{" "}
+                                            </>
+                                        )}
                                         The total cost of your entries is{" "}
                                         {props.amount_formatted}.
                                     </p>

@@ -44,13 +44,25 @@ class CompetitionGuestEntryPaymentController extends Controller
                 /** @var CompetitionEntry $entry */
                 $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('competitionEventEntries')->first();
 
+                $entryAmount = 0;
+
                 foreach ($entry->competitionEventEntries as $event) {
                     /** @var CompetitionEventEntry $event */
                     $lineItem = new PaymentLine();
                     $lineItem->unit_amount = $event->amount;
+                    $entryAmount += $event->amount;
                     $lineItem->quantity = 1;
                     $lineItem->currency = 'gbp';
                     $lineItem->associatedUuid()->associate($event);
+                    $payment->lines()->save($lineItem);
+                }
+
+                if ($competition->processing_fee > 0 && $entryAmount > 0) {
+                    $lineItem = new PaymentLine();
+                    $lineItem->unit_amount = $competition->processing_fee;
+                    $lineItem->quantity = 1;
+                    $lineItem->currency = 'gbp';
+                    $lineItem->associatedUuid()->associate($entry);
                     $payment->lines()->save($lineItem);
                 }
             }

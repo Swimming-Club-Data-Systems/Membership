@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Money;
+use App\Interfaces\PaidObject;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -33,7 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
-class CompetitionEntry extends Model
+class CompetitionEntry extends Model implements PaidObject
 {
     use HasFactory, HasUuids;
 
@@ -121,11 +122,45 @@ class CompetitionEntry extends Model
     }
 
     /**
-     * Calculate the totals for the associated event entries. Does not save the model.
+     * Calculate the totals for the associated event entries.
+     * Does not include competition processing fees.
+     * Does not save the model.
      */
     public function calculateTotals(): void
     {
         $this->amount = $this->competitionEventEntries()->sum('amount');
         $this->amount_refunded = $this->competitionEventEntries()->sum('amount_refunded');
+    }
+
+    public function handlePaid(): void
+    {
+        $this->processing_fee_paid = true;
+    }
+
+    public function handleChargedBack(): void
+    {
+        // TODO: Implement handleChargedBack() method.
+    }
+
+    public function getPaymentLineDescriptor(): string
+    {
+        // TODO: Implement getPaymentLineDescriptor() method.
+
+        return 'Processing fee for competition entry '.$this->id;
+    }
+
+    public function handleRefund(int $refundAmount, int $totalAmountRefunded): void
+    {
+        // TODO: Implement handleRefund() method.
+    }
+
+    public function handleFailed(): void
+    {
+        // TODO: Implement handleFailed() method.
+    }
+
+    public function handleCanceled(): void
+    {
+        // TODO: Implement handleCanceled() method.
     }
 }
