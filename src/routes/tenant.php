@@ -417,6 +417,9 @@ Route::middleware([
                     Route::get('/{header}/pay-now', [CompetitionGuestEntryPaymentController::class, 'start'])
                         ->whereUuid('header')
                         ->name('enter_as_guest.pay');
+                    Route::post('/{header}/express-pay', [CompetitionGuestEntryPaymentController::class, 'startJson'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.express_pay');
                     Route::get('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'editEntry'])
                         ->whereUuid(['header', 'entrant'])
                         ->name('enter_as_guest.edit_entry');

@@ -12,19 +12,15 @@ use App\Models\Tenant\CompetitionGuestEntrant;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 
 class CompetitionGuestEntryPaymentController extends Controller
 {
-    public function start(Request $request, Competition $competition, CompetitionGuestEntryHeader $header)
+    private function getGuestEntryHeaderPayment(Competition $competition, CompetitionGuestEntryHeader $header): Payment
     {
-        $this->authorize('update', $header);
-
-        /** @var Tenant $tenant */
-        $tenant = tenant();
-
         try {
             DB::beginTransaction();
 
@@ -73,17 +69,69 @@ class CompetitionGuestEntryPaymentController extends Controller
 
             DB::commit();
 
-            return redirect(route('payments.checkout.show', $payment));
-
-            // Redirect to check out
+            return $payment;
         } catch (\Exception $e) {
+            // Catch, rollback, report, rethrow
             DB::rollBack();
 
             report($e);
 
+            throw $e;
+        }
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function start(Request $request, Competition $competition, CompetitionGuestEntryHeader $header): \Illuminate\Http\RedirectResponse
+    {
+        $this->authorize('update', $header);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        try {
+            // Get payment and redirect to checkout
+
+            $payment = $this->getGuestEntryHeaderPayment($competition, $header);
+
+            return Redirect::route('payments.checkout.show', $payment);
+        } catch (\Exception $e) {
             $request->session()->flash('error', 'We can\'t take you to the checkout page right now. Please try again later. If the issue persists, please contact '.$tenant->Name.' for help.');
 
             return Redirect::route('competitions.enter_as_guest.show', [$competition, $header]);
+        }
+    }
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function startJson(Request $request, Competition $competition, CompetitionGuestEntryHeader $header)
+    {
+        $this->authorize('update', $header);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        try {
+            // Get payment and redirect to checkout
+
+            $payment = $this->getGuestEntryHeaderPayment($competition, $header);
+
+            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+            $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+
+            return response()->json([
+                'client_secret' => $paymentIntent->client_secret,
+                'return_url' => route('payments.checkout.show', $payment),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred. Please try again later.',
+            ], 500);
         }
     }
 }

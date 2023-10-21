@@ -57,10 +57,13 @@ const Success: Layout<Props> = (props: Props) => {
                         confirmation of your payment.
                     </p>
 
-                    <p>
-                        This transaction will appear on your statement as{" "}
-                        {props.statement_descriptor}, {props.formatted_total}.
-                    </p>
+                    {props.statement_descriptor && (
+                        <p>
+                            This transaction will appear on your statement as{" "}
+                            {props.statement_descriptor},{" "}
+                            {props.formatted_total}.
+                        </p>
+                    )}
 
                     {props.return_link && (
                         <p>

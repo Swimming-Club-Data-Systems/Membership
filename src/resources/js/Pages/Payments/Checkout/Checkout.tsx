@@ -8,6 +8,7 @@ import {
     Elements,
     PaymentElement,
     PaymentRequestButtonElement,
+    ExpressCheckoutElement,
     useElements,
     useStripe,
 } from "@stripe/react-stripe-js";
@@ -197,20 +198,20 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                     <div className="grid col-span-full md:col-span-6 gap-4">
                         {paymentRequest && (
                             <>
-                                <PaymentRequestButtonElement
-                                    options={{ paymentRequest }}
-                                />
+                                {/*<PaymentRequestButtonElement*/}
+                                {/*    options={{ paymentRequest }}*/}
+                                {/*/>*/}
 
-                                <div className="relative mb-4">
-                                    <div className="absolute inset-0 flex items-center">
-                                        <div className="w-full border-t border-gray-300" />
-                                    </div>
-                                    <div className="relative flex justify-center text-sm">
-                                        <span className="bg-gray-100 px-2 text-gray-500">
-                                            Or
-                                        </span>
-                                    </div>
-                                </div>
+                                {/*<div className="relative mb-4">*/}
+                                {/*    <div className="absolute inset-0 flex items-center">*/}
+                                {/*        <div className="w-full border-t border-gray-300" />*/}
+                                {/*    </div>*/}
+                                {/*    <div className="relative flex justify-center text-sm">*/}
+                                {/*        <span className="bg-gray-100 px-2 text-gray-500">*/}
+                                {/*            Or*/}
+                                {/*        </span>*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
                             </>
                         )}
 
@@ -334,14 +335,16 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                             name: usePage().props?.tenant?.name,
                                         },
                                         paymentMethodOrder: [
+                                            "apple_pay",
+                                            "google_pay",
                                             "card",
                                             "bacs_debit",
                                         ],
-                                        wallets: {
-                                            // We use a separate Payment Request button at the top of the page
-                                            applePay: "never",
-                                            googlePay: "never",
-                                        },
+                                        // wallets: {
+                                        //     // We use a separate Payment Request button at the top of the page
+                                        //     // applePay: "never",
+                                        //     // googlePay: "never",
+                                        // },
                                     }}
                                 />
 

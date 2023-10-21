@@ -6,6 +6,7 @@ use App\Business\Form\CustomFields;
 use App\Business\Helpers\Money;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionEvent;
@@ -119,16 +120,32 @@ class CompetitionGuestEntryHeaderController extends Controller
     {
         $this->authorize('view', $header);
 
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         $payable = false;
         $paid = false;
-        $entrants = $header->competitionGuestEntrants->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable, &$paid) {
+        $total = 0;
+        $entrants = $header->competitionGuestEntrants->map(function (CompetitionGuestEntrant $entrant) use ($competition, &$payable, &$paid, &$total) {
             /** @var CompetitionEntry|null $entry */
-            $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->first();
+            $entry = CompetitionEntry::where('competition_guest_entrant_id', '=', $entrant->id)->with('competitionEventEntries')->first();
             if ($entry && ! $entry->paid) {
                 $payable = true;
             } elseif ($entry && $entry->paid) {
                 $paid = true;
             }
+
+            $amount = 0;
+            if ($entry) {
+                foreach ($entry->competitionEventEntries as $event) {
+                    /** @var CompetitionEventEntry $event */
+                    $amount += $event->amount;
+                }
+            }
+
+            $total += $amount;
+
+            $amountFormatted = Money::formatCurrency($amount);
 
             return [
                 'id' => $entrant->id,
@@ -138,8 +155,12 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'sex' => $entrant->sex,
                 'age' => $entrant->age,
                 'age_on_day' => $entrant->ageAt($competition->age_at_date),
+                'amount' => $amount,
+                'amount_formatted' => $amountFormatted,
             ];
         })->toArray();
+
+        $totalFormatted = Money::formatCurrency($total);
 
         return Inertia::render('Competitions/Entries/GuestEntryShow', [
             'id' => $header->id,
@@ -154,6 +175,11 @@ class CompetitionGuestEntryHeaderController extends Controller
             'last_name' => $header->last_name,
             'email' => $header->email,
             'entrants' => $entrants,
+            'stripe_publishable_key' => config('services.stripe.key'),
+            'stripe_account' => $tenant->stripeAccount(),
+            'amount' => $total,
+            'amount_formatted' => $totalFormatted,
+            'currency' => 'gbp',
         ]);
     }
 
