@@ -42,6 +42,19 @@ class AADOAuthController extends Controller
     {
         $provider = OAuthLogin::getMultiTenantProvider();
 
+        $host = $request->session()->pull('target_host');
+
+        if (! $request->get('code')) {
+            // No code returned, return to start page
+            if ($host) {
+                // Go to tenant login route
+                return 'https://'.$host.Redirect::route('login');
+            } else {
+                // Go to central login route
+                return Redirect::route('login');
+            }
+        }
+
         $accessToken = $provider->getAccessToken('authorization_code', [
             'code' => $request->get('code'),
         ]);
@@ -61,8 +74,6 @@ class AADOAuthController extends Controller
             ->execute();
 
         //        return [$identity, $idpUser];
-
-        $host = $request->session()->pull('target_host');
 
         if ($host) {
             // Send the user to the tenant they came from with encrypted details
