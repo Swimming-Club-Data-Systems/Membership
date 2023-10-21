@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionMode;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\CompetitionSessionPutRequest;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\Venue;
@@ -29,6 +31,10 @@ class CompetitionSessionController extends Controller
             'editable' => $request->user()?->can('update', $session),
             'edit_mode' => false,
         ];
+
+        if ($request->user()?->can('update', $session)) {
+            $data['timezones'] = Timezones::getTimezoneSelectList();
+        }
 
         return Inertia::render('Competitions/Sessions/Show', $data);
     }
@@ -68,6 +74,9 @@ class CompetitionSessionController extends Controller
     {
         $this->authorize('create', CompetitionSession::class);
 
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -89,6 +98,9 @@ class CompetitionSessionController extends Controller
                 'date',
                 'after:start',
             ],
+            'timezone' => [
+                'timezone:all',
+            ],
         ]);
 
         $session = new CompetitionSession($validated);
@@ -98,6 +110,21 @@ class CompetitionSessionController extends Controller
             $session->venue()->associate($venue);
         }
         $session->sequence = $competition->sessions()->max('sequence') + 1;
+
+        $session->start_time = $request->date(
+            'start_time',
+            null,
+            $request->string('timezone', $tenant->timezone)
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->end_time = $request->date(
+            'end_time',
+            null,
+            $request->string('timezone', $tenant->timezone)
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->timezone = $request->string('timezone', $tenant->timezone);
+
         $competition->sessions()->save($session);
 
         return redirect()->route('competitions.show', [$competition]);
@@ -119,15 +146,13 @@ class CompetitionSessionController extends Controller
             'edit_session' => [
                 'form_initial_values' => [
                     'name' => $session->name,
-                    'start_date' => $session->start_time,
-                    'end_date' => $session->end_time,
-                    //                    'start_date' => $session->start_time->toDateString(),
-                    //                    'start_time' => $session->start_time->toTimeString(),
-                    //                    'end_date' => $session->end_time->toDateString(),
-                    //                    'end_time' => $session->end_time->toTimeString(),
+                    'start_time' => $session->start_time->setTimezone(new \DateTimeZone($session->timezone)),
+                    'end_time' => $session->end_time->setTimezone(new \DateTimeZone($session->timezone)),
+                    'timezone' => $session->timezone,
                     'venue' => $venue->id,
                 ],
             ],
+            'timezones' => Timezones::getTimezoneSelectList(),
         ];
 
         return Inertia::render('Competitions/Sessions/Show', $data);
@@ -138,6 +163,9 @@ class CompetitionSessionController extends Controller
      */
     public function update(Competition $competition, CompetitionSession $session, CompetitionSessionPutRequest $request): \Illuminate\Http\RedirectResponse
     {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         $this->authorize('update', $session);
 
         $validated = $request->validated();
@@ -151,6 +179,20 @@ class CompetitionSessionController extends Controller
         } else {
             $session->venue()->dissociate();
         }
+
+        $session->start_time = $request->date(
+            'start_time',
+            null,
+            $request->string('timezone', $tenant->timezone)
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->end_time = $request->date(
+            'end_time',
+            null,
+            $request->string('timezone', $tenant->timezone)
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $session->timezone = $request->string('timezone', $tenant->timezone);
 
         $session->save();
 

@@ -1,14 +1,16 @@
 import React from "react";
-import BaseLink from "@/Components/BaseLink";
+import BaseLink, { LinkProps as BaseLinkProps } from "@/Components/BaseLink";
 
-const Link = ({ className, ...props }) => {
+const Link = ({ className = "", children, ...props }: BaseLinkProps) => {
     return (
         <BaseLink
             className={`text-indigo-600 hover:text-indigo-700 hover:underline ${
                 className || ""
             }`}
             {...props}
-        />
+        >
+            {children}
+        </BaseLink>
     );
 };
 

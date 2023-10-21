@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -12,9 +13,11 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $name
  * @property int $sequence
  * @property Carbon $start_time
+ * @property string $timezone
  * @property Carbon $end_time
  * @property Venue $venue
  * @property Competition $competition
+ * @property Collection $events
  */
 class CompetitionSession extends Model
 {
@@ -56,7 +59,7 @@ class CompetitionSession extends Model
 
     public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(CompetitionEvent::class);
+        return $this->hasMany(CompetitionEvent::class)->orderBy('sequence', 'asc');
     }
 
     public function getRelationshipToPrimaryModel(): string

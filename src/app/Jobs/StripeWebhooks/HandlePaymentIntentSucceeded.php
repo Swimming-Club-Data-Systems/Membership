@@ -64,13 +64,15 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
 
                         $payment->status = PaymentStatus::SUCCEEDED;
                         $payment->stripe_status = $intent->status;
-                        foreach ($payment->lines()->get() as $line) {
+                        foreach ($payment->lines()->with(['associated', 'associatedUuid'])->get() as $line) {
                             /** @var PaymentLine $line */
                             if ($line->associated && $line->associated instanceof PaidObject) {
                                 $line->associated->handlePaid();
+                            } elseif ($line->associatedUuid && $line->associatedUuid instanceof PaidObject) {
+                                $line->associatedUuid->handlePaid();
                             }
 
-                            $associate = $line->associated ?? $line;
+                            $associate = $line->associated ?? $line; // Not including uuid as it can't be referenced this way
 
                             // Debit the user/guest journal (already done if monthly fees)
                             if ($intent->metadata->payment_category != 'monthly_fee') {
@@ -123,6 +125,14 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                                 'is_system' => true,
                             ]);
                             $transaction = $guestIncomeJournal->journal->credit($payment->amount, 'Payment received with thanks');
+
+                            try {
+                                // Trigger Email Receipt
+                                Mail::to($payment)->send(new PaymentSucceeded($payment));
+                            } catch (\Exception $e) {
+                                report($e);
+                                // Can't send, ignore silently
+                            }
                         }
                         $transaction->referencesObject($payment);
 

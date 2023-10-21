@@ -18,7 +18,35 @@ class PaymentMethod
         $typeData = json_decode(json_encode($typeData));
         switch ($type) {
             case 'card':
-                return self::formatCardBrandName($typeData->brand).' ···· '.$typeData->last4;
+                $wallet = '';
+
+                if ($typeData->wallet) {
+                    switch ($typeData->wallet->type) {
+                        case 'amex_express_checkout':
+                            $wallet = 'Amex Express Checkout';
+                            break;
+                        case 'apple_pay':
+                            $wallet = 'Apple Pay';
+                            break;
+                        case 'google_pay':
+                            $wallet = 'Google Pay';
+                            break;
+                        case 'masterpass':
+                            $wallet = 'Masterpass';
+                            break;
+                        case 'samsung_pay':
+                            $wallet = 'Samsung Pay';
+                            break;
+                        case 'visa_checkout':
+                            $wallet = 'Visa Checkout';
+                            break;
+                        case 'link':
+                            $wallet = 'Link';
+                            break;
+                    }
+                }
+
+                return self::formatCardBrandName($typeData->brand).($wallet ? ' ('.$wallet.')' : '').' ···· '.$typeData->last4;
             case 'bacs_debit':
                 return 'Bacs Direct Debit ···· '.$typeData->last4;
             case 'klarna':

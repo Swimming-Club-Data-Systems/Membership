@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
@@ -21,7 +22,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Squad extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, Searchable;
 
     protected $primaryKey = 'SquadID';
 
@@ -66,5 +67,19 @@ class Squad extends Model
                 'SquadFee' => BigDecimal::of($value)->withPointMovedLeft(2),
             ],
         );
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $fields = [
+            'SquadID',
+            'SquadName',
+            'SquadFee',
+            'Tenant',
+        ];
+
+        return array_intersect_key($array, array_flip($fields));
     }
 }

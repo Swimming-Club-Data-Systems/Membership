@@ -13,6 +13,7 @@ use App\Models\Tenant\PaymentLine;
 use App\Models\Tenant\Refund;
 use App\Models\Tenant\User;
 use Brick\Math\BigDecimal;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -101,6 +102,14 @@ class PaymentsController extends Controller
 
     private function showData(Payment $payment): array
     {
+        $payment->load([
+            'lines',
+            'lines.refunds' => function (Builder $query) {
+                $query->orderBy('created_at', 'desc');
+            },
+            'refunds.lines',
+        ]);
+
         $lines = [];
         $refunds = [];
 
@@ -109,10 +118,10 @@ class PaymentsController extends Controller
             'lines' => [],
         ];
 
-        foreach ($payment->lines()->with(['refunds'])->get() as $line) {
+        foreach ($payment->lines as $line) {
             /** @var PaymentLine $line */
             $lineRefunds = [];
-            foreach ($line->refunds()->get() as $refund) {
+            foreach ($line->refunds as $refund) {
                 /** @var Refund $refund */
                 $lineRefunds[] = [
                     'id' => $refund->id,
@@ -152,10 +161,10 @@ class PaymentsController extends Controller
             ];
         }
 
-        foreach ($payment->refunds()->with(['lines'])->get() as $refund) {
+        foreach ($payment->refunds as $refund) {
             /** @var Refund $refund */
             $refundLines = [];
-            foreach ($refund->lines()->get() as $line) {
+            foreach ($refund->lines as $line) {
                 /** @var PaymentLine $line */
                 $refundLines[] = [
                     'id' => $line->id,
@@ -226,13 +235,13 @@ class PaymentsController extends Controller
     {
         $request->validate([
             'reason' => ['required', Rule::in(['n/a', 'duplicate', 'fraudulent', 'requested_by_customer'])],
-            'lines.*.refund_amount' => ['min:0', 'decimal:0,2'],
+            'lines.*.refund_amount' => ['nullable', 'min:0', 'decimal:0,2'],
         ]);
 
         $lines = $request->input('lines');
 
         $refundTotal = 0;
-        foreach ($payment->lines()->get() as $line) {
+        foreach ($payment->lines as $line) {
             /** @var PaymentLine $line */
             foreach ($lines as $postedLine) {
                 if ($postedLine['id'] == $line->id && $postedLine['refund_amount']) {
@@ -308,7 +317,7 @@ class PaymentsController extends Controller
                 $dbRefund->save();
 
                 // Refund all paid objects and save changes in the database
-                foreach ($payment->lines()->get() as $line) {
+                foreach ($payment->lines as $line) {
                     /** @var PaymentLine $line */
                     foreach ($lines as $postedLine) {
                         if ($postedLine['id'] == $line->id && $postedLine['refund_amount']) {
@@ -316,7 +325,9 @@ class PaymentsController extends Controller
 
                             $line->amount_refunded = $line->amount_refunded + $amount;
                             if ($line->associated && $line->associated instanceof PaidObject) {
-                                $line->associated->handleRefund($amount);
+                                $line->associated->handleRefund($amount, $line->amount_refunded);
+                            } elseif ($line->associatedUuid && $line->associatedUuid instanceof PaidObject) {
+                                $line->associatedUuid->handleRefund($amount, $line->amount_refunded);
                             }
                             $line->save();
 
@@ -334,8 +345,12 @@ class PaymentsController extends Controller
                 $totalRefundedFormatted = Money::formatCurrency($payment->amount_refunded, $refund->currency);
                 $request->session()->flash('success', "We've refunded {$refundFormatted} to the original payment method ({$payment->paymentMethod->description}). The total amount refunded is {$totalRefundedFormatted}.");
 
-                if ($payment->user) {
-                    Mail::to($payment->user)->send(new PaymentRefunded($payment, $refund->amount));
+                try {
+                    if ($payment->user) {
+                        Mail::to($payment->user)->send(new PaymentRefunded($payment, $refund->amount));
+                    }
+                } catch (\Exception $e) {
+                    // Need to catch the error, but if the email fails, that must not stop the data being committed
                 }
             }
 
@@ -344,6 +359,7 @@ class PaymentsController extends Controller
         } catch (ApiErrorException $e) {
             DB::rollBack();
             $request->session()->flash('error', 'Something went wrong which meant we could not refund this payment. Please try again later.');
+            report($e);
         }
 
         return redirect(route('payments.payments.show', $payment));

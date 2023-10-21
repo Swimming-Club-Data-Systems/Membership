@@ -6,6 +6,7 @@ use App\Business\Helpers\ApplicationFeeAmount;
 use App\Business\Helpers\Money;
 use App\Enums\PaymentStatus;
 use App\Enums\StripePaymentIntentStatus;
+use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -27,7 +28,7 @@ use Illuminate\Support\Str;
  * @property int $application_fee_amount
  * @property int $amount_refundable
  * @property string $formatted_amount_refundable
- * @property PaymentMethod $paymentMethod
+ * @property PaymentMethod|null $paymentMethod
  * @property string $currency
  * @property string $status
  * @property string $return_link
@@ -37,6 +38,9 @@ use Illuminate\Support\Str;
  * @property string $receipt_email
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property string $customer_name
+ * @property string $name
+ * @property string $email
  */
 class Payment extends Model
 {
@@ -135,6 +139,61 @@ class Payment extends Model
     {
         return Attribute::make(
             get: fn () => Money::formatCurrency($this->amount_refundable, $this->currency),
+        );
+    }
+
+    public function createStripePaymentIntent()
+    {
+        if ($this->stripe_id) {
+            return;
+        }
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        $data = [
+            'currency' => 'gbp',
+            'amount' => $this->amount,
+            'automatic_payment_methods' => [
+                'enabled' => true,
+            ],
+            'description' => 'SCDS Checkout Payment',
+            'metadata' => [
+                'payment_category' => 'scds_checkout_v3',
+                'payment_id' => $this->id,
+                'user_id' => $this->user?->UserID,
+            ],
+            'application_fee_amount' => $this->applicationFeeAmount(),
+        ];
+
+        if ($this->user?->stripeCustomerId()) {
+            $data['customer'] = $this->user?->stripeCustomerId();
+        }
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+        $paymentIntent = $stripe->paymentIntents->create($data, [
+            'stripe_account' => $tenant->stripeAccount(),
+        ]);
+        $this->stripe_id = $paymentIntent->id;
+    }
+
+    /**
+     * Get the customer full name via expected attribute.
+     */
+    protected function name(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['customer_name'],
+        );
+    }
+
+    /**
+     * Get the customer email via expected attribute.
+     */
+    protected function email(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['receipt_email'],
         );
     }
 }

@@ -39,14 +39,16 @@ class CheckoutController extends Controller
             ->orderBy('created_at', 'asc')
             ->get();
         $paymentMethodsArray = [];
-        foreach ($paymentMethods as $method) {
-            /** @var PaymentMethod $method */
-            $paymentMethodsArray[] = [
-                'id' => $method->id,
-                'stripe_id' => $method->stripe_id,
-                'description' => $method->description,
-                'information_line' => $method->information_line,
-            ];
+        if ($paymentMethods) {
+            foreach ($paymentMethods as $method) {
+                /** @var PaymentMethod $method */
+                $paymentMethodsArray[] = [
+                    'id' => $method->id,
+                    'stripe_id' => $method->stripe_id,
+                    'description' => $method->description,
+                    'information_line' => $method->information_line,
+                ];
+            }
         }
 
         $lines = [];
@@ -94,9 +96,9 @@ class CheckoutController extends Controller
             'formatted_total' => Money::formatCurrency($paymentIntent->amount),
             'return_url' => route('payments.checkout.show', $payment),
             'lines' => $lines,
-            'customer_email' => $user?->email,
+            'customer_email' => $user?->email ?? $payment->email,
             'customer_phone' => $user?->Mobile,
-            'customer_name' => $user?->name,
+            'customer_name' => $user?->name ?? $payment->name,
             'customer_address' => [
                 'line1' => $user?->getAddress()?->address_line_1,
                 'line2' => $user?->getAddress()?->address_line_2,
@@ -104,6 +106,10 @@ class CheckoutController extends Controller
                 'country' => $user?->getAddress()?->country_name,
                 'postal_code' => $user?->getAddress()?->post_code,
             ],
+            'cancel_link' => $payment->cancel_link,
+            'cancel_link_text' => $payment->cancel_link_text,
+            'return_link' => $payment->return_link,
+            'return_link_text' => $payment->return_link_text,
         ]);
     }
 
@@ -201,13 +207,42 @@ class CheckoutController extends Controller
         $tenant = tenant();
 
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
-        $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [], [
+        $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [
+            'expand' => [
+                'payment_method',
+            ],
+        ], [
             'stripe_account' => $tenant->stripeAccount(),
         ]);
 
         if ($paymentIntent->status === StripePaymentIntentStatus::SUCCEEDED->value) {
+            $lines = [];
+            foreach ($payment->lines()->get() as $line) {
+                /** @var PaymentLine $line */
+                $lines[] = [
+                    'id' => $line->id,
+                    'description' => $line->description,
+                    'quantity' => $line->quantity,
+                    'formatted_amount' => $line->formatted_amount_total,
+                ];
+            }
+
+            $type = $paymentIntent->payment_method->type;
+
             return Inertia::render('Payments/Checkout/Success', [
                 'id' => $payment->id,
+                'formatted_total' => Money::formatCurrency($paymentIntent->amount),
+                'statement_descriptor' => $paymentIntent->charges->data[0]->calculated_statement_descriptor,
+                'lines' => $lines,
+                'payment_method' => $paymentIntent->payment_method ? [
+                    'id' => $payment->paymentMethod?->id,
+                    'description' => \App\Business\Helpers\PaymentMethod::formatNameFromData($type, $paymentIntent->payment_method->$type),
+                    'info_line' => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($type, $paymentIntent->payment_method->$type),
+                ] : null,
+                'cancel_link' => $payment->cancel_link,
+                'cancel_link_text' => $payment->cancel_link_text,
+                'return_link' => $payment->return_link,
+                'return_link_text' => $payment->return_link_text,
             ]);
         } elseif ($paymentIntent->status === StripePaymentIntentStatus::PROCESSING->value) {
             return Inertia::render('Payments/Checkout/InProgress', [

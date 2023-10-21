@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Venue;
 use App\Rules\ValidPhone;
+use Brick\PhoneNumber\PhoneNumberException;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -109,12 +110,27 @@ class VenueController extends Controller
     {
         $this->authorize('view', $venue);
 
+        $phone = null;
+        try {
+            if ($venue->phone) {
+                $phone = [
+                    'formatted' => $venue->phone->forCallingFrom(),
+                    'url' => $venue->phone->toRfc(),
+                ];
+            }
+        } catch (PhoneNumberException $e) {
+            // Could not parse phone number
+        }
+
         return Inertia::render('Venues/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $venue->id,
             'name' => $venue->name,
             'formatted_address' => $venue->formatted_address,
             'place_id' => $venue->place_id,
+            'website' => $venue->website,
+            'phone' => $phone,
+            'google_maps_url' => $venue->google_maps_url,
         ]);
     }
 

@@ -123,10 +123,7 @@ try {
         $subject = mb_substr($subject, 0, 78);
     }
     $message = str_replace($to_remove, "", $data->state->editorValue);
-    if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Admin" && !($replyAddress && $data->state->replyTo == "toMe")) {
-        $name = getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
-        $message .= '<p class="small text-muted">Sent by ' . $name . '. Reply to this email to contact our Enquiries Team who can pass your message on to ' . $name . '.</p>';
-    }
+
     $force = 0;
     $sender = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
     if ($data->state->forceSend && ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas")) {

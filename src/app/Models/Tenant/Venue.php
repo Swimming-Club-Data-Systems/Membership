@@ -19,7 +19,7 @@ use Laravel\Scout\Searchable;
  * @property float $long
  * @property float $lat
  * @property string $website
- * @property PhoneNumber $phone
+ * @property PhoneNumber|null $phone
  * @property string $google_maps_url
  * @property string $place_id
  * @property string $plus_code_global

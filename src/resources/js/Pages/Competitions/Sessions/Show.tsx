@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -21,16 +21,18 @@ import Modal from "@/Components/Modal";
 import { PlusCircleIcon } from "@heroicons/react/24/outline";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
 import Alert from "@/Components/Alert";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
+import DateTimeInput, {
+    DateTimeInputTimezones,
+} from "@/Components/Form/DateTimeInput";
 import { router } from "@inertiajs/react";
-import { useFormikContext } from "formik";
 import ButtonLink from "@/Components/ButtonLink";
 import {
     DefinitionList,
     DefinitionListItemProps,
 } from "@/Components/DefinitionList";
 import { formatDateTime } from "@/Utils/date-utils";
-import { bool } from "yup";
+import Select from "@/Components/Form/Select";
+import { FieldArray, useFormikContext } from "formik";
 
 const getCategoryName = (category: string): string => {
     switch (category) {
@@ -86,6 +88,49 @@ export type Props = {
     different_venue_to_competition_venue: boolean;
     start_time: string;
     end_time: string;
+    timezones: DateTimeInputTimezones;
+};
+
+const Ages = (props) => {
+    const { values } = useFormikContext();
+
+    return (
+        <FieldArray
+            name="ages"
+            render={(arrayHelpers) => (
+                <Card title="Age groups">
+                    {values.ages &&
+                        values.ages.length > 0 &&
+                        values.ages.map((age, index) => (
+                            <div key={index}>
+                                <TextInput
+                                    name={`ages.${index}`}
+                                    label={`Age group ${index + 1}`}
+                                    className="uppercase"
+                                    rightButton={
+                                        values.ages.length > 1 && (
+                                            <Button
+                                                className="rounded-l-none"
+                                                variant="danger"
+                                                onClick={() =>
+                                                    arrayHelpers.remove(index)
+                                                }
+                                            >
+                                                Delete
+                                            </Button>
+                                        )
+                                    }
+                                    showErrorIconOnLabel // Required because of rightButton
+                                />
+                            </div>
+                        ))}
+                    <Button onClick={() => arrayHelpers.push("")}>
+                        Add an age group
+                    </Button>
+                </Card>
+            )}
+        />
+    );
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -203,7 +248,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: props.competition.name,
                         route: "competitions.show",
                         routeParams: {
-                            competition: props.id,
+                            competition: props.competition.id,
                         },
                     },
                     // {
@@ -217,7 +262,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: props.name,
                         route: "competitions.sessions.show",
                         routeParams: {
-                            competition: props.competition.id,
+                            competition: props.id,
                             session: props.id,
                         },
                     },
@@ -280,22 +325,23 @@ const Show: Layout<Props> = (props: Props) => {
                                             "The session name must not exceed 255 characters."
                                         ),
                                     venue: yup.number().required().integer(),
-                                    start_date: yup
+                                    start_time: yup
                                         .date()
                                         .typeError("Start date must be a date.")
                                         .required(
                                             "A start date and time is required."
                                         ),
-                                    end_date: yup
+                                    end_time: yup
                                         .date()
                                         .typeError("End date must be a date.")
                                         .required(
                                             "An end date and time is required."
                                         )
                                         .min(
-                                            yup.ref("start_date"),
+                                            yup.ref("start_time"),
                                             "End time must be after the start time."
                                         ),
+                                    timezone: yup.string().required(),
                                 })}
                                 hideDefaultButtons
                                 formName="edit_session"
@@ -316,16 +362,24 @@ const Show: Layout<Props> = (props: Props) => {
                                     <VenueCombobox name="venue" />
                                     <div className="grid md:grid-cols-2 gap-6">
                                         <DateTimeInput
-                                            name="start_date"
+                                            name="start_time"
                                             label="Start date and time"
                                             mb="mb-0"
+                                            showTimeInput
                                         />
                                         <DateTimeInput
-                                            name="end_date"
+                                            name="end_time"
                                             label="End date and time"
                                             mb="mb-0"
+                                            showTimeInput
                                         />
                                     </div>
+
+                                    <Select
+                                        name="timezone"
+                                        label="Session timezone"
+                                        items={props.timezones}
+                                    />
                                 </Card>
                             </Form>
                         )}
@@ -336,20 +390,6 @@ const Show: Layout<Props> = (props: Props) => {
                                     items={items}
                                     verticalPadding={2}
                                 />
-                                {/*<TextInput name="name" label="Name" />*/}
-                                {/*<VenueCombobox name="venue" />*/}
-                                {/*<div className="grid md:grid-cols-2 gap-6">*/}
-                                {/*    <DateTimeInput*/}
-                                {/*        name="start_date"*/}
-                                {/*        label="Start date and time"*/}
-                                {/*        mb="mb-0"*/}
-                                {/*    />*/}
-                                {/*    <DateTimeInput*/}
-                                {/*        name="end_date"*/}
-                                {/*        label="End date and time"*/}
-                                {/*        mb="mb-0"*/}
-                                {/*    />*/}
-                                {/*</div>*/}
                             </Card>
                         )}
 
@@ -376,7 +416,11 @@ const Show: Layout<Props> = (props: Props) => {
                                 <BasicList items={props.events.map(Event)} />
                             )}
 
-                            {props.events.length === 0 && <></>}
+                            {props.events.length === 0 && (
+                                <Alert variant="warning" title="No events">
+                                    No events exist for this session.
+                                </Alert>
+                            )}
                         </Card>
 
                         <Modal
@@ -463,6 +507,78 @@ const Show: Layout<Props> = (props: Props) => {
                                             0,
                                             "Processing fee must be £0 or more."
                                         ),
+                                    ages: yup
+                                        .array()
+                                        .ensure()
+                                        .of(
+                                            yup
+                                                .string()
+                                                .required(
+                                                    "An age group is required."
+                                                )
+                                                .test(
+                                                    "is-valid-age-group-string",
+                                                    "Age group must be OPEN or of the format X-, -Y or X-Y.",
+                                                    (value) => {
+                                                        if (
+                                                            value.toUpperCase() ===
+                                                            "OPEN"
+                                                        ) {
+                                                            return true;
+                                                        }
+
+                                                        // Check if single value
+                                                        const singleValueExpression =
+                                                            /^\d+$/;
+                                                        if (
+                                                            singleValueExpression.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            return true;
+                                                        }
+
+                                                        // Check if X-, -Y or X-Y
+                                                        const rangeExpression =
+                                                            /^\d*-\d*$/;
+                                                        if (
+                                                            rangeExpression.test(
+                                                                value
+                                                            )
+                                                        ) {
+                                                            // Regex valid, check second number greater than first
+
+                                                            // Split and convert values to array
+                                                            const values = value
+                                                                .split("-")
+                                                                .filter(
+                                                                    (v) =>
+                                                                        v.length >
+                                                                        0
+                                                                )
+                                                                .map((v) =>
+                                                                    parseInt(v)
+                                                                );
+                                                            if (
+                                                                values.length >
+                                                                1
+                                                            ) {
+                                                                // If two values check first less than eq second
+                                                                return (
+                                                                    values[0] <=
+                                                                    values[1]
+                                                                );
+                                                            } else {
+                                                                // Only one value so valid
+                                                                return true;
+                                                            }
+                                                        } else {
+                                                            return false;
+                                                        }
+                                                    }
+                                                )
+                                        )
+                                        .min(1),
                                 })}
                                 // hideDefaultButtons
                                 initialValues={{
@@ -473,6 +589,7 @@ const Show: Layout<Props> = (props: Props) => {
                                     units: "metres",
                                     entry_fee_string: 0,
                                     processing_fee_string: 0,
+                                    ages: ["OPEN"],
                                 }}
                                 alwaysClearable
                                 onClear={() => setShowAddEventModal(false)}
@@ -570,6 +687,8 @@ const Show: Layout<Props> = (props: Props) => {
                                     label="Processing fee (£)"
                                     precision={2}
                                 />
+
+                                <Ages />
                             </Form>
                         </Modal>
                     </div>

@@ -37,7 +37,7 @@ export const RadioGroup = ({
                     <ErrorMessage
                         name={name}
                         render={(message) => (
-                            <p className="mb-3 text-sm text-red-600">
+                            <p className="mt-2 mb-3 text-sm text-red-600">
                                 {message}
                             </p>
                         )}

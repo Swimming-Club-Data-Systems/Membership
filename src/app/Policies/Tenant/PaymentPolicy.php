@@ -16,9 +16,14 @@ class PaymentPolicy
         //
     }
 
-    public function pay(User $user, Payment $payment): Response
+    public function pay(?User $user, Payment $payment): Response
     {
-        return $user->id === $payment->user_UserID ? Response::allow() : Response::denyAsNotFound();
+        if (! $user && ! $payment->user_UserID) {
+            // Do checks as to whether the current unauthenticated user can access this checkout session
+            return Response::allow();
+        }
+
+        return $user?->id === $payment->user_UserID ? Response::allow() : Response::denyAsNotFound();
     }
 
     public function view(User $user, Payment $payment): Response

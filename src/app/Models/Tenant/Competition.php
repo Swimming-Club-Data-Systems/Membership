@@ -4,12 +4,14 @@ namespace App\Models\Tenant;
 
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
+use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Events\Tenant\CompetitionCreated;
 use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -22,6 +24,7 @@ use Laravel\Scout\Searchable;
  * @property Venue $venue
  * @property CompetitionMode $mode
  * @property CompetitionStatus $status
+ * @property CompetitionOpenTo $open_to
  * @property bool $require_times
  * @property bool $coach_enters
  * @property bool $requires_approval
@@ -35,6 +38,8 @@ use Laravel\Scout\Searchable;
  * @property Carbon $age_at_date
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property Collection $events
+ * @property $custom_fields
  */
 class Competition extends Model
 {
@@ -52,6 +57,8 @@ class Competition extends Model
         'processing_fee_string',
         'closing_date',
         'age_at_date',
+        'status',
+        'open_to',
     ];
 
     /**
@@ -63,9 +70,15 @@ class Competition extends Model
         'pool_course' => CompetitionCourse::class,
         'status' => CompetitionStatus::class,
         'mode' => CompetitionMode::class,
+        'open_to' => CompetitionOpenTo::class,
         'closing_date' => 'datetime',
         'gala_date' => 'datetime',
         'age_at_date' => 'datetime',
+        'require_times' => 'boolean',
+        'coach_enters' => 'boolean',
+        'requires_approval' => 'boolean',
+        'public' => 'boolean',
+        'custom_fields' => 'array',
     ];
 
     /**
@@ -77,12 +90,15 @@ class Competition extends Model
         'pool_course' => CompetitionCourse::SHORT,
         'mode' => CompetitionMode::BASIC,
         'status' => CompetitionStatus::DRAFT,
+        'open_to' => CompetitionOpenTo::MEMBERS,
         'require_times' => false,
         'coach_enters' => false,
         'requires_approval' => false,
         'public' => true,
         'default_entry_fee' => 0,
         'processing_fee' => 0,
+        'description' => '',
+        'custom_fields' => '{}',
     ];
 
     /**

@@ -3,9 +3,11 @@
 namespace App\Business\Helpers;
 
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Competition;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Venue;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -93,6 +95,13 @@ class AppMenu
             $menu[] = [
                 'name' => 'Team Manager Dashboard',
                 'href' => '/team-managers',
+            ];
+        }
+
+        if ($this->user->can('create', Competition::class)) {
+            $menu[] = [
+                'name' => 'Guest Competitions',
+                'href' => route('competitions.index'),
             ];
         }
 
@@ -225,6 +234,15 @@ class AppMenu
                 'href' => '/galas',
                 'children' => $this->galas(),
             ];
+
+            // Disabled
+            //            if (App::isLocal()) {
+            //                $menu[] = [
+            //                    'name' => 'Competitions',
+            //                    'href' => '/competitions',
+            //                    'children' => $this->competitions(),
+            //                ];
+            //            }
 
             if ($this->user->hasPermission(['Admin', 'Galas'])) {
                 $menu[] = [
@@ -686,6 +704,25 @@ class AppMenu
         $menu[] = [
             'name' => 'System Settings',
             'href' => '/settings',
+        ];
+
+        if ($this->user->can('create', Venue::class)) {
+            $menu[] = [
+                'name' => 'Venues (Competitions)',
+                'href' => route('venues.index', [], false),
+            ];
+        }
+
+        return $menu;
+    }
+
+    public function competitions()
+    {
+        $menu = [];
+
+        $menu[] = [
+            'name' => 'Home',
+            'href' => route('competitions.index'),
         ];
 
         return $menu;

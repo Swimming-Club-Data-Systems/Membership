@@ -65,12 +65,24 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
         handleReset();
     };
 
-    const numErrors = Object.keys(errors).reduce((total, current) => {
-        if (errors[current].length > 0 && touched[current]) {
-            total += 1;
-        }
-        return total;
-    }, 0);
+    const calculateNumberOfErrors = (errors, touched) => {
+        if (errors === undefined) return 0;
+        return Object.keys(errors).reduce((total, current) => {
+            if (Array.isArray(errors[current])) {
+                for (let i = 0; i < errors[current].length; i++) {
+                    total += calculateNumberOfErrors(
+                        errors[current][i],
+                        touched?.[current]?.[i] || {}
+                    );
+                }
+            } else if (errors[current].length > 0 && touched?.[current]) {
+                total += 1;
+            }
+            return total;
+        }, 0);
+    };
+
+    const numErrors = calculateNumberOfErrors(errors, touched);
 
     return (
         <div className="flex gap-4 items-center justify-between">
@@ -149,21 +161,21 @@ export const UnknownError = () => {
 };
 
 const HandleServerErrors = () => {
-    const formSpecialContext = useContext(FormSpecialContext);
+    const { formName, setStatus } = useContext(FormSpecialContext);
 
     // If we're scoped, get those errors, otherwise just the errors
-    const errors = formSpecialContext.formName
-        ? usePage().props?.errors[formSpecialContext.formName]
+    const errors = formName
+        ? usePage().props?.errors[formName]
         : usePage().props.errors;
 
     const { setSubmitting } = useFormikContext();
 
     useEffect(() => {
         if (errors) {
-            formSpecialContext.setStatus(errors);
+            setStatus(errors);
             setSubmitting(false);
         }
-    }, [errors]);
+    }, [setStatus, setSubmitting, errors]);
 
     return null;
 };
@@ -226,6 +238,8 @@ export type FormProps = {
         message: string | ReactNode;
         confirmText?: string;
     };
+    /** Default is `false`. Control whether Formik should reset the form if `initialValues` changes (using deep equality). */
+    enableReinitialize?: boolean;
 };
 
 const Form = (props: FormProps) => {
@@ -250,6 +264,7 @@ const Form = (props: FormProps) => {
         disabled = false,
         readOnly = false,
         onSuccess,
+        enableReinitialize = true,
         ...otherProps
     } = props;
 
@@ -347,7 +362,7 @@ const Form = (props: FormProps) => {
                 initialValues={mergedValues}
                 validationSchema={validationSchema}
                 onSubmit={onSubmitHandler}
-                enableReinitialize
+                enableReinitialize={enableReinitialize}
             >
                 {(formikProps) => {
                     const onConfirm = async () => {

@@ -57,4 +57,27 @@ class OAuthLogin
 
         return $provider;
     }
+
+    public static function getMultiTenantProvider(string $redirectUri = null): GenericProvider
+    {
+        if (! config('central.aad.client_id')) {
+            abort(404);
+        }
+
+        if (! $redirectUri) {
+            $redirectUri = route('central.aad.verify');
+        }
+
+        $provider = new GenericProvider([
+            'clientId' => config('central.aad.client_id'),    // The client ID assigned to you by the provider
+            'clientSecret' => config('central.aad.client_secret'),    // The client password assigned to you by the provider
+            'redirectUri' => $redirectUri,
+            'urlAuthorize' => config('central.aad.url_authorize'),
+            'urlAccessToken' => config('central.aad.url_access_token'),
+            'urlResourceOwnerDetails' => '',
+            'scopes' => 'openid email profile user.read',
+        ]);
+
+        return $provider;
+    }
 }

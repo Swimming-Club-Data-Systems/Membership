@@ -7,6 +7,7 @@ interface AProps {
     external?: boolean;
     as?: string;
     children: React.ReactNode;
+    className?: string;
 }
 
 const A: React.FC<AProps> = (props) => {
@@ -15,7 +16,7 @@ const A: React.FC<AProps> = (props) => {
     return <a {...props} target={target} />;
 };
 
-interface LinkProps extends AProps {
+export interface LinkProps extends AProps {
     method?: string;
 }
 

@@ -133,7 +133,7 @@ class GalaEntry extends Model implements PaidObject
         // TODO: Implement handleChargedBack() method.
     }
 
-    public function handleRefund(int $refundAmount): void
+    public function handleRefund(int $refundAmount, int $totalAmountRefunded): void
     {
         $this->Refunded = true;
         $this->AmountRefunded = $this->AmountRefunded + $refundAmount;

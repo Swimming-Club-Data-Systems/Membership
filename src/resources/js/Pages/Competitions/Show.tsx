@@ -20,10 +20,15 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import Modal from "@/Components/Modal";
 import { VenueCombobox } from "@/Components/Venues/VenueCombobox";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
+import DateTimeInput, {
+    DateTimeInputTimezones,
+} from "@/Components/Form/DateTimeInput";
 import formatISO from "date-fns/formatISO";
-import ValidationErrors from "@/Components/ValidationErrors";
 import FlashAlert from "@/Components/FlashAlert";
+import ActionPanel from "@/Components/ActionPanel";
+import { courseLength } from "@/Utils/Competitions/CourseLength";
+import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
+import Select from "@/Components/Form/Select";
 
 type Session = {
     id: number;
@@ -56,6 +61,10 @@ export type Props = {
     };
     sessions: Session[];
     editable: boolean;
+    members_can_enter: boolean;
+    guests_can_enter: boolean;
+    timezones: DateTimeInputTimezones;
+    org_timezone: string;
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -123,6 +132,7 @@ const Show: Layout<Props> = (props: Props) => {
                             .required(
                                 "A start time is required for this session."
                             ),
+                        timezone: yup.string().required(),
                         end_time: yup
                             .date()
                             .required(
@@ -137,6 +147,7 @@ const Show: Layout<Props> = (props: Props) => {
                         name: `Session ${props.sessions.length + 1}`,
                         venue: props.venue.id,
                         start_time: time,
+                        timezone: props.org_timezone,
                         end_time: time,
                     }}
                     alwaysClearable
@@ -164,6 +175,12 @@ const Show: Layout<Props> = (props: Props) => {
                         label="End time"
                         showTimeInput
                     />
+
+                    <Select
+                        name="timezone"
+                        label="Session timezone"
+                        items={props.timezones}
+                    />
                 </Form>
             </Modal>
         );
@@ -178,7 +195,7 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "length",
             term: "Pool length",
-            definition: props.pool_course,
+            definition: courseLength(props.pool_course),
         },
         {
             key: "age_at_date",
@@ -188,11 +205,11 @@ const Show: Layout<Props> = (props: Props) => {
         {
             key: "status",
             term: "Status",
-            definition: props.status,
+            definition: competitionStatus(props.status),
         },
         {
             key: "require_times",
-            term: "Require times",
+            term: "Requires times",
             definition: props.require_times ? "Yes" : "No",
         },
         {
@@ -202,7 +219,7 @@ const Show: Layout<Props> = (props: Props) => {
         },
         {
             key: "coach_enters",
-            term: "Coach selects swims",
+            term: "Coaches select swims",
             definition: props.coach_enters ? "Yes" : "No",
         },
     ];
@@ -244,6 +261,46 @@ const Show: Layout<Props> = (props: Props) => {
 
                 <div className="grid grid-cols-12 gap-6">
                     <div className="col-start-1 col-span-7 flex flex-col gap-6">
+                        <FlashAlert />
+
+                        {(props.members_can_enter ||
+                            props.guests_can_enter) && (
+                            <ActionPanel
+                                title="This competition is open for entries"
+                                buttons={
+                                    <>
+                                        {props.members_can_enter && (
+                                            <ButtonLink
+                                                href=""
+                                                className="mr-3"
+                                            >
+                                                Enter now
+                                            </ButtonLink>
+                                        )}
+                                        {props.guests_can_enter && (
+                                            <Link
+                                                href={route(
+                                                    "competitions.enter_as_guest",
+                                                    props.id
+                                                )}
+                                            >
+                                                Enter as guest{" "}
+                                                <span aria-hidden="true">
+                                                    {" "}
+                                                    &rarr;
+                                                </span>
+                                            </Link>
+                                        )}
+                                    </>
+                                }
+                            >
+                                <p>
+                                    You can enter this competition until{" "}
+                                    {formatDateTime(props.closing_date)}.
+                                </p>
+                            </ActionPanel>
+                        )}
+
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />
                         </Card>
@@ -264,7 +321,16 @@ const Show: Layout<Props> = (props: Props) => {
                             <BasicList items={props.sessions.map(Session)} />
                         </Card>
                         <Card title="Entrants">
-                            Shows info about your members and entrants
+                            <div className="text-sm">
+                                <Link
+                                    href={route(
+                                        "competitions.guest_entries.index",
+                                        [props.id]
+                                    )}
+                                >
+                                    View guest entries
+                                </Link>
+                            </div>
                         </Card>
                     </div>
                     <div className="row-start-1 col-start-8 col-span-5">

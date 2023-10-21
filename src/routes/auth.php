@@ -28,6 +28,9 @@ Route::middleware('guest')->group(function () {
     Route::get('login/oauth-verify', [OAuthLoginController::class, 'verify'])
         ->name('login.oauth_verify');
 
+    Route::get('login/oauth-email', [OAuthLoginController::class, 'signedEmail'])
+        ->name('login.signed_email');
+
     Route::post('login/check-username', [AuthenticatedSessionController::class, 'checkUsername'])
         ->name('login.check_user');
 

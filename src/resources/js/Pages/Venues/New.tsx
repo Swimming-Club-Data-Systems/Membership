@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -25,26 +25,27 @@ const MapComponent: React.FC = () => {
 
     const autocomplete = useRef(null);
 
-    const { setFieldValue, setFieldTouched, validateField } =
-        useFormikContext();
+    const { setFieldValue } = useFormikContext();
 
-    const autocompleteChanged = () => {
+    const autocompleteChanged = useCallback(() => {
         const place = autocomplete.current.getPlace();
 
-        setFieldValue("name", place.name);
-        setFieldValue("formatted_address", place.formatted_address);
-        setFieldValue("vicinity", place.vicinity);
-        setFieldValue("website", place.website);
-        setFieldValue("plus_code_global", place.plus_code.global_code);
-        setFieldValue("plus_code_compound", place.plus_code.compound_code);
-        setFieldValue("place_id", place.place_id);
-        setFieldValue("long", place.geometry.location.lng());
-        setFieldValue("lat", place.geometry.location.lat());
-        setFieldValue("phone", place.international_phone_number);
-        setFieldValue("google_maps_url", place.url);
-        setFieldValue("address_components", place.address_components);
-        setFieldValue("html_attributions", place.html_attributions);
-    };
+        if (place) {
+            setFieldValue("name", place.name);
+            setFieldValue("formatted_address", place.formatted_address);
+            setFieldValue("vicinity", place.vicinity);
+            setFieldValue("website", place.website);
+            setFieldValue("plus_code_global", place.plus_code.global_code);
+            setFieldValue("plus_code_compound", place.plus_code.compound_code);
+            setFieldValue("place_id", place.place_id);
+            setFieldValue("long", place.geometry.location.lng());
+            setFieldValue("lat", place.geometry.location.lat());
+            setFieldValue("phone", place.international_phone_number);
+            setFieldValue("google_maps_url", place.url);
+            setFieldValue("address_components", place.address_components);
+            setFieldValue("html_attributions", place.html_attributions);
+        }
+    }, [setFieldValue]);
 
     useEffect(() => {
         const options = {
@@ -70,7 +71,7 @@ const MapComponent: React.FC = () => {
             options
         );
         autocomplete.current.addListener("place_changed", autocompleteChanged);
-    }, []);
+    }, [autocompleteChanged]);
 
     return (
         <TextInput
@@ -96,6 +97,7 @@ const Map = ({ google_maps_api_key }: { google_maps_api_key: string }) => {
         return (
             <>
                 <iframe
+                    title="Map view"
                     className="mb-3"
                     width="100%"
                     height="450"

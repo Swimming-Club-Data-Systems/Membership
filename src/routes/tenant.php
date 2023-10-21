@@ -4,7 +4,11 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
+use App\Http\Controllers\Tenant\CompetitionEntryController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -21,6 +25,7 @@ use App\Http\Controllers\Tenant\PaymentTransactionController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
+use App\Http\Controllers\Tenant\SquadController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
@@ -136,6 +141,14 @@ Route::middleware([
         Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
         Route::any('/{path}', function ($path) {
             return Inertia::location('/v1/members/'.$path);
+        })->where('path', '.*');
+    });
+
+    Route::prefix('/squads')->group(function () {
+        Route::get('/', [SquadController::class, 'index']);
+        Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('squads.show');
+        Route::any('/{path}', function ($path) {
+            return Inertia::location('/v1/squads/'.$path);
         })->where('path', '.*');
     });
 
@@ -361,6 +374,17 @@ Route::middleware([
                 Route::get('/edit', [CompetitionController::class, 'edit'])
                     ->name('edit');
                 Route::put('/', [CompetitionController::class, 'update']);
+                Route::prefix('entries')->group(function () {
+                    Route::get('/', [CompetitionEntryController::class, 'index']);
+                    Route::get('/{entry}', [CompetitionEntryController::class, 'show']);
+                });
+                Route::prefix('guest-entries')->group(function () {
+                    Route::get('/', [CompetitionGuestEntryController::class, 'index'])
+                        ->name('guest_entries.index');
+                    Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
+                        ->name('guest_entries.show');
+                    Route::put('/{entry}', [CompetitionGuestEntryController::class, 'update']);
+                });
                 Route::prefix('sessions')->group(function () {
                     Route::name('sessions.')->group(function () {
                         Route::get('/', [CompetitionSessionController::class, 'show'])
@@ -383,7 +407,27 @@ Route::middleware([
                             ->name('events.delete');
                     });
                 });
-            })->whereNumber('competition');
+                Route::prefix('/enter-as-guest')->group(function () {
+                    Route::get('/', [CompetitionGuestEntryHeaderController::class, 'new'])
+                        ->name('enter_as_guest');
+                    Route::post('/', [CompetitionGuestEntryHeaderController::class, 'create']);
+                    Route::get('/{header}', [CompetitionGuestEntryHeaderController::class, 'show'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.show');
+                    Route::get('/{header}/pay-now', [CompetitionGuestEntryPaymentController::class, 'start'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.pay');
+                    Route::post('/{header}/express-pay', [CompetitionGuestEntryPaymentController::class, 'startJson'])
+                        ->whereUuid('header')
+                        ->name('enter_as_guest.express_pay');
+                    Route::get('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'editEntry'])
+                        ->whereUuid(['header', 'entrant'])
+                        ->name('enter_as_guest.edit_entry');
+                    Route::put('/{header}/entry/{entrant}', [CompetitionGuestEntryHeaderController::class, 'updateEntry'])
+                        ->whereUuid(['header', 'entrant']);
+                });
+
+            });
         });
     });
 

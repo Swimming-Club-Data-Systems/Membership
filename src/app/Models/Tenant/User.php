@@ -14,6 +14,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -50,6 +51,7 @@ use Stripe\Exception\InvalidRequestException;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $gravatar_url
+ * @property Collection $competitionGuestEntryHeaders
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -340,6 +342,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function statements(): HasMany
     {
         return $this->hasMany(CustomerStatement::class);
+    }
+
+    public function competitionGuestEntryHeaders(): HasMany
+    {
+        return $this->hasMany(CompetitionGuestEntryHeader::class);
     }
 
     /**

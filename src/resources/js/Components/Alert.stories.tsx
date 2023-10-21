@@ -20,10 +20,29 @@ type Story = StoryObj<typeof Alert>;
  * See https://storybook.js.org/docs/react/api/csf
  * to learn how to use render functions.
  */
-export const Primary: Story = {
+export const Success: Story = {
     render: ({ children, ...args }) => <Alert {...args}>{children}</Alert>,
 };
-Primary.args = {
+Success.args = {
     title: "Success",
     children: "Test",
+    variant: "success",
+};
+
+export const Warning: Story = {
+    render: ({ children, ...args }) => <Alert {...args}>{children}</Alert>,
+};
+Warning.args = {
+    title: "Warning",
+    children: "Test",
+    variant: "warning",
+};
+
+export const Error: Story = {
+    render: ({ children, ...args }) => <Alert {...args}>{children}</Alert>,
+};
+Error.args = {
+    title: "Error",
+    children: "Test",
+    variant: "error",
 };

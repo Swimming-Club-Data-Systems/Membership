@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
+use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
@@ -48,7 +53,7 @@ class CompetitionController extends Controller
                     ->where('Tenant', tenant('ID'))
                     ->paginate(config('app.per_page'));
             } else {
-                $competitions = Competition::where('public')
+                $competitions = Competition::where('public', true)
                     ->where('status', '!=', CompetitionStatus::DRAFT)
                     ->orderBy('gala_date', 'desc')
                     ->paginate(config('app.per_page'));
@@ -100,6 +105,9 @@ class CompetitionController extends Controller
     public function create(Request $request): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('create', Competition::class);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
         $validated = $request->validate([
             'name' => [
@@ -161,6 +169,14 @@ class CompetitionController extends Controller
                 'required',
                 new Enum(CompetitionMode::class),
             ],
+            'open_to' => [
+                'required',
+                new Enum(CompetitionOpenTo::class),
+            ],
+            'custom_fields' => [
+                'nullable',
+                'json',
+            ],
         ]);
 
         $competition = new Competition();
@@ -174,11 +190,20 @@ class CompetitionController extends Controller
         $competition->public = $request->boolean('public');
         $competition->default_entry_fee_string = $request->string('default_entry_fee');
         $competition->processing_fee_string = $request->string('processing_fee');
-        $competition->closing_date = $request->date('closing_date');
-        $competition->age_at_date = $request->date('age_at_date');
+        $competition->custom_fields = json_decode($request->json('custom_fields')) ?? [];
+        $competition->closing_date = $request->date(
+            'closing_date',
+            null,
+            $tenant->timezone,
+        )->setTimezone(new \DateTimeZone('UTC'));
+        $competition->age_at_date = $request->date(
+            'age_at_date',
+        );
         $competition->mode = $request->enum('setup_type', CompetitionMode::class);
         if ($competition->mode == CompetitionMode::BASIC) {
-            $competition->gala_date = $request->date('gala_date');
+            $competition->gala_date = $request->date(
+                'gala_date',
+            );
         } else {
             $competition->gala_date = $competition->age_at_date;
         }
@@ -194,6 +219,23 @@ class CompetitionController extends Controller
     public function show(Competition $competition, Request $request): \Inertia\Response
     {
         $this->authorize('view', $competition);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        // Get entries for this user
+        //        /** @var User $user */
+        //        $user = $request->user();
+        //        $competitionEntryHeaders = $user->competitionGuestEntryHeaders()->with(['competitionGuestEntrants']);
+        //        foreach ($competitionEntryHeaders as $competitionEntryHeader) {
+        //            /** @var CompetitionGuestEntryHeader $competitionEntryHeader */
+        //            foreach ($competitionEntryHeader->competitionGuestEntrant as $competitionGuestEntrant) {
+        //
+        //            }
+        //        }
+
+        /** @var User $user */
+        $user = $request->user() ?? new User();
 
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
@@ -219,7 +261,12 @@ class CompetitionController extends Controller
                 'formatted_address' => $competition->venue->formatted_address,
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
-            'editable' => $request->user()?->can('update', $competition),
+            'editable' => $user->can('update', $competition),
+            'members_can_enter' => ($competition->open_to === CompetitionOpenTo::MEMBERS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enter', $competition),
+            'guests_can_enter' => ($competition->open_to === CompetitionOpenTo::GUESTS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enterAsGuest', $competition),
+            'open_to' => $competition->open_to,
+            'timezones' => $user->can('update', $competition) ? Timezones::getTimezoneSelectList() : [],
+            'org_timezone' => $tenant->timezone,
         ]);
     }
 
@@ -240,11 +287,13 @@ class CompetitionController extends Controller
                 'requires_approval' => $competition->requires_approval,
                 'status' => $competition->status,
                 'public' => $competition->public,
-                'default_entry_fee_string' => $competition->default_entry_fee_string,
-                'processing_fee_string' => $competition->processing_fee_string,
+                'default_entry_fee' => $competition->default_entry_fee_string,
+                'processing_fee' => $competition->processing_fee_string,
                 'closing_date' => $competition->closing_date,
                 'age_at_date' => $competition->age_at_date,
                 'venue' => $competition->venue->id,
+                'open_to' => $competition->open_to,
+                'custom_fields' => json_encode($competition->custom_fields, JSON_PRETTY_PRINT),
             ],
             'id' => $competition->id,
             'name' => $competition->name,
@@ -263,6 +312,9 @@ class CompetitionController extends Controller
     public function update(Competition $competition, Request $request): \Illuminate\Http\RedirectResponse
     {
         $this->authorize('update', $competition);
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
         $validated = $request->validate([
             'name' => [
@@ -314,13 +366,53 @@ class CompetitionController extends Controller
                 'required',
                 'date',
             ],
+            'status' => [
+                'required',
+                new Enum(CompetitionStatus::class),
+            ],
+            'open_to' => [
+                'required',
+                new Enum(CompetitionOpenTo::class),
+            ],
+            'custom_fields' => [
+                'nullable',
+                'json',
+            ],
         ]);
 
         $competition->fill($validated);
+
+        //        ddd([
+        //            $request->date('closing_date'),
+        //            $request->date(
+        //                'closing_date',
+        //                null,
+        //                'Europe/Berlin'
+        //            ),
+        //        ]);
+
+        $competition->default_entry_fee_string = $request->string('default_entry_fee');
+        $competition->processing_fee_string = $request->string('processing_fee');
+
+        $competition->closing_date = $request->date(
+            'closing_date',
+            null,
+            $tenant->timezone
+        )->setTimezone(new \DateTimeZone('UTC'));
+
+        $competition->age_at_date = $request->date(
+            'age_at_date',
+            //            null,
+            //            $request->string('age_at_date_timezone', 'Europe/London')
+        );
+
+        $competition->custom_fields = json_decode($request->json('custom_fields')) ?? [];
+
         $competition->venue()->associate($validated['venue']);
         $competition->save();
 
         // Flash message
+        $request->session()->flash('success', 'Changes saved successfully.');
 
         return redirect()->route('competitions.show', $competition);
     }
