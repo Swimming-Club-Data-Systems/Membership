@@ -31,6 +31,7 @@ export type Props = {
     competition: {
         name: string;
         id: number;
+        require_times: boolean;
     };
     header: {
         id: string;
@@ -112,7 +113,11 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
             <Container noMargin>
                 <div className="grid gap-4">
                     {props.paid && (
-                        <Alert title="Entry locked" variant="warning">
+                        <Alert
+                            title="Entry locked"
+                            variant="warning"
+                            className="mb-4"
+                        >
                             This entry has been paid for and can now no longer
                             be amended. You can amend some of{" "}
                             {props.entrant.first_name}'s personal details if
@@ -120,21 +125,19 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
                             {props.tenant.name} directly.
                         </Alert>
                     )}
-
-                    <EntryForm
-                        sessions={props.sessions}
-                        action={route(
-                            "competitions.enter_as_guest.edit_entry",
-                            {
-                                competition: props.competition.id,
-                                header: props.id,
-                                entrant: props.entrant.id,
-                            }
-                        )}
-                        readOnly={props.paid}
-                    />
                 </div>
             </Container>
+
+            <EntryForm
+                requireTimes={props.competition.require_times}
+                sessions={props.sessions}
+                action={route("competitions.enter_as_guest.edit_entry", {
+                    competition: props.competition.id,
+                    header: props.id,
+                    entrant: props.entrant.id,
+                })}
+                readOnly={props.paid}
+            />
         </>
     );
 };

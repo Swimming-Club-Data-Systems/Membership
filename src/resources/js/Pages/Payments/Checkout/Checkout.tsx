@@ -360,7 +360,9 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                             <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
                                 Payment Summary
                             </h2>
-                            <PaymentLineItemsSummary data={props.lines} />
+                            <div className="-mx-4 sm:mx-0">
+                                <PaymentLineItemsSummary data={props.lines} />
+                            </div>
                             {props.cancel_link && (
                                 <>
                                     <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">

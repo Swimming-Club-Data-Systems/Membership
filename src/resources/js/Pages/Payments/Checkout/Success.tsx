@@ -112,7 +112,9 @@ const Success: Layout<Props> = (props: Props) => {
                 <div className="mb-4">
                     <PaymentLineItemsSummary data={props.lines} />
                 </div>
+            </Container>
 
+            <Container>
                 <p className="text-sm text-gray-900">
                     Payments and refunds are subject to the published terms and
                     conditions.

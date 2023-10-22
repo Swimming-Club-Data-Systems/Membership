@@ -161,21 +161,21 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                 ></MainHeader>
             </Container>
 
-            <Container noMargin>
-                <Form
-                    removeDefaultInputMargin={true}
-                    hideDefaultButtons
-                    validationSchema={validationSchema}
-                    initialValues={initialValues}
-                    submitTitle="Next step"
-                    action={route(
-                        "competitions.enter_as_guest",
-                        props.competition.id
-                    )}
-                    method="post"
-                    hideErrors
-                    enableReinitialize={false}
-                >
+            <Form
+                removeDefaultInputMargin={true}
+                hideDefaultButtons
+                validationSchema={validationSchema}
+                initialValues={initialValues}
+                submitTitle="Next step"
+                action={route(
+                    "competitions.enter_as_guest",
+                    props.competition.id
+                )}
+                method="post"
+                hideErrors
+                enableReinitialize={false}
+            >
+                <Container noMargin>
                     <FlashAlert />
                     <RenderServerErrors />
 
@@ -346,11 +346,15 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                 </p>
                             </div>
                         </Card>
+                    </div>
+                </Container>
 
+                <Container>
+                    <div className="mt-6">
                         <SubmissionButtons />
                     </div>
-                </Form>
-            </Container>
+                </Container>
+            </Form>
         </>
     );
 };

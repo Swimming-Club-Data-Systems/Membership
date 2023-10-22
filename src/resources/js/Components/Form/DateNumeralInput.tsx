@@ -148,7 +148,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                 <div className="w-20">
                                     <label
                                         htmlFor={`${controlId}_year`}
-                                        className="block text-sm font-medium text-gray-500"
+                                        className="block text-sm mb-1 font-medium text-gray-500"
                                     >
                                         Year
                                     </label>
@@ -171,7 +171,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                 <div className="w-14">
                                     <label
                                         htmlFor={`${controlId}_month`}
-                                        className="block text-sm font-medium text-gray-500"
+                                        className="block text-sm mb-1 font-medium text-gray-500"
                                     >
                                         Month
                                     </label>
@@ -194,7 +194,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                 <div className="w-14">
                                     <label
                                         htmlFor={`${controlId}_day`}
-                                        className="block text-sm font-medium text-gray-500"
+                                        className="block text-sm mb-1 font-medium text-gray-500"
                                     >
                                         Day
                                     </label>
