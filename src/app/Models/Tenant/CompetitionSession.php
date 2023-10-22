@@ -38,6 +38,7 @@ class CompetitionSession extends Model
         'sequence',
         'start_time',
         'end_time',
+        'timezone',
     ];
 
     /**

@@ -6,6 +6,7 @@ use App\Enums\CompetitionCategory;
 use App\Enums\EventCode;
 use App\Enums\Stroke;
 use App\Events\Tenant\CompetitionCreated;
+use App\Models\Central\Tenant;
 use App\Models\Tenant\CompetitionEvent;
 use App\Models\Tenant\CompetitionSession;
 
@@ -27,12 +28,16 @@ class PopulateBasicCompetition
         // Create a single session, with date gala date
         // Populate the session with OPEN and FEMALE events
 
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
         /** @var CompetitionSession $session */
         $session = $event->competition->sessions()->create([
             'name' => 'Session',
             'sequence' => 1,
             'start_time' => $event->competition->gala_date,
             'end_time' => $event->competition->gala_date,
+            'timezone' => $tenant->timezone,
         ]);
 
         $events = [

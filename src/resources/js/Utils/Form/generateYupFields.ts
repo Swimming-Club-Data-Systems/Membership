@@ -36,11 +36,13 @@ const generateYup = (field: Field) => {
 const generateYupFields = (fields: Field[]) => {
     const yupFields = {};
 
-    fields.forEach((field) => {
-        if (field.name) {
-            yupFields[field.name] = generateYup(field);
-        }
-    });
+    if (fields) {
+        fields.forEach((field) => {
+            if (field.name) {
+                yupFields[field.name] = generateYup(field);
+            }
+        });
+    }
 
     return yupFields;
 };

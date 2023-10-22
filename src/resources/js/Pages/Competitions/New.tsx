@@ -154,7 +154,7 @@ const New: Layout<Props> = (props: Props) => {
                         age_at_date: todaysDate,
                         gala_date: todaysDate,
                         setup_type: "basic",
-                        open_to: "members",
+                        open_to: "guests", // Change to "members" later
                         custom_fields: "",
                     }}
                     submitTitle="Next step"
@@ -250,7 +250,7 @@ const New: Layout<Props> = (props: Props) => {
                                     name="setup_type"
                                     label="Basic"
                                     value="basic"
-                                    help="No sessions, created with default events. Remove events which don't apply."
+                                    help="No sessions, created with default events. You can remove any events which don't apply."
                                 />
                                 <Radio
                                     name="setup_type"
@@ -266,7 +266,7 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Custom field description JSON"
                                 help={
                                     <>
-                                        Define custom fields for guest
+                                        Optional. Define custom fields for guest
                                         competition entries.{" "}
                                         <Link
                                             external

@@ -23,6 +23,7 @@ import generateFields from "@/Utils/Form/generateFields";
 import { Field } from "@/Utils/Form/Field";
 import generateYupFields from "@/Utils/Form/generateYupFields";
 import Link from "@/Components/Link";
+import DateNumeralInput from "@/Components/Form/DateNumeralInput";
 
 export type Props = {
     google_maps_api_key: string;
@@ -117,6 +118,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                         .max(50, "Last name must be at most 50 characters."),
                     date_of_birth: yup
                         .date()
+                        .typeError("A valid date is required.")
                         .required("A date of birth is required.")
                         .min(
                             "1900-01-01",
@@ -260,7 +262,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                                         />
                                                     </div>
                                                     <div className="col-start-1 col-end-13">
-                                                        <DateTimeInput
+                                                        <DateNumeralInput
                                                             name={`swimmers[${index}].date_of_birth`}
                                                             label="Date of birth"
                                                             min="1900-01-01"
