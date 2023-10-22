@@ -1,18 +1,11 @@
-import React, { JSX, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
-import ButtonLink from "@/Components/ButtonLink";
-import ActionPanel from "@/Components/ActionPanel";
 import Link from "@/Components/Link";
-import { formatDate, formatDateTime } from "@/Utils/date-utils";
-import Card from "@/Components/Card";
-import { DefinitionList } from "@/Components/DefinitionList";
-import Button from "@/Components/Button";
-import BasicList from "@/Components/BasicList";
+import { formatDate } from "@/Utils/date-utils";
 import MainLayout from "@/Layouts/MainLayout";
-import GuestEntryShow from "@/Pages/Competitions/Entries/GuestEntryShow";
-import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
+import { LaravelPaginatorProps } from "@/Components/Collection";
 import Badge from "@/Components/Badge";
 import PlainCollection from "@/Components/PlainCollection";
 import { usePage } from "@inertiajs/react";
@@ -56,10 +49,6 @@ interface EntryProps {
         id: number;
         name: string;
     };
-}
-
-interface Entries extends LaravelPaginatorProps {
-    data: EntryProps[];
 }
 
 type GuestEntryListProps = {

@@ -8,7 +8,6 @@ import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import TextArea from "@/Components/Form/TextArea";
-import formatISO from "date-fns/formatISO";
 import Checkbox from "@/Components/Form/Checkbox";
 import DecimalInput from "@/Components/Form/DecimalInput";
 import Radio from "@/Components/Form/Radio";
@@ -39,10 +38,6 @@ export const CompetitionOpenToSelectValues = [
 ];
 
 const New: Layout<Props> = (props: Props) => {
-    const todaysDate = formatISO(Date.now(), {
-        representation: "date",
-    });
-
     return (
         <>
             <Head

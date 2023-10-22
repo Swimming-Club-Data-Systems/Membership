@@ -50,6 +50,8 @@ const MainLayout: React.FC<Props> = ({
 
     const navigation = usePage().props.tenant.menu;
 
+    const url = usePage().url;
+
     const user = userObject
         ? {
               name: `${userObject.Forename} ${userObject.Surname}`,
@@ -564,10 +566,7 @@ const MainLayout: React.FC<Props> = ({
                                         </div>
                                     )}
                                     <div className="hidden sm:block">
-                                        <ol
-                                            role="list"
-                                            className="flex items-center space-x-4"
-                                        >
+                                        <ol className="flex items-center space-x-4">
                                             <li>
                                                 <div>
                                                     <Link
@@ -600,8 +599,7 @@ const MainLayout: React.FC<Props> = ({
                                                             href={
                                                                 item.route ===
                                                                 "this"
-                                                                    ? usePage()
-                                                                          .url
+                                                                    ? url
                                                                     : route(
                                                                           item.route,
                                                                           item.routeParams

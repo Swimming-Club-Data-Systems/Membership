@@ -1,4 +1,3 @@
-import React from "react";
 import { decrement, increment, store } from "@/Reducers/store";
 import axios from "axios";
 

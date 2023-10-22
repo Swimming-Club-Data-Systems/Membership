@@ -1,23 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
-import {
-    Elements,
-    PaymentElement,
-    PaymentRequestButtonElement,
-    useElements,
-    useStripe,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import Form, { SubmissionButtons } from "@/Components/Form/Form";
-import * as yup from "yup";
-import Alert from "@/Components/Alert";
-import Select from "@/Components/Form/Select";
-import Card from "@/Components/Card";
-import Table from "@/Components/Table";
 
 type Props = {
     id: number;

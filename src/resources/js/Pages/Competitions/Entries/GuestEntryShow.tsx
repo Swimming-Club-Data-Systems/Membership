@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -25,6 +25,7 @@ import {
 } from "@stripe/stripe-js";
 import axios from "@/Utils/axios";
 import { usePage } from "@inertiajs/react";
+import { appearance } from "@/Utils/Stripe/Appearance";
 
 export type Props = {
     google_maps_api_key: string;
@@ -197,7 +198,7 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
         mode: "payment",
         amount: props.amount,
         currency: props.currency,
-        appearance: {},
+        appearance: appearance,
     };
 
     useEffect(() => {

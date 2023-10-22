@@ -5,10 +5,6 @@ import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { formatDate } from "@/Utils/date-utils";
-import Table from "@/Components/Table";
-import Card from "@/Components/Card";
-import Stats from "@/Components/Stats";
-import Stat from "@/Components/Stat";
 import {
     StatementContent,
     StatementContentProps,

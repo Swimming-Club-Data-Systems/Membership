@@ -13,7 +13,6 @@ import TextInput from "@/Components/Form/TextInput";
 import Card from "@/Components/Card";
 import { FieldArray, useField } from "formik";
 import Button from "@/Components/Button";
-import DateTimeInput from "@/Components/Form/DateTimeInput";
 import { formatISO } from "date-fns";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import Radio from "@/Components/Form/Radio";
@@ -23,6 +22,7 @@ import generateFields from "@/Utils/Form/generateFields";
 import { Field } from "@/Utils/Form/Field";
 import generateYupFields from "@/Utils/Form/generateYupFields";
 import Link from "@/Components/Link";
+import DateNumeralInput from "@/Components/Form/DateNumeralInput";
 
 export type Props = {
     google_maps_api_key: string;
@@ -117,6 +117,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                         .max(50, "Last name must be at most 50 characters."),
                     date_of_birth: yup
                         .date()
+                        .typeError("A valid date is required.")
                         .required("A date of birth is required.")
                         .min(
                             "1900-01-01",
@@ -159,21 +160,21 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                 ></MainHeader>
             </Container>
 
-            <Container noMargin>
-                <Form
-                    removeDefaultInputMargin={true}
-                    hideDefaultButtons
-                    validationSchema={validationSchema}
-                    initialValues={initialValues}
-                    submitTitle="Next step"
-                    action={route(
-                        "competitions.enter_as_guest",
-                        props.competition.id
-                    )}
-                    method="post"
-                    hideErrors
-                    enableReinitialize={false}
-                >
+            <Form
+                removeDefaultInputMargin={true}
+                hideDefaultButtons
+                validationSchema={validationSchema}
+                initialValues={initialValues}
+                submitTitle="Next step"
+                action={route(
+                    "competitions.enter_as_guest",
+                    props.competition.id
+                )}
+                method="post"
+                hideErrors
+                enableReinitialize={false}
+            >
+                <Container noMargin>
                     <FlashAlert />
                     <RenderServerErrors />
 
@@ -260,7 +261,7 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                                         />
                                                     </div>
                                                     <div className="col-start-1 col-end-13">
-                                                        <DateTimeInput
+                                                        <DateNumeralInput
                                                             name={`swimmers[${index}].date_of_birth`}
                                                             label="Date of birth"
                                                             min="1900-01-01"
@@ -344,11 +345,15 @@ const NewGuestEntryHeader: Layout<Props> = (props: Props) => {
                                 </p>
                             </div>
                         </Card>
+                    </div>
+                </Container>
 
+                <Container>
+                    <div className="mt-6">
                         <SubmissionButtons />
                     </div>
-                </Form>
-            </Container>
+                </Container>
+            </Form>
         </>
     );
 };

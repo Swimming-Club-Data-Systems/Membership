@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Field } from "@/Utils/Form/Field";
 import TextInput from "@/Components/Form/TextInput";
 import DecimalInput from "@/Components/Form/DecimalInput";
@@ -14,12 +14,16 @@ const P = ({ children }) => (
     </div>
 );
 
-const generateFields = (fields: FieldsArray, namePrefix?: string) => {
+const generateFields = (
+    fields: FieldsArray,
+    namePrefix?: string
+): ReactNode[] => {
     // Take an array of fields and recursively generate TSX/JSX
-    return fields.map((field) => generateTsx(field, namePrefix));
+    if (fields) return fields.map((field) => generateTsx(field, namePrefix));
+    return null;
 };
 
-const generateTsx = (field: Field, namePrefix?: string) => {
+const generateTsx = (field: Field, namePrefix?: string): ReactNode => {
     const Tag = getComponent(field.type);
 
     const { initialValue, type, name, ...props } = field;

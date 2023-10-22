@@ -5,6 +5,8 @@
     "build": "vite build && vite build --ssr",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "lint": "eslint ./resources",
+    "lint-fix": "eslint ./resources --fix",
     "chromatic": "npx chromatic --project-token=chpt_58e5f6e1f380507"
   },
   "devDependencies": {

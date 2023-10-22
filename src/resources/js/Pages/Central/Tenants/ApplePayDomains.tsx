@@ -44,13 +44,13 @@ type Props = {
     apple_pay_domains: ApplePayDomain[];
 };
 
-interface Layout<P> extends React.FC<P> {
+interface LayoutType<P> extends React.FC<P> {
     layout: (ReactNode) => ReactNode;
 }
 
-const ApplePayDomains: Layout<Props> = (props: Props) => {
+const ApplePayDomains: LayoutType<Props> = (props: Props) => {
     const [showDomainDeleteModal, setShowDomainDeleteModal] = useState(false);
-    const [showNewDomainModal, setShowNewDomainModal] = useState(false);
+    //const [showNewDomainModal, setShowNewDomainModal] = useState(false);
     const [domainDeleteModalData, setDomainDeleteModalData] =
         useState<ApplePayDomain | null>(null);
 

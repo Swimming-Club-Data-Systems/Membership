@@ -4,7 +4,7 @@ import { useEffect, useRef, useCallback } from "react";
 // event.stopPropagation() which could have unexpected and frustrating consequences for consumers.
 // Simple approach taken from https://github.com/facebook/react/issues/10962#issuecomment-444622208
 
-export default (
+const useClickAwayListener = (
     handleClickAway: (ev: Event) => void,
     eventTypeId: "mousedown" | "click" = "click"
 ) => {
@@ -36,3 +36,5 @@ export default (
 
     return onInsideClick;
 };
+
+export default useClickAwayListener;

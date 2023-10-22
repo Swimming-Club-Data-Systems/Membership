@@ -33,6 +33,8 @@ class CustomFields
 
                     if (Arr::get($field, 'required')) {
                         $rules[] = 'required';
+                    } elseif ($type == 'textarea' || $type == 'textbox') {
+                        $rules[] = 'nullable';
                     }
 
                     $items = Arr::get($field, 'items');

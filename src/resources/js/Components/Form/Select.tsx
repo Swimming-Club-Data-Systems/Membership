@@ -33,28 +33,21 @@ const Combobox: React.FC<Props> = ({
     className = "",
     keyField = "value",
     items,
+    name,
     ...props
 }) => {
-    const [{ onChange, ...field }, meta, { setValue, ...helpers }] =
-        useField(props);
+    const [{ onChange, ...field }, meta, { setValue }] = useField(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
-    const controlId =
-        (formName ? formName + "_" : "") + (props.id || props.name);
+    const controlId = (formName ? formName + "_" : "") + (props.id || name);
     const formSpecialContext = useContext(FormSpecialContext);
     const marginBotton =
         mb || formSpecialContext.removeDefaultInputMargin ? "" : "mb-6";
 
     if (!type) {
         type = "text";
-    }
-
-    let errorClasses = "";
-    if (isInvalid) {
-        errorClasses =
-            "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500";
     }
 
     if (!leftText) {
@@ -75,6 +68,7 @@ const Combobox: React.FC<Props> = ({
     return (
         <div className={marginBotton}>
             <BaseSelect
+                id={controlId}
                 keyField={keyField}
                 label={label}
                 name={name}

@@ -7,10 +7,12 @@ import DecimalInput from "@/Components/Form/DecimalInput";
 type EntryAdditionalDetailsProps = {
     /** The event object from the entry form */
     event: Event;
+    requireTimes: boolean;
 };
 
 export const EntryAdditionalDetails = ({
     event,
+    requireTimes,
 }: EntryAdditionalDetailsProps) => {
     const { values }: { values: { entries: { entering: boolean }[] } } =
         useFormikContext();
@@ -19,13 +21,15 @@ export const EntryAdditionalDetails = ({
     if (selected) {
         return (
             <div className="grid gap-4">
-                <div>
-                    <TextInput
-                        name={`entries.${event.sequence - 1}.entry_time`}
-                        label="Entry time"
-                        help={`An entry time is required for this event. Please enter your personal best time, if you have one.`}
-                    />
-                </div>
+                {requireTimes && (
+                    <div>
+                        <TextInput
+                            name={`entries.${event.sequence - 1}.entry_time`}
+                            label="Entry time"
+                            help={`An entry time is required for this event. Please enter your personal best time, if you have one.`}
+                        />
+                    </div>
+                )}
 
                 {false && (
                     <div>

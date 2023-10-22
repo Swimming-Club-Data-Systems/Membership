@@ -1,10 +1,11 @@
 import React from "react";
-import Form from "@/Components/Form/Form";
+import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Card from "@/Components/Card";
 import BasicList from "@/Components/BasicList";
 import Checkbox from "@/Components/Form/Checkbox";
 import { EntryAdditionalDetails } from "@/Components/Competitions/EntryAdditionalDetails";
+import Container from "@/Components/Container";
 
 export type Event = {
     id: number;
@@ -34,9 +35,15 @@ type EntryFormProps = {
     }[];
     action: string;
     readOnly: boolean;
+    requireTimes: boolean;
 };
 
-export const EntryForm = ({ sessions, action, readOnly }: EntryFormProps) => {
+export const EntryForm = ({
+    sessions,
+    action,
+    readOnly,
+    requireTimes,
+}: EntryFormProps) => {
     return (
         <>
             <Form
@@ -66,46 +73,60 @@ export const EntryForm = ({ sessions, action, readOnly }: EntryFormProps) => {
                 submitTitle="Save"
                 readOnly={readOnly}
                 enableReinitialize={false}
+                hideDefaultButtons
             >
-                <div className="grid gap-4">
-                    {sessions.map((session) => (
-                        <Card key={session.id} title={session.name}>
-                            <BasicList
-                                items={session.events.map((event) => {
-                                    return {
-                                        id: event.id,
-                                        content: (
-                                            <div
-                                                key={event.id}
-                                                className="@container"
-                                            >
-                                                <div className="grid gap-4 grid-cols-12">
-                                                    <div className="col-span-full @lg:col-span-5">
-                                                        <Checkbox
-                                                            name={`entries.${
-                                                                event.sequence -
-                                                                1
-                                                            }.entering`}
-                                                            label={event.name}
-                                                            help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
-                                                            mb="mb-0"
-                                                        />
-                                                    </div>
+                <Container noMargin>
+                    <div className="grid gap-4">
+                        {sessions.map((session) => (
+                            <Card key={session.id} title={session.name}>
+                                <BasicList
+                                    items={session.events.map((event) => {
+                                        return {
+                                            id: event.id,
+                                            content: (
+                                                <div
+                                                    key={event.id}
+                                                    className="@container"
+                                                >
+                                                    <div className="grid gap-4 grid-cols-12">
+                                                        <div className="col-span-full @lg:col-span-5">
+                                                            <Checkbox
+                                                                name={`entries.${
+                                                                    event.sequence -
+                                                                    1
+                                                                }.entering`}
+                                                                label={
+                                                                    event.name
+                                                                }
+                                                                help={`£${event.entry_fee_string} entry fee, £${event.processing_fee_string} processing fee`}
+                                                                mb="mb-0"
+                                                            />
+                                                        </div>
 
-                                                    <div className="col-span-full @lg:col-span-7">
-                                                        <EntryAdditionalDetails
-                                                            event={event}
-                                                        />
+                                                        <div className="col-span-full @lg:col-span-7">
+                                                            <EntryAdditionalDetails
+                                                                event={event}
+                                                                requireTimes={
+                                                                    requireTimes
+                                                                }
+                                                            />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        ),
-                                    };
-                                })}
-                            ></BasicList>
-                        </Card>
-                    ))}
-                </div>
+                                            ),
+                                        };
+                                    })}
+                                ></BasicList>
+                            </Card>
+                        ))}
+                    </div>
+                </Container>
+
+                <Container>
+                    <div className="mt-4">
+                        <SubmissionButtons />
+                    </div>
+                </Container>
             </Form>
         </>
     );

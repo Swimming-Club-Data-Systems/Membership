@@ -240,7 +240,7 @@ const Show: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title={props.name}
                     subtitle="Competition"
@@ -258,13 +258,14 @@ const Show: Layout<Props> = (props: Props) => {
                         </>
                     }
                 ></MainHeader>
+            </Container>
+
+            <Container noMargin>
+                <FlashAlert />
 
                 <div className="grid grid-cols-12 gap-6">
-                    <div className="col-start-1 col-span-7 flex flex-col gap-6">
-                        <FlashAlert />
-
-                        {(props.members_can_enter ||
-                            props.guests_can_enter) && (
+                    {(props.members_can_enter || props.guests_can_enter) && (
+                        <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <ActionPanel
                                 title="This competition is open for entries"
                                 buttons={
@@ -299,11 +300,16 @@ const Show: Layout<Props> = (props: Props) => {
                                     {formatDateTime(props.closing_date)}.
                                 </p>
                             </ActionPanel>
-                        )}
+                        </div>
+                    )}
 
+                    <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                         <Card title="Basic details">
                             <DefinitionList items={items} verticalPadding={2} />
                         </Card>
+                    </div>
+
+                    <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                         <Card
                             title="Schedule"
                             footer={
@@ -320,6 +326,9 @@ const Show: Layout<Props> = (props: Props) => {
                         >
                             <BasicList items={props.sessions.map(Session)} />
                         </Card>
+                    </div>
+
+                    <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                         <Card title="Entrants">
                             <div className="text-sm">
                                 <Link
@@ -333,12 +342,14 @@ const Show: Layout<Props> = (props: Props) => {
                             </div>
                         </Card>
                     </div>
-                    <div className="row-start-1 col-start-8 col-span-5">
+
+                    <div className="col-span-full row-span-6 md:row-start-1 md:col-start-8 md:col-span-5">
                         <Card title="Venue" subtitle={props.venue.name}>
                             <p className="text-sm">
                                 {props.venue.formatted_address}
                             </p>
                             <iframe
+                                title="Map"
                                 width="100%"
                                 height="400"
                                 style={{ border: 0 }}

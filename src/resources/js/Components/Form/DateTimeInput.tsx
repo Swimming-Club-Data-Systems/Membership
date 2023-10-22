@@ -6,9 +6,8 @@ import Input, { InputProps } from "@/Components/Form/base/Input";
 import { registerLocale } from "react-datepicker";
 import { enGB } from "date-fns/locale";
 import { parseISO, parse } from "date-fns";
-import { format, zonedTimeToUtc, utcToZonedTime } from "date-fns-tz";
+import { format } from "date-fns-tz";
 import TailwindDatepicker from "react-tailwindcss-datepicker";
-import Select from "@/Components/Form/Select";
 registerLocale("en-GB", enGB);
 
 export type DateTimeInputTimezone = {
@@ -76,12 +75,7 @@ const DateTimeInput: React.FC<Props> = ({
         className += " rounded-r-md ";
     }
 
-    const dateFormat = showTimeInput ? "dd/MM/yyyy HH:mm" : "dd/MM/yyyy";
-
     const calculatedValue = parseISO(field.value);
-    // if (props.timeZone) {
-    //     calculatedValue = utcToZonedTime(field.value, props.timeZone);
-    // }
 
     const dateValue = useMemo(() => {
         try {

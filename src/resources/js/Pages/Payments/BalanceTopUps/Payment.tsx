@@ -168,6 +168,7 @@ export const PaymentContent: React.FC<Props> = (props) => {
                                         )
                                         .max(
                                             yup.ref("amount_refundable"),
+                                            // eslint-disable-next-line no-template-curly-in-string
                                             "The amount to refund must be less than or equal to £${max}."
                                         ),
                                 })

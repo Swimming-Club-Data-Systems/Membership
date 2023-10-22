@@ -11,11 +11,7 @@ type AlertListProps = {
 };
 
 export const AlertList: React.FC<AlertListProps> = ({ children }) => {
-    return (
-        <ul role="list" className="list-disc space-y-1 pl-5">
-            {children}
-        </ul>
-    );
+    return <ul className="list-disc space-y-1 pl-5">{children}</ul>;
 };
 
 type Action = {

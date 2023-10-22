@@ -61,12 +61,6 @@ export const BaseInput: React.FC<Props> = ({
 
     const textColour = isInvalid ? "text-red-600" : "text-gray-500";
 
-    let errorClasses = "";
-    if (isInvalid) {
-        errorClasses =
-            "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500";
-    }
-
     if (!leftText) {
         className += " rounded-l-md ";
     }

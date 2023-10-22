@@ -7,15 +7,17 @@ const getCustomInitialValues = (
 ): { [key: string]: string | number | null } => {
     const initialValues = {};
 
-    fields.forEach((field) => {
-        if (field.name) {
-            if (field.initialValue) {
-                initialValues[field.name] = field.initialValue;
-            } else {
-                initialValues[field.name] = null;
+    if (fields) {
+        fields.forEach((field) => {
+            if (field.name) {
+                if (field.initialValue) {
+                    initialValues[field.name] = field.initialValue;
+                } else {
+                    initialValues[field.name] = null;
+                }
             }
-        }
-    });
+        });
+    }
 
     return initialValues;
 };

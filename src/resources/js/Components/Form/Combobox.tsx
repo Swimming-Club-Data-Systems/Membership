@@ -6,7 +6,6 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 interface Props {
     id?: string;
     disabled?: boolean;
-    type?: string;
     leftText?: string;
     rightButton?: ReactNode;
     className?: string;
@@ -24,7 +23,6 @@ const Combobox: React.FC<Props> = ({
     label,
     disabled,
     mb,
-    type,
     leftText,
     rightButton,
     // rightText,
@@ -43,16 +41,6 @@ const Combobox: React.FC<Props> = ({
     const marginBotton =
         mb || formSpecialContext.removeDefaultInputMargin ? "" : "mb-6";
 
-    if (!type) {
-        type = "text";
-    }
-
-    let errorClasses = "";
-    if (isInvalid) {
-        errorClasses =
-            "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500";
-    }
-
     if (!leftText) {
         className += " rounded-l-md ";
     }
@@ -68,9 +56,10 @@ const Combobox: React.FC<Props> = ({
     return (
         <div className={marginBotton}>
             <BaseCombobox
+                id={controlId}
                 keyField={keyField}
                 label={label}
-                name={name}
+                name={props.name}
                 disabled={
                     isSubmitting || disabled || context.disabled || readOnly
                 }
@@ -78,18 +67,6 @@ const Combobox: React.FC<Props> = ({
                 onChange={changeHandler}
                 className={className}
                 isInvalid={isInvalid}
-                // input={
-                //     <input
-                //         readOnly={readOnly}
-                //         disabled={isSubmitting || disabled || context.disabled}
-                //         className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
-                //         id={controlId}
-                //         type={type}
-                //         {...field}
-                //         {...props}
-                //     />
-                // }
-                // rightButton={rightButton}
                 {...props}
             />
         </div>

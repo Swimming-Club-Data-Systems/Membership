@@ -1,11 +1,7 @@
 import React from "react";
 import {
-    ChartPieIcon,
-    CogIcon,
     CurrencyPoundIcon,
-    KeyIcon,
     BuildingOffice2Icon,
-    UserCircleIcon,
     CreditCardIcon,
     UsersIcon,
     BanknotesIcon,

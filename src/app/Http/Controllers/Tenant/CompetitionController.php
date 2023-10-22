@@ -122,6 +122,7 @@ class CompetitionController extends Controller
             ],
             'description' => [
                 'string',
+                'nullable',
             ],
             'pool_course' => [
                 'required',
@@ -191,6 +192,7 @@ class CompetitionController extends Controller
         $competition->default_entry_fee_string = $request->string('default_entry_fee');
         $competition->processing_fee_string = $request->string('processing_fee');
         $competition->custom_fields = json_decode($request->json('custom_fields')) ?? [];
+        $competition->open_to = $request->enum('open_to', CompetitionOpenTo::class);
         $competition->closing_date = $request->date(
             'closing_date',
             null,
@@ -329,6 +331,7 @@ class CompetitionController extends Controller
             ],
             'description' => [
                 'string',
+                'nullable',
             ],
             'pool_course' => [
                 'required',
@@ -382,14 +385,7 @@ class CompetitionController extends Controller
 
         $competition->fill($validated);
 
-        //        ddd([
-        //            $request->date('closing_date'),
-        //            $request->date(
-        //                'closing_date',
-        //                null,
-        //                'Europe/Berlin'
-        //            ),
-        //        ]);
+        $competition->description = $request->string('description');
 
         $competition->default_entry_fee_string = $request->string('default_entry_fee');
         $competition->processing_fee_string = $request->string('processing_fee');
