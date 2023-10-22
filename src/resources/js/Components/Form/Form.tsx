@@ -161,12 +161,12 @@ export const UnknownError = () => {
 };
 
 const HandleServerErrors = () => {
+    const pageProps = usePage().props;
+
     const { formName, setStatus } = useContext(FormSpecialContext);
 
     // If we're scoped, get those errors, otherwise just the errors
-    const errors = formName
-        ? usePage().props?.errors[formName]
-        : usePage().props.errors;
+    const errors = formName ? pageProps?.errors[formName] : pageProps.errors;
 
     const { setSubmitting } = useFormikContext();
 

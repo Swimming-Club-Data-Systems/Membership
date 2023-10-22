@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react";
 import { useField, useFormikContext } from "formik";
 import { v4 } from "uuid";
 import { FormSpecialContext } from "@/Components/Form/Form";
-import { bool } from "yup";
 
 export interface RadioCheckProps {
     name: string;
@@ -33,14 +32,7 @@ const RadioCheck = ({
     });
     const { readOnly: contextReadOnly, disabled: contextDisabled } =
         useContext(FormSpecialContext);
-    const { isSubmitting, ...context } = useFormikContext();
-
-    let feedback = null;
-    let feedbackType = null;
-    if (meta.touched && meta.error) {
-        feedback = meta.error;
-        feedbackType = "invalid";
-    }
+    const { isSubmitting } = useFormikContext();
 
     const disabled = propsDisabled || contextDisabled;
     const readOnly = propsReadOnly || contextReadOnly;

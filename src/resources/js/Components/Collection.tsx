@@ -23,21 +23,21 @@ const Search: React.FC<SearchProps> = (props) => {
     };
 
     const SetSearchValue = () => {
-        const formikProps = useFormikContext();
+        const { setFieldValue } = useFormikContext();
 
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
             const searchValue = params.get("query");
             if (searchValue) {
-                formikProps.setFieldValue("query", searchValue);
+                setFieldValue("query", searchValue);
             }
-        }, []);
+        }, [setFieldValue]);
 
         return null;
     };
 
     const SearchButton = () => {
-        const { isSubmitting, dirty, isValid } = useFormikContext();
+        const { isSubmitting, isValid } = useFormikContext();
         return (
             <Button
                 type="submit"
@@ -153,9 +153,7 @@ const Collection: React.FC<CollectonProps> = (props) => {
                             </p>
                         </InternalContainer>
                     </div>
-                    <ul role="list" className="divide-y divide-gray-200">
-                        {items}
-                    </ul>
+                    <ul className="divide-y divide-gray-200">{items}</ul>
                     <Pagination collection={props} />
                 </div>
             )}

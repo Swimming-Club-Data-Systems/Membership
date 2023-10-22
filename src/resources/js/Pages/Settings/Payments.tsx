@@ -11,15 +11,15 @@ import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
 import Checkbox from "@/Components/Form/Checkbox";
 import Select from "@/Components/Form/Select";
-import DateInput from "@/Components/Form/base/date/DateInput";
 import { useField, useFormikContext } from "formik";
+import DateTimeInput from "@/Components/Form/DateTimeInput";
 
 const WrappedDate = (props) => {
     const { setFieldValue } = useFormikContext();
-    const [field, meta] = useField(props);
+    const [field] = useField(props);
 
     return (
-        <DateInput
+        <DateTimeInput
             id={props.name}
             {...props}
             {...field}

@@ -23,13 +23,14 @@ type Props = {
         };
     };
     users: TenantAdminstrator[];
+    formatted_balance: string;
 };
 
-interface Layout<P> extends React.FC<P> {
+interface LayoutType<P> extends React.FC<P> {
     layout: (ReactNode) => ReactNode;
 }
 
-const PayAsYouGo: Layout<Props> = (props: Props) => {
+const PayAsYouGo: LayoutType<Props> = (props: Props) => {
     return (
         <>
             <Head title={`Pay As You Go Services - ${props.name}`} />

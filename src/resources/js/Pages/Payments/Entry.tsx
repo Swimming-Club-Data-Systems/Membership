@@ -16,11 +16,10 @@ import TextInput from "@/Components/Form/TextInput";
 import Radio from "@/Components/Form/Radio";
 import BasicList from "@/Components/BasicList";
 import { router } from "@inertiajs/react";
-import Alert from "@/Components/Alert";
 import Stat from "@/Components/Stat";
 import Stats from "@/Components/Stats";
 
-type User = {
+type UserProps = {
     manual_payment_entry_id: number;
     user_id: number;
     name: string;
@@ -28,7 +27,7 @@ type User = {
     posted: boolean;
 };
 
-type Line = {
+type LineProps = {
     manual_payment_entry_id: number;
     line_id: number;
     description: string;
@@ -43,8 +42,8 @@ type Line = {
 
 type Props = {
     id: number;
-    users: User[];
-    lines: Line[];
+    users: UserProps[];
+    lines: LineProps[];
     can_post: boolean;
     posted: boolean;
     debits: string;
@@ -76,7 +75,7 @@ const deleteLine = async (entry, line) => {
     );
 };
 
-const User = (item: User) => {
+const User = (item: UserProps) => {
     return {
         id: item.user_id,
         content: (
@@ -113,7 +112,7 @@ const User = (item: User) => {
     };
 };
 
-const Line = (item: Line) => {
+const Line = (item: LineProps) => {
     return {
         id: item.line_id,
         content: (

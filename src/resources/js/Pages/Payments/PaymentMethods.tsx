@@ -13,7 +13,7 @@ import Modal from "@/Components/Modal";
 export type PaymentMethodDetailsProps = {
     payment_methods: [];
     direct_debits: [];
-    payment_method: {};
+    payment_method: object;
     is_admin?: boolean;
     user?: {
         id: number;

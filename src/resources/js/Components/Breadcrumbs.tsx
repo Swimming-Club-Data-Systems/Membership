@@ -1,5 +1,5 @@
 import React from "react";
-import { HomeIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
+import { HomeIcon } from "@heroicons/react/24/solid";
 import { Link, usePage } from "@inertiajs/react";
 
 interface Props {
@@ -18,10 +18,7 @@ const Breadcrumbs: React.FC<Props> = (props) => {
                 className="flex border-b border-gray-200 bg-white"
                 aria-label="Breadcrumb"
             >
-                <ol
-                    role="list"
-                    className="mx-auto flex w-full space-x-4 px-4 sm:px-6 lg:px-8"
-                >
+                <ol className="mx-auto flex w-full space-x-4 px-4 sm:px-6 lg:px-8">
                     <li className="flex">
                         <div className="flex items-center">
                             <Link

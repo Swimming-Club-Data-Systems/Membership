@@ -349,6 +349,7 @@ const Show: Layout<Props> = (props: Props) => {
                                 {props.venue.formatted_address}
                             </p>
                             <iframe
+                                title="Map"
                                 width="100%"
                                 height="400"
                                 style={{ border: 0 }}

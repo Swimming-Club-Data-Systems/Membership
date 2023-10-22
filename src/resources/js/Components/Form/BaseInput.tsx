@@ -1,5 +1,5 @@
 import React, { ReactNode, useContext } from "react";
-import { useField, useFormikContext } from "formik";
+import { useField } from "formik";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { FormSpecialContext } from "./Form";
 
@@ -49,35 +49,15 @@ const BaseInput: React.FC<Props> = ({
     ...props
 }) => {
     const [field, meta] = useField(props);
-    const { isSubmitting } = useFormikContext();
     const formSpecialContext = useContext(FormSpecialContext);
     const marginBotton =
         mb || formSpecialContext.removeDefaultInputMargin ? "" : "mb-6";
-    const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
     const controlId =
         (formSpecialContext.formName ? formSpecialContext.formName + "_" : "") +
         (props.id || props.name);
 
-    if (!type) {
-        type = "text";
-    }
-
     const textColour = isInvalid ? "text-red-600" : "text-gray-500";
-
-    let errorClasses = "";
-    if (isInvalid) {
-        errorClasses =
-            "pr-10 border-red-300 text-red-900 placeholder-red-300 focus:outline-none focus:ring-red-500 focus:border-red-500";
-    }
-
-    if (!leftText) {
-        className += " rounded-l-md ";
-    }
-
-    // if (!rightText) {
-    //     className += " rounded-r-md ";
-    // }
 
     return (
         <>
@@ -138,12 +118,6 @@ const BaseInput: React.FC<Props> = ({
                             />
                         </div>
                     )}
-                    {/* Right text is not supported right now */}
-                    {/* {rightText && (
-                        <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 text-sm">
-                            {rightText}
-                        </span>
-                    )} */}
                     {rightButton}
                 </div>
 

@@ -5,9 +5,6 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 import Input, { InputProps } from "@/Components/Form/base/Input";
 import { registerLocale } from "react-datepicker";
 import { enGB } from "date-fns/locale";
-import { format, parseISO, parse } from "date-fns";
-import TailwindDatepicker from "react-tailwindcss-datepicker";
-import Select from "@/Components/Form/Select";
 registerLocale("en-GB", enGB);
 
 export type DateTimeInputTimezone = {
@@ -45,15 +42,13 @@ const DateNumeralInput: React.FC<Props> = ({
     max,
     ...props
 }) => {
-    const [{ ...field }, meta, helpers] = useField(props);
+    const [{ ...field }, meta] = useField(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
     const controlId =
         (formName ? formName + "_" : "") + (props.id || props.name);
-    const minDate = typeof min === "string" ? new Date(min) : min;
-    const maxDate = typeof max === "string" ? new Date(max) : max;
 
     const yearRef = useRef<HTMLInputElement | null>();
     const monthRef = useRef<HTMLInputElement | null>();

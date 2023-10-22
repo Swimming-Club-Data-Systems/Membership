@@ -3,7 +3,7 @@ import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import PlainCollection from "@/Components/PlainCollection";
-import { formatDate, formatDateTime } from "@/Utils/date-utils";
+import { formatDateTime } from "@/Utils/date-utils";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
 

@@ -5,7 +5,6 @@ import Card from "@/Components/Card";
 import BasicList from "@/Components/BasicList";
 import Checkbox from "@/Components/Form/Checkbox";
 import { EntryAdditionalDetails } from "@/Components/Competitions/EntryAdditionalDetails";
-import { EntryTotals } from "@/Components/Competitions/EntryTotals";
 import Container from "@/Components/Container";
 
 export type Event = {

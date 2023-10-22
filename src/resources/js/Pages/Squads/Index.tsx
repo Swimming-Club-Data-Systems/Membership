@@ -49,7 +49,7 @@ const Index = (props) => {
 const crumbs = [{ href: "/squads", name: "Squads" }];
 
 Index.layout = (page) => (
-    <MainLayout title="Squads" subtitle="Squad list">
+    <MainLayout title="Squads" subtitle="Squad list" breadcrumbs={crumbs}>
         {page}
     </MainLayout>
 );

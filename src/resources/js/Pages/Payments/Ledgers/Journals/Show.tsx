@@ -3,9 +3,7 @@ import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
-import Collection from "@/Components/Collection";
 import MainHeader from "@/Layouts/Components/MainHeader";
-import ButtonLink from "@/Components/ButtonLink";
 
 type Props = {
     name: string;

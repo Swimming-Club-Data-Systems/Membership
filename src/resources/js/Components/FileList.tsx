@@ -17,10 +17,7 @@ export const FileList: React.FC<FileListProps> = ({ items }) => {
     }
 
     return (
-        <ul
-            role="list"
-            className="divide-y divide-gray-200 rounded-md border border-gray-200"
-        >
+        <ul className="divide-y divide-gray-200 rounded-md border border-gray-200">
             {items.map((item) => {
                 let isDownload = true;
                 switch (item.mime_type) {

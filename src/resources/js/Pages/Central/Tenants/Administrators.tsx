@@ -31,11 +31,11 @@ type Props = {
     users: TenantAdminstrator[];
 };
 
-interface Layout<P> extends React.FC<P> {
+interface LayoutType<P> extends React.FC<P> {
     layout: (ReactNode) => ReactNode;
 }
 
-const Index: Layout<Props> = (props: Props) => {
+const Index: LayoutType<Props> = (props: Props) => {
     const [showNewUserModal, setShowNewUserModal] = useState(false);
     const [showRemoveUserModal, setShowRemoveUserModal] = useState(false);
     const [removeUserModalData, setRemoveUserModalData] =

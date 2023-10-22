@@ -260,7 +260,6 @@ const BaseDecimalInput: React.FC<BaseDecimalInputProps> = React.forwardRef(
         };
 
         const isControlled = value !== undefined;
-        const prevControlledRef = useRef<boolean>();
 
         const prevValue = usePrevious(value);
 

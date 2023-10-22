@@ -1,10 +1,10 @@
 import React, { createContext, ReactNode } from "react";
 import { ErrorMessage } from "formik";
 
-interface RadioGroupContext {
+interface RadioGroupContextType {
     name?: string;
 }
-export const RadioGroupContext = createContext<RadioGroupContext>({});
+export const RadioGroupContext = createContext<RadioGroupContextType>({});
 
 interface Props {
     label: string;
@@ -22,7 +22,7 @@ export const RadioGroup = ({
     children,
 }: Props) => {
     return (
-        <RadioGroupContext.Provider value={{ name: name }}>
+        <RadioGroupContextType.Provider value={{ name: name }}>
             <div>
                 <label className="text-base font-semibold text-gray-900">
                     {label}
@@ -44,7 +44,7 @@ export const RadioGroup = ({
                     />
                 )}
             </div>
-        </RadioGroupContext.Provider>
+        </RadioGroupContextType.Provider>
     );
 };
 
