@@ -35,7 +35,11 @@ class Journal extends Model
     protected static function boot()
     {
         parent::boot();
-        static::created(function (Journal $journal) {
+        //        static::created(function (Journal $journal) {
+        //            $journal->resetCurrentBalances();
+        //        });
+
+        static::saved(function (Journal $journal) {
             $journal->resetCurrentBalances();
         });
 

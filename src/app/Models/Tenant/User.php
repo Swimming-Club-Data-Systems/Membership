@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
-use function Illuminate\Events\queueable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -31,6 +30,8 @@ use Laravel\Passport\HasApiTokens;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Stripe\Exception\InvalidRequestException;
+
+use function Illuminate\Events\queueable;
 
 /**
  * @property int $id
@@ -46,7 +47,7 @@ use Stripe\Exception\InvalidRequestException;
  * @property string $name
  * @property string $email
  * @property StripeCustomer $stripeCustomer
- * @property Journal $journal
+ * @property Journal|null $journal
  * @property Carbon $Edit
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -55,7 +56,7 @@ use Stripe\Exception\InvalidRequestException;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal;
+    use AccountingJournal, BelongsToTenant, HasApiTokens, HasFactory, Notifiable, Searchable;
 
     protected bool $configOptionsCached = false;
 
@@ -434,7 +435,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
-    public function stripeCustomerId()
+    public function stripeCustomerId(): string
     {
         if ($this->stripeCustomer) {
             return $this->stripeCustomer->CustomerID;
@@ -466,6 +467,8 @@ class User extends Authenticatable implements MustVerifyEmail
             $stripeCustomer = new StripeCustomer();
             $stripeCustomer->CustomerID = $customer->id;
             $this->stripeCustomer = $stripeCustomer;
+
+            return $stripeCustomer->CustomerID;
         }
     }
 

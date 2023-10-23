@@ -8,6 +8,8 @@ import {
     TransactionItemContent,
 } from "@/Pages/Payments/Transactions/Index";
 import { Layout } from "@/Common/Layout";
+import Stats from "@/Components/Stats";
+import Stat from "@/Components/Stat";
 
 const Index: Layout<TransactionIndexProps> = (props: TransactionIndexProps) => {
     return (
@@ -33,6 +35,14 @@ const Index: Layout<TransactionIndexProps> = (props: TransactionIndexProps) => {
                 ]}
                 subtitle={`View transactions for ${props.user.name}`}
             />
+
+            <Container>
+                <div className="mb-6">
+                    <Stats title="Details">
+                        <Stat name="Balance" stat={props.balance} />
+                    </Stats>
+                </div>
+            </Container>
 
             <Container noMargin>
                 <PlainCollection
