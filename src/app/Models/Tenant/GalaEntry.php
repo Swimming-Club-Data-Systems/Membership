@@ -37,7 +37,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class GalaEntry extends Model implements PaidObject
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, HasFactory;
 
     protected $primaryKey = 'EntryID';
 
@@ -122,7 +122,7 @@ class GalaEntry extends Model implements PaidObject
         return 'gala';
     }
 
-    public function handlePaid(): void
+    public function handlePaid($line): void
     {
         $this->Charged = true;
         $this->save();

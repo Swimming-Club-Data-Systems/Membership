@@ -31,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property bool $processing_fee_paid
  * @property bool $vetoable
  * @property Collection $competitionEventEntries
+ * @property Competition $competition
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -64,6 +65,11 @@ class CompetitionEntry extends Model implements PaidObject
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Member::class);
+    }
+
+    public function competition(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Competition::class);
     }
 
     public function competitionGuestEntrant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -132,9 +138,14 @@ class CompetitionEntry extends Model implements PaidObject
         $this->amount_refunded = $this->competitionEventEntries()->sum('amount_refunded');
     }
 
-    public function handlePaid(): void
+    public function handlePaid($line): void
     {
         $this->processing_fee_paid = true;
+
+        // Credit the competition journal
+        // Get competition
+        $competition = $this->competition;
+        $competition->journal->credit($line->amount_total);
     }
 
     public function handleChargedBack(): void

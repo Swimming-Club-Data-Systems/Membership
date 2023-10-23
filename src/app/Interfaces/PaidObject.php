@@ -2,9 +2,11 @@
 
 namespace App\Interfaces;
 
+use App\Models\Tenant\PaymentLine;
+
 interface PaidObject
 {
-    public function handlePaid(): void;
+    public function handlePaid(PaymentLine $line): void;
 
     public function handleChargedBack(): void;
 

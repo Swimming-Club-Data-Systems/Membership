@@ -127,13 +127,18 @@ class CompetitionEventEntry extends Model implements PaidObject
         );
     }
 
-    public function handlePaid(): void
+    public function handlePaid($line): void
     {
         $this->paid = true;
         $this->save();
 
         $this->competitionEntry->paid = true;
         $this->competitionEntry->save();
+
+        // Credit the competition journal
+        // Get competition
+        $competition = $this->competitionEvent->competitionSession->competition;
+        $competition->journal->credit($line->amount_total);
     }
 
     public function handleChargedBack(): void
