@@ -32,6 +32,7 @@ const Combobox: React.FC<Props> = ({
     keyField = "value",
     items = [],
     name,
+    nullable,
     ...props
 }) => {
     const [{ onChange, ...field }, meta, { setValue }] = useField(
@@ -70,6 +71,7 @@ const Combobox: React.FC<Props> = ({
                 disabled={
                     isSubmitting || disabled || context.disabled || readOnly
                 }
+                nullable={nullable}
                 {...field}
                 onChange={changeHandler}
                 className={className}

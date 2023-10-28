@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Business\Helpers\Money;
+use App\Enums\PostType;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\Post;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class SquadController extends Controller
@@ -44,7 +48,14 @@ class SquadController extends Controller
     {
         $this->authorize('create', Squad::class);
 
-        return Inertia::render('Squads/New');
+        return Inertia::render('Squads/New', [
+            'codes_of_conduct' => Post::where('Type', PostType::CONDUCT_CODE)->get()->map(function ($post) {
+                return [
+                    'value' => $post->ID,
+                    'name' => $post->Title,
+                ];
+            }),
+        ]);
     }
 
     public function create(Request $request)
@@ -57,11 +68,18 @@ class SquadController extends Controller
             'name' => ['string', 'required', 'max:255'],
             'monthly_fee' => ['decimal:0,2', 'required', 'min:0'],
             'timetable' => ['string', 'nullable', 'max:100', 'url'],
+            'code_of_conduct' => [
+                'nullable',
+                Rule::exists('posts', 'ID')->where(function (Builder $query) {
+                    return $query->where('Tenant', tenant('id'));
+                }),
+            ],
         ]);
 
         $squad->SquadName = $request->string('name');
         $squad->SquadFee = $request->float('monthly_fee');
         $squad->SquadTimetable = $request->string('timetable');
+        $squad->SquadCoC = $request->string('code_of_conduct');
 
         $squad->save();
 
@@ -136,6 +154,8 @@ class SquadController extends Controller
     {
         $this->authorize('update', $squad);
 
+        $coc = (int) $squad->SquadCoC;
+
         return Inertia::render('Squads/Edit', [
             'id' => $squad->SquadID,
             'name' => $squad->SquadName,
@@ -143,8 +163,14 @@ class SquadController extends Controller
                 'name' => $squad->SquadName,
                 'monthly_fee' => Money::formatDecimal($squad->fee),
                 'timetable' => $squad->SquadTimetable,
-                'code_of_conduct' => $squad->SquadCoC,
+                'code_of_conduct' => $coc == 0 ? null : $coc,
             ],
+            'codes_of_conduct' => Post::where('Type', PostType::CONDUCT_CODE)->get()->map(function ($post) {
+                return [
+                    'value' => $post->ID,
+                    'name' => $post->Title,
+                ];
+            }),
         ]);
     }
 
@@ -156,11 +182,18 @@ class SquadController extends Controller
             'name' => ['string', 'required', 'max:255'],
             'monthly_fee' => ['decimal:0,2', 'required', 'min:0'],
             'timetable' => ['string', 'nullable', 'max:100', 'url'],
+            'code_of_conduct' => [
+                'nullable',
+                Rule::exists('posts', 'ID')->where(function (Builder $query) {
+                    return $query->where('Tenant', tenant('id'));
+                }),
+            ],
         ]);
 
         $squad->SquadName = $request->string('name');
         $squad->SquadFee = $request->float('monthly_fee');
         $squad->SquadTimetable = $request->string('timetable');
+        $squad->SquadCoC = $request->string('code_of_conduct');
 
         $squad->save();
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
@@ -12,10 +12,13 @@ import TextInput from "@/Components/Form/TextInput";
 import DecimalInput from "@/Components/Form/DecimalInput";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
+import Select from "@/Components/Form/Select";
 
 type Props = {
-    id: number;
-    name: string;
+    codes_of_conduct: {
+        value: number;
+        name: ReactNode;
+    }[];
 };
 
 const Edit = (props: Props) => {
@@ -87,6 +90,12 @@ const Edit = (props: Props) => {
                             name="timetable"
                             label="Timetable URL"
                             help="You can link to a timetable on your website. If you don't provide a link, we'll show a link to a timetable generated from the sessions in your registers."
+                        />
+                        <Select
+                            nullable
+                            name="code_of_conduct"
+                            label="Code of conduct"
+                            items={props.codes_of_conduct}
                         />
                     </Card>
                 </Form>

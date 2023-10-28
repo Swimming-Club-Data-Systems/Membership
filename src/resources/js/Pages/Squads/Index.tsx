@@ -36,7 +36,7 @@ const crumbs = [{ route: "squads.index", name: "Squads" }];
 const Index = (props) => {
     return (
         <>
-            <Head title="Squads" breadcrumbs={crumbs} />
+            <Head title="Squads" />
 
             <Container>
                 <MainHeader
@@ -67,6 +67,10 @@ const Index = (props) => {
     );
 };
 
-Index.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
+Index.layout = (page) => (
+    <MainLayout hideHeader breadcrumbs={crumbs}>
+        {page}
+    </MainLayout>
+);
 
 export default Index;
