@@ -138,19 +138,23 @@ Route::middleware([
     });
 
     Route::prefix('/members')->group(function () {
-        Route::get('/', [MemberController::class, 'index']);
-        Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
-        Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/members/'.$path);
-        })->where('path', '.*');
+        Route::name('members.')->group(function () {
+            Route::get('/', [MemberController::class, 'index'])->name('index');
+            Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('show');
+            Route::any('/{path}', function ($path) {
+                return Inertia::location('/v1/members/'.$path);
+            })->where('path', '.*');
+        });
     });
 
     Route::prefix('/squads')->group(function () {
-        Route::get('/', [SquadController::class, 'index']);
-        Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('squads.show');
-        Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/squads/'.$path);
-        })->where('path', '.*');
+        Route::name('squads.')->group(function () {
+            Route::get('/', [SquadController::class, 'index'])->name('index');
+            Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('show');
+            Route::any('/{path}', function ($path) {
+                return Inertia::location('/v1/squads/'.$path);
+            })->where('path', '.*');
+        });
     });
 
     Route::prefix('/users')->group(function () {
@@ -347,7 +351,9 @@ Route::middleware([
                 });
             });
 
-            Route::get('journal-report', [JournalController::class, 'view']);
+            if (App::isLocal()) {
+                Route::get('journal-report', [JournalController::class, 'view']);
+            }
         });
     });
 

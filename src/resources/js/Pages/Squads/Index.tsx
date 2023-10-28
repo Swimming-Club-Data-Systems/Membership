@@ -46,7 +46,7 @@ const Index = (props) => {
     );
 };
 
-const crumbs = [{ href: "/squads", name: "Squads" }];
+const crumbs = [{ route: "squads.index", name: "Squads" }];
 
 Index.layout = (page) => (
     <MainLayout title="Squads" subtitle="Squad list" breadcrumbs={crumbs}>

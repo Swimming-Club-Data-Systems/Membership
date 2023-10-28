@@ -58,10 +58,10 @@ const Index = (props) => {
     );
 };
 
-const crumbs = [{ href: "/members", name: "Members" }];
+const crumbs = [{ route: "members.index", name: "Members" }];
 
 Index.layout = (page) => (
-    <MainLayout title="Members" subtitle="Member list">
+    <MainLayout title="Members" subtitle="Member list" breadcrumbs={crumbs}>
         {page}
     </MainLayout>
 );
