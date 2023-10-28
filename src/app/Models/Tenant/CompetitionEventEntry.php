@@ -165,6 +165,11 @@ class CompetitionEventEntry extends Model implements PaidObject
 
         $this->competitionEntry->calculateTotals();
         $this->competitionEntry->save();
+
+        // Debit the competition journal
+        // Get competition
+        $competition = $this->competitionEvent->competitionSession->competition;
+        $competition->journal->debit($refundAmount);
     }
 
     public function handleFailed(): void

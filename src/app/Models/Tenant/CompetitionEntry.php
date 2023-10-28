@@ -163,6 +163,11 @@ class CompetitionEntry extends Model implements PaidObject
     public function handleRefund(int $refundAmount, int $totalAmountRefunded): void
     {
         // TODO: Implement handleRefund() method.
+
+        // Debit the competition journal
+        // Get competition
+        $competition = $this->competition;
+        $competition->journal->debit($refundAmount);
     }
 
     public function handleFailed(): void
