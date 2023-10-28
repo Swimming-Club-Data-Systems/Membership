@@ -149,8 +149,13 @@ Route::middleware([
 
     Route::prefix('/squads')->group(function () {
         Route::name('squads.')->group(function () {
+            Route::post('/', [SquadController::class, 'create']);
             Route::get('/', [SquadController::class, 'index'])->name('index');
+            Route::get('/new', [SquadController::class, 'new'])->name('new');
             Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('show');
+            Route::get('/{squad}/edit', [SquadController::class, 'edit'])->whereNumber('squad')->name('edit');
+            Route::put('/{squad}', [SquadController::class, 'update'])->whereNumber('squad');
+            Route::delete('/{squad}', [SquadController::class, 'delete'])->whereNumber('squad')->name('delete');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/squads/'.$path);
             })->where('path', '.*');

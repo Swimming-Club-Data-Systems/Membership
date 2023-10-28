@@ -32,6 +32,8 @@ use Laravel\Scout\Searchable;
  * @property string GenderPronouns
  * @property bool GenderDisplay
  * @property User user
+ * @property MemberMedical|null $memberMedical
+ * @property string|null $pronouns Pronouns if the member has chosen to display them
  */
 class Member extends Model
 {
@@ -61,6 +63,11 @@ class Member extends Model
     public function user(): HasOne
     {
         return $this->hasOne(User::class, 'UserID', 'UserID');
+    }
+
+    public function memberMedical()
+    {
+        return $this->hasOne(MemberMedical::class, 'MemberID');
     }
 
     public function squads(): BelongsToMany
@@ -114,6 +121,16 @@ class Member extends Model
     {
         return Attribute::make(
             get: fn ($value, $attributes) => $attributes['MForename'].' '.$attributes['MSurname'],
+        );
+    }
+
+    /**
+     * Get the member name.
+     */
+    protected function pronouns(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['GenderDisplay'] ? $attributes['GenderPronouns'] : null,
         );
     }
 

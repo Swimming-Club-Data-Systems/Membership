@@ -3,6 +3,9 @@ import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import Collection from "@/Components/Collection";
 import MainLayout from "@/Layouts/MainLayout";
+import MainHeader from "@/Layouts/Components/MainHeader";
+import ButtonLink from "@/Components/ButtonLink";
+import FlashAlert from "@/Components/FlashAlert";
 
 const ItemContent = (props) => {
     return (
@@ -28,10 +31,28 @@ const ItemContent = (props) => {
     );
 };
 
+const crumbs = [{ route: "squads.index", name: "Squads" }];
+
 const Index = (props) => {
     return (
         <>
-            <Head title="Squads" />
+            <Head title="Squads" breadcrumbs={crumbs} />
+
+            <Container>
+                <MainHeader
+                    title="Squads"
+                    subtitle="Squad list"
+                    buttons={
+                        props.can_create && (
+                            <ButtonLink href={route("squads.new")}>
+                                New
+                            </ButtonLink>
+                        )
+                    }
+                />
+
+                <FlashAlert className="mb-4" />
+            </Container>
 
             <Container noMargin>
                 <Collection
@@ -46,12 +67,6 @@ const Index = (props) => {
     );
 };
 
-const crumbs = [{ route: "squads.index", name: "Squads" }];
-
-Index.layout = (page) => (
-    <MainLayout title="Squads" subtitle="Squad list" breadcrumbs={crumbs}>
-        {page}
-    </MainLayout>
-);
+Index.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
 export default Index;

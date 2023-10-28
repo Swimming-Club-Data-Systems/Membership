@@ -23,6 +23,13 @@ class Squad extends Model
 {
     use BelongsToTenant, Searchable;
 
+    protected $attributes = [
+        'SquadCoach' => '',
+        'SquadTimetable' => '',
+        'SquadCoC' => '',
+        'SquadKey' => '',
+    ];
+
     protected $primaryKey = 'SquadID';
 
     public function members(): BelongsToMany
@@ -53,6 +60,11 @@ class Squad extends Model
     {
         return $this->belongsToMany(Member::class, 'squadMoves', 'Old', 'Member')
             ->using(SquadMove::class);
+    }
+
+    public function coaches()
+    {
+        return $this->belongsToMany(User::class, 'coaches', 'Squad', 'User')->withPivot(['Type']);
     }
 
     /**
