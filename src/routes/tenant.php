@@ -13,6 +13,7 @@ use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
+use App\Http\Controllers\Tenant\JournalController;
 use App\Http\Controllers\Tenant\LedgerAccountController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
@@ -345,6 +346,8 @@ Route::middleware([
                         ->name('show');
                 });
             });
+
+            Route::get('journal-report', [JournalController::class, 'view']);
         });
     });
 

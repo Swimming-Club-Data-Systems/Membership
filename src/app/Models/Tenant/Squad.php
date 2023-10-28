@@ -2,13 +2,12 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int SquadID
@@ -22,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Squad extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     protected $primaryKey = 'SquadID';
 

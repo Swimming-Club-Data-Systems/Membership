@@ -9,7 +9,6 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 interface Props extends Pick<BaseSelectProps, "items"> {
     id?: string;
     disabled?: boolean;
-    type?: string;
     leftText?: string;
     rightButton?: ReactNode;
     className?: string;
@@ -26,29 +25,25 @@ const Combobox: React.FC<Props> = ({
     label,
     disabled,
     mb,
-    type,
     leftText,
     rightButton,
     // rightText,
     className = "",
     keyField = "value",
-    items,
+    items = [],
     name,
     ...props
 }) => {
-    const [{ onChange, ...field }, meta, { setValue }] = useField(props);
+    const [{ onChange, ...field }, meta, { setValue }] = useField(
+        props.id || name
+    );
     const { isSubmitting } = useFormikContext();
-    const { formName, readOnly, ...context } = useContext(FormSpecialContext);
+    const { formName, readOnly, removeDefaultInputMargin, ...context } =
+        useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
     const isInvalid = meta.touched && meta.error;
     const controlId = (formName ? formName + "_" : "") + (props.id || name);
-    const formSpecialContext = useContext(FormSpecialContext);
-    const marginBotton =
-        mb || formSpecialContext.removeDefaultInputMargin ? "" : "mb-6";
-
-    if (!type) {
-        type = "text";
-    }
+    const marginBotton = mb || removeDefaultInputMargin ? "" : "mb-6";
 
     if (!leftText) {
         className += " rounded-l-md ";

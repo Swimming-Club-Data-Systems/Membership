@@ -8,9 +8,11 @@ use App\Enums\EventCode;
 use App\Enums\Stroke;
 use App\Events\Tenant\CompetitionCreated;
 use App\Exceptions\Accounting\JournalAlreadyExists;
+use App\Models\Accounting\Journal;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\CompetitionEvent;
 use App\Models\Tenant\CompetitionSession;
+use App\Models\Tenant\LedgerAccount;
 
 class PopulateBasicCompetition
 {
@@ -34,7 +36,18 @@ class PopulateBasicCompetition
         $tenant = tenant();
 
         try {
-            $event->competition->initJournal();
+            /** @var Journal|bool $journal */
+            $journal = $event->competition->initJournal();
+
+            $competitionIncomeLedger = LedgerAccount::where([
+                'name' => 'Competition Income',
+                'type' => 'income',
+                'is_system' => true,
+            ])->first();
+
+            if ($journal && $competitionIncomeLedger) {
+                $journal->assignToLedger($competitionIncomeLedger->ledger);
+            }
         } catch (JournalAlreadyExists) {
             // Swallow
         }

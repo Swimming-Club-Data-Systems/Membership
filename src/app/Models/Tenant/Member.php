@@ -2,14 +2,13 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int MemberID
@@ -36,7 +35,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Member extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     /**
      * The attributes that should be cast.

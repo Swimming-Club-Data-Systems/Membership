@@ -22,7 +22,7 @@ export const RadioGroup = ({
     children,
 }: Props) => {
     return (
-        <RadioGroupContextType.Provider value={{ name: name }}>
+        <RadioGroupContext.Provider value={{ name: name }}>
             <div>
                 <label className="text-base font-semibold text-gray-900">
                     {label}
@@ -44,7 +44,7 @@ export const RadioGroup = ({
                     />
                 )}
             </div>
-        </RadioGroupContextType.Provider>
+        </RadioGroupContext.Provider>
     );
 };
 

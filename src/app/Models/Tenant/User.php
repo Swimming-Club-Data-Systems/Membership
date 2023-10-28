@@ -10,6 +10,7 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
 use App\Traits\Accounting\AccountingJournal;
+use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -28,7 +29,6 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Stripe\Exception\InvalidRequestException;
 
 use function Illuminate\Events\queueable;

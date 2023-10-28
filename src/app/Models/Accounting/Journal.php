@@ -39,8 +39,8 @@ class Journal extends Model
         //            $journal->resetCurrentBalances();
         //        });
 
-        static::saved(function (Journal $journal) {
-            $journal->resetCurrentBalances();
+        static::saving(function (Journal $journal) {
+            $journal->balance = $journal->getBalance();
         });
 
         parent::boot();
