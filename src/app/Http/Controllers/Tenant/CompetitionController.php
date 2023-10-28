@@ -10,6 +10,7 @@ use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\User;
@@ -264,6 +265,7 @@ class CompetitionController extends Controller
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
             'editable' => $user->can('update', $competition),
+            'view_entries' => $user->can('viewAny', CompetitionEntry::class),
             'members_can_enter' => ($competition->open_to === CompetitionOpenTo::MEMBERS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enter', $competition),
             'guests_can_enter' => ($competition->open_to === CompetitionOpenTo::GUESTS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enterAsGuest', $competition),
             'open_to' => $competition->open_to,
