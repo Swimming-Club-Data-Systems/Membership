@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\QuickFinancialReport;
 use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
@@ -240,6 +241,17 @@ class CompetitionController extends Controller
         /** @var User $user */
         $user = $request->user() ?? new User();
 
+        $qfr = null;
+
+        if ($user->can('update', $competition)) {
+            try {
+                $qfr = QuickFinancialReport::get($competition);
+            } catch (\Exception $e) {
+                // Swallow
+                report($e);
+            }
+        }
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
@@ -271,6 +283,14 @@ class CompetitionController extends Controller
             'open_to' => $competition->open_to,
             'timezones' => $user->can('update', $competition) ? Timezones::getTimezoneSelectList() : [],
             'org_timezone' => $tenant->timezone,
+            'qfr' => $qfr ? [
+                'credits' => $qfr->periodCredits,
+                'credits_formatted' => $qfr->periodCreditsFormatted,
+                'debits' => $qfr->periodDebits,
+                'debits_formatted' => $qfr->periodDebitsFormatted,
+                'balance' => $qfr->periodBalance,
+                'balance_formatted' => $qfr->periodBalanceFormatted,
+            ] : null,
         ]);
     }
 

@@ -18,10 +18,10 @@ export type DefinitionListProps = {
 
 export const DefinitionList: React.FC<DefinitionListProps> = ({
     items,
-    verticalPadding = 4,
+    verticalPadding = 2,
 }) => {
     return (
-        <div className="mt-5 border-t border-gray-200">
+        <div className="">
             <dl className="@container">
                 {items.map((item) => {
                     return (

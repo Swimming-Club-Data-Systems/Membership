@@ -66,6 +66,14 @@ export type Props = {
     guests_can_enter: boolean;
     timezones: DateTimeInputTimezones;
     org_timezone: string;
+    qfr?: {
+        credits_formatted: string;
+        debits_formatted: string;
+        balance_formatted: string;
+        credits: number;
+        debits: number;
+        balance: number;
+    };
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -342,6 +350,35 @@ const Show: Layout<Props> = (props: Props) => {
                                         View guest entries
                                     </Link>
                                 </div>
+                            </Card>
+                        </div>
+                    )}
+
+                    {props.qfr && (
+                        <div className="col-start-1 col-span-full md:col-span-7 text-sm">
+                            <Card title="Financial Overiew">
+                                <DefinitionList
+                                    items={[
+                                        {
+                                            key: "balance",
+                                            term: "Net position",
+                                            definition:
+                                                props.qfr.balance_formatted,
+                                        },
+                                        {
+                                            key: "credits",
+                                            term: "Credits",
+                                            definition:
+                                                props.qfr.credits_formatted,
+                                        },
+                                        {
+                                            key: "debits",
+                                            term: "Debits",
+                                            definition:
+                                                props.qfr.debits_formatted,
+                                        },
+                                    ]}
+                                />
                             </Card>
                         </div>
                     )}
