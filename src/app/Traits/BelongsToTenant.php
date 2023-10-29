@@ -22,7 +22,7 @@ trait BelongsToTenant
         static::addGlobalScope(new TenantScope);
 
         static::creating(function (Model $model) {
-            if (!$model->getAttributeValue('Tenant') && !$model->relationLoaded('tenant')) {
+            if (! $model->getAttributeValue('Tenant') && ! $model->relationLoaded('tenant')) {
                 if (tenancy()->initialized) {
                     $model->setAttribute('Tenant', tenant()->getTenantKey());
                     $model->setRelation('tenant', tenant());

@@ -17,12 +17,11 @@ class SmsSent extends Mailable
      * @return void
      */
     public function __construct(
-        public Sms    $sms,
+        public Sms $sms,
         public string $totalFee,
-        public int    $sentUsers,
-        public int    $failedUsers
-    )
-    {
+        public int $sentUsers,
+        public int $failedUsers
+    ) {
     }
 
     /**

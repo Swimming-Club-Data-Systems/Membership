@@ -37,7 +37,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
         ? {
               name: `${userObject.first_name} ${userObject.last_name}`,
               email: userObject.EmailAddress,
-              imageUrl: userObject.gravitar_url,
+              imageUrl: userObject.gravatar_url,
           }
         : null;
 
@@ -352,6 +352,10 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                         href={
                                                                             item.href
                                                                         }
+                                                                        external={
+                                                                            item.external
+                                                                        }
+                                                                        target="_self"
                                                                         className="block rounded-md px-3 py-2 text-base text-gray-900 font-medium hover:bg-gray-100 hover:text-gray-800"
                                                                     >
                                                                         {

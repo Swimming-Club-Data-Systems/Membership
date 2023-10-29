@@ -48,6 +48,7 @@
         "web-auth/webauthn-lib": "^3.3",
         "nyholm/psr7": "^1.5",
         "nyholm/psr7-server": "^1.0",
-      "ext-json": "*"
+      "ext-json": "*",
+      "ext-pdo": "*"
     }
 }

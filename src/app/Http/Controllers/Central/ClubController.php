@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Central;
 
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
-use App\Models\Tenant\Member;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -15,7 +14,7 @@ class ClubController extends Controller
         $tenants = null;
 
         if ($request->query('query')) {
-            $tenants = Tenant::search($request->query('query'))->query(fn($query) => $query->with(['tenantOptions' => function ($query) {
+            $tenants = Tenant::search($request->query('query'))->query(fn ($query) => $query->with(['tenantOptions' => function ($query) {
                 $query->where('Option', 'LOGO_DIR');
             }]))->paginate(config('app.per_page'));
         } else {
@@ -23,6 +22,7 @@ class ClubController extends Controller
                 $query->where('Option', 'LOGO_DIR');
             }])->paginate(config('app.per_page'));
         }
+
         return Inertia::render('Central/Clubs', [
             'tenants' => $tenants->onEachSide(3),
         ]);
@@ -30,6 +30,6 @@ class ClubController extends Controller
 
     public function redirect(Tenant $tenant, Request $request)
     {
-        return Inertia::location($request->getScheme() . '://' . $tenant->Domain);
+        return Inertia::location($request->getScheme().'://'.$tenant->Domain);
     }
 }

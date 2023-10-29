@@ -19,12 +19,11 @@ class MandateInactive extends Mailable
      * @return void
      */
     public function __construct(
-        public User           $user,
-        public Mandate        $mandate,
+        public User $user,
+        public Mandate $mandate,
         public ?PaymentMethod $paymentMethod = null,
         public ?PaymentMethod $newDefaultPaymentMethod = null,
-    )
-    {
+    ) {
     }
 
     /**

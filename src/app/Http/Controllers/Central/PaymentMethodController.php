@@ -19,9 +19,9 @@ class PaymentMethodController extends Controller
             'intent' => $tenant->createSetupIntent([
                 'payment_method_types' => [
                     'card',
-                ]
+                ],
             ]),
-            'stripe_publishable' => config('cashier.key')
+            'stripe_publishable' => config('cashier.key'),
         ]);
     }
 
@@ -32,7 +32,7 @@ class PaymentMethodController extends Controller
 
             $tenant->deletePaymentMethod($paymentMethod->id);
 
-            $request->session()->flash('flash_bag.payment_method.success', 'We have deleted ' . PaymentMethod::formatName($paymentMethod) . ' from your list of payment methods.');
+            $request->session()->flash('flash_bag.payment_method.success', 'We have deleted '.PaymentMethod::formatName($paymentMethod).' from your list of payment methods.');
         } catch (\Exception $e) {
             $request->session()->flash('flash_bag.payment_method.error', $e->getMessage());
         }
@@ -49,7 +49,7 @@ class PaymentMethodController extends Controller
                 $tenant->updateDefaultPaymentMethod($paymentMethod->id);
                 $tenant->save();
 
-                $request->session()->flash('flash_bag.payment_method.success', 'We have set ' . PaymentMethod::formatName($paymentMethod) . ' as your default payment method.');
+                $request->session()->flash('flash_bag.payment_method.success', 'We have set '.PaymentMethod::formatName($paymentMethod).' as your default payment method.');
             }
         } catch (\Exception $e) {
             $request->session()->flash('flash_bag.payment_method.error', $e->getMessage());

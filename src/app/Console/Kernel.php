@@ -12,7 +12,6 @@ class Kernel extends ConsoleKernel
     /**
      * Define the application's command schedule.
      *
-     * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     protected function schedule(Schedule $schedule)
@@ -22,6 +21,9 @@ class Kernel extends ConsoleKernel
 
         // Clean up pruneable models
         $schedule->command('model:prune')->daily();
+
+        // Prune stale cache tag entries
+        $schedule->command('cache:prune-stale-tags')->hourly();
 
         // Update Meilisearch records
         $schedule->command(UpdateMeilisearchDocuments::class)->everyFifteenMinutes();

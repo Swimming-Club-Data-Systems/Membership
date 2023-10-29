@@ -17,6 +17,7 @@ class StripeCustomer extends Model
     use HasFactory, BelongsToPrimaryModel;
 
     protected $table = 'stripeCustomers';
+
     protected $primaryKey = 'ID';
 
     /**

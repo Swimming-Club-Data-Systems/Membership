@@ -60,9 +60,9 @@ class MyAccountController extends Controller
                 'email:rfc,dns,spoof',
                 'max:255',
                 Rule::unique('users', 'EmailAddress')
-                    ->where(fn($query) => $query->where('Tenant', tenant('ID'))
-                        ->where('UserID', '!=', Auth::id()))
-            ]
+                    ->where(fn ($query) => $query->where('Tenant', tenant('ID'))
+                        ->where('UserID', '!=', Auth::id())),
+            ],
         ]);
 
         $user = User::find(Auth::id());
@@ -78,7 +78,7 @@ class MyAccountController extends Controller
         $flashMessage = 'We\'ve saved your changes.';
 
         if (Str::lower($request->input('email')) != $user->email) {
-            $flashMessage .= ' Please follow the link we have sent to ' . Str::lower($request->input('email')) . ' to finish changing your email.';
+            $flashMessage .= ' Please follow the link we have sent to '.Str::lower($request->input('email')).' to finish changing your email.';
         }
 
         $request->session()->flash('success', $flashMessage);
@@ -140,5 +140,4 @@ class MyAccountController extends Controller
     {
         return Inertia::render('', []);
     }
-
 }

@@ -8,11 +8,11 @@ use App\Models\Tenant\TenantOption;
 use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use function Illuminate\Events\queueable;
 use Laravel\Cashier\Billable;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
-use function Illuminate\Events\queueable;
 
 /**
  * @property int ID
@@ -32,25 +32,31 @@ use function Illuminate\Events\queueable;
  * @property Journal journal
  * @property string application_fee_type
  * @property float application_fee_amount
+ * @property string $timezone
  */
 class Tenant extends BaseTenant
 {
     use HasDomains, Searchable, Billable, AccountingJournal;
 
     protected $configOptionsCached = false;
+
     protected $configOptions = [];
+
     /**
      * The attributes that should be hidden for arrays.
      *
      * @var array
      */
     protected $hidden = ['tenantOptions', 'Email'];
+
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
     protected $appends = ['logo_path'];
+
+    protected $primaryKey = 'ID';
 
     public static function getCustomColumns(): array
     {
@@ -86,7 +92,7 @@ class Tenant extends BaseTenant
         if ($tenantOption) {
             return $tenantOption->tenant;
         }
-        throw new \Exception('No tenant found for Stripe Account ID: ' . $id);
+        throw new \Exception('No tenant found for Stripe Account ID: '.$id);
     }
 
     /**
@@ -129,15 +135,15 @@ class Tenant extends BaseTenant
             'invoice_settings' => [
                 'custom_fields' => [
                     [
-                        "name" => "Tenant ID",
-                        "value" => $this->ID,
+                        'name' => 'Tenant ID',
+                        'value' => $this->ID,
                     ],
                     [
-                        "name" => "Swim England Club Code",
-                        "value" => $this->Code,
-                    ]
-                ]
-            ]
+                        'name' => 'Swim England Club Code',
+                        'value' => $this->Code,
+                    ],
+                ],
+            ],
         ]);
     }
 
@@ -198,7 +204,7 @@ class Tenant extends BaseTenant
 
     public function getOption($key)
     {
-        if (!$this->configOptionsCached) {
+        if (! $this->configOptionsCached) {
             foreach ($this->tenantOptions()->get() as $option) {
                 $this->configOptions[$option->Option] = $option->Value;
             }
@@ -228,7 +234,6 @@ class Tenant extends BaseTenant
     /**
      * Return the ID of the tenant's Stripe account, or null if they do not have one
      *
-     * @return string|null
      * @throws NoStripeAccountException
      */
     public function stripeAccount(): ?string
@@ -240,27 +245,38 @@ class Tenant extends BaseTenant
         throw new NoStripeAccountException();
     }
 
+    public function domains(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(config('tenancy.domain_model'), 'tenant_id');
+    }
+
     /**
      * Get the tenant id via expected attribute.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['ID'] ?? null,
+            get: fn ($value, $attributes) => $attributes['ID'] ?? null,
         );
     }
 
     /**
      * Get the tenant logo path.
-     *
-     * @return \Illuminate\Database\Eloquent\Casts\Attribute
      */
     protected function logoPath(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $this->getOption("LOGO_DIR") ? getUploadedAssetUrl($this->getOption("LOGO_DIR")) : null,
+            get: fn ($value, $attributes) => $this->getOption('LOGO_DIR') ? getUploadedAssetUrl($this->getOption('LOGO_DIR')) : null,
+        );
+    }
+
+    /**
+     * Get the tenant timezone setting.
+     */
+    protected function timezone(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $this->getOption('TIMEZONE') ? $this->getOption('TIMEZONE') : 'Europe/London',
         );
     }
 }

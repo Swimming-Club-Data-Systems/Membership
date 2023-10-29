@@ -34,6 +34,7 @@ class TenantController extends Controller
                 $query->where('Option', 'LOGO_DIR');
             }])->paginate(config('app.per_page'));
         }
+
         return Inertia::render('Central/Tenants/Index', [
             'tenants' => $tenants->onEachSide(3),
         ]);
@@ -51,15 +52,15 @@ class TenantController extends Controller
                 'code' => $tenant->Code,
                 'website' => $tenant->Website,
                 'email' => $tenant->Email,
-                'verified' => (bool)$tenant->Verified,
+                'verified' => (bool) $tenant->Verified,
                 'domain' => $tenant->Domain,
-                'alphanumeric_sender_id' => (string)$tenant->alphanumeric_sender_id,
-                'application_fee_type' => $tenant->application_fee_type ?? "none",
-                'application_fee_amount' => $tenant->application_fee_type != "none" &&
-                mb_strlen((string)$tenant->application_fee_amount) > 0 ?
-                    BigDecimal::of((string)$tenant->application_fee_amount)->withPointMovedLeft(2) : 0,
+                'alphanumeric_sender_id' => (string) $tenant->alphanumeric_sender_id,
+                'application_fee_type' => $tenant->application_fee_type ?? 'none',
+                'application_fee_amount' => $tenant->application_fee_type != 'none' &&
+                mb_strlen((string) $tenant->application_fee_amount) > 0 ?
+                    BigDecimal::of((string) $tenant->application_fee_amount)->withPointMovedLeft(2) : 0,
             ],
-            'editable' => Gate::allows('manage')
+            'editable' => Gate::allows('manage'),
         ]);
     }
 
@@ -86,12 +87,12 @@ class TenantController extends Controller
         if (Gate::allows('manage')) {
             $tenant->Verified = $request->input('verified');
             $tenant->Domain = $request->input('domain');
-            if ($request->input('application_fee_type') === "fixed" || $request->input('application_fee_type') === "percent") {
+            if ($request->input('application_fee_type') === 'fixed' || $request->input('application_fee_type') === 'percent') {
                 $tenant->application_fee_type = $request->input('application_fee_type');
                 $tenant->application_fee_amount =
-                    BigDecimal::of((string)$request->input('application_fee_amount'))->withPointMovedRight(2)->toInt();
+                    BigDecimal::of((string) $request->input('application_fee_amount'))->withPointMovedRight(2)->toInt();
             } else {
-                $tenant->application_fee_type = "none";
+                $tenant->application_fee_type = 'none';
                 $tenant->application_fee_amount = 0;
             }
         }
@@ -160,13 +161,13 @@ class TenantController extends Controller
                 ]);
 
                 $token = $provider->getAccessToken('authorization_code', [
-                    'code' => $request->input('code')
+                    'code' => $request->input('code'),
                 ]);
 
                 $responseValues = $token->getValues();
 
-                if (!isset($responseValues['stripe_user_id'])) {
-                    throw new \Exception("No stripe_user_id returned in response");
+                if (! isset($responseValues['stripe_user_id'])) {
+                    throw new \Exception('No stripe_user_id returned in response');
                 }
 
                 $tenant->setOption('STRIPE_ACCOUNT_ID', $responseValues['stripe_user_id']);
@@ -176,7 +177,7 @@ class TenantController extends Controller
                     \Stripe\ApplePayDomain::create([
                         'domain_name' => $tenant->Domain,
                     ], [
-                        'stripe_account' => $responseValues['stripe_user_id']
+                        'stripe_account' => $responseValues['stripe_user_id'],
                     ]);
                 }
 
@@ -201,8 +202,8 @@ class TenantController extends Controller
         $this->authorize('manage', $tenant);
 
         return Inertia::render('Central/Tenants/Billing', [
-            'id' => fn() => $tenant->ID,
-            'name' => fn() => $tenant->Name,
+            'id' => fn () => $tenant->ID,
+            'name' => fn () => $tenant->Name,
             'invoices' => function () use ($tenant) {
                 return $tenant->invoicesIncludingPending([
                     'limit' => 5,
@@ -250,11 +251,11 @@ class TenantController extends Controller
                         'current_period_start' => $stripeSubscription->current_period_start,
                         'current_period_end' => $stripeSubscription->current_period_end,
                         'currency' => $stripeSubscription->currency,
-                        'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : "N/A",
+                        'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : 'N/A',
                         'description' => $stripeSubscription->description,
                         'billing_cycle_anchor' => $stripeSubscription->billing_cycle_anchor,
                         'collection_method' => $stripeSubscription->collection_method,
-                        'discount' => (bool)$stripeSubscription->discount,
+                        'discount' => (bool) $stripeSubscription->discount,
                         'items' => collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
                             return [
                                 'id' => $subItem->id,
@@ -266,10 +267,10 @@ class TenantController extends Controller
                                     'currency' => $subItem->price->currency,
                                     'formatted_unit_amount' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency),
                                     'decimal_unit_amount' => Money::formatDecimal($subItem->price->unit_amount, $subItem->price->currency),
-                                    'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency) . ' '
-                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
-                                    'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency) . ' '
-                                        . Str::upper($subItem->price->currency) . ' / ' . $subItem->price->recurring->interval,
+                                    'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency).' '
+                                        .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
+                                    'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency).' '
+                                        .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
                                 ],
                                 'product_name' => $subItem->price->product->name,
                                 'product_type' => $subItem->price->product->type,
@@ -322,7 +323,7 @@ class TenantController extends Controller
 
     public function payAsYouGo(Tenant $tenant)
     {
-        if (!$tenant->journal) {
+        if (! $tenant->journal) {
             try {
                 $tenant->initJournal();
                 $tenant = $tenant->fresh();
@@ -349,7 +350,7 @@ class TenantController extends Controller
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
         $checkoutSession = $stripe->checkout->sessions->create([
-            'success_url' => route('central.tenants.top_up_success', $tenant) . '?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => route('central.tenants.top_up_success', $tenant).'?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('central.tenants.pay_as_you_go', [$tenant]),
             'line_items' => [
                 [
@@ -377,11 +378,11 @@ class TenantController extends Controller
             try {
                 $stripe = new \Stripe\StripeClient(config('cashier.secret'));
                 $session = $stripe->checkout->sessions->retrieve($request->input('session_id'), [
-                    'expand' => ['payment_intent']
+                    'expand' => ['payment_intent'],
                 ]);
 
                 if ($session->status == 'complete' && $session->payment_intent) {
-                    $request->session()->flash('success', 'You have topped up your balance by ' . Money::formatCurrency($session->payment_intent->amount, $session->payment_intent->currency) . '. It may take a moment for your balance to update.');
+                    $request->session()->flash('success', 'You have topped up your balance by '.Money::formatCurrency($session->payment_intent->amount, $session->payment_intent->currency).'. It may take a moment for your balance to update.');
                 }
             } catch (\Exception $e) {
             }
@@ -399,9 +400,9 @@ class TenantController extends Controller
         $applePay = null;
         if ($stripeAccount) {
             $applePay = \Stripe\ApplePayDomain::all([
-                'limit' => 20
+                'limit' => 20,
             ], [
-                'stripe_account' => $stripeAccount
+                'stripe_account' => $stripeAccount,
             ]);
         }
 
@@ -423,12 +424,12 @@ class TenantController extends Controller
 
         try {
             $domain = \Stripe\ApplePayDomain::create([
-                'domain_name' => $request->input('domain')
+                'domain_name' => $request->input('domain'),
             ], [
-                'stripe_account' => $stripeAccount
+                'stripe_account' => $stripeAccount,
             ]);
 
-            $request->session()->flash('success', 'We have added ' . $domain->domain_name . ' to the list of Apple Pay domains.');
+            $request->session()->flash('success', 'We have added '.$domain->domain_name.' to the list of Apple Pay domains.');
         } catch (\Exception $e) {
             $request->session()->flash('error', $e->getMessage());
         }
@@ -446,19 +447,18 @@ class TenantController extends Controller
 
         try {
             $domain = \Stripe\ApplePayDomain::retrieve($id, [
-                'stripe_account' => $stripeAccount
+                'stripe_account' => $stripeAccount,
             ]);
 
             $domainName = $domain->domain_name;
 
             $domain->delete();
 
-            $request->session()->flash('success', 'We have deleted ' . $domainName . ' from the list of Apple Pay domains.');
+            $request->session()->flash('success', 'We have deleted '.$domainName.' from the list of Apple Pay domains.');
         } catch (\Exception $e) {
             $request->session()->flash('error', $e->getMessage());
         }
 
         return Redirect::route('central.tenants.apple_pay_domains', $tenant);
     }
-
 }

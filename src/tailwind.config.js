@@ -8,6 +8,11 @@ module.exports = {
         "./resources/views/**/*.blade.php",
         "./resources/js/**/*.jsx",
         "./resources/js/**/*.tsx",
+        "./stories/**/*.tsx",
+        "./stories/**/*.jsx",
+        "./stories/**/*.ts",
+        "./stories/**/*.js",
+        "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
     ],
 
     theme: {
@@ -27,7 +32,7 @@ module.exports = {
     plugins: [
         require("@tailwindcss/forms"),
         require("@tailwindcss/typography"),
-        require("@tailwindcss/line-clamp"),
         require("@tailwindcss/aspect-ratio"),
+        require("@tailwindcss/container-queries"),
     ],
 };

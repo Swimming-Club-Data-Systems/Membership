@@ -39,7 +39,8 @@ class ProcessStripeSetupIntents extends Command
             try {
                 $tenant->stripeAccount();
             } catch (NoStripeAccountException) {
-                echo("Tenant " . $tenant->id . " does not have a Stripe account");
+                echo 'Tenant '.$tenant->id.' does not have a Stripe account';
+
                 return Command::FAILURE;
             }
 
@@ -63,7 +64,7 @@ class ProcessStripeSetupIntents extends Command
             $numSuccess = 0;
 
             foreach ($intentsIterator as $data) {
-                if ($data->status == "succeeded" && $data?->payment_method?->type == "bacs_debit" && $data->mandate) {
+                if ($data->status == 'succeeded' && $data?->payment_method?->type == 'bacs_debit' && $data->mandate) {
                     try {
                         DB::table('stripeMandates')->upsert([
                             'ID' => $data->payment_method->id,
@@ -78,9 +79,9 @@ class ProcessStripeSetupIntents extends Command
                             'Reference' => $data->mandate->payment_method_details->bacs_debit->reference,
                             'URL' => $data->mandate->payment_method_details->bacs_debit->url,
                         ], [
-                            'ID'
+                            'ID',
                         ], [
-                            'Reference', 'Status', 'MandateStatus', 'URL', 'SortCode', 'Last4', 'Address'
+                            'Reference', 'Status', 'MandateStatus', 'URL', 'SortCode', 'Last4', 'Address',
                         ]);
                         $numSuccess++;
                     } catch (\Exception $e) {
@@ -90,7 +91,7 @@ class ProcessStripeSetupIntents extends Command
                 }
             }
 
-            echo "Completed with " . $numSuccess . " successes and " . $numErrors . " errors.";
+            echo 'Completed with '.$numSuccess.' successes and '.$numErrors.' errors.';
         });
 
         return Command::SUCCESS;

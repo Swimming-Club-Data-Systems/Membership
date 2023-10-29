@@ -52,8 +52,8 @@ class ConfirmableWebAuthnController extends Controller
         $publicKeyCredentialRequestOptionsJson = json_encode($publicKeyCredentialRequestOptions);
         $publicKeyCredentialRequestOptions = json_decode($publicKeyCredentialRequestOptionsJson, true);
 
-        if ($request->input('mediation') == "conditional") {
-            $publicKeyCredentialRequestOptions['mediation'] = "conditional";
+        if ($request->input('mediation') == 'conditional') {
+            $publicKeyCredentialRequestOptions['mediation'] = 'conditional';
         }
 
         $request->session()->put('webauthn_credential_request_options', json_encode($publicKeyCredentialRequestOptions));
@@ -85,7 +85,7 @@ class ConfirmableWebAuthnController extends Controller
         $publicKeyCredential = $publicKeyCredentialLoader->loadArray($request->input());
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
-        if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+        if (! $authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
             //e.g. process here with a redirection to the public key login/MFA page.
         }
 
@@ -119,7 +119,7 @@ class ConfirmableWebAuthnController extends Controller
             $authenticatorAssertionResponse,
             $publicKeyCredentialRequestOptions,
             $serverRequest,
-//            $userHandle
+            //            $userHandle
             null,
             ['testclub.localhost', 'localhost'],
         );

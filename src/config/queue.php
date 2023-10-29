@@ -1,5 +1,7 @@
 <?php
 
+use App\Enums\Queue;
+
 return [
 
     /*

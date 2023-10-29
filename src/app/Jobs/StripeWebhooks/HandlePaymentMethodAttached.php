@@ -2,6 +2,7 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PaymentMethod;
 use App\Models\Tenant\StripeCustomer;
@@ -28,6 +29,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -52,7 +54,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                 /** @var StripeCustomer $customer */
                 $customer = StripeCustomer::firstWhere('CustomerID', '=', $this->webhookCall->payload['data']['object']['customer']);
 
-                if (!$customer) {
+                if (! $customer) {
                     // Stop executing
                     return;
                 }
@@ -60,7 +62,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                 // See if it's already in the database
                 $paymentMethod = PaymentMethod::firstWhere('stripe_id', '=', $this->webhookCall->payload['data']['object']['id']);
 
-                if (!$paymentMethod) {
+                if (! $paymentMethod) {
                     $pm = \Stripe\PaymentMethod::retrieve([
                         'id' => $this->webhookCall->payload['data']['object']['id'],
                         'expand' => ['billing_details.address'],
@@ -74,6 +76,7 @@ class HandlePaymentMethodAttached implements ShouldQueue
                     $paymentMethod->type = $type;
                     $paymentMethod->pm_type_data = $pm->$type;
                     $paymentMethod->billing_address = $pm->billing_details;
+                    $paymentMethod->fingerprint = $paymentMethod->pm_type_data?->fingerprint;
                     $paymentMethod->user()->associate($customer->user);
                     $paymentMethod->created_at = $pm->created;
 

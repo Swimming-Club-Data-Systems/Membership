@@ -9,6 +9,7 @@ use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Laravel\Scout\Searchable;
 
 /**
  * @property Journal journal
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  */
 class JournalAccount extends Model
 {
-    use HasFactory, BelongsToTenant, AccountingJournal {
+    use HasFactory, BelongsToTenant, Searchable, AccountingJournal {
         journal as protected traitJournal;
     }
 
@@ -40,7 +41,7 @@ class JournalAccount extends Model
 
     public function journal(): MorphOne
     {
-        if (!$this->traitJournal()) {
+        if (! $this->traitJournal()) {
             try {
                 $this->initJournal();
                 $this->refresh();

@@ -46,16 +46,17 @@ const MainLayout: React.FC<Props> = ({
     buttons,
     hideHeader = false,
 }) => {
-    console.log(title);
     const userObject = usePage().props.auth.user;
 
     const navigation = usePage().props.tenant.menu;
+
+    const url = usePage().url;
 
     const user = userObject
         ? {
               name: `${userObject.Forename} ${userObject.Surname}`,
               email: userObject.EmailAddress,
-              imageUrl: userObject.gravitar_url,
+              imageUrl: userObject.gravatar_url,
           }
         : null;
 
@@ -565,10 +566,7 @@ const MainLayout: React.FC<Props> = ({
                                         </div>
                                     )}
                                     <div className="hidden sm:block">
-                                        <ol
-                                            role="list"
-                                            className="flex items-center space-x-4"
-                                        >
+                                        <ol className="flex items-center space-x-4">
                                             <li>
                                                 <div>
                                                     <Link
@@ -601,8 +599,7 @@ const MainLayout: React.FC<Props> = ({
                                                             href={
                                                                 item.route ===
                                                                 "this"
-                                                                    ? usePage()
-                                                                          .url
+                                                                    ? url
                                                                     : route(
                                                                           item.route,
                                                                           item.routeParams

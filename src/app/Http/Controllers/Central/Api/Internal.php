@@ -16,7 +16,6 @@ class Internal extends Controller
     /**
      * Show the profile for a given user.
      *
-     * @param Request $request
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */

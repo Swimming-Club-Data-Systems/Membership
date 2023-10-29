@@ -21,11 +21,13 @@ class JournalAccountController extends Controller
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index()
+    {
 
     }
 
-    public function new(LedgerAccount $ledger) {
+    public function new(LedgerAccount $ledger)
+    {
         return Inertia::render('Payments/Ledgers/Journals/New', [
             'ledger_id' => $ledger->id,
             'ledger_name' => $ledger->name,
@@ -46,7 +48,7 @@ class JournalAccountController extends Controller
             'currency' => [
                 'required',
                 Rule::in(['GBP']),
-            ]
+            ],
         ]);
 
         $journalAccount = new JournalAccount();
@@ -66,5 +68,49 @@ class JournalAccountController extends Controller
             'name' => $journal->name,
             'is_system' => $journal->is_system,
         ]);
+    }
+
+    public function combobox(Request $request)
+    {
+        $journals = null;
+        if ($request->query('query')) {
+            $journals = JournalAccount::search($request->query('query'))
+                ->where('Tenant', tenant('ID'))
+                ->paginate(50);
+        }
+
+        $journalsArray = [];
+
+        $selectedJournal = null;
+        if ($request->query('id')) {
+            /** @var JournalAccount $selectedJournal */
+            $selectedJournal = JournalAccount::find($request->query('id'));
+            if ($selectedJournal) {
+                $journalsArray[] = [
+                    'id' => $selectedJournal->id,
+                    'name' => $selectedJournal->name,
+                ];
+            }
+        }
+
+        if ($journals) {
+            foreach ($journals as $journal) {
+                /** @var JournalAccount $journal */
+                if ($selectedJournal == null || $selectedJournal->id !== $journal->id) {
+                    $journalsArray[] = [
+                        'id' => $journal->id,
+                        'name' => $journal->name,
+                    ];
+                }
+            }
+        }
+
+        $responseData = [
+            'data' => $journalsArray,
+            'has_more_pages' => $journals && $journals->hasMorePages(),
+            'total' => $journals ? $journals->total() : count($journalsArray),
+        ];
+
+        return \response()->json($responseData);
     }
 }

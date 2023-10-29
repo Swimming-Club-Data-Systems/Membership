@@ -2,10 +2,9 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use App\Traits\UuidIdentifier;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property string $ID
@@ -15,9 +14,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class NotifyCategory extends Model
 {
-    use HasFactory, BelongsToTenant, UuidIdentifier;
+    use BelongsToTenant, UuidIdentifier;
 
     protected $primaryKey = 'ID';
+
     protected $table = 'notifyCategories';
 
     /**
@@ -29,7 +29,7 @@ class NotifyCategory extends Model
             ->as('subscription')
             ->withTimestamps()
             ->withPivot([
-                'Subscribed'
+                'Subscribed',
             ]);
     }
 }

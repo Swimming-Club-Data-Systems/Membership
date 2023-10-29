@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\ProcessSMS;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Member;
-use App\Models\Tenant\NotifyHistory;
 use App\Models\Tenant\Sms;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
@@ -36,7 +35,7 @@ class SMSController extends Controller
 
         $sms = null;
         if ($request->query('query')) {
-            $sms = Sms::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+            $sms = Sms::search($request->query('query'))->where('Tenant', tenant('ID'))->query(fn ($query) => $query->with(['author']))->paginate(config('app.per_page'));
         } else {
             $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
         }
@@ -68,7 +67,7 @@ class SMSController extends Controller
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        if (!$tenant->journal) {
+        if (! $tenant->journal) {
             try {
                 $tenant->initJournal();
                 $tenant = $tenant->fresh();
@@ -105,7 +104,7 @@ class SMSController extends Controller
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        if (!$tenant->journal) {
+        if (! $tenant->journal) {
             try {
                 $tenant->initJournal();
                 $tenant = $tenant->fresh();
@@ -143,7 +142,7 @@ class SMSController extends Controller
 
         foreach (Squad::all() as $squad) {
             /** @var Squad $squad */
-            if ($request->boolean('squads.' . $squad->SquadID)) {
+            if ($request->boolean('squads.'.$squad->SquadID)) {
                 $sms->squads()->attach($squad);
                 foreach ($squad->members()->with(['user'])->get() as $member) {
                     /** @var Member $member */
@@ -154,14 +153,13 @@ class SMSController extends Controller
             }
         }
 
-        if (sizeof($users) == 0) {
+        if (count($users) == 0) {
             // Throw back to the form
             $sms->delete();
             throw ValidationException::withMessages([
-                'users' => 'There are no subscribed users for your selection'
+                'users' => 'There are no subscribed users for your selection',
             ]);
         }
-
 
         foreach ($users as $userId => $mobile) {
             $sms->recipients()->attach($userId, [], false);
@@ -169,7 +167,7 @@ class SMSController extends Controller
 
         ProcessSMS::dispatch($sms);
 
-        $request->session()->flash('success', 'We\'re sending your message to ' . sizeof($users) . ' users.');
+        $request->session()->flash('success', 'We\'re sending your message to '.count($users).' users.');
 
         return Redirect::route('notify.sms.new');
     }

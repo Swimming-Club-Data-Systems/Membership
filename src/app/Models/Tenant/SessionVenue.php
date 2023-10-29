@@ -2,11 +2,9 @@
 
 namespace App\Models\Tenant;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int VenueID
@@ -15,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class SessionVenue extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant;
 
     public function sessions(): HasMany
     {
@@ -23,5 +21,6 @@ class SessionVenue extends Model
     }
 
     protected $primaryKey = 'SessionID';
+
     protected $table = 'sessionsVenues';
 }

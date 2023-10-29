@@ -20,7 +20,6 @@ class Permission extends Model
 
     /**
      * Get the user
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user(): BelongsTo
     {

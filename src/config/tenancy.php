@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Stancl\Tenancy\Database\Models\Domain;
 use App\Models\Central\Tenant;
+use Stancl\Tenancy\Database\Models\Domain;
 
 $centralDomains = [
     '127.0.0.1',

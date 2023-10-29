@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
+use App\Enums\Queue;
 use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Mail\SmsSent;
 use App\Models\Central\Tenant;
@@ -32,6 +33,7 @@ class ProcessSMS implements ShouldQueue
     public function __construct(Sms $sms)
     {
         $this->sms = $sms->withoutRelations();
+        $this->onQueue(Queue::NOTIFY->value);
     }
 
     /**
@@ -44,7 +46,7 @@ class ProcessSMS implements ShouldQueue
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        if (!$tenant->journal) {
+        if (! $tenant->journal) {
             try {
                 $tenant->initJournal();
                 $tenant = $tenant->fresh();
@@ -63,7 +65,7 @@ class ProcessSMS implements ShouldQueue
         $client = new Client(config('twilio.sid'), config('twilio.token'), null, config('twilio.region'));
         $client->setEdge(config('twilio.edge'));
 
-        $from = $tenant->alphanumeric_sender_id ? $tenant->alphanumeric_sender_id : "SWIM CLUB";
+        $from = $tenant->alphanumeric_sender_id ? $tenant->alphanumeric_sender_id : 'SWIM CLUB';
         if (config('twilio.from') == '+15005550006') {
             // Must be in test mode, overwrite the from number with this
             $from = config('twilio.from');
@@ -87,7 +89,7 @@ class ProcessSMS implements ShouldQueue
                         'from' => $from,
                         'body' => $this->sms->message,
                         'shortenUrls' => true,
-                        'maxPrice' => 0.0100
+                        'maxPrice' => 0.0100,
                     ]
                 );
 
@@ -97,7 +99,7 @@ class ProcessSMS implements ShouldQueue
                 $totalFee += $fee;
 
                 // Debit the tenant and reference the Sms model
-                $transaction = $tenant->journal->debit($fee, 'SMS message of ' . $response->numSegments . ' ' . Str::plural('segment', $response->numSegments) . ' to ' . Str::mask($number, '*', -6) . ' (' . PhoneNumber::create($number)->getDescription() . ')');
+                $transaction = $tenant->journal->debit($fee, 'SMS message of '.$response->numSegments.' '.Str::plural('segment', $response->numSegments).' to '.Str::mask($number, '*', -6).' ('.PhoneNumber::create($number)->getDescription().')');
                 $transaction->referencesObject($this->sms);
                 $sentUsers++;
             } catch (TwilioException $e) {

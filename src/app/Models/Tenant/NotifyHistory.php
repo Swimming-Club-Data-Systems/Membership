@@ -3,11 +3,10 @@
 namespace App\Models\Tenant;
 
 use App\Models\Central\Tenant;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int $ID
@@ -24,9 +23,10 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class NotifyHistory extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     protected $primaryKey = 'ID';
+
     protected $table = 'notifyHistory';
 
     private $_attachments;
@@ -54,14 +54,14 @@ class NotifyHistory extends Model
 
         $data = array_intersect_key($array, array_flip($fields));
 
-        $data['author'] = $this->author ? $this->author->Forename . ' ' . $this->author->Surname : null;
+        $data['author'] = $this->author ? $this->author->Forename.' '.$this->author->Surname : null;
 
         return $data;
     }
 
     public function attachments(): array
     {
-        if (!$this->_attachments) {
+        if (! $this->_attachments) {
             $this->_attachments = [];
             if (isset($this->JSONData['Attachments'])) {
                 foreach ($this->JSONData['Attachments'] as $key => $data) {
@@ -70,7 +70,7 @@ class NotifyHistory extends Model
                         'name' => $data['Filename'],
                         'mime_type' => $data['MIME'],
                         'path' => $data['URI'],
-                        's3_path' => $this->tenant->ID . '/' . $data['URI'],
+                        's3_path' => $this->tenant->ID.'/'.$data['URI'],
                     ];
                 }
             }

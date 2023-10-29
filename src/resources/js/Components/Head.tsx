@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Head as InertiaHead } from "@inertiajs/react";
-import { setKey, setKeys, store } from "@/Reducers/store";
+import { setKeys, store } from "@/Reducers/store";
 
 type HeadProps = {
     title: string;

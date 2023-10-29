@@ -3,8 +3,8 @@
 namespace App\Models\Tenant\Auth;
 
 use App\Models\Tenant\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\MassPrunable;
+use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**

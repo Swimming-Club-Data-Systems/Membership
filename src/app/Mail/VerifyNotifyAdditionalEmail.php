@@ -20,22 +20,16 @@ class VerifyNotifyAdditionalEmail extends Mailable
 
     /**
      * The signed url to visit and confirm
-     *
-     * @var string $url
      */
     public string $url;
 
     /**
      * The additional recipient's email address
-     *
-     * @var string $email
      */
     public string $email;
 
     /**
      * The additional recipient's name
-     *
-     * @var string $name
      */
     public string $name;
 

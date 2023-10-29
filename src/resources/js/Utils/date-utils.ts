@@ -1,4 +1,4 @@
-import { format, fromUnixTime, parse, parseISO } from "date-fns";
+import { format, fromUnixTime, parseISO } from "date-fns";
 
 export const formatDateTime = (isoDate: string): string => {
     return format(parseISO(isoDate), "HH:mm, do MMMM yyyy");

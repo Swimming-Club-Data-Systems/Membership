@@ -20,4 +20,11 @@ return [
         'url_access_token' => env('ADMIN_OAUTH_URL_ACCESS_TOKEN'),
     ],
 
+    'aad' => [
+        'client_id' => env('AAD_OAUTH_CLIENT_ID'),
+        'client_secret' => env('AAD_OAUTH_CLIENT_SECRET'),
+        'url_authorize' => env('AAD_OAUTH_URL_AUTHORIZE'),
+        'url_access_token' => env('AAD_OAUTH_URL_ACCESS_TOKEN'),
+    ],
+
 ];

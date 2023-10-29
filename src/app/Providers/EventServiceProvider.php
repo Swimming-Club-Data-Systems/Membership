@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\Tenant\CompetitionCreated;
 use App\Listeners\StripeEventListener;
+use App\Listeners\Tenant\PopulateBasicCompetition;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -22,7 +24,10 @@ class EventServiceProvider extends ServiceProvider
         ],
         WebhookReceived::class => [
             StripeEventListener::class,
-        ]
+        ],
+        CompetitionCreated::class => [
+            PopulateBasicCompetition::class,
+        ],
     ];
 
     /**

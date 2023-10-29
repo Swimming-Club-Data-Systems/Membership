@@ -23,7 +23,6 @@ class MemberPolicy
     /**
      * Perform pre-authorization checks.
      *
-     * @param User $user
      * @param  string  $ability
      * @return void|bool
      */
@@ -37,7 +36,6 @@ class MemberPolicy
     /**
      * Can the user view the list?
      *
-     * @param User $user
      * @return void|bool
      */
     public function viewAll(User $user)
@@ -50,8 +48,6 @@ class MemberPolicy
     /**
      * Can the current user view the member?
      *
-     * @param User $user
-     * @param Member $member
      * @return void|bool
      */
     public function view(User $user, Member $member)

@@ -16,9 +16,9 @@ class ReportAnErrorController extends Controller
     public function create(Request $request)
     {
         $userData = [
-            'id' => "",
-            'name' => "",
-            'email' => "",
+            'id' => '',
+            'name' => '',
+            'email' => '',
         ];
 
         if ($request->user()) {
@@ -36,7 +36,7 @@ class ReportAnErrorController extends Controller
                 'app' => 'tenant',
                 'user' => $userData,
                 'url' => $request->input('url', ''),
-            ]
+            ],
         ]);
     }
 
@@ -49,7 +49,7 @@ class ReportAnErrorController extends Controller
             'description' => ['required', 'max:1000'],
             'user_agent' => ['required', 'max:255'],
             'user_agent_brands' => ['json'],
-            'data_sharing_agreement' => ['accepted']
+            'data_sharing_agreement' => ['accepted'],
         ]);
 
         Mail::to(\App\Models\Central\User::find(1))->send(new IssueReport(
@@ -74,7 +74,7 @@ class ReportAnErrorController extends Controller
 
         $request->session()->flash('success', "We've sent your error report. It will be reviewed as soon as possible.");
 
-//        return Inertia::location(route('report_an_error'));
+        //        return Inertia::location(route('report_an_error'));
         return Redirect::route('report_an_error');
     }
 }

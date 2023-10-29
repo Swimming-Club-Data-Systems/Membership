@@ -21,7 +21,7 @@ class NotifyHistoryController extends Controller
         $emails = null;
 
         if ($request->query('query')) {
-            $emails = NotifyHistory::search($request->query('query'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+            $emails = NotifyHistory::search($request->query('query'))->query(fn ($query) => $query->with(['author']))->paginate(config('app.per_page'));
         } else {
             $emails = NotifyHistory::orderBy('Date', 'desc')->with(['author'])->paginate(config('app.per_page'));
         }
@@ -38,6 +38,7 @@ class NotifyHistoryController extends Controller
     public function show(NotifyHistory $email)
     {
         Gate::authorize('manage');
+
         return response()->json($email->jsonSerialize());
     }
 
@@ -53,19 +54,20 @@ class NotifyHistoryController extends Controller
             $filename = $file['Filename'] ?? 'file';
             $mime = $file['MIME'];
 
-            $disposition = 'attachment; filename="' . addslashes($filename) . '"';
-            if ($mime == "application/pdf" || str_contains($mime, "image") || str_contains($mime, "image")) {
+            $disposition = 'attachment; filename="'.addslashes($filename).'"';
+            if ($mime == 'application/pdf' || str_contains($mime, 'image') || str_contains($mime, 'image')) {
                 $disposition = 'inline';
             }
 
             try {
                 $url = Storage::temporaryUrl(
-                    $email->Tenant . '/' . $request->input('file'),
+                    $email->Tenant.'/'.$request->input('file'),
                     now()->addMinutes(5),
                     [
                         'ResponseContentDisposition' => $disposition,
                     ]
                 );
+
                 return redirect($url);
             } catch (\Exception $e) {
                 abort(404, 'File not found in file storage');
@@ -81,7 +83,7 @@ class NotifyHistoryController extends Controller
 
         $sms = null;
         if ($request->query('query')) {
-            $sms = Sms::search($request->query('query'))->query(fn($query) => $query->with(['author']))->paginate(config('app.per_page'));
+            $sms = Sms::search($request->query('query'))->query(fn ($query) => $query->with(['author']))->paginate(config('app.per_page'));
         } else {
             $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
         }

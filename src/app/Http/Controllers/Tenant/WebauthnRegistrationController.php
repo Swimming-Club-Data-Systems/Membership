@@ -83,8 +83,8 @@ class WebauthnRegistrationController extends Controller
 
     public function verify(Request $request)
     {
-        if (!$request->session()->exists('webauthn_credential_registration_request_options')) {
-            throw ValidationException::withMessages(["No request object in memory."]);
+        if (! $request->session()->exists('webauthn_credential_registration_request_options')) {
+            throw ValidationException::withMessages(['No request object in memory.']);
         }
 
         $options = $request->session()->get('webauthn_credential_registration_request_options');
@@ -115,7 +115,7 @@ class WebauthnRegistrationController extends Controller
         }
 
         $authenticatorAttestationResponse = $publicKeyCredential->getResponse();
-        if (!$authenticatorAttestationResponse instanceof AuthenticatorAttestationResponse) {
+        if (! $authenticatorAttestationResponse instanceof AuthenticatorAttestationResponse) {
             // Failed, report back
             return response()->json([
                 'success' => false,
@@ -169,13 +169,14 @@ class WebauthnRegistrationController extends Controller
 
             $request->session()->forget('webauthn_credential_registration_request_options');
 
-            $request->session()->flash('flash_bag.manage_passkeys.success', 'We have saved your new passkey (' . $credential->credential_name . ').');
+            $request->session()->flash('flash_bag.manage_passkeys.success', 'We have saved your new passkey ('.$credential->credential_name.').');
 
             return response()->json([
                 'success' => true,
             ]);
         } catch (\Throwable $e) {
             report($e);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Passkey verification failed. Please try again.',
@@ -189,7 +190,7 @@ class WebauthnRegistrationController extends Controller
 
         $credential->delete();
 
-        $request->session()->flash('flash_bag.delete_credential.success', 'We have deleted ' . $credential->credential_name . ' from your list of passkeys.');
+        $request->session()->flash('flash_bag.delete_credential.success', 'We have deleted '.$credential->credential_name.' from your list of passkeys.');
 
         return Redirect::route('my_account.security');
     }

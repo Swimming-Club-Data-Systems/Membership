@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      *
-     * @param \App\Http\Requests\Auth\LoginRequest $request
+     * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\Response
      */
     public function store(CentralLoginRequest $request)
@@ -82,7 +82,7 @@ class AuthenticatedSessionController extends Controller
 
         // Get or set code
         $code = $request->session()->get('auth.two_factor_code');
-        if (!$code) {
+        if (! $code) {
             $code = random_int(100000, 999999);
             $request->session()->put('auth.two_factor_code', $code);
         }
@@ -105,13 +105,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::findOrFail($request->session()->get('auth.two_factor_code_user'));
 
-        $invalidMessage = "The authentication code provided was invalid";
+        $invalidMessage = 'The authentication code provided was invalid';
 
         // Check
         if ($request->session()->missing('auth.two_factor_code')) {
             // Verify TOTP
             $totp = new Google2FA();
-            if (!$totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $response->input('code'))) {
+            if (! $totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $request->input('code'))) {
                 throw ValidationException::withMessages([
                     'code' => $invalidMessage,
                 ]);
@@ -124,7 +124,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        Auth::guard('central')->login($user, (bool)$request->session()->pull('auth.remember'));
+        Auth::guard('central')->login($user, (bool) $request->session()->pull('auth.remember'));
 
         // The user has just logged in with multiple factors so set confirmed at time
         // Otherwise the user is hit with confirm immediately if heading to profile routes.
@@ -133,7 +133,7 @@ class AuthenticatedSessionController extends Controller
         $request->session()->forget([
             'auth.two_factor_code_user',
             'auth.two_factor_code',
-            'auth.check_two_factor_code'
+            'auth.check_two_factor_code',
         ]);
 
         $request->session()->regenerate();
@@ -144,7 +144,6 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      *
-     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request)

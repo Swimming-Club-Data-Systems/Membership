@@ -2,10 +2,10 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int GalaID
@@ -13,12 +13,12 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property string CourseLength
  * @property string GalaVenue
  * @property float GalaFee
- * @property boolean GalaFeeConstant
+ * @property bool GalaFeeConstant
  * @property \DateTime ClosingDate
  * @property \DateTime GalaDate
- * @property boolean HyTek
- * @property boolean CoachEnters
- * @property boolean RequiresApproval
+ * @property bool HyTek
+ * @property bool CoachEnters
+ * @property bool RequiresApproval
  * @property string Description
  * @property int PaymentCategory
  * @property int ProcessingFee
@@ -33,5 +33,10 @@ class Gala extends Model
     {
         return $this->belongsToMany(User::class, 'teamManagers', 'Gala', 'User')
             ->withTimestamps();
+    }
+
+    public function entries(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(GalaEntry::class, 'GalaID', 'GalaID');
     }
 }

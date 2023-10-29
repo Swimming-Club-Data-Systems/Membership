@@ -9,6 +9,7 @@ class PaymentMethod
     public static function formatName($paymentMethod)
     {
         $type = $paymentMethod->type;
+
         return self::formatNameFromData($type, $paymentMethod->$type);
     }
 
@@ -17,11 +18,95 @@ class PaymentMethod
         $typeData = json_decode(json_encode($typeData));
         switch ($type) {
             case 'card':
-                return self::formatCardBrandName($typeData->brand) . ' ···· ' . $typeData->last4;
+                $wallet = '';
+
+                if ($typeData->wallet) {
+                    switch ($typeData->wallet->type) {
+                        case 'amex_express_checkout':
+                            $wallet = 'Amex Express Checkout';
+                            break;
+                        case 'apple_pay':
+                            $wallet = 'Apple Pay';
+                            break;
+                        case 'google_pay':
+                            $wallet = 'Google Pay';
+                            break;
+                        case 'masterpass':
+                            $wallet = 'Masterpass';
+                            break;
+                        case 'samsung_pay':
+                            $wallet = 'Samsung Pay';
+                            break;
+                        case 'visa_checkout':
+                            $wallet = 'Visa Checkout';
+                            break;
+                        case 'link':
+                            $wallet = 'Link';
+                            break;
+                    }
+                }
+
+                return self::formatCardBrandName($typeData->brand).($wallet ? ' ('.$wallet.')' : '').' ···· '.$typeData->last4;
             case 'bacs_debit':
-                return 'Bacs Direct Debit ···· ' . $typeData->last4;
+                return 'Bacs Direct Debit ···· '.$typeData->last4;
+            case 'klarna':
+                return 'Klarna';
+            case 'acss_debit':
+                return 'ACSS '.$typeData->bank_name.' ···· '.$typeData->last4;
+            case 'affirm':
+                return 'Affirm';
+            case 'afterpay_clearpay':
+                return 'Clearpay';
+            case 'alipay':
+                return 'Alipay';
+            case 'au_becs_debit':
+                return 'BECS Direct Debit ···· '.$typeData->last4;
+            case 'bancontact':
+                return 'Bancontact';
+            case 'blik':
+                return 'BLIK';
+            case 'boleto':
+                return 'Boleto';
+            case 'cashapp':
+                return 'Cash App';
+            case 'customer_balance':
+                return 'Customer Balance (S)';
+            case 'eps':
+                return 'EPS';
+            case 'fpx':
+                return 'fpx';
+            case 'giropay':
+                return 'Giropay';
+            case 'grabpay':
+                return 'GrabPay';
+            case 'ideal':
+                return 'iDEAL';
+            case 'interac_present':
+                return 'Interac';
+            case 'konbini':
+                return 'Konbini';
+            case 'link':
+                return 'Link';
+            case 'oxxo':
+                return 'OXXO';
+            case 'p24':
+                return 'P24';
+            case 'paynow':
+                return 'PayNow';
+            case 'pix':
+                return 'Pix';
+            case 'promptpay':
+                return 'PromptPay';
+            case 'sepa_debit':
+                return 'SEPA Direct Debit ···· '.$typeData->last4;
+            case 'sofort':
+                return 'SOFORT';
+            case 'us_bank_account':
+                return 'U.S. Bank Account ···· '.$typeData->last4;
+            case 'wechat_pay':
+                return 'WeChat Pay';
             default:
-                return $type . ': ' . $typeData->id;
+                return $type;
         }
     }
 
@@ -45,12 +130,14 @@ class PaymentMethod
             default:
                 break;
         }
-        return "Unknown";
+
+        return 'Unknown';
     }
 
     public static function formatInfoLine($paymentMethod)
     {
         $type = $paymentMethod->type;
+
         return self::formatInfoLineFromData($type, $paymentMethod->$type);
     }
 
@@ -63,9 +150,10 @@ class PaymentMethod
                 $expiry->day = 1;
                 $expiry->year = $typeData->exp_year;
                 $expiry->month = $typeData->exp_month;
-                return 'Expires ' . $expiry->monthName . ' ' . $expiry->year;
+
+                return 'Expires '.$expiry->monthName.' '.$expiry->year;
             case 'bacs_debit':
-                return implode("-", str_split($typeData->sort_code, 2));
+                return implode('-', str_split($typeData->sort_code, 2));
             default:
                 return null;
         }
@@ -79,6 +167,7 @@ class PaymentMethod
             case 'debit':
                 return 'Debit';
         }
-        return "Prepaid";
+
+        return 'Prepaid';
     }
 }

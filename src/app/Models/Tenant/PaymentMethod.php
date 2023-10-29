@@ -2,13 +2,16 @@
 
 namespace App\Models\Tenant;
 
+use App\Exceptions\NoStripeAccountException;
 use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use ArrayObject;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stripe\Exception\ApiErrorException;
 
 /**
  * @property int $id
@@ -18,11 +21,28 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property ArrayObject $pm_type_data
  * @property ArrayObject $billing_address
  * @property Tenant $tenant
- * @property boolean $default
+ * @property bool $default
+ * @property string $description
+ * @property string $information_line
+ * @property string $fingerprint
  */
 class PaymentMethod extends Model
 {
     use HasFactory, SoftDeletes, BelongsToTenant;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'stripe_id',
+        'type',
+        'pm_type_data',
+        'billing_address',
+        'created_at',
+        'fingerprint',
+    ];
 
     protected $casts = [
         'pm_type_data' => AsArrayObject::class,
@@ -70,6 +90,53 @@ class PaymentMethod extends Model
                 }
             }
         });
+
+        static::created(function (self $paymentMethod) {
+            // Clean up other instances of the same underlying PaymentMethod if it's added again
+            if ($paymentMethod->fingerprint && $paymentMethod->user) {
+                /** @var PaymentMethod $newPm */
+                $newPm = PaymentMethod::find($paymentMethod->id);
+                dispatch(function () use ($newPm) {
+                    $sameUnderlyingPaymentMethods = $newPm
+                        ->user
+                        ->paymentMethods()
+                        ->where('fingerprint', '=', $newPm->fingerprint)
+                        ->where('id', '!=', $newPm->id)
+                        ->get();
+
+                    $clearedOthers = false;
+                    foreach ($sameUnderlyingPaymentMethods as $otherPM) {
+                        /** @var Tenant $tenant */
+                        $tenant = tenant();
+
+                        /** @var PaymentMethod $otherPM */
+                        $otherPM->user()->dissociate();
+                        $otherPM->save();
+
+                        try {
+                            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+                            $stripe->paymentMethods->detach($otherPM->stripe_id, null, [
+                                'stripe_account' => $tenant->stripeAccount(),
+                            ]);
+                        } catch (ApiErrorException|NoStripeAccountException) {
+                            // Ignore Stripe Error, this is just us trying to house keep
+                        }
+
+                        $clearedOthers = true;
+                    }
+
+                    // Trigger a save to force update of the default BACS Debit method if required
+                    if ($clearedOthers) {
+                        $newPm->save();
+                    }
+                });
+            }
+        });
+    }
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function mandate(): \Illuminate\Database\Eloquent\Relations\HasOne
@@ -112,8 +179,28 @@ class PaymentMethod extends Model
         $this->save();
     }
 
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function payments(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(Payment::class);
+    }
+
+    /**
+     * Get the payment method description.
+     */
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => \App\Business\Helpers\PaymentMethod::formatNameFromData($this->type, $this->pm_type_data),
+        );
+    }
+
+    /**
+     * Get the payment method description.
+     */
+    protected function informationLine(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => \App\Business\Helpers\PaymentMethod::formatInfoLineFromData($this->type, $this->pm_type_data),
+        );
     }
 }

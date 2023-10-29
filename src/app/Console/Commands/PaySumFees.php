@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Models\Central\Tenant;
-use App\Models\Tenant\User;
 use Illuminate\Console\Command;
 
 class PaySumFees extends Command
@@ -20,7 +19,7 @@ class PaySumFees extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sum up all fees and create statements';
 
     /**
      * Execute the console command.
@@ -37,17 +36,11 @@ class PaySumFees extends Command
             /** @var Tenant $tenant */
             $tenant->run(function () use ($tenant) {
 
-                $users = User::all();
-                foreach ($users as $user) {
-                    /** @var User $user */
-                    $balance = $user->journal->getBalance();
-                    if ($balance > 100) {
-                        // Balance greater than Stripe minimum, create an invoice for it
-                    }
-                }
+                \App\Jobs\PaySumFees::dispatchSync($tenant);
 
             });
         }
+
         return Command::SUCCESS;
     }
 }

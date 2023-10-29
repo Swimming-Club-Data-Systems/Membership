@@ -54,8 +54,8 @@ class ConfirmableWebAuthnController extends Controller
         $publicKeyCredentialRequestOptionsJson = json_encode($publicKeyCredentialRequestOptions);
         $publicKeyCredentialRequestOptions = json_decode($publicKeyCredentialRequestOptionsJson, true);
 
-        if ($request->input('mediation') == "conditional") {
-            $publicKeyCredentialRequestOptions['mediation'] = "conditional";
+        if ($request->input('mediation') == 'conditional') {
+            $publicKeyCredentialRequestOptions['mediation'] = 'conditional';
         }
 
         $request->session()->put('webauthn_credential_request_options', json_encode($publicKeyCredentialRequestOptions));
@@ -92,7 +92,7 @@ class ConfirmableWebAuthnController extends Controller
         $publicKeyCredential = $publicKeyCredentialLoader->loadArray($input);
 
         $authenticatorAssertionResponse = $publicKeyCredential->getResponse();
-        if (!$authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
+        if (! $authenticatorAssertionResponse instanceof AuthenticatorAssertionResponse) {
             //e.g. process here with a redirection to the public key login/MFA page.
         }
 
@@ -126,7 +126,7 @@ class ConfirmableWebAuthnController extends Controller
             $authenticatorAssertionResponse,
             $publicKeyCredentialRequestOptions,
             $serverRequest,
-//            $userHandle
+            //            $userHandle
             null,
             ['testclub.localhost', 'localhost'],
         );
@@ -139,11 +139,11 @@ class ConfirmableWebAuthnController extends Controller
 
         $request->session()->put('auth.password_confirmed_at', time());
 
-        $url = $request->session()->get('url.intended') ?? "";
+        $url = $request->session()->get('url.intended') ?? '';
 
         $redirectUrl = RouteServiceProvider::HOME;
 
-        if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
+        if (Route::getRoutes()->match(Request::create($url))->getName() == 'login.v1') {
             $request->session()->forget('url.intended');
             $redirectUrl = V1LoginController::getUrl($user);
         } else {

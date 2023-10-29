@@ -39,7 +39,8 @@ class ProcessStripePaymentIntents extends Command
             try {
                 $tenant->stripeAccount();
             } catch (NoStripeAccountException) {
-                echo("Tenant " . $tenant->id . " does not have a Stripe account");
+                echo 'Tenant '.$tenant->id.' does not have a Stripe account';
+
                 return Command::FAILURE;
             }
 
@@ -98,7 +99,7 @@ class ProcessStripePaymentIntents extends Command
                 }
             }
 
-            echo "Completed with " . $numSuccess . " successes and " . $numErrors . " errors.";
+            echo 'Completed with '.$numSuccess.' successes and '.$numErrors.' errors.';
         });
 
         return Command::SUCCESS;

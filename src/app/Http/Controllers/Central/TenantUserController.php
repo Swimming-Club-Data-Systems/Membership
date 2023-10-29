@@ -31,13 +31,16 @@ class TenantUserController extends Controller
         } else {
             $users = User::orderBy('Forename', 'asc')->orderBy('Surname', 'asc')->paginate(config('app.per_page'));
         }
+
         return Inertia::render('Central/Users/Index', [
             'users' => $users->onEachSide(3),
         ]);
     }
 
-    public function show(User $user) {
+    public function show(User $user)
+    {
         Gate::authorize('manage');
-        return Inertia::location('/v1/users/' . $user->UserID);
+
+        return Inertia::location('/v1/users/'.$user->UserID);
     }
 }

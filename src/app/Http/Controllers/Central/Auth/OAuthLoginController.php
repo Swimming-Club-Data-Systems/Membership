@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Central\Auth;
 
 use App\Business\Helpers\OAuthLogin;
+use App\Http\Controllers\Controller;
 use App\Models\Central\User;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class OAuthLoginController extends Controller
 {
@@ -49,11 +48,11 @@ class OAuthLoginController extends Controller
          */
         $user = User::query()->where('email', $idpUser->getMail())->first();
 
-        if (!$user) {
+        if (! $user) {
             abort(404);
         }
 
-        Auth::guard('central')->login($user, (bool)$request->session()->pull('auth.remember'));
+        Auth::guard('central')->login($user, (bool) $request->session()->pull('auth.remember'));
 
         // The user has just logged in with SSO so set confirmed at time
         // Otherwise the user is hit with confirm immediately if heading to profile routes.

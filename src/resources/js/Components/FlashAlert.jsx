@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useContext } from "react";
 import Alert from "./Alert";
 import { usePage } from "@inertiajs/react";
+import { FormSpecialContext } from "@/Components/Form/Form";
 
-const FlashAlert = ({ className, bag = null }) => {
+const FlashAlert = ({ className = "", bag = null }) => {
+    const formContext = useContext(FormSpecialContext);
+
+    const bagName = bag || formContext?.formName;
+
     const flash =
-        (bag ? usePage().props?.flash[bag] : usePage().props?.flash) ?? {};
+        (bagName ? usePage().props?.flash[bagName] : usePage().props?.flash) ??
+        {};
 
     return (
         <>

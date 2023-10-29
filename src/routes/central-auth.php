@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Central\Auth\AADOAuthController;
 use App\Http\Controllers\Central\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Central\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Central\Auth\ConfirmableWebAuthnController;
@@ -13,6 +14,11 @@ use App\Http\Controllers\Central\Auth\WebAuthnLoginController;
 use Illuminate\Support\Facades\Route;
 
 Route::name('central.')->group(function () {
+    Route::get('tenant/auth', [AADOAuthController::class, 'start'])
+        ->name('aad.start');
+    Route::get('tenant/verify', [AADOAuthController::class, 'verify'])
+        ->name('aad.verify');
+
     Route::middleware('guest:central')->group(function () {
         Route::get('register', [RegisteredUserController::class, 'create'])
             ->name('register');

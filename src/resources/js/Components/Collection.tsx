@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -23,21 +23,21 @@ const Search: React.FC<SearchProps> = (props) => {
     };
 
     const SetSearchValue = () => {
-        const formikProps = useFormikContext();
+        const { setFieldValue } = useFormikContext();
 
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
             const searchValue = params.get("query");
             if (searchValue) {
-                formikProps.setFieldValue("query", searchValue);
+                setFieldValue("query", searchValue);
             }
-        }, []);
+        }, [setFieldValue]);
 
         return null;
     };
 
     const SearchButton = () => {
-        const { isSubmitting, dirty, isValid } = useFormikContext();
+        const { isSubmitting, isValid } = useFormikContext();
         return (
             <Button
                 type="submit"
@@ -78,17 +78,32 @@ const Search: React.FC<SearchProps> = (props) => {
     );
 };
 
-type CollectonProps = {
+export interface LaravelPaginatorProps {
+    current_page: number;
+    first_page_url: string;
+    from: number;
+    last_page: number;
+    last_page_url: string;
+    links: [];
+    next_page_url: string;
+    path: string;
+    per_page: number;
+    prev_page_url: string;
+    to: number;
+    total: number;
+    data: Array<unknown>;
+}
+
+interface CollectonProps extends LaravelPaginatorProps {
     route: string;
-    data: [];
     routeIdName?: string;
     routeParams?: [number | string];
     searchable?: boolean;
     path: string;
     current_page: number;
     last_page: number;
-    itemRenderer: (item: never) => React.FC;
-};
+    itemRenderer: (item: unknown) => ReactNode;
+}
 
 const Collection: React.FC<CollectonProps> = (props) => {
     const items = props.data.map((item, idx) => {
@@ -138,9 +153,7 @@ const Collection: React.FC<CollectonProps> = (props) => {
                             </p>
                         </InternalContainer>
                     </div>
-                    <ul role="list" className="divide-y divide-gray-200">
-                        {items}
-                    </ul>
+                    <ul className="divide-y divide-gray-200">{items}</ul>
                     <Pagination collection={props} />
                 </div>
             )}

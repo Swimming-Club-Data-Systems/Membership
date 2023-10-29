@@ -23,8 +23,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      *
-     * @param \App\Http\Requests\Auth\LoginRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function store(LoginRequest $request)
     {
@@ -66,7 +65,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function resend(Request $request)
     {
@@ -74,7 +73,7 @@ class AuthenticatedSessionController extends Controller
 
         // Get or set code
         $code = $request->session()->get('auth.two_factor_code');
-        if (!$code) {
+        if (! $code) {
             $code = random_int(100000, 999999);
             $request->session()->put('auth.two_factor_code', $code);
         }
@@ -87,7 +86,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      *
-     * @return \Inertia\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function confirm(Request $request)
     {
@@ -97,13 +96,13 @@ class AuthenticatedSessionController extends Controller
 
         $user = User::findOrFail($request->session()->get('auth.two_factor_code_user'));
 
-        $invalidMessage = "The authentication code provided was invalid";
+        $invalidMessage = 'The authentication code provided was invalid';
 
         // Check
         if ($request->session()->missing('auth.two_factor_code')) {
             // Verify TOTP
             $totp = new Google2FA();
-            if (!$totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $request->input('code'))) {
+            if (! $totp->verifyKey($user->getOption('GoogleAuth2FASecret'), $request->input('code'))) {
                 throw ValidationException::withMessages([
                     'code' => $invalidMessage,
                 ]);
@@ -116,7 +115,7 @@ class AuthenticatedSessionController extends Controller
             }
         }
 
-        Auth::login($user, (bool)$request->session()->pull('auth.remember'));
+        Auth::login($user, (bool) $request->session()->pull('auth.remember'));
 
         // The user has just logged in with multiple factors so set confirmed at time
         // Otherwise the user is hit with confirm immediately if heading to profile routes.
@@ -125,16 +124,17 @@ class AuthenticatedSessionController extends Controller
         $request->session()->forget([
             'auth.two_factor_code_user',
             'auth.two_factor_code',
-            'auth.check_two_factor_code'
+            'auth.check_two_factor_code',
         ]);
 
         $request->session()->regenerate();
 
-        $url = $request->session()->get('url.intended') ?? "";
+        $url = $request->session()->get('url.intended') ?? '';
 
-        if (Route::getRoutes()->match(Request::create($url))->getName() == "login.v1") {
+        if (Route::getRoutes()->match(Request::create($url))->getName() == 'login.v1') {
             $request->session()->forget('url.intended');
             $controller = new V1LoginController();
+
             return $controller($request);
         } else {
             return redirect()->intended(RouteServiceProvider::HOME);
@@ -144,7 +144,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      *
-     * @return \Inertia\Response
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function create(Request $request)
     {
@@ -161,8 +161,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function destroy(Request $request)
     {
@@ -178,7 +177,6 @@ class AuthenticatedSessionController extends Controller
     /**
      * Return information on whether the user has webauthn or an SSO url to use
      *
-     * @param Request $request
      * @return JsonResponse
      */
     public function checkUsername(Request $request)
@@ -206,16 +204,17 @@ class AuthenticatedSessionController extends Controller
         }
 
         if ($user && $tenant->getOption('TENANT_ENABLE_STAFF_OAUTH') && Str::endsWith($user->EmailAddress, $tenant->getOption('TENANT_OAUTH_EMAIL_DOMAIN'))) {
-            $ssoUrl = url("login/oauth?email=" . urlencode($user->EmailAddress));
+            $ssoUrl = url('login/oauth?email='.urlencode($user->EmailAddress));
         }
 
         return response()->json([
-            "has_webauthn" => $hasWebauthn,
-            "sso_url" => $ssoUrl,
+            'has_webauthn' => $hasWebauthn,
+            'sso_url' => $ssoUrl,
         ]);
     }
 
-    public function confirmDestroy() {
+    public function confirmDestroy()
+    {
         return Inertia::render('Auth/Logout');
     }
 }

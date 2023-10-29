@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Queue;
 use Illuminate\Support\Str;
 
 return [
@@ -119,7 +120,7 @@ return [
     */
 
     'silenced' => [
-        \Laravel\Scout\Jobs\MakeSearchable::class
+        \Laravel\Scout\Jobs\MakeSearchable::class,
     ],
 
     /*
@@ -182,7 +183,11 @@ return [
     'defaults' => [
         'supervisor-1' => [
             'connection' => 'redis',
-            'queue' => ['default'],
+            'queue' => [
+                'default',
+                Queue::NOTIFY->value,
+                Queue::STRIPE->value,
+            ],
             'balance' => 'auto',
             'maxProcesses' => 1,
             'maxTime' => 0,

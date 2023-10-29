@@ -2,11 +2,10 @@
 
 namespace App\Models\Tenant;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int SessionID
@@ -20,18 +19,19 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Session extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant;
 
     public function squads(): BelongsToMany
     {
         return $this->belongsToMany(Squad::class, 'sessionsSquads', 'Session', 'Squad')
             ->withTimestamps()
             ->withPivot([
-                'ForAllMembers'
+                'ForAllMembers',
             ]);
     }
 
-    public function venue(): HasOne {
+    public function venue(): HasOne
+    {
         return $this->hasOne(SessionVenue::class, 'VenueID', 'VenueID');
     }
 

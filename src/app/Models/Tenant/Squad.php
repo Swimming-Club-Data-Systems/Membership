@@ -2,12 +2,12 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Laravel\Scout\Searchable;
 
 /**
  * @property int SquadID
@@ -21,7 +21,14 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class Squad extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant, Searchable;
+
+    protected $attributes = [
+        'SquadCoach' => '',
+        'SquadTimetable' => '',
+        'SquadCoC' => '',
+        'SquadKey' => '',
+    ];
 
     protected $primaryKey = 'SquadID';
 
@@ -30,7 +37,7 @@ class Squad extends Model
         return $this->belongsToMany(Member::class, 'squadMembers', 'Squad', 'Member')
             ->withTimestamps()
             ->withPivot([
-                'Paying'
+                'Paying',
             ]);
     }
 
@@ -39,7 +46,7 @@ class Squad extends Model
         return $this->belongsToMany(User::class, 'squadReps', 'Squad', 'User')
             ->withTimestamps()
             ->withPivot([
-                'ContactDescription'
+                'ContactDescription',
             ]);
     }
 
@@ -55,18 +62,38 @@ class Squad extends Model
             ->using(SquadMove::class);
     }
 
+    public function coaches(): BelongsToMany
+    {
+        return $this
+            ->belongsToMany(User::class, 'coaches', 'Squad', 'User')
+            ->withPivot(['Type'])
+            ->using(Coach::class);
+    }
+
     /**
      * Get or set the fee as an integer.
-     *
-     * @return Attribute
      */
     protected function fee(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => BigDecimal::of((string)$attributes['SquadFee'])->withPointMovedRight(2)->toInt(),
-            set: fn($value) => [
-                'SquadFee' => BigDecimal::of($value)->withPointMovedLeft(2)
+            get: fn ($value, $attributes) => BigDecimal::of((string) $attributes['SquadFee'])->withPointMovedRight(2)->toInt(),
+            set: fn ($value) => [
+                'SquadFee' => BigDecimal::of($value)->withPointMovedLeft(2),
             ],
         );
+    }
+
+    public function toSearchableArray(): array
+    {
+        $array = $this->toArray();
+
+        $fields = [
+            'SquadID',
+            'SquadName',
+            'SquadFee',
+            'Tenant',
+        ];
+
+        return array_intersect_key($array, array_flip($fields));
     }
 }

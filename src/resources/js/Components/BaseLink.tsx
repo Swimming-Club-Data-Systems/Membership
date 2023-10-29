@@ -7,15 +7,20 @@ interface AProps {
     external?: boolean;
     as?: string;
     children: React.ReactNode;
+    className?: string;
 }
 
-const A: React.FC<AProps> = (props) => {
+const A: React.FC<AProps> = ({ children, ...props }) => {
     const target = props.target ? props.target : "_blank";
 
-    return <a {...props} target={target} />;
+    return (
+        <a {...props} target={target}>
+            {children}
+        </a>
+    );
 };
 
-interface LinkProps extends AProps {
+export interface LinkProps extends AProps {
     method?: string;
 }
 

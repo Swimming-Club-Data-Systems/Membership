@@ -4,7 +4,6 @@ namespace App\Jobs\System;
 
 use App\Models\Central\Tenant;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,8 +26,7 @@ class SeedTenant implements ShouldQueue
     public function __construct(
         public Tenant $tenant,
         public bool $isNew = false
-    )
-    {
+    ) {
     }
 
     /**

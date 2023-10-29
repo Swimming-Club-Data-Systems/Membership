@@ -87,7 +87,7 @@ const PlainCollection = (props) => {
 
     return (
         <>
-            <Search path={props.path} />
+            {props.searchable && <Search path={props.path} />}
 
             {props.data.length > 0 && (
                 <div className="overflow-hidden bg-white shadow sm:rounded-lg">

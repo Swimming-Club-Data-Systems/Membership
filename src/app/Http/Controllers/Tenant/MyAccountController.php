@@ -83,8 +83,8 @@ class MyAccountController extends Controller
                 'email:rfc,dns,spoof',
                 'max:255',
                 Rule::unique('users', 'EmailAddress')
-                    ->where(fn($query) => $query->where('Tenant', tenant('ID'))
-                        ->where('UserID', '!=', Auth::id()))
+                    ->where(fn ($query) => $query->where('Tenant', tenant('ID'))
+                        ->where('UserID', '!=', Auth::id())),
             ],
             'mobile' => [new ValidPhone, 'max:255'],
             ...Address::validationRules(),
@@ -107,14 +107,14 @@ class MyAccountController extends Controller
         $address->country_code = Str::upper($request->input('country'));
         $address->post_code = $request->input('post_code');
 
-        $user->setOption('MAIN_ADDRESS', (string)$address);
+        $user->setOption('MAIN_ADDRESS', (string) $address);
 
         $user->save();
 
         $flashMessage = 'We\'ve saved your changes.';
 
         if (Str::lower($request->input('email')) != $user->EmailAddress) {
-            $flashMessage .= ' Please follow the link we have sent to ' . Str::lower($request->input('email')) . ' to finish changing your email.';
+            $flashMessage .= ' Please follow the link we have sent to '.Str::lower($request->input('email')).' to finish changing your email.';
         }
 
         $request->session()->flash('success', $flashMessage);
@@ -142,7 +142,7 @@ class MyAccountController extends Controller
                 'description' => Str::finish($sub->Description, '.'),
             ];
 
-            $notifySubOptsFormik[$sub->ID] = (bool)$subscribed;
+            $notifySubOptsFormik[$sub->ID] = (bool) $subscribed;
         }
 
         foreach ($user->notifyAdditionalEmails()->orderBy('Name')->orderBy('EmailAddress')->get() as $recipient) {
@@ -158,8 +158,8 @@ class MyAccountController extends Controller
             'notify_additional_emails' => $notifyAdditionalEmails,
             'form_initial_values' => [
                 'email' => $user->EmailAddress,
-                'email_comms' => (bool)$user->EmailComms,
-                'sms_comms' => (bool)$user->MobileComms,
+                'email_comms' => (bool) $user->EmailComms,
+                'sms_comms' => (bool) $user->MobileComms,
                 'notify_categories' => $notifySubOptsFormik,
             ],
         ]);
@@ -178,8 +178,8 @@ class MyAccountController extends Controller
                 'email:rfc,dns,spoof',
                 'max:255',
                 Rule::unique('users', 'EmailAddress')
-                    ->where(fn($query) => $query->where('Tenant', tenant('ID'))
-                        ->where('UserID', '!=', Auth::id()))
+                    ->where(fn ($query) => $query->where('Tenant', tenant('ID'))
+                        ->where('UserID', '!=', Auth::id())),
             ],
         ]);
 
@@ -196,15 +196,15 @@ class MyAccountController extends Controller
             // Does the user have one?
             $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
 
-            $checked = $request->boolean('notify_categories.' . $sub->ID);
+            $checked = $request->boolean('notify_categories.'.$sub->ID);
 
-            if ($checked && !$userSub) {
+            if ($checked && ! $userSub) {
                 $user->notifyCategories()->attach($sub);
 
                 $userSub = $user->notifyCategories()->where('notifyCategories.ID', $sub->ID)->first();
                 $userSub->subscription->Subscribed = true;
                 $userSub->subscription->save();
-            } else if (!$checked) {
+            } elseif (! $checked) {
                 $user->notifyCategories()->detach($sub);
             }
         }
@@ -214,7 +214,7 @@ class MyAccountController extends Controller
         $flashMessage = 'We\'ve saved your changes.';
 
         if (Str::lower($request->input('email')) != $user->EmailAddress) {
-            $flashMessage .= ' Please follow the link we have sent to ' . Str::lower($request->input('email')) . ' to finish changing your email.';
+            $flashMessage .= ' Please follow the link we have sent to '.Str::lower($request->input('email')).' to finish changing your email.';
         }
 
         $request->session()->flash('success', $flashMessage);
@@ -235,8 +235,8 @@ class MyAccountController extends Controller
                 'email:rfc,dns,spoof',
                 'max:100',
                 Rule::unique('notifyAdditionalEmails', 'EmailAddress')
-                    ->where(fn($query) => $query
-                        ->where('UserID', '!=', Auth::id()))
+                    ->where(fn ($query) => $query
+                        ->where('UserID', '!=', Auth::id())),
             ],
         ]);
 
@@ -259,7 +259,7 @@ class MyAccountController extends Controller
                     'user' => $user->UserID,
                     'name' => $name,
                     'email' => $email,
-                ]))
+                ])),
             ]
         );
 
@@ -270,7 +270,7 @@ class MyAccountController extends Controller
         Mail::to($recipient)->send(new VerifyNotifyAdditionalEmail($user, $url, $email, $name));
 
         $request->session()->flash('flash_bag.additional_email.success',
-            'We have sent an email to ' . $name . ' asking them to confirm they wish to receive squad update emails.');
+            'We have sent an email to '.$name.' asking them to confirm they wish to receive squad update emails.');
 
         return Redirect::route('my_account.email');
     }
@@ -296,7 +296,7 @@ class MyAccountController extends Controller
             ];
         }
 
-        $hasTotp = (bool)$user->getOption('hasGoogleAuth2FA');
+        $hasTotp = (bool) $user->getOption('hasGoogleAuth2FA');
 
         return Inertia::render('MyAccount/Password', [
             'passkeys' => $passkeys,
@@ -343,7 +343,7 @@ class MyAccountController extends Controller
         $tenant = tenant();
 
         // If the user has totp already, alert user we'll be replacing the old one
-        $hasTotp = (bool)$user->getOption('hasGoogleAuth2FA');
+        $hasTotp = (bool) $user->getOption('hasGoogleAuth2FA');
 
         $g2fa = new Google2FA();
 
@@ -359,9 +359,9 @@ class MyAccountController extends Controller
         $qr2x = QrCode::size(200)->format('png')->generate($url);
         $qr3x = QrCode::size(300)->format('png')->generate($url);
 
-        $img = 'data:image/png;base64,' . base64_encode($qr);
-        $img2x = 'data:image/png;base64,' . base64_encode($qr2x);
-        $img3x = 'data:image/png;base64,' . base64_encode($qr3x);
+        $img = 'data:image/png;base64,'.base64_encode($qr);
+        $img2x = 'data:image/png;base64,'.base64_encode($qr2x);
+        $img3x = 'data:image/png;base64,'.base64_encode($qr3x);
 
         return response()->json([
             'has_totp' => $hasTotp,
@@ -384,16 +384,18 @@ class MyAccountController extends Controller
         ]);
 
         $key = $request->session()->pull('2fa_key');
-        if (!$key) {
+        if (! $key) {
             $request->session()->flash('flash_bag.totp_modal.error', 'Please request a TOTP key first.');
+
             return Redirect::route('my_account.security');
         }
 
         $g2fa = new Google2FA();
         $valid = $g2fa->verifyKey($key, $request->input('code'));
 
-        if (!$valid) {
+        if (! $valid) {
             $request->session()->flash('flash_bag.totp_modal.error', 'You entered an invalid authentication code.');
+
             return Redirect::route('my_account.security');
         }
 
@@ -404,10 +406,12 @@ class MyAccountController extends Controller
         $user->setOption('GoogleAuth2FASecret', $key);
 
         $request->session()->flash('flash_bag.totp.success', 'You have set up your Time-based One-Time Password application.');
+
         return Redirect::route('my_account.security');
     }
 
-    public function deleteTOTP(Request $request) {
+    public function deleteTOTP(Request $request)
+    {
         /** @var User $user */
         $user = Auth::user();
 
@@ -415,7 +419,7 @@ class MyAccountController extends Controller
         $user->setOption('GoogleAuth2FASecret', null);
 
         $request->session()->flash('flash_bag.totp.success', 'Your two-factor authentication app has now been disabled.');
+
         return Redirect::route('my_account.security');
     }
-
 }

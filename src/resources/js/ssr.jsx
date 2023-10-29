@@ -1,10 +1,8 @@
 import React from "react";
-import ReactDOMServer from "react-dom/server";
+import { createRoot } from "react-dom/server";
 import createServer from "@inertiajs/react/server";
 import { createInertiaApp } from "@inertiajs/react";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
-import route from "../../vendor/tightenco/ziggy/dist/index.m";
-import { render } from "react-dom";
 import { ErrorBoundary } from "@/Components/ErrorBoundary";
 import { Provider } from "react-redux";
 import { store } from "@/Reducers/store";
@@ -40,13 +38,13 @@ createServer((page) =>
                 ),
             ]),
         setup({ el, App, props }) {
-            return render(
+            const root = createRoot(el);
+            return root.render(
                 <ErrorBoundary>
                     <Wrapper>
                         <App {...props} />
                     </Wrapper>
-                </ErrorBoundary>,
-                el
+                </ErrorBoundary>
             );
         },
     })

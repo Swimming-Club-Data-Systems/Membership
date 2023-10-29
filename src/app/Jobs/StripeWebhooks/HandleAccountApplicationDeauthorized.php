@@ -2,8 +2,8 @@
 
 namespace App\Jobs\StripeWebhooks;
 
+use App\Enums\Queue;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -28,6 +28,7 @@ class HandleAccountApplicationDeauthorized implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

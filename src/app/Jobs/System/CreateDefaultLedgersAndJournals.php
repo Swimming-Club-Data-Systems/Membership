@@ -28,8 +28,7 @@ class CreateDefaultLedgersAndJournals implements ShouldQueue
      */
     public function __construct(
         public Tenant $tenant
-    )
-    {
+    ) {
     }
 
     /**
@@ -54,17 +53,35 @@ class CreateDefaultLedgersAndJournals implements ShouldQueue
                 'is_system' => true,
             ]);
 
+            $squadIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Squad Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
+            $extraFeeIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Extra Fee Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
+            $competitionIncomeLedger = LedgerAccount::firstOrCreate([
+                'name' => 'Competition Income',
+                'type' => 'income',
+                'is_system' => true,
+            ]);
+
             // Check for Journal Existence
             $guestIncomeJournal = JournalAccount::firstOrNew([
                 'name' => 'Guest Customers',
-                'is_system' => true
+                'is_system' => true,
             ]);
             $guestIncomeJournal->ledgerAccount()->associate($generalIncomeLedger);
             $guestIncomeJournal->save();
 
             $stripeFeesJournal = JournalAccount::firstOrNew([
                 'name' => 'Stripe Fees',
-                'is_system' => true
+                'is_system' => true,
             ]);
             $stripeFeesJournal->ledgerAccount()->associate($bankFeesLedger);
             $stripeFeesJournal->save();

@@ -2,18 +2,18 @@
 
 namespace App\Models\Tenant;
 
+use App\Traits\BelongsToTenant;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int MemberID
  * @property int UserID
- * @property boolean Status
+ * @property bool Status
  * @property string AccessKey
  * @property string MForename
  * @property string MSurname
@@ -23,19 +23,21 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  * @property \DateTime DateOfBirth
  * @property string Gender
  * @property string OtherNotes
- * @property boolean ASAPrimary
- * @property boolean ASAPaid
- * @property boolean ClubPaid
+ * @property bool ASAPrimary
+ * @property bool ASAPaid
+ * @property bool ClubPaid
  * @property string Country
- * @property boolean Active
+ * @property bool Active
  * @property string GenderIdentity
  * @property string GenderPronouns
- * @property boolean GenderDisplay
+ * @property bool GenderDisplay
  * @property User user
+ * @property MemberMedical|null $memberMedical
+ * @property string|null $pronouns Pronouns if the member has chosen to display them
  */
 class Member extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     /**
      * The attributes that should be cast.
@@ -45,6 +47,7 @@ class Member extends Model
     protected $casts = [
         'DateOfBirth' => 'datetime',
     ];
+
     protected $primaryKey = 'MemberID';
 
     /**
@@ -62,12 +65,17 @@ class Member extends Model
         return $this->hasOne(User::class, 'UserID', 'UserID');
     }
 
+    public function memberMedical()
+    {
+        return $this->hasOne(MemberMedical::class, 'MemberID');
+    }
+
     public function squads(): BelongsToMany
     {
         return $this->belongsToMany(Squad::class, 'squadMembers', 'Member', 'Squad')
             ->withTimestamps()
             ->withPivot([
-                'Paying'
+                'Paying',
             ]);
     }
 
@@ -108,14 +116,39 @@ class Member extends Model
 
     /**
      * Get the member name.
-     *
-     * @return Attribute
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['MForename'] . ' ' . $attributes['MSurname'],
+            get: fn ($value, $attributes) => $attributes['MForename'].' '.$attributes['MSurname'],
         );
     }
 
+    /**
+     * Get the member name.
+     */
+    protected function pronouns(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => $attributes['GenderDisplay'] ? $attributes['GenderPronouns'] : null,
+        );
+    }
+
+    /**
+     * Get the member's age at the supplied date
+     */
+    public function ageAt(Carbon $date): int
+    {
+        $diff = $this->DateOfBirth->diff($date);
+
+        return $diff->y;
+    }
+
+    /**
+     * Get the member's age today
+     */
+    public function age(): int
+    {
+        return $this->ageAt(Carbon::now());
+    }
 }

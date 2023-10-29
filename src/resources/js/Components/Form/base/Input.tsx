@@ -45,12 +45,15 @@ export interface InputProps extends CommonInputProps {
     rows?: number;
     /** HTML type attribute of the input */
     type?: string;
+    mb?: string;
 }
 
-function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
+export function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
     // setTimeout is required so the dom has a chance to place the cursor in the input
     setTimeout(() => {
         if (input?.current) {
+            // const originalType = input.current.type;
+            // input.current.type = "text";
             const { selectionStart, selectionEnd, value } = input.current;
             const { length } = value;
             // only select text if cursor is at the very end or the very start of the value
@@ -62,6 +65,7 @@ function selectTextOnFocus(input: React.RefObject<HTMLInputElement>) {
                     input.current.setSelectionRange(0, length);
                 }
             }
+            // input.current.type = originalType;
         }
     });
 }
@@ -139,9 +143,9 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             // if (groupContext.onFocus) {
             //     groupContext.onFocus();
             // }
-            if (type === "text") {
-                selectTextOnFocus(input);
-            }
+            // if (type === "text") {
+            selectTextOnFocus(input);
+            // }
         };
 
         const handleBlur = (ev: React.FocusEvent<HTMLInputElement>) => {

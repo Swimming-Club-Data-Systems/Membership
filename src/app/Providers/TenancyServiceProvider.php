@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Stancl\JobPipeline\JobPipeline;
+use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Events;
 use Stancl\Tenancy\Jobs;
 use Stancl\Tenancy\Listeners;
 use Stancl\Tenancy\Middleware;
-use Stancl\Tenancy\Resolvers\DomainTenantResolver;
-use Stancl\Tenancy\Controllers\TenantAssetsController;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Resolvers\DomainTenantResolver;
 
 class TenancyServiceProvider extends ServiceProvider
 {
@@ -28,8 +28,8 @@ class TenancyServiceProvider extends ServiceProvider
             Events\CreatingTenant::class => [],
             Events\TenantCreated::class => [
                 JobPipeline::make([
-                    Jobs\CreateDatabase::class,
-                    Jobs\MigrateDatabase::class,
+                    // Jobs\CreateDatabase::class,
+                    // Jobs\MigrateDatabase::class,
                     // Jobs\SeedDatabase::class,
 
                     // Your own jobs to prepare the tenant.
@@ -37,7 +37,7 @@ class TenancyServiceProvider extends ServiceProvider
 
                 ])->send(function (Events\TenantCreated $event) {
                     return $event->tenant;
-                })->shouldBeQueued(false), // `false` by default, but you probably want to make this `true` for production.
+                })->shouldBeQueued(app()->isProduction()), // `false` by default, but you probably want to make this `true` for production.
             ],
             Events\SavingTenant::class => [],
             Events\TenantSaved::class => [],

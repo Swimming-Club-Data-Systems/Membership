@@ -28,6 +28,16 @@ return [
         'payment_method_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodUpdated::class,
         'payment_method_automatically_updated' => \App\Jobs\StripeWebhooks\HandlePaymentMethodAutomaticallyUpdated::class,
         'mandate_updated' => \App\Jobs\StripeWebhooks\HandleMandateUpdated::class,
+        'payment_intent_canceled' => \App\Jobs\StripeWebhooks\HandlePaymentIntentCanceled::class,
+        'payment_intent_created' => \App\Jobs\StripeWebhooks\HandlePaymentIntentCreated::class,
+        'payment_intent_partially_funded' => \App\Jobs\StripeWebhooks\HandlePaymentIntentPartiallyFunded::class,
+        'payment_intent_payment_failed' => \App\Jobs\StripeWebhooks\HandlePaymentIntentPaymentFailed::class,
+        'payment_intent_processing' => \App\Jobs\StripeWebhooks\HandlePaymentIntentProcessing::class,
+        'payment_intent_requires_action' => \App\Jobs\StripeWebhooks\HandlePaymentIntentRequiresAction::class,
+        'payment_intent_succeeded' => \App\Jobs\StripeWebhooks\HandlePaymentIntentSucceeded::class,
+        'charge_dispute_closed' => \App\Jobs\StripeWebhooks\HandleChargeDisputeClosed::class,
+        'charge_dispute_created' => \App\Jobs\StripeWebhooks\HandleChargeDisputeClosed::class,
+        'charge_dispute_updated' => \App\Jobs\StripeWebhooks\HandleChargeDisputeUpdated::class,
     ],
 
     /*

@@ -71,7 +71,6 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
         });
     }
 
-
     /**
      * Register the Telescope gate.
      *

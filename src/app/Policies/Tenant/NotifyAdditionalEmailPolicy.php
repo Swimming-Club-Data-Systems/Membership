@@ -11,8 +11,7 @@ class NotifyAdditionalEmailPolicy
     use HandlesAuthorization;
 
     /**
-     * @param User $user
-     * @param string $ability
+     * @param  string  $ability
      * @return void|bool
      */
     public function before(User $user, $ability)
@@ -25,7 +24,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param \App\Models\Tenant\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function viewAny(User $user)
@@ -36,8 +34,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can view the model.
      *
-     * @param \App\Models\Tenant\User $user
-     * @param \App\Models\Tenant\NotifyAdditionalEmail $notifyAdditionalEmail
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function view(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)
@@ -48,7 +44,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can create models.
      *
-     * @param \App\Models\Tenant\User $user
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function create(User $user)
@@ -59,8 +54,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param \App\Models\Tenant\User $user
-     * @param \App\Models\Tenant\NotifyAdditionalEmail $notifyAdditionalEmail
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function update(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)
@@ -71,8 +64,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param \App\Models\Tenant\User $user
-     * @param \App\Models\Tenant\NotifyAdditionalEmail $notifyAdditionalEmail
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function delete(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)
@@ -83,8 +74,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can restore the model.
      *
-     * @param \App\Models\Tenant\User $user
-     * @param \App\Models\Tenant\NotifyAdditionalEmail $notifyAdditionalEmail
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function restore(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)
@@ -95,8 +84,6 @@ class NotifyAdditionalEmailPolicy
     /**
      * Determine whether the user can permanently delete the model.
      *
-     * @param \App\Models\Tenant\User $user
-     * @param \App\Models\Tenant\NotifyAdditionalEmail $notifyAdditionalEmail
      * @return \Illuminate\Auth\Access\Response|bool
      */
     public function forceDelete(User $user, NotifyAdditionalEmail $notifyAdditionalEmail)

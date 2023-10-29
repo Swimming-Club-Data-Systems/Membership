@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Tenant;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Tenant\User;
+use App\Providers\RouteServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class VerifyEmailChangeController extends Controller
 {
@@ -24,7 +24,6 @@ class VerifyEmailChangeController extends Controller
     /**
      * Handle the incoming request.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function __invoke(Request $request, $id, $newEmail)
@@ -41,6 +40,7 @@ class VerifyEmailChangeController extends Controller
         // Already done?
         if ($user->EmailAddress == $newEmail) {
             $request->session()->flash('warning', 'You have already verified your new email address.');
+
             return redirect()->route('my_account.profile');
         }
 
@@ -49,18 +49,18 @@ class VerifyEmailChangeController extends Controller
             [
                 ['EmailAddress', $newEmail],
                 ['UserID', '!=', $user->UserID],
-                ['Tenant', tenant("ID")],
+                ['Tenant', tenant('ID')],
                 ['Active', 1],
             ]
         )->count();
 
         if ($count > 0) {
             // Error
-            $request->session()->flash('error', $newEmail . ' is already in use by another account.');
+            $request->session()->flash('error', $newEmail.' is already in use by another account.');
         } else {
             $user->EmailAddress = $newEmail;
             $user->save();
-            $request->session()->flash('success', 'We\'ve updated your account email address to ' . $newEmail . '.');
+            $request->session()->flash('success', 'We\'ve updated your account email address to '.$newEmail.'.');
         }
 
         return redirect()->route('my_account.profile');

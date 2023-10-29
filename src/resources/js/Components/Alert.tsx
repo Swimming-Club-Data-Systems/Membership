@@ -11,11 +11,7 @@ type AlertListProps = {
 };
 
 export const AlertList: React.FC<AlertListProps> = ({ children }) => {
-    return (
-        <ul role="list" className="list-disc space-y-1 pl-5">
-            {children}
-        </ul>
-    );
+    return <ul className="list-disc space-y-1 pl-5">{children}</ul>;
 };
 
 type Action = {
@@ -26,7 +22,7 @@ type Action = {
 
 type Props = {
     className?: string;
-    variant?: string;
+    variant?: "error" | "danger" | "warning" | "success" | "primary";
     handleDismiss?: (e) => void;
     title: string;
     actions?: Action[];
@@ -38,6 +34,7 @@ const Alert: React.FC<Props> = (props) => {
     let variantClass, symbol, titleClass, dismissColour;
     switch (props.variant) {
         case "error":
+        case "danger":
             variantClass = "bg-red-50 text-red-700";
             titleClass = "text-red-800";
             dismissColour =

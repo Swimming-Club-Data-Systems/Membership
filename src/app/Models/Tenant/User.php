@@ -10,9 +10,12 @@ use App\Models\Central\Tenant;
 use App\Models\Tenant\Auth\UserCredential;
 use App\Models\Tenant\Auth\V1Login;
 use App\Traits\Accounting\AccountingJournal;
+use App\Traits\BelongsToTenant;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -26,11 +29,12 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Stripe\Exception\InvalidRequestException;
+
 use function Illuminate\Events\queueable;
 
 /**
+ * @property int $id
  * @property int $UserID
  * @property string $Forename
  * @property string $Surname
@@ -43,15 +47,23 @@ use function Illuminate\Events\queueable;
  * @property string $name
  * @property string $email
  * @property StripeCustomer $stripeCustomer
- * @property Journal $journal
+ * @property Journal|null $journal
+ * @property Carbon $Edit
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property string $gravatar_url
+ * @property Collection $competitionGuestEntryHeaders
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, BelongsToTenant, Searchable, AccountingJournal;
+    use AccountingJournal, BelongsToTenant, HasApiTokens, HasFactory, Notifiable, Searchable;
 
     protected bool $configOptionsCached = false;
+
     protected array $configOptions = [];
+
     protected bool $permissionsCached = false;
+
     protected array $permissionsCache = [];
 
     /**
@@ -63,7 +75,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'Forename',
         'Surname',
         'EmailAddress',
-        'Password'
+        'Password',
     ];
 
     /**
@@ -83,14 +95,17 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'edit' => 'datetime',
     ];
+
     protected $primaryKey = 'UserID';
+
     /**
      * The accessors to append to the model's array form.
      *
      * @var array
      */
-    protected $appends = ['gravitar_url'];
+    protected $appends = ['gravatar_url'];
 
     protected static function booted()
     {
@@ -125,7 +140,7 @@ class User extends Authenticatable implements MustVerifyEmail
                             ],
                         ],
                         [
-                            'stripe_account' => $tenant->stripeAccount()
+                            'stripe_account' => $tenant->stripeAccount(),
                         ]
                     );
                 } catch (InvalidRequestException $e) {
@@ -138,7 +153,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * get an Address object for the user
-     * @return Address
      */
     public function getAddress(): Address
     {
@@ -147,7 +161,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getOption($key)
     {
-        if (!$this->configOptionsCached) {
+        if (! $this->configOptionsCached) {
             foreach ($this->userOptions()->get() as $option) {
                 $this->configOptions[$option->Option] = $option->Value;
             }
@@ -171,9 +185,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Send an email to the new address to validate and change
-     *
-     * @param string $email
-     * @return void
      */
     public function verifyNewEmail(string $email): void
     {
@@ -195,20 +206,17 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the user id via expected attribute.
-     *
-     * @return Attribute
      */
     protected function id(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['UserID'],
+            get: fn ($value, $attributes) => $attributes['UserID'],
         );
     }
 
     /**
      * Relationships
      */
-
     public function setOption($key, $value)
     {
         // Make sure values are cached
@@ -249,7 +257,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->as('subscription')
             ->withTimestamps()
             ->withPivot([
-                'Subscribed'
+                'Subscribed',
             ]);
     }
 
@@ -266,12 +274,22 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Member::class, 'UserID');
     }
 
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class, 'user_UserID');
+    }
+
+    public function balanceTopUps(): HasMany
+    {
+        return $this->hasMany(BalanceTopUp::class, 'user_UserID');
+    }
+
     public function representedSquads(): BelongsToMany
     {
         return $this->belongsToMany(Squad::class, 'squadReps', 'User', 'Squad')
             ->withTimestamps()
             ->withPivot([
-                'ContactDescription'
+                'ContactDescription',
             ]);
     }
 
@@ -281,10 +299,15 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
+    public function manualPaymentEntries(): BelongsToMany
+    {
+        return $this->belongsToMany(ManualPaymentEntry::class);
+    }
+
     public function hasPermission(string|array $name)
     {
         // Fetch cache
-        if (!$this->permissionsCached) {
+        if (! $this->permissionsCached) {
             foreach ($this->permissions()->get() as $permission) {
                 $this->permissionsCache[] = $permission->Permission;
             }
@@ -293,7 +316,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
         if (gettype($name) == 'string') {
             return in_array($name, $this->permissionsCache);
-        } else if (gettype($name) == 'array') {
+        } elseif (gettype($name) == 'array') {
             foreach ($name as $item) {
                 if (in_array($item, $this->permissionsCache)) {
                     return true;
@@ -306,16 +329,25 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the user's assigned permissions
-     * @return HasMany
      */
     public function permissions(): HasMany
     {
         return $this->hasMany(Permission::class, 'User');
     }
 
-    public function onboardingSessions()
+    public function onboardingSessions(): HasMany
     {
         return $this->hasMany(OnboardingSession::class, 'user', 'UserID');
+    }
+
+    public function statements(): HasMany
+    {
+        return $this->hasMany(CustomerStatement::class);
+    }
+
+    public function competitionGuestEntryHeaders(): HasMany
+    {
+        return $this->hasMany(CompetitionGuestEntryHeader::class);
     }
 
     /**
@@ -323,7 +355,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAuthIdentifierName(): string
     {
-        return "UserID";
+        return 'UserID';
     }
 
     public function getAuthIdentifier(): int
@@ -348,13 +380,11 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get the user's profile image url.
-     *
-     * @return  Attribute
      */
-    public function gravitarUrl(): Attribute
+    public function gravatarUrl(): Attribute
     {
         return new Attribute(
-            get: fn() => "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($this->EmailAddress))) . "?d=mp",
+            get: fn () => 'https://www.gravatar.com/avatar/'.md5(mb_strtolower(trim($this->EmailAddress))).'?d=mp',
         );
     }
 
@@ -391,16 +421,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     /**
      * Get Sms messages sent to this user
+     *
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
     public function sms()
     {
         return $this->morphToMany(Sms::class, 'smsable');
-    }
-
-    public function paymentMethods()
-    {
-        return $this->hasMany(PaymentMethod::class);
     }
 
     public function extraFees(): BelongsToMany
@@ -409,7 +435,7 @@ class User extends Authenticatable implements MustVerifyEmail
             ->withTimestamps();
     }
 
-    public function stripeCustomerId()
+    public function stripeCustomerId(): string
     {
         if ($this->stripeCustomer) {
             return $this->stripeCustomer->CustomerID;
@@ -435,26 +461,28 @@ class User extends Authenticatable implements MustVerifyEmail
                     // 'state' => $address->county, // No mapping for UK
                 ],
             ], [
-                'stripe_account' => $tenant->stripeAccount()
+                'stripe_account' => $tenant->stripeAccount(),
             ]);
 
             $stripeCustomer = new StripeCustomer();
             $stripeCustomer->CustomerID = $customer->id;
             $this->stripeCustomer = $stripeCustomer;
+
+            return $stripeCustomer->CustomerID;
         }
     }
 
     public function getJournal(): MorphOne
     {
-        if (!$this->journal()->exists()) {
+        if (! $this->journal()->exists()) {
             try {
                 /** @var LedgerAccount $ledger */
                 $ledger = LedgerAccount::where('name', 'Customer Income')->where('is_system', true)->first();
 
-                if (!$ledger) {
+                if (! $ledger) {
                     // Can not proceed
                     // throw an error
-                    throw new ModelNotFoundException("The System Customer Income Ledger could not be found");
+                    throw new ModelNotFoundException('The System Customer Income Ledger could not be found');
                 }
 
                 $this->initJournal('GBP', $ledger->ledger->id);
@@ -469,35 +497,46 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->journal();
     }
 
+    public function preferredDirectDebit()
+    {
+        return $this
+            ->paymentMethods()
+            ->where('type', '=', 'bacs_debit')
+            ->where('default', '=', true)
+            ->orderBy('created_at', 'asc')
+            ->first();
+    }
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
     /**
      * Get the user full name via expected attribute.
-     *
-     * @return Attribute
      */
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['Forename'] . ' ' . $attributes['Surname'],
+            get: fn ($value, $attributes) => $attributes['Forename'].' '.$attributes['Surname'],
         );
     }
 
     /**
      * Get the user's password via expected attribute.
-     *
-     * @return Attribute
      */
     protected function password(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['Password'],
+            get: fn ($value, $attributes) => $attributes['Password'],
         );
     }
 
     protected function email(): Attribute
     {
         return Attribute::make(
-            get: fn($value, $attributes) => $attributes['EmailAddress'],
-            set: fn($value) => [
+            get: fn ($value, $attributes) => $attributes['EmailAddress'],
+            set: fn ($value) => [
                 'EmailAddress' => $value,
             ],
         );
@@ -510,6 +549,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasOne(StripeCustomer::class, 'User');
     }
-
-
 }

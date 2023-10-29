@@ -26,6 +26,16 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Tenant\NotifyHistory::class => \App\Policies\Tenant\NotifyHistoryPolicy::class,
         \App\Models\Tenant\LedgerAccount::class => \App\Policies\Tenant\LedgerAccountPolicy::class,
         \App\Models\Tenant\JournalAccount::class => \App\Policies\Tenant\JournalAccountPolicy::class,
+        \App\Models\Tenant\CustomerStatement::class => \App\Policies\Tenant\CustomerStatementPolicy::class,
+        \App\Models\Tenant\ManualPaymentEntry::class => \App\Policies\Tenant\ManualPaymentEntryPolicy::class,
+        \App\Models\Tenant\Payment::class => \App\Policies\Tenant\PaymentPolicy::class,
+        \App\Models\Tenant\Competition::class => \App\Policies\Tenant\CompetitionPolicy::class,
+        \App\Models\Tenant\CompetitionSession::class => \App\Policies\Tenant\CompetitionSessionPolicy::class,
+        \App\Models\Tenant\CompetitionEvent::class => \App\Policies\Tenant\CompetitionEventPolicy::class,
+        \App\Models\Tenant\Venue::class => \App\Policies\Tenant\VenuePolicy::class,
+        \App\Models\Tenant\CompetitionGuestEntryHeader::class => \App\Policies\Tenant\CompetitionGuestEntryHeaderPolicy::class,
+        \App\Models\Tenant\CompetitionEntry::class => \App\Policies\Tenant\CompetitionEntryPolicy::class,
+        \App\Models\Tenant\Squad::class => \App\Policies\Tenant\SquadPolicy::class,
     ];
 
     /**
@@ -35,8 +45,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerPolicies();
-
         // if (!$this->app->routesAreCached()) {
         //     Passport::routes();
         // }

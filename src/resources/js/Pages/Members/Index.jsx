@@ -14,7 +14,7 @@ const ItemContent = (props) => {
                     {/*<div className="">*/}
                     {/*    <img*/}
                     {/*        className="h-8 w-8 rounded-full"*/}
-                    {/*        src={props.gravitar_url}*/}
+                    {/*        src={props.gravatar_url}*/}
                     {/*        alt=""*/}
                     {/*    />*/}
                     {/*</div>*/}
@@ -58,10 +58,10 @@ const Index = (props) => {
     );
 };
 
-const crumbs = [{ href: "/members", name: "Members" }];
+const crumbs = [{ route: "members.index", name: "Members" }];
 
 Index.layout = (page) => (
-    <MainLayout title="Members" subtitle="Member list">
+    <MainLayout title="Members" subtitle="Member list" breadcrumbs={crumbs}>
         {page}
     </MainLayout>
 );

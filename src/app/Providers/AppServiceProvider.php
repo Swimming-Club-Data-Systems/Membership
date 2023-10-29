@@ -3,13 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Central\Tenant;
-use Symfony\Component\HttpFoundation\Request;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 use Laravel\Cashier\Cashier;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use Laravel\Passport\Passport;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
+use Symfony\Component\HttpFoundation\Request;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -52,7 +52,7 @@ class AppServiceProvider extends ServiceProvider
         Password::defaults(function () {
             $rule = Password::min(8);
 
-            return !$this->app->isProduction()
+            return ! $this->app->isProduction()
                 ? $rule->mixedCase()->numbers()->uncompromised()
                 : $rule;
         });
