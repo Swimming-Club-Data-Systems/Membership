@@ -203,6 +203,7 @@ const New: Layout<Props> = (props: Props) => {
                                 name="closing_date"
                                 label="Closing date"
                                 showTimeInput
+                                help="00:00 indicates the start of the day. Use 23:59 for the end of the day."
                             />
                             <DateTimeInput name="age_at_date" label="Ages at" />
                             <Checkbox
@@ -210,14 +211,19 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Require times"
                             />
                             <Checkbox
+                                readOnly={true}
                                 name="coach_enters"
                                 label="Coaches select swims"
+                                help="This option will become available when members can use the new competition tools."
                             />
                             <Checkbox
+                                readOnly={true}
                                 name="requires_approval"
                                 label="Entries require approval"
+                                help="This option will become available when members can use the new competition tools."
                             />
                             <Select
+                                readOnly={true}
                                 name="open_to"
                                 label="Open to"
                                 items={CompetitionOpenToSelectValues}

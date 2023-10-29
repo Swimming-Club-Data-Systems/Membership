@@ -9,6 +9,7 @@ import * as yup from "yup";
 import TextInput from "@/Components/Form/TextInput";
 import TextArea from "@/Components/Form/TextArea";
 import formatISO from "date-fns/formatISO";
+import lastDayOfYear from "date-fns/lastDayOfYear";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Checkbox from "@/Components/Form/Checkbox";
 import DecimalInput from "@/Components/Form/DecimalInput";
@@ -43,6 +44,10 @@ const LastDay = () => {
 
 const New: Layout<Props> = (props: Props) => {
     const todaysDate = formatISO(Date.now(), {
+        representation: "date",
+    });
+
+    const lastDay = formatISO(lastDayOfYear(Date.now()), {
         representation: "date",
     });
 
@@ -151,7 +156,7 @@ const New: Layout<Props> = (props: Props) => {
                         default_entry_fee: 0,
                         processing_fee: 0,
                         closing_date: todaysDate,
-                        age_at_date: todaysDate,
+                        age_at_date: lastDay,
                         gala_date: todaysDate,
                         setup_type: "basic",
                         open_to: "guests", // Change to "members" later
@@ -205,6 +210,7 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Closing date"
                                 min={todaysDate}
                                 showTimeInput
+                                help="00:00 indicates the start of the day. Use 23:59 for the end of the day."
                             />
                             <DateTimeInput
                                 name="age_at_date"
@@ -216,14 +222,19 @@ const New: Layout<Props> = (props: Props) => {
                                 label="Require times"
                             />
                             <Checkbox
+                                readOnly={true}
                                 name="coach_enters"
                                 label="Coaches select swims"
+                                help="This option will become available when members can use the new competition tools."
                             />
                             <Checkbox
+                                readOnly={true}
                                 name="requires_approval"
                                 label="Entries require approval"
+                                help="This option will become available when members can use the new competition tools."
                             />
                             <Select
+                                readOnly={true}
                                 name="open_to"
                                 label="Open to"
                                 items={CompetitionOpenToSelectValues}

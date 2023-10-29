@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class CustomFields
 {
-    public static function getValidationRules(array $fields, string $prefix = null): array
+    public static function getValidationRules(?array $fields, string $prefix = null): array
     {
         $validationRules = [];
 

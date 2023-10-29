@@ -8,6 +8,7 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 
 interface Props extends Pick<BaseSelectProps, "items"> {
     id?: string;
+    readOnly?: boolean;
     disabled?: boolean;
     leftText?: string;
     rightButton?: ReactNode;
@@ -69,7 +70,11 @@ const Combobox: React.FC<Props> = ({
                 label={label}
                 name={name}
                 disabled={
-                    isSubmitting || disabled || context.disabled || readOnly
+                    isSubmitting ||
+                    disabled ||
+                    context.disabled ||
+                    readOnly ||
+                    props.readOnly
                 }
                 nullable={nullable}
                 {...field}

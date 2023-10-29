@@ -128,7 +128,7 @@ export const Select: React.FC<Props> = ({
                         </HeadlessListbox.Label>
                         <div className="relative mt-1">
                             <HeadlessListbox.Button
-                                className={`relative w-full cursor-default rounded-md bg-white ${
+                                className={`relative w-full cursor-default rounded-md ${
                                     props.disabled && "bg-gray-100"
                                 } ${
                                     props.readOnly && "bg-gray-100"

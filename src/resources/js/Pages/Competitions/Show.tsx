@@ -29,6 +29,7 @@ import ActionPanel from "@/Components/ActionPanel";
 import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
 import Select from "@/Components/Form/Select";
+import Alert from "@/Components/Alert";
 
 type Session = {
     id: number;
@@ -273,6 +274,32 @@ const Show: Layout<Props> = (props: Props) => {
                 <FlashAlert className="mb-6" />
 
                 <div className="grid grid-cols-12 gap-6">
+                    {props.status !== "published" && (
+                        <div className="col-start-1 col-span-full md:col-span-7">
+                            <Alert
+                                title="Competition not published"
+                                variant="warning"
+                            >
+                                <p className="mb-3">
+                                    This competition is currently in{" "}
+                                    {props.status} state. Though you can enter
+                                    as an admin, you'll need to make it{" "}
+                                    <span className="font-bold">Published</span>{" "}
+                                    before members or guests can enter.
+                                </p>
+
+                                <p>
+                                    To do this, edit this competition and change
+                                    the{" "}
+                                    <span className="font-bold">
+                                        Publication status
+                                    </span>{" "}
+                                    dropdown.
+                                </p>
+                            </Alert>
+                        </div>
+                    )}
+
                     {(props.members_can_enter || props.guests_can_enter) && (
                         <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <ActionPanel
