@@ -175,7 +175,7 @@ class CompetitionEventEntry extends Model implements PaidObject
 
         // Debit the competition journal
         // Get competition
-        $competition = $this->competitionEvent->competitionSession->competition;
+        $competition = $this->competitionEvent->competition;
         $competition->journal->debit($refundAmount);
     }
 
