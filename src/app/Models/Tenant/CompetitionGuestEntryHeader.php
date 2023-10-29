@@ -3,12 +3,13 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Prunable;
 
 /**
  * @property string $id
@@ -19,16 +20,18 @@ use Illuminate\Database\Eloquent\Model;
  * @property User|null $user
  * @property array $custom_form_data
  * @property Collection $competitionGuestEntrants
+ * @property bool $complete
  */
 class CompetitionGuestEntryHeader extends Model
 {
-    use HasFactory, HasUuids, BelongsToTenant;
+    use BelongsToTenant, HasUuids, Prunable;
 
     /**
      * The attributes that should be cast.
      */
     protected $casts = [
         'custom_form_data' => AsArrayObject::class,
+        'complete' => 'boolean',
     ];
 
     protected $attributes = [
@@ -83,5 +86,25 @@ class CompetitionGuestEntryHeader extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the prunable model query.
+     */
+    public function prunable(): Builder
+    {
+        return static::where('complete', false)
+            ->where('created_at', '<=', now()->subDays(2));
+    }
+
+    /**
+     * Prepare the model for pruning.
+     */
+    protected function pruning(): void
+    {
+        // Delete guest entrants
+        $this->competitionGuestEntrants->each(function (CompetitionGuestEntrant $competitionGuestEntrant) {
+            $competitionGuestEntrant->delete();
+        });
     }
 }

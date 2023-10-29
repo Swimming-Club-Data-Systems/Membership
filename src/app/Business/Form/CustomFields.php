@@ -11,7 +11,7 @@ class CustomFields
     {
         $validationRules = [];
 
-        if (Arr::isList($fields)) {
+        if ($fields && Arr::isList($fields)) {
             foreach ($fields as $field) {
                 $name = Arr::get($field, 'name');
                 if ($name) {
@@ -57,7 +57,7 @@ class CustomFields
 
     public static function setValues($fields, $arrayObject, $values): void
     {
-        if (Arr::isList($fields)) {
+        if ($fields && Arr::isList($fields)) {
             foreach ($fields as $field) {
                 if (Arr::get($field, 'name')) {
                     $name = Arr::get($field, 'name');

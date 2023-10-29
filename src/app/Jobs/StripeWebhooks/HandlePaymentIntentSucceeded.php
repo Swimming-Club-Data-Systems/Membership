@@ -67,9 +67,9 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                         foreach ($payment->lines()->with(['associated', 'associatedUuid'])->get() as $line) {
                             /** @var PaymentLine $line */
                             if ($line->associated && $line->associated instanceof PaidObject) {
-                                $line->associated->handlePaid();
+                                $line->associated->handlePaid($line);
                             } elseif ($line->associatedUuid && $line->associatedUuid instanceof PaidObject) {
-                                $line->associatedUuid->handlePaid();
+                                $line->associatedUuid->handlePaid($line);
                             }
 
                             $associate = $line->associated ?? $line; // Not including uuid as it can't be referenced this way

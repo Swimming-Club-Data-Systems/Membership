@@ -39,7 +39,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class PaymentLine extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, HasFactory;
 
     protected $table = 'v2_payment_lines';
 
@@ -194,7 +194,7 @@ class PaymentLine extends Model
                 } elseif ($this->associatedUuid instanceof PaidObject) {
                     return $this->associatedUuid->getPaymentLineDescriptor();
                 } else {
-                    return 'Line Item';
+                    return 'Line Item (no associated item)';
                 }
             }
         );

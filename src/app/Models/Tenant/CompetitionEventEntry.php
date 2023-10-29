@@ -7,7 +7,6 @@ use App\Interfaces\PaidObject;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -28,7 +27,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class CompetitionEventEntry extends Model implements PaidObject
 {
-    use HasFactory, HasUuids;
+    use HasUuids;
 
     protected $fillable = [
         'competition_entry_id',
@@ -137,8 +136,16 @@ class CompetitionEventEntry extends Model implements PaidObject
 
         // Credit the competition journal
         // Get competition
-        $competition = $this->competitionEvent->competitionSession->competition;
+        $competition = $this->competitionEvent->competition;
         $competition->journal->credit($line->amount_total);
+
+        if ($this->competitionEntry->competitionGuestEntrant) {
+            $header = $this->competitionEntry->competitionGuestEntrant->competitionGuestEntryHeader;
+            if (! $header->complete) {
+                $header->complete = true;
+                $header->save();
+            }
+        }
     }
 
     public function handleChargedBack(): void

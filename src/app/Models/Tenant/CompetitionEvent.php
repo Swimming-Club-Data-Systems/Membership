@@ -9,7 +9,6 @@ use App\Enums\Sex;
 use App\Enums\Stroke;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -28,12 +27,10 @@ use Illuminate\Support\Str;
  * @property int $processing_fee
  * @property string $processing_fee_string
  * @property Competition $competition
- * @property CompetitionSession $competitionSession
+ * @property CompetitionSession $session
  */
 class CompetitionEvent extends Model
 {
-    use HasFactory;
-
     /**
      * The attributes that should be cast.
      *
@@ -87,7 +84,7 @@ class CompetitionEvent extends Model
 
     public function competition(): \Illuminate\Database\Eloquent\Relations\HasOneThrough
     {
-        return $this->hasOneThrough(Competition::class, CompetitionSession::class);
+        return $this->hasOneThrough(Competition::class, CompetitionSession::class, 'id', 'id', 'competition_session_id', 'competition_id');
     }
 
     public function eventEntries(): \Illuminate\Database\Eloquent\Relations\HasMany
