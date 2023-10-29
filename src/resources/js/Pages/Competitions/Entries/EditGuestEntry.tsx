@@ -96,10 +96,8 @@ const EditGuestEntry: Layout<Props> = (props: Props) => {
                             className="mb-4"
                         >
                             This entry has been paid for and can now no longer
-                            be amended. You can amend some of{" "}
-                            {props.entrant.first_name}'s personal details if
-                            required. For any other changes, you must contact{" "}
-                            {props.tenant.name} directly.
+                            be amended. You must contact {props.tenant.name}{" "}
+                            directly if you need to make any changes.
                         </Alert>
                     )}
                 </div>
