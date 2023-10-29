@@ -40,14 +40,16 @@ class SquadPolicy
      */
     public function viewAll(User $user)
     {
-        if ($user->hasPermission(['Galas', 'Committee'])) {
+        if ($user->hasPermission(['Galas', 'Committee', 'Coach'])) {
             return true;
         }
     }
 
     public function create(User $user)
     {
-
+        if ($user->hasPermission(['Coach'])) {
+            return true;
+        }
     }
 
     /**
@@ -57,7 +59,7 @@ class SquadPolicy
      */
     public function view(User $user, Squad $squad)
     {
-        if ($user->hasPermission(['Galas', 'Committee'])) {
+        if ($user->hasPermission(['Galas', 'Committee', 'Coach'])) {
             return true;
         }
     }
@@ -69,13 +71,15 @@ class SquadPolicy
      */
     public function update(User $user, Squad $squad)
     {
-        //        if ($user->hasPermission(['Galas', 'Committee'])) {
-        //            return true;
-        //        }
+        if ($user->hasPermission(['Coach'])) {
+            return true;
+        }
     }
 
     public function delete(User $user, Squad $squad)
     {
-
+        if ($user->hasPermission(['Coach'])) {
+            return true;
+        }
     }
 }
