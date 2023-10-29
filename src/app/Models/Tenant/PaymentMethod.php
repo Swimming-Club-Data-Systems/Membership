@@ -8,7 +8,6 @@ use App\Traits\BelongsToTenant;
 use ArrayObject;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Stripe\Exception\ApiErrorException;
@@ -28,7 +27,7 @@ use Stripe\Exception\ApiErrorException;
  */
 class PaymentMethod extends Model
 {
-    use HasFactory, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.

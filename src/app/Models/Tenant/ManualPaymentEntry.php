@@ -12,7 +12,6 @@ use App\Services\Accounting;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Support\Facades\DB;
@@ -28,7 +27,7 @@ use Money\Money;
  */
 class ManualPaymentEntry extends Model
 {
-    use HasFactory, Prunable, BelongsToTenant;
+    use BelongsToTenant, Prunable;
 
     /**
      * The relationships that should always be loaded.

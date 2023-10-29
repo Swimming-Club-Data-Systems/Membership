@@ -23,7 +23,7 @@ trait AccountingJournal
      *
      * @throws JournalAlreadyExists
      */
-    public function initJournal(?string $currency_code = 'GBP', ?int $ledger_id = null)
+    public function initJournal(?string $currency_code = 'GBP', int $ledger_id = null)
     {
         if (! $this->journal) {
             $journal = new Journal();

@@ -9,7 +9,7 @@ use Brick\Postcode\UnknownCountryException;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\InvokableRule;
 
-class ValidPostCode implements InvokableRule, DataAwareRule
+class ValidPostCode implements DataAwareRule, InvokableRule
 {
     /**
      * All of the data under validation.

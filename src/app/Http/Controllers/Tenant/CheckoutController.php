@@ -113,7 +113,7 @@ class CheckoutController extends Controller
         ]);
     }
 
-    public function create(): \Symfony\Component\HttpFoundation\Response|null
+    public function create(): ?\Symfony\Component\HttpFoundation\Response
     {
         DB::beginTransaction();
         try {

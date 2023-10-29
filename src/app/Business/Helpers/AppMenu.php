@@ -190,7 +190,7 @@ class AppMenu
         return $menu;
     }
 
-    public static function asArray(User|null $user): array
+    public static function asArray(?User $user): array
     {
         $object = new AppMenu($user);
 

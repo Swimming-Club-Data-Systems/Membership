@@ -48,8 +48,6 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Display the login view.
-     *
-     // * @return \Illuminate\Http\Response
      */
     public function check(Request $request)
     {

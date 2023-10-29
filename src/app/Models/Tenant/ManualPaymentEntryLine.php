@@ -7,7 +7,6 @@ use App\Models\Accounting\Journal;
 use Brick\Math\BigDecimal;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -28,7 +27,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class ManualPaymentEntryLine extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel;
 
     /**
      * The attributes that should be cast.

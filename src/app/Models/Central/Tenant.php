@@ -8,11 +8,12 @@ use App\Models\Tenant\TenantOption;
 use App\Traits\Accounting\AccountingJournal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use function Illuminate\Events\queueable;
 use Laravel\Cashier\Billable;
 use Laravel\Scout\Searchable;
 use Stancl\Tenancy\Database\Concerns\HasDomains;
 use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
+
+use function Illuminate\Events\queueable;
 
 /**
  * @property int ID
@@ -36,7 +37,7 @@ use Stancl\Tenancy\Database\Models\Tenant as BaseTenant;
  */
 class Tenant extends BaseTenant
 {
-    use HasDomains, Searchable, Billable, AccountingJournal;
+    use AccountingJournal, Billable, HasDomains, Searchable;
 
     protected $configOptionsCached = false;
 

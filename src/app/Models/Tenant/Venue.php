@@ -6,7 +6,6 @@ use App\Business\Helpers\PhoneNumber;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
@@ -33,7 +32,7 @@ use Laravel\Scout\Searchable;
  */
 class Venue extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     /**
      * The attributes that should be cast.

@@ -3,7 +3,6 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
 
@@ -15,7 +14,7 @@ use Laravel\Scout\Searchable;
  */
 class Sms extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     public function squads()
     {

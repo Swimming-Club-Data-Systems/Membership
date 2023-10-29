@@ -6,7 +6,6 @@ use App\Exceptions\Accounting\JournalAlreadyExists;
 use App\Models\Accounting\Journal;
 use App\Traits\Accounting\AccountingJournal;
 use App\Traits\BelongsToTenant;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Laravel\Scout\Searchable;
@@ -20,7 +19,7 @@ use Laravel\Scout\Searchable;
  */
 class JournalAccount extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable, AccountingJournal {
+    use AccountingJournal, BelongsToTenant, Searchable {
         journal as protected traitJournal;
     }
 

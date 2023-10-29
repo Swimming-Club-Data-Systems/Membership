@@ -2,7 +2,6 @@
 
 namespace App\Models\Tenant;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
@@ -14,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class StripeCustomer extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel;
 
     protected $table = 'stripeCustomers';
 

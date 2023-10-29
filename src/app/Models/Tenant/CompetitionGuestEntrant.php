@@ -7,7 +7,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -25,7 +24,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class CompetitionGuestEntrant extends Model
 {
-    use HasFactory, HasUuids, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, HasUuids;
 
     /**
      * The attributes that should be cast.

@@ -7,7 +7,7 @@ use Brick\PhoneNumber\PhoneNumberParseException;
 use Illuminate\Contracts\Validation\DataAwareRule;
 use Illuminate\Contracts\Validation\InvokableRule;
 
-class ValidPhone implements InvokableRule, DataAwareRule
+class ValidPhone implements DataAwareRule, InvokableRule
 {
     /**
      * All of the data under validation.

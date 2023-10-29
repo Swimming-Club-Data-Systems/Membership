@@ -5,7 +5,6 @@ namespace App\Models\Tenant;
 use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
@@ -19,7 +18,7 @@ use Illuminate\Support\Facades\Date;
  */
 class ExtraFee extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant;
 
     protected $primaryKey = 'ExtraID';
 

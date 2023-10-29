@@ -14,7 +14,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class V1Login extends Model
 {
-    use MassPrunable, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, MassPrunable;
 
     /**
      * Get the post that owns the comment.

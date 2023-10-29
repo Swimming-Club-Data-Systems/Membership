@@ -3,7 +3,6 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -25,7 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Gala extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant;
 
     protected $primaryKey = 'GalaID';
 
