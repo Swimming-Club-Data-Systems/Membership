@@ -29,11 +29,11 @@ export const DefinitionList: React.FC<DefinitionListProps> = ({
                             key={item.key}
                             className={`py-${verticalPadding} @sm:grid @sm:grid-cols-3 @sm:gap-4`}
                         >
-                            <dt className="text-sm font-medium text-gray-500">
+                            <dt className="text-sm font-medium text-gray-500 @sm:col-start-1 @sm:col-span-1">
                                 {item.term}
                             </dt>
                             <dd
-                                className={`mt-1 text-sm text-gray-900 @sm:col-span-2 @sm:mt-0 ${
+                                className={`mt-1 text-sm text-gray-900 @sm:col-start-2 @sm:col-span-2 @sm:mt-0 ${
                                     item.truncate ? "truncate" : ""
                                 }`}
                             >
