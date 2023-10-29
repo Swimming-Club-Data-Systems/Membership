@@ -153,6 +153,11 @@ Route::middleware([
             Route::get('/', [SquadController::class, 'index'])->name('index');
             Route::get('/new', [SquadController::class, 'new'])->name('new');
             Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('show');
+            Route::post('/{squad}/coaches', [SquadController::class, 'addCoach'])->whereNumber('squad')->name('add-coach');
+            Route::delete('/{squad}/coaches/{user}', [SquadController::class, 'deleteCoach'])
+                ->whereNumber('squad')
+                ->whereNumber('user')
+                ->name('delete-coach');
             Route::get('/{squad}/edit', [SquadController::class, 'edit'])->whereNumber('squad')->name('edit');
             Route::put('/{squad}', [SquadController::class, 'update'])->whereNumber('squad');
             Route::delete('/{squad}', [SquadController::class, 'delete'])->whereNumber('squad')->name('delete');

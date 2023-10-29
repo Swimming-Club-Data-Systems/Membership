@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Business\Helpers\Money;
+use App\Enums\CoachType;
 use App\Enums\PostType;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
@@ -156,6 +157,20 @@ class SquadController extends Controller
 
         $coc = (int) $squad->SquadCoC;
 
+        $coaches = [];
+        foreach ($squad
+            ->coaches()
+            ->orderByPivot('Type')
+            ->orderBy('Forename')
+            ->orderBy('Surname')
+            ->get() as $coach) {
+            $coaches[] = [
+                'id' => $coach->UserID,
+                'name' => $coach->name,
+                'type' => Str::title($coach->pivot->Type),
+            ];
+        }
+
         return Inertia::render('Squads/Edit', [
             'id' => $squad->SquadID,
             'name' => $squad->SquadName,
@@ -171,6 +186,7 @@ class SquadController extends Controller
                     'name' => $post->Title,
                 ];
             }),
+            'coaches' => $coaches,
         ]);
     }
 
@@ -211,5 +227,44 @@ class SquadController extends Controller
         $request->session()->flash('success', $squad->SquadName.' has been successfully deleted.');
 
         return redirect()->route('squads.index');
+    }
+
+    public function addCoach(Request $request, Squad $squad)
+    {
+        $this->authorize('update', $squad);
+
+        $request->validate([
+            'user_select' => [
+                'required',
+                Rule::exists('users', 'UserID')->where(function (Builder $query) {
+                    return $query->where('Tenant', tenant('id'))->where('Active', true);
+                }),
+                Rule::unique('coaches', 'User')->where(fn (Builder $query) => $query->where('Squad', $squad->SquadID)),
+            ],
+            'type' => ['required', Rule::enum(CoachType::class)],
+        ]);
+
+        /** @var User $user */
+        $user = User::findOrFail($request->integer('user_select'));
+        $type = $request->enum('type', CoachType::class);
+
+        $squad->coaches()->attach($user, [
+            'type' => $type,
+        ]);
+
+        $request->session()->flash('flash_bag.coaches.success', $user->name.' added to '.$squad->SquadName.'.');
+
+        return redirect()->route('squads.edit', $squad);
+    }
+
+    public function deleteCoach(Request $request, Squad $squad, User $user)
+    {
+        $this->authorize('update', $squad);
+
+        $squad->coaches()->detach($user);
+
+        $request->session()->flash('flash_bag.coaches.success', 'Removed '.$user->name.' from '.$squad->SquadName.'.');
+
+        return redirect()->route('squads.edit', $squad);
     }
 }
