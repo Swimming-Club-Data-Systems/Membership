@@ -6,6 +6,8 @@ import PlainCollection from "@/Components/PlainCollection";
 import { formatDateTime } from "@/Utils/date-utils";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
+import Stats from "@/Components/Stats";
+import Stat from "@/Components/Stat";
 
 type TransactionItemContentProps = {
     id: number;
@@ -24,6 +26,7 @@ export type TransactionIndexProps = {
         name: string;
     };
     transactions: TransactionItemContentProps[];
+    balance: string;
 };
 
 export const TransactionItemContent: React.FC<TransactionItemContentProps> = (
@@ -43,8 +46,8 @@ export const TransactionItemContent: React.FC<TransactionItemContentProps> = (
                     </div>
                 </div>
                 <div className="ml-2 flex flex-shrink-0 text-sm">
-                    {props.debit && <>{props.debit_formatted}</>}
-                    {props.credit && <>{props.credit_formatted}</>}
+                    {props.debit && <>-{props.debit_formatted}</>}
+                    {props.credit && <>(CR) {props.credit_formatted}</>}
                 </div>
             </div>
         </>
@@ -65,12 +68,20 @@ const Index: Layout<TransactionIndexProps> = (props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title="Transactions"
                     subtitle="Transactions"
                 ></MainHeader>
 
+                <div className="mb-6">
+                    <Stats title="Details">
+                        <Stat name="Balance" stat={props.balance} />
+                    </Stats>
+                </div>
+            </Container>
+
+            <Container noMargin>
                 <PlainCollection
                     {...props.transactions}
                     itemRenderer={TransactionItemContent}

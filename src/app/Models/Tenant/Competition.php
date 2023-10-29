@@ -7,6 +7,8 @@ use App\Enums\CompetitionMode;
 use App\Enums\CompetitionOpenTo;
 use App\Enums\CompetitionStatus;
 use App\Events\Tenant\CompetitionCreated;
+use App\Models\Accounting\Journal;
+use App\Traits\Accounting\AccountingJournal;
 use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Carbon\Carbon;
@@ -40,10 +42,11 @@ use Laravel\Scout\Searchable;
  * @property Carbon $updated_at
  * @property Collection $events
  * @property $custom_fields
+ * @property Journal $journal
  */
 class Competition extends Model
 {
-    use HasFactory, Searchable, BelongsToTenant;
+    use AccountingJournal, BelongsToTenant, HasFactory, Searchable;
 
     protected $fillable = [
         'name',

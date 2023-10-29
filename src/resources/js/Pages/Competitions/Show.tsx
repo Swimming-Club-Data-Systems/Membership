@@ -61,10 +61,19 @@ export type Props = {
     };
     sessions: Session[];
     editable: boolean;
+    view_entries: boolean;
     members_can_enter: boolean;
     guests_can_enter: boolean;
     timezones: DateTimeInputTimezones;
     org_timezone: string;
+    qfr?: {
+        credits_formatted: string;
+        debits_formatted: string;
+        balance_formatted: string;
+        credits: number;
+        debits: number;
+        balance: number;
+    };
 };
 
 const Show: Layout<Props> = (props: Props) => {
@@ -261,7 +270,7 @@ const Show: Layout<Props> = (props: Props) => {
             </Container>
 
             <Container noMargin>
-                <FlashAlert />
+                <FlashAlert className="mb-6" />
 
                 <div className="grid grid-cols-12 gap-6">
                     {(props.members_can_enter || props.guests_can_enter) && (
@@ -328,20 +337,51 @@ const Show: Layout<Props> = (props: Props) => {
                         </Card>
                     </div>
 
-                    <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
-                        <Card title="Entrants">
-                            <div className="text-sm">
-                                <Link
-                                    href={route(
-                                        "competitions.guest_entries.index",
-                                        [props.id]
-                                    )}
-                                >
-                                    View guest entries
-                                </Link>
-                            </div>
-                        </Card>
-                    </div>
+                    {props.view_entries && (
+                        <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
+                            <Card title="Entrants">
+                                <div className="text-sm">
+                                    <Link
+                                        href={route(
+                                            "competitions.guest_entries.index",
+                                            [props.id]
+                                        )}
+                                    >
+                                        View guest entries
+                                    </Link>
+                                </div>
+                            </Card>
+                        </div>
+                    )}
+
+                    {props.qfr && (
+                        <div className="col-start-1 col-span-full md:col-span-7 text-sm">
+                            <Card title="Financial Overiew">
+                                <DefinitionList
+                                    items={[
+                                        {
+                                            key: "balance",
+                                            term: "Net position",
+                                            definition:
+                                                props.qfr.balance_formatted,
+                                        },
+                                        {
+                                            key: "credits",
+                                            term: "Credits",
+                                            definition:
+                                                props.qfr.credits_formatted,
+                                        },
+                                        {
+                                            key: "debits",
+                                            term: "Debits",
+                                            definition:
+                                                props.qfr.debits_formatted,
+                                        },
+                                    ]}
+                                />
+                            </Card>
+                        </div>
+                    )}
 
                     <div className="col-span-full row-span-6 md:row-start-1 md:col-start-8 md:col-span-5">
                         <Card title="Venue" subtitle={props.venue.name}>

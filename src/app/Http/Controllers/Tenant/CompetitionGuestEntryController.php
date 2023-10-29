@@ -16,6 +16,8 @@ class CompetitionGuestEntryController extends Controller
 {
     public function index(Competition $competition)
     {
+        $this->authorize('viewAny', CompetitionEntry::class);
+
         $entries = CompetitionEntry::where('competition_id', $competition->id)
             ->with(['competitionGuestEntrant', 'competitionEventEntries', 'competitionEventEntries.competitionEvent'])
             ->paginate(config('app.per_page'));
@@ -82,6 +84,8 @@ class CompetitionGuestEntryController extends Controller
 
     public function show(Competition $competition, CompetitionEntry $entry)
     {
+        $this->authorize('view', $entry);
+
         $entry->load([
             'competitionGuestEntrant',
             'competitionEventEntries',
@@ -169,6 +173,8 @@ class CompetitionGuestEntryController extends Controller
 
     public function update(Competition $competition, CompetitionEntry $entry, Request $request): \Illuminate\Http\RedirectResponse
     {
+        $this->authorize('update', $entry);
+
         $request->validate([
             'approved' => ['boolean'],
             'paid' => ['boolean'],

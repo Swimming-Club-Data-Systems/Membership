@@ -3,11 +3,10 @@
 namespace App\Models\Tenant;
 
 use App\Models\Central\Tenant;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 use Laravel\Scout\Searchable;
-use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
 /**
  * @property int $ID
@@ -24,7 +23,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
  */
 class NotifyHistory extends Model
 {
-    use HasFactory, BelongsToTenant, Searchable;
+    use BelongsToTenant, Searchable;
 
     protected $primaryKey = 'ID';
 

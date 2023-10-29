@@ -48,6 +48,7 @@ class PaymentTransactionController extends Controller
         });
 
         return [
+            'balance' => $user->journal?->balance ? Money::formatCurrency($user->journal?->balance->getAmount(), $user->journal?->balance->getCurrency()) : 0,
             'transactions' => $transactions->onEachSide(3),
             'user' => [
                 'id' => $user->id,

@@ -13,6 +13,7 @@ use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
 use App\Http\Controllers\Tenant\JournalAccountController;
+use App\Http\Controllers\Tenant\JournalController;
 use App\Http\Controllers\Tenant\LedgerAccountController;
 use App\Http\Controllers\Tenant\MemberController;
 use App\Http\Controllers\Tenant\MyAccountController;
@@ -137,19 +138,33 @@ Route::middleware([
     });
 
     Route::prefix('/members')->group(function () {
-        Route::get('/', [MemberController::class, 'index']);
-        Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('members.show');
-        Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/members/'.$path);
-        })->where('path', '.*');
+        Route::name('members.')->group(function () {
+            Route::get('/', [MemberController::class, 'index'])->name('index');
+            Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('show');
+            Route::any('/{path}', function ($path) {
+                return Inertia::location('/v1/members/'.$path);
+            })->where('path', '.*');
+        });
     });
 
     Route::prefix('/squads')->group(function () {
-        Route::get('/', [SquadController::class, 'index']);
-        Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('squads.show');
-        Route::any('/{path}', function ($path) {
-            return Inertia::location('/v1/squads/'.$path);
-        })->where('path', '.*');
+        Route::name('squads.')->group(function () {
+            Route::post('/', [SquadController::class, 'create']);
+            Route::get('/', [SquadController::class, 'index'])->name('index');
+            Route::get('/new', [SquadController::class, 'new'])->name('new');
+            Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('show');
+            Route::post('/{squad}/coaches', [SquadController::class, 'addCoach'])->whereNumber('squad')->name('add-coach');
+            Route::delete('/{squad}/coaches/{user}', [SquadController::class, 'deleteCoach'])
+                ->whereNumber('squad')
+                ->whereNumber('user')
+                ->name('delete-coach');
+            Route::get('/{squad}/edit', [SquadController::class, 'edit'])->whereNumber('squad')->name('edit');
+            Route::put('/{squad}', [SquadController::class, 'update'])->whereNumber('squad');
+            Route::delete('/{squad}', [SquadController::class, 'delete'])->whereNumber('squad')->name('delete');
+            Route::any('/{path}', function ($path) {
+                return Inertia::location('/v1/squads/'.$path);
+            })->where('path', '.*');
+        });
     });
 
     Route::prefix('/users')->group(function () {
@@ -345,6 +360,10 @@ Route::middleware([
                         ->name('show');
                 });
             });
+
+            if (App::isLocal()) {
+                Route::get('journal-report', [JournalController::class, 'view']);
+            }
         });
     });
 

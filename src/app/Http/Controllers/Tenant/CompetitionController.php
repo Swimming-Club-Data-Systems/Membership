@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\QuickFinancialReport;
 use App\Business\Helpers\Timezones;
 use App\Enums\CompetitionCourse;
 use App\Enums\CompetitionMode;
@@ -10,6 +11,7 @@ use App\Enums\CompetitionStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\User;
@@ -239,6 +241,17 @@ class CompetitionController extends Controller
         /** @var User $user */
         $user = $request->user() ?? new User();
 
+        $qfr = null;
+
+        if ($user->can('update', $competition)) {
+            try {
+                $qfr = QuickFinancialReport::get($competition);
+            } catch (\Exception $e) {
+                // Swallow
+                report($e);
+            }
+        }
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
@@ -264,11 +277,20 @@ class CompetitionController extends Controller
             ],
             'sessions' => $competition->sessions()->get()->toArray(),
             'editable' => $user->can('update', $competition),
+            'view_entries' => $user->can('viewAny', CompetitionEntry::class),
             'members_can_enter' => ($competition->open_to === CompetitionOpenTo::MEMBERS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enter', $competition),
             'guests_can_enter' => ($competition->open_to === CompetitionOpenTo::GUESTS || $competition->open_to === CompetitionOpenTo::MEMBERS_AND_GUESTS) && $user->can('enterAsGuest', $competition),
             'open_to' => $competition->open_to,
             'timezones' => $user->can('update', $competition) ? Timezones::getTimezoneSelectList() : [],
             'org_timezone' => $tenant->timezone,
+            'qfr' => $qfr ? [
+                'credits' => $qfr->periodCredits,
+                'credits_formatted' => $qfr->periodCreditsFormatted,
+                'debits' => $qfr->periodDebits,
+                'debits_formatted' => $qfr->periodDebitsFormatted,
+                'balance' => $qfr->periodBalance,
+                'balance_formatted' => $qfr->periodBalanceFormatted,
+            ] : null,
         ]);
     }
 

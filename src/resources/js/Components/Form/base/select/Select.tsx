@@ -5,6 +5,7 @@ import React, {
     Fragment,
     ReactNode,
     useCallback,
+    useMemo,
 } from "react";
 import { Listbox as HeadlessListbox, Transition } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
@@ -29,7 +30,7 @@ export interface Props {
     help?: string;
     nullable?: boolean;
     items: {
-        value: string;
+        value: string | number;
         name: ReactNode;
         disabled?: boolean;
     }[];
@@ -41,13 +42,21 @@ export const Select: React.FC<Props> = ({
     keyField = "value",
     className = "",
     value,
-    items,
+    items: rawItems,
     onChange: onChangeProps,
     onBlur: onBlurProps,
+    nullable,
     ...props
 }) => {
     const [selectedItem, setSelectedItem] = useState(null);
     const inputRef = useRef(null);
+
+    const items = useMemo(() => {
+        if (nullable) {
+            return [{ value: null, name: "N/A" }, ...rawItems];
+        }
+        return rawItems;
+    }, [rawItems, nullable]);
 
     /**
      * Get the initial value if id provided

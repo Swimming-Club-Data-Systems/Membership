@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
  * @property int $processing_fee
  * @property string $processing_fee_string
  * @property Competition $competition
+ * @property CompetitionSession $competitionSession
  */
 class CompetitionEvent extends Model
 {

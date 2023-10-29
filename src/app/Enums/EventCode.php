@@ -3,12 +3,15 @@
 namespace App\Enums;
 
 use App\Enums\Attributes\Description;
+use App\Enums\Concerns\GetsAttributes;
 
 /**
  * SportSystems two character EventCodes for standard events
  */
 enum EventCode: int
 {
+    use GetsAttributes;
+
     #[Description('50m Freestyle')]
     case Freestyle50 = 1;
     #[Description('100m Freestyle')]

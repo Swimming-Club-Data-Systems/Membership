@@ -21,7 +21,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  */
 class CompetitionSession extends Model
 {
-    use HasFactory, BelongsToPrimaryModel;
+    use BelongsToPrimaryModel, HasFactory;
 
     /**
      * The attributes that should be cast.

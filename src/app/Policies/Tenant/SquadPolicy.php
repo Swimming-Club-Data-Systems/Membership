@@ -2,6 +2,7 @@
 
 namespace App\Policies\Tenant;
 
+use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
@@ -44,15 +45,37 @@ class SquadPolicy
         }
     }
 
+    public function create(User $user)
+    {
+
+    }
+
     /**
      * Can the current user view the user?
      *
      * @return void|bool
      */
-    public function view(User $user, User $modelUser)
+    public function view(User $user, Squad $squad)
     {
         if ($user->hasPermission(['Galas', 'Committee'])) {
             return true;
         }
+    }
+
+    /**
+     * Can the current user view the user?
+     *
+     * @return void|bool
+     */
+    public function update(User $user, Squad $squad)
+    {
+        //        if ($user->hasPermission(['Galas', 'Committee'])) {
+        //            return true;
+        //        }
+    }
+
+    public function delete(User $user, Squad $squad)
+    {
+
     }
 }
