@@ -133,7 +133,7 @@ class SquadController extends Controller
             $coaches[] = [
                 'id' => $coach->UserID,
                 'name' => $coach->name,
-                'type' => Str::title($coach->pivot->Type),
+                'type' => $coach->pivot->Type->description(),
             ];
         }
 
@@ -167,7 +167,7 @@ class SquadController extends Controller
             $coaches[] = [
                 'id' => $coach->UserID,
                 'name' => $coach->name,
-                'type' => Str::title($coach->pivot->Type),
+                'type' => $coach->pivot->Type->description(),
             ];
         }
 

@@ -62,9 +62,12 @@ class Squad extends Model
             ->using(SquadMove::class);
     }
 
-    public function coaches()
+    public function coaches(): BelongsToMany
     {
-        return $this->belongsToMany(User::class, 'coaches', 'Squad', 'User')->withPivot(['Type']);
+        return $this
+            ->belongsToMany(User::class, 'coaches', 'Squad', 'User')
+            ->withPivot(['Type'])
+            ->using(Coach::class);
     }
 
     /**
