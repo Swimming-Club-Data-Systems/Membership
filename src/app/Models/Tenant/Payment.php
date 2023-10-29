@@ -44,7 +44,7 @@ use Illuminate\Support\Str;
  */
 class Payment extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use BelongsToTenant, HasFactory;
 
     protected $table = 'v2_payments';
 
@@ -142,7 +142,7 @@ class Payment extends Model
         );
     }
 
-    public function createStripePaymentIntent()
+    public function createStripePaymentIntent($paymentMethodTypes = null)
     {
         if ($this->stripe_id) {
             return;
@@ -151,12 +151,23 @@ class Payment extends Model
         /** @var Tenant $tenant */
         $tenant = tenant();
 
+        $pmTypes = [];
+        if ($paymentMethodTypes) {
+            $pmTypes = [
+                'payment_method_types' => $paymentMethodTypes,
+            ];
+        } else {
+            $pmTypes = [
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
+            ];
+        }
+
         $data = [
             'currency' => 'gbp',
             'amount' => $this->amount,
-            'automatic_payment_methods' => [
-                'enabled' => true,
-            ],
+            ...$pmTypes,
             'description' => 'SCDS Checkout Payment',
             'metadata' => [
                 'payment_category' => 'scds_checkout_v3',

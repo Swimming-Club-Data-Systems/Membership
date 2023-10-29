@@ -75,7 +75,7 @@ class CompetitionGuestEntryPaymentController extends Controller
             $payment->return_link_text = 'Return to entry page';
             $payment->cancel_link = route('competitions.enter_as_guest.show', [$competition, $header]);
 
-            $payment->createStripePaymentIntent();
+            $payment->createStripePaymentIntent(['card', 'link']);
 
             $payment->save();
 

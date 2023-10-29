@@ -363,7 +363,8 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
                                     <p>Ready to pay?</p>
 
                                     <p>
-                                        {props.competition.processing_fee && (
+                                        {props.competition.processing_fee >
+                                            0 && (
                                             <>
                                                 A processing fee of{" "}
                                                 {

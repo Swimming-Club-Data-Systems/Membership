@@ -110,6 +110,11 @@ export const Select: React.FC<Props> = ({
         [keyField]
     );
 
+    let background = "bg-white";
+    if (props.disabled || props.readOnly) {
+        background = "bg-gray-100";
+    }
+
     return (
         <div ref={inputRef}>
             <HeadlessListbox
@@ -128,11 +133,7 @@ export const Select: React.FC<Props> = ({
                         </HeadlessListbox.Label>
                         <div className="relative mt-1">
                             <HeadlessListbox.Button
-                                className={`relative w-full cursor-default rounded-md ${
-                                    props.disabled && "bg-gray-100"
-                                } ${
-                                    props.readOnly && "bg-gray-100"
-                                } py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm`}
+                                className={`relative w-full cursor-default rounded-md ${background} py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm`}
                                 onBlur={onBlur}
                             >
                                 <span className="block truncate">
