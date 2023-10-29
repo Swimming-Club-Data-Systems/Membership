@@ -149,7 +149,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                     </label>
                                     <Input
                                         id={`${controlId}_year`}
-                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
+                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 read-only:bg-gray-100 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
                                         value={year}
                                         onBlur={handleBlur}
                                         onChange={handleYearChange}
@@ -172,7 +172,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                     </label>
                                     <Input
                                         id={`${controlId}_month`}
-                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
+                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 read-only:bg-gray-100 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
                                         value={month}
                                         onBlur={handleBlur}
                                         onChange={handleMonthChange}
@@ -195,7 +195,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                     </label>
                                     <Input
                                         id={`${controlId}_day`}
-                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
+                                        className={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 read-only:bg-gray-100 disabled:bg-gray-100 shadow-sm ${className} ${errorClasses}`}
                                         value={day}
                                         onBlur={handleBlur}
                                         onChange={handleDayChange}

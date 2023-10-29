@@ -7,6 +7,7 @@ use App\Enums\CoachType;
 use App\Enums\PostType;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\Permission;
 use App\Models\Tenant\Post;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
@@ -251,6 +252,14 @@ class SquadController extends Controller
         $squad->coaches()->attach($user, [
             'type' => $type,
         ]);
+
+        try {
+            $permission = new Permission();
+            $permission->Permission = 'Coach';
+            $user->permissions()->save($permission);
+        } catch (\Exception $e) {
+            // Might be rejected due to duplicate, swallow
+        }
 
         $request->session()->flash('flash_bag.coaches.success', $user->name.' added to '.$squad->SquadName.'.');
 

@@ -61,7 +61,7 @@ const RadioCheck = ({
                     {...props}
                     disabled={isSubmitting || disabled || readOnly}
                     type={type}
-                    className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 ${checkStyles} ${invalidCheckStyles}`}
+                    className={`h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:bg-gray-100 ${checkStyles} ${invalidCheckStyles}`}
                 />
             </div>
             <div className="ml-3 text-sm">

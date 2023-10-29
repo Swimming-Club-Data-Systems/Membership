@@ -172,7 +172,7 @@ const DateTimeInput: React.FC<Props> = ({
                                 <div className="w-full @[17rem]:max-w-44">
                                     <TailwindDatepicker
                                         inputId={controlId}
-                                        inputClassName={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 shadow-sm z-50 ${className} ${errorClasses}`}
+                                        inputClassName={`flex-1 min-w-0 w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 read-only:bg-gray-100 disabled:bg-gray-100 shadow-sm z-50 ${className} ${errorClasses}`}
                                         primaryColor="indigo"
                                         asSingle={true}
                                         useRange={false}

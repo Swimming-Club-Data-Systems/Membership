@@ -61,7 +61,7 @@ const DateInput: React.FC<Props> = ({
                 <BaseDateInput
                     readOnly={readOnly}
                     disabled={isSubmitting || disabled || context.disabled}
-                    className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 disabled:bg-gray-100 ${className} ${errorClasses}`}
+                    className={`flex-1 min-w-0 block w-full px-3 py-2 rounded-none border-gray-300 text-sm focus:border-indigo-500 focus:ring-indigo-500 read-only:bg-gray-100 disabled:bg-gray-100 ${className} ${errorClasses}`}
                     id={controlId}
                     type={type}
                     {...field}

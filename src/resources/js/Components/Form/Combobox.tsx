@@ -6,6 +6,7 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 interface Props {
     id?: string;
     disabled?: boolean;
+    readOnly?: boolean;
     leftText?: string;
     rightButton?: ReactNode;
     className?: string;
@@ -61,7 +62,11 @@ const Combobox: React.FC<Props> = ({
                 label={label}
                 name={props.name}
                 disabled={
-                    isSubmitting || disabled || context.disabled || readOnly
+                    isSubmitting ||
+                    disabled ||
+                    context.disabled ||
+                    props.readOnly ||
+                    readOnly
                 }
                 {...field}
                 onChange={changeHandler}

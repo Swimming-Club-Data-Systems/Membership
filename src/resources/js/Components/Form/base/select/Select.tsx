@@ -21,6 +21,7 @@ export interface Props {
     label: string;
     id?: string;
     disabled?: boolean;
+    readOnly?: boolean;
     name: string;
     onBlur: (ev: any) => void;
     onChange: (value: any) => void;
@@ -116,7 +117,7 @@ export const Select: React.FC<Props> = ({
                 value={selectedItem}
                 onChange={onChange}
                 by={compareItems}
-                disabled={props.disabled}
+                disabled={props.disabled || props.readOnly}
                 name={name}
                 // nullable={props.nullable}
             >
@@ -127,7 +128,11 @@ export const Select: React.FC<Props> = ({
                         </HeadlessListbox.Label>
                         <div className="relative mt-1">
                             <HeadlessListbox.Button
-                                className="relative w-full cursor-default rounded-md bg-white py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm"
+                                className={`relative w-full cursor-default rounded-md bg-white ${
+                                    props.disabled && "bg-gray-100"
+                                } ${
+                                    props.readOnly && "bg-gray-100"
+                                } py-2 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-600 text-sm`}
                                 onBlur={onBlur}
                             >
                                 <span className="block truncate">
