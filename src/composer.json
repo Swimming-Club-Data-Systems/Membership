@@ -42,7 +42,7 @@
         "spatie/laravel-backup": "^8.1",
         "spatie/laravel-stripe-webhooks": "^3.2",
         "stancl/tenancy": "^3.6",
-        "stripe/stripe-php": "^9.0",
+        "stripe/stripe-php": "10",
         "symfony/intl": "^6.1",
         "symfony/psr-http-message-bridge": "^2.1",
         "tightenco/ziggy": "^1.0",

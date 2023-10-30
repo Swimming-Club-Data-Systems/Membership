@@ -17,6 +17,7 @@ use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Laravel\Cashier\Invoice;
 use Laravel\Cashier\Subscription;
+use Stripe\Exception\ApiErrorException;
 use Symfony\Component\Intl\Currencies;
 
 class TenantController extends Controller
@@ -174,7 +175,9 @@ class TenantController extends Controller
 
                 if ($tenant->Domain) {
                     // Setup Apple Pay domains
-                    \Stripe\ApplePayDomain::create([
+                    $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+                    $stripe->applePayDomains->create([
                         'domain_name' => $tenant->Domain,
                     ], [
                         'stripe_account' => $responseValues['stripe_user_id'],
@@ -395,15 +398,21 @@ class TenantController extends Controller
     {
         $this->authorize('manage', $tenant);
 
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
         $stripeAccount = $tenant->getOption('STRIPE_ACCOUNT_ID');
 
         $applePay = null;
         if ($stripeAccount) {
-            $applePay = \Stripe\ApplePayDomain::all([
-                'limit' => 20,
-            ], [
-                'stripe_account' => $stripeAccount,
-            ]);
+            try {
+                $applePay = $stripe->applePayDomains->all([
+                    'limit' => 20,
+                ], [
+                    'stripe_account' => $stripeAccount,
+                ]);
+            } catch (ApiErrorException $e) {
+                // Swallow
+            }
         }
 
         return Inertia::render('Central/Tenants/ApplePayDomains', [
@@ -423,7 +432,9 @@ class TenantController extends Controller
         abort_unless($stripeAccount, 404, 'This tenant does not have a connected Stripe Account');
 
         try {
-            $domain = \Stripe\ApplePayDomain::create([
+            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+            $domain = $stripe->applePayDomains->create([
                 'domain_name' => $request->input('domain'),
             ], [
                 'stripe_account' => $stripeAccount,
