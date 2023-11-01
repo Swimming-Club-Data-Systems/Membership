@@ -21,6 +21,8 @@ jobs:
           php-version: "8.2"
       - name: "Composer Install"
         uses: "ramsey/composer-install@v2"
+        with:
+          working-directory: ./src
       - name: "Setup SSH"
         run: |
           'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
@@ -30,5 +32,5 @@ jobs:
           'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
-          ~/.composer/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
+          src/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
   
