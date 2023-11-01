@@ -22,7 +22,7 @@ jobs:
           '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       
           ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-stage"
-        env: 
-          name: staging
-          url: https://mt.myswimmingclub.uk
+    env: 
+      name: staging
+      url: https://mt.myswimmingclub.uk
   
