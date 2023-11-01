@@ -13,16 +13,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: "Clone, Build, Deploy"
+      - name: "Setup SSH"
         run: |
           'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
           eval $(ssh-agent -s)
           ssh-add <(echo "$SSH_PRIVATE_KEY")
           mkdir -p ~/.ssh
           '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-      
+      - name: "Deploy via Envoy"
+        run: |
           ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-stage"
-    env: 
-      name: staging
-      url: https://mt.myswimmingclub.uk
   
