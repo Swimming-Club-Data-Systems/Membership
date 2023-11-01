@@ -9,18 +9,26 @@ on:
 jobs:
   
   deploy-staging:
-    container: registry.gitlab.com/swimming-club-data-systems/membership:latest
+    # container: registry.gitlab.com/swimming-club-data-systems/membership:latest
     runs-on: self-hosted
 
     steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+      - name: "Setup PHP 8.2"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+      - name: "Composer Install"
+        uses: "ramsey/composer-install@v2"
       - name: "Setup SSH"
         run: |
           'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
           eval $(ssh-agent -s)
-          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}")
           mkdir -p ~/.ssh
-          '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+          'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
-          ~/.composer/vendor/bin/envoy run deploy --branch="$CI_COMMIT_BRANCH" --commit="$CI_COMMIT_SHA" --baseDir="/var/www/mt-laravel-stage"
+          ~/.composer/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
   
