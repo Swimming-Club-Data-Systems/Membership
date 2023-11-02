@@ -10,7 +10,7 @@ jobs:
   
   deploy-staging:
     # container: registry.gitlab.com/swimming-club-data-systems/membership:latest
-    container: ubuntu:23.04
+    # container: ubuntu:23.04
     runs-on: self-hosted
 
     steps:
