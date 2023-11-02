@@ -28,6 +28,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           touch ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           touch ~/.ssh/known_hosts
           touch ~/.ssh/config
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/id_rsa
