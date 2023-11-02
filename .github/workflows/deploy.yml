@@ -30,7 +30,7 @@ jobs:
           ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}")
           mkdir -p ~/.ssh
           touch ~/.ssh/config
-          'echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+        # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
           src/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
