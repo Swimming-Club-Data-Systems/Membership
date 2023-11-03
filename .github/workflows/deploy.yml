@@ -35,5 +35,5 @@ jobs:
       # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
-          src/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
+          src/vendor/bin/envoy run deploy --branch="${{github.ref_name}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
   
