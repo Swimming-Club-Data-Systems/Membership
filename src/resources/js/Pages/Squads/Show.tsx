@@ -140,7 +140,10 @@ const Show = (props: Props) => {
                     </Card>
 
                     {props.members && (
-                        <Card title="Members">
+                        <Card
+                            title="Members"
+                            subtitle={`${props.name} has ${props.members.length} members`}
+                        >
                             {props.members.length > 0 && (
                                 <BasicList
                                     items={props.members.map((member) => {
