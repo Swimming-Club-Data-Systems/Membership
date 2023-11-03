@@ -25,14 +25,14 @@ jobs:
         uses: "ramsey/composer-install@v2"
         with:
           working-directory: ./src
-      - name: "Setup SSH"
-        run: |
-          eval $(ssh-agent -s)
-          ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}")
-          mkdir -p ~/.ssh/ && touch ~/.ssh/known_hosts
-          echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
-        # touch ~/.ssh/config
-        # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      # - name: "Setup SSH"
+      #   run: |
+      #     eval $(ssh-agent -s)
+      #     ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}")
+      #     mkdir -p ~/.ssh/ && touch ~/.ssh/known_hosts
+      #     echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+      # touch ~/.ssh/config
+      # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
           src/vendor/bin/envoy run deploy --branch="${{github.ref}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
