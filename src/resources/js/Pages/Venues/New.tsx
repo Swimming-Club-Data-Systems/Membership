@@ -152,7 +152,11 @@ const New: Layout<Props> = (props: Props) => {
 
             <Container noMargin>
                 <Form
-                    validationSchema={yup.object().shape({})}
+                    validationSchema={yup.object().shape({
+                        name: yup
+                            .string()
+                            .required("A venue name is required."),
+                    })}
                     initialValues={{
                         search: "",
                         address_components: [],

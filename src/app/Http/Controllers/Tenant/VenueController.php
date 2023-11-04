@@ -67,6 +67,7 @@ class VenueController extends Controller
                 'max:255',
             ],
             'website' => [
+                'nullable',
                 'url',
                 'max:255',
             ],
