@@ -139,73 +139,83 @@ const Show = (props: Props) => {
                         />
                     </Card>
 
-                    <Card title="Members">
-                        {props.members.length > 0 && (
-                            <BasicList
-                                items={props.members.map((member) => {
-                                    return {
-                                        id: member.id,
-                                        content: (
-                                            <>
-                                                <div
-                                                    className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-2 text-sm"
-                                                    key={member.id}
-                                                >
-                                                    <div className="">
-                                                        <div className="text-gray-900">
-                                                            <Link
-                                                                href={route(
-                                                                    "members.show",
-                                                                    member.id
-                                                                )}
-                                                            >
-                                                                {member.name}
-                                                            </Link>
-                                                        </div>
-                                                        {member.pronouns && (
-                                                            <div className="text-gray-500">
-                                                                {
-                                                                    member.pronouns
-                                                                }
+                    {props.members && (
+                        <Card
+                            title="Members"
+                            subtitle={`${props.name} has ${
+                                props.members.length
+                            } member${props.members.length === 1 ? "" : "s"}`}
+                        >
+                            {props.members.length > 0 && (
+                                <BasicList
+                                    items={props.members.map((member) => {
+                                        return {
+                                            id: member.id,
+                                            content: (
+                                                <>
+                                                    <div
+                                                        className="flex flex-col md:flex-row md:items-center md:justify-between gap-y-2 text-sm"
+                                                        key={member.id}
+                                                    >
+                                                        <div className="">
+                                                            <div className="text-gray-900">
+                                                                <Link
+                                                                    href={route(
+                                                                        "members.show",
+                                                                        member.id
+                                                                    )}
+                                                                >
+                                                                    {
+                                                                        member.name
+                                                                    }
+                                                                </Link>
                                                             </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="block">
-                                                        <div className="flex gap-1">
-                                                            {member.medical_consent_withheld && (
-                                                                <Badge colour="red">
-                                                                    Medical
-                                                                    Consent
-                                                                    Withheld
-                                                                </Badge>
+                                                            {member.pronouns && (
+                                                                <div className="text-gray-500">
+                                                                    {
+                                                                        member.pronouns
+                                                                    }
+                                                                </div>
                                                             )}
-                                                            {member.medical_conditions_recently_updated && (
-                                                                <Badge colour="yellow">
-                                                                    Medical
-                                                                    Updated
+                                                        </div>
+                                                        <div className="block">
+                                                            <div className="flex gap-1">
+                                                                {member.medical_consent_withheld && (
+                                                                    <Badge colour="red">
+                                                                        Medical
+                                                                        Consent
+                                                                        Withheld
+                                                                    </Badge>
+                                                                )}
+                                                                {member.medical_conditions_recently_updated && (
+                                                                    <Badge colour="yellow">
+                                                                        Medical
+                                                                        Updated
+                                                                    </Badge>
+                                                                )}
+                                                                <Badge colour="indigo">
+                                                                    Age{" "}
+                                                                    {member.age}
                                                                 </Badge>
-                                                            )}
-                                                            <Badge colour="indigo">
-                                                                Age {member.age}
-                                                            </Badge>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </>
-                                        ),
-                                    };
-                                })}
-                            />
-                        )}
-                        {props.members.length === 0 && (
-                            <Alert
-                                title="No members to display"
-                                variant="warning"
-                            >
-                                This squad currently has no members.
-                            </Alert>
-                        )}
-                    </Card>
+                                                </>
+                                            ),
+                                        };
+                                    })}
+                                />
+                            )}
+                            {props.members.length === 0 && (
+                                <Alert
+                                    title="No members to display"
+                                    variant="warning"
+                                >
+                                    This squad currently has no members.
+                                </Alert>
+                            )}
+                        </Card>
+                    )}
                 </div>
             </Container>
 

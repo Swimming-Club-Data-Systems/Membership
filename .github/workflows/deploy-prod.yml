@@ -1,0 +1,79 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-fe-v2:
+    name: Build Laravel App Front End
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      working-directory: ./src
+      run: |
+        npm install
+        npm run build
+  build-fe-v1:
+    name: Build Legacy App Front End
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      working-directory: ./src_v1
+      run: |
+        npm install
+        npm run build
+  deploy-staging:
+    needs: [build-fe-v2, build-fe-v1]
+    name: Deploy to Production Environment
+    # container: registry.gitlab.com/swimming-club-data-systems/membership:latest
+    # container: ubuntu:23.04
+    runs-on: self-hosted
+
+    steps:
+      - name: "Checkout"
+        uses: "actions/checkout@v3"
+      - name: "Setup PHP 8.2"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "8.2"
+          extensions: bcmath, gd, redis
+      - name: "Composer Install"
+        uses: "ramsey/composer-install@v2"
+        with:
+          working-directory: ./src
+      # - name: "Setup SSH"
+      #   run: |
+      #     eval $(ssh-agent -s)
+      #     ssh-add <(echo "${{ secrets.SSH_PRIVATE_KEY }}")
+      #     mkdir -p ~/.ssh/ && touch ~/.ssh/known_hosts
+      #     echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+      # touch ~/.ssh/config
+      # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+      - name: "Deploy via Envoy"
+        run: |
+          src/vendor/bin/envoy run deploy --branch="${{github.ref_name}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-prod"
+  

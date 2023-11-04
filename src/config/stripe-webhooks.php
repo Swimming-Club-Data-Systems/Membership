@@ -52,6 +52,11 @@ return [
     'profile' => \Spatie\StripeWebhooks\StripeWebhookProfile::class,
 
     /*
+     * Specify a connection and or a queue to process the webhooks
+     */
+    'queue' => env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
+
+    /*
      * When disabled, the package will not verify if the signature is valid.
      * This can be handy in local environments.
      */

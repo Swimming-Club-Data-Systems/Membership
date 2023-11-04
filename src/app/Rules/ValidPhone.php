@@ -35,12 +35,15 @@ class ValidPhone implements DataAwareRule, InvokableRule
 
         try {
             $number = PhoneNumber::parse($value, $country);
-        } catch (PhoneNumberParseException $e) {
+        } catch (PhoneNumberParseException) {
             // 'The string supplied is too short to be a phone number.'
             $fail('The :attribute is not a valid phone number.');
+        } catch (\TypeError) {
+            // Phone number just needs to be valid, it is not required so
+            // swallow the type error thrown for it being null
         }
 
-        if (! $number->isValidNumber()) {
+        if ($number && ! $number->isValidNumber()) {
             // strict check relying on up-to-date metadata library
             $fail('The :attribute is not a valid phone number.');
         }

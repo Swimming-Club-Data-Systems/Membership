@@ -1,0 +1,49 @@
+name: Build Front Ends
+
+on:
+  pull_request:
+    branches: [ "main", "development-main" ]
+
+jobs:
+  build-laravel:
+    name: Build Laravel App Front End
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      working-directory: ./src
+      run: |
+        npm install
+        npm run build
+  build-legacy:
+    name: Build Legacy App Front End
+    runs-on: self-hosted
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Build
+      working-directory: ./src_v1
+      run: |
+        npm install
+        npm run build

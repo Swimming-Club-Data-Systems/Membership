@@ -3,7 +3,7 @@
 {{-- TEST --}}
 
 @setup
-    $repository = 'git@gitlab.com:swimming-club-data-systems/Membership.git';
+    $repository = 'git@github.com:Swimming-Club-Data-Systems/Membership.git';
     $releases_dir = $baseDir . '/releases';
     $app_dir = $baseDir;
     $release = date('YmdHis');

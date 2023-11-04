@@ -119,7 +119,7 @@ class SquadController extends Controller
                     'pronouns' => $member->pronouns,
                     'age' => $member->age(),
                     'medical' => $member->memberMedical,
-                    'medical_consent_withheld' => $member->memberMedical?->WithholdConsent ?? false,
+                    'medical_consent_withheld' => $member->age() < 18 && (($member->memberMedical?->WithholdConsent ?? false)),
                     'medical_conditions_recently_updated' => $member->memberMedical?->updated_at > $twoWeeksAgo,
                 ];
             }

@@ -40,7 +40,7 @@ class MemberPolicy
      */
     public function viewAll(User $user)
     {
-        if ($user->hasPermission(['Galas', 'Committee'])) {
+        if ($user->hasPermission(['Galas', 'Committee', 'Coach'])) {
             return true;
         }
     }
@@ -52,7 +52,7 @@ class MemberPolicy
      */
     public function view(User $user, Member $member)
     {
-        if ($user->hasPermission(['Galas', 'Committee'])) {
+        if ($user->hasPermission(['Galas', 'Committee', 'Coach'])) {
             return true;
         }
 
