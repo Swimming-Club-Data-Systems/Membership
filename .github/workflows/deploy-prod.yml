@@ -1,8 +1,8 @@
-name: Deploy Staging
+name: Deploy Production
 
 on:
   push:
-    branches: [ "development-main" ]
+    branches: [ "main" ]
 
 jobs:
   build-fe-v2:
@@ -48,7 +48,7 @@ jobs:
         npm run build
   deploy-staging:
     needs: [build-fe-v2, build-fe-v1]
-    name: Deploy to Staging Environment
+    name: Deploy to Production Environment
     # container: registry.gitlab.com/swimming-club-data-systems/membership:latest
     # container: ubuntu:23.04
     runs-on: self-hosted
@@ -75,5 +75,5 @@ jobs:
       # 'echo "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
       - name: "Deploy via Envoy"
         run: |
-          src/vendor/bin/envoy run deploy --branch="${{github.ref_name}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-stage"
+          src/vendor/bin/envoy run deploy --branch="${{github.ref_name}}" --commit="${{github.sha}}" --baseDir="/var/www/mt-laravel-prod"
   
