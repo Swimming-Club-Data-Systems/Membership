@@ -142,7 +142,9 @@ const Show = (props: Props) => {
                     {props.members && (
                         <Card
                             title="Members"
-                            subtitle={`${props.name} has ${props.members.length} members`}
+                            subtitle={`${props.name} has ${
+                                props.members.length
+                            } member${props.members.length === 1 ? "" : "s"}`}
                         >
                             {props.members.length > 0 && (
                                 <BasicList
