@@ -131,7 +131,7 @@ export const Combobox: React.FC<Props> = ({
                 <HeadlessCombobox.Input
                     // as={Input}
                     ref={inputRef}
-                    className={`w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-sm ${className}`}
+                    className={`w-full rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 text-gray-900 text-sm ${className}`}
                     onChange={(event) => setQuery(event.target.value)}
                     onFocus={() => {
                         selectTextOnFocus(inputRef);

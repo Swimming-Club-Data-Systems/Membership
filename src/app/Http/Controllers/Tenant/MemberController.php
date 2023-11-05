@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\Squad;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -45,5 +46,63 @@ class MemberController extends Controller
         $this->authorize('view', $member);
 
         return Inertia::location('/v1/members/'.$member->MemberID);
+    }
+
+    public function combobox(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $members = null;
+        if ($request->query('query')) {
+            $members = Member::search($request->query('query'))
+                ->where('Tenant', tenant('ID'))
+                ->paginate(50);
+        }
+
+        $membersArray = [];
+
+        $selectedMember = null;
+        if ($request->query('id')) {
+            /** @var Member $selectedMember */
+            $selectedMember = Squad::find($request->query('id'));
+            if ($selectedMember) {
+                $membersArray[] = [
+                    'id' => $selectedMember->MemberID,
+                    'name' => $selectedMember->name,
+                ];
+            }
+        }
+
+        if ($members) {
+            foreach ($members as $member) {
+                /** @var Member $member */
+                if ($selectedMember == null || $selectedMember->MemberID !== $member->MemberID) {
+                    $membersArray[] = [
+                        'id' => $member->MemberID,
+                        'name' => $member->name,
+                    ];
+                }
+            }
+        }
+
+        $responseData = [
+            'data' => $membersArray,
+            'has_more_pages' => $members && $members->hasMorePages(),
+            'total' => $members ? $members->total() : count($membersArray),
+        ];
+
+        return \response()->json($responseData);
+    }
+
+    public function squads(Member $member)
+    {
+        $this->authorize('view', $member);
+
+        $data = $member->squads->map(function (Squad $squad) {
+            return [
+                'value' => $squad->SquadID,
+                'name' => $squad->SquadName,
+            ];
+        });
+
+        return \response()->json($data);
     }
 }

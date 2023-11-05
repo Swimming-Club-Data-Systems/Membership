@@ -17,6 +17,10 @@ class SquadMove extends Pivot
     // The squadsMoves table has an ID column
     public $incrementing = true;
 
+    protected $casts = [
+        'Date' => 'datetime',
+    ];
+
     public function oldSquad(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Squad::class, 'Old', 'SquadID');

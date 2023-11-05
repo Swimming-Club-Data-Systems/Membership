@@ -27,6 +27,7 @@ use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
 use App\Http\Controllers\Tenant\SquadController;
+use App\Http\Controllers\Tenant\SquadMoveController;
 use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
@@ -140,7 +141,14 @@ Route::middleware([
     Route::prefix('/members')->group(function () {
         Route::name('members.')->group(function () {
             Route::get('/', [MemberController::class, 'index'])->name('index');
-            Route::get('/{member}', [MemberController::class, 'show'])->whereNumber('member')->name('show');
+            Route::get('/combobox', [MemberController::class, 'combobox'])
+                ->name('combobox');
+            Route::get('/{member}/squads', [MemberController::class, 'squads'])
+                ->whereNumber('member')
+                ->name('squads');
+            Route::get('/{member}', [MemberController::class, 'show'])
+                ->whereNumber('member')
+                ->name('show');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');
@@ -151,6 +159,8 @@ Route::middleware([
         Route::name('squads.')->group(function () {
             Route::post('/', [SquadController::class, 'create']);
             Route::get('/', [SquadController::class, 'index'])->name('index');
+            Route::get('/combobox', [SquadController::class, 'combobox'])
+                ->name('combobox');
             Route::get('/new', [SquadController::class, 'new'])->name('new');
             Route::get('/{squad}', [SquadController::class, 'show'])->whereNumber('squad')->name('show');
             Route::post('/{squad}/coaches', [SquadController::class, 'addCoach'])->whereNumber('squad')->name('add-coach');
@@ -164,6 +174,21 @@ Route::middleware([
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/squads/'.$path);
             })->where('path', '.*');
+        });
+    });
+
+    Route::prefix('/squad-moves')->group(function () {
+        Route::name('squad-moves.')->group(function () {
+            Route::get('/', [SquadMoveController::class, 'index'])
+                ->name('index');
+            Route::post('/', [SquadMoveController::class, 'create'])
+                ->name('create');
+            Route::put('/{move}', [SquadMoveController::class, 'update'])
+                ->whereNumber('move')
+                ->name('update');
+            Route::delete('/{move}', [SquadMoveController::class, 'update'])
+                ->whereNumber('move')
+                ->name('update');
         });
     });
 
