@@ -5,6 +5,7 @@ namespace App\Jobs\StripeWebhooks;
 use App\Enums\PaymentStatus;
 use App\Enums\Queue;
 use App\Enums\StripePaymentIntentStatus;
+use App\Interfaces\PaidObject;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
@@ -52,9 +53,9 @@ class HandlePaymentIntentCanceled implements ShouldQueue
             if ($intent?->metadata?->payment_id) {
                 // Try and find a payment with this id
                 /** @var Payment $payment */
-                $payment = Payment::findOrFail($intent->metadata->payment_id);
+                $payment = Payment::find($intent->metadata->payment_id);
 
-                if ($payment->stripe_status != StripePaymentIntentStatus::CANCELED) {
+                if ($payment && $payment->stripe_status != StripePaymentIntentStatus::CANCELED) {
                     DB::beginTransaction();
 
                     $payment->status = PaymentStatus::FAILED;

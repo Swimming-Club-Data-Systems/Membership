@@ -58,9 +58,9 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
                 if ($intent?->metadata?->payment_id) {
                     // Try and find a payment with this id
                     /** @var Payment $payment */
-                    $payment = Payment::findOrFail($intent->metadata->payment_id);
+                    $payment = Payment::find($intent->metadata->payment_id);
 
-                    if ($payment->status != PaymentStatus::SUCCEEDED) {
+                    if ($payment && $payment->status != PaymentStatus::SUCCEEDED) {
 
                         $payment->status = PaymentStatus::SUCCEEDED;
                         $payment->stripe_status = $intent->status;
