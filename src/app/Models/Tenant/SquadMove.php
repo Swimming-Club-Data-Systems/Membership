@@ -2,7 +2,7 @@
 
 namespace App\Models\Tenant;
 
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
 
 /**
@@ -12,10 +12,10 @@ use Illuminate\Support\Facades\Date;
  * @property bool Paying
  * @property Member member
  */
-class SquadMove extends Pivot
+class SquadMove extends Model
 {
     // The squadsMoves table has an ID column
-    public $incrementing = true;
+    // public $incrementing = true;
 
     protected $casts = [
         'Date' => 'datetime',

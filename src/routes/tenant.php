@@ -183,12 +183,12 @@ Route::middleware([
                 ->name('index');
             Route::post('/', [SquadMoveController::class, 'create'])
                 ->name('create');
-            Route::put('/{move}', [SquadMoveController::class, 'update'])
-                ->whereNumber('move')
+            Route::put('/{squadMove}', [SquadMoveController::class, 'update'])
+                ->whereNumber('squadMove')
                 ->name('update');
-            Route::delete('/{move}', [SquadMoveController::class, 'update'])
-                ->whereNumber('move')
-                ->name('update');
+            Route::delete('/{squadMove}', [SquadMoveController::class, 'delete'])
+                ->whereNumber('squadMove')
+                ->name('delete');
         });
     });
 

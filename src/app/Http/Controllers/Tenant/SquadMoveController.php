@@ -58,23 +58,23 @@ class SquadMoveController extends Controller
 
         $squadMove = new SquadMove();
 
-        $member = Member::findOrFail($request->integer('member'));
-
-        $squadMove->member()->associate($member);
-        if ($request->integer('old_squad')) {
-            $squadMove->oldSquad()->associate(Squad::findOrFail($request->integer('old_squad')));
-        }
-        if ($request->integer('new_squad')) {
-            $squadMove->newSquad()->associate(Squad::findOrFail($request->integer('new_squad')));
-        }
         $squadMove->Date = $request->date('date');
         $squadMove->Paying = $request->boolean('paying');
 
+        $member = Member::findOrFail($request->integer('member'));
+        $squadMove->Member = $member->MemberID;
+
+        if ($request->integer('old_squad')) {
+            $squad = Squad::findOrFail($request->integer('old_squad'));
+            $squadMove->Old = $squad->SquadID;
+        }
+        if ($request->integer('new_squad')) {
+            $squad = Squad::findOrFail($request->integer('new_squad'));
+            $squadMove->New = $squad->SquadID;
+        }
+
         $squadMove->save();
 
-        //        $squad->coaches()->attach($user, [
-        //            'type' => $type,
-        //        ]);
         $request->session()->flash('success', 'Squad move created.');
 
         return redirect()->back();
@@ -90,14 +90,16 @@ class SquadMoveController extends Controller
         ]);
 
         if ($request->integer('old_squad')) {
-            $squadMove->oldSquad()->associate(Squad::findOrFail($request->integer('old_squad')));
+            $squad = Squad::findOrFail($request->integer('old_squad'));
+            $squadMove->Old = $squad->SquadID;
         } else {
-            $squadMove->oldSquad()->disassociate();
+            $squadMove->Old = null;
         }
         if ($request->integer('new_squad')) {
-            $squadMove->newSquad()->associate(Squad::findOrFail($request->integer('new_squad')));
+            $squad = Squad::findOrFail($request->integer('new_squad'));
+            $squadMove->New = $squad->SquadID;
         } else {
-            $squadMove->newSquad()->disassociate();
+            $squadMove->New = null;
         }
         $squadMove->Date = $request->date('date');
         $squadMove->Paying = $request->boolean('paying');

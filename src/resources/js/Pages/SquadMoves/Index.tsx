@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import FlashAlert from "@/Components/FlashAlert";
@@ -21,6 +21,7 @@ import { formatISO } from "date-fns";
 import { useField } from "formik";
 import Select from "@/Components/Form/Select";
 import axios from "@/Utils/axios";
+import startOfDay from "date-fns/startOfDay";
 
 type Squad = {
     id: number;
@@ -51,6 +52,7 @@ type OldSquadSelectProps = {
 
 const OldSquadSelect = (props: OldSquadSelectProps) => {
     const [values, setValues] = useState([]);
+    const [valuesLoaded, setValuesLoaded] = useState(false);
     const [{ value: fieldMemberId }] = useField("member");
     const [{ value }, {}, { setValue }] = useField("old_squad");
 
@@ -61,18 +63,19 @@ const OldSquadSelect = (props: OldSquadSelectProps) => {
         if (memberId) {
             axios.get(route("members.squads", memberId)).then((result) => {
                 setValues(result?.data ?? []);
+                setValuesLoaded(true);
             });
         }
     }, [memberId]);
 
     useEffect(() => {
-        if (value) {
+        if (value && valuesLoaded) {
             // If the squad currently selected is not in the array, set the field value to null
             if (!values.find((element) => element.value === value)) {
                 setValue(null);
             }
         }
-    }, [setValue, value, values]);
+    }, [setValue, value, values, valuesLoaded]);
 
     return (
         <Select name="old_squad" items={values} label="Old squad" nullable />
@@ -80,8 +83,21 @@ const OldSquadSelect = (props: OldSquadSelectProps) => {
 };
 
 const ItemContent = (props: Item) => {
-    const [showEditModal, setShowEditModal] = useState(false);
-    const [minDate] = useState(formatISO(new Date()));
+    const [showEditModal, setShowEditModal] = useState<boolean>(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [minDate] = useState(
+        formatISO(startOfDay(new Date()), { representation: "date" })
+    );
+
+    const deleteMove = async () => {
+        router.delete(route("squad-moves.delete", props.id), {
+            preserveScroll: true,
+            preserveState: true,
+            onSuccess: (page) => {
+                setShowDeleteModal(false);
+            },
+        });
+    };
 
     return (
         <>
@@ -124,12 +140,19 @@ const ItemContent = (props: Item) => {
                         </div>
                     </div>
                 </div>
-                <div className="ml-2 flex-none flex-shrink-0">
+                <div className="ml-2 flex gap-2 flex-shrink-0">
                     <Button
                         variant="primary"
                         onClick={() => setShowEditModal(true)}
                     >
                         Edit
+                    </Button>
+
+                    <Button
+                        variant="danger"
+                        onClick={() => setShowDeleteModal(true)}
+                    >
+                        Delete
                     </Button>
                 </div>
             </div>
@@ -182,7 +205,6 @@ const ItemContent = (props: Item) => {
                         onSuccess: (page) => {
                             setShowEditModal(false);
                         },
-                        only: ["coaches", "flash"],
                         preserveState: true,
                         preserveScroll: true,
                     }}
@@ -212,6 +234,32 @@ const ItemContent = (props: Item) => {
                     />
                 </Form>
             </Modal>
+
+            <Modal
+                onClose={() => setShowDeleteModal(false)}
+                title="Delete Squad Move"
+                show={showDeleteModal}
+                variant="danger"
+                Icon={UserGroupIcon}
+                buttons={
+                    <>
+                        <Button variant="danger" onClick={deleteMove}>
+                            Confirm
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setShowDeleteModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </>
+                }
+            >
+                <p className="text-sm">
+                    Are you sure you want to delete {props.member.name}'s squad
+                    move?
+                </p>
+            </Modal>
         </>
     );
 };
@@ -220,7 +268,10 @@ const crumbs = [{ route: "squad-moves.index", name: "Squad Moves" }];
 
 const Index = (props: Props) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
-    const [minDate] = useState(formatISO(new Date()));
+    const [minDate] = useState(
+        formatISO(startOfDay(new Date()), { representation: "date" })
+    );
+    console.log(minDate);
 
     return (
         <>
@@ -252,7 +303,6 @@ const Index = (props: Props) => {
                 Icon={UserGroupIcon}
             >
                 <Form
-                    formName="edit"
                     validationSchema={yup.object().shape({
                         date: yup
                             .date()
@@ -292,7 +342,6 @@ const Index = (props: Props) => {
                         onSuccess: (page) => {
                             setShowCreateModal(false);
                         },
-                        only: ["coaches", "flash"],
                         preserveState: true,
                         preserveScroll: true,
                     }}
