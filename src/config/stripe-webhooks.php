@@ -54,6 +54,7 @@ return [
     /*
      * Specify a connection and or a queue to process the webhooks
      */
+    'connection' => env('STRIPE_WEBHOOK_CONNECTION'),
     'queue' => env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
 
     /*

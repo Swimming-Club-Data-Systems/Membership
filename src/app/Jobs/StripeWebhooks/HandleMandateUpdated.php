@@ -100,7 +100,7 @@ class HandleMandateUpdated implements ShouldQueue
 
                 // Now send the user an email stating the DDI has been cancelled.
                 // If a new default has been set, include details of it and its mandate in the email
-                if ($user) {
+                if ($user && $mandate) {
                     Mail::to($user)->send(new MandateInactive($user, $mandate, $paymentMethod, $newDefault));
                 }
 
