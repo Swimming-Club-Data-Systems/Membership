@@ -532,7 +532,7 @@ include BASE_PATH . 'views/header.php';
 
       <div class="list-group mb-3">
         <?php foreach ($squads as $squad) { ?>
-          <a href="<?= htmlspecialchars(autoUrl('squads/' . $squad->getId())) ?>" class="list-group-item list-group-item-action">
+          <a href="<?= htmlspecialchars('/squads/' . $squad->getId()) ?>" class="list-group-item list-group-item-action">
             <?= htmlspecialchars($squad->getName()) ?>
           </a>
         <?php } ?>
@@ -547,7 +547,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          To change whether <?= htmlspecialchars($member->getForename()) ?> pays for a squad, remove them and add them again. The ability to modify this setting properly is coming soon.
+            To change whether <?= htmlspecialchars($member->getForename()) ?> pays for a squad, edit the squad move from <a href="/squad-moves">the Squad Moves page</a>.
         </p>
       <?php } ?>
       <div id="squads-data" data-squads-url="<?= htmlspecialchars(autoUrl("members/$id/squads.json")) ?>"></div>

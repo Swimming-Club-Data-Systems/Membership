@@ -20,8 +20,8 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['Swimmers-FamilyMode']) 
       <?php if ($access == "Admin") { ?>
       <a class="nav-link" href="<?php echo autoUrl("swimmers/addmember")?>">Add Member</a>
       <?php } ?>
-      <a class="nav-link" href="<?php echo autoUrl("squads")?>">Squads</a>
-  		<a class="nav-link" href="<?php echo autoUrl("squads/moves")?>">Squad Moves</a>
+      <a class="nav-link" href="/squads">Squads</a>
+  		<a class="nav-link" href="/squad-moves">Squad Moves</a>
       <a class="nav-link" href="<?php echo autoUrl("swimmers/accesskeys")?>">Access Keys</a>
       <?php if ($access == "Admin") { ?>
       <a class="nav-link" href="<?php echo autoUrl("renewal")?>">Membership Renewal</a>

@@ -195,7 +195,7 @@ include BASE_PATH . "views/header.php";
 					</span>
 				</a>
 
-				<a href="<?= autoUrl('squads/moves') ?>">
+				<a href="/squad-moves">
 					<span class="mb-3">
 						<span class="title mb-0">
 							View Upcoming Squad Moves

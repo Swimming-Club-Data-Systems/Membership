@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php';
           <?php if ($squad != null) { ?>
             <div class="news-grid">
               <?php do { ?>
-                <a href="<?= autoUrl("squads/" . $squad['SquadID']) ?>">
+                <a href="/squads/<?= htmlspecialchars($squad['SquadID']) ?>">
                   <span class="mb-3">
                     <span class="title mb-0">
                       <?= htmlspecialchars($squad['SquadName']) ?>
