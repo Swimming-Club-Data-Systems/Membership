@@ -204,6 +204,10 @@ class TenantController extends Controller
     {
         $this->authorize('manage', $tenant);
 
+        $stripe = new \Stripe\StripeClient(
+            config('cashier.secret')
+        );
+
         return Inertia::render('Central/Tenants/Billing', [
             'id' => fn () => $tenant->ID,
             'name' => fn () => $tenant->Name,
@@ -238,50 +242,59 @@ class TenantController extends Controller
                     ];
                 });
             },
-            'subscriptions' => function () use ($tenant) {
-                return $tenant->subscriptions()->with(['items'])->get()->map(function (Subscription $item) {
-                    /** @var \Stripe\Subscription $stripeSubscription */
-                    $stripeSubscription = $item->asStripeSubscription(['items', 'items.data.price.product', 'latest_invoice', 'default_payment_method']);
+            'subscriptions' => function () use ($tenant, $stripe) {
+                try {
+                    return $tenant->subscriptions()->with(['items'])->get()->map(function (Subscription $item) use ($stripe) {
+                        /** @var \Stripe\Subscription $stripeSubscription */
+                        $stripeSubscription = $stripe->subscriptions->retrieve(
+                            $item->stripe_id, ['expand' => ['items', 'items.data.price.product', 'latest_invoice', 'default_payment_method']]
+                        );
 
-                    $name = Str::replaceLast(', ', ', and ', collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
-                        return $subItem->price->product->name;
-                    })->implode(', '));
+                        // $stripeSubscription = $item->asStripeSubscription(['items', 'items.data.price.product', 'latest_invoice', 'default_payment_method']);
 
-                    return [
-                        'id' => $item->id,
-                        'status' => $item->stripe_status,
-                        'name' => $name,
-                        'current_period_start' => $stripeSubscription->current_period_start,
-                        'current_period_end' => $stripeSubscription->current_period_end,
-                        'currency' => $stripeSubscription->currency,
-                        'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : 'N/A',
-                        'description' => $stripeSubscription->description,
-                        'billing_cycle_anchor' => $stripeSubscription->billing_cycle_anchor,
-                        'collection_method' => $stripeSubscription->collection_method,
-                        'discount' => (bool) $stripeSubscription->discount,
-                        'items' => collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
-                            return [
-                                'id' => $subItem->id,
-                                'quantity' => $subItem->quantity,
-                                'created' => $subItem->created,
-                                'price' => [
-                                    'billing_scheme' => $subItem->price->billing_scheme,
-                                    'unit_amount' => $subItem->price->unit_amount,
-                                    'currency' => $subItem->price->currency,
-                                    'formatted_unit_amount' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency),
-                                    'decimal_unit_amount' => Money::formatDecimal($subItem->price->unit_amount, $subItem->price->currency),
-                                    'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency).' '
-                                        .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
-                                    'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency).' '
-                                        .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
-                                ],
-                                'product_name' => $subItem->price->product->name,
-                                'product_type' => $subItem->price->product->type,
-                            ];
-                        }),
-                    ];
-                });
+                        $name = Str::replaceLast(', ', ', and ', collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                            return $subItem->price->product->name;
+                        })->implode(', '));
+
+                        return [
+                            'id' => $item->id,
+                            'status' => $item->stripe_status,
+                            'name' => $name,
+                            'current_period_start' => $stripeSubscription->current_period_start,
+                            'current_period_end' => $stripeSubscription->current_period_end,
+                            'currency' => $stripeSubscription->currency,
+                            'currency_name' => Currencies::exists(Str::upper($stripeSubscription->currency)) ? Currencies::getName(Str::upper($stripeSubscription->currency)) : 'N/A',
+                            'description' => $stripeSubscription->description,
+                            'billing_cycle_anchor' => $stripeSubscription->billing_cycle_anchor,
+                            'collection_method' => $stripeSubscription->collection_method,
+                            'discount' => (bool) $stripeSubscription->discount,
+                            'items' => collect($stripeSubscription->items->data)->map(function (\Stripe\SubscriptionItem $subItem) {
+                                return [
+                                    'id' => $subItem->id,
+                                    'quantity' => $subItem->quantity,
+                                    'created' => $subItem->created,
+                                    'price' => [
+                                        'billing_scheme' => $subItem->price->billing_scheme,
+                                        'unit_amount' => $subItem->price->unit_amount,
+                                        'currency' => $subItem->price->currency,
+                                        'formatted_unit_amount' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency),
+                                        'decimal_unit_amount' => Money::formatDecimal($subItem->price->unit_amount, $subItem->price->currency),
+                                        'unit_amount_period' => Money::formatCurrency($subItem->price->unit_amount, $subItem->price->currency).' '
+                                            .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
+                                        'amount_period' => Money::formatCurrency($subItem->price->unit_amount * $subItem->quantity, $subItem->price->currency).' '
+                                            .Str::upper($subItem->price->currency).' / '.$subItem->price->recurring->interval,
+                                    ],
+                                    'product_name' => $subItem->price->product->name,
+                                    'product_type' => $subItem->price->product->type,
+                                ];
+                            }),
+                        ];
+                    });
+                } catch (\Exception) {
+                    return [];
+                }
             },
+
         ]);
     }
 

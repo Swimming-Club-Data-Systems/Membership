@@ -11,6 +11,7 @@ import BasicList from "@/Components/BasicList";
 import Modal from "@/Components/Modal";
 import { fromUnixTime } from "date-fns";
 import Table from "@/Components/Table";
+import Alert from "@/Components/Alert";
 
 const Index = (props) => {
     const [showPaymentMethodDeleteModal, setShowPaymentMethodDeleteModal] =
@@ -154,6 +155,16 @@ const Index = (props) => {
                                 };
                             })}
                         />
+                    )}
+
+                    {props.subscriptions.length === 0 && (
+                        <Alert
+                            title="No subscriptions to display"
+                            variant="warning"
+                        >
+                            There are no active subscriptions to display at this
+                            time.
+                        </Alert>
                     )}
                 </Card>
 
