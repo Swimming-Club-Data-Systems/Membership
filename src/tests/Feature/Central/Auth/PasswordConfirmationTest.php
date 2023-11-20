@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Central\Auth;
 
-use App\Models\Central\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -27,7 +27,20 @@ abstract class TestCase extends BaseTestCase
 
     public function initializeTenancy(): void
     {
-        $tenant = Tenant::create();
+        $tenant = new Tenant();
+        $tenant->Name = 'Test Club';
+        $tenant->Code = 'XSHF';
+        $tenant->Website = 'https://www.testclubwebsite.scds.uk';
+        $tenant->Email = 'testclub@scds.uk';
+        $tenant->Verified = true;
+        $tenant->Domain = 'testclub-test.membership.test';
+        $tenant->UniqueID = \Ramsey\Uuid\v4();
+
+        $tenant->save();
+
+        //        $tenant->domains()->create([
+        //            'domain' => 'testclub-test.membership.test',
+        //        ]);
 
         tenancy()->initialize($tenant);
     }
