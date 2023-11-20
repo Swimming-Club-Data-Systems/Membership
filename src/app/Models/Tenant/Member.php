@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -38,7 +39,7 @@ use Laravel\Scout\Searchable;
  */
 class Member extends Model
 {
-    use BelongsToTenant, Searchable;
+    use BelongsToTenant, HasFactory, Searchable;
 
     /**
      * The attributes that should be cast.

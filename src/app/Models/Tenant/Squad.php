@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Laravel\Scout\Searchable;
@@ -21,7 +22,7 @@ use Laravel\Scout\Searchable;
  */
 class Squad extends Model
 {
-    use BelongsToTenant, Searchable;
+    use BelongsToTenant, HasFactory, Searchable;
 
     protected $attributes = [
         'SquadCoach' => '',
