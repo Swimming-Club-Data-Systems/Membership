@@ -5,8 +5,10 @@ namespace App\Models\Tenant;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 
@@ -37,7 +39,7 @@ use Laravel\Scout\Searchable;
  */
 class Member extends Model
 {
-    use BelongsToTenant, Searchable;
+    use BelongsToTenant, HasFactory, Searchable;
 
     /**
      * The attributes that should be cast.
@@ -95,6 +97,11 @@ class Member extends Model
     {
         return $this->belongsToMany(Member::class, 'squadMoves', 'Member', 'Old')
             ->using(SquadMove::class);
+    }
+
+    public function squadMoves(): HasMany
+    {
+        return $this->hasMany(SquadMove::class, 'Member');
     }
 
     public function toSearchableArray(): array

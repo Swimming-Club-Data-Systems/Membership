@@ -11,10 +11,16 @@
 |
 */
 
+use Tests\TenantTestCase;
+
 uses(
     Tests\TestCase::class,
     // Illuminate\Foundation\Testing\RefreshDatabase::class,
-)->in('Feature');
+)->in('Feature/Central/**/*');
+
+uses(
+    TenantTestCase::class,
+)->in('Feature/Tenant/**/*');
 
 /*
 |--------------------------------------------------------------------------

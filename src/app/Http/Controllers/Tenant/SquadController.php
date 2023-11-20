@@ -276,4 +276,48 @@ class SquadController extends Controller
 
         return redirect()->route('squads.edit', $squad);
     }
+
+    public function combobox(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $squads = null;
+        if ($request->query('query')) {
+            $squads = Squad::search($request->query('query'))
+                ->where('Tenant', tenant('ID'))
+                ->paginate(50);
+        }
+
+        $squadsArray = [];
+
+        $selectedSquad = null;
+        if ($request->query('id')) {
+            /** @var Squad $selectedSquad */
+            $selectedSquad = Squad::find($request->query('id'));
+            if ($selectedSquad) {
+                $squadsArray[] = [
+                    'id' => $selectedSquad->SquadID,
+                    'name' => $selectedSquad->SquadName,
+                ];
+            }
+        }
+
+        if ($squads) {
+            foreach ($squads as $squad) {
+                /** @var Squad $squad */
+                if ($selectedSquad == null || $selectedSquad->SquadID !== $squad->SquadID) {
+                    $squadsArray[] = [
+                        'id' => $squad->SquadID,
+                        'name' => $squad->SquadName,
+                    ];
+                }
+            }
+        }
+
+        $responseData = [
+            'data' => $squadsArray,
+            'has_more_pages' => $squads && $squads->hasMorePages(),
+            'total' => $squads ? $squads->total() : count($squadsArray),
+        ];
+
+        return \response()->json($responseData);
+    }
 }

@@ -60,7 +60,7 @@ try {
     $current[] = [
       'id' => $squad->getId(),
       'name' => $squad->getName(),
-      'url' => autoUrl('squads/' . $squad->getId()),
+      'url' => '/squads/' . $squad->getId(),
       'price_string' => $squad->getFee(false),
       'pays' => $pays,
     ];
@@ -84,7 +84,7 @@ try {
       $oldSquad = [
         'id' => (int) $move['OldID'],
         'name' => $move['OldName'],
-        'url' => autoUrl('squads/' . $move['OldID']),
+        'url' => '/squads/' . $move['OldID'],
       ];
     }
 
@@ -92,7 +92,7 @@ try {
       $newSquad = [
         'id' => (int) $move['NewID'],
         'name' => $move['NewName'],
-        'url' => autoUrl('squads/' . $move['NewID']),
+        'url' => '/squads/' . $move['NewID'],
       ];
     }
 

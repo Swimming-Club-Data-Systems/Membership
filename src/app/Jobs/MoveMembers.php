@@ -52,7 +52,8 @@ class MoveMembers implements ShouldQueue
                         ]);
                     }
 
-                    $move->delete();
+                    // Do not trigger events
+                    $move->deleteQuietly();
                 }
             });
         }

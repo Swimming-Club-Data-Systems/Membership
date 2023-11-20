@@ -319,14 +319,14 @@ class AppMenu
         if ($this->user->hasPermission(['Admin', 'Coach'])) {
             $menu[] = [
                 'name' => 'Squad List',
-                'href' => '/squads',
+                'href' => route('squads.index', [], false),
             ];
         }
 
         if ($this->user->hasPermission(['Admin', 'Coach'])) {
             $menu[] = [
                 'name' => 'Squad Moves',
-                'href' => '/squads/moves',
+                'href' => route('squad-moves.index', [], false),
             ];
         }
 

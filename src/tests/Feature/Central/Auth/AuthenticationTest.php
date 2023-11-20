@@ -1,9 +1,7 @@
 <?php
 
-namespace Tests\Feature\Auth;
+namespace Tests\Feature\Central\Auth;
 
-use App\Models\Central\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
