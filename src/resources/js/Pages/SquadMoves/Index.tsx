@@ -111,14 +111,17 @@ const ItemContent = (props: Item) => {
                         </div>
                         <div className="text-sm text-gray-700 group-hover:text-gray-800">
                             {props.old_squad && (
-                                <Link
-                                    href={route(
-                                        "squads.show",
-                                        props.old_squad.id
-                                    )}
-                                >
-                                    {props.old_squad.name}
-                                </Link>
+                                <>
+                                    {!props.new_squad && <>Leaving </>}
+                                    <Link
+                                        href={route(
+                                            "squads.show",
+                                            props.old_squad.id
+                                        )}
+                                    >
+                                        {props.old_squad.name}
+                                    </Link>
+                                </>
                             )}
                             {props.old_squad && props.new_squad && (
                                 <>
@@ -127,14 +130,17 @@ const ItemContent = (props: Item) => {
                                 </>
                             )}
                             {props.new_squad && (
-                                <Link
-                                    href={route(
-                                        "squads.show",
-                                        props.new_squad.id
-                                    )}
-                                >
-                                    {props.new_squad.name}
-                                </Link>
+                                <>
+                                    {!props.old_squad && <>Joining </>}
+                                    <Link
+                                        href={route(
+                                            "squads.show",
+                                            props.new_squad.id
+                                        )}
+                                    >
+                                        {props.new_squad.name}
+                                    </Link>
+                                </>
                             )}{" "}
                             on {formatDate(props.date)}
                         </div>

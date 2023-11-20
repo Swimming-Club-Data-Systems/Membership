@@ -108,6 +108,10 @@ export const Combobox: React.FC<Props> = ({
             });
     }, [deferredQuery, endpoint]);
 
+    const mergedItems = props.nullable
+        ? [{ id: null, name: "N/A" }, ...items]
+        : items;
+
     return (
         <HeadlessCombobox
             as="div"
@@ -151,9 +155,9 @@ export const Combobox: React.FC<Props> = ({
                     />
                 </HeadlessCombobox.Button>
 
-                {items.length > 0 && (
+                {mergedItems.length > 0 && (
                     <HeadlessCombobox.Options className="absolute z-50 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                        {items.map((item) => (
+                        {mergedItems.map((item) => (
                             <HeadlessCombobox.Option
                                 key={item.id}
                                 value={item}
