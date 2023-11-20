@@ -7,6 +7,7 @@ use App\Models\Tenant\Member;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\SquadMove;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class SquadMoveController extends Controller
@@ -51,7 +52,7 @@ class SquadMoveController extends Controller
         $request->validate([
             'member' => ['required'],
             'date' => ['required', 'date'],
-            'old_squad' => ['required_without:new_squad'],
+            'old_squad' => ['required_without:new_squad', 'after_or_equal:today'],
             'new_squad' => ['required_without:old_squad'],
             'paying' => ['boolean'],
         ]);
@@ -65,7 +66,10 @@ class SquadMoveController extends Controller
         $squadMove->Member = $member->MemberID;
 
         if ($request->integer('old_squad')) {
-            $squad = Squad::findOrFail($request->integer('old_squad'));
+            $squad = $squadMove->member->squads->find($request->integer('old_squad'));
+            if (! $squad) {
+                throw ValidationException::withMessages(['old_squad' => 'Member is not a member of the old squad selected.']);
+            }
             $squadMove->Old = $squad->SquadID;
         }
         if ($request->integer('new_squad')) {
@@ -83,14 +87,17 @@ class SquadMoveController extends Controller
     public function update(SquadMove $squadMove, Request $request)
     {
         $request->validate([
-            'date' => ['required', 'date'],
+            'date' => ['required', 'date', 'after_or_equal:today'],
             'old_squad' => ['required_without:new_squad'],
             'new_squad' => ['required_without:old_squad'],
             'paying' => ['boolean'],
         ]);
 
         if ($request->integer('old_squad')) {
-            $squad = Squad::findOrFail($request->integer('old_squad'));
+            $squad = $squadMove->member->squads->find($request->integer('old_squad'));
+            if (! $squad) {
+                throw ValidationException::withMessages(['old_squad' => 'Member is not a member of the old squad selected.']);
+            }
             $squadMove->Old = $squad->SquadID;
         } else {
             $squadMove->Old = null;

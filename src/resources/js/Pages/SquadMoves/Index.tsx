@@ -308,7 +308,7 @@ const Index = (props: Props) => {
                             .date()
                             .required("A moving date is required.")
                             .min(
-                                new Date(),
+                                minDate,
                                 "The move date must not be in the past."
                             ),
                         new_squad: yup
