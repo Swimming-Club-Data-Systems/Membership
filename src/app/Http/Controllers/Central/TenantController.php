@@ -290,7 +290,9 @@ class TenantController extends Controller
                             }),
                         ];
                     });
-                } catch (\Exception) {
+                } catch (\Exception $e) {
+                    report($e);
+
                     return [];
                 }
             },
