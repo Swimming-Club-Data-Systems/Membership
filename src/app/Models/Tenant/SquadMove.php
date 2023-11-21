@@ -8,6 +8,7 @@ use App\Events\Tenant\SquadMoveUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Date;
+use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
  * @property Date Date
@@ -18,7 +19,7 @@ use Illuminate\Support\Facades\Date;
  */
 class SquadMove extends Model
 {
-    use Notifiable;
+    use BelongsToPrimaryModel, Notifiable;
 
     // The squadsMoves table has an ID column
     // public $incrementing = true;
@@ -56,4 +57,9 @@ class SquadMove extends Model
     protected $table = 'squadMoves';
 
     protected $primaryKey = 'ID';
+
+    public function getRelationshipToPrimaryModel(): string
+    {
+        return 'member';
+    }
 }
