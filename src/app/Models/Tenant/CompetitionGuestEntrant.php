@@ -88,7 +88,7 @@ class CompetitionGuestEntrant extends Model
             if (Arr::get($field, 'name')) {
                 // Try and find in guest entrant data
                 $fieldName = Arr::get($field, 'name');
-                $fieldValue = property_exists($this->custom_form_data, $fieldName) ? $this->custom_form_data->$fieldName : null;
+                $fieldValue = Arr::exists($this->custom_form_data, $fieldName) ? $this->custom_form_data[$fieldName] : null;
                 $fieldFriendlyName = Arr::get($field, 'label') ?? Arr::get($field, 'name');
 
                 $friendlyValue = $fieldValue;
