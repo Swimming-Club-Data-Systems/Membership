@@ -51,9 +51,9 @@ class HandlePaymentIntentProcessing implements ShouldQueue
             if ($intent?->metadata?->payment_id) {
                 // Try and find a payment with this id
                 /** @var Payment $payment */
-                $payment = Payment::findOrFail($intent->metadata->payment_id);
+                $payment = Payment::find($intent->metadata->payment_id);
 
-                if ($payment->stripe_status != StripePaymentIntentStatus::PROCESSING) {
+                if ($payment && $payment->stripe_status != StripePaymentIntentStatus::PROCESSING) {
                     DB::beginTransaction();
 
                     $payment->status = PaymentStatus::PENDING;
