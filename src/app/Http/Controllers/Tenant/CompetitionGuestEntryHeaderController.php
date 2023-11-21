@@ -175,7 +175,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                 'processing_fee' => $competition->processing_fee,
                 'processing_fee_formatted' => Money::formatCurrency($competition->processing_fee),
             ],
-            'payable' => $payable,
+            'payable' => $payable && $total > 0,
             'paid' => $paid,
             'first_name' => $header->first_name,
             'last_name' => $header->last_name,
@@ -327,37 +327,40 @@ class CompetitionGuestEntryHeaderController extends Controller
             'entries.*.entry_time' => [
                 'nullable',
             ],
+            'entries' => ['array'],
         ]);
 
-        foreach ($validated['entries'] as $event) {
-            if ($event['entering']) {
-                // Create or update
-                /** @var CompetitionEventEntry $eventEntry */
-                $eventEntry = CompetitionEventEntry::firstOrNew(
-                    [
-                        'competition_entry_id' => $entry->id,
-                        'competition_event_id' => $event['event_id'],
-                    ],
-                    [
-                        'entry_time' => $event['entry_time'],
-                    ]
-                );
+        if (Arr::isList($validated['entries'])) {
+            foreach ($validated['entries'] as $event) {
+                if ($event['entering']) {
+                    // Create or update
+                    /** @var CompetitionEventEntry $eventEntry */
+                    $eventEntry = CompetitionEventEntry::firstOrNew(
+                        [
+                            'competition_entry_id' => $entry->id,
+                            'competition_event_id' => $event['event_id'],
+                        ],
+                        [
+                            'entry_time' => $event['entry_time'],
+                        ]
+                    );
 
-                if (! $eventEntry->exists) {
-                    /** @var CompetitionEvent $competitionEvent */
-                    $competitionEvent = $competition->events->find($event['event_id']);
-                    $eventEntry->populateFromEvent($competitionEvent);
+                    if (! $eventEntry->exists) {
+                        /** @var CompetitionEvent $competitionEvent */
+                        $competitionEvent = $competition->events->find($event['event_id']);
+                        $eventEntry->populateFromEvent($competitionEvent);
 
-                    // If the user has permission,
-                    // add logic for amending price before save
-                }
+                        // If the user has permission,
+                        // add logic for amending price before save
+                    }
 
-                $eventEntry->save();
+                    $eventEntry->save();
 
-            } else {
-                // Delete
-                if ($event['id']) {
-                    CompetitionEventEntry::destroy($event['id']);
+                } else {
+                    // Delete
+                    if ($event['id']) {
+                        CompetitionEventEntry::destroy($event['id']);
+                    }
                 }
             }
         }
