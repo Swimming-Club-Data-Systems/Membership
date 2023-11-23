@@ -1,24 +1,41 @@
 # Membership
-Membership is a project from [Chester-le-Street ASC](https://www.chesterlestreetasc.co.uk/) and [Swimming Club Data Systems](https://www.myswimmingclub.uk/) which aims to make swimming club
-management simpler for club volunteers, coaches, helpers and members. It is available under the Apache open-source license, so you are free to use our code in any way possible.
+Membership is a project from [Swimming Club Data Systems](https://www.myswimmingclub.uk/) and originally developed at [Chester-le-Street ASC](https://www.chesterlestreetasc.co.uk/) which aims to make swimming club
+management simpler for club volunteers, coaches, helpers and members.
+
+It is available for a monthly fee from SCDS or under the Apache 2.0 open-source license but with no support provided whatsoever.
+
+## Deployment Health
+
+[![Deploy Staging](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy.yml/badge.svg?branch=development-main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy.yml)
+[![Deploy Production](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml/badge.svg)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml)
+
+## Test results
+
+[![Build Front Ends](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml/badge.svg)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml)
 
 ## Redevelopment work
 
-The membership system is being re-implemented in Laravel.
+The membership system is currently being re-implemented in Laravel.
 
-The new Laravel based system (`./src`) runs on PHP 8 and later only. The legacy side (`./src_v1`) runs specifically on PHP 7.4 only as a result of its legacy status.
+The new Laravel-based system (`./src`) runs on PHP 8.2 and later only. The legacy code (`./src_v1`) runs specifically on PHP 7.4 only as a result of its legacy status, with the intention being to retire this code in due course.
 
-When you set up the applications, the legacy app runs at `/v1` and the new laravel app at `/`. This allows the two systems to send you between one and the other depending on where features are implemented.
+When you set up the applications, the legacy app runs at `/v1` and the new Laravel app at `/`. This allows the two systems to send you between one and the other depending on where features are implemented.
 
-In production we use nginx to achieve this split.
+In production, we are using nginx to achieve this split and handle running each path with the right PHP version.
 
 ## About
 
-This software is continuously developed in accordance with the business and operational needs of Chester-le-Street ASC and SCDS customer clubs, with a steady stream of feature requests from all.
+This software is continuously developed according to the business and operational needs of SCDS customer clubs.
 
-Chester-le-Street ASC and SCDS accept no liability for any issues, including all legal issues, with this software.
+SCDS accepts no liability for any issues, including legal issues, with this software.
 
-The system requires at least PHP 7.4 and for JavaScipt to be enabled on clients.
+The system requires:
+
+- PHP 8.2 for `/src` + PHP 7.4 for `/src_v1`
+- Redis
+- MariaDB
+- Node (for some background task scheduling and event handling)
+- JS on front ends
 
 ## Features
 ### Automatic Member Management
