@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Amp\Future;
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
 use App\Enums\Queue;
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Twilio\Exceptions\TwilioException;
@@ -62,6 +64,9 @@ class ProcessSMS implements ShouldQueue
             }
         }
 
+        $numberCollection = collect($numbers);
+        $chunks = $numberCollection->chunk(5);
+
         $client = new Client(config('twilio.sid'), config('twilio.token'), null, config('twilio.region'));
         $client->setEdge(config('twilio.edge'));
 
@@ -75,40 +80,66 @@ class ProcessSMS implements ShouldQueue
         $sentUsers = 0;
         $failedUsers = 0;
 
-        foreach ($numbers as $number => $userId) {
-            try {
-                // Check balance > 0
-                if ($tenant->journal->getBalance()->getAmount() < 0) {
-                    // The tenant is out of funds and needs to top up
-                    break;
-                }
+        $allResponses = Collection::empty();
 
-                $response = $client->messages->create(
-                    $number,
-                    [
-                        'from' => $from,
-                        'body' => $this->sms->message,
-                        'shortenUrls' => true,
-                        'maxPrice' => 0.0100,
-                    ]
-                );
+        foreach ($chunks as $chunk) {
+            $responses = Future\await($chunk->map(function ($userId, $number) use ($tenant, $from, $client, &$totalFee, &$sentUsers, &$failedUsers) {
+                return \Amp\async(function () use ($userId, $from, $client, $tenant, $number, &$totalFee, &$sentUsers, &$failedUsers) {
+                    try {
+                        // Check balance > 0
+                        if ($tenant->journal->getBalance()->getAmount() < 0) {
+                            // The tenant is out of funds and needs to top up
+                            return [
+                                'success' => false,
+                                'user' => $userId,
+                                'number' => $number,
+                                'reason' => 'Tenant out of funds',
+                            ];
+                        }
 
-                PhoneNumber::create($number)->getDescription();
+                        $response = $client->messages->create(
+                            $number,
+                            [
+                                'from' => $from,
+                                'body' => $this->sms->message,
+                                'shortenUrls' => true,
+                                'maxPrice' => 0.0100,
+                            ]
+                        );
 
-                $fee = 5 * $response->numSegments;
-                $totalFee += $fee;
+                        //                        $response = new \stdClass();
+                        //                        $response->numSegments = '2';
 
-                // Debit the tenant and reference the Sms model
-                $transaction = $tenant->journal->debit($fee, 'SMS message of '.$response->numSegments.' '.Str::plural('segment', $response->numSegments).' to '.Str::mask($number, '*', -6).' ('.PhoneNumber::create($number)->getDescription().')');
-                $transaction->referencesObject($this->sms);
-                $sentUsers++;
-            } catch (TwilioException $e) {
-                report($e);
-                $failedUsers++;
-            } catch (\Exception $e) {
-                report($e);
-                $failedUsers++;
-            }
+                        PhoneNumber::create($number)->getDescription();
+
+                        $fee = 5 * (int) $response->numSegments;
+                        $totalFee += $fee;
+
+                        // Debit the tenant and reference the Sms model
+                        $transaction = $tenant->journal->debit($fee, 'SMS message of '.$response->numSegments.' '.Str::plural('segment', (int) $response->numSegments).' to '.Str::mask($number, '*', -6).' ('.PhoneNumber::create($number)->getDescription().')');
+                        $transaction->referencesObject($this->sms);
+                        $sentUsers++;
+
+                        return [
+                            'success' => true,
+                            'user' => $userId,
+                            'number' => $number,
+                        ];
+                    } catch (TwilioException|\Exception $e) {
+                        report($e);
+                        $failedUsers++;
+
+                        return [
+                            'success' => false,
+                            'user' => $userId,
+                            'number' => $number,
+                            'reason' => $e->getMessage(),
+                        ];
+                    }
+                });
+            })->all());
+
+            $allResponses = $allResponses->merge($responses);
         }
 
         $this->sms->processed = true;
