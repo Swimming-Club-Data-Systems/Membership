@@ -73,7 +73,7 @@ export type Props = {
     google_maps_api_key: string;
     name: string;
     id: number;
-    competition: { name: string; id: number };
+    competition: { name: string; id: number; default_entry_fee: string };
     venue: {
         name: string;
         id: number;
@@ -587,7 +587,8 @@ const Show: Layout<Props> = (props: Props) => {
                                     stroke: "freestyle",
                                     distance: 0,
                                     units: "metres",
-                                    entry_fee_string: 0,
+                                    entry_fee_string:
+                                        props.competition.default_entry_fee,
                                     processing_fee_string: 0,
                                     ages: ["OPEN"],
                                 }}

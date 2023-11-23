@@ -169,6 +169,9 @@ const Show: Layout<Props> = (props: Props) => {
                     action={route("competitions.sessions.index", {
                         competition: props.id,
                     })}
+                    inertiaOptions={{
+                        preserveScroll: true,
+                    }}
                 >
                     <RenderServerErrors />
                     <FlashAlert className="mb-4" />

@@ -38,7 +38,12 @@ const LastDay = () => {
     }
 
     return (
-        <DateTimeInput name="gala_date" label="Final day" min={todaysDate} />
+        <DateTimeInput
+            name="gala_date"
+            label="Final day"
+            min={todaysDate}
+            mb="mb-0"
+        />
     );
 };
 
@@ -211,11 +216,13 @@ const New: Layout<Props> = (props: Props) => {
                                 min={todaysDate}
                                 showTimeInput
                                 help="00:00 indicates the start of the day. Use 23:59 for the end of the day."
+                                mb="mb-0"
                             />
                             <DateTimeInput
                                 name="age_at_date"
                                 label="Ages at"
                                 min={todaysDate}
+                                mb="mb-0"
                             />
                             <Checkbox
                                 name="require_times"

@@ -163,7 +163,6 @@ const DateTimeInput: React.FC<Props> = ({
             <div className="flex gap-4">
                 <div>
                     <BaseInput
-                        mb="mb-0"
                         label={label}
                         type={type}
                         // inputClassName="w-44"

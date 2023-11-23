@@ -49,6 +49,7 @@ class CompetitionSessionController extends Controller
                 'id' => $competition->id,
                 'name' => $competition->name,
                 'basic_mode' => $competition->mode === CompetitionMode::BASIC,
+                'default_entry_fee' => $competition->default_entry_fee_string,
             ],
             'venue' => [
                 'id' => $venue->id,
