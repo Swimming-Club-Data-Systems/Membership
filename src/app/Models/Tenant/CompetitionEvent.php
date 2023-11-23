@@ -165,23 +165,23 @@ class CompetitionEvent extends Model
                 return true;
             } elseif (Str::startsWith($this->ages[$i], '-')) {
                 // Up to age $this->ages[$i]
-                $ages = Str::of($this->ages[$i])->explode('-');
+                $ages = Str::of($this->ages[$i])->explode('-')->all();
 
-                if ($age <= $ages[0]) {
+                if ($age <= (int) $ages[0]) {
                     return true;
                 }
             } elseif (Str::endsWith($this->ages[$i], '-')) {
                 // Age $this->ages[$i] and up
-                $ages = Str::of($this->ages[$i])->explode('-');
+                $ages = Str::of($this->ages[$i])->explode('-')->all();
 
-                if ($age >= $ages[0]) {
+                if ($age >= (int) $ages[0]) {
                     return true;
                 }
             } elseif (Str::contains($this->ages[$i], '-')) {
                 // Ages between [0] and [1]
-                $ages = Str::of($this->ages[$i])->explode('-');
+                $ages = Str::of($this->ages[$i])->explode('-')->all();
 
-                if ($age >= $ages[0] && $age <= $ages[0]) {
+                if ($age >= (int) $ages[0] && $age <= (int) $ages[1]) {
                     return true;
                 }
             } else {

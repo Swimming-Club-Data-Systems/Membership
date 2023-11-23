@@ -113,6 +113,7 @@ class CompetitionGuestEntrant extends Model
                     'friendly_name' => $fieldFriendlyName,
                     'value' => $fieldValue,
                     'friendly_value' => $friendlyValue,
+                    'show_in_preview' => Arr::exists($field, 'show_in_preview') ? Arr::get($field, 'show_in_preview', false) : false,
                 ];
             }
         }

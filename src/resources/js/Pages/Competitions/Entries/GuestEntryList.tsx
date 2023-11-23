@@ -16,6 +16,10 @@ import Form, {
 import * as yup from "yup";
 import Checkbox from "@/Components/Form/Checkbox";
 import FlashAlert from "@/Components/FlashAlert";
+import useCustomFieldsList, {
+    CustomFields,
+} from "@/Components/Competitions/useCustomFieldsList";
+import { DefinitionList } from "@/Components/DefinitionList";
 
 interface EntryProps {
     id: string;
@@ -26,6 +30,7 @@ interface EntryProps {
         sex: string;
         age: number;
         age_on_day: number;
+        custom_fields: CustomFields;
     };
     amount: number;
     amount_refunded: number;
@@ -59,6 +64,11 @@ type GuestEntryListProps = {
 };
 
 const EntryRenderer = (props: EntryProps): ReactNode => {
+    const customFields = useCustomFieldsList(
+        props.entrant.custom_fields,
+        "show_in_preview"
+    );
+
     return (
         <Form
             initialValues={{
@@ -102,6 +112,12 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                                 <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
                                     {formatDate(props.entrant.date_of_birth)}{" "}
                                     (Age {props.entrant.age_on_day} on day)
+                                </div>
+                                <div>
+                                    <DefinitionList
+                                        verticalPadding={2}
+                                        items={customFields}
+                                    />
                                 </div>
                             </div>
                         </div>

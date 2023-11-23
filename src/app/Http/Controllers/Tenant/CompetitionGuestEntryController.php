@@ -56,6 +56,7 @@ class CompetitionGuestEntryController extends Controller
                     'age' => $item->competitionGuestEntrant->age,
                     'age_on_day' => $item->competitionGuestEntrant->ageAt($competition->age_at_date),
                     'sex' => $item->competitionGuestEntrant->sex,
+                    'custom_fields' => $item->competitionGuestEntrant->getCustomFieldData($competition),
                 ],
                 'entries' => $item->competitionEventEntries->map(function (CompetitionEventEntry $entry) {
                     return [

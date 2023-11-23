@@ -16,6 +16,9 @@ import Form, {
 import * as yup from "yup";
 import Checkbox from "@/Components/Form/Checkbox";
 import FlashAlert from "@/Components/FlashAlert";
+import useCustomFieldsList, {
+    CustomFields,
+} from "@/Components/Competitions/useCustomFieldsList";
 
 interface EntryProps {
     id: string;
@@ -31,12 +34,7 @@ interface EntryProps {
         sex: string;
         age: number;
         age_on_day: number;
-        custom_fields: {
-            friendly_name: string;
-            friendly_value?: string;
-            name: string;
-            value?: string;
-        }[];
+        custom_fields: CustomFields;
     };
     header: {
         id: string;
@@ -80,19 +78,7 @@ interface EntryProps {
 }
 
 const GuestEntryReadOnly = (props: EntryProps) => {
-    const customFields = useMemo(
-        () =>
-            props.entrant.custom_fields.map((field) => {
-                return {
-                    key: `custom_field_${field.name}`,
-                    term: field.friendly_name,
-                    definition: field.friendly_value
-                        ? field.friendly_value
-                        : "Not given",
-                };
-            }),
-        [props.entrant.custom_fields]
-    );
+    const customFields = useCustomFieldsList(props.entrant.custom_fields);
 
     return (
         <>
