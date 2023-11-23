@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use Amp\Future;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\OnboardingSession;
@@ -24,6 +25,55 @@ class DashboardController extends Controller
 
             /** @var User $user */
             $user = Auth::user();
+
+            $networkRequests = [
+                'swim_england_news' => function () {
+                    return Cache::remember('swim_england_news', 3600 * 3, function () {
+                        try {
+                            $data = [];
+                            $response = Http::get('https://www.swimming.org/sport/wp-json/wp/v2/posts?per_page=6')->json();
+                            foreach ($response as $item) {
+                                $data[] = [
+                                    'id' => $item['id'],
+                                    'title' => $item['title']['rendered'],
+                                    'link' => $item['link'],
+                                    'date' => $item['date_gmt'],
+                                ];
+                            }
+
+                            return $data;
+                        } catch (\Exception $e) {
+                            return [];
+                        }
+                    });
+                },
+                'regional_news' => function () {
+                    return Cache::remember('regional_news', 3600 * 3, function () {
+                        try {
+                            $data = [];
+                            $response = Http::get('https://asaner.org.uk/feed')->body();
+                            $response = new \SimpleXMLElement($response);
+
+                            for ($i = 0; $i < min(count($response->channel->item), 6); $i++) {
+                                $data[] = [
+                                    'id' => (string) $response->channel->item[$i]->guid,
+                                    'title' => (string) $response->channel->item[$i]->title,
+                                    'link' => (string) $response->channel->item[$i]->link,
+                                    'date' => (string) $response->channel->item[$i]->pubDate,
+                                ];
+                            }
+
+                            return $data;
+                        } catch (\Exception $e) {
+                            return [];
+                        }
+                    });
+                },
+            ];
+
+            $responses = Future\await(array_map(function ($request) {
+                return \Amp\async($request);
+            }, $networkRequests));
 
             return Inertia::render('Dashboard', [
                 'members' => $user->members()->with(['squads' => function ($query) {
@@ -54,44 +104,8 @@ class DashboardController extends Controller
                             'id' => $item->id,
                         ];
                     }),
-                'swim_england_news' => Cache::remember('swim_england_news', 3600 * 3, function () {
-                    try {
-                        $data = [];
-                        $response = Http::get('https://www.swimming.org/sport/wp-json/wp/v2/posts?per_page=6')->json();
-                        foreach ($response as $item) {
-                            $data[] = [
-                                'id' => $item['id'],
-                                'title' => $item['title']['rendered'],
-                                'link' => $item['link'],
-                                'date' => $item['date_gmt'],
-                            ];
-                        }
-
-                        return $data;
-                    } catch (\Exception $e) {
-                        return [];
-                    }
-                }),
-                'regional_news' => Cache::remember('regional_news', 3600 * 3, function () {
-                    try {
-                        $data = [];
-                        $response = Http::get('https://asaner.org.uk/feed')->body();
-                        $response = new \SimpleXMLElement($response);
-
-                        for ($i = 0; $i < min(count($response->channel->item), 6); $i++) {
-                            $data[] = [
-                                'id' => (string) $response->channel->item[$i]->guid,
-                                'title' => (string) $response->channel->item[$i]->title,
-                                'link' => (string) $response->channel->item[$i]->link,
-                                'date' => (string) $response->channel->item[$i]->pubDate,
-                            ];
-                        }
-
-                        return $data;
-                    } catch (\Exception $e) {
-                        return [];
-                    }
-                }),
+                'swim_england_news' => $responses['swim_england_news'],
+                'regional_news' => $responses['regional_news'],
                 'now' => now()->toDateString(),
                 'gocardless_switch_off' => Auth::user()->hasPermission('Admin') &&
                     $tenant->getOption('GOCARDLESS_ACCESS_TOKEN') && ! $tenant->getOption('USE_STRIPE_DIRECT_DEBIT'),

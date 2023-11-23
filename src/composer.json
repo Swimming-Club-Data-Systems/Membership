@@ -10,6 +10,7 @@
     "require": {
         "php": "^8.2",
         "ext-simplexml": "*",
+        "amphp/amp": "^3.0",
         "aws/aws-sdk-php": "^3.233",
         "brick/math": "^0.10.2",
         "brick/phonenumber": "^0.4.0",
