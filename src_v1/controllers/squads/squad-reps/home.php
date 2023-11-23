@@ -48,9 +48,6 @@ include BASE_PATH . 'views/header.php';
                     <span class="title mb-0">
                       <?= htmlspecialchars($squad['SquadName']) ?>
                     </span>
-                    <span>
-                      <?= htmlspecialchars($squad['SquadCoach']) ?>
-                    </span>
                   </span>
                   <span class="category">
                     Squads
@@ -113,7 +110,7 @@ include BASE_PATH . 'views/header.php';
             Other services
           </h2>
           <div class="news-grid">
-            <a href="<?= autoUrl("notify/newemail") ?>">
+            <a href="<?= autoUrl("notify/new") ?>">
               <span class="mb-3">
                 <span class="title mb-0">
                   Email parents
@@ -124,19 +121,6 @@ include BASE_PATH . 'views/header.php';
               </span>
               <span class="category">
                 Notify
-              </span>
-            </a>
-            <a href="<?= autoUrl("contact-tracing/check-in") ?>">
-              <span class="mb-3">
-                <span class="title mb-0">
-                  COVID Liason Squad Registers
-                </span>
-                <span>
-                  Check in members for contact tracing
-                </span>
-              </span>
-              <span class="category">
-                Contact Tracing
               </span>
             </a>
             <a href="<?= autoUrl("squad-reps/contact-details") ?>">
