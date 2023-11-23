@@ -220,6 +220,7 @@ const ItemContent = (props: Item) => {
                             name="date"
                             label="Move date"
                             min={minDate}
+                            mb="mb-0"
                         />
                     </div>
 
@@ -364,6 +365,7 @@ const Index = (props: Props) => {
                             name="date"
                             label="Move date"
                             min={minDate}
+                            mb="mb-0"
                         />
                     </div>
 
