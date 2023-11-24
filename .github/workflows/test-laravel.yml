@@ -17,18 +17,24 @@ jobs:
         php-version: '8.2'
     - uses: actions/checkout@v3
     - name: Copy .env
+      working-directory: ./src
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
+      working-directory: ./src
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Generate key
+      working-directory: ./src
       run: php artisan key:generate
     - name: Directory Permissions
+      working-directory: ./src
       run: chmod -R 777 storage bootstrap/cache
     - name: Create Database
+      working-directory: ./src
       run: |
         mkdir -p database
         touch database/database.sqlite
     - name: Execute tests (Unit and Feature tests) via PHPUnit
+      working-directory: ./src
       env:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
