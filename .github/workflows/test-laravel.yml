@@ -22,6 +22,11 @@ jobs:
     - name: Install Dependencies
       working-directory: ./src
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Build front end
+      working-directory: ./src_v1
+      run: |
+        npm install
+        npm run build
     - name: Generate key
       working-directory: ./src
       run: php artisan key:generate
@@ -33,7 +38,7 @@ jobs:
       run: |
         mkdir -p database
         touch database/database.sqlite
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
+    - name: Execute tests (Unit and Feature tests) via Pest
       working-directory: ./src
       env:
         DB_CONNECTION: sqlite
