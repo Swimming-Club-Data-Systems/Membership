@@ -23,7 +23,7 @@ jobs:
       working-directory: ./src
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
     - name: Build front end
-      working-directory: ./src_v1
+      working-directory: ./src
       run: |
         npm install
         npm run build
