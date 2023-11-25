@@ -4,14 +4,25 @@ management simpler for club volunteers, coaches, helpers and members.
 
 It is available for a monthly fee from SCDS or under the Apache 2.0 open-source license but with no support provided whatsoever.
 
+## Test results
+
+### `main` branch
+
+[![Laravel Tests](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/test-laravel.yml/badge.svg?branch=main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/test-laravel.yml)
+
+### `development-main` branch
+
+[![Laravel Tests](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/test-laravel.yml/badge.svg?branch=development-main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/test-laravel.yml)
+
+## JavaScript build health
+
+- `main` [![Build Front Ends](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml/badge.svg)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml)
+- `development-main` [![Build Front Ends](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml/badge.svg?branch=development-main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml)
+
 ## Deployment Health
 
 [![Deploy Staging](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy.yml/badge.svg?branch=development-main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy.yml)
-[![Deploy Production](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml/badge.svg)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml)
-
-## Test results
-
-[![Build Front Ends](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml/badge.svg)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/build-fe.yml)
+[![Deploy Production](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml/badge.svg?branch=main)](https://github.com/Swimming-Club-Data-Systems/Membership/actions/workflows/deploy-prod.yml)
 
 ## Redevelopment work
 

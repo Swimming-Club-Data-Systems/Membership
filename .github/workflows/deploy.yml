@@ -3,6 +3,7 @@ name: Deploy Staging
 on:
   push:
     branches: [ "development-main" ]
+  workflow_dispatch:
 
 jobs:
   build-fe-v2:
@@ -11,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -32,7 +33,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -46,8 +47,49 @@ jobs:
       run: |
         npm install
         npm run build
-  deploy-staging:
+  laravel-tests:
+    name: "Test Laravel"
+    runs-on: self-hosted
     needs: [build-fe-v2, build-fe-v1]
+    steps:
+    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+      with:
+        php-version: '8.2'
+    - uses: actions/checkout@v3
+    - name: Copy .env
+      working-directory: ./src
+      run: php -r "file_exists('.env') || copy('.env.example', '.env');"
+    - name: Install Dependencies
+      working-directory: ./src
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Build front end
+      working-directory: ./src
+      run: |
+        npm install
+        npm run build
+    - name: Generate key
+      working-directory: ./src
+      run: php artisan key:generate
+    - name: Directory Permissions
+      working-directory: ./src
+      run: chmod -R 777 storage bootstrap/cache
+    # - name: Create Database
+    #   working-directory: ./src
+    #   run: |
+    #     mkdir -p database
+    #     touch database/database.sqlite
+    - name: Execute tests (Unit and Feature tests) via Pest
+      working-directory: ./src
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: ${{ secrets.TEST_DB_HOST }}
+        DB_PORT: ${{ secrets.TEST_DB_PORT }}
+        DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+        DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+      run: vendor/bin/pest
+  deploy-staging:
+    needs: [build-fe-v2, build-fe-v1, laravel-tests]
     name: Deploy to Staging Environment
     # container: registry.gitlab.com/swimming-club-data-systems/membership:latest
     # container: ubuntu:23.04

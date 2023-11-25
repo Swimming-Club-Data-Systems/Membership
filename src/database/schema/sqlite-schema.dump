@@ -1,0 +1,1269 @@
+PRAGMA synchronous = OFF;
+PRAGMA journal_mode = MEMORY;
+BEGIN TRANSACTION;
+CREATE TABLE `auditLogging` (
+  `ID` char(36) NOT NULL
+,  `User` integer  NOT NULL
+,  `Time` timestamp NOT NULL DEFAULT current_timestamp
+,  `Event` varchar(256) NOT NULL
+,  `Description` varchar(512) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `checkoutItems` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `checkout_session` char(36) NOT NULL
+,  `name` varchar(255) NOT NULL
+,  `description` text DEFAULT NULL
+,  `amount` integer  NOT NULL
+,  `currency` char(3) NOT NULL
+,  `tax_amount` integer  NOT NULL DEFAULT 0
+,  `tax_data` longtext NOT NULL CHECK (json_valid(`tax_data`))
+,  `sub_items` longtext NOT NULL CHECK (json_valid(`sub_items`))
+,  `type` varchar(255) DEFAULT 'debit'
+,  `attributes` longtext NOT NULL CHECK (json_valid(`attributes`))
+,  `metadata` longtext NOT NULL CHECK (json_valid(`metadata`))
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `checkoutSessions` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `user` integer  DEFAULT NULL
+,  `amount` integer  NOT NULL
+,  `currency` char(3) NOT NULL
+,  `state` varchar(64) NOT NULL
+,  `allowed_types` longtext NOT NULL CHECK (json_valid(`allowed_types`))
+,  `created` datetime NOT NULL DEFAULT current_timestamp
+,  `succeeded` datetime DEFAULT NULL
+,  `intent` varchar(255) DEFAULT NULL
+,  `method` varchar(255) DEFAULT NULL
+,  `version` varchar(64) DEFAULT 'v1'
+,  `creator` integer  DEFAULT NULL
+,  `tax_id` varchar(255) DEFAULT NULL
+,  `total_details` longtext NOT NULL CHECK (json_valid(`total_details`))
+,  `metadata` longtext NOT NULL CHECK (json_valid(`metadata`))
+,  `Tenant` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `clubMembershipClasses` (
+  `ID` char(36) NOT NULL
+,  `Type` varchar(256) DEFAULT 'club'
+,  `Name` varchar(256) NOT NULL
+,  `Description` text DEFAULT NULL
+,  `Fees` longtext NOT NULL CHECK (json_valid(`Fees`))
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `coaches` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `User` integer  NOT NULL
+,  `Squad` integer  NOT NULL
+,  `Type` text  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `completedForms` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Member` integer  DEFAULT NULL
+,  `User` integer  DEFAULT NULL
+,  `Form` varchar(255) DEFAULT NULL
+,  `Date` date NOT NULL
+,  `About` text DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `covidGalaHealthScreen` (
+  `ID` char(36) NOT NULL
+,  `DateTime` datetime NOT NULL DEFAULT current_timestamp
+,  `Member` integer  NOT NULL
+,  `Gala` integer  NOT NULL
+,  `MemberAgreement` integer NOT NULL DEFAULT 0
+,  `Guardian` integer  DEFAULT NULL
+,  `GuardianAgreement` integer DEFAULT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `covidHealthScreen` (
+  `ID` char(36) NOT NULL
+,  `Member` integer  NOT NULL
+,  `DateTime` datetime NOT NULL DEFAULT current_timestamp
+,  `OfficerApproval` integer NOT NULL DEFAULT 0
+,  `ApprovedBy` integer  DEFAULT NULL
+,  `Document` text DEFAULT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `covidLocations` (
+  `ID` char(36) NOT NULL
+,  `Name` varchar(256) NOT NULL
+,  `Address` text NOT NULL
+,  `Tenant` integer  NOT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `covidRiskAwareness` (
+  `ID` char(36) NOT NULL
+,  `DateTime` datetime NOT NULL DEFAULT current_timestamp
+,  `Member` integer  NOT NULL
+,  `MemberAgreement` integer NOT NULL DEFAULT 0
+,  `Guardian` integer  DEFAULT NULL
+,  `GuardianAgreement` integer DEFAULT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `covidVisitors` (
+  `ID` char(36) NOT NULL
+,  `Location` char(36) NOT NULL
+,  `Time` datetime NOT NULL
+,  `Person` integer  DEFAULT NULL
+,  `Type` text  NOT NULL
+,  `GuestName` varchar(256) DEFAULT NULL
+,  `GuestPhone` varchar(256) DEFAULT NULL
+,  `Inputter` integer  DEFAULT NULL
+,  `Notes` text DEFAULT NULL
+,  `SignedOut` integer NOT NULL DEFAULT 0
+,  `Tenant` integer  NOT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `domains` (
+  `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `domain` varchar(255) NOT NULL
+,  `tenant_id` varchar(255) NOT NULL
+,  `created_at` timestamp NULL DEFAULT NULL
+,  `updated_at` timestamp NULL DEFAULT NULL
+);
+CREATE TABLE `emergencyContacts` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `Name` mediumtext NOT NULL
+,  `ContactNumber` mediumtext NOT NULL
+,  `Relation` varchar(255) DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `extras` (
+  `ExtraID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `ExtraName` varchar(100) NOT NULL
+,  `ExtraFee` decimal(6,2) NOT NULL
+,  `Type` text  DEFAULT 'Payment'
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `extrasRelations` (
+  `RelationID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `ExtraID` integer  NOT NULL
+,  `MemberID` integer  DEFAULT NULL
+,  `UserID` integer  DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `failed_jobs` (
+  `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `uuid` varchar(255) NOT NULL
+,  `connection` text NOT NULL
+,  `queue` text NOT NULL
+,  `payload` longtext NOT NULL
+,  `exception` longtext NOT NULL
+,  `failed_at` timestamp NOT NULL DEFAULT current_timestamp
+,  UNIQUE (`uuid`)
+);
+CREATE TABLE `galaData` (
+  `Gala` integer  NOT NULL
+,  `Events` text NOT NULL
+,  `Prices` text NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `galaEntries` (
+  `EntryID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `GalaID` integer  NOT NULL
+,  `MemberID` integer  NOT NULL
+,  `EntryProcessed` integer NOT NULL
+,  `TimesRequired` integer DEFAULT NULL
+,  `TimesProvided` integer DEFAULT NULL
+,  `FeeToPay` double DEFAULT NULL
+,  `Charged` integer NOT NULL DEFAULT 0
+,  `25Free` integer DEFAULT NULL
+,  `50Free` integer DEFAULT NULL
+,  `100Free` integer DEFAULT NULL
+,  `200Free` integer DEFAULT NULL
+,  `400Free` integer DEFAULT NULL
+,  `800Free` integer DEFAULT NULL
+,  `1500Free` integer DEFAULT NULL
+,  `25Breast` integer DEFAULT NULL
+,  `50Breast` integer DEFAULT NULL
+,  `100Breast` integer DEFAULT NULL
+,  `200Breast` integer DEFAULT NULL
+,  `25Fly` integer DEFAULT NULL
+,  `50Fly` integer DEFAULT NULL
+,  `100Fly` integer DEFAULT NULL
+,  `200Fly` integer DEFAULT NULL
+,  `25Back` integer DEFAULT NULL
+,  `50Back` integer DEFAULT NULL
+,  `100Back` integer DEFAULT NULL
+,  `200Back` integer DEFAULT NULL
+,  `200IM` integer DEFAULT NULL
+,  `400IM` integer DEFAULT NULL
+,  `100IM` integer DEFAULT NULL
+,  `150IM` integer DEFAULT NULL
+,  `25FreeTime` text DEFAULT NULL
+,  `50FreeTime` text DEFAULT NULL
+,  `100FreeTime` text DEFAULT NULL
+,  `200FreeTime` text DEFAULT NULL
+,  `400FreeTime` text DEFAULT NULL
+,  `800FreeTime` text DEFAULT NULL
+,  `1500FreeTime` text DEFAULT NULL
+,  `25BreastTime` text DEFAULT NULL
+,  `50BreastTime` text DEFAULT NULL
+,  `100BreastTime` text DEFAULT NULL
+,  `200BreastTime` text DEFAULT NULL
+,  `25FlyTime` text DEFAULT NULL
+,  `50FlyTime` text DEFAULT NULL
+,  `100FlyTime` text DEFAULT NULL
+,  `200FlyTime` text DEFAULT NULL
+,  `25BackTime` text DEFAULT NULL
+,  `50BackTime` text DEFAULT NULL
+,  `100BackTime` text DEFAULT NULL
+,  `200BackTime` text DEFAULT NULL
+,  `200IMTime` text DEFAULT NULL
+,  `400IMTime` text DEFAULT NULL
+,  `100IMTime` text DEFAULT NULL
+,  `150IMTime` text DEFAULT NULL
+,  `Refunded` integer DEFAULT 0
+,  `Locked` integer DEFAULT 0
+,  `Vetoable` integer DEFAULT 0
+,  `AmountRefunded` integer  DEFAULT 0
+,  `StripePayment` integer  DEFAULT NULL
+,  `Approved` integer DEFAULT 1
+,  `PaymentID` integer  DEFAULT NULL
+,  `ProcessingFee` integer  DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `galaSessions` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Gala` integer  NOT NULL
+,  `Name` varchar(255) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `galaSessionsCanEnter` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Member` integer  NOT NULL
+,  `Session` integer  NOT NULL
+,  `CanEnter` integer NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `galas` (
+  `GalaID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `GalaName` varchar(255) DEFAULT NULL
+,  `CourseLength` text  DEFAULT NULL
+,  `GalaVenue` varchar(255) DEFAULT NULL
+,  `GalaFee` decimal(8,2) DEFAULT NULL
+,  `GalaFeeConstant` integer NOT NULL DEFAULT 1
+,  `ClosingDate` datetime DEFAULT NULL
+,  `GalaDate` date NOT NULL
+,  `HyTek` integer NOT NULL
+,  `CoachEnters` integer DEFAULT 0
+,  `RequiresApproval` integer DEFAULT 0
+,  `Description` text DEFAULT NULL
+,  `PaymentCategory` integer  DEFAULT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `ProcessingFee` integer  DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `gcCredentials` (
+  `OrganisationId` varchar(256) NOT NULL
+,  `AccessToken` varchar(256) NOT NULL
+,  `Tenant` integer  NOT NULL
+,  PRIMARY KEY (`OrganisationId`)
+);
+CREATE TABLE `individualFeeTrack` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MonthID` integer  NOT NULL
+,  `PaymentID` integer  DEFAULT NULL
+,  `MemberID` integer  NOT NULL
+,  `UserID` integer  DEFAULT NULL
+,  `Description` mediumtext NOT NULL
+,  `Amount` integer  NOT NULL
+,  `Type` text  NOT NULL
+,  `NC` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `joinParents` (
+  `Hash` char(40) NOT NULL
+,  `First` varchar(30) NOT NULL
+,  `Last` varchar(40) NOT NULL
+,  `Email` varchar(70) NOT NULL
+,  `Invited` integer NOT NULL DEFAULT 0
+,  `Tenant` integer  NOT NULL DEFAULT 1
+);
+CREATE TABLE `joinSwimmers` (
+  `ID` integer  NOT NULL
+,  `Parent` char(40) NOT NULL
+,  `First` varchar(30) NOT NULL
+,  `Last` varchar(40) NOT NULL
+,  `DoB` date NOT NULL
+,  `XP` integer  NOT NULL
+,  `XPDetails` text DEFAULT NULL
+,  `Medical` text DEFAULT NULL
+,  `Questions` text DEFAULT NULL
+,  `Club` varchar(30) DEFAULT NULL
+,  `ASA` varchar(255) DEFAULT NULL
+,  `TrialStart` datetime DEFAULT NULL
+,  `TrialEnd` datetime DEFAULT NULL
+,  `Comments` text DEFAULT NULL
+,  `SquadSuggestion` integer  DEFAULT NULL
+,  `Sex` text  NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+);
+CREATE TABLE `linkedAccounts` (
+  `ID` integer  NOT NULL
+,  `User` integer  NOT NULL
+,  `LinkedUser` integer  NOT NULL
+,  `Key` varchar(255) DEFAULT NULL
+,  `Active` integer NOT NULL
+);
+CREATE TABLE `listSenders` (
+  `User` integer  NOT NULL
+,  `List` integer  NOT NULL
+,  `Manager` integer NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `meetResults` (
+  `Result` integer  NOT NULL
+,  `Meet` integer  NOT NULL
+,  `Date` date NOT NULL
+,  `Time` varchar(8) NOT NULL
+,  `IntTime` integer  NOT NULL
+,  `ChronologicalOrder` integer  NOT NULL
+,  `Round` char(1) NOT NULL
+,  `Stroke` char(1) NOT NULL
+,  `Distance` integer  NOT NULL
+,  `Course` char(1) NOT NULL
+,  `Member` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `meets` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Name` varchar(200) NOT NULL
+,  `StartTime` datetime NOT NULL
+,  `Creator` integer  NOT NULL
+,  `Started` integer NOT NULL DEFAULT 0
+,  `Finished` integer NOT NULL DEFAULT 0
+,  `Link` varchar(2048) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `meetsWithResults` (
+  `Meet` integer  NOT NULL
+,  `Gala` integer  DEFAULT NULL
+,  `Name` varchar(100) NOT NULL
+,  `City` varchar(50) NOT NULL
+,  `Start` date DEFAULT NULL
+,  `End` date DEFAULT NULL
+,  `Course` char(1) NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `memberEmailAddresses` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Member` integer  NOT NULL
+,  `EmailAddress` varchar(320) NOT NULL
+,  `Verified` integer DEFAULT 0
+,  `Primary` integer DEFAULT 0
+);
+CREATE TABLE `memberMedical` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MemberID` integer  NOT NULL
+,  `Conditions` mediumtext DEFAULT NULL
+,  `Allergies` mediumtext DEFAULT NULL
+,  `Medication` mediumtext DEFAULT NULL
+,  `GPName` varchar(255) DEFAULT NULL
+,  `GPAddress` longtext NOT NULL DEFAULT '[]' CHECK (json_valid(`GPAddress`))
+,  `GPPhone` varchar(255) DEFAULT NULL
+,  `WithholdConsent` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `memberPhotography` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MemberID` integer  NOT NULL
+,  `Website` integer NOT NULL
+,  `Social` integer NOT NULL
+,  `Noticeboard` integer NOT NULL
+,  `FilmTraining` integer NOT NULL
+,  `ProPhoto` integer NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `members` (
+  `MemberID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  DEFAULT NULL
+,  `Status` integer NOT NULL DEFAULT 1
+,  `RR` integer NOT NULL DEFAULT 0
+,  `AccessKey` varchar(20) NOT NULL
+,  `MForename` varchar(255) DEFAULT NULL
+,  `MSurname` varchar(255) DEFAULT NULL
+,  `MMiddleNames` varchar(255) DEFAULT NULL
+,  `ASANumber` varchar(255) DEFAULT NULL
+,  `NGBCategory` char(36) DEFAULT NULL
+,  `DateOfBirth` date NOT NULL
+,  `Gender` text  NOT NULL
+,  `OtherNotes` text NOT NULL
+,  `RRTransfer` integer DEFAULT 0
+,  `ASAPrimary` integer NOT NULL DEFAULT 1
+,  `ASAPaid` integer NOT NULL DEFAULT 0
+,  `ClubMember` integer NOT NULL DEFAULT 1
+,  `ClubPaid` integer NOT NULL DEFAULT 0
+,  `ASAMember` integer NOT NULL DEFAULT 1
+,  `Country` varchar(7) NOT NULL DEFAULT 'GB-ENG'
+,  `PWHash` varchar(200) DEFAULT NULL
+,  `PWWrong` integer  DEFAULT 0
+,  `Active` integer DEFAULT 1
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `ClubCategory` char(36) NOT NULL
+,  `GenderIdentity` varchar(256) DEFAULT NULL
+,  `GenderPronouns` varchar(256) DEFAULT NULL
+,  `GenderDisplay` integer DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `membershipBatch` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `User` integer  NOT NULL
+,  `StartText` text DEFAULT NULL
+,  `Footer` text DEFAULT NULL
+,  `DueDate` date DEFAULT NULL
+,  `Completed` integer NOT NULL DEFAULT 0
+,  `Cancelled` integer NOT NULL DEFAULT 0
+,  `Total` integer  NOT NULL
+,  `PaymentTypes` longtext NOT NULL CHECK (json_valid(`PaymentTypes`))
+,  `PaymentDetails` longtext NOT NULL CHECK (json_valid(`PaymentDetails`))
+,  `AutoReminders` integer NOT NULL DEFAULT 0
+,  `Creator` integer  DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `membershipBatchItems` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Batch` char(36) NOT NULL
+,  `Membership` char(36) NOT NULL
+,  `Member` integer  NOT NULL
+,  `Amount` integer  NOT NULL
+,  `Notes` text DEFAULT NULL
+,  `Year` char(36) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `membershipYear` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Name` varchar(255) NOT NULL
+,  `StartDate` date NOT NULL
+,  `EndDate` date NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `membershipYearMembers` (
+  `Year` char(36) NOT NULL
+,  `Member` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `memberships` (
+  `Member` integer  NOT NULL
+,  `Year` char(36) NOT NULL
+,  `Membership` char(36) NOT NULL
+,  `Amount` integer  NOT NULL DEFAULT 0
+,  `StartDate` date NOT NULL
+,  `EndDate` date NOT NULL
+,  `Purchased` datetime NOT NULL
+,  `PaymentInfo` longtext NOT NULL CHECK (json_valid(`PaymentInfo`))
+,  `Notes` text DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `migrations` (
+  `id` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `migration` varchar(255) NOT NULL
+,  `batch` integer  NOT NULL
+);
+CREATE TABLE `newUsers` (
+  `ID` integer NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `AuthCode` mediumtext NOT NULL
+,  `UserJSON` mediumtext NOT NULL
+,  `Time` datetime NOT NULL DEFAULT current_timestamp
+,  `Type` mediumtext NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `notify` (
+  `EmailID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MessageID` integer  DEFAULT NULL
+,  `UserID` integer  NOT NULL
+,  `Status` text  NOT NULL
+,  `Subject` mediumtext DEFAULT NULL
+,  `Message` mediumtext DEFAULT NULL
+,  `Sender` integer  DEFAULT NULL
+,  `ForceSend` integer NOT NULL DEFAULT 0
+,  `EmailType` mediumtext DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `notifyAdditionalEmails` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `EmailAddress` varchar(100) NOT NULL
+,  `Name` varchar(50) NOT NULL
+,  `Hash` varchar(255) DEFAULT NULL
+,  `Verified` integer DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `notifyCategories` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Name` varchar(255) NOT NULL
+,  `Description` mediumtext NOT NULL
+,  `Active` integer DEFAULT 1
+,  `Tenant` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `notifyHistory` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Sender` integer  NOT NULL
+,  `Subject` mediumtext NOT NULL
+,  `Message` mediumtext NOT NULL
+,  `ForceSend` integer NOT NULL
+,  `Date` datetime NOT NULL
+,  `JSONData` mediumtext NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `notifyOptions` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `EmailType` mediumtext NOT NULL
+,  `Subscribed` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `onboardingMembers` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `session` char(36) NOT NULL
+,  `member` integer  NOT NULL
+,  `stages` longtext NOT NULL DEFAULT '[]' CHECK (json_valid(`stages`))
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `onboardingSessions` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `user` integer  NOT NULL
+,  `created` datetime NOT NULL DEFAULT current_timestamp
+,  `creator` integer  DEFAULT NULL
+,  `start` date NOT NULL DEFAULT current_timestamp
+,  `charge_outstanding` integer NOT NULL DEFAULT 0
+,  `charge_pro_rata` integer NOT NULL DEFAULT 0
+,  `welcome_text` text DEFAULT NULL
+,  `token` varchar(1024) NOT NULL
+,  `token_on` integer NOT NULL DEFAULT 0
+,  `status` varchar(255) DEFAULT NULL
+,  `due_date` date DEFAULT NULL
+,  `completed_at` datetime DEFAULT NULL
+,  `stages` longtext NOT NULL CHECK (json_valid(`stages`))
+,  `metadata` longtext NOT NULL CHECK (json_valid(`metadata`))
+,  `batch` char(36) DEFAULT NULL
+,  `type` varchar(255) NOT NULL DEFAULT 'onboarding'
+,  `renewal` char(36) DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `passwordTokens` (
+  `TokenID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `Token` mediumtext NOT NULL
+,  `Date` date DEFAULT NULL
+,  `Type` text  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentCategories` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Name` varchar(100) NOT NULL
+,  `Description` varchar(200) NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `UniqueID` varchar(36) NOT NULL
+,  `Show` integer NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentMandates` (
+  `MandateID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `Name` varchar(20) NOT NULL
+,  `Mandate` varchar(20) NOT NULL
+,  `Customer` varchar(20) NOT NULL
+,  `BankAccount` varchar(20) NOT NULL
+,  `BankName` varchar(100) DEFAULT NULL
+,  `AccountHolderName` varchar(30) NOT NULL
+,  `AccountNumEnd` varchar(2) NOT NULL
+,  `InUse` integer NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentMonths` (
+  `MonthID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MonthStart` varchar(7) NOT NULL
+,  `Date` date NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentPreferredMandate` (
+  `PrefID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `MandateID` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentRetries` (
+  `UserID` integer  NOT NULL
+,  `Day` date NOT NULL
+,  `PMKey` varchar(256) NOT NULL
+,  `Tried` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentSchedule` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `Day` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentSquadFees` (
+  `SFID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MonthID` integer  NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentTypes` (
+  `PayTypeID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `PayTypeName` varchar(60) NOT NULL
+,  `PayTypeDescription` varchar(200) DEFAULT NULL
+,  `PayTypeEnabled` integer NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentWebhookOps` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `EventID` varchar(20) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `payments` (
+  `PaymentID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Date` date NOT NULL
+,  `Status` text  NOT NULL
+,  `UserID` integer  NOT NULL
+,  `MandateID` integer  DEFAULT NULL
+,  `Name` varchar(50) DEFAULT NULL
+,  `Amount` integer  NOT NULL
+,  `Currency` varchar(3) NOT NULL
+,  `PMkey` varchar(20) DEFAULT NULL
+,  `Type` text  NOT NULL
+,  `Payout` varchar(30) DEFAULT NULL
+,  `stripeMandate` varchar(255) DEFAULT NULL
+,  `stripePaymentIntent` varchar(255) DEFAULT NULL
+,  `stripePayout` varchar(255) DEFAULT NULL
+,  `stripeFailureCode` varchar(256) DEFAULT NULL
+,  `stripeFee` integer  NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `paymentsPayouts` (
+  `ID` varchar(30) NOT NULL
+,  `Amount` integer  NOT NULL
+,  `Fees` integer  NOT NULL
+,  `Currency` char(3) NOT NULL
+,  `ArrivalDate` date DEFAULT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `paymentsPending` (
+  `PaymentID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Date` date NOT NULL
+,  `Status` text  NOT NULL
+,  `UserID` integer  NOT NULL
+,  `Name` varchar(500) DEFAULT NULL
+,  `Amount` integer  NOT NULL
+,  `Currency` varchar(3) NOT NULL
+,  `PMkey` varchar(20) DEFAULT NULL
+,  `Type` text  NOT NULL
+,  `MetadataJSON` mediumtext DEFAULT NULL
+,  `Category` integer  DEFAULT NULL
+,  `Payment` integer  DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `permissions` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Permission` varchar(200) NOT NULL
+,  `User` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `posts` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Author` integer  DEFAULT NULL
+,  `Date` timestamp NOT NULL DEFAULT current_timestamp
+,  `Content` mediumtext NOT NULL
+,  `Title` mediumtext NOT NULL
+,  `Excerpt` mediumtext NOT NULL
+,  `Path` mediumtext NOT NULL
+,  `Modified` timestamp NOT NULL DEFAULT current_timestamp 
+,  `Type` mediumtext NOT NULL
+,  `MIME` mediumtext NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `qualifications` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Name` varchar(256) NOT NULL
+,  `Description` text DEFAULT NULL
+,  `DefaultExpiry` longtext NOT NULL CHECK (json_valid(`DefaultExpiry`))
+,  `Show` integer NOT NULL DEFAULT 1
+,  `Tenant` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `qualificationsMembers` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Qualification` char(36) NOT NULL
+,  `Member` integer  NOT NULL
+,  `ValidFrom` date NOT NULL DEFAULT current_timestamp
+,  `ValidUntil` date DEFAULT NULL
+,  `Notes` text DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `renewalData` (
+  `ID` char(36) NOT NULL
+,  `Renewal` char(36) DEFAULT NULL
+,  `User` integer  DEFAULT NULL
+,  `Document` longtext NOT NULL CHECK (json_valid(`Document`))
+,  `PaymentIntent` integer  DEFAULT NULL
+,  `PaymentDD` integer  DEFAULT NULL
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `renewalMembers` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `PaymentID` integer  DEFAULT NULL
+,  `MemberID` integer  NOT NULL
+,  `RenewalID` integer  NOT NULL
+,  `Date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' 
+,  `CountRenewal` integer NOT NULL DEFAULT 0
+,  `Renewed` integer DEFAULT 0
+,  `PaymentType` text  DEFAULT 'dd'
+,  `StripePayment` integer  DEFAULT NULL
+,  `CashPaid` integer DEFAULT 0
+,  `ChequePaid` integer DEFAULT 0
+,  `BACSPaid` integer DEFAULT 0
+,  `BACSReference` varchar(18) DEFAULT NULL
+);
+CREATE TABLE `renewalPeriods` (
+  `ID` char(36) NOT NULL
+,  `Opens` date NOT NULL
+,  `Closes` longtext NOT NULL CHECK (json_valid(`Closes`))
+,  `Name` varchar(256) NOT NULL
+,  `Year` integer  NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `renewalProgress` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `RenewalID` integer  NOT NULL
+,  `Date` date NOT NULL
+,  `Stage` integer  NOT NULL
+,  `Substage` integer  NOT NULL
+,  `Part` integer  NOT NULL
+);
+CREATE TABLE `renewals` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Name` mediumtext NOT NULL
+,  `Year` integer  NOT NULL
+,  `StartDate` date NOT NULL
+,  `EndDate` date NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+);
+CREATE TABLE `renewalv2` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `start` date NOT NULL
+,  `end` date NOT NULL
+,  `default_stages` longtext NOT NULL DEFAULT '[]' CHECK (json_valid(`default_stages`))
+,  `default_member_stages` longtext NOT NULL DEFAULT '[]' CHECK (json_valid(`default_member_stages`))
+,  `metadata` longtext NOT NULL CHECK (json_valid(`metadata`))
+,  `Tenant` integer  NOT NULL
+,  `club_year` char(36) DEFAULT NULL
+,  `ngb_year` char(36) DEFAULT NULL
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `schemaMigrations` (
+  `id` integer  NOT NULL
+,  `migration` varchar(30) NOT NULL
+);
+CREATE TABLE `sessions` (
+  `SessionID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `VenueID` integer  NOT NULL
+,  `SessionName` varchar(100) NOT NULL
+,  `SessionDay` integer  NOT NULL
+,  `StartTime` time DEFAULT NULL
+,  `EndTime` time DEFAULT NULL
+,  `DisplayFrom` date DEFAULT NULL
+,  `DisplayUntil` date DEFAULT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `sessionsAttendance` (
+  `WeekID` integer  NOT NULL
+,  `SessionID` integer  NOT NULL
+,  `MemberID` integer  NOT NULL
+,  `AttendanceBoolean` integer  DEFAULT NULL
+,  `AttendanceRequired` integer DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `sessionsBookable` (
+  `Session` integer  NOT NULL
+,  `Date` date NOT NULL
+,  `MaxPlaces` integer  DEFAULT NULL
+,  `AllSquads` integer DEFAULT 0
+,  `RegisterGenerated` integer DEFAULT 0
+,  `BookingOpens` datetime DEFAULT NULL
+,  `BookingFee` integer  DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `sessionsBookings` (
+  `Session` integer  NOT NULL
+,  `Date` date NOT NULL
+,  `Member` integer  NOT NULL
+,  `BookedAt` datetime NOT NULL DEFAULT current_timestamp
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `sessionsSquads` (
+  `Squad` integer  NOT NULL
+,  `Session` integer  NOT NULL
+,  `ForAllMembers` integer NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `sessionsVenues` (
+  `VenueID` integer  NOT NULL
+,  `VenueName` varchar(100) NOT NULL
+,  `Location` mediumtext DEFAULT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`VenueID`)
+);
+CREATE TABLE `sessionsWeek` (
+  `WeekID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `WeekDateBeginning` date NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `squadMembers` (
+  `Member` integer  NOT NULL
+,  `Squad` integer  NOT NULL
+,  `Paying` integer NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `squadMoves` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Member` integer  NOT NULL
+,  `Date` date NOT NULL
+,  `Old` integer  DEFAULT NULL
+,  `New` integer  DEFAULT NULL
+,  `Paying` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `squadReps` (
+  `User` integer  NOT NULL
+,  `Squad` integer  NOT NULL
+,  `ContactDescription` varchar(255) DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `squads` (
+  `SquadID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `SquadName` varchar(255) DEFAULT NULL
+,  `SquadFee` decimal(8,2) DEFAULT NULL
+,  `SquadCoach` varchar(100) NOT NULL
+,  `SquadTimetable` varchar(100) NOT NULL
+,  `SquadCoC` varchar(100) NOT NULL
+,  `SquadKey` varchar(20) NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `stripeCustomers` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `User` integer  NOT NULL
+,  `CustomerID` varchar(255) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `stripeDisputes` (
+  `ID` varchar(255) NOT NULL
+,  `SID` varchar(255) NOT NULL
+,  `Amount` integer  NOT NULL DEFAULT 0
+,  `Currency` varchar(3) NOT NULL
+,  `PaymentIntent` varchar(255) DEFAULT NULL
+,  `Reason` varchar(255) NOT NULL
+,  `Status` varchar(255) NOT NULL
+,  `Created` datetime DEFAULT NULL
+,  `EvidenceDueBy` datetime DEFAULT NULL
+,  `IsRefundable` integer NOT NULL DEFAULT 0
+,  `HasEvidence` integer NOT NULL DEFAULT 0
+,  `EvidencePastDue` integer NOT NULL DEFAULT 0
+,  `EvidenceSubmissionCount` integer  NOT NULL DEFAULT 0
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `stripeMandates` (
+  `ID` varchar(255) NOT NULL
+,  `Mandate` varchar(255) NOT NULL
+,  `Customer` varchar(255) NOT NULL
+,  `Fingerprint` varchar(255) NOT NULL
+,  `Last4` varchar(4) NOT NULL
+,  `SortCode` varchar(8) NOT NULL
+,  `Address` varchar(1024) NOT NULL
+,  `Status` text  NOT NULL
+,  `MandateStatus` text  NOT NULL
+,  `CreationTime` datetime NOT NULL DEFAULT current_timestamp
+,  `Reference` varchar(64) NOT NULL
+,  `URL` varchar(512) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `stripePayMethods` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Customer` varchar(255) NOT NULL
+,  `MethodID` varchar(255) NOT NULL
+,  `CardName` varchar(255) DEFAULT NULL
+,  `City` varchar(255) DEFAULT NULL
+,  `Country` varchar(255) DEFAULT NULL
+,  `Line1` varchar(255) DEFAULT NULL
+,  `Line2` varchar(255) DEFAULT NULL
+,  `PostCode` varchar(255) DEFAULT NULL
+,  `Brand` varchar(255) DEFAULT NULL
+,  `IssueCountry` varchar(255) DEFAULT NULL
+,  `ExpMonth` integer  DEFAULT NULL
+,  `ExpYear` integer  DEFAULT NULL
+,  `Funding` varchar(255) DEFAULT NULL
+,  `Last4` varchar(255) DEFAULT NULL
+,  `Name` varchar(255) DEFAULT NULL
+,  `Fingerprint` varchar(255) DEFAULT NULL
+,  `Reusable` integer NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `stripePaymentIntents` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `stripe_id` varchar(255) NOT NULL
+,  `amount` integer  NOT NULL
+,  `amount_capturable` integer  NOT NULL DEFAULT 0
+,  `amount_received` integer  NOT NULL DEFAULT 0
+,  `amount_refunded` integer  NOT NULL DEFAULT 0
+,  `currency` char(3) DEFAULT 'gbp'
+,  `customer` varchar(255) DEFAULT NULL
+,  `description` varchar(256) DEFAULT NULL
+,  `payment_method` varchar(255) DEFAULT NULL
+,  `shipping` longtext DEFAULT NULL CHECK (json_valid(`shipping`))
+,  `charge_data` longtext DEFAULT NULL CHECK (json_valid(`charge_data`))
+,  `status` varchar(256) NOT NULL
+,  `review` varchar(255) DEFAULT NULL
+,  `application_fee_amount` integer  DEFAULT 0
+,  `cancelled_at` datetime DEFAULT NULL
+,  `cancellation_reason` varchar(256) DEFAULT NULL
+,  `invoice` varchar(255) DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `stripePaymentItems` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Payment` integer  NOT NULL
+,  `Name` varchar(255) DEFAULT NULL
+,  `Description` text DEFAULT NULL
+,  `Amount` integer  NOT NULL
+,  `Currency` varchar(3) NOT NULL
+,  `AmountRefunded` integer  DEFAULT 0
+,  `Category` integer  DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `stripePaymentMethods` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `stripe_id` varchar(255) NOT NULL
+,  `customer` varchar(255) DEFAULT NULL
+,  `billing_details` longtext NOT NULL CHECK (json_valid(`billing_details`))
+,  `type` varchar(256) NOT NULL
+,  `type_data` longtext NOT NULL CHECK (json_valid(`type_data`))
+,  `fingerprint` varchar(256) DEFAULT NULL
+,  `reusable` integer DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `stripePayments` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `User` integer  NOT NULL
+,  `DateTime` datetime NOT NULL
+,  `Method` integer  DEFAULT NULL
+,  `Intent` varchar(255) DEFAULT NULL
+,  `Amount` integer  NOT NULL
+,  `Currency` varchar(3) NOT NULL
+,  `ServedBy` integer  DEFAULT NULL
+,  `Paid` integer NOT NULL
+,  `AmountRefunded` integer  DEFAULT 0
+,  `Fees` integer  DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `stripePayouts` (
+  `ID` varchar(255) NOT NULL
+,  `Amount` integer  NOT NULL
+,  `ArrivalDate` date DEFAULT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `superUsers` (
+  `ID` char(36) NOT NULL
+,  `First` varchar(256) NOT NULL
+,  `Last` varchar(256) NOT NULL
+,  `PWHash` varchar(256) NOT NULL
+,  `Email` varchar(256) NOT NULL
+,  `TwoFactor` varchar(256) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `superUsersLogins` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `User` char(36) NOT NULL
+,  `Time` timestamp NOT NULL DEFAULT current_timestamp
+,  `IPAddress` varchar(256) NOT NULL
+,  `GeoLocation` varchar(512) DEFAULT NULL
+,  `Browser` varchar(256) NOT NULL
+,  `Platform` varchar(256) NOT NULL
+,  `Mobile` integer NOT NULL DEFAULT 0
+,  `Hash` varchar(512) NOT NULL
+,  `HashActive` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `swimEnglandCompliance` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Key` varchar(255) NOT NULL
+,  `Value` mediumtext DEFAULT NULL
+,  `Tenant` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `targetedListMembers` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `ListID` integer  NOT NULL
+,  `ReferenceID` integer  NOT NULL
+,  `ReferenceType` text  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `targetedLists` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Name` mediumtext NOT NULL
+,  `Description` mediumtext NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `teamManagers` (
+  `User` integer  NOT NULL
+,  `Gala` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `telescope_entries` (
+  `sequence` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `uuid` char(36) NOT NULL
+,  `batch_id` char(36) NOT NULL
+,  `family_hash` varchar(255) DEFAULT NULL
+,  `should_display_on_index` integer NOT NULL DEFAULT 1
+,  `type` varchar(20) NOT NULL
+,  `content` longtext NOT NULL
+,  `created_at` datetime DEFAULT NULL
+,  UNIQUE (`uuid`)
+);
+CREATE TABLE `telescope_entries_tags` (
+  `entry_uuid` char(36) NOT NULL
+,  `tag` varchar(255) NOT NULL
+,  CONSTRAINT `telescope_entries_tags_entry_uuid_foreign` FOREIGN KEY (`entry_uuid`) REFERENCES `telescope_entries` (`uuid`) ON DELETE CASCADE
+);
+CREATE TABLE `telescope_monitoring` (
+  `tag` varchar(255) NOT NULL
+);
+CREATE TABLE `tenantOptions` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Option` varchar(255) DEFAULT NULL
+,  `Value` mediumtext NOT NULL
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `tenantRedirect` (
+  `ID` char(36) NOT NULL DEFAULT uuid()
+,  `Source` varchar(256) NOT NULL
+,  `Target` varchar(256) DEFAULT NULL
+,  `Created` datetime NOT NULL DEFAULT current_timestamp
+,  `Tenant` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`ID`)
+);
+CREATE TABLE `tenants` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Name` varchar(128) NOT NULL
+,  `Code` char(4) DEFAULT NULL
+,  `Website` varchar(256) DEFAULT NULL
+,  `Email` varchar(256) NOT NULL
+,  `Verified` integer NOT NULL DEFAULT 0
+,  `UniqueID` varchar(36) NOT NULL DEFAULT uuid()
+,  `Domain` varchar(256) DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  `Data` longtext DEFAULT NULL CHECK (json_valid(`Data`))
+);
+CREATE TABLE `timesIndividual` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `MemberID` integer  NOT NULL
+,  `Minutes` integer  NOT NULL
+,  `Seconds` integer  NOT NULL
+,  `Hundreds` integer  NOT NULL
+,  `FinaPoints` integer  NOT NULL
+,  `Round` text  NOT NULL
+,  `Date` date NOT NULL
+,  `Meet` mediumtext NOT NULL
+,  `Venue` mediumtext NOT NULL
+,  `Club` integer  NOT NULL
+,  `Level` integer  NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `trainingLogs` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Member` integer  NOT NULL
+,  `DateTime` datetime NOT NULL
+,  `Content` text NOT NULL
+,  `ContentType` varchar(100) NOT NULL
+,  `Title` varchar(150) NOT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `userCredentials` (
+  `id` char(36) NOT NULL DEFAULT uuid()
+,  `credential_id` varchar(256) NOT NULL
+,  `credential_name` varchar(256) DEFAULT ''
+,  `user_id` integer  NOT NULL
+,  `credential` longtext NOT NULL CHECK (json_valid(`credential`))
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+,  PRIMARY KEY (`id`)
+);
+CREATE TABLE `userLogins` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `UserID` integer  NOT NULL
+,  `Time` timestamp NOT NULL DEFAULT current_timestamp
+,  `IPAddress` mediumtext NOT NULL
+,  `GeoLocation` mediumtext DEFAULT NULL
+,  `Browser` mediumtext NOT NULL
+,  `Platform` mediumtext NOT NULL
+,  `Mobile` integer NOT NULL
+,  `Hash` mediumtext NOT NULL
+,  `HashActive` integer NOT NULL DEFAULT 0
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `userOptions` (
+  `ID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `User` integer  NOT NULL
+,  `Option` varchar(30) NOT NULL
+,  `Value` mediumtext DEFAULT NULL
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+CREATE TABLE `users` (
+  `UserID` integer  NOT NULL PRIMARY KEY AUTOINCREMENT
+,  `Username` varchar(65) DEFAULT NULL
+,  `GID` integer  DEFAULT NULL
+,  `Password` varchar(255) NOT NULL
+,  `EmailAddress` varchar(255) NOT NULL
+,  `EmailComms` integer NOT NULL
+,  `Forename` mediumtext NOT NULL
+,  `Surname` mediumtext NOT NULL
+,  `Mobile` text NOT NULL
+,  `MobileComms` integer NOT NULL
+,  `RR` integer NOT NULL DEFAULT 0
+,  `Edit` datetime NOT NULL DEFAULT current_timestamp 
+,  `WrongPassCount` integer  NOT NULL DEFAULT 0
+,  `Active` integer DEFAULT 1
+,  `Tenant` integer  NOT NULL DEFAULT 1
+,  `created_at` datetime NOT NULL DEFAULT current_timestamp
+,  `updated_at` datetime NOT NULL DEFAULT current_timestamp 
+);
+INSERT INTO `migrations` VALUES (1,'2018_08_08_100000_create_telescope_entries_table',1);
+INSERT INTO `migrations` VALUES (2,'2019_08_19_000000_create_failed_jobs_table',1);
+INSERT INTO `migrations` VALUES (3,'2019_12_14_000001_create_personal_access_tokens_table',1);
+CREATE INDEX "idx_telescope_entries_tags_telescope_entries_tags_entry_uuid_tag_index" ON "telescope_entries_tags" (`entry_uuid`,`tag`);
+CREATE INDEX "idx_telescope_entries_tags_telescope_entries_tags_tag_index" ON "telescope_entries_tags" (`tag`);
+CREATE INDEX "idx_telescope_entries_telescope_entries_batch_id_index" ON "telescope_entries" (`batch_id`);
+CREATE INDEX "idx_telescope_entries_telescope_entries_family_hash_index" ON "telescope_entries" (`family_hash`);
+CREATE INDEX "idx_telescope_entries_telescope_entries_created_at_index" ON "telescope_entries" (`created_at`);
+CREATE INDEX "idx_telescope_entries_telescope_entries_type_should_display_on_index_index" ON "telescope_entries" (`type`,`should_display_on_index`);
+END TRANSACTION;

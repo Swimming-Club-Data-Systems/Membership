@@ -1,8 +1,11 @@
 name: Laravel Tests
 
 on:
-  push:
-    branches: [ "development-main" ]
+  # This can be used to automatically publish nightlies at UTC nighttime
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+  # This can be used to allow manually triggering nightlies from the web interface
+  workflow_dispatch:
   pull_request:
     branches: [ "main", "development-main" ]
 
@@ -17,19 +20,35 @@ jobs:
         php-version: '8.2'
     - uses: actions/checkout@v3
     - name: Copy .env
+      working-directory: ./src
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
     - name: Install Dependencies
-      run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      working-directory: ./src
+      run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+    - name: Build front end
+      working-directory: ./src
+      run: |
+        npm install
+        npm run build
     - name: Generate key
+      working-directory: ./src
       run: php artisan key:generate
     - name: Directory Permissions
+      working-directory: ./src
       run: chmod -R 777 storage bootstrap/cache
     - name: Create Database
+      working-directory: ./src
       run: |
         mkdir -p database
         touch database/database.sqlite
-    - name: Execute tests (Unit and Feature tests) via PHPUnit
+    - name: Execute tests (Unit and Feature tests) via Pest
+      working-directory: ./src
       env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: database/database.sqlite
-      run: vendor/bin/phpunit
+        DB_CONNECTION: mysql
+        DB_HOST: ${{ secrets.TEST_DB_HOST }}
+        DB_PORT: ${{ secrets.TEST_DB_PORT }}
+        DB_DATABASE: ${{ secrets.TEST_DB_DATABASE }}
+        DB_USERNAME: ${{ secrets.TEST_DB_USERNAME }}
+        DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
+
+      run: vendor/bin/pest
