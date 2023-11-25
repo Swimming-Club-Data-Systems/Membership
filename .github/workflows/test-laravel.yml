@@ -1,8 +1,11 @@
 name: Laravel Tests
 
 on:
-  push:
-    branches: [ "development-main" ]
+  # This can be used to automatically publish nightlies at UTC nighttime
+  schedule:
+    - cron: '0 2 * * *' # run at 2 AM UTC
+  # This can be used to allow manually triggering nightlies from the web interface
+  workflow_dispatch:
   pull_request:
     branches: [ "main", "development-main" ]
 
