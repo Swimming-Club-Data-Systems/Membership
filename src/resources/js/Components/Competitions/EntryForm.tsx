@@ -6,6 +6,7 @@ import BasicList from "@/Components/BasicList";
 import Checkbox from "@/Components/Form/Checkbox";
 import { EntryAdditionalDetails } from "@/Components/Competitions/EntryAdditionalDetails";
 import Container from "@/Components/Container";
+import { usePage } from "@inertiajs/react";
 
 export type Event = {
     id: number;
@@ -38,12 +39,23 @@ type EntryFormProps = {
     requireTimes: boolean;
 };
 
+const findInitialValuesArrayId = (
+    event_id: number,
+    initialEventValues: { event_id: number }[]
+): number => {
+    return initialEventValues.findIndex((event) => {
+        return event.event_id === event_id;
+    });
+};
+
 export const EntryForm = ({
     sessions,
     action,
     readOnly,
     requireTimes,
 }: EntryFormProps) => {
+    const initialEventValues = usePage().props.form_initial_values?.entries;
+
     return (
         <>
             <Form
@@ -81,6 +93,11 @@ export const EntryForm = ({
                             <Card key={session.id} title={session.name}>
                                 <BasicList
                                     items={session.events.map((event) => {
+                                        const vid = findInitialValuesArrayId(
+                                            event.id,
+                                            initialEventValues
+                                        );
+
                                         return {
                                             id: event.id,
                                             content: (
@@ -91,10 +108,7 @@ export const EntryForm = ({
                                                     <div className="grid gap-4 grid-cols-12">
                                                         <div className="col-span-full @lg:col-span-5">
                                                             <Checkbox
-                                                                name={`entries.${
-                                                                    event.sequence -
-                                                                    1
-                                                                }.entering`}
+                                                                name={`entries.${vid}.entering`}
                                                                 label={
                                                                     event.name
                                                                 }
@@ -109,6 +123,7 @@ export const EntryForm = ({
                                                                 requireTimes={
                                                                     requireTimes
                                                                 }
+                                                                vid={vid}
                                                             />
                                                         </div>
                                                     </div>

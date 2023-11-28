@@ -8,11 +8,13 @@ type EntryAdditionalDetailsProps = {
     /** The event object from the entry form */
     event: Event;
     requireTimes: boolean;
+    vid: number;
 };
 
 export const EntryAdditionalDetails = ({
     event,
     requireTimes,
+    vid,
 }: EntryAdditionalDetailsProps) => {
     const { values }: { values: { entries: { entering: boolean }[] } } =
         useFormikContext();
@@ -24,7 +26,7 @@ export const EntryAdditionalDetails = ({
                 {requireTimes && (
                     <div>
                         <TextInput
-                            name={`entries.${event.sequence - 1}.entry_time`}
+                            name={`entries.${vid}.entry_time`}
                             label="Entry time"
                             help={`An entry time is required for this event. Please enter your personal best time, if you have one.`}
                         />
@@ -34,7 +36,7 @@ export const EntryAdditionalDetails = ({
                 {false && (
                     <div>
                         <DecimalInput
-                            name={`entries.${event.sequence - 1}.amount`}
+                            name={`entries.${vid}.amount`}
                             label="Amount (£)"
                             help={`Edit the combined event and processing fees.`}
                         />
