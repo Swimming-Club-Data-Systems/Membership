@@ -18,7 +18,7 @@ export const EntryAdditionalDetails = ({
 }: EntryAdditionalDetailsProps) => {
     const { values }: { values: { entries: { entering: boolean }[] } } =
         useFormikContext();
-    const selected: boolean = values.entries?.[event.sequence - 1]?.entering;
+    const selected: boolean = values.entries?.[vid]?.entering;
 
     if (selected) {
         return (
