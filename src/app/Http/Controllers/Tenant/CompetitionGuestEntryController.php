@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\EntryTimeHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
@@ -66,7 +67,7 @@ class CompetitionGuestEntryController extends Controller
                         'amount_string' => $entry->amount_string,
                         'amount_refunded_string' => $entry->amount_refunded_string,
                         'cancellation_reason' => $entry->cancellation_reason,
-                        'entry_time' => $entry->entry_time,
+                        'entry_time' => $entry->entry_time ? EntryTimeHelper::formatted($entry->entry_time) : null,
                         'notes' => $entry->notes,
                         'paid' => $entry->paid,
                         'refunded' => $entry->refunded,
@@ -140,7 +141,7 @@ class CompetitionGuestEntryController extends Controller
                     'amount_string' => $entry->amount_string,
                     'amount_refunded_string' => $entry->amount_refunded_string,
                     'cancellation_reason' => $entry->cancellation_reason,
-                    'entry_time' => $entry->entry_time,
+                    'entry_time' => $entry->entry_time ? EntryTimeHelper::formatted($entry->entry_time) : null,
                     'notes' => $entry->notes,
                     'paid' => $entry->paid,
                     'refunded' => $entry->refunded,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Business\Form\CustomFields;
+use App\Business\Helpers\EntryTimeHelper;
 use App\Business\Helpers\Money;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
@@ -225,7 +226,7 @@ class CompetitionGuestEntryHeaderController extends Controller
                                 'event_id' => $event->id,
                                 'sequence' => $event->sequence,
                                 'entering' => $eventEntry != null,
-                                'entry_time' => $eventEntry?->entry_time,
+                                'entry_time' => $eventEntry?->entry_time ? EntryTimeHelper::formatted($eventEntry?->entry_time) : null,
                                 'amount' => $eventEntry ? $eventEntry->amount_string : Money::formatDecimal($event->entry_fee + $event->processing_fee),
                                 'id' => $eventEntry?->id,
                             ];
@@ -333,17 +334,20 @@ class CompetitionGuestEntryHeaderController extends Controller
         if (Arr::isList($validated['entries'])) {
             foreach ($validated['entries'] as $event) {
                 if ($event['entering']) {
+
+                    // Handle entry time
+                    $time = EntryTimeHelper::toDecimal($event['entry_time']);
+
                     // Create or update
                     /** @var CompetitionEventEntry $eventEntry */
                     $eventEntry = CompetitionEventEntry::firstOrNew(
                         [
                             'competition_entry_id' => $entry->id,
                             'competition_event_id' => $event['event_id'],
-                        ],
-                        [
-                            'entry_time' => $event['entry_time'],
                         ]
                     );
+
+                    $eventEntry->entry_time = $time;
 
                     if (! $eventEntry->exists) {
                         /** @var CompetitionEvent $competitionEvent */
