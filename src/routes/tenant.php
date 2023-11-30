@@ -392,6 +392,22 @@ Route::middleware([
         });
     });
 
+    Route::prefix('renewals')->group(function () {
+        Route::name('renewals.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Tenant\RenewalController::class, 'index'])
+                ->name('index');
+            Route::get('/{renewal}', [\App\Http\Controllers\Tenant\RenewalController::class, 'show'])
+                ->whereUuid('renewal')
+                ->name('show');
+            Route::get('/{renewal}/edit', [\App\Http\Controllers\Tenant\RenewalController::class, 'edit'])
+                ->whereUuid('renewal')
+                ->name('edit');
+            Route::put('/{renewal}', [\App\Http\Controllers\Tenant\RenewalController::class, 'update'])
+                ->whereUuid('renewal')
+                ->name('update');
+        });
+    });
+
     Route::prefix('venues')->group(function () {
         Route::name('venues.')->group(function () {
             Route::get('/', [VenueController::class, 'index'])->name('index');
