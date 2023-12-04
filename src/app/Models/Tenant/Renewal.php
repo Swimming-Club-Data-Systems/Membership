@@ -3,6 +3,7 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
+use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
@@ -28,6 +29,7 @@ class Renewal extends Model
     protected $casts = [
         'default_stages' => 'array',
         'default_member_stages' => 'array',
+        'metadata' => AsArrayObject::class,
     ];
 
     public function onboardingSessions(): \Illuminate\Database\Eloquent\Relations\HasMany

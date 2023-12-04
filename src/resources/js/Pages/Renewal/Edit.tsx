@@ -12,8 +12,44 @@ import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Checkbox from "@/Components/Form/Checkbox";
 import Alert from "@/Components/Alert";
 import Card from "@/Components/Card";
+import { useFormikContext } from "formik";
 
-const Show: Layout<RenewalProps> = (props: RenewalProps) => {
+type StageField = {
+    id: string;
+    name: string;
+    locked: boolean;
+};
+
+interface Props extends RenewalProps {
+    user_fields: StageField[];
+    member_fields: StageField[];
+}
+
+const Dates = () => {
+    const {
+        values: { use_custom_billing_dates },
+    } = useFormikContext<{ use_custom_billing_dates: boolean }>();
+
+    if (use_custom_billing_dates) {
+        return (
+            <>
+                <DateTimeInput
+                    name="dd_club_bills_date"
+                    label="Club membership billing date"
+                />
+
+                <DateTimeInput
+                    name="dd_ngb_bills_date"
+                    label="Governing body membership billing date"
+                />
+            </>
+        );
+    }
+
+    return null;
+};
+
+const Show: Layout<Props> = (props: Props) => {
     const pageName = `Edit Renewal Period ${formatDate(
         props.start
     )} - ${formatDate(props.end)}`;
@@ -57,15 +93,28 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                 <div className="grid gap-6">
                     <Form
                         validationSchema={yup.object().shape({
-                            start: yup
-                                .date()
-                                .min(date, "Start date must be in the future."),
-                            end: yup
+                            start_date: yup.date(),
+                            // .min(date, "Start date must be in the future."),
+                            end_date: yup
                                 .date()
                                 .min(
-                                    yup.ref("start"),
+                                    yup.ref("start_date"),
                                     "End date must be later than the start date."
                                 ),
+                            dd_ngb_bills_date: yup
+                                .date()
+                                .when("use_custom_billing_dates", {
+                                    is: true,
+                                    then: (schema) =>
+                                        schema.required("A date is required"),
+                                }),
+                            dd_club_bills_date: yup
+                                .date()
+                                .when("use_custom_billing_dates", {
+                                    is: true,
+                                    then: (schema) =>
+                                        schema.required("A date is required"),
+                                }),
                         })}
                         initialValues={{}}
                         action={route("renewals.update", props.id)}
@@ -73,11 +122,11 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                         submitTitle="Save"
                     >
                         <DateTimeInput
-                            name="start"
+                            name="start_date"
                             label="Renewal period start date"
                         />
                         <DateTimeInput
-                            name="end"
+                            name="end_date"
                             label="Renewal period end date"
                         />
 
@@ -87,7 +136,7 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                                         therefore you can not edit the required
                                         stages"
                                 variant="warning"
-                                className="mb-3"
+                                className="mb-6"
                             >
                                 <p>
                                     You can edit the required stages for an
@@ -97,81 +146,81 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                             </Alert>
                         )}
 
-                        <Card title="Requried stages" className="mb-3">
-                            <Checkbox
-                                name="account_details"
-                                label="Set your account password"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="address_details"
-                                label="Tell us your address"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="communications_options"
-                                label="Tell us your communications options"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="emergency_contacts"
-                                label="Tell us your emergency contact details"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="member_forms"
-                                label="Complete member information"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="parent_conduct"
-                                label="Agree to the parent/guardian Code of Conduct"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="data_privacy_agreement"
-                                label="Data Privacy Agreement"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="terms_agreement"
-                                label="Agree to the terms and conditions of club membership"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="direct_debit_mandate"
-                                label="Set up a Direct Debit Instruction"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="fees"
-                                label="Pay your registration fees"
-                                disabled={props.started}
-                            />
+                        <Card title="Requried stages" className="mb-6">
+                            {props.user_fields.map((field) => {
+                                return (
+                                    <Checkbox
+                                        key={field.id}
+                                        name={field.id}
+                                        label={field.name}
+                                        disabled={props.started || field.locked}
+                                    />
+                                );
+                            })}
                         </Card>
 
-                        <Card title="Member information stage">
-                            <Checkbox
-                                name="medical_form"
-                                label="Medical form"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="photography_consent"
-                                label="Photography consent"
-                                disabled={props.started}
-                            />
-                            <Checkbox
-                                name="code_of_conduct"
-                                label="Code of conduct"
-                                disabled={props.started}
-                            />
+                        <Card title="Member information stage" className="mb-6">
+                            {props.member_fields.map((field) => {
+                                return (
+                                    <Checkbox
+                                        key={field.id}
+                                        name={field.id}
+                                        label={field.name}
+                                        disabled={props.started || field.locked}
+                                    />
+                                );
+                            })}
 
-                            <p>
+                            <p className="text-sm">
                                 Photography consents will only be asked from
                                 members who are aged under 18 when renewal
                                 opens.{" "}
                             </p>
+                        </Card>
+
+                        <Card title="Custom Direct Debit billing dates">
+                            <div className="prose prose-sm">
+                                <p>
+                                    For clubs supporting payment by Direct
+                                    Debit, you can select a custom date on which
+                                    to bill the Swim England and Club Membership
+                                    fee components. Selecting a custom date only
+                                    applies when members choose to pay renewal
+                                    fees by Direct Debit - if they pay by card
+                                    they will pay their entire renewal fee in
+                                    one go.
+                                </p>
+
+                                <p>
+                                    Members will be charged on their first
+                                    billing day on or after your selected bill
+                                    date. Please note that fees will not be
+                                    automatically added to accounts if users do
+                                    not complete renewal.
+                                </p>
+
+                                <p>
+                                    To use custom bill dates, you must tick the
+                                    Use custom bill dates checkbox.
+                                </p>
+
+                                {props.started && (
+                                    <p>
+                                        <strong>
+                                            Changes made here will not apply to
+                                            any member who has already completed
+                                            renewal.
+                                        </strong>
+                                    </p>
+                                )}
+
+                                <Checkbox
+                                    name="use_custom_billing_dates"
+                                    label="Use custom billing dates"
+                                />
+
+                                <Dates />
+                            </div>
                         </Card>
                     </Form>
                 </div>
