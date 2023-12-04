@@ -22,6 +22,7 @@ export interface RenewalProps {
     end: string;
     club_year: MembershipYearProps;
     ngb_year: MembershipYearProps;
+    started: boolean;
 }
 
 interface Renewals extends LaravelPaginatorProps {

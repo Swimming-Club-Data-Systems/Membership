@@ -10,6 +10,8 @@ import Form from "@/Components/Form/Form";
 import * as yup from "yup";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Checkbox from "@/Components/Form/Checkbox";
+import Alert from "@/Components/Alert";
+import Card from "@/Components/Card";
 
 const Show: Layout<RenewalProps> = (props: RenewalProps) => {
     const pageName = `Edit Renewal Period ${formatDate(
@@ -79,47 +81,98 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                             label="Renewal period end date"
                         />
 
-                        <p>Required stages</p>
+                        {props.started && (
+                            <Alert
+                                title="This renewal period has started,
+                                        therefore you can not edit the required
+                                        stages"
+                                variant="warning"
+                                className="mb-3"
+                            >
+                                <p>
+                                    You can edit the required stages for an
+                                    individual user by finding their onboarding
+                                    session.
+                                </p>
+                            </Alert>
+                        )}
 
-                        <Checkbox name="x" label="Set your account password" />
-                        <Checkbox name="x" label="Tell us your address" />
-                        <Checkbox
-                            name="x"
-                            label="Tell us your communications options"
-                        />
-                        <Checkbox
-                            name="x"
-                            label="Tell us your emergency contact details"
-                        />
-                        <Checkbox
-                            name="x"
-                            label="Complete member information"
-                        />
-                        <Checkbox
-                            name="x"
-                            label="Agree to the parent/guardian Code of Conduct"
-                        />
-                        <Checkbox name="x" label="Data Privacy Agreement" />
-                        <Checkbox
-                            name="x"
-                            label="Agree to the terms and conditions of club membership"
-                        />
-                        <Checkbox
-                            name="x"
-                            label="Set up a Direct Debit Instruction"
-                        />
-                        <Checkbox name="x" label="Pay your registration fees" />
+                        <Card title="Requried stages" className="mb-3">
+                            <Checkbox
+                                name="account_details"
+                                label="Set your account password"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="address_details"
+                                label="Tell us your address"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="communications_options"
+                                label="Tell us your communications options"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="emergency_contacts"
+                                label="Tell us your emergency contact details"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="member_forms"
+                                label="Complete member information"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="parent_conduct"
+                                label="Agree to the parent/guardian Code of Conduct"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="data_privacy_agreement"
+                                label="Data Privacy Agreement"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="terms_agreement"
+                                label="Agree to the terms and conditions of club membership"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="direct_debit_mandate"
+                                label="Set up a Direct Debit Instruction"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="fees"
+                                label="Pay your registration fees"
+                                disabled={props.started}
+                            />
+                        </Card>
 
-                        <p>Member information stage includes the following; </p>
+                        <Card title="Member information stage">
+                            <Checkbox
+                                name="medical_form"
+                                label="Medical form"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="photography_consent"
+                                label="Photography consent"
+                                disabled={props.started}
+                            />
+                            <Checkbox
+                                name="code_of_conduct"
+                                label="Code of conduct"
+                                disabled={props.started}
+                            />
 
-                        <Checkbox name="x" label="Medical form" />
-                        <Checkbox name="x" label="Photography consent" />
-                        <Checkbox name="x" label="Code of conduct" />
-
-                        <p>
-                            Photography consents will only be asked from members
-                            who are aged under 18 when renewal opens.{" "}
-                        </p>
+                            <p>
+                                Photography consents will only be asked from
+                                members who are aged under 18 when renewal
+                                opens.{" "}
+                            </p>
+                        </Card>
                     </Form>
                 </div>
             </Container>
