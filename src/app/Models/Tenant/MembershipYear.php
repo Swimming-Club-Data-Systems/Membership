@@ -18,4 +18,6 @@ class MembershipYear extends Model
     use BelongsToTenant, HasUuids;
 
     protected $table = 'membershipYear';
+
+    protected $primaryKey = 'ID';
 }

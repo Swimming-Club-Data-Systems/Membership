@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\MembershipYear;
 use App\Models\Tenant\OnboardingMember;
 use App\Models\Tenant\OnboardingSession;
 use App\Models\Tenant\Renewal;
@@ -18,7 +19,69 @@ class RenewalController extends Controller
 
         return Inertia::render('Renewal/Index', [
             'renewals' => $renewals->onEachSide(3),
+            'can_create' => true,
         ]);
+    }
+
+    public function new()
+    {
+        $userStepValues = [];
+        $userFields = [];
+        collect(OnboardingSession::stagesOrder())->each(function ($stage) use (&$userStepValues, &$userFields) {
+            $stageData = OnboardingSession::getDefaultRenewalStages()[$stage];
+            $userStepValues[$stage] = $stageData['required'];
+            $userFields[] = [
+                'id' => $stage,
+                'name' => OnboardingSession::stages()[$stage],
+                'locked' => $stageData['required_locked'],
+            ];
+        });
+        $memberStepValues = [];
+        $memberFields = [];
+        collect(OnboardingMember::stagesOrder())->each(function ($stage) use (&$memberStepValues, &$memberFields) {
+            $stageData = OnboardingMember::getDefaultStages()[$stage];
+            $memberStepValues[$stage] = $stageData['required'];
+            $memberFields[] = [
+                'id' => $stage,
+                'name' => OnboardingMember::stages()[$stage],
+                'locked' => $stageData['required_locked'],
+            ];
+        });
+
+        $membershipYearSelect = [
+            [
+                'value' => 'N/A',
+                'name' => 'None',
+            ],
+        ];
+        $membershipYears = MembershipYear::orderBy('EndDate', 'desc')->limit(10)->get();
+
+        foreach ($membershipYears as $membershipYear) {
+            /** @var MembershipYear $membershipYear */
+            $membershipYearSelect[] = [
+                'value' => $membershipYear->ID,
+                'name' => $membershipYear->Name,
+            ];
+        }
+
+        return Inertia::render('Renewal/New', [
+            'started' => false,
+            'user_fields' => $userFields,
+            'member_fields' => $memberFields,
+            'form_initial_values' => [
+                ...$userStepValues,
+                ...$memberStepValues,
+                'ngb_year' => 'N/A',
+                'club_year' => 'N/A',
+                'credit_debit' => true,
+            ],
+            'membership_years' => $membershipYearSelect,
+        ]);
+    }
+
+    public function create()
+    {
+
     }
 
     public function show(Renewal $renewal)

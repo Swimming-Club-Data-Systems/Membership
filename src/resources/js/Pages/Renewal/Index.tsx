@@ -78,12 +78,11 @@ const Index: Layout<Props> = (props: Props) => {
                     title={"Renewal Periods"}
                     subtitle={`All renewal periods`}
                     buttons={
-                        null
-                        // props.can_create && (
-                        //     <ButtonLink href={route("renewals.new")}>
-                        //         New
-                        //     </ButtonLink>
-                        // )
+                        props.can_create && (
+                            <ButtonLink href={route("renewals.new")}>
+                                New
+                            </ButtonLink>
+                        )
                     }
                 ></MainHeader>
 

@@ -396,6 +396,10 @@ Route::middleware([
         Route::name('renewals.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Tenant\RenewalController::class, 'index'])
                 ->name('index');
+            Route::get('/new', [\App\Http\Controllers\Tenant\RenewalController::class, 'new'])
+                ->name('new');
+            Route::post('/', [\App\Http\Controllers\Tenant\RenewalController::class, 'create'])
+                ->name('create');
             Route::get('/{renewal}', [\App\Http\Controllers\Tenant\RenewalController::class, 'show'])
                 ->whereUuid('renewal')
                 ->name('show');

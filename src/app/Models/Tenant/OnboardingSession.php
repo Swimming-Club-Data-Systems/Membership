@@ -126,7 +126,7 @@ class OnboardingSession extends Model
 
     public static function getDefaultRenewalStages(): array
     {
-        //        $stages = Session::getDefaultStages();
+        $stages = self::getDefaultStages();
         $stages['account_details']['required'] = false;
         $stages['account_details']['required_locked'] = true;
 

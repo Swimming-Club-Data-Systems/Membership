@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -24,12 +24,14 @@ type StageField = {
 interface Props extends RenewalProps {
     user_fields: StageField[];
     member_fields: StageField[];
+    membership_years?: {
+        value: string;
+        name: ReactNode;
+    }[];
 }
 
-const Show: Layout<Props> = (props: Props) => {
-    const pageName = `Edit Renewal Period ${formatDate(
-        props.start
-    )} - ${formatDate(props.end)}`;
+const New: Layout<Props> = (props: Props) => {
+    const pageName = "Create Renewal Period";
     const date = new Date();
     date.setHours(0, 0, 0, 0);
 
@@ -40,16 +42,8 @@ const Show: Layout<Props> = (props: Props) => {
                 breadcrumbs={[
                     { name: "Renewal Periods", route: "renewals.index" },
                     {
-                        name: `${formatDate(props.start)} - ${formatDate(
-                            props.end
-                        )}`,
-                        route: "renewals.show",
-                        routeParams: props.id,
-                    },
-                    {
-                        name: "Edit",
-                        route: "renewals.edit",
-                        routeParams: props.id,
+                        name: "New",
+                        route: "renewals.new",
                     },
                 ]}
             />
@@ -57,23 +51,18 @@ const Show: Layout<Props> = (props: Props) => {
             <Container noMargin>
                 <MainHeader
                     title={pageName}
-                    subtitle={`For the ${formatDate(
-                        props.club_year.StartDate
-                    )} - ${formatDate(
-                        props.club_year.EndDate
-                    )} club year and ${formatDate(
-                        props.ngb_year.StartDate
-                    )} - ${formatDate(props.ngb_year.EndDate)} NGB year`}
+                    subtitle="Create a new renewal period"
                 ></MainHeader>
 
                 <div className="grid gap-6">
                     <RenewalForm
-                        mode="edit"
+                        mode="create"
                         started={props.started}
-                        action={route("renewals.update", props.id)}
-                        method="put"
+                        action={route("renewals.create")}
+                        method="post"
                         user_fields={props.user_fields}
                         member_fields={props.member_fields}
+                        membership_years={props.membership_years}
                     />
                 </div>
             </Container>
@@ -81,6 +70,6 @@ const Show: Layout<Props> = (props: Props) => {
     );
 };
 
-Show.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
+New.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
-export default Show;
+export default New;
