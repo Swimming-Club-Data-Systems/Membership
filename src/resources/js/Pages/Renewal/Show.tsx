@@ -18,6 +18,21 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
         props.end
     )}`;
 
+    let subtitle = "For the ";
+    if (props.club_year) {
+        subtitle += `${formatDate(props.club_year.StartDate)} - ${formatDate(
+            props.club_year.EndDate
+        )} club year`;
+        if (props.ngb_year) {
+            subtitle += ` and the `;
+        }
+    }
+    if (props.ngb_year) {
+        subtitle += `${formatDate(props.ngb_year.StartDate)} - ${formatDate(
+            props.ngb_year.EndDate
+        )} NGB year`;
+    }
+
     return (
         <>
             <Head
@@ -37,13 +52,7 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
             <Container noMargin>
                 <MainHeader
                     title={pageName}
-                    subtitle={`For the ${formatDate(
-                        props.club_year.StartDate
-                    )} - ${formatDate(
-                        props.club_year.EndDate
-                    )} club year and ${formatDate(
-                        props.ngb_year.StartDate
-                    )} - ${formatDate(props.ngb_year.EndDate)} NGB year`}
+                    subtitle={subtitle}
                     buttons={
                         <ButtonLink href={route("renewals.edit", props.id)}>
                             Edit

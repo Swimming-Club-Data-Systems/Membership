@@ -7,6 +7,7 @@ import React, { ReactNode } from "react";
 import { useFormikContext } from "formik";
 import Alert from "@/Components/Alert";
 import Select from "@/Components/Form/Select";
+import { AnySchema, Schema } from "yup";
 
 type StageField = {
     id: string;
@@ -51,11 +52,13 @@ const Dates = () => {
                 <DateTimeInput
                     name="dd_club_bills_date"
                     label="Club membership billing date"
+                    mb="mb-0"
                 />
 
                 <DateTimeInput
                     name="dd_ngb_bills_date"
                     label="Governing body membership billing date"
+                    mb="mb-0"
                 />
             </>
         );
@@ -65,29 +68,56 @@ const Dates = () => {
 };
 
 export const RenewalForm = (props: RenewalFormProps) => {
+    const rules: { [key: string]: AnySchema } = {
+        start_date: yup.date().required("A start date is required."),
+        // .min(date, "Start date must be in the future."),
+        end_date: yup
+            .date()
+            .required("An end date is required.")
+            .min(
+                yup.ref("start_date"),
+                "End date must be later than the start date."
+            ),
+        dd_ngb_bills_date: yup.date().when("use_custom_billing_dates", {
+            is: true,
+            then: (schema) => schema.required("A date is required."),
+            otherwise: (schema) => schema.notRequired(),
+        }),
+        dd_club_bills_date: yup.date().when("use_custom_billing_dates", {
+            is: true,
+            then: (schema) => schema.required("A date is required."),
+            otherwise: (schema) => schema.notRequired(),
+        }),
+    };
+
+    if (props.mode === "create") {
+        rules.ngb_year = yup.string().when("club_year", {
+            is: "N/A",
+            then: (schema) =>
+                schema
+                    .required(
+                        "Either an NGB Membership Year or a Club Membership Year is required."
+                    )
+                    .test(
+                        "is-not-na",
+                        "Either an NGB Membership Year or a Club Membership Year is required.",
+                        (value) => value !== "N/A"
+                    ),
+        });
+        rules.credit_debit = yup.boolean();
+        rules.direct_debit = yup.boolean();
+    }
+
     return (
         <Form
-            validationSchema={yup.object().shape({
-                start_date: yup.date(),
-                // .min(date, "Start date must be in the future."),
-                end_date: yup
-                    .date()
-                    .min(
-                        yup.ref("start_date"),
-                        "End date must be later than the start date."
-                    ),
-                dd_ngb_bills_date: yup.date().when("use_custom_billing_dates", {
-                    is: true,
-                    then: (schema) => schema.required("A date is required"),
-                }),
-                dd_club_bills_date: yup
-                    .date()
-                    .when("use_custom_billing_dates", {
-                        is: true,
-                        then: (schema) => schema.required("A date is required"),
-                    }),
-            })}
-            initialValues={{}}
+            validationSchema={yup.object().shape(rules)}
+            initialValues={{
+                start_date: null,
+                end_date: null,
+                dd_ngb_bills_date: null,
+                dd_club_bills_date: null,
+                use_custom_billing_dates: false,
+            }}
             action={props.action}
             method={props.method}
             submitTitle="Save"

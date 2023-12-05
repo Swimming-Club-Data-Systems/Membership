@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property MembershipYear $clubYear
  * @property MembershipYear $ngbYear
  * @property bool $started
+ * @property bool $open
  */
 class Renewal extends Model
 {
@@ -30,6 +31,14 @@ class Renewal extends Model
         'default_stages' => 'array',
         'default_member_stages' => 'array',
         'metadata' => AsArrayObject::class,
+        'started' => 'boolean',
+        'open' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'default_stages' => '[]',
+        'default_member_stages' => '[]',
+        'metadata' => '[]',
     ];
 
     public function onboardingSessions(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -37,14 +46,14 @@ class Renewal extends Model
         return $this->hasMany(OnboardingSession::class, 'renewal', 'id');
     }
 
-    public function ngbYear(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function ngbYear(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(MembershipYear::class, 'ID', 'ngb_year');
+        return $this->belongsTo(MembershipYear::class, 'ngb_year', 'ID');
     }
 
-    public function clubYear(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function clubYear(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(MembershipYear::class, 'ID', 'club_year');
+        return $this->belongsTo(MembershipYear::class, 'club_year', 'ID');
     }
 
     public function isCurrent(): bool
@@ -65,6 +74,13 @@ class Renewal extends Model
     {
         return Attribute::make(
             get: fn ($value) => $this->isCurrent() || $this->isPast() || $this->onboardingSessions()->exists(),
+        );
+    }
+
+    protected function open(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $this->isCurrent(),
         );
     }
 }

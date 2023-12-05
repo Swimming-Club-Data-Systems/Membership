@@ -44,16 +44,20 @@ const RenewalRenderer = (props: RenewalProps): ReactNode => {
                             {formatDate(props.start)} - {formatDate(props.end)}
                         </div>
                         <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
-                            <p>
-                                For the club membership year{" "}
-                                {formatDate(props.club_year.StartDate)} -{" "}
-                                {formatDate(props.club_year.EndDate)}
-                            </p>
-                            <p>
-                                For the Swim England membership year{" "}
-                                {formatDate(props.ngb_year.StartDate)} -{" "}
-                                {formatDate(props.ngb_year.EndDate)}
-                            </p>
+                            {props.club_year && (
+                                <p>
+                                    For the club membership year{" "}
+                                    {formatDate(props.club_year.StartDate)} -{" "}
+                                    {formatDate(props.club_year.EndDate)}
+                                </p>
+                            )}
+                            {props.ngb_year && (
+                                <p>
+                                    For the Swim England membership year{" "}
+                                    {formatDate(props.ngb_year.StartDate)} -{" "}
+                                    {formatDate(props.ngb_year.EndDate)}
+                                </p>
+                            )}
                         </div>
                     </div>
                 </div>

@@ -33,6 +33,21 @@ const Show: Layout<Props> = (props: Props) => {
     const date = new Date();
     date.setHours(0, 0, 0, 0);
 
+    let subtitle = "For the ";
+    if (props.club_year) {
+        subtitle += `${formatDate(props.club_year.StartDate)} - ${formatDate(
+            props.club_year.EndDate
+        )} club year`;
+        if (props.ngb_year) {
+            subtitle += ` and the `;
+        }
+    }
+    if (props.ngb_year) {
+        subtitle += `${formatDate(props.ngb_year.StartDate)} - ${formatDate(
+            props.ngb_year.EndDate
+        )} NGB year`;
+    }
+
     return (
         <>
             <Head
@@ -55,16 +70,7 @@ const Show: Layout<Props> = (props: Props) => {
             />
 
             <Container noMargin>
-                <MainHeader
-                    title={pageName}
-                    subtitle={`For the ${formatDate(
-                        props.club_year.StartDate
-                    )} - ${formatDate(
-                        props.club_year.EndDate
-                    )} club year and ${formatDate(
-                        props.ngb_year.StartDate
-                    )} - ${formatDate(props.ngb_year.EndDate)} NGB year`}
-                ></MainHeader>
+                <MainHeader title={pageName} subtitle={subtitle}></MainHeader>
 
                 <div className="grid gap-6">
                     <RenewalForm
