@@ -1,19 +1,20 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
-import { formatDate, formatDateTime } from "@/Utils/date-utils";
+import { formatDate } from "@/Utils/date-utils";
 import ButtonLink from "@/Components/ButtonLink";
-import Badge from "@/Components/Badge";
-import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { RenewalProps } from "@/Pages/Renewal/Index";
 import Card from "@/Components/Card";
 import Link from "@/Components/Link";
 
-const Show: Layout<RenewalProps> = (props: RenewalProps) => {
+interface Props extends RenewalProps {
+    can_edit: boolean;
+}
+
+const Show: Layout<Props> = (props: Props) => {
     const pageName = `Renewal Period ${formatDate(props.start)} - ${formatDate(
         props.end
     )}`;
@@ -54,9 +55,11 @@ const Show: Layout<RenewalProps> = (props: RenewalProps) => {
                     title={pageName}
                     subtitle={subtitle}
                     buttons={
-                        <ButtonLink href={route("renewals.edit", props.id)}>
-                            Edit
-                        </ButtonLink>
+                        props.can_edit && (
+                            <ButtonLink href={route("renewals.edit", props.id)}>
+                                Edit
+                            </ButtonLink>
+                        )
                     }
                 ></MainHeader>
 

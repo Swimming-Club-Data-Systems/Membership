@@ -14,18 +14,22 @@ use Inertia\Inertia;
 
 class RenewalController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $this->authorize('viewAll', Renewal::class);
+
         $renewals = Renewal::orderBy('end', 'desc')->with(['clubYear', 'ngbYear'])->paginate(config('app.per_page'));
 
         return Inertia::render('Renewal/Index', [
             'renewals' => $renewals->onEachSide(3),
-            'can_create' => true,
+            'can_create' => $request->user()->can('create', Renewal::class),
         ]);
     }
 
     public function new()
     {
+        $this->authorize('create', Renewal::class);
+
         $userStepValues = [];
         $userFields = [];
         collect(OnboardingSession::stagesOrder())->each(function ($stage) use (&$userStepValues, &$userFields) {
@@ -82,6 +86,8 @@ class RenewalController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize('create', Renewal::class);
+
         $rules = [
             'club_year' => [
                 'nullable',
@@ -167,19 +173,24 @@ class RenewalController extends Controller
         return Inertia::location(route('renewals.show', $renewal));
     }
 
-    public function show(Renewal $renewal)
+    public function show(Renewal $renewal, Request $request)
     {
+        $this->authorize('view', $renewal);
+
         return Inertia::render('Renewal/Show', [
             'id' => $renewal->id,
             'start' => $renewal->start,
             'end' => $renewal->end,
             'club_year' => $renewal->clubYear,
             'ngb_year' => $renewal->ngbYear,
+            'can_edit' => $request->user()->can('update', $renewal),
         ]);
     }
 
     public function edit(Renewal $renewal)
     {
+        $this->authorize('update', $renewal);
+
         $userStepValues = [];
         $userFields = [];
         collect(OnboardingSession::stagesOrder())->each(function ($stage) use (&$userStepValues, &$userFields, $renewal) {
@@ -228,6 +239,8 @@ class RenewalController extends Controller
 
     public function update(Renewal $renewal, Request $request)
     {
+        $this->authorize('update', $renewal);
+
         $rules = [
             'start_date' => ['date', 'required'],
             'end_date' => ['date', 'required', 'after:start_date'],

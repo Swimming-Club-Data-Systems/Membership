@@ -7,7 +7,7 @@ import React, { ReactNode } from "react";
 import { useFormikContext } from "formik";
 import Alert from "@/Components/Alert";
 import Select from "@/Components/Form/Select";
-import { AnySchema, Schema } from "yup";
+import { AnySchema } from "yup";
 
 type StageField = {
     id: string;

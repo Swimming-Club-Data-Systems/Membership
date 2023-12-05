@@ -5,10 +5,8 @@ import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
 import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
-import { formatDate, formatDateTime } from "@/Utils/date-utils";
+import { formatDate } from "@/Utils/date-utils";
 import ButtonLink from "@/Components/ButtonLink";
-import Badge from "@/Components/Badge";
-import { courseLength } from "@/Utils/Competitions/CourseLength";
 
 type MembershipYearProps = {
     id: string;
@@ -61,7 +59,7 @@ const RenewalRenderer = (props: RenewalProps): ReactNode => {
                         </div>
                     </div>
                 </div>
-                <Badge colour="indigo">OPEN???</Badge>
+                {/*<Badge colour="indigo">OPEN???</Badge>*/}
             </div>
         </>
     );
