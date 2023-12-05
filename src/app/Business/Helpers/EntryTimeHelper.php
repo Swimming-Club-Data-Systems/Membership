@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class EntryTimeHelper
 {
-    public static function toDecimal(?string $time): string
+    public static function toDecimal(?string $time): ?string
     {
         $output = null;
         if ($time) {
@@ -20,7 +20,12 @@ class EntryTimeHelper
             }
         }
 
-        return (string) $output;
+        $ret = (string) $output;
+        if ($output == null || Str::length($ret) == 0) {
+            $ret = null;
+        }
+
+        return $ret;
     }
 
     public static function formatted(null|string|float $time): string
