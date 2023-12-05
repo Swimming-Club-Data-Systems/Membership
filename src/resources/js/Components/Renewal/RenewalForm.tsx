@@ -2,7 +2,7 @@ import * as yup from "yup";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 import Card from "@/Components/Card";
 import Checkbox from "@/Components/Form/Checkbox";
-import Form from "@/Components/Form/Form";
+import Form, { SubmissionButtons } from "@/Components/Form/Form";
 import React, { ReactNode } from "react";
 import { useFormikContext } from "formik";
 import Alert from "@/Components/Alert";
@@ -121,6 +121,7 @@ export const RenewalForm = (props: RenewalFormProps) => {
             action={props.action}
             method={props.method}
             submitTitle="Save"
+            hideDefaultButtons
         >
             <div className="grid gap-6">
                 {props.mode === "create" && (
@@ -238,8 +239,35 @@ export const RenewalForm = (props: RenewalFormProps) => {
                         />
 
                         <Checkbox name="direct_debit" label="Direct Debit" />
+
+                        <div className="prose prose-sm">
+                            <p>
+                                Payment types will only be available to users if
+                                they also meet the criteria for that type. e.g.
+                                to pay by Direct Debit, it must be enabled for
+                                their renewal session, your club must have
+                                Direct Debit payments enabled and the user must
+                                have a Direct Debit mandate set up.
+                            </p>
+
+                            <p>
+                                You can edit payment options for individual
+                                users later - for example if your preferred and
+                                only enabled payment method for a renewal is
+                                Direct Debit but have a member for whom this is
+                                inappropriate, you can enable the card payment
+                                option just for them.
+                            </p>
+                        </div>
                     </Card>
                 )}
+                <Card title="Save changes" footer={<SubmissionButtons />}>
+                    <Alert variant="warning" title="Warning">
+                        Some settings can only be changed before the start date
+                        of this renewal. After the start, you must edit an
+                        individual onboarding session instead.
+                    </Alert>
+                </Card>
             </div>
         </Form>
     );

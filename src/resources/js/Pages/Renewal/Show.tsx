@@ -50,7 +50,7 @@ const Show: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
+            <Container>
                 <MainHeader
                     title={pageName}
                     subtitle={subtitle}
@@ -62,7 +62,9 @@ const Show: Layout<Props> = (props: Props) => {
                         )
                     }
                 ></MainHeader>
+            </Container>
 
+            <Container noMargin>
                 <div className="grid gap-6">
                     <Card title="View member renewal status">
                         <ul className="text-sm">

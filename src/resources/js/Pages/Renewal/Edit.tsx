@@ -7,6 +7,7 @@ import { Layout } from "@/Common/Layout";
 import { formatDate } from "@/Utils/date-utils";
 import { RenewalProps } from "@/Pages/Renewal/Index";
 import { RenewalForm } from "@/Components/Renewal/RenewalForm";
+import Link from "@/Components/Link";
 
 type StageField = {
     id: string;
@@ -62,9 +63,22 @@ const Show: Layout<Props> = (props: Props) => {
                 ]}
             />
 
-            <Container noMargin>
-                <MainHeader title={pageName} subtitle={subtitle}></MainHeader>
+            <Container>
+                <MainHeader
+                    title={pageName}
+                    subtitle={subtitle}
+                    buttons={
+                        <Link
+                            external
+                            href="https://docs.myswimmingclub.uk/docs/onboarding/renewal/"
+                        >
+                            Help
+                        </Link>
+                    }
+                ></MainHeader>
+            </Container>
 
+            <Container noMargin>
                 <div className="grid gap-6">
                     <RenewalForm
                         mode="edit"
