@@ -92,7 +92,6 @@ const Index: Layout<Props> = (props: Props) => {
 
             <Container noMargin>
                 <Collection
-                    searchable
                     {...props.renewals}
                     route="renewals.show"
                     itemRenderer={RenewalRenderer}
