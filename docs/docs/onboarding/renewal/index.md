@@ -6,7 +6,7 @@ Membership renewal is a busy and complex time of year, therefore we try to make 
 
 To get started quickly with membership renewal you will need to;
 
-1. Create a membership year - We'll be renewing membership for that year
+1. [Create a membership year](../membership-years.md) - We'll be renewing membership for that year
 2. Create a renewal period
     1. Choose your start and end dates
     2. Choose your required steps
@@ -29,7 +29,22 @@ The page will look like this;
 
 ![Screenshot of the new renewal period page](../img/new-renewal-period.png "New renewal period page")
 
-Now let's fill in the required information. Start by choosing a membership year for your Swim England and/or Club Membership years. You can choose from any current or future membership year, or none if one does not apply (e.g. your club does not charge an annual club membership fee). You can choose different membership years for each if your club membership year does not run concurrently with the Swim England one.
+Now let's fill in the required information. Start by choosing a membership year for your Swim England and/or Club Membership years. You can choose from any of the latest 15 current or future membership year, or **None** if one does not apply (e.g. your club does not charge an annual club membership fee). You can choose different membership years for each if your club membership year does not run concurrently with the Swim England one.
+
+At most clubs, the club and Swim England membership years run concurrently with the same start and end dates (usually 1 Jan - 31 Dec). If this applies to you, select the same membership year from both dropdowns.
+
+If you club does not have an annual **Club Membership**, select None for your **Club Membership** membership year.
+
+If your club and Swim England membership years run with different dates, please either;
+
+- Select the appropriate membership year for club and Swim England fees. Members will pay for both types at the same time.
+- Select a membership year for the appropriate membership type you want to renew and select None for the other. You can repeat this the other way around when you want to renew the other type (you may wish to remove some of the required stages for one of the renewals). In this case, members will only renew and pay for the type of membership you chose a membership year for.
+
+:::warning
+
+You must pick a year under at least one of the options.
+
+:::
 
 Now let's pick a start and end date for the renewal period. These can be anything you like, but you should always pick a start date that is in the future - this is because we will calculate who needs to renew as part of a batch process which runs overnight on your selected start date, and it will not run if you select today's date or a date in the past.
 
@@ -41,11 +56,19 @@ Then choose the payment methods you want to allow members to use to pay their re
 
 If members choose to pay by Direct Debit, you can choose to use custom posting dates for the transactions. This allows you to bill Swim England and Club Membership fees over separate months to reduce the financial burden on families.
 
-To do this, tick the *Use custom bill dates* box and enter the dates you would like to use for Swim England and Club Membership fees.
+This option will not apply to payments made via any other means.
 
-This setting will be ignored if you do not tick the box. You can change this setting later on in the renewal period, but any changes will not apply to any transactions that have already been posted.
+To do this, tick the *Use custom billing dates* box and enter the dates you would like to use for Swim England and Club Membership fees.
 
-Here is an example of how you might use this setting;
+This setting will be ignored if you do not tick the box. You can change this setting later on in the renewal period, but any changes will not apply to any renewals which have already been completed.
+
+:::info
+
+Don't forget to enable the option to pay for renewal by Direct Debit if you select custom billing dates.
+
+:::
+
+The custom billing dates section looks like this;
 
 ![Screenshot of the new renewal period page, custom renewal bill date settings](../img/custom-renewal-bill-date.png "New renewal period page, custom renewal bill date settings")
 
