@@ -177,6 +177,14 @@ class RenewalController extends Controller
     {
         $this->authorize('view', $renewal);
 
+        $complete = $renewal->onboardingSessions()
+            ->where('status', '=', 'complete')
+            ->count();
+        $notComplete = $renewal->onboardingSessions()
+            ->where('status', '!=', 'complete')
+            ->count();
+        $total = $complete + $notComplete;
+
         return Inertia::render('Renewal/Show', [
             'id' => $renewal->id,
             'start' => $renewal->start,
@@ -184,6 +192,9 @@ class RenewalController extends Controller
             'club_year' => $renewal->clubYear,
             'ngb_year' => $renewal->ngbYear,
             'can_edit' => $request->user()->can('update', $renewal),
+            'total_complete' => $complete,
+            'total_not_complete' => $notComplete,
+            'total' => $total,
         ]);
     }
 

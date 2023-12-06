@@ -12,6 +12,9 @@ import Link from "@/Components/Link";
 
 interface Props extends RenewalProps {
     can_edit: boolean;
+    total_complete: number;
+    total_not_complete: number;
+    total: number;
 }
 
 const Show: Layout<Props> = (props: Props) => {
@@ -79,7 +82,10 @@ const Show: Layout<Props> = (props: Props) => {
                         </ul>
                     </Card>
 
-                    <Card title="View associated onboarding sessions">
+                    <Card
+                        title="View associated onboarding sessions"
+                        className="mb-6"
+                    >
                         <ul className="text-sm">
                             <li>
                                 <Link
@@ -124,6 +130,12 @@ const Show: Layout<Props> = (props: Props) => {
                         </ul>
                     </Card>
                 </div>
+            </Container>
+            <Container>
+                <p className="text-sm">
+                    {props.total_complete} renewals completed of {props.total}{" "}
+                    total.
+                </p>
             </Container>
         </>
     );
