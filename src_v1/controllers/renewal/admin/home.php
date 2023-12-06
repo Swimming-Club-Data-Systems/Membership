@@ -56,7 +56,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 		</p>
 
 		<p class="mb-0">
-			<a href="/renewal" class="alert-link">Visit the new renewal system</a>
+			<a href="/renewals" class="alert-link">Visit the new renewal system</a>
 		</p>
 	</div>
 

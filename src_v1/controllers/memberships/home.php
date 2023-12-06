@@ -158,7 +158,7 @@ include BASE_PATH . "views/header.php";
 						</p>
 					</div>
 					<p class="mb-0 mt-auto d-flex">
-						<a href="/renewal" class="btn btn-primary">
+						<a href="/renewals" class="btn btn-primary">
 							Go
 						</a>
 					</p>
