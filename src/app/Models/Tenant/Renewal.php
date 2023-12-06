@@ -28,8 +28,8 @@ class Renewal extends Model
     protected $table = 'renewalv2';
 
     protected $casts = [
-        'default_stages' => 'array',
-        'default_member_stages' => 'array',
+        'default_stages' => AsArrayObject::class,
+        'default_member_stages' => AsArrayObject::class,
         'metadata' => AsArrayObject::class,
         'started' => 'boolean',
         'open' => 'boolean',

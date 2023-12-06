@@ -48,11 +48,10 @@ const Dates = () => {
 
     if (use_custom_billing_dates) {
         return (
-            <>
+            <div>
                 <DateTimeInput
                     name="dd_club_bills_date"
                     label="Club membership billing date"
-                    mb="mb-0"
                 />
 
                 <DateTimeInput
@@ -60,7 +59,7 @@ const Dates = () => {
                     label="Governing body membership billing date"
                     mb="mb-0"
                 />
-            </>
+            </div>
         );
     }
 
@@ -141,16 +140,17 @@ export const RenewalForm = (props: RenewalFormProps) => {
                 )}
 
                 <Card title="Period dates">
-                    <DateTimeInput
-                        mb="mb-0"
-                        name="start_date"
-                        label="Renewal period start date"
-                    />
-                    <DateTimeInput
-                        mb="mb-0"
-                        name="end_date"
-                        label="Renewal period end date"
-                    />
+                    <div>
+                        <DateTimeInput
+                            name="start_date"
+                            label="Renewal period start date"
+                        />
+                        <DateTimeInput
+                            mb="mb-0"
+                            name="end_date"
+                            label="Renewal period end date"
+                        />
+                    </div>
                 </Card>
 
                 <Card title="Required stages">
@@ -220,14 +220,14 @@ export const RenewalForm = (props: RenewalFormProps) => {
                                 </strong>
                             </p>
                         )}
-
-                        <Checkbox
-                            name="use_custom_billing_dates"
-                            label="Use custom billing dates"
-                        />
-
-                        <Dates />
                     </div>
+
+                    <Checkbox
+                        name="use_custom_billing_dates"
+                        label="Use custom billing dates"
+                    />
+
+                    <Dates />
                 </Card>
 
                 {props.mode === "create" && (

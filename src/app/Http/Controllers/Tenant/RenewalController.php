@@ -244,8 +244,9 @@ class RenewalController extends Controller
         $rules = [
             'start_date' => ['date', 'required'],
             'end_date' => ['date', 'required', 'after:start_date'],
-            'dd_ngb_bills_date' => ['date', 'required_if_accepted:use_custom_billing_dates'],
-            'dd_club_bills_date' => ['date', 'required_if_accepted:use_custom_billing_dates'],
+            'use_custom_billing_dates' => ['boolean', 'required'],
+            'dd_ngb_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
+            'dd_club_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
         ];
 
         $stages = collect(OnboardingSession::stagesOrder());
