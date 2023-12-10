@@ -15,12 +15,22 @@ use Inertia\Inertia;
 
 class CompetitionGuestEntryController extends Controller
 {
-    public function index(Competition $competition)
+    public function index(Competition $competition, Request $request)
     {
         $this->authorize('viewAny', CompetitionEntry::class);
 
-        $entries = CompetitionEntry::where('competition_id', $competition->id)
-            ->with(['competitionGuestEntrant', 'competitionEventEntries', 'competitionEventEntries.competitionEvent'])
+        $entries = CompetitionEntry::where('competition_id', $competition->id);
+
+        if ($request->string('sex') != '') {
+            $entries = $entries->whereRelation('competitionGuestEntrant', 'sex', '=', $request->string('sex'));
+        }
+
+        $entries = $entries
+            ->with([
+                'competitionGuestEntrant',
+                'competitionEventEntries',
+                'competitionEventEntries.competitionEvent',
+            ])
             ->paginate(config('app.per_page'));
 
         $data = [

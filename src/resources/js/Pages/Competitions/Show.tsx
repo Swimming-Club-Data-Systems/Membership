@@ -370,16 +370,44 @@ const Show: Layout<Props> = (props: Props) => {
                     {props.view_entries && (
                         <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <Card title="Entrants">
-                                <div className="text-sm">
-                                    <Link
-                                        href={route(
-                                            "competitions.guest_entries.index",
-                                            [props.id]
-                                        )}
-                                    >
-                                        View guest entries
-                                    </Link>
-                                </div>
+                                <ul className="text-sm">
+                                    <li>
+                                        <Link
+                                            href={route(
+                                                "competitions.guest_entries.index",
+                                                [props.id]
+                                            )}
+                                        >
+                                            View guest entries
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={route(
+                                                "competitions.guest_entries.index",
+                                                {
+                                                    competition: props.id,
+                                                    sex: "Male",
+                                                }
+                                            )}
+                                        >
+                                            View Open Category guest entries
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link
+                                            href={route(
+                                                "competitions.guest_entries.index",
+                                                {
+                                                    competition: props.id,
+                                                    sex: "Female",
+                                                }
+                                            )}
+                                        >
+                                            View Female Category guest entries
+                                        </Link>
+                                    </li>
+                                </ul>
                             </Card>
                         </div>
                     )}
