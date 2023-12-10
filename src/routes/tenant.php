@@ -9,6 +9,7 @@ use App\Http\Controllers\Tenant\CompetitionEventController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
+use App\Http\Controllers\Tenant\CompetitionGuestEntryReportController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -445,9 +446,13 @@ Route::middleware([
                 Route::prefix('guest-entries')->group(function () {
                     Route::get('/', [CompetitionGuestEntryController::class, 'index'])
                         ->name('guest_entries.index');
+                    Route::get('/report', [CompetitionGuestEntryReportController::class, 'report'])
+                        ->name('guest_entries.report');
                     Route::get('/{entry}', [CompetitionGuestEntryController::class, 'show'])
+                        ->whereUuid('entry')
                         ->name('guest_entries.show');
-                    Route::put('/{entry}', [CompetitionGuestEntryController::class, 'update']);
+                    Route::put('/{entry}', [CompetitionGuestEntryController::class, 'update'])
+                        ->whereUuid('entry');
                 });
                 Route::prefix('sessions')->group(function () {
                     Route::name('sessions.')->group(function () {

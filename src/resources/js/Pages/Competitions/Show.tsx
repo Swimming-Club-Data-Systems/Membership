@@ -407,6 +407,20 @@ const Show: Layout<Props> = (props: Props) => {
                                             View Female Category guest entries
                                         </Link>
                                     </li>
+                                    <li>
+                                        <Link
+                                            href={route(
+                                                "competitions.guest_entries.report",
+                                                {
+                                                    competition: props.id,
+                                                }
+                                            )}
+                                            external
+                                            download
+                                        >
+                                            Guest entry report (XLSX)
+                                        </Link>
+                                    </li>
                                 </ul>
                             </Card>
                         </div>
