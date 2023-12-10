@@ -8,6 +8,7 @@ interface AProps {
     as?: string;
     children: React.ReactNode;
     className?: string;
+    download?: boolean;
 }
 
 const A: React.FC<AProps> = ({ children, ...props }) => {

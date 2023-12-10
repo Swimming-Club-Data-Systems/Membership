@@ -32,6 +32,7 @@
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.0",
         "league/oauth2-client": "^2.6",
+        "maatwebsite/excel": "^3.1",
         "meilisearch/meilisearch-php": "0.23.3",
         "microsoft/microsoft-graph": "^1.73",
         "moneyphp/money": "^4.0",
