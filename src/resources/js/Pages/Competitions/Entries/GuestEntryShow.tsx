@@ -60,6 +60,7 @@ export type Props = {
     amount: number;
     amount_formatted: string;
     currency: string;
+    payment_method_types: string[];
 };
 
 type ExpressCheckoutProps = {
@@ -199,6 +200,7 @@ const GuestEntryShow: Layout<Props> = (props: Props) => {
         amount: props.amount,
         currency: props.currency,
         appearance: appearance,
+        payment_method_types: props.payment_method_types,
     };
 
     useEffect(() => {
