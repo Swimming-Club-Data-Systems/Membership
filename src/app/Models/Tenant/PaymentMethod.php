@@ -95,40 +95,47 @@ class PaymentMethod extends Model
             if ($paymentMethod->fingerprint && $paymentMethod->user) {
                 /** @var PaymentMethod $newPm */
                 $newPm = PaymentMethod::find($paymentMethod->id);
-                dispatch(function () use ($newPm) {
-                    $sameUnderlyingPaymentMethods = $newPm
-                        ->user
-                        ->paymentMethods()
-                        ->where('fingerprint', '=', $newPm->fingerprint)
-                        ->where('id', '!=', $newPm->id)
-                        ->get();
-
-                    $clearedOthers = false;
-                    foreach ($sameUnderlyingPaymentMethods as $otherPM) {
-                        /** @var Tenant $tenant */
-                        $tenant = tenant();
-
-                        /** @var PaymentMethod $otherPM */
-                        $otherPM->user()->dissociate();
-                        $otherPM->save();
-
+                if ($newPm) {
+                    dispatch(function () use ($newPm) {
                         try {
-                            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
-                            $stripe->paymentMethods->detach($otherPM->stripe_id, null, [
-                                'stripe_account' => $tenant->stripeAccount(),
-                            ]);
-                        } catch (ApiErrorException|NoStripeAccountException) {
-                            // Ignore Stripe Error, this is just us trying to house keep
+                            $sameUnderlyingPaymentMethods = $newPm
+                                ->user
+                                ->paymentMethods()
+                                ->where('fingerprint', '=', $newPm->fingerprint)
+                                ->where('id', '!=', $newPm->id)
+                                ->get();
+
+                            $clearedOthers = false;
+                            foreach ($sameUnderlyingPaymentMethods as $otherPM) {
+                                /** @var Tenant $tenant */
+                                $tenant = tenant();
+
+                                /** @var PaymentMethod $otherPM */
+                                $otherPM->user()->dissociate();
+                                $otherPM->save();
+
+                                try {
+                                    $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+                                    $stripe->paymentMethods->detach($otherPM->stripe_id, null, [
+                                        'stripe_account' => $tenant->stripeAccount(),
+                                    ]);
+                                } catch (ApiErrorException|NoStripeAccountException) {
+                                    // Ignore Stripe Error, this is just us trying to house keep
+                                }
+
+                                $clearedOthers = true;
+                            }
+
+                            // Trigger a save to force update of the default BACS Debit method if required
+                            if ($clearedOthers) {
+                                $newPm->save();
+                            }
+                        } catch (\Exception $e) {
+                            // Log any exceptions for fuller analysis
+                            report($e);
                         }
-
-                        $clearedOthers = true;
-                    }
-
-                    // Trigger a save to force update of the default BACS Debit method if required
-                    if ($clearedOthers) {
-                        $newPm->save();
-                    }
-                });
+                    });
+                }
             }
         });
     }
