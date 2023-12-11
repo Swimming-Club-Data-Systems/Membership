@@ -25,6 +25,16 @@ class ProcessSMS implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    /**
+     * Do not retry sending an SMS if the job fails as costs are incurred
+     */
+    public int $tries = 1;
+
+    /**
+     * There are lots of requests required for SMS so we'll allow a longer timeout than usual
+     */
+    public int $timeout = 240;
+
     public Sms $sms;
 
     /**
