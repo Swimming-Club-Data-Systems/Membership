@@ -62,4 +62,11 @@ return [
      * This can be handy in local environments.
      */
     'verify_signature' => env('STRIPE_SIGNATURE_VERIFY', true),
+
+    /*
+     * The class name of the job that will process the webhook request.
+     *
+     * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
+     */
+    'process_webhook_job' => \App\Jobs\StripeWebhooks\ProcessStripeWebhookJob::class,
 ];

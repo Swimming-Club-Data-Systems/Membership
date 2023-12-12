@@ -41,6 +41,10 @@ class HandleMandateUpdated implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
+            return;
+        }
+
         /** @var Tenant $tenant */
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
