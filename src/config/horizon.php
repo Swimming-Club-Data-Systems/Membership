@@ -121,6 +121,7 @@ return [
 
     'silenced' => [
         \Laravel\Scout\Jobs\MakeSearchable::class,
+        \Laravel\Scout\Jobs\RemoveFromSearch::class,
         \Laravel\Telescope\Jobs\ProcessPendingUpdates::class,
     ],
 
