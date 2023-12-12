@@ -25,7 +25,7 @@ use Inertia\Inertia;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::stripeWebhooks('stripe/connect-webhook');
+Route::post('stripe/connect-webhook', \App\Http\Controllers\Central\StripeWebhooksController::class);
 
 Route::get('/', function () {
     return Inertia::render('Central/Index', [
