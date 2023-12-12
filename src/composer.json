@@ -27,7 +27,7 @@
         "laravel/horizon": "^5.13",
         "laravel/passport": "^11.8.3",
         "laravel/sanctum": "^3.2",
-        "laravel/scout": "^10.6",
+        "laravel/scout": "^9.4",
         "laravel/telescope": "^4.9",
         "laravel/tinker": "^2.7",
         "league/flysystem-aws-s3-v3": "^3.0",
@@ -60,10 +60,9 @@
         "laravel/pint": "^1.10",
         "laravel/sail": "^1.15",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^6.4",
-        "pestphp/pest": "^1.23",
-        "pestphp/pest-plugin-laravel": "^1.4",
-        "phpunit/phpunit": "^9.6",
+        "nunomaduro/collision": "^7.0",
+        "pestphp/pest": "^2.0",
+        "pestphp/pest-plugin-laravel": "^2.0",
         "spatie/laravel-ignition": "^2.0"
     },
     "autoload": {
