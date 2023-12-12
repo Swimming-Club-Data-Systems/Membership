@@ -98,6 +98,10 @@ class User extends Authenticatable implements MustVerifyEmail
         'edit' => 'datetime',
     ];
 
+    protected $attributes = [
+        'Active' => true,
+    ];
+
     protected $primaryKey = 'UserID';
 
     /**

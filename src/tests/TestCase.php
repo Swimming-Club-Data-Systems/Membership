@@ -2,7 +2,9 @@
 
 namespace Tests;
 
+use App\Enums\ClubMembershipClassType;
 use App\Models\Central\Tenant;
+use App\Models\Tenant\ClubMembershipClass;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -37,6 +39,19 @@ abstract class TestCase extends BaseTestCase
         $tenant->UniqueID = \Ramsey\Uuid\v4();
 
         $tenant->save();
+
+        // Setup default ledgers and journals
+        \App\Jobs\System\CreateDefaultLedgersAndJournals::dispatchSync($tenant);
+
+        // Create Placeholder NGB and Club Membership Categories - required for members
+        ClubMembershipClass::create([
+            'Name' => 'Swim England',
+            'Type' => ClubMembershipClassType::NGB,
+        ]);
+        ClubMembershipClass::create([
+            'Name' => 'Club',
+            'Type' => ClubMembershipClassType::CLUB,
+        ]);
 
         //        $tenant->domains()->create([
         //            'domain' => 'testclub-test.membership.test',

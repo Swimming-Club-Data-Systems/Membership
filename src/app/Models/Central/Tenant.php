@@ -34,6 +34,9 @@ use function Illuminate\Events\queueable;
  * @property string application_fee_type
  * @property float application_fee_amount
  * @property string $timezone
+ * @property bool|null $use_payments_v2
+ * @property int|null $fee_calculation_date
+ * @property int|null $squad_fee_calculation_date
  */
 class Tenant extends BaseTenant
 {
