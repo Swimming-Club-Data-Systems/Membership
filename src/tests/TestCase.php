@@ -44,14 +44,16 @@ abstract class TestCase extends BaseTestCase
         \App\Jobs\System\CreateDefaultLedgersAndJournals::dispatchSync($tenant);
 
         // Create Placeholder NGB and Club Membership Categories - required for members
-        ClubMembershipClass::create([
-            'Name' => 'Swim England',
-            'Type' => ClubMembershipClassType::NGB,
-        ]);
-        ClubMembershipClass::create([
-            'Name' => 'Club',
-            'Type' => ClubMembershipClassType::CLUB,
-        ]);
+        $tenant->run(function () {
+            ClubMembershipClass::create([
+                'Name' => 'Swim England',
+                'Type' => ClubMembershipClassType::NGB,
+            ]);
+            ClubMembershipClass::create([
+                'Name' => 'Club',
+                'Type' => ClubMembershipClassType::CLUB,
+            ]);
+        });
 
         //        $tenant->domains()->create([
         //            'domain' => 'testclub-test.membership.test',

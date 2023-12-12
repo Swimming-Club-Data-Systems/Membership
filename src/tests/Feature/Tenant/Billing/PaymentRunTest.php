@@ -13,6 +13,8 @@ test('runs a simulated full payment run for a tenant', function () {
     /** @var Tenant $tenant */
     $tenant = tenant();
 
+    $this->assertEquals('Test Club', tenant('Name'));
+
     // Set up configuration for Payments V2
     $day = \Carbon\Carbon::now()->day;
     $tenant->use_payments_v2 = true;
