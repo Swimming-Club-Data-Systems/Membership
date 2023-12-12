@@ -38,6 +38,10 @@ class HandlePaymentIntentPaymentFailed implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
+            return;
+        }
+
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
         $tenant->run(function () {

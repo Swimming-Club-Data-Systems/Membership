@@ -38,6 +38,10 @@ class HandleAccountApplicationDeauthorized implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
+            return;
+        }
+
         // Remove Stripe account id from the system to disable all Stripe services in the tenant app
         // Store old Stripe account id so that if set up again we can check it's the same and fail otherwise
         // Email the tenant admins telling them services have been disconnected and are now unavailable
