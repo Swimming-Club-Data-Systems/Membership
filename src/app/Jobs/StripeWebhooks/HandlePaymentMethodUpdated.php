@@ -37,6 +37,10 @@ class HandlePaymentMethodUpdated implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
+            return;
+        }
+
         // Find the payment method if it's in the database
 
         /** @var Tenant $tenant */

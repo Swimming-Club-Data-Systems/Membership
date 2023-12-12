@@ -41,6 +41,10 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
      */
     public function handle()
     {
+        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
+            return;
+        }
+
         // do your work here
 
         // you can access the payload of the webhook call with `$this->webhookCall->payload`
