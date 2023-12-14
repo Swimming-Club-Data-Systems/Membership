@@ -195,11 +195,11 @@ class Batch
         $renewal = \SCDS\Onboarding\Renewal::retrieve($renewalId);
 
         if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->club) {
-          $clubDate = $renewal->metadata->custom_direct_debit_bill_dates->club;
+          $clubDate = (new \DateTime($renewal->metadata->custom_direct_debit_bill_dates->club, new \DateTimeZone('Europe/London')))->format('Y-m-d');
         }
 
         if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->ngb) {
-          $ngbDate = $renewal->metadata->custom_direct_debit_bill_dates->ngb;
+          $ngbDate = (new \DateTime($renewal->metadata->custom_direct_debit_bill_dates->ngb, new \DateTimeZone('Europe/London')))->format('Y-m-d');
         }
       }
 
