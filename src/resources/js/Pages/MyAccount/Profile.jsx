@@ -159,7 +159,7 @@ const Show = (props) => {
                             <div className="col-span-6 sm:col-span-3">
                                 <Select
                                     name="country"
-                                    options={Object.keys(props.countries).map(
+                                    items={Object.keys(props.countries).map(
                                         (code) => {
                                             return {
                                                 key: code,
