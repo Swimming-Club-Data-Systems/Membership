@@ -22,6 +22,8 @@ class ExtraFee extends Model
 
     protected $primaryKey = 'ExtraID';
 
+    protected $table = 'extras';
+
     public function members()
     {
         return $this->belongsToMany(Member::class, 'extrasRelations', 'ExtraID', 'MemberID')->withTimestamps();

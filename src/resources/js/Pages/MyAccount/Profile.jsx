@@ -52,13 +52,13 @@ const Show = (props) => {
                             .phone(
                                 undefined,
                                 undefined,
-                                "Please enter a valid phone number"
+                                "Please enter a valid phone number",
                             )
                             .required("A phone number is required"),
                         address_line_1: yup
                             .string()
                             .required(
-                                "A street and house name or number is required"
+                                "A street and house name or number is required",
                             ),
                         address_line_2: yup.string(),
                         city: yup.string().required("A city is required"),
@@ -159,13 +159,14 @@ const Show = (props) => {
                             <div className="col-span-6 sm:col-span-3">
                                 <Select
                                     name="country"
-                                    options={Object.keys(props.countries).map(
+                                    items={Object.keys(props.countries).map(
                                         (code) => {
                                             return {
                                                 key: code,
+                                                value: code,
                                                 name: props.countries[code],
                                             };
-                                        }
+                                        },
                                     )}
                                     label="Country"
                                     autoComplete="country"

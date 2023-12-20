@@ -34,15 +34,9 @@ class HandlePaymentMethodAttached implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
-            return;
-        }
-
         // Find if there is a user for this customer in the system
         // Check if PM is in the database already
         // If not add the payment method to the database

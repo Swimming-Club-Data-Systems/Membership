@@ -37,10 +37,6 @@ class HandlePaymentIntentPartiallyFunded implements ShouldQueue
      */
     public function handle()
     {
-        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
-            return;
-        }
-
         //
     }
 }

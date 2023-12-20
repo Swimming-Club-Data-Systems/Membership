@@ -141,7 +141,7 @@ class RenewalController extends Controller
             $renewal->clubYear()->associate($clubYear);
         }
         if ($ngbYear) {
-            $renewal->clubYear()->associate($ngbYear);
+            $renewal->ngbYear()->associate($ngbYear);
         }
 
         $defaultUserStages = OnboardingSession::getDefaultRenewalStages();

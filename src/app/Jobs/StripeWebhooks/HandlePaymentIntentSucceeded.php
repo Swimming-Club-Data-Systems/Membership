@@ -37,15 +37,9 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
-            return;
-        }
-
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
         $tenant->run(function () {

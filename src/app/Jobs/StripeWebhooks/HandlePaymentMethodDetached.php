@@ -32,15 +32,9 @@ class HandlePaymentMethodDetached implements ShouldQueue
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
-        if ($this->webhookCall->payload['livemode'] != config('stripe.livemode')) {
-            return;
-        }
-
         // Remove the user id from the PaymentMethod object
 
         /** @var Tenant $tenant */
