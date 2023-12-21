@@ -19,6 +19,7 @@ use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
@@ -257,6 +258,10 @@ class CompetitionController extends Controller
             'id' => $competition->id,
             'name' => $competition->name,
             'description' => $competition->description,
+            'description_html' => Str::of($competition->description)->markdown([
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ]),
             'pool_course' => $competition->pool_course,
             'mode' => $competition->mode,
             'require_times' => $competition->require_times,

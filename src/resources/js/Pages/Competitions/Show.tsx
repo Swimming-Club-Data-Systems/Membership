@@ -54,6 +54,7 @@ export type Props = {
     processing_fee_string: string;
     coach_enters: boolean;
     description: string;
+    description_html: string;
     venue: {
         name: string;
         id: number;
@@ -132,7 +133,7 @@ const Show: Layout<Props> = (props: Props) => {
                             .required("A name is required for this session.")
                             .max(
                                 255,
-                                "The session name must be less than 255 characters."
+                                "The session name must be less than 255 characters.",
                             ),
                         venue: yup
                             .number()
@@ -140,17 +141,17 @@ const Show: Layout<Props> = (props: Props) => {
                         start_time: yup
                             .date()
                             .required(
-                                "A start time is required for this session."
+                                "A start time is required for this session.",
                             ),
                         timezone: yup.string().required(),
                         end_time: yup
                             .date()
                             .required(
-                                "An end time is required for this session."
+                                "An end time is required for this session.",
                             )
                             .min(
                                 yup.ref("start_time"),
-                                "The end time for this session must be after the start time."
+                                "The end time for this session must be after the start time.",
                             ),
                     })}
                     initialValues={{
@@ -303,6 +304,19 @@ const Show: Layout<Props> = (props: Props) => {
                         </div>
                     )}
 
+                    {props.description_html && (
+                        <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
+                            <Card title="Description">
+                                <div
+                                    className="prose prose-sm"
+                                    dangerouslySetInnerHTML={{
+                                        __html: props.description_html,
+                                    }}
+                                />
+                            </Card>
+                        </div>
+                    )}
+
                     {(props.members_can_enter || props.guests_can_enter) && (
                         <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <ActionPanel
@@ -321,7 +335,7 @@ const Show: Layout<Props> = (props: Props) => {
                                             <Link
                                                 href={route(
                                                     "competitions.enter_as_guest",
-                                                    props.id
+                                                    props.id,
                                                 )}
                                             >
                                                 Enter as guest{" "}
@@ -375,7 +389,7 @@ const Show: Layout<Props> = (props: Props) => {
                                         <Link
                                             href={route(
                                                 "competitions.guest_entries.index",
-                                                [props.id]
+                                                [props.id],
                                             )}
                                         >
                                             View guest entries
@@ -388,7 +402,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 {
                                                     competition: props.id,
                                                     sex: "Male",
-                                                }
+                                                },
                                             )}
                                         >
                                             View Open Category guest entries
@@ -401,7 +415,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 {
                                                     competition: props.id,
                                                     sex: "Female",
-                                                }
+                                                },
                                             )}
                                         >
                                             View Female Category guest entries
@@ -413,7 +427,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 "competitions.guest_entries.report",
                                                 {
                                                     competition: props.id,
-                                                }
+                                                },
                                             )}
                                             external
                                             download
@@ -469,9 +483,9 @@ const Show: Layout<Props> = (props: Props) => {
                                 allowFullScreen
                                 referrerPolicy="no-referrer-when-downgrade"
                                 src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
-                                    props.google_maps_api_key
+                                    props.google_maps_api_key,
                                 )}&q=place_id:${encodeURIComponent(
-                                    props.venue.place_id
+                                    props.venue.place_id,
                                 )}`}
                             ></iframe>
                         </Card>
