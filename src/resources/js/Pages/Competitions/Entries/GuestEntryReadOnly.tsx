@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
@@ -156,7 +156,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                         <div className="truncate text-sm text-gray-700 group-hover:text-gray-800">
                                                             {formatDate(
                                                                 props.entrant
-                                                                    .date_of_birth
+                                                                    .date_of_birth,
                                                             )}{" "}
                                                             (Age{" "}
                                                             {props.entrant.age})
@@ -220,7 +220,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                                 )}
                                                             </li>
                                                         );
-                                                    }
+                                                    },
                                                 )}
                                             </ul>
                                         </div>
@@ -262,7 +262,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                 className="text-sm"
                                                 href={route(
                                                     "payments.payments.show",
-                                                    [props.payment.id]
+                                                    [props.payment.id],
                                                 )}
                                             >
                                                 View payment or make refunds
@@ -345,7 +345,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                 key: "dob",
                                                 term: "Date of birth",
                                                 definition: formatDate(
-                                                    props.entrant.date_of_birth
+                                                    props.entrant.date_of_birth,
                                                 ),
                                             },
                                             {
@@ -360,7 +360,7 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                     props.entrant.age_on_day
                                                 } (${formatDate(
                                                     props.competition
-                                                        .age_at_date
+                                                        .age_at_date,
                                                 )})`,
                                             },
                                             {
@@ -400,14 +400,14 @@ const GuestEntryReadOnly = (props: EntryProps) => {
                                                 key: "created_at",
                                                 term: "Created at",
                                                 definition: formatDateTime(
-                                                    props.created_at
+                                                    props.created_at,
                                                 ),
                                             },
                                             {
                                                 key: "updated_at",
                                                 term: "Updated at",
                                                 definition: formatDateTime(
-                                                    props.updated_at
+                                                    props.updated_at,
                                                 ),
                                             },
                                         ]}

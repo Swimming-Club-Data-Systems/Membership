@@ -1,4 +1,4 @@
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ReactNode, useState } from "react";
 import MainLayout from "@/Layouts/MainLayout";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
@@ -83,7 +83,7 @@ const Edit = (props: Props) => {
                 onFinish: (page) => {
                     setShowDeleteCoachModal(false);
                 },
-            }
+            },
         );
     };
 
@@ -129,7 +129,7 @@ const Edit = (props: Props) => {
                                 .required("A squad name is required.")
                                 .max(
                                     255,
-                                    "Squad name can not exceed 100 characters."
+                                    "Squad name can not exceed 100 characters.",
                                 ),
                             monthly_fee: yup
                                 .number()
@@ -137,13 +137,13 @@ const Edit = (props: Props) => {
                                 .required("Monthly fee is required.")
                                 .min(
                                     0,
-                                    "Monthly fee can not be less than zero."
+                                    "Monthly fee can not be less than zero.",
                                 ),
                             timetable: yup
                                 .string()
                                 .max(
                                     100,
-                                    "Timetable url must not exceed 100 characters."
+                                    "Timetable url must not exceed 100 characters.",
                                 )
                                 .url("Timetable must be a valid URL."),
                             code_of_conduct: yup.number().nullable(),
@@ -206,7 +206,7 @@ const Edit = (props: Props) => {
                                                         <Link
                                                             href={route(
                                                                 "users.show",
-                                                                coach.id
+                                                                coach.id,
                                                             )}
                                                         >
                                                             {coach.name}
@@ -222,10 +222,10 @@ const Edit = (props: Props) => {
                                                             variant="danger"
                                                             onClick={() => {
                                                                 setDeleteModalDetails(
-                                                                    coach
+                                                                    coach,
                                                                 );
                                                                 setShowDeleteCoachModal(
-                                                                    true
+                                                                    true,
                                                                 );
                                                             }}
                                                         >

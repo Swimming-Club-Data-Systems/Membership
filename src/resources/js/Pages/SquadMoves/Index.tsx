@@ -54,7 +54,7 @@ const OldSquadSelect = (props: OldSquadSelectProps) => {
     const [values, setValues] = useState([]);
     const [valuesLoaded, setValuesLoaded] = useState(false);
     const [{ value: fieldMemberId }] = useField("member");
-    const [{ value }, {}, { setValue }] = useField("old_squad");
+    const [{ value }, , { setValue }] = useField("old_squad");
 
     const memberId = props.memberId || fieldMemberId;
 
@@ -86,7 +86,7 @@ const ItemContent = (props: Item) => {
     const [showEditModal, setShowEditModal] = useState<boolean>(false);
     const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [minDate] = useState(
-        formatISO(startOfDay(new Date()), { representation: "date" })
+        formatISO(startOfDay(new Date()), { representation: "date" }),
     );
 
     const deleteMove = async () => {
@@ -116,7 +116,7 @@ const ItemContent = (props: Item) => {
                                     <Link
                                         href={route(
                                             "squads.show",
-                                            props.old_squad.id
+                                            props.old_squad.id,
                                         )}
                                     >
                                         {props.old_squad.name}
@@ -135,7 +135,7 @@ const ItemContent = (props: Item) => {
                                     <Link
                                         href={route(
                                             "squads.show",
-                                            props.new_squad.id
+                                            props.new_squad.id,
                                         )}
                                     >
                                         {props.new_squad.name}
@@ -178,7 +178,7 @@ const ItemContent = (props: Item) => {
                             .required("A moving date is required.")
                             .min(
                                 minDate,
-                                "The move date must not be in the past."
+                                "The move date must not be in the past.",
                             ),
                         new_squad: yup
                             .number()
@@ -186,7 +186,7 @@ const ItemContent = (props: Item) => {
                             .nullable()
                             .notOneOf(
                                 [yup.ref("old_squad")],
-                                "The new squad can not be the same as the old squad."
+                                "The new squad can not be the same as the old squad.",
                             ),
                         old_squad: yup
                             .number()
@@ -194,7 +194,7 @@ const ItemContent = (props: Item) => {
                             .nullable()
                             .notOneOf(
                                 [yup.ref("new_squad")],
-                                "The old squad can not be the same as the new squad."
+                                "The old squad can not be the same as the new squad.",
                             ),
                         paying: yup.boolean(),
                     })}
@@ -276,7 +276,7 @@ const crumbs = [{ route: "squad-moves.index", name: "Squad Moves" }];
 const Index = (props: Props) => {
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [minDate] = useState(
-        formatISO(startOfDay(new Date()), { representation: "date" })
+        formatISO(startOfDay(new Date()), { representation: "date" }),
     );
     console.log(minDate);
 
@@ -316,7 +316,7 @@ const Index = (props: Props) => {
                             .required("A moving date is required.")
                             .min(
                                 minDate,
-                                "The move date must not be in the past."
+                                "The move date must not be in the past.",
                             ),
                         new_squad: yup
                             .number()
@@ -324,7 +324,7 @@ const Index = (props: Props) => {
                             .nullable()
                             .notOneOf(
                                 [yup.ref("old_squad")],
-                                "The new squad can not be the same as the old squad."
+                                "The new squad can not be the same as the old squad.",
                             ),
                         old_squad: yup
                             .number()
@@ -332,7 +332,7 @@ const Index = (props: Props) => {
                             .nullable()
                             .notOneOf(
                                 [yup.ref("new_squad")],
-                                "The old squad can not be the same as the new squad."
+                                "The old squad can not be the same as the new squad.",
                             ),
                         paying: yup.boolean(),
                     })}
