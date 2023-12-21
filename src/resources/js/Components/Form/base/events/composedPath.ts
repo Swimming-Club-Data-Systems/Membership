@@ -3,7 +3,7 @@
 // IE does not support composedPath
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath
-export default (ev: CustomEvent): EventTarget[] => {
+const composedPath = (ev: CustomEvent): EventTarget[] => {
     // When testing with enzyme, we want to trigger a listener on an element but pretend
     // that it bubbled from the enzymeTestingTarget
     // e.g. document.dispatchEvent(new MouseClick('click', {
@@ -26,3 +26,5 @@ export default (ev: CustomEvent): EventTarget[] => {
 
     return path;
 };
+
+export default composedPath;

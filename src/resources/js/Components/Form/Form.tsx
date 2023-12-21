@@ -269,9 +269,9 @@ const Form = (props: FormProps) => {
     } = props;
 
     const [hasErrors, setHasErrors] = useState(false);
-    const handleNetErrorDismiss = () => {
-        setHasErrors(false);
-    };
+    // const handleNetErrorDismiss = () => {
+    //     setHasErrors(false);
+    // };
     const [showConfirm, setShowConfirm] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
 

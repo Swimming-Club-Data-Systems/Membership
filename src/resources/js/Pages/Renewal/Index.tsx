@@ -7,7 +7,6 @@ import { Layout } from "@/Common/Layout";
 import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import { formatDate } from "@/Utils/date-utils";
 import ButtonLink from "@/Components/ButtonLink";
-import Link from "@/Components/Link";
 
 type MembershipYearProps = {
     id: string;

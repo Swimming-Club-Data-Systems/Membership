@@ -1,21 +1,24 @@
 module.exports = {
-    env: {
-        browser: true,
-        es2021: true,
+    "env": {
+        "browser": true,
+        "es2021": true
     },
-    parser: "@typescript-eslint/parser",
-    extends: [
-        "eslint:recommended",
-        "react-app",
+    "extends": [
         "prettier",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:storybook/recommended",
+        "react-app"
     ],
-    overrides: [],
-    parserOptions: {
-        ecmaVersion: "latest",
-        sourceType: "module",
-    },
-    plugins: ["react", "@typescript-eslint"],
-    rules: {},
-};
+    "overrides": [
+        {
+            "env": {
+                "node": true
+            },
+            "files": [
+                ".eslintrc.{js,cjs}"
+            ],
+            "parserOptions": {
+                "sourceType": "script"
+            }
+        }
+    ],
+    "ignorePatterns": ["resources/js/ziggy.js"],
+}
