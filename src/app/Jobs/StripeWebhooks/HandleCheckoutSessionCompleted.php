@@ -31,15 +31,13 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
-        $this->onQueue(Queue::STRIPE->value);
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // do your work here
 

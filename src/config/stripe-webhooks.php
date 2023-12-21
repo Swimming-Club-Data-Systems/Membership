@@ -55,11 +55,18 @@ return [
      * Specify a connection and or a queue to process the webhooks
      */
     'connection' => env('STRIPE_WEBHOOK_CONNECTION'),
-    'queue' => env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
+    'queue' => 'default', //env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
 
     /*
      * When disabled, the package will not verify if the signature is valid.
      * This can be handy in local environments.
      */
     'verify_signature' => env('STRIPE_SIGNATURE_VERIFY', true),
+
+    /*
+     * The class name of the job that will process the webhook request.
+     *
+     * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
+     */
+    'process_webhook_job' => \App\Jobs\StripeWebhooks\ProcessStripeWebhookJob::class,
 ];

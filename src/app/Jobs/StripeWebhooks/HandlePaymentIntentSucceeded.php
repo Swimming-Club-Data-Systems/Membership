@@ -32,15 +32,13 @@ class HandlePaymentIntentSucceeded implements ShouldQueue
     public function __construct(
         public WebhookCall $webhookCall
     ) {
-        $this->onQueue(Queue::STRIPE->value);
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 

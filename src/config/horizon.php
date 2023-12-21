@@ -121,6 +121,8 @@ return [
 
     'silenced' => [
         \Laravel\Scout\Jobs\MakeSearchable::class,
+        \Laravel\Scout\Jobs\RemoveFromSearch::class,
+        \Laravel\Telescope\Jobs\ProcessPendingUpdates::class,
     ],
 
     /*
@@ -193,7 +195,7 @@ return [
             'maxTime' => 0,
             'maxJobs' => 0,
             'memory' => 128,
-            'tries' => 1,
+            'tries' => 3,
             'timeout' => 60,
             'nice' => 0,
         ],

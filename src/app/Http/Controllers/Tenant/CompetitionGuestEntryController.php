@@ -31,7 +31,8 @@ class CompetitionGuestEntryController extends Controller
                 'competitionEventEntries',
                 'competitionEventEntries.competitionEvent',
             ])
-            ->paginate(config('app.per_page'));
+            ->paginate(config('app.per_page'))
+            ->withQueryString();
 
         $data = [
             'competition' => [

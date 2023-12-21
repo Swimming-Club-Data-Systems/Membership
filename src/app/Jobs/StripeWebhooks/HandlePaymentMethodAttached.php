@@ -29,15 +29,13 @@ class HandlePaymentMethodAttached implements ShouldQueue
     public function __construct(WebhookCall $webhookCall)
     {
         $this->webhookCall = $webhookCall;
-        $this->onQueue(Queue::STRIPE->value);
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
      * Execute the job.
-     *
-     * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // Find if there is a user for this customer in the system
         // Check if PM is in the database already

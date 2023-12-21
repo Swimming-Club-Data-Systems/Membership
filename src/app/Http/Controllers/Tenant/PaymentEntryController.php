@@ -65,7 +65,7 @@ class PaymentEntryController extends Controller
     /**
      * @throws AuthorizationException
      */
-    public function amend(ManualPaymentEntry $entry): \Inertia\Response|RedirectResponse
+    public function amend(ManualPaymentEntry $entry): \Inertia\Response|RedirectResponse|\Symfony\Component\HttpFoundation\Response
     {
         $authorise = $this->authoriseAmendment($entry);
         if ($authorise) {

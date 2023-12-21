@@ -187,6 +187,7 @@ class CompetitionGuestEntryHeaderController extends Controller
             'amount' => $total,
             'amount_formatted' => $totalFormatted,
             'currency' => 'gbp',
+            'payment_method_types' => ['card', 'link'],
         ]);
     }
 

@@ -27,7 +27,7 @@ class HandlePaymentIntentPartiallyFunded implements ShouldQueue
     public function __construct(
         public WebhookCall $webhookCall
     ) {
-        $this->onQueue(Queue::STRIPE->value);
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace Database\Factories\Tenant;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Tenant\Member>
@@ -29,6 +30,8 @@ class MemberFactory extends Factory
             'GenderIdentity' => $gender,
             'GenderPronouns' => $gender == 'Male' ? 'He/Him/His' : 'She/Her/Hers',
             'GenderDisplay' => $fake->boolean(),
+            'AccessKey' => Str::random(8),
+            'ClubCategory' => Str::uuid(),
         ];
     }
 }

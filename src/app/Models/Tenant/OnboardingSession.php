@@ -108,9 +108,9 @@ class OnboardingSession extends Model
                 'revisitable' => true,
             ],
             'direct_debit_mandate' => [
-                'required' => boolval($tenant->getOption('USE_DIRECT_DEBIT')),
+                'required' => boolval($tenant->getOption('ENABLE_BILLING_SYSTEM')),
                 'completed' => false,
-                'required_locked' => ! ($tenant->getOption('USE_DIRECT_DEBIT')),
+                'required_locked' => ! boolval($tenant->getOption('ENABLE_BILLING_SYSTEM')),
                 'metadata' => [],
                 'revisitable' => true,
             ],

@@ -3,13 +3,11 @@
 namespace App\Models\Tenant;
 
 use App\Traits\BelongsToTenant;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Prunable;
 
 /**
  * @property string $id
@@ -24,7 +22,7 @@ use Illuminate\Database\Eloquent\Prunable;
  */
 class CompetitionGuestEntryHeader extends Model
 {
-    use BelongsToTenant, HasUuids, Prunable;
+    use BelongsToTenant, HasUuids;
 
     /**
      * The attributes that should be cast.
@@ -86,25 +84,5 @@ class CompetitionGuestEntryHeader extends Model
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    /**
-     * Get the prunable model query.
-     */
-    public function prunable(): Builder
-    {
-        return static::where('complete', false)
-            ->where('created_at', '<=', now()->subDays(2));
-    }
-
-    /**
-     * Prepare the model for pruning.
-     */
-    protected function pruning(): void
-    {
-        // Delete guest entrants
-        $this->competitionGuestEntrants->each(function (CompetitionGuestEntrant $competitionGuestEntrant) {
-            $competitionGuestEntrant->delete();
-        });
     }
 }
