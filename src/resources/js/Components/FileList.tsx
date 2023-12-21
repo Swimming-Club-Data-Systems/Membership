@@ -11,6 +11,8 @@ export type FileListProps = {
     items: FileProps[];
 };
 
+const Link = (props) => <a {...props}>Download</a>;
+
 export const FileList: React.FC<FileListProps> = ({ items }) => {
     if (items.length === 0) {
         return;
@@ -49,15 +51,15 @@ export const FileList: React.FC<FileListProps> = ({ items }) => {
                             </span>
                         </div>
                         <div className="ml-4 flex-shrink-0">
-                            <a
+                            <Link
                                 target="_blank"
                                 href={item.url}
                                 className="font-medium text-indigo-600 hover:text-indigo-500"
-                                rel="noreferrer"
                                 download={isDownload}
+                                referrerPolicy="origin"
                             >
                                 Download
-                            </a>
+                            </Link>
                         </div>
                     </li>
                 );

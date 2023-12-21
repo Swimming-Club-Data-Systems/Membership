@@ -6,6 +6,7 @@ use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
 use App\Http\Controllers\Tenant\CompetitionEntryController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
+use App\Http\Controllers\Tenant\CompetitionFileController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
+use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -439,6 +441,16 @@ Route::middleware([
                 Route::get('/edit', [CompetitionController::class, 'edit'])
                     ->name('edit');
                 Route::put('/', [CompetitionController::class, 'update']);
+                Route::name('files.')->group(function () {
+                    Route::prefix('files')->group(function () {
+                        Route::post('/upload', [CompetitionFileController::class, 'upload'])
+                            ->withoutMiddleware(VerifyCsrfToken::class)
+                            ->name('upload');
+                        Route::get('/{file}', [CompetitionFileController::class, 'view'])
+                            ->whereUuid('file')
+                            ->name('view');
+                    });
+                });
                 Route::prefix('entries')->group(function () {
                     Route::get('/', [CompetitionEntryController::class, 'index']);
                     Route::get('/{entry}', [CompetitionEntryController::class, 'show']);

@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
+use App\Models\Tenant\CompetitionFile;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\User;
@@ -253,6 +254,25 @@ class CompetitionController extends Controller
             }
         }
 
+        $files = null;
+        if ($request->user()) {
+            $files = $competition->files()->orderBy('sequence', 'asc')->get();
+        } else {
+            $files = $competition->files()->where('public', true)->orderBy('sequence', 'asc')->get();
+        }
+
+        $filesArray = [];
+        foreach ($files as $file) {
+            /** @var CompetitionFile $file */
+            $filesArray[] = [
+                'id' => $file->id,
+                'name' => $file->public_name,
+                'url' => route('competitions.files.view', [$competition, $file]),
+                'mime_type' => $file->mime_type,
+                'size' => $file->size,
+            ];
+        }
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
@@ -296,6 +316,7 @@ class CompetitionController extends Controller
                 'balance' => $qfr->periodBalance,
                 'balance_formatted' => $qfr->periodBalanceFormatted,
             ] : null,
+            'files' => $filesArray,
         ]);
     }
 

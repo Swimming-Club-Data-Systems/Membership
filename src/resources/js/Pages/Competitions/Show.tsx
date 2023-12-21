@@ -30,6 +30,9 @@ import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
 import Select from "@/Components/Form/Select";
 import Alert from "@/Components/Alert";
+import Uploady from "@rpldy/uploady";
+import { asUploadButton } from "@rpldy/upload-button";
+import FileList from "@/Components/FileList";
 
 type Session = {
     id: number;
@@ -76,7 +79,32 @@ export type Props = {
         debits: number;
         balance: number;
     };
+    files: {
+        id: string;
+        name: string;
+        url: string;
+        mime_type: string;
+    }[];
 };
+
+const UploadButton = asUploadButton((props) => {
+    return (
+        <Button {...props} style={{ cursor: "pointer" }}>
+            Add file
+        </Button>
+    );
+});
+
+const Upload = ({ id }) => (
+    <Uploady
+        destination={{
+            url: route("competitions.files.upload", id),
+            headers: {},
+        }}
+    >
+        <UploadButton />
+    </Uploady>
+);
 
 const Show: Layout<Props> = (props: Props) => {
     const [showAddSessionModal, setShowAddSessionModal] =
@@ -470,25 +498,35 @@ const Show: Layout<Props> = (props: Props) => {
                     )}
 
                     <div className="col-span-full row-span-6 md:row-start-1 md:col-start-8 md:col-span-5">
-                        <Card title="Venue" subtitle={props.venue.name}>
-                            <p className="text-sm">
-                                {props.venue.formatted_address}
-                            </p>
-                            <iframe
-                                title="Map"
-                                width="100%"
-                                height="400"
-                                style={{ border: 0 }}
-                                loading="lazy"
-                                allowFullScreen
-                                referrerPolicy="no-referrer-when-downgrade"
-                                src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
-                                    props.google_maps_api_key,
-                                )}&q=place_id:${encodeURIComponent(
-                                    props.venue.place_id,
-                                )}`}
-                            ></iframe>
-                        </Card>
+                        <div className="grid gap-6">
+                            <Card title="Venue" subtitle={props.venue.name}>
+                                <p className="text-sm">
+                                    {props.venue.formatted_address}
+                                </p>
+                                <iframe
+                                    title="Map"
+                                    width="100%"
+                                    height="400"
+                                    style={{ border: 0 }}
+                                    loading="lazy"
+                                    allowFullScreen
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
+                                        props.google_maps_api_key,
+                                    )}&q=place_id:${encodeURIComponent(
+                                        props.venue.place_id,
+                                    )}`}
+                                ></iframe>
+                            </Card>
+
+                            {props.files.length > 0 && (
+                                <Card title="Attachments">
+                                    <FileList items={props.files} />
+
+                                    <Upload id={props.id} />
+                                </Card>
+                            )}
+                        </div>
                     </div>
                 </div>
 
