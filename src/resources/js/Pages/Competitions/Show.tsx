@@ -85,6 +85,7 @@ export type Props = {
         url: string;
         mime_type: string;
     }[];
+    csrf_token: string;
 };
 
 const UploadButton = asUploadButton((props) => {
@@ -95,11 +96,13 @@ const UploadButton = asUploadButton((props) => {
     );
 });
 
-const Upload = ({ id }) => (
+const Upload = ({ id, csrfToken }: { id: number; csrfToken: string }) => (
     <Uploady
         destination={{
             url: route("competitions.files.upload", id),
-            headers: {},
+            headers: {
+                "X-CSRF-TOKEN": csrfToken,
+            },
         }}
     >
         <UploadButton />
@@ -519,11 +522,16 @@ const Show: Layout<Props> = (props: Props) => {
                                 ></iframe>
                             </Card>
 
-                            {props.files.length > 0 && (
+                            {(props.files.length > 0 || props.editable) && (
                                 <Card title="Attachments">
                                     <FileList items={props.files} />
 
-                                    <Upload id={props.id} />
+                                    {props.editable && (
+                                        <Upload
+                                            id={props.id}
+                                            csrfToken={props.csrf_token}
+                                        />
+                                    )}
                                 </Card>
                             )}
                         </div>

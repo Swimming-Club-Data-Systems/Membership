@@ -317,6 +317,7 @@ class CompetitionController extends Controller
                 'balance_formatted' => $qfr->periodBalanceFormatted,
             ] : null,
             'files' => $filesArray,
+            'csrf_token' => $request->session()->token(),
         ]);
     }
 

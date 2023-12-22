@@ -34,7 +34,6 @@ use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
-use App\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -444,7 +443,6 @@ Route::middleware([
                 Route::name('files.')->group(function () {
                     Route::prefix('files')->group(function () {
                         Route::post('/upload', [CompetitionFileController::class, 'upload'])
-                            ->withoutMiddleware(VerifyCsrfToken::class)
                             ->name('upload');
                         Route::get('/{file}', [CompetitionFileController::class, 'view'])
                             ->whereUuid('file')
