@@ -447,6 +447,12 @@ Route::middleware([
                         Route::get('/{file}', [CompetitionFileController::class, 'view'])
                             ->whereUuid('file')
                             ->name('view');
+                        Route::put('/{file}', [CompetitionFileController::class, 'update'])
+                            ->whereUuid('file')
+                            ->name('update');
+                        Route::delete('/{file}', [CompetitionFileController::class, 'delete'])
+                            ->whereUuid('file')
+                            ->name('delete');
                     });
                 });
                 Route::prefix('entries')->group(function () {

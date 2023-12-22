@@ -15,6 +15,10 @@ class CompetitionFileController extends Controller
     {
         $this->authorize('update', $competition);
 
+        $request->validate([
+            'file' => ['file', 'size:10240'],
+        ]);
+
         /** @var Tenant $tenant */
         $tenant = tenant();
 
@@ -72,5 +76,28 @@ class CompetitionFileController extends Controller
         } catch (\Exception $e) {
             abort(404, 'File not found in file storage');
         }
+    }
+
+    public function update(Competition $competition, CompetitionFile $file, Request $request)
+    {
+        $this->authorize('update', $competition);
+
+        $request->validate([
+            'name' => ['required', 'max:255'],
+        ]);
+
+        $file->public_name = $request->input('name');
+        $file->save();
+
+        return redirect(route('competitions.show', $competition));
+    }
+
+    public function delete(Competition $competition, CompetitionFile $file, Request $request)
+    {
+        $this->authorize('update', $competition);
+
+        $file->delete();
+
+        return $file;
     }
 }

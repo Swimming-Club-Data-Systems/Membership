@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -30,9 +30,10 @@ import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
 import Select from "@/Components/Form/Select";
 import Alert from "@/Components/Alert";
-import Uploady from "@rpldy/uploady";
+import Uploady, { UPLOADER_EVENTS } from "@rpldy/uploady";
 import { asUploadButton } from "@rpldy/upload-button";
 import FileList from "@/Components/FileList";
+import { router } from "@inertiajs/react";
 
 type Session = {
     id: number;
@@ -96,21 +97,64 @@ const UploadButton = asUploadButton((props) => {
     );
 });
 
-const Upload = ({ id, csrfToken }: { id: number; csrfToken: string }) => (
-    <Uploady
-        destination={{
-            url: route("competitions.files.upload", id),
-            headers: {
-                "X-CSRF-TOKEN": csrfToken,
-            },
-        }}
-    >
-        <UploadButton />
-    </Uploady>
-);
+const Upload = ({
+    id,
+    csrfToken,
+    onError,
+}: {
+    id: number;
+    csrfToken: string;
+    onError: () => void;
+}) => {
+    const reload = () => {
+        router.reload({
+            only: ["files"],
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
 
+    const internalOnError = () => {
+        onError();
+    };
+
+    const listeners = useMemo(
+        () => ({
+            [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => {
+                reload();
+            },
+            [UPLOADER_EVENTS.ITEM_FINISH]: (item) => {
+                reload();
+            },
+            [UPLOADER_EVENTS.BATCH_ERROR]: (batch) => {
+                internalOnError();
+            },
+            [UPLOADER_EVENTS.ITEM_ERROR]: (item) => {
+                internalOnError();
+            },
+        }),
+        [],
+    );
+
+    return (
+        <Uploady
+            destination={{
+                url: route("competitions.files.upload", id),
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            }}
+            multiple={false}
+            listeners={listeners}
+        >
+            <UploadButton />
+        </Uploady>
+    );
+};
 const Show: Layout<Props> = (props: Props) => {
     const [showAddSessionModal, setShowAddSessionModal] =
+        useState<boolean>(false);
+    const [showFileUploadError, setShowFileUploadError] =
         useState<boolean>(false);
 
     const Session = (item: Session) => {
@@ -523,14 +567,43 @@ const Show: Layout<Props> = (props: Props) => {
                             </Card>
 
                             {(props.files.length > 0 || props.editable) && (
-                                <Card title="Attachments">
-                                    <FileList items={props.files} />
+                                <Card
+                                    title="Attachments"
+                                    footer={
+                                        <>
+                                            {props.editable && (
+                                                <Upload
+                                                    id={props.id}
+                                                    csrfToken={props.csrf_token}
+                                                    onError={() => {}}
+                                                />
+                                            )}
+                                        </>
+                                    }
+                                >
+                                    <FileList
+                                        items={props.files}
+                                        editable
+                                        updateRoute={(id) => {
+                                            return route(
+                                                "competitions.files.update",
+                                                {
+                                                    competition: props.id,
+                                                    file: id,
+                                                },
+                                            );
+                                        }}
+                                    />
 
-                                    {props.editable && (
-                                        <Upload
-                                            id={props.id}
-                                            csrfToken={props.csrf_token}
-                                        />
+                                    {showFileUploadError && (
+                                        <Alert
+                                            title="File upload error"
+                                            variant="error"
+                                            className="mb-3"
+                                        >
+                                            The selected file could not be
+                                            uploaded.
+                                        </Alert>
                                     )}
                                 </Card>
                             )}

@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Events\Tenant\CompetitionFileDeleted;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 
@@ -44,4 +45,13 @@ class CompetitionFile extends Model
     {
         return $this->belongsTo(Competition::class);
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'deleted' => CompetitionFileDeleted::class,
+    ];
 }
