@@ -98,6 +98,6 @@ class CompetitionFileController extends Controller
 
         $file->delete();
 
-        return $file;
+        return redirect(route('competitions.show', $competition));
     }
 }

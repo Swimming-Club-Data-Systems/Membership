@@ -6,6 +6,7 @@ import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
 import { DocumentIcon } from "@heroicons/react/24/outline";
+import { router } from "@inertiajs/react";
 
 export type FileProps = {
     id?: string;
@@ -26,9 +27,11 @@ const Link = (props) => <a {...props}>Download</a>;
 export const FileList: React.FC<FileListProps> = ({
     items,
     updateRoute,
+    deleteRoute,
     editable,
 }) => {
     const [open, setOpen] = useState<boolean>(false);
+    const [confirmDeleteOpen, setConfirmDeleteOpen] = useState<boolean>(false);
     const [file, setFile] = useState<FileProps>(null);
 
     if (items.length === 0) {
@@ -122,7 +125,55 @@ export const FileList: React.FC<FileListProps> = ({
                             }}
                         >
                             <TextInput name="name" label="File name" />
+
+                            <Button
+                                variant="danger"
+                                onClick={() => setConfirmDeleteOpen(true)}
+                            >
+                                Delete file
+                            </Button>
                         </Form>
+
+                        <Modal
+                            show={confirmDeleteOpen}
+                            variant="danger"
+                            title="Delete file"
+                            onClose={() => setConfirmDeleteOpen(false)}
+                            Icon={DocumentIcon}
+                            buttons={
+                                <>
+                                    <Button
+                                        variant="danger"
+                                        onClick={() => {
+                                            router.delete(
+                                                deleteRoute(file.id),
+                                                {
+                                                    preserveScroll: true,
+                                                    onFinish: (page) => {
+                                                        setConfirmDeleteOpen(
+                                                            false,
+                                                        );
+                                                        setOpen(false);
+                                                    },
+                                                },
+                                            );
+                                        }}
+                                    >
+                                        Confirm
+                                    </Button>
+                                    <Button
+                                        variant="secondary"
+                                        onClick={() =>
+                                            setConfirmDeleteOpen(false)
+                                        }
+                                    >
+                                        Cancel
+                                    </Button>
+                                </>
+                            }
+                        >
+                            <p>Are you sure you want to delete {file.name}?</p>
+                        </Modal>
                     </>
                 )}
             </Modal>

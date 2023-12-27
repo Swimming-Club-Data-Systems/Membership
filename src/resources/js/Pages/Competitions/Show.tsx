@@ -593,6 +593,15 @@ const Show: Layout<Props> = (props: Props) => {
                                                 },
                                             );
                                         }}
+                                        deleteRoute={(id) => {
+                                            return route(
+                                                "competitions.files.delete",
+                                                {
+                                                    competition: props.id,
+                                                    file: id,
+                                                },
+                                            );
+                                        }}
                                     />
 
                                     {showFileUploadError && (
