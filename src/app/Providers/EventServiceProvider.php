@@ -37,6 +37,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Tenant\SquadMoveDeleted::class => [
             \App\Listeners\Tenant\SendSquadMoveDeletedNotification::class,
         ],
+        \App\Events\Tenant\CompetitionFileDeleted::class => [
+            \App\Listeners\Tenant\DeleteCompetitionFileFromStorage::class,
+        ],
     ];
 
     /**

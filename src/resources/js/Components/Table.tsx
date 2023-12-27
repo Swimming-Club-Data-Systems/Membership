@@ -1,5 +1,5 @@
 import React from "react";
-import _ from "lodash";
+import { get } from "lodash";
 
 type TableProps = {
     columns: {
@@ -9,7 +9,7 @@ type TableProps = {
         field: string;
         default?: string | number;
         render?: (
-            value: string | number | React.ReactNode
+            value: string | number | React.ReactNode,
         ) => string | number | React.ReactNode;
     }[];
     data: object[];
@@ -39,14 +39,14 @@ const Table: React.FC<TableProps> = (props) => {
                         </thead>
                         <tbody className="divide-y divide-gray-200">
                             {props.data.map((row, idx) => {
-                                const key = _.get(row, "id", idx);
+                                const key = get(row, "id", idx);
                                 return (
                                     <tr key={`row-${key}`}>
                                         {props.columns.map((column) => {
-                                            const value = _.get(
+                                            const value = get(
                                                 row,
                                                 column.field,
-                                                column.default || null
+                                                column.default || null,
                                             );
 
                                             return (
