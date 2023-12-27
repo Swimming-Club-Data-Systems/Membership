@@ -581,6 +581,15 @@ const Show: Layout<Props> = (props: Props) => {
                                         </>
                                     }
                                 >
+                                    {props.files.length === 0 && (
+                                        <Alert
+                                            variant="warning"
+                                            title="No attachments"
+                                        >
+                                            There are no attachments to display.
+                                        </Alert>
+                                    )}
+
                                     <FileList
                                         items={props.files}
                                         editable

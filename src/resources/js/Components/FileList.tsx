@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { PaperClipIcon } from "@heroicons/react/24/outline";
 import Button from "@/Components/Button";
 import Modal from "@/Components/Modal";
 import Form from "@/Components/Form/Form";
 import TextInput from "@/Components/Form/TextInput";
 import * as yup from "yup";
-import { DocumentIcon } from "@heroicons/react/24/outline";
+import {
+    PaperClipIcon,
+    DocumentIcon,
+    TrashIcon,
+} from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
 
 export type FileProps = {
@@ -139,7 +142,7 @@ export const FileList: React.FC<FileListProps> = ({
                             variant="danger"
                             title="Delete file"
                             onClose={() => setConfirmDeleteOpen(false)}
-                            Icon={DocumentIcon}
+                            Icon={TrashIcon}
                             buttons={
                                 <>
                                     <Button
