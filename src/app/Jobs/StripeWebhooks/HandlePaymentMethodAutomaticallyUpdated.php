@@ -16,17 +16,18 @@ class HandlePaymentMethodAutomaticallyUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var \Spatie\WebhookClient\Models\WebhookCall */
-    public $webhookCall;
+    public WebhookCall $webhookCall;
+
+    public int $webhookCallId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(WebhookCall $webhookCall)
+    public function __construct(int $webhookCallId)
     {
-        $this->webhookCall = $webhookCall;
+        $this->webhookCallId = $webhookCallId;
         // $this->onQueue(Queue::STRIPE->value);
     }
 
@@ -35,6 +36,8 @@ class HandlePaymentMethodAutomaticallyUpdated implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
+
         // Find the payment method if it's in the database
 
         /** @var Tenant $tenant */

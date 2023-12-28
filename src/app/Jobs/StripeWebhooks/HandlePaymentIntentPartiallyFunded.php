@@ -19,13 +19,15 @@ class HandlePaymentIntentPartiallyFunded implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public WebhookCall $webhookCall;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
     public function __construct(
-        public WebhookCall $webhookCall
+        public int $webhookCallId
     ) {
         // $this->onQueue(Queue::STRIPE->value);
     }
@@ -37,6 +39,8 @@ class HandlePaymentIntentPartiallyFunded implements ShouldQueue
      */
     public function handle()
     {
+        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
+
         //
     }
 }
