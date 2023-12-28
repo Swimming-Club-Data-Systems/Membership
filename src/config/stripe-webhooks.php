@@ -68,5 +68,5 @@ return [
      *
      * This should be set to a class that extends \Spatie\WebhookClient\Jobs\ProcessWebhookJob.
      */
-    'process_webhook_job' => \App\Jobs\StripeWebhooks\ProcessStripeWebhookJob::class,
+    'process_webhook_job' => \Spatie\StripeWebhooks\ProcessStripeWebhookJob::class,
 ];
