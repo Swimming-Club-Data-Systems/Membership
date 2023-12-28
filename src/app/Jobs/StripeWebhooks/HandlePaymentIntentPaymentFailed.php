@@ -8,6 +8,7 @@ use App\Interfaces\PaidObject;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\PaymentLine;
+use App\Traits\JobBackoff;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,7 +19,7 @@ use Spatie\WebhookClient\Models\WebhookCall;
 
 class HandlePaymentIntentPaymentFailed implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
     public WebhookCall $webhookCall;
 

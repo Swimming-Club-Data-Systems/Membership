@@ -3,6 +3,7 @@
 namespace App\Jobs\StripeWebhooks;
 
 use App\Enums\Queue;
+use App\Traits\JobBackoff;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -12,7 +13,7 @@ use Spatie\WebhookClient\Models\WebhookCall;
 
 class HandlePaymentIntentRequiresAction implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
     public WebhookCall $webhookCall;
 

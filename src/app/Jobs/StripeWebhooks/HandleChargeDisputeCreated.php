@@ -6,6 +6,7 @@ use App\Enums\Queue;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\JournalAccount;
 use App\Models\Tenant\Payment;
+use App\Traits\JobBackoff;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -16,7 +17,7 @@ use Spatie\WebhookClient\Models\WebhookCall;
 
 class HandleChargeDisputeCreated implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
     public WebhookCall $webhookCall;
 
