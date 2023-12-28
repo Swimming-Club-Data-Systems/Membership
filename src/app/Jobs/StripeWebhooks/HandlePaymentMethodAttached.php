@@ -27,9 +27,9 @@ class HandlePaymentMethodAttached implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(int $webhookCallIId)
+    public function __construct(int $webhookCallId)
     {
-        $this->webhookCallId = $webhookCallIId;
+        $this->webhookCallId = $webhookCallId;
         // $this->onQueue(Queue::STRIPE->value);
     }
 
