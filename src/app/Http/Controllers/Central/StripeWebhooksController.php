@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Central;
 
 use App\Business\Webhooks\StripeWebhookProcessor;
-use App\Jobs\StripeWebhooks\ProcessStripeWebhookJob;
 use Illuminate\Http\Request;
+use Spatie\StripeWebhooks\ProcessStripeWebhookJob;
 use Spatie\StripeWebhooks\StripeSignatureValidator;
 use Spatie\WebhookClient\Exceptions\InvalidConfig;
 use Spatie\WebhookClient\WebhookConfig;
