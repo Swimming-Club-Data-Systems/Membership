@@ -5,7 +5,6 @@ import MainHeader from "@/Layouts/Components/MainHeader";
 import Link from "@/Components/Link";
 import { formatDate } from "@/Utils/date-utils";
 import MainLayout from "@/Layouts/MainLayout";
-import { LaravelPaginatorProps } from "@/Components/Collection";
 import Badge from "@/Components/Badge";
 import PlainCollection from "@/Components/PlainCollection";
 import { usePage } from "@inertiajs/react";
@@ -66,7 +65,7 @@ type GuestEntryListProps = {
 const EntryRenderer = (props: EntryProps): ReactNode => {
     const customFields = useCustomFieldsList(
         props.entrant.custom_fields,
-        "show_in_preview"
+        "show_in_preview",
     );
 
     return (

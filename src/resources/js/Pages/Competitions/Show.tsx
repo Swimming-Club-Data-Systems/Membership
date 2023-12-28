@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
@@ -30,6 +30,10 @@ import { courseLength } from "@/Utils/Competitions/CourseLength";
 import { competitionStatus } from "@/Utils/Competitions/CompetitionStatus";
 import Select from "@/Components/Form/Select";
 import Alert from "@/Components/Alert";
+import Uploady, { UPLOADER_EVENTS } from "@rpldy/uploady";
+import { asUploadButton } from "@rpldy/upload-button";
+import FileList from "@/Components/FileList";
+import { router } from "@inertiajs/react";
 
 type Session = {
     id: number;
@@ -54,6 +58,7 @@ export type Props = {
     processing_fee_string: string;
     coach_enters: boolean;
     description: string;
+    description_html: string;
     venue: {
         name: string;
         id: number;
@@ -75,10 +80,81 @@ export type Props = {
         debits: number;
         balance: number;
     };
+    files: {
+        id: string;
+        name: string;
+        url: string;
+        mime_type: string;
+    }[];
+    csrf_token: string;
 };
 
+const UploadButton = asUploadButton((props) => {
+    return (
+        <Button {...props} style={{ cursor: "pointer" }}>
+            Add file
+        </Button>
+    );
+});
+
+const Upload = ({
+    id,
+    csrfToken,
+    onError,
+}: {
+    id: number;
+    csrfToken: string;
+    onError: () => void;
+}) => {
+    const reload = () => {
+        router.reload({
+            only: ["files"],
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
+
+    const internalOnError = () => {
+        onError();
+    };
+
+    const listeners = useMemo(
+        () => ({
+            [UPLOADER_EVENTS.BATCH_FINISH]: (batch) => {
+                reload();
+            },
+            [UPLOADER_EVENTS.ITEM_FINISH]: (item) => {
+                reload();
+            },
+            [UPLOADER_EVENTS.BATCH_ERROR]: (batch) => {
+                internalOnError();
+            },
+            [UPLOADER_EVENTS.ITEM_ERROR]: (item) => {
+                internalOnError();
+            },
+        }),
+        [],
+    );
+
+    return (
+        <Uploady
+            destination={{
+                url: route("competitions.files.upload", id),
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+            }}
+            multiple={false}
+            listeners={listeners}
+        >
+            <UploadButton />
+        </Uploady>
+    );
+};
 const Show: Layout<Props> = (props: Props) => {
     const [showAddSessionModal, setShowAddSessionModal] =
+        useState<boolean>(false);
+    const [showFileUploadError, setShowFileUploadError] =
         useState<boolean>(false);
 
     const Session = (item: Session) => {
@@ -132,7 +208,7 @@ const Show: Layout<Props> = (props: Props) => {
                             .required("A name is required for this session.")
                             .max(
                                 255,
-                                "The session name must be less than 255 characters."
+                                "The session name must be less than 255 characters.",
                             ),
                         venue: yup
                             .number()
@@ -140,17 +216,17 @@ const Show: Layout<Props> = (props: Props) => {
                         start_time: yup
                             .date()
                             .required(
-                                "A start time is required for this session."
+                                "A start time is required for this session.",
                             ),
                         timezone: yup.string().required(),
                         end_time: yup
                             .date()
                             .required(
-                                "An end time is required for this session."
+                                "An end time is required for this session.",
                             )
                             .min(
                                 yup.ref("start_time"),
-                                "The end time for this session must be after the start time."
+                                "The end time for this session must be after the start time.",
                             ),
                     })}
                     initialValues={{
@@ -303,6 +379,19 @@ const Show: Layout<Props> = (props: Props) => {
                         </div>
                     )}
 
+                    {props.description_html && (
+                        <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
+                            <Card title="Description">
+                                <div
+                                    className="prose prose-sm"
+                                    dangerouslySetInnerHTML={{
+                                        __html: props.description_html,
+                                    }}
+                                />
+                            </Card>
+                        </div>
+                    )}
+
                     {(props.members_can_enter || props.guests_can_enter) && (
                         <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <ActionPanel
@@ -321,7 +410,7 @@ const Show: Layout<Props> = (props: Props) => {
                                             <Link
                                                 href={route(
                                                     "competitions.enter_as_guest",
-                                                    props.id
+                                                    props.id,
                                                 )}
                                             >
                                                 Enter as guest{" "}
@@ -375,7 +464,7 @@ const Show: Layout<Props> = (props: Props) => {
                                         <Link
                                             href={route(
                                                 "competitions.guest_entries.index",
-                                                [props.id]
+                                                [props.id],
                                             )}
                                         >
                                             View guest entries
@@ -388,7 +477,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 {
                                                     competition: props.id,
                                                     sex: "Male",
-                                                }
+                                                },
                                             )}
                                         >
                                             View Open Category guest entries
@@ -401,7 +490,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 {
                                                     competition: props.id,
                                                     sex: "Female",
-                                                }
+                                                },
                                             )}
                                         >
                                             View Female Category guest entries
@@ -413,7 +502,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 "competitions.guest_entries.report",
                                                 {
                                                     competition: props.id,
-                                                }
+                                                },
                                             )}
                                             external
                                             download
@@ -456,25 +545,87 @@ const Show: Layout<Props> = (props: Props) => {
                     )}
 
                     <div className="col-span-full row-span-6 md:row-start-1 md:col-start-8 md:col-span-5">
-                        <Card title="Venue" subtitle={props.venue.name}>
-                            <p className="text-sm">
-                                {props.venue.formatted_address}
-                            </p>
-                            <iframe
-                                title="Map"
-                                width="100%"
-                                height="400"
-                                style={{ border: 0 }}
-                                loading="lazy"
-                                allowFullScreen
-                                referrerPolicy="no-referrer-when-downgrade"
-                                src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
-                                    props.google_maps_api_key
-                                )}&q=place_id:${encodeURIComponent(
-                                    props.venue.place_id
-                                )}`}
-                            ></iframe>
-                        </Card>
+                        <div className="grid gap-6">
+                            <Card title="Venue" subtitle={props.venue.name}>
+                                <p className="text-sm">
+                                    {props.venue.formatted_address}
+                                </p>
+                                <iframe
+                                    title="Map"
+                                    width="100%"
+                                    height="400"
+                                    style={{ border: 0 }}
+                                    loading="lazy"
+                                    allowFullScreen
+                                    referrerPolicy="no-referrer-when-downgrade"
+                                    src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
+                                        props.google_maps_api_key,
+                                    )}&q=place_id:${encodeURIComponent(
+                                        props.venue.place_id,
+                                    )}`}
+                                ></iframe>
+                            </Card>
+
+                            {(props.files.length > 0 || props.editable) && (
+                                <Card
+                                    title="Attachments"
+                                    footer={
+                                        <>
+                                            {props.editable && (
+                                                <Upload
+                                                    id={props.id}
+                                                    csrfToken={props.csrf_token}
+                                                    onError={() => {}}
+                                                />
+                                            )}
+                                        </>
+                                    }
+                                >
+                                    {props.files.length === 0 && (
+                                        <Alert
+                                            variant="warning"
+                                            title="No attachments"
+                                        >
+                                            There are no attachments to display.
+                                        </Alert>
+                                    )}
+
+                                    <FileList
+                                        items={props.files}
+                                        editable
+                                        updateRoute={(id) => {
+                                            return route(
+                                                "competitions.files.update",
+                                                {
+                                                    competition: props.id,
+                                                    file: id,
+                                                },
+                                            );
+                                        }}
+                                        deleteRoute={(id) => {
+                                            return route(
+                                                "competitions.files.delete",
+                                                {
+                                                    competition: props.id,
+                                                    file: id,
+                                                },
+                                            );
+                                        }}
+                                    />
+
+                                    {showFileUploadError && (
+                                        <Alert
+                                            title="File upload error"
+                                            variant="error"
+                                            className="mb-3"
+                                        >
+                                            The selected file could not be
+                                            uploaded.
+                                        </Alert>
+                                    )}
+                                </Card>
+                            )}
+                        </div>
                     </div>
                 </div>
 

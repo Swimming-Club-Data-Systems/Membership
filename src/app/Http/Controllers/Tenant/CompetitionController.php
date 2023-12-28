@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
+use App\Models\Tenant\CompetitionFile;
 use App\Models\Tenant\CompetitionGuestEntryHeader;
 use App\Models\Tenant\CompetitionSession;
 use App\Models\Tenant\User;
@@ -19,6 +20,7 @@ use App\Models\Tenant\Venue;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 use Inertia\Inertia;
@@ -252,11 +254,34 @@ class CompetitionController extends Controller
             }
         }
 
+        $files = null;
+        if ($request->user()) {
+            $files = $competition->files()->orderBy('sequence', 'asc')->get();
+        } else {
+            $files = $competition->files()->where('public', true)->orderBy('sequence', 'asc')->get();
+        }
+
+        $filesArray = [];
+        foreach ($files as $file) {
+            /** @var CompetitionFile $file */
+            $filesArray[] = [
+                'id' => $file->id,
+                'name' => $file->public_name,
+                'url' => route('competitions.files.view', [$competition, $file]),
+                'mime_type' => $file->mime_type,
+                'size' => $file->size,
+            ];
+        }
+
         return Inertia::render('Competitions/Show', [
             'google_maps_api_key' => config('google.maps.clientside'),
             'id' => $competition->id,
             'name' => $competition->name,
             'description' => $competition->description,
+            'description_html' => Str::of($competition->description)->markdown([
+                'html_input' => 'strip',
+                'allow_unsafe_links' => false,
+            ]),
             'pool_course' => $competition->pool_course,
             'mode' => $competition->mode,
             'require_times' => $competition->require_times,
@@ -291,6 +316,8 @@ class CompetitionController extends Controller
                 'balance' => $qfr->periodBalance,
                 'balance_formatted' => $qfr->periodBalanceFormatted,
             ] : null,
+            'files' => $filesArray,
+            'csrf_token' => $request->session()->token(),
         ]);
     }
 

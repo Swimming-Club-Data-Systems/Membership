@@ -125,6 +125,11 @@ class Competition extends Model
         return $this->belongsTo(Venue::class);
     }
 
+    public function files(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(CompetitionFile::class);
+    }
+
     public function sessions(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CompetitionSession::class)->orderBy('sequence', 'asc');

@@ -48,7 +48,7 @@ const DateTimeInput: React.FC<Props> = ({
     timezones = false,
     ...props
 }) => {
-    const [{ ...field }, meta, helpers] = useField(props);
+    const [{ ...field }, meta] = useField(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
@@ -104,7 +104,7 @@ const DateTimeInput: React.FC<Props> = ({
         newValue:
             | { startDate: string; endDate: string }
             | { target: { value: string } },
-        type: "date" | "time"
+        type: "date" | "time",
     ) => {
         // Calculate the new datetime
         const formatTime = (date) => {
@@ -137,7 +137,7 @@ const DateTimeInput: React.FC<Props> = ({
                 " " +
                 format(
                     parse(newValue.target?.value, "HH:mm", new Date()),
-                    "HH:mm:ss"
+                    "HH:mm:ss",
                 );
         }
 

@@ -1,10 +1,15 @@
-/** @type { import("@storybook/react-vite").StorybookConfig } */
-const config = {
+import { mergeConfig } from "vite";
+import type { StorybookConfig } from "@storybook/react-vite";
+
+const config: StorybookConfig = {
     stories: [
         "../resources/js/**/*.mdx",
-        "../resources/js/**/*.stories.@(js|jsx|ts|tsx)",
+        "../resources/js/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     ],
     staticDirs: ["../public"],
+    core: {
+        builder: "@storybook/builder-vite",
+    },
     addons: [
         "@storybook/addon-links",
         "@storybook/addon-essentials",
@@ -24,6 +29,15 @@ const config = {
     },
     docs: {
         autodocs: "tag",
+    },
+    async viteFinal(config) {
+        // Merge custom configuration into the default config
+        return mergeConfig(config, {
+            // Add dependencies to pre-optimization
+            optimizeDeps: {
+                include: ["storybook-dark-mode"],
+            },
+        });
     },
 };
 export default config;

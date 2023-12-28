@@ -15,7 +15,7 @@ import {
     FormikBag,
     useFormikContext,
 } from "formik";
-import type { VisitOptions } from "@inertiajs/react";
+import type { VisitOptions } from "@inertiajs/core";
 import { router, usePage } from "@inertiajs/react";
 import Button from "../Button.js";
 import Alert, { AlertList } from "../Alert.js";
@@ -72,7 +72,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                 for (let i = 0; i < errors[current].length; i++) {
                     total += calculateNumberOfErrors(
                         errors[current][i],
-                        touched?.[current]?.[i] || {}
+                        touched?.[current]?.[i] || {},
                     );
                 }
             } else if (errors[current].length > 0 && touched?.[current]) {
@@ -213,7 +213,7 @@ export type FormProps = {
     validationSchema: AnyObjectSchema | (() => AnyObjectSchema);
     onSubmit?: (
         values: Record<string, unknown>,
-        formikBag: FormikBag<never, never>
+        formikBag: FormikBag<never, never>,
     ) => void;
     submitTitle?: string;
     submitClass?: string;
@@ -269,9 +269,9 @@ const Form = (props: FormProps) => {
     } = props;
 
     const [hasErrors, setHasErrors] = useState(false);
-    const handleNetErrorDismiss = () => {
-        setHasErrors(false);
-    };
+    // const handleNetErrorDismiss = () => {
+    //     setHasErrors(false);
+    // };
     const [showConfirm, setShowConfirm] = useState(false);
     const [confirmed, setConfirmed] = useState(false);
 

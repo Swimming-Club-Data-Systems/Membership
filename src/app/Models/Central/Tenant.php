@@ -283,4 +283,9 @@ class Tenant extends BaseTenant
             get: fn ($value, $attributes) => $this->getOption('TIMEZONE') ? $this->getOption('TIMEZONE') : 'Europe/London',
         );
     }
+
+    public function storagePath(): string
+    {
+        return (string) $this->id.'/';
+    }
 }

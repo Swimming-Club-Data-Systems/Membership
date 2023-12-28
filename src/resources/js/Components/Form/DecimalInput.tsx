@@ -62,15 +62,21 @@ const DecimalInput: React.FC<Props> = ({
             : e.target.value;
     };
 
-    const onChangeInternal = useCallback((ev: CustomEvent) => {
-        setFieldValue(props.name, getInputValue(ev));
-    }, []);
+    const onChangeInternal = useCallback(
+        (ev: CustomEvent) => {
+            setFieldValue(props.name, getInputValue(ev));
+        },
+        [props.name, setFieldValue],
+    );
 
-    const onBlurInternal = useCallback((ev) => {
-        setFieldValue(props.name, getInputValue(ev));
-        setTimeout(() => validateField(props.name), 0);
-        setFieldTouched(props.name);
-    }, []);
+    const onBlurInternal = useCallback(
+        (ev) => {
+            setFieldValue(props.name, getInputValue(ev));
+            setTimeout(() => validateField(props.name), 0);
+            setFieldTouched(props.name);
+        },
+        [props.name, setFieldTouched, setFieldValue, validateField],
+    );
 
     if (!type) {
         type = "text";
