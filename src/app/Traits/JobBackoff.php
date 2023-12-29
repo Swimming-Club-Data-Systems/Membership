@@ -9,6 +9,6 @@ trait JobBackoff
      */
     public function backoff(): array
     {
-        return [1, 5, 10];
+        return [30, 60, 90];
     }
 }
