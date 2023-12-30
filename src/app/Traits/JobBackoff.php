@@ -9,6 +9,11 @@ trait JobBackoff
      */
     public function backoff(): array
     {
-        return [30, 60, 90];
+        return [30, 60, 120, 240, 480];
     }
+
+    /**
+     * The number of times the job may be attempted.
+     */
+    public int $tries = 5;
 }

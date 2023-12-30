@@ -39,9 +39,9 @@ class StripeWebhookProcessor extends WebhookProcessor
                 report('WebhookCall: '.$webhookCall->id.' is not persisted to db');
             }
 
-            dispatch(new $jobClass($webhookCall->id))->onQueue(Queue::STRIPE->value);
-
             $webhookCall->clearException();
+
+            dispatch(new $jobClass($webhookCall->id))->onQueue(Queue::STRIPE->value)->afterCommit();
 
         } catch (Exception $exception) {
             $webhookCall->saveException($exception);
