@@ -41,7 +41,7 @@ class StripeWebhookProcessor extends WebhookProcessor
 
             $webhookCall->clearException();
 
-            dispatch(new $jobClass($webhookCall->id))->onQueue(Queue::STRIPE->value)->afterCommit();
+            $jobClass::dispatch($webhookCall->id)->onQueue(Queue::STRIPE->value)->afterCommit();
 
         } catch (Exception $exception) {
             $webhookCall->saveException($exception);
