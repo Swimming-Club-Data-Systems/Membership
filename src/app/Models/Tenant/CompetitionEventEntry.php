@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $id
  * @property CompetitionEntry $competitionEntry
  * @property CompetitionEvent $competitionEvent
- * @property float $entry_time
+ * @property float|string $entry_time
  * @property int $amount
  * @property int $amount_refunded
  * @property string $amount_string

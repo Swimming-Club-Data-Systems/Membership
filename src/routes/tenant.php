@@ -11,6 +11,7 @@ use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryReportController;
+use App\Http\Controllers\Tenant\CompetitionMemberEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -491,6 +492,21 @@ Route::middleware([
                             ->whereNumber('event')
                             ->name('events.delete');
                     });
+                });
+                Route::prefix('/enter')->group(function () {
+                    Route::get('/', [CompetitionMemberEntryHeaderController::class, 'new'])
+                        ->name('enter');
+                    //                    Route::get('/{header}/pay-now', [CompetitionGuestEntryPaymentController::class, 'start'])
+                    //                        ->whereUuid('header')
+                    //                        ->name('enter_as_guest.pay');
+                    //                    Route::post('/{header}/express-pay', [CompetitionGuestEntryPaymentController::class, 'startJson'])
+                    //                        ->whereUuid('header')
+                    //                        ->name('enter_as_guest.express_pay');
+                    Route::get('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'editEntry'])
+                        ->whereNumber(['member'])
+                        ->name('enter.edit_entry');
+                    Route::put('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'updateEntry'])
+                        ->whereNumber(['member']);
                 });
                 Route::prefix('/enter-as-guest')->group(function () {
                     Route::get('/', [CompetitionGuestEntryHeaderController::class, 'new'])
