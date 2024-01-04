@@ -102,6 +102,8 @@ class RenewalController extends Controller
             'use_custom_billing_dates' => ['boolean', 'required'],
             'dd_ngb_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
             'dd_club_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
+            'credit_debit' => ['boolean'],
+            'direct_debit' => ['boolean'],
         ];
 
         $clubYear = MembershipYear::find($request->string('club_year'));
@@ -167,6 +169,17 @@ class RenewalController extends Controller
             $data['club'] = $request->date('dd_club_bills_date');
         }
         $renewal->metadata['custom_direct_debit_bill_dates'] = $data;
+
+        $pmTypes = [];
+
+        if ($request->boolean('credit_debit')) {
+            $pmTypes[] = 'card';
+        }
+        if ($request->boolean('direct_debit')) {
+            $pmTypes[] = 'dd';
+        }
+
+        $renewal->metadata['supported_payment_types'] = $pmTypes;
 
         $renewal->save();
 
@@ -258,6 +271,8 @@ class RenewalController extends Controller
             'use_custom_billing_dates' => ['boolean', 'required'],
             'dd_ngb_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
             'dd_club_bills_date' => ['nullable', 'date', 'required_if_accepted:use_custom_billing_dates', 'after:yesterday'],
+            'credit_debit' => ['boolean'],
+            'direct_debit' => ['boolean'],
         ];
 
         $stages = collect(OnboardingSession::stagesOrder());
@@ -301,6 +316,17 @@ class RenewalController extends Controller
             $data['club'] = $request->date('dd_club_bills_date');
         }
         $renewal->metadata['custom_direct_debit_bill_dates'] = $data;
+
+        $pmTypes = [];
+
+        if ($request->boolean('credit_debit')) {
+            $pmTypes[] = 'card';
+        }
+        if ($request->boolean('direct_debit')) {
+            $pmTypes[] = 'dd';
+        }
+
+        $renewal->metadata['supported_payment_types'] = $pmTypes;
 
         $renewal->save();
 
