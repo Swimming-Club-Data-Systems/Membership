@@ -4,13 +4,13 @@ use App\Http\Controllers\Tenant\Auth\V1LoginController;
 use App\Http\Controllers\Tenant\BalanceTopUpController;
 use App\Http\Controllers\Tenant\CheckoutController;
 use App\Http\Controllers\Tenant\CompetitionController;
-use App\Http\Controllers\Tenant\CompetitionEntryController;
 use App\Http\Controllers\Tenant\CompetitionEventController;
 use App\Http\Controllers\Tenant\CompetitionFileController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryReportController;
+use App\Http\Controllers\Tenant\CompetitionMemberEntryController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
@@ -457,8 +457,11 @@ Route::middleware([
                     });
                 });
                 Route::prefix('entries')->group(function () {
-                    Route::get('/', [CompetitionEntryController::class, 'index']);
-                    Route::get('/{entry}', [CompetitionEntryController::class, 'show']);
+                    Route::get('/', [CompetitionMemberEntryController::class, 'index'])
+                        ->name('entries.index');
+                    Route::get('/{entry}', [CompetitionMemberEntryController::class, 'show'])
+                        ->whereUuid('entry')
+                        ->name('entries.show');
                 });
                 Route::prefix('guest-entries')->group(function () {
                     Route::get('/', [CompetitionGuestEntryController::class, 'index'])

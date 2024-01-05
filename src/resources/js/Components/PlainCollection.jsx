@@ -8,7 +8,7 @@ import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
 import InternalContainer from "@/Components/InternalContainer";
-import EmptyState from "@/Components/EmptyState.js";
+import EmptyState from "@/Components/EmptyState";
 
 const Search = (props) => {
     const url = props.path;
