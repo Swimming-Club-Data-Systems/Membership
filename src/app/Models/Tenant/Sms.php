@@ -11,6 +11,10 @@ use Laravel\Scout\Searchable;
  * @property User $author
  * @property string $message
  * @property bool $processed
+ * @property string $currency
+ * @property int $amount
+ * @property int $number_sent
+ * @property int $segments_sent
  */
 class Sms extends Model
 {

@@ -4,16 +4,18 @@ namespace App\Listeners;
 
 use App\Business\Helpers\PaymentMethod;
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Sms;
+use Illuminate\Support\Carbon;
+use Laravel\Cashier\Cashier;
 use Laravel\Cashier\Events\WebhookReceived;
+use Stripe\Exception\ApiErrorException;
 
 class StripeEventListener
 {
     /**
      * Handle received Stripe webhooks.
-     *
-     * @return void
      */
-    public function handle(WebhookReceived $event)
+    public function handle(WebhookReceived $event): void
     {
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
@@ -33,6 +35,53 @@ class StripeEventListener
                 } catch (\Exception $e) {
 
                 }
+            }
+        } elseif ($event->payload['type'] === 'invoice.created') {
+            try {
+                // Make the invoice paper size A4
+                $invoice = $stripe->invoices->retrieve($event->payload['data']['object']['id']);
+
+                $stripe->invoices->update($invoice->id,
+                    [
+                        'rendering' => [
+                            'pdf' => [
+                                'page_size' => 'a4',
+                            ],
+                        ],
+                    ]);
+
+                // Add period information to the invoice (e.g. SMS fees)
+
+                /** @var Tenant $tenant */
+                $tenant = Cashier::findBillable($event->payload['data']['object']['customer']);
+
+                if ($tenant != null && $invoice->subscription == $tenant->subscription()?->stripe_id) {
+                    // Get SMS messages in the period
+                    $smsPeriod = Sms::where('created_at', '>=', Carbon::createFromTimestamp($invoice->period_start, 'UTC'))
+                        ->where('created_at', '<', Carbon::createFromTimestamp($invoice->period_end, 'UTC'));
+
+                    $count = $smsPeriod->sum('segments_sent');
+                    $amount = $smsPeriod->sum('amount');
+
+                    $stripe->invoiceItems->create([
+                        'customer' => $tenant->stripe_id,
+                        'invoice' => $invoice->id,
+                        'amount' => $amount,
+                        'currency' => 'gbp',
+                        'description' => "Notify SMS ($count outbound message segments)",
+                        'discounts' => [
+                            ['coupon' => 'paygobalance'],
+                        ],
+                        'tax_behavior' => 'exclusive',
+                        'period' => [
+                            'start' => $invoice->period_start,
+                            'end' => $invoice->period_end,
+                        ],
+                    ]);
+                }
+
+            } catch (ApiErrorException $e) {
+                report($e);
             }
         }
     }

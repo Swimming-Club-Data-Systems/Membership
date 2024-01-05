@@ -89,12 +89,13 @@ class ProcessSMS implements ShouldQueue
         $totalFee = 0;
         $sentUsers = 0;
         $failedUsers = 0;
+        $sentSegments = 0;
 
         $allResponses = Collection::empty();
 
         foreach ($chunks as $chunk) {
-            $responses = Future\await($chunk->map(function ($userId, $number) use ($tenant, $from, $client, &$totalFee, &$sentUsers, &$failedUsers) {
-                return \Amp\async(function () use ($userId, $from, $client, $tenant, $number, &$totalFee, &$sentUsers, &$failedUsers) {
+            $responses = Future\await($chunk->map(function ($userId, $number) use ($tenant, $from, $client, &$totalFee, &$sentUsers, &$failedUsers, &$sentSegments) {
+                return \Amp\async(function () use ($userId, $from, $client, $tenant, $number, &$totalFee, &$sentUsers, &$failedUsers, &$sentSegments) {
                     try {
                         // Check balance > 0
                         if ($tenant->journal->getBalance()->getAmount() < 0) {
@@ -123,6 +124,7 @@ class ProcessSMS implements ShouldQueue
                         PhoneNumber::create($number)->getDescription();
 
                         $fee = 5 * (int) $response->numSegments;
+                        $sentSegments += (int) $response->numSegments;
                         $totalFee += $fee;
 
                         // Debit the tenant and reference the Sms model
@@ -153,6 +155,12 @@ class ProcessSMS implements ShouldQueue
         }
 
         $this->sms->processed = true;
+
+        $this->sms->amount = $totalFee;
+        $this->sms->currency = 'gbp';
+        $this->sms->number_sent = $sentUsers;
+        $this->sms->segments_sent = $sentSegments;
+
         $this->sms->save();
 
         Mail::to($this->sms->author)->send(new SmsSent($this->sms, Money::formatCurrency($totalFee), $sentUsers, $failedUsers));
