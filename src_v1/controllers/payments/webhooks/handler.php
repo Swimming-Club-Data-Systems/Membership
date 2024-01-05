@@ -239,7 +239,7 @@ function process_mandate_event($event) {
 			print("Mandate " . $event["links"]["mandate"] . " has expired!\n");
 			$mandate = $event["links"]["mandate"];
       $expire = $db->prepare("UPDATE `paymentMandates` SET `InUse` = ? WHERE `Mandate` = ?");
-      $expire->execute([false, $mandate]);
+      $expire->execute([(int)false, $mandate]);
 
 			// Get the user ID, set to another bank if possible and let them know.
 			$getUser = $db->prepare("SELECT users.UserID, `Forename`, `Surname`, `EmailAddress`,
