@@ -703,7 +703,7 @@ class AppMenu
 
         $menu[] = [
             'name' => 'System Settings',
-            'href' => '/settings',
+            'href' => '/v1/settings', // Added /v1 and there is a route at /settings redirecting
         ];
 
         if ($this->user->can('create', Venue::class)) {
