@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Central\Tenant;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -61,5 +62,7 @@ class AppServiceProvider extends ServiceProvider
         Cashier::calculateTaxes();
 
         \Locale::setDefault('en_GB');
+
+        Model::shouldBeStrict(! $this->app->isProduction());
     }
 }
