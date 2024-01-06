@@ -1,7 +1,7 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import { Head } from "@inertiajs/react";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import Collection from "@/Components/Collection";
 import ButtonLink from "@/Components/ButtonLink";

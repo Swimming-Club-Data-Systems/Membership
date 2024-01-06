@@ -2,7 +2,7 @@ import React from "react";
 import * as yup from "yup";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import { Head } from "@inertiajs/react";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import Card from "@/Components/Card";
 import Form, {
@@ -43,7 +43,7 @@ const Index: Layout<Props> = (props: Props) => {
                                 "income",
                                 "expense",
                             ],
-                            "Must be one of the supported types"
+                            "Must be one of the supported types",
                         ),
                 })}
                 hideDefaultButtons

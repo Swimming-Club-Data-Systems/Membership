@@ -135,7 +135,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                                     active
                                                                                         ? "bg-gray-100"
                                                                                         : "",
-                                                                                    "block px-4 py-2 text-sm text-gray-700"
+                                                                                    "block px-4 py-2 text-sm text-gray-700",
                                                                                 )}
                                                                                 method={
                                                                                     item.method
@@ -147,7 +147,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                             </Link>
                                                                         )}
                                                                     </Menu.Item>
-                                                                )
+                                                                ),
                                                             )}
                                                         </Menu.Items>
                                                     </Transition>
@@ -301,7 +301,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                                 <Menu.Items className="mt-2 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                                                                     {item.children.map(
                                                                                         (
-                                                                                            item
+                                                                                            item,
                                                                                         ) => (
                                                                                             <Menu.Item
                                                                                                 key={
@@ -322,7 +322,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                                                             active
                                                                                                                 ? "bg-gray-100"
                                                                                                                 : "",
-                                                                                                            "block px-4 py-2 text-gray-700"
+                                                                                                            "block px-4 py-2 text-gray-700",
                                                                                                         )}
                                                                                                         method={
                                                                                                             item.method
@@ -334,7 +334,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                                                     </Popover.Button>
                                                                                                 )}
                                                                                             </Menu.Item>
-                                                                                        )
+                                                                                        ),
                                                                                     )}
                                                                                 </Menu.Items>
                                                                             </Transition>
@@ -363,7 +363,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                         }
                                                                     </Popover.Button>
                                                                 );
-                                                            }
+                                                            },
                                                         )}
                                                     </div>
                                                 </div>
@@ -427,7 +427,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                             item.name
                                                                         }
                                                                     </Popover.Button>
-                                                                )
+                                                                ),
                                                             )}
                                                         </div>
                                                     </div>
@@ -489,7 +489,7 @@ const CentralMainLayout = ({ title, subtitle, children }) => {
                                                                     active
                                                                         ? "bg-gray-100"
                                                                         : "",
-                                                                    "block px-4 py-2 text-sm text-gray-700"
+                                                                    "block px-4 py-2 text-sm text-gray-700",
                                                                 )}
                                                                 method={
                                                                     item.method

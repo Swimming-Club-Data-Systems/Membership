@@ -1,6 +1,6 @@
 import React from "react";
 import Head from "@/Components/Head";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import MainLayout from "@/Layouts/MainLayout";
 import Form, {
@@ -57,7 +57,7 @@ const deleteUser = async (entry, user) => {
             only: ["users", "flash"],
             preserveScroll: true,
             preserveState: true,
-        }
+        },
     );
 };
 
@@ -71,7 +71,7 @@ const deleteLine = async (entry, line) => {
             only: ["lines", "flash"],
             preserveScroll: true,
             preserveState: true,
-        }
+        },
     );
 };
 
@@ -97,7 +97,7 @@ const User = (item: UserProps) => {
                                     onClick={() => {
                                         deleteUser(
                                             item.manual_payment_entry_id,
-                                            item.user_id
+                                            item.user_id,
                                         );
                                     }}
                                 >
@@ -142,7 +142,7 @@ const Line = (item: LineProps) => {
                                     onClick={() => {
                                         deleteLine(
                                             item.manual_payment_entry_id,
-                                            item.line_id
+                                            item.line_id,
                                         );
                                     }}
                                 >
@@ -269,7 +269,7 @@ const Index: Layout<Props> = (props: Props) => {
                             .required("A description is required")
                             .max(
                                 255,
-                                "Description must be 255 characters or less"
+                                "Description must be 255 characters or less",
                             ),
                         amount: yup
                             .number()
@@ -277,17 +277,17 @@ const Index: Layout<Props> = (props: Props) => {
                             .required("You must enter an amount")
                             .min(
                                 0,
-                                "You must enter an amount greater than £0.00"
+                                "You must enter an amount greater than £0.00",
                             )
                             .max(
                                 1000,
-                                "You must enter an amount less than or equal to £1000.00"
+                                "You must enter an amount less than or equal to £1000.00",
                             ),
                         type: yup
                             .string()
                             .oneOf(
                                 ["credit", "debit"],
-                                "The payment type must be one of Credit or Debit"
+                                "The payment type must be one of Credit or Debit",
                             ),
                         journal_select: yup
                             .number()
@@ -346,7 +346,7 @@ const Index: Layout<Props> = (props: Props) => {
 
                                 <Combobox
                                     endpoint={route(
-                                        "payments.ledgers.journals.combobox"
+                                        "payments.ledgers.journals.combobox",
                                     )}
                                     name="journal_select"
                                     label="Journal account (payment category)"

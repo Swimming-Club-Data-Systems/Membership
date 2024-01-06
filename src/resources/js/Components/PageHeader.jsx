@@ -65,7 +65,7 @@ const PageHeader = (props) => {
                                                 {navigation.map((item) => {
                                                     const current =
                                                         (url.startsWith(
-                                                            item.href
+                                                            item.href,
                                                         ) &&
                                                             item.href !==
                                                                 "/") ||
@@ -78,7 +78,7 @@ const PageHeader = (props) => {
                                                                 current
                                                                     ? "bg-gray-900 text-white"
                                                                     : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                                "rounded-md px-3 py-2 text-sm font-medium"
+                                                                "rounded-md px-3 py-2 text-sm font-medium",
                                                             )}
                                                             aria-current={
                                                                 current
@@ -153,7 +153,7 @@ const PageHeader = (props) => {
                                                                                 active
                                                                                     ? "bg-gray-100"
                                                                                     : "",
-                                                                                "block px-4 py-2 text-sm text-gray-700"
+                                                                                "block px-4 py-2 text-sm text-gray-700",
                                                                             )}
                                                                         >
                                                                             {
@@ -162,7 +162,7 @@ const PageHeader = (props) => {
                                                                         </a>
                                                                     )}
                                                                 </Menu.Item>
-                                                            )
+                                                            ),
                                                         )}
                                                     </Menu.Items>
                                                 </Transition>
@@ -202,7 +202,7 @@ const PageHeader = (props) => {
                                                 item.current
                                                     ? "bg-gray-900 text-white"
                                                     : "text-gray-300 hover:bg-gray-700 hover:text-white",
-                                                "block rounded-md px-3 py-2 text-base font-medium"
+                                                "block rounded-md px-3 py-2 text-base font-medium",
                                             )}
                                             aria-current={
                                                 item.current

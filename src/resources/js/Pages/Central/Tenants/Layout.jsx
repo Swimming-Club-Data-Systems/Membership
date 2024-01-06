@@ -60,7 +60,7 @@ const Layout = (props) => {
             icon: UsersIcon,
             current: route().current(
                 "central.tenants.administrators",
-                tenantId
+                tenantId,
             ),
         },
         {
@@ -69,7 +69,7 @@ const Layout = (props) => {
             icon: GlobeEuropeAfricaIcon,
             current: route().current(
                 "central.tenants.apple_pay_domains",
-                tenantId
+                tenantId,
             ),
         },
         // {
@@ -93,7 +93,7 @@ const Layout = (props) => {
                                     item.current
                                         ? "bg-gray-50 text-indigo-700 hover:text-indigo-700 hover:bg-white"
                                         : "text-gray-900 hover:text-gray-900 hover:bg-gray-50",
-                                    "group rounded-md px-3 py-2 flex items-center text-sm font-medium"
+                                    "group rounded-md px-3 py-2 flex items-center text-sm font-medium",
                                 )}
                                 aria-current={item.current ? "page" : undefined}
                                 preserveScroll
@@ -103,7 +103,7 @@ const Layout = (props) => {
                                         item.current
                                             ? "text-indigo-500 group-hover:text-indigo-500"
                                             : "text-gray-400 group-hover:text-gray-500",
-                                        "flex-shrink-0 -ml-1 mr-3 h-6 w-6"
+                                        "flex-shrink-0 -ml-1 mr-3 h-6 w-6",
                                     )}
                                     aria-hidden="true"
                                 />

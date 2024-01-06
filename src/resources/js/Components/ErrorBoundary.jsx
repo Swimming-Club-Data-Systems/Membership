@@ -1,5 +1,5 @@
 import React from "react";
-import Container from "../Components/Container";
+import Container from "./Container";
 import ApplicationLogo from "@/Components/ApplicationLogo";
 
 export class ErrorBoundary extends React.Component {

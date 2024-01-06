@@ -6,7 +6,7 @@ import Button from "@/Components/Button.jsx";
 import Card from "@/Components/Card.jsx";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import { Head, router } from "@inertiajs/react";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import Modal from "@/Components/Modal";
 
@@ -22,7 +22,7 @@ export type PaymentMethodDetailsProps = {
 };
 
 export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
-    props: PaymentMethodDetailsProps
+    props: PaymentMethodDetailsProps,
 ) => {
     const [showPaymentMethodDeleteModal, setShowPaymentMethodDeleteModal] =
         useState(false);
@@ -55,21 +55,22 @@ export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
                         </div>
                         <div className="block">
                             <>
-                                {item.type === "bacs_debit" && !item.default && (
-                                    <Button
-                                        variant="secondary"
-                                        onClick={() => {
-                                            setShowPaymentMethodDefaultModal(
-                                                true
-                                            );
-                                            setPaymentMethodDefaultModalData(
-                                                item
-                                            );
-                                        }}
-                                    >
-                                        Make default
-                                    </Button>
-                                )}
+                                {item.type === "bacs_debit" &&
+                                    !item.default && (
+                                        <Button
+                                            variant="secondary"
+                                            onClick={() => {
+                                                setShowPaymentMethodDefaultModal(
+                                                    true,
+                                                );
+                                                setPaymentMethodDefaultModalData(
+                                                    item,
+                                                );
+                                            }}
+                                        >
+                                            Make default
+                                        </Button>
+                                    )}
 
                                 {!item.default && (
                                     <Button
@@ -77,10 +78,10 @@ export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
                                         className="ml-3"
                                         onClick={() => {
                                             setShowPaymentMethodDeleteModal(
-                                                true
+                                                true,
                                             );
                                             setPaymentMethodDeleteModalData(
-                                                item
+                                                item,
                                             );
                                         }}
                                     >
@@ -105,7 +106,7 @@ export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
                 onSuccess: (page) => {
                     setShowPaymentMethodDeleteModal(false);
                 },
-            }
+            },
         );
     };
 
@@ -124,7 +125,7 @@ export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
                 onSuccess: (page) => {
                     setShowPaymentMethodDefaultModal(false);
                 },
-            }
+            },
         );
     };
 
@@ -282,7 +283,7 @@ export const PaymentMethodDetails: React.FC<PaymentMethodDetailsProps> = (
 };
 
 const Index: Layout<PaymentMethodDetailsProps> = (
-    props: PaymentMethodDetailsProps
+    props: PaymentMethodDetailsProps,
 ) => {
     return (
         <>

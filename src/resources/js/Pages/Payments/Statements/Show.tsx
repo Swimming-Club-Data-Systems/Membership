@@ -1,7 +1,7 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { formatDate } from "@/Utils/date-utils";
@@ -15,7 +15,7 @@ const Show: Layout<StatementContentProps> = (props: StatementContentProps) => {
         <>
             <Head
                 title={`Statement #${props.id} (${formatDate(
-                    props.start
+                    props.start,
                 )} - ${formatDate(props.end)})`}
                 breadcrumbs={[
                     { name: "Payments", route: "my_account.index" },

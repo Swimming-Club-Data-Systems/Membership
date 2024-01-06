@@ -124,7 +124,7 @@ const Dashboard = (props) => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                 {props.members.map((member) => {
                                     const squadNames = member.squads.map(
-                                        (squad) => squad.SquadName
+                                        (squad) => squad.SquadName,
                                     );
 
                                     return (
@@ -139,7 +139,7 @@ const Dashboard = (props) => {
                                             id={member.MemberID}
                                             link={route(
                                                 "members.show",
-                                                member.MemberID
+                                                member.MemberID,
                                             )}
                                         />
                                     );
@@ -166,12 +166,12 @@ const Dashboard = (props) => {
                                             name={`${session.SessionName}`}
                                             role={`${format(
                                                 Date.parse(
-                                                    session.StartDateTime
+                                                    session.StartDateTime,
                                                 ),
-                                                "HH:mm"
+                                                "HH:mm",
                                             )} - ${format(
                                                 Date.parse(session.EndDateTime),
-                                                "HH:mm"
+                                                "HH:mm",
                                             )}`}
                                             id={session.SessionID}
                                             link={`/attendance/register?date=${date}&session=${session.SessionID}`}
@@ -200,7 +200,7 @@ const Dashboard = (props) => {
                                             name={`${item.title}`}
                                             role={format(
                                                 Date.parse(item.date),
-                                                "HH:mm, do MMMM yyyy"
+                                                "HH:mm, do MMMM yyyy",
                                             )}
                                             id={item.id}
                                             link={item.link}
@@ -230,7 +230,7 @@ const Dashboard = (props) => {
                                             name={`${item.title}`}
                                             role={format(
                                                 Date.parse(item.date),
-                                                "HH:mm, do MMMM yyyy"
+                                                "HH:mm, do MMMM yyyy",
                                             )}
                                             id={item.id}
                                             link={item.link}

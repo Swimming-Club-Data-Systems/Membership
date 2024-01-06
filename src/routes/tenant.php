@@ -25,6 +25,7 @@ use App\Http\Controllers\Tenant\PaymentEntryController;
 use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\PaymentsController;
 use App\Http\Controllers\Tenant\PaymentTransactionController;
+use App\Http\Controllers\Tenant\PointOfSaleController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
@@ -251,6 +252,12 @@ Route::middleware([
             Route::get('/sms', [SMSController::class, 'new'])->name('sms.new');
             Route::post('/sms', [SMSController::class, 'store']);
             Route::get('/sms/history', [SMSController::class, 'index'])->name('sms.history');
+        });
+    });
+
+    Route::prefix('point-of-sale')->group(function () {
+        Route::name('pos.')->group(function () {
+            Route::get('/', [PointOfSaleController::class, 'index'])->name('index');
         });
     });
 

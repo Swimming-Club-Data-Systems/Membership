@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import {
@@ -246,14 +246,15 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                         <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
                                             Use a saved payment method
                                         </h2>
-                                        {alert && alert.name === "saved_cards" && (
-                                            <Alert
-                                                title={alert.title}
-                                                variant={alert.variant}
-                                            >
-                                                <p>{alert.message}</p>
-                                            </Alert>
-                                        )}
+                                        {alert &&
+                                            alert.name === "saved_cards" && (
+                                                <Alert
+                                                    title={alert.title}
+                                                    variant={alert.variant}
+                                                >
+                                                    <p>{alert.message}</p>
+                                                </Alert>
+                                            )}
 
                                         <Select
                                             name="payment_method"
@@ -266,7 +267,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                                         value: payment_method.stripe_id,
                                                         name: payment_method.description,
                                                     };
-                                                }
+                                                },
                                             )}
                                             label="Choose a saved payment method"
                                         />

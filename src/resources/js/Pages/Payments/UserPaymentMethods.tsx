@@ -1,7 +1,7 @@
 import React from "react";
 import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
-import Container from "@/Components/Container.jsx";
+import Container from "@/Components/Container";
 import { Layout } from "@/Common/Layout.jsx";
 import {
     PaymentMethodDetails,
@@ -9,7 +9,7 @@ import {
 } from "@/Pages/Payments/PaymentMethods";
 
 const Index: Layout<PaymentMethodDetailsProps> = (
-    props: PaymentMethodDetailsProps
+    props: PaymentMethodDetailsProps,
 ) => {
     return (
         <>

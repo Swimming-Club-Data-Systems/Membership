@@ -29,7 +29,7 @@ const Footer = (props) => {
                             <div>
                                 <Link
                                     href={`/report-an-issue?url=${encodeURIComponent(
-                                        window?.location?.href
+                                        window?.location?.href,
                                     )}`}
                                 >
                                     Report a technical issue
