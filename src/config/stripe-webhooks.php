@@ -38,6 +38,12 @@ return [
         'charge_dispute_closed' => \App\Jobs\StripeWebhooks\HandleChargeDisputeClosed::class,
         'charge_dispute_created' => \App\Jobs\StripeWebhooks\HandleChargeDisputeClosed::class,
         'charge_dispute_updated' => \App\Jobs\StripeWebhooks\HandleChargeDisputeUpdated::class,
+        'product_created' => \App\Jobs\StripeWebhooks\HandleProductCreated::class,
+        'product_deleted' => \App\Jobs\StripeWebhooks\HandleProductDeleted::class,
+        'product_updated' => \App\Jobs\StripeWebhooks\HandleProductUpdated::class,
+        'price_created' => \App\Jobs\StripeWebhooks\HandlePriceCreated::class,
+        'price_deleted' => \App\Jobs\StripeWebhooks\HandlePriceDeleted::class,
+        'price_updated' => \App\Jobs\StripeWebhooks\HandlePriceUpdated::class,
     ],
 
     /*
