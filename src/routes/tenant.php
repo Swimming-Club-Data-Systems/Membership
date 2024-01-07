@@ -258,6 +258,7 @@ Route::middleware([
     Route::prefix('point-of-sale')->group(function () {
         Route::name('pos.')->group(function () {
             Route::get('/', [PointOfSaleController::class, 'index'])->name('index');
+            Route::get('/readers', [PointOfSaleController::class, 'listReaders'])->name('readers');
         });
     });
 

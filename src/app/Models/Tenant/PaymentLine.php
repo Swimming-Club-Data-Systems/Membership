@@ -64,6 +64,13 @@ class PaymentLine extends Model
     }
 
     /**
+     * The relationships that should always be loaded.
+     *
+     * @var array
+     */
+    protected $with = ['associated', 'associatedUuid'];
+
+    /**
      * The associated payment header information
      */
     public function payment(): \Illuminate\Database\Eloquent\Relations\BelongsTo

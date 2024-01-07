@@ -63,6 +63,6 @@ class AppServiceProvider extends ServiceProvider
 
         \Locale::setDefault('en_GB');
 
-        Model::shouldBeStrict(! $this->app->isProduction());
+        //        Model::shouldBeStrict(! $this->app->isProduction());
     }
 }
