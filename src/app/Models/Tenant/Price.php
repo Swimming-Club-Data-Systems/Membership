@@ -9,6 +9,19 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
+/**
+ * @property string $id
+ * @property string $product_id
+ * @property string $currency
+ * @property bool $active
+ * @property string $stripe_id
+ * @property string $nickname
+ * @property StripePriceType $type
+ * @property int $unit_amount
+ * @property StripePriceBillingScheme $billing_scheme
+ * @property StripePriceTaxBehavior $tax_behavior
+ * @property bool $usable_in_membership
+ */
 class Price extends Model
 {
     use BelongsToPrimaryModel, HasUuids;

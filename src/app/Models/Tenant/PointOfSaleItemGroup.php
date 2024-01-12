@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -12,6 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $name
  * @property int $sequence
  * @property PointOfSaleScreen $pointOfSaleScreen
+ * @property Collection $pointOfSaleItems
  */
 class PointOfSaleItemGroup extends Model
 {
@@ -33,7 +35,7 @@ class PointOfSaleItemGroup extends Model
 
     public function pointOfSaleItems(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(PointOfSaleItem::class);
+        return $this->hasMany(PointOfSaleItem::class)->orderBy('sequence', 'asc');
     }
 
     public function pointOfSaleScreen(): \Illuminate\Database\Eloquent\Relations\BelongsTo

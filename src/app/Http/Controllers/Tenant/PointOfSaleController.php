@@ -3,17 +3,41 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
+use App\Models\Central\Tenant;
+use App\Models\Tenant\PointOfSaleItem;
+use App\Models\Tenant\PointOfSaleItemGroup;
+use App\Models\Tenant\PointOfSaleScreen;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PointOfSaleController extends Controller
 {
-    public function index(Request $request)
+    public function show(Request $request, PointOfSaleScreen $screen)
     {
         $readerId = $request->session()->get('pos.reader_id');
 
+        if (! $readerId) {
+            abort(400, 'You must connect a reader.');
+        }
+
         return Inertia::render('Payments/PointOfSale/PointOfSale', [
-            'reader' => $readerId,
+            'id' => $screen->id,
+            'reader_id' => $readerId,
+            'item_groups' => $screen->pointOfSaleItemGroups->map(function (PointOfSaleItemGroup $group) {
+                return [
+                    'id' => $group->id,
+                    'name' => $group->name,
+                    'items' => $group->pointOfSaleItems->map(function (PointOfSaleItem $item) {
+                        return [
+                            'id' => $item->id,
+                            'label' => $item->label,
+                            'price_id' => $item->price->id,
+                            'stripe_price_id' => $item->price->stripe_id,
+                            'unit_amount' => $item->price->unit_amount,
+                        ];
+                    }),
+                ];
+            }),
         ]);
     }
 
@@ -33,9 +57,104 @@ class PointOfSaleController extends Controller
         }
     }
 
-    public function connectReader()
+    public function connectReader(Request $request, string $readerId)
     {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
 
+        try {
+            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+            $reader = $stripe->terminal->readers->retrieve($readerId, [
+
+            ], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+
+            $request->session()->put('pos.reader_id', $reader->id);
+
+            return [
+                'selected_reader' => $reader->id,
+                'reader' => $reader,
+            ];
+        } catch (\Exception $e) {
+            return 'No reader has been found: '.$e->getMessage();
+        }
+    }
+
+    public function clearReader(Request $request, string $readerId)
+    {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+        try {
+            $stripe->terminal->readers->cancelAction($readerId, [], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+
+            $request->session()->remove('pos.current_intent_id');
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+
+        return [
+            'success' => true,
+        ];
+    }
+
+    public function setReaderDisplay(Request $request, string $readerId)
+    {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+        $lineItems = [];
+
+        $items = collect($request->json('items'));
+
+        $total = 0;
+
+        foreach ($items as $item) {
+            $total = $total + ($item['quantity'] * $item['unit_amount']);
+
+            $lineItems[] = [
+                'amount' => $item['unit_amount'],
+                'description' => $item['label'],
+                'quantity' => $item['quantity'],
+            ];
+        }
+
+        if (count($lineItems) > 0) {
+            $stripe->terminal->readers->setReaderDisplay(
+                $readerId,
+                [
+                    'type' => 'cart',
+                    'cart' => [
+                        'currency' => 'gbp',
+                        'line_items' => $lineItems,
+                        'tax' => 0,
+                        'total' => $total,
+                    ],
+                ],
+                [
+                    'stripe_account' => $tenant->stripeAccount(),
+                ]
+            );
+        } else {
+            $stripe->terminal->readers->cancelAction($readerId, [], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+        }
+
+        return [
+            'success' => true,
+        ];
     }
 
     public function createIntent(Request $request)
@@ -61,6 +180,44 @@ class PointOfSaleController extends Controller
 
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        $lineItems = [];
+
+        $items = collect($request->json('items'));
+
+        $total = 0;
+
+        foreach ($items as $item) {
+            $total = $total + ($item['quantity'] * $item['unit_amount']);
+
+            $lineItems[] = [
+                'amount' => $item['unit_amount'],
+                'description' => $item['label'],
+                'quantity' => $item['quantity'],
+            ];
+        }
+
+        if ($intentId) {
+            $stripe->paymentIntents->update($intentId, [
+                'amount' => $total,
+            ], ['stripe_account' => $tenant->stripeAccount()]);
+        } else {
+            $intent = $stripe->paymentIntents->create([
+                'amount' => $total,
+                'currency' => 'gbp',
+                'payment_method_types' => [
+                    'card_present',
+                ],
+                'capture_method' => 'manual',
+            ], ['stripe_account' => $tenant->stripeAccount()]);
+
+            $intentId = $intent->id;
+
+            $request->session()->put('pos.current_intent_id', $intentId);
+        }
+
         $attempt = 0;
         $tries = 3;
         $shouldRetry = false;
@@ -68,9 +225,27 @@ class PointOfSaleController extends Controller
         do {
             $attempt++;
             try {
+                if (count($lineItems) > 0) {
+                    $stripe->terminal->readers->setReaderDisplay(
+                        $readerId,
+                        [
+                            'type' => 'cart',
+                            'cart' => [
+                                'currency' => 'gbp',
+                                'line_items' => $lineItems,
+                                'tax' => 0,
+                                'total' => $total,
+                            ],
+                        ],
+                        [
+                            'stripe_account' => $tenant->stripeAccount(),
+                        ]
+                    );
+                }
+
                 $reader = $stripe->terminal->readers->processPaymentIntent($readerId, [
                     'payment_intent' => $intentId,
-                ]);
+                ], ['stripe_account' => $tenant->stripeAccount()]);
 
                 echo json_encode($reader);
             } catch (\Stripe\Exception\InvalidRequestException $e) {

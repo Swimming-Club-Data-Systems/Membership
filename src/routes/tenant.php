@@ -257,7 +257,17 @@ Route::middleware([
 
     Route::prefix('point-of-sale')->group(function () {
         Route::name('pos.')->group(function () {
-            Route::get('/', [PointOfSaleController::class, 'index'])->name('index');
+            Route::get('/{screen}', [PointOfSaleController::class, 'show'])
+                ->whereUuid('screen')
+                ->name('show');
+            Route::post('/charge', [PointOfSaleController::class, 'charge'])
+                ->name('charge');
+            Route::post('/readers/{reader}/set-display', [PointOfSaleController::class, 'setReaderDisplay'])
+                ->name('set-reader-display');
+            Route::post('/readers/{reader}/clear-reader', [PointOfSaleController::class, 'clearReader'])
+                ->name('clear-reader');
+            Route::get('/readers/{reader}', [PointOfSaleController::class, 'connectReader'])
+                ->name('connect-reader');
             Route::get('/readers', [PointOfSaleController::class, 'listReaders'])->name('readers');
         });
     });

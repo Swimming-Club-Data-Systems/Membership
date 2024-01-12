@@ -1,9 +1,21 @@
-import React from "react";
+import React, {
+    useCallback,
+    useEffect,
+    useReducer,
+    useRef,
+    useState,
+} from "react";
 import Head from "@/Components/Head";
 import Card from "@/Components/Card";
-import Button from "@/Components/Button";
+import Button, { Props as ButtonProps } from "@/Components/Button";
+import ButtonLink from "@/Components/ButtonLink";
+import BasicList from "@/Components/BasicList";
+import { MinusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import axios from "@/Utils/axios";
+import BigNumber from "bignumber.js";
 
 type POSButtonProps = {
+    onClick: ButtonProps["onClick"];
     children: React.ReactNode;
 };
 
@@ -16,6 +28,7 @@ const POSButton = (props: POSButtonProps) => {
         <Button
             variant="secondary"
             className="h-20 flex items-center overflow-hidden"
+            onClick={props.onClick}
         >
             <div>{props.children}</div>
         </Button>
@@ -30,9 +43,176 @@ const POSButtonGroup = (props: POSButtonGroupProps) => {
     );
 };
 
-type Props = {};
+type Props = {
+    id: string;
+    item_groups: {
+        id: string;
+        name: string;
+        items: {
+            id: string;
+            label: string;
+            unit_amount: number;
+        }[];
+    }[];
+    reader_id: string;
+};
+
+type Item = {
+    id: string;
+    label: string;
+    quantity: number;
+    unit_amount: number;
+};
+
+type ReducerAction = {
+    type: "addItem" | "removeItem" | "removeAllOfItem" | "reset";
+    item?: Item;
+};
+
+type State = {
+    items: Item[];
+    iteration: number;
+};
+
+const reducer = (state: State, action: ReducerAction): State => {
+    const newArray: Item[] = [];
+
+    // Create new state array
+    state.items.forEach((item: Item) => {
+        newArray.push({
+            id: item.id,
+            label: item.label,
+            quantity: item.quantity,
+            unit_amount: item.unit_amount,
+        });
+    });
+
+    const findIndex = (index: string) =>
+        newArray.findIndex((item) => {
+            return item.id === index;
+        });
+
+    if (action.type === "addItem") {
+        // If item already in list then increment the number, else add
+        const index = findIndex(action.item.id);
+
+        if (index >= 0) {
+            newArray[index].quantity++;
+        } else {
+            newArray.push({
+                id: action.item.id,
+                label: action.item.label,
+                quantity: 1,
+                unit_amount: action.item.unit_amount,
+            });
+        }
+
+        return { items: newArray, iteration: state.iteration + 1 };
+    } else if (action.type === "removeItem") {
+        // Decrement or remove
+        const index = findIndex(action.item.id);
+        if (index >= 0) {
+            newArray[index].quantity--;
+
+            if (newArray[index].quantity === 0) {
+                newArray.splice(index, 1);
+            }
+        }
+
+        return { items: newArray, iteration: state.iteration + 1 };
+    } else if (action.type === "reset") {
+        return { items: [], iteration: state.iteration + 1 };
+    } else if (action.type === "removeAllOfItem") {
+        const index = findIndex(action.item.id);
+        if (index >= 0) {
+            newArray.splice(index, 1);
+        }
+
+        return { items: newArray, iteration: state.iteration + 1 };
+    } else {
+        throw Error("Unknown action.");
+    }
+};
 
 const PointOfSale = (props: Props) => {
+    const [state, dispatchItems] = useReducer(reducer, {
+        items: [],
+        iteration: 0,
+    });
+    const [count, setCount] = useState(0);
+    const prevIteration = useRef<number>(0);
+
+    const clearReader = useCallback(() => {
+        try {
+            axios.post(
+                route("pos.clear-reader", {
+                    reader: props.reader_id,
+                }),
+            );
+        } catch (error) {}
+    }, [props.reader_id]);
+
+    const charge = () => {
+        try {
+            axios.post(
+                route("pos.charge", {
+                    reader: props.reader_id,
+                }),
+                { items: state.items },
+            );
+        } catch (error) {}
+    };
+
+    // useEffect(() => {
+    //     // As items is updated, set the reader display
+    //     try {
+    //         const uninterceptedAxiosInstance = axios.create();
+    //         uninterceptedAxiosInstance.post(
+    //             route("pos.set-reader-display", {
+    //                 reader: props.reader_id,
+    //             }),
+    //             { items: state.items },
+    //         );
+    //     } catch (error) {}
+    // }, [state.iteration]);
+
+    // useEffect(() => {
+    //     const timer = setTimeout(() => {
+    //         if (prevIteration.current !== state.iteration) {
+    //             try {
+    //                 console.log("Running");
+    //                 const uninterceptedAxiosInstance = axios.create();
+    //                 uninterceptedAxiosInstance.post(
+    //                     route("pos.set-reader-display", {
+    //                         reader: props.reader_id,
+    //                     }),
+    //                     { items: state.items },
+    //                 );
+    //             } catch (error) {}
+    //         }
+    //         setCount(count + 1);
+    //         prevIteration.current = state.iteration;
+    //     }, 2000);
+    //     return () => clearTimeout(timer);
+    // }, [props.reader_id, count]);
+
+    const showCartOnReader = useCallback(() => {
+        try {
+            const uninterceptedAxiosInstance = axios.create();
+            uninterceptedAxiosInstance.post(
+                route("pos.set-reader-display", {
+                    reader: props.reader_id,
+                }),
+                { items: state.items },
+            );
+        } catch (error) {}
+    }, [state.iteration, props.reader_id]);
+
+    const total = state.items.reduce(
+        (acc, next) => acc + next.unit_amount * next.quantity,
+        0,
+    );
+
     return (
         <>
             <Head
@@ -40,39 +220,43 @@ const PointOfSale = (props: Props) => {
                 breadcrumbs={[
                     {
                         name: "Point Of Sale",
-                        route: "pos.index",
+                        route: "pos.show",
+                        routeParams: props.id,
                     },
                 ]}
             />
 
-            {/*<Container fluid noMargin>*/}
-            {/* 3 column wrapper */}
             <div className="lg:flex h-screen">
-                {/* Left sidebar & main wrapper */}
                 <div className="flex-1 h-full overflow-y-auto overflow-x-visible scroll-auto">
                     <div className="p-4">
                         <div className="grid gap-4">
-                            <POSButtonGroup>
-                                <POSButton>Adult</POSButton>
-                                <POSButton>Child</POSButton>
-                                <POSButton>Teen</POSButton>
-                                <POSButton>Concession (65+)</POSButton>
-                                <POSButton>Honorary Member</POSButton>
-                                <POSButton>Free Guest</POSButton>
-                            </POSButtonGroup>
-                            <POSButtonGroup>
-                                <POSButton>Programme</POSButton>
-                                <POSButton>Start Sheet</POSButton>
-                            </POSButtonGroup>
-                            <POSButtonGroup>
-                                <POSButton>Raffle Ticket</POSButton>
-                            </POSButtonGroup>
-                            <POSButtonGroup>
-                                <POSButton>50p Sweets Mix</POSButton>
-                                <POSButton>£1 Sweets Mix</POSButton>
-                                <POSButton>£2 Sweets Mix</POSButton>
-                                <POSButton>Cake</POSButton>
-                            </POSButtonGroup>
+                            {props.item_groups.map((group) => {
+                                return (
+                                    <POSButtonGroup key={group.id}>
+                                        {group.items.map((item) => {
+                                            return (
+                                                <POSButton
+                                                    key={item.id}
+                                                    onClick={() => {
+                                                        dispatchItems({
+                                                            type: "addItem",
+                                                            item: {
+                                                                id: item.id,
+                                                                label: item.label,
+                                                                quantity: 0,
+                                                                unit_amount:
+                                                                    item.unit_amount,
+                                                            },
+                                                        });
+                                                    }}
+                                                >
+                                                    {item.label}
+                                                </POSButton>
+                                            );
+                                        })}
+                                    </POSButtonGroup>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
@@ -81,19 +265,124 @@ const PointOfSale = (props: Props) => {
                     <div className="p-4 grid gap-4">
                         <Card title="Current transaction">
                             <div className="grid gap-2">
-                                <Button variant="primary">Charge</Button>
-                                <Button variant="secondary">
+                                <Button
+                                    variant="primary"
+                                    onClick={charge}
+                                    disabled={total < 1}
+                                >
+                                    Charge
+                                </Button>
+                                {/*<Button*/}
+                                {/*    variant="secondary"*/}
+                                {/*    onClick={showCartOnReader}*/}
+                                {/*>*/}
+                                {/*    Show basket on reader*/}
+                                {/*</Button>*/}
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => {
+                                        clearReader();
+                                    }}
+                                >
                                     Cancel charge/Reset reader
                                 </Button>
-                                <Button variant="danger">Clear cart</Button>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => {
+                                        dispatchItems({
+                                            type: "reset",
+                                        });
+                                        clearReader();
+                                    }}
+                                >
+                                    Clear cart
+                                </Button>
                             </div>
                         </Card>
 
-                        <Card title="Basket"></Card>
+                        <Card
+                            title="Basket"
+                            footer={
+                                <div className="text-sm">
+                                    Total{" "}
+                                    {new Intl.NumberFormat("en-GB", {
+                                        style: "currency",
+                                        currency: "GBP",
+                                    }).format(
+                                        new BigNumber(total)
+                                            .shiftedBy(-2)
+                                            .toNumber(),
+                                    )}
+                                </div>
+                            }
+                        >
+                            <BasicList
+                                items={state.items.map((item) => {
+                                    return {
+                                        id: item.id,
+                                        content: (
+                                            <div className="flex justify-between items-center text-sm">
+                                                <div>
+                                                    <div>
+                                                        {item.label} &times;
+                                                        {item.quantity}
+                                                    </div>
+                                                    <div>
+                                                        {new Intl.NumberFormat(
+                                                            "en-GB",
+                                                            {
+                                                                style: "currency",
+                                                                currency: "GBP",
+                                                            },
+                                                        ).format(
+                                                            new BigNumber(
+                                                                item.unit_amount,
+                                                            )
+                                                                .shiftedBy(-2)
+                                                                .toNumber(),
+                                                        )}
+                                                        /item
+                                                    </div>
+                                                </div>
+                                                <div className="flex gap-1">
+                                                    <Button
+                                                        variant="secondary"
+                                                        onClick={() => {
+                                                            dispatchItems({
+                                                                type: "removeItem",
+                                                                item: item,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <MinusCircleIcon className="h-3" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="danger"
+                                                        onClick={() => {
+                                                            dispatchItems({
+                                                                type: "removeAllOfItem",
+                                                                item: item,
+                                                            });
+                                                        }}
+                                                    >
+                                                        <TrashIcon className="h-3" />
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        ),
+                                    };
+                                })}
+                            ></BasicList>
+                        </Card>
 
                         <Card title="Point of sale options">
                             <div className="grid gap-2">
-                                <Button variant="secondary">Exit</Button>
+                                <ButtonLink
+                                    variant="secondary"
+                                    href={route("index")}
+                                >
+                                    Exit
+                                </ButtonLink>
                             </div>
                         </Card>
                     </div>
