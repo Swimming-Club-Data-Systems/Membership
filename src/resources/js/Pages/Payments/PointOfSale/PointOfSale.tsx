@@ -13,6 +13,7 @@ import BasicList from "@/Components/BasicList";
 import { MinusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
 import axios from "@/Utils/axios";
 import BigNumber from "bignumber.js";
+// import Echo from "laravel-echo";
 
 type POSButtonProps = {
     onClick: ButtonProps["onClick"];
@@ -141,6 +142,19 @@ const PointOfSale = (props: Props) => {
     });
     const [count, setCount] = useState(0);
     const prevIteration = useRef<number>(0);
+
+    useEffect(() => {
+        try {
+            window.Echo.private(`reader.${props.reader_id}`).listen(
+                "Tenant\\PointOfSale\\ReaderStatusUpdated",
+                (e) => {
+                    console.log(e);
+                },
+            );
+        } catch (error) {
+            console.log(error);
+        }
+    }, [props.reader_id]);
 
     const clearReader = useCallback(() => {
         try {

@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Broadcast;
 Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
+
+Broadcast::channel('reader.{readerId}', function (App\Models\Tenant\User $user, string $readerId) {
+    return $user->hasPermission('Admin');
+});

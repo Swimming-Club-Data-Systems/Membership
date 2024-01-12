@@ -36,6 +36,7 @@ use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
@@ -64,6 +65,11 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+    Broadcast::routes([
+        'middleware' => ['web', InitializeTenancyByDomain::class, PreventAccessFromCentralDomains::class],
+    ]);
+
+    require base_path('routes/channels.php');
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 
@@ -264,6 +270,7 @@ Route::middleware([
                 ->name('charge');
             Route::post('/readers/{reader}/set-display', [PointOfSaleController::class, 'setReaderDisplay'])
                 ->name('set-reader-display');
+            Route::get('/readers/{reader}/trigger-update', [PointOfSaleController::class, 'update']);
             Route::post('/readers/{reader}/clear-reader', [PointOfSaleController::class, 'clearReader'])
                 ->name('clear-reader');
             Route::get('/readers/{reader}', [PointOfSaleController::class, 'connectReader'])

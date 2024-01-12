@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Events\Tenant\PointOfSale\ReaderStatusUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
 use App\Models\Tenant\PointOfSaleItem;
@@ -296,5 +297,29 @@ class PointOfSaleController extends Controller
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
         $reader = $stripe->testHelpers->terminal->readers->presentPaymentMethod($readerId);
+    }
+
+    public function update(Request $request, string $readerId)
+    {
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        try {
+            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+            $reader = $stripe->terminal->readers->retrieve($readerId, [
+
+            ], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+
+            ReaderStatusUpdated::dispatch($reader);
+
+            return [
+                'reader' => $reader,
+            ];
+        } catch (\Exception $e) {
+            return 'No reader has been found: '.$e->getMessage();
+        }
     }
 }
