@@ -44,6 +44,8 @@ return [
         'price_created' => \App\Jobs\StripeWebhooks\HandlePriceCreated::class,
         'price_deleted' => \App\Jobs\StripeWebhooks\HandlePriceDeleted::class,
         'price_updated' => \App\Jobs\StripeWebhooks\HandlePriceUpdated::class,
+        'terminal_reader_action_failed' => \App\Jobs\StripeWebhooks\HandleTerminalReaderActionFailed::class,
+        'terminal_reader_action_succeeded' => \App\Jobs\StripeWebhooks\HandleTerminalReaderActionSucceeded::class,
     ],
 
     /*

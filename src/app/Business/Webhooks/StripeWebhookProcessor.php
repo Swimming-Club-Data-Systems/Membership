@@ -3,13 +3,24 @@
 namespace App\Business\Webhooks;
 
 use App\Enums\Queue;
+use App\Jobs\StripeWebhooks\HandleTerminalReaderActionFailed;
+use App\Jobs\StripeWebhooks\HandleTerminalReaderActionSucceeded;
 use Exception;
+use Illuminate\Support\Collection;
 use Spatie\StripeWebhooks\Exceptions\WebhookFailed;
 use Spatie\WebhookClient\Models\WebhookCall;
 use Spatie\WebhookClient\WebhookProcessor;
 
 class StripeWebhookProcessor extends WebhookProcessor
 {
+    private static function synchronousClasses(): Collection
+    {
+        return collect([
+            HandleTerminalReaderActionFailed::class,
+            HandleTerminalReaderActionSucceeded::class,
+        ]);
+    }
+
     protected function processWebhook(WebhookCall $webhookCall): void
     {
         try {
@@ -41,7 +52,12 @@ class StripeWebhookProcessor extends WebhookProcessor
 
             $webhookCall->clearException();
 
-            $jobClass::dispatch($webhookCall->id)->onQueue(Queue::STRIPE->value)->afterCommit();
+            // Determine if the job should be handled synchronously (Stripe Terminal events only)
+            if (self::synchronousClasses()->contains($jobClass)) {
+                $jobClass::dispatchSync($webhookCall->id);
+            } else {
+                $jobClass::dispatch($webhookCall->id)->onQueue(Queue::STRIPE->value)->afterCommit();
+            }
 
         } catch (Exception $exception) {
             $webhookCall->saveException($exception);

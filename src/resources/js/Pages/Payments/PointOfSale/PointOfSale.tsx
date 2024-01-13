@@ -142,15 +142,22 @@ const PointOfSale = (props: Props) => {
     });
     const [count, setCount] = useState(0);
     const prevIteration = useRef<number>(0);
+    const [readerStatus, setReaderStatus] = useState<string>("OK");
 
     useEffect(() => {
         try {
-            window.Echo.private(`reader.${props.reader_id}`).listen(
-                "Tenant\\PointOfSale\\ReaderStatusUpdated",
-                (e) => {
+            window.Echo.private(`reader.${props.reader_id}`)
+                .listen("Tenant\\PointOfSale\\ReaderStatusUpdated", (e) => {
                     console.log(e);
-                },
-            );
+                })
+                .listen("Tenant\\PointOfSale\\ReaderActionFailed", (e) => {
+                    setReaderStatus(e.data.failure_message);
+                    console.log(e);
+                })
+                .listen("Tenant\\PointOfSale\\ReaderActionSucceeded", (e) => {
+                    setReaderStatus("OK");
+                    console.log(e);
+                });
         } catch (error) {
             console.log(error);
         }
@@ -312,6 +319,10 @@ const PointOfSale = (props: Props) => {
                                     Clear cart
                                 </Button>
                             </div>
+                        </Card>
+
+                        <Card title="Reader status">
+                            <p className="text-sm">{readerStatus}</p>
                         </Card>
 
                         <Card
