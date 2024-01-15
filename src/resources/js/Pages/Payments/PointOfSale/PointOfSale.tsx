@@ -10,9 +10,16 @@ import Card from "@/Components/Card";
 import Button, { Props as ButtonProps } from "@/Components/Button";
 import ButtonLink from "@/Components/ButtonLink";
 import BasicList from "@/Components/BasicList";
-import { MinusCircleIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+    MinusCircleIcon,
+    TrashIcon,
+    CreditCardIcon,
+    CheckCircleIcon,
+    ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 import axios from "@/Utils/axios";
 import BigNumber from "bignumber.js";
+import Modal from "@/Components/Modal";
 // import Echo from "laravel-echo";
 
 type POSButtonProps = {
@@ -144,6 +151,10 @@ const PointOfSale = (props: Props) => {
     const prevIteration = useRef<number>(0);
     const [readerStatus, setReaderStatus] = useState<string>("OK");
 
+    const [showWaiting, setShowWaiting] = useState<boolean>(false);
+    const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const [showError, setShowError] = useState<boolean>(false);
+
     useEffect(() => {
         try {
             window.Echo.private(`reader.${props.reader_id}`)
@@ -152,16 +163,27 @@ const PointOfSale = (props: Props) => {
                 })
                 .listen("Tenant\\PointOfSale\\ReaderActionFailed", (e) => {
                     setReaderStatus(e.data.failure_message);
+                    setShowWaiting(false);
+                    setShowError(true);
                     console.log(e);
                 })
                 .listen("Tenant\\PointOfSale\\ReaderActionSucceeded", (e) => {
                     setReaderStatus("OK");
+                    setShowWaiting(false);
+                    setShowSuccess(true);
                     console.log(e);
                 });
         } catch (error) {
             console.log(error);
         }
     }, [props.reader_id]);
+
+    const clearPayment = useCallback(() => {
+        try {
+            axios.post(route("pos.clear-payment"));
+            setShowError(false);
+        } catch (error) {}
+    }, []);
 
     const clearReader = useCallback(() => {
         try {
@@ -170,6 +192,7 @@ const PointOfSale = (props: Props) => {
                     reader: props.reader_id,
                 }),
             );
+            setShowError(false);
         } catch (error) {}
     }, [props.reader_id]);
 
@@ -181,7 +204,24 @@ const PointOfSale = (props: Props) => {
                 }),
                 { items: state.items },
             );
-        } catch (error) {}
+            setShowWaiting(true);
+            setShowError(false);
+        } catch (error) {
+            setShowWaiting(false);
+        }
+    };
+
+    const cancelCharge = () => {
+        clearReader();
+        setShowWaiting(false);
+    };
+
+    const clearAfterSuccess = () => {
+        dispatchItems({
+            type: "reset",
+        });
+        setShowSuccess(false);
+        clearPayment();
     };
 
     // useEffect(() => {
@@ -318,11 +358,15 @@ const PointOfSale = (props: Props) => {
                                 >
                                     Clear cart
                                 </Button>
+                                <Button
+                                    variant="danger"
+                                    onClick={() => {
+                                        clearPayment();
+                                    }}
+                                >
+                                    Clear payment in session
+                                </Button>
                             </div>
-                        </Card>
-
-                        <Card title="Reader status">
-                            <p className="text-sm">{readerStatus}</p>
                         </Card>
 
                         <Card
@@ -413,6 +457,63 @@ const PointOfSale = (props: Props) => {
                     </div>
                 </div>
             </div>
+
+            <Modal
+                show={showWaiting}
+                onClose={cancelCharge}
+                title="Awaiting customer action"
+                Icon={CreditCardIcon}
+                buttons={
+                    <Button variant="danger" onClick={cancelCharge}>
+                        Cancel payment
+                    </Button>
+                }
+            >
+                <p className="mb-3">
+                    Please wait for the customer to make payment.
+                </p>
+                <p>Closing this dialog will cancel the current action.</p>
+            </Modal>
+
+            <Modal
+                show={showSuccess}
+                onClose={clearAfterSuccess}
+                variant="success"
+                title="Payment successful"
+                Icon={CheckCircleIcon}
+                buttons={
+                    <Button variant="success" onClick={clearAfterSuccess}>
+                        Continue
+                    </Button>
+                }
+            >
+                <p>
+                    Payment has been successful. Please ask the customer if they
+                    would like to be sent a receipt by email.
+                </p>
+            </Modal>
+
+            <Modal
+                show={showError}
+                onClose={clearAfterSuccess}
+                variant="danger"
+                title="Payment failed"
+                Icon={ExclamationCircleIcon}
+                buttons={
+                    <>
+                        <Button variant="primary" onClick={charge}>
+                            Retry with other card
+                        </Button>
+                        <Button variant="secondary" onClick={clearReader}>
+                            Abort
+                        </Button>
+                    </>
+                }
+            >
+                <p className="mb-3">Payment failed.</p>
+                <p>{readerStatus}</p>
+            </Modal>
+
             {/*</Container>*/}
         </>
     );

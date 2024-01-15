@@ -273,6 +273,8 @@ Route::middleware([
             Route::get('/readers/{reader}/trigger-update', [PointOfSaleController::class, 'update']);
             Route::post('/readers/{reader}/clear-reader', [PointOfSaleController::class, 'clearReader'])
                 ->name('clear-reader');
+            Route::post('/clear-payment', [PointOfSaleController::class, 'clearPayment'])
+                ->name('clear-payment');
             Route::get('/readers/{reader}', [PointOfSaleController::class, 'connectReader'])
                 ->name('connect-reader');
             Route::get('/readers', [PointOfSaleController::class, 'listReaders'])->name('readers');

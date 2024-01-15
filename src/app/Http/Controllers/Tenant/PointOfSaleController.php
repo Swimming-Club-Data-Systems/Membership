@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\ApplicationFeeAmount;
 use App\Events\Tenant\PointOfSale\ReaderStatusUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Central\Tenant;
+use App\Models\Tenant\Payment;
+use App\Models\Tenant\PaymentLine;
 use App\Models\Tenant\PointOfSaleItem;
 use App\Models\Tenant\PointOfSaleItemGroup;
 use App\Models\Tenant\PointOfSaleScreen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class PointOfSaleController extends Controller
@@ -83,6 +87,15 @@ class PointOfSaleController extends Controller
         }
     }
 
+    public function clearPayment(Request $request)
+    {
+        $request->session()->remove('pos.current_payment_id');
+
+        return [
+            'success' => true,
+        ];
+    }
+
     public function clearReader(Request $request, string $readerId)
     {
         /** @var Tenant $tenant */
@@ -95,7 +108,7 @@ class PointOfSaleController extends Controller
                 'stripe_account' => $tenant->stripeAccount(),
             ]);
 
-            $request->session()->remove('pos.current_intent_id');
+            //            $request->session()->remove('pos.current_payment_id');
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -177,47 +190,47 @@ class PointOfSaleController extends Controller
     public function charge(Request $request)
     {
         $readerId = $request->session()->get('pos.reader_id');
-        $intentId = $request->session()->get('pos.current_intent_id');
 
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
         /** @var Tenant $tenant */
         $tenant = tenant();
 
-        $lineItems = [];
+        $payment = $this->createOrUpdatePayment($request);
 
-        $items = collect($request->json('items'));
+        //        $lineItems = [];
+        //
+        //        $items = collect($request->json('items'));
+        //
+        //        $total = 0;
+        //
+        //        foreach ($items as $item) {
+        //            $total = $total + ($item['quantity'] * $item['unit_amount']);
+        //
+        //            $lineItems[] = [
+        //                'amount' => $item['unit_amount'],
+        //                'description' => $item['label'],
+        //                'quantity' => $item['quantity'],
+        //            ];
+        //        }
 
-        $total = 0;
-
-        foreach ($items as $item) {
-            $total = $total + ($item['quantity'] * $item['unit_amount']);
-
-            $lineItems[] = [
-                'amount' => $item['unit_amount'],
-                'description' => $item['label'],
-                'quantity' => $item['quantity'],
-            ];
-        }
-
-        if ($intentId) {
-            $stripe->paymentIntents->update($intentId, [
-                'amount' => $total,
-            ], ['stripe_account' => $tenant->stripeAccount()]);
-        } else {
-            $intent = $stripe->paymentIntents->create([
-                'amount' => $total,
-                'currency' => 'gbp',
-                'payment_method_types' => [
-                    'card_present',
-                ],
-                'capture_method' => 'manual',
-            ], ['stripe_account' => $tenant->stripeAccount()]);
-
-            $intentId = $intent->id;
-
-            $request->session()->put('pos.current_intent_id', $intentId);
-        }
+        //        if ($intentId) {
+        //            $stripe->paymentIntents->update($intentId, [
+        //                'amount' => $total,
+        //            ], ['stripe_account' => $tenant->stripeAccount()]);
+        //        } else {
+        //            $intent = $stripe->paymentIntents->create([
+        //                'amount' => $total,
+        //                'currency' => 'gbp',
+        //                'payment_method_types' => [
+        //                    'card_present',
+        //                ],
+        //            ], ['stripe_account' => $tenant->stripeAccount()]);
+        //
+        //            $intentId = $intent->id;
+        //
+        //            $request->session()->put('pos.current_intent_id', $intentId);
+        //        }
 
         $attempt = 0;
         $tries = 3;
@@ -226,26 +239,26 @@ class PointOfSaleController extends Controller
         do {
             $attempt++;
             try {
-                if (count($lineItems) > 0) {
-                    $stripe->terminal->readers->setReaderDisplay(
-                        $readerId,
-                        [
-                            'type' => 'cart',
-                            'cart' => [
-                                'currency' => 'gbp',
-                                'line_items' => $lineItems,
-                                'tax' => 0,
-                                'total' => $total,
-                            ],
-                        ],
-                        [
-                            'stripe_account' => $tenant->stripeAccount(),
-                        ]
-                    );
-                }
+                //                if (count($lineItems) > 0) {
+                //                    $stripe->terminal->readers->setReaderDisplay(
+                //                        $readerId,
+                //                        [
+                //                            'type' => 'cart',
+                //                            'cart' => [
+                //                                'currency' => 'gbp',
+                //                                'line_items' => $lineItems,
+                //                                'tax' => 0,
+                //                                'total' => $total,
+                //                            ],
+                //                        ],
+                //                        [
+                //                            'stripe_account' => $tenant->stripeAccount(),
+                //                        ]
+                //                    );
+                //                }
 
                 $reader = $stripe->terminal->readers->processPaymentIntent($readerId, [
-                    'payment_intent' => $intentId,
+                    'payment_intent' => $payment->stripe_id,
                 ], ['stripe_account' => $tenant->stripeAccount()]);
 
                 echo json_encode($reader);
@@ -277,7 +290,7 @@ class PointOfSaleController extends Controller
                         // Check PaymentIntent status because it's not ready to be processed. It might have been already
                         // successfully processed or canceled.
                         $shouldRetry = false;
-                        $paymentIntent = $stripe->paymentIntents->retrieve($intent->id);
+                        $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id);
                         echo json_encode(['error' => 'PaymentIntent is already in '.$paymentIntent->status.' state.']);
                         break;
                     default:
@@ -292,7 +305,6 @@ class PointOfSaleController extends Controller
     public function presentToReader(Request $request)
     {
         $readerId = $request->session()->get('pos.reader_id');
-        $intentId = $request->session()->get('pos.current_intent_id');
 
         $stripe = new \Stripe\StripeClient(config('cashier.secret'));
 
@@ -320,6 +332,68 @@ class PointOfSaleController extends Controller
             ];
         } catch (\Exception $e) {
             return 'No reader has been found: '.$e->getMessage();
+        }
+    }
+
+    private function createOrUpdatePayment(Request $request): Payment
+    {
+        try {
+            DB::beginTransaction();
+
+            $paymentId = $request->session()->get('pos.current_payment_id');
+
+            $payment = null;
+            if ($paymentId) {
+                $payment = Payment::findOrFail($paymentId);
+            } else {
+                $payment = new Payment();
+                $payment->save();
+            }
+
+            $payment->lines()->delete();
+
+            $lineItems = [];
+
+            $items = collect($request->json('items'));
+
+            $total = 0;
+
+            foreach ($items as $item) {
+                $lineItem = new PaymentLine();
+                $lineItem->unit_amount = $item['unit_amount'];
+                $total += ($item['quantity'] * $item['unit_amount']);
+                $lineItem->quantity = $item['quantity'];
+                $lineItem->currency = 'gbp';
+                // $lineItem->associatedUuid()->associate($event);
+                $payment->lines()->save($lineItem);
+
+                $lineItems[] = [
+                    'amount' => $item['unit_amount'],
+                    'description' => $item['label'],
+                    'quantity' => $item['quantity'],
+                ];
+            }
+
+            $payment->refresh();
+
+            $payment->application_fee_amount = ApplicationFeeAmount::calculateAmount($payment->amount);
+
+            $payment->createStripePaymentIntent(['card_present']);
+
+            $payment->save();
+
+            DB::commit();
+
+            $request->session()->put('pos.current_payment_id', $payment->id);
+
+            return $payment;
+        } catch (\Exception $e) {
+            // Catch, rollback, report, rethrow
+            DB::rollBack();
+
+            report($e);
+
+            throw $e;
         }
     }
 }

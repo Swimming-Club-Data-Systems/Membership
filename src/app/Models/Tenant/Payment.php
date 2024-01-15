@@ -142,14 +142,25 @@ class Payment extends Model
         );
     }
 
-    public function createStripePaymentIntent($paymentMethodTypes = null)
+    public function createStripePaymentIntent($paymentMethodTypes = null): void
     {
-        if ($this->stripe_id) {
-            return;
-        }
-
         /** @var Tenant $tenant */
         $tenant = tenant();
+
+        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+        if ($this->stripe_id) {
+            $stripe->paymentIntents->update(
+                $this->stripe_id,
+                [
+                    'amount' => $this->amount,
+                    'application_fee_amount' => $this->applicationFeeAmount(),
+                ], [
+                    'stripe_account' => $tenant->stripeAccount(),
+                ]);
+
+            return;
+        }
 
         $pmTypes = [];
         if ($paymentMethodTypes) {
@@ -181,11 +192,15 @@ class Payment extends Model
             $data['customer'] = $this->user?->stripeCustomerId();
         }
 
-        $stripe = new \Stripe\StripeClient(config('cashier.secret'));
         $paymentIntent = $stripe->paymentIntents->create($data, [
             'stripe_account' => $tenant->stripeAccount(),
         ]);
         $this->stripe_id = $paymentIntent->id;
+    }
+
+    public function updateStripePaymentIntent(): void
+    {
+        $this->createStripePaymentIntent();
     }
 
     /**

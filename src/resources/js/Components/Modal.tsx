@@ -13,7 +13,7 @@ type ModalProps = {
     variant?: ModalVariantProps;
     // eslint-disable-next-line
     Icon?: any;
-    show?: boolean;
+    show: boolean;
     onClose: () => void;
     title: string | ReactNode;
     children: string | ReactNode;
