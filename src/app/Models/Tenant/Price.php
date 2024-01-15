@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Enums\StripePriceBillingScheme;
 use App\Enums\StripePriceTaxBehavior;
 use App\Enums\StripePriceType;
+use App\Events\Tenant\PriceCreating;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -14,6 +15,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $product_id
  * @property string $currency
  * @property bool $active
+ * @property Product $product
  * @property string $stripe_id
  * @property string $nickname
  * @property StripePriceType $type
@@ -61,6 +63,15 @@ class Price extends Model
         'tax_behavior',
         'usable_in_membership',
         'stripe_id',
+    ];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'creating' => PriceCreating::class,
     ];
 
     public function product(): \Illuminate\Database\Eloquent\Relations\BelongsTo

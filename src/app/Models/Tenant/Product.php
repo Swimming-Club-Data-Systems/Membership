@@ -2,14 +2,26 @@
 
 namespace App\Models\Tenant;
 
+use App\Events\Tenant\ProductCreating;
 use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Laravel\Scout\Searchable;
 
+/**
+ * @property string $id
+ * @property string $name
+ * @property bool $active
+ * @property string $description
+ * @property string $stripe_id
+ * @property bool $shippable
+ * @property string $unit_label
+ * @property bool $public
+ */
 class Product extends Model
 {
-    use BelongsToTenant, HasUuids;
+    use BelongsToTenant, HasUuids, Searchable;
 
     /**
      * The model's default values for attributes.
@@ -42,6 +54,15 @@ class Product extends Model
         'unit_label',
         'public',
         'stripe_id',
+    ];
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'creating' => ProductCreating::class,
     ];
 
     public static function fromStripe(\Stripe\Product|string $product)

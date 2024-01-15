@@ -26,6 +26,8 @@ use App\Http\Controllers\Tenant\PaymentMethodController;
 use App\Http\Controllers\Tenant\PaymentsController;
 use App\Http\Controllers\Tenant\PaymentTransactionController;
 use App\Http\Controllers\Tenant\PointOfSaleController;
+use App\Http\Controllers\Tenant\PriceController;
+use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\ReportAnErrorController;
 use App\Http\Controllers\Tenant\SettingsController;
 use App\Http\Controllers\Tenant\SMSController;
@@ -278,6 +280,31 @@ Route::middleware([
             Route::get('/readers/{reader}', [PointOfSaleController::class, 'connectReader'])
                 ->name('connect-reader');
             Route::get('/readers', [PointOfSaleController::class, 'listReaders'])->name('readers');
+        });
+    });
+
+    Route::prefix('products')->group(function () {
+        Route::name('products.')->group(function () {
+            Route::get('/', [ProductController::class, 'index'])
+                ->name('index');
+            Route::get('/new', [ProductController::class, 'new'])
+                ->name('new');
+            Route::post('/', [ProductController::class, 'create'])
+                ->name('create');
+            Route::get('/{product}', [ProductController::class, 'show'])
+                ->whereUuid('product')
+                ->name('show');
+            Route::prefix('/{product}/prices')->group(function () {
+                Route::name('prices.')->group(function () {
+                    Route::get('/new', [PriceController::class, 'new'])
+                        ->name('new');
+                    Route::post('/', [PriceController::class, 'create'])
+                        ->name('create');
+                    Route::get('/{price}', [PriceController::class, 'show'])
+                        ->whereUuid('price')
+                        ->name('show');
+                });
+            })->whereUuid('product');
         });
     });
 
