@@ -12,10 +12,22 @@ import TextInput from "@/Components/Form/TextInput";
 import DecimalInput from "@/Components/Form/DecimalInput";
 import Card from "@/Components/Card";
 import FlashAlert from "@/Components/FlashAlert";
-import TextArea from "@/Components/Form/TextArea";
-import Checkbox from "@/Components/Form/Checkbox";
 
-const New = () => {
+type Props = {
+    product: {
+        id: string;
+        name: string;
+    };
+};
+
+export type Price = {
+    id: string;
+    nickname: string;
+    formatted_unit_amount: string;
+    active: boolean;
+};
+
+const New = (props: Props) => {
     return (
         <>
             <Head
@@ -23,8 +35,18 @@ const New = () => {
                 breadcrumbs={[
                     { name: "Products", route: "products.index" },
                     {
+                        name: props.product.name,
+                        route: "products.show",
+                        routeParams: {
+                            product: props.product.id,
+                        },
+                    },
+                    {
                         name: "New",
-                        route: "products.new",
+                        route: "products.prices.new",
+                        routeParams: {
+                            product: props.product.id,
+                        },
                     },
                 ]}
             />
@@ -41,34 +63,10 @@ const New = () => {
             <Container noMargin>
                 <Form
                     initialValues={{
-                        // Product
-                        name: "",
-                        description: "",
-                        shippable: false,
-                        unit_label: "",
-                        // Default price
                         unit_amount: 0,
                         nickname: "",
                     }}
                     validationSchema={yup.object().shape({
-                        name: yup
-                            .string()
-                            .required("A name is required.")
-                            .max(255, "Name can not exceed 255 characters."),
-                        description: yup
-                            .string()
-                            .required("A description is required.")
-                            .max(
-                                1024,
-                                "Description can not exceed 1024 characters.",
-                            ),
-                        shippable: yup.boolean(),
-                        unit_label: yup
-                            .string()
-                            .max(
-                                255,
-                                "Unit label can not exceed 255 characters.",
-                            ),
                         unit_amount: yup
                             .number()
                             .min(0, "Unit amount must not be negative."),
@@ -83,7 +81,9 @@ const New = () => {
                             ),
                     })}
                     submitTitle="Save"
-                    action={route("products.create")}
+                    action={route("products.prices.create", {
+                        product: props.product.id,
+                    })}
                     method="post"
                     hideDefaultButtons
                 >
@@ -91,26 +91,14 @@ const New = () => {
                         <RenderServerErrors />
                         <FlashAlert className="mb-3" />
 
-                        <TextInput name="name" label="Name" />
-                        <TextArea
-                            name="description"
-                            label="Description"
-                            maxLength={1024}
-                        />
-                        <Checkbox
-                            name="shippable"
-                            label="Shippable"
-                            help="Is this item shippable?"
-                        />
-                        <TextInput name="unit_label" label="Unit label" />
                         <DecimalInput
                             name="unit_amount"
-                            label="Default price unit amount (£)"
+                            label="Price unit amount (£)"
                             precision={2}
                         />
                         <TextInput
                             name="nickname"
-                            label="Default price nickname"
+                            label="Price nickname"
                             help="This is not displayed to users, it is for internal organisation."
                         />
                     </Card>

@@ -44,7 +44,7 @@ const Index = (props) => {
                     subtitle="Product list"
                     buttons={
                         <ButtonLink href={route("products.new")}>
-                            New
+                            New product
                         </ButtonLink>
                     }
                 />

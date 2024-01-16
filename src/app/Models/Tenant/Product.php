@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Events\Tenant\ProductCreating;
 use App\Models\Central\Tenant;
 use App\Traits\BelongsToTenant;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Scout\Searchable;
@@ -18,6 +19,7 @@ use Laravel\Scout\Searchable;
  * @property bool $shippable
  * @property string $unit_label
  * @property bool $public
+ * @property Collection $prices
  */
 class Product extends Model
 {

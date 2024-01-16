@@ -2,10 +2,12 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\Money;
 use App\Enums\StripePriceBillingScheme;
 use App\Enums\StripePriceTaxBehavior;
 use App\Enums\StripePriceType;
 use App\Events\Tenant\PriceCreating;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
@@ -23,10 +25,18 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property StripePriceBillingScheme $billing_scheme
  * @property StripePriceTaxBehavior $tax_behavior
  * @property bool $usable_in_membership
+ * @property string $formatted_unit_amount
  */
 class Price extends Model
 {
     use BelongsToPrimaryModel, HasUuids;
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['formatted_unit_amount'];
 
     /**
      * The model's default values for attributes.
@@ -82,5 +92,12 @@ class Price extends Model
     public function getRelationshipToPrimaryModel(): string
     {
         return 'product';
+    }
+
+    protected function formattedUnitAmount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => Money::formatCurrency($this->unit_amount, $this->currency),
+        );
     }
 }
