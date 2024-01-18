@@ -110,6 +110,11 @@ class Member extends Model
         return $this->hasMany(SquadMove::class, 'Member');
     }
 
+    public function competitionEntries(): HasMany
+    {
+        return $this->hasMany(CompetitionEntry::class);
+    }
+
     public function toSearchableArray(): array
     {
         $array = $this->toArray();

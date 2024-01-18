@@ -12,6 +12,7 @@ use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryReportController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryHeaderController;
+use App\Http\Controllers\Tenant\CompetitionMemberEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
@@ -435,6 +436,8 @@ Route::middleware([
             Route::get('/new', [CompetitionController::class, 'new'])
                 ->name('new');
             Route::post('/', [CompetitionController::class, 'create']);
+            Route::get('/pay-for-entries', [CompetitionMemberEntryPaymentController::class, 'viewPayable'])->name('pay');
+            Route::post('/pay-for-entries', [CompetitionMemberEntryPaymentController::class, 'createPayment']);
             Route::prefix('{competition}')->group(function () {
                 Route::get('/', [CompetitionController::class, 'show'])
                     ->name('show');
@@ -531,7 +534,10 @@ Route::middleware([
                         ->whereUuid(['header', 'entrant']);
                 });
 
-            });
+            })->whereNumber('competition');
+            //                    Route::get('/{header}/pay-now', [CompetitionGuestEntryPaymentController::class, 'start'])
+            //                        ->whereUuid('header')
+            //                        ->name('enter_as_guest.pay');
         });
     });
 

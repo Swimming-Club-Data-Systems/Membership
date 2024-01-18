@@ -400,7 +400,12 @@ const Show: Layout<Props> = (props: Props) => {
                                     <>
                                         {props.members_can_enter && (
                                             <ButtonLink
-                                                href=""
+                                                href={route(
+                                                    "competitions.enter",
+                                                    {
+                                                        competition: props.id,
+                                                    },
+                                                )}
                                                 className="mr-3"
                                             >
                                                 Enter now
