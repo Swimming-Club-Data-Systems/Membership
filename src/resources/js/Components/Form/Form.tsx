@@ -113,13 +113,7 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                 )}
             </div>
             <div className="flex flex-row-reverse gap-4">
-                <Button
-                    className={`inline-flex justify-center ${formSpecialContext.submitClass}`}
-                    type="submit"
-                    disabled={isSubmitting}
-                >
-                    {formSpecialContext.submitTitle || "Submit"}
-                </Button>
+                <SubmitButton className="inline-flex justify-center" />
 
                 {!formSpecialContext.hideClear && (
                     <>
@@ -139,6 +133,22 @@ export const SubmissionButtons: React.FC<SubmissionButtonsProps> = (props) => {
                 )}
             </div>
         </div>
+    );
+};
+
+export const SubmitButton = ({ className }: { className?: string }) => {
+    const { isSubmitting } = useFormikContext();
+
+    const formSpecialContext = useContext(FormSpecialContext);
+
+    return (
+        <Button
+            className={`${className} ${formSpecialContext.submitClass}`}
+            type="submit"
+            disabled={isSubmitting}
+        >
+            {formSpecialContext.submitTitle || "Submit"}
+        </Button>
     );
 };
 

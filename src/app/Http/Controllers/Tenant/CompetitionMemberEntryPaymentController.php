@@ -18,6 +18,11 @@ use Inertia\Inertia;
 
 class CompetitionMemberEntryPaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function viewPayable(Request $request)
     {
         /** @var Tenant $tenant */
@@ -59,6 +64,10 @@ class CompetitionMemberEntryPaymentController extends Controller
                     ];
                 })->toArray(),
             ],
+            'stripe_publishable_key' => config('services.stripe.key'),
+            'stripe_account' => $tenant->stripeAccount(),
+            'currency' => 'gbp',
+            'payment_method_types' => ['card', 'link'],
         ]);
 
         return $compEntries;
@@ -99,6 +108,53 @@ class CompetitionMemberEntryPaymentController extends Controller
             $request->session()->flash('error', 'We can\'t take you to the checkout page right now. Please try again later. If the issue persists, please contact '.$tenant->Name.' for help.');
 
             return Redirect::route('competitions.pay');
+        }
+    }
+
+    public function createPaymentJson(Request $request)
+    {
+        $request->validate([
+            'entries.*.paying' => ['boolean'],
+            'entries.*.id' => ['string', 'required', 'uuid'],
+        ]);
+
+        $data = $request->get('entries');
+
+        /** @var Tenant $tenant */
+        $tenant = tenant();
+
+        /** @var User $user */
+        $user = $request->user();
+        $compEntries = $user->competitionEntries()->where('paid', '=', false)->with(['member', 'competition'])->get();
+
+        // TODO Change so that foreach $compEntries and check for ['paying'] in submitted data
+
+        try {
+            // Get payment and redirect to checkout
+
+            $entries = [];
+            foreach ($data as $entry) {
+                if ($entry['paying']) {
+                    $entries[] = CompetitionEntry::find($entry['id']);
+                }
+            }
+
+            $payment = $this->getPayment($request->user(), $entries);
+
+            $stripe = new \Stripe\StripeClient(config('cashier.secret'));
+
+            $paymentIntent = $stripe->paymentIntents->retrieve($payment->stripe_id, [], [
+                'stripe_account' => $tenant->stripeAccount(),
+            ]);
+
+            return response()->json([
+                'client_secret' => $paymentIntent->client_secret,
+                'return_url' => route('payments.checkout.show', $payment),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred. Please try again later.',
+            ], 500);
         }
     }
 

@@ -4,7 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import Form, { SubmissionButtons } from "@/Components/Form/Form";
+import Form, { SubmitButton } from "@/Components/Form/Form";
 import * as yup from "yup";
 import Card from "@/Components/Card";
 import Checkbox from "@/Components/Form/Checkbox";
@@ -13,8 +13,15 @@ import { useFormikContext } from "formik";
 import { formatCurrency } from "@/Utils/Payments/MoneyHelpers";
 import BigNumber from "bignumber.js";
 import ArrayErrorMessage from "@/Components/Form/ArrayErrorMessage";
+import { Elements } from "@stripe/react-stripe-js";
+import { StripeElementsOptions } from "@stripe/stripe-js";
+import { appearance } from "@/Utils/Stripe/Appearance";
+import { useLoadStripe } from "@/Components/Payments/useLoadStripe";
+import { ExpressCheckout } from "@/Components/Payments/Checkout/ExpressCheckout";
 
 export type Props = {
+    stripe_account: string;
+    stripe_publishable_key: string;
     user_not_direct_debit: boolean;
     tenant_not_direct_debit: boolean;
     entries: {
@@ -30,6 +37,7 @@ export type Props = {
         amount: number;
         amount_currency: string;
     }[];
+    payment_method_types: string[];
 };
 
 const Total = ({ setTotal }) => {
@@ -54,11 +62,46 @@ const Total = ({ setTotal }) => {
     return null;
 };
 
+const PaymentButtons = ({
+    stripe,
+    options,
+}: {
+    stripe: any;
+    options: StripeElementsOptions;
+}) => {
+    const values = useFormikContext();
+
+    return (
+        <Elements stripe={stripe} options={options}>
+            <ExpressCheckout
+                createIntentRoute={route("competitions.pay")}
+                createIntentPostData={values}
+            />
+
+            <div className="d-grid">
+                <SubmitButton className="py-[11px] w-full" />
+            </div>
+        </Elements>
+    );
+};
+
 const SelectEntriesToPayFor: Layout<Props> = (props: Props) => {
     const [total, setTotal] = useState<number>(0);
+    const stripe = useLoadStripe(
+        props.stripe_account,
+        props.stripe_publishable_key,
+    );
 
     const notDirectDebit =
         props.tenant_not_direct_debit || props.user_not_direct_debit;
+
+    const options: StripeElementsOptions = {
+        mode: "payment",
+        amount: total,
+        currency: "gbp",
+        appearance: appearance,
+        payment_method_types: props.payment_method_types,
+    };
 
     return (
         <>
@@ -113,13 +156,11 @@ const SelectEntriesToPayFor: Layout<Props> = (props: Props) => {
                     )} now`}
                     action={route("competitions.pay")}
                     method="post"
+                    hideClear
                 >
                     <Total setTotal={setTotal} />
                     <div className="grid gap-6">
-                        <Card
-                            title="Select entries"
-                            footer={<SubmissionButtons />}
-                        >
+                        <Card title="Select entries">
                             <div className="prose prose-sm">
                                 <p>
                                     {notDirectDebit && (
@@ -176,6 +217,13 @@ const SelectEntriesToPayFor: Layout<Props> = (props: Props) => {
                                     };
                                 })}
                             />
+
+                            {total > 0 && (
+                                <PaymentButtons
+                                    stripe={stripe}
+                                    options={options}
+                                />
+                            )}
                         </Card>
                     </div>
                 </Form>
