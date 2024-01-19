@@ -65,102 +65,186 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function editEntry(Competition $competition, Member $member, Request $request)
     {
-        if ($competition->coach_enters) {
-            // Show select session availability form
-            return [
-                'coach_enters' => true,
-            ];
-        } else {
-            // Show competition entry form
+        $entry = CompetitionEntry::where('member_MemberID', '=', $member->MemberID)
+            ->where('competition_id', '=', $competition->id)
+            ->first();
 
-            $entry = CompetitionEntry::firstOrCreate([
+        if ($competition->coach_enters && ! $entry) {
+            // Show select session availability form if the coach enters and an entry does not yet exist
+            return $this->editEntrySelectSessions($competition, $member);
+        } else {
+            return $this->editEntryWithEntry($competition, $member, $entry);
+        }
+    }
+
+    private function editEntrySelectSessions(Competition $competition, Member $member)
+    {
+        $sessions = $competition
+            ->sessions()
+            ->with('events')
+            ->get();
+
+        $sessionsFormData = [];
+
+        $sessionData = $sessions
+            ->map(function (CompetitionSession $session) use ($member, $competition, &$sessionsFormData) {
+                return [
+                    'id' => $session->id,
+                    'name' => $session->name,
+                    'sequence' => $session->sequence,
+                    'start_time' => $session->start_time,
+                    'end_time' => $session->end_time,
+                    'timezone' => $session->timezone,
+                    'events' => $session
+                        ->events
+                        ->filter(function (CompetitionEvent $event) use ($member, $competition) {
+                            return $event->categoryMatches($member->Gender) && $event->ageMatches($member->ageAt($competition->age_at_date));
+                        })
+                        ->map(function (CompetitionEvent $event) use (&$sessionsFormData) {
+                            $sessionsFormData[] = [
+                                'event_id' => $event->id,
+                                'sequence' => $event->sequence,
+                            ];
+
+                            return [
+                                'id' => $event->id,
+                                'name' => $event->name,
+                                'sequence' => $event->sequence,
+                                'distance' => $event->distance,
+                                'stroke' => $event->stroke,
+                                'units' => $event->units,
+                                'event_code' => $event->event_code,
+                                'entry_fee' => $event->entry_fee,
+                                'entry_fee_string' => $event->entry_fee_string,
+                                'entry_fee_formatted' => Money::formatCurrency($event->entry_fee),
+                                'processing_fee' => $event->processing_fee,
+                                'processing_fee_string' => $event->processing_fee_string,
+                                'processing_fee_formatted' => Money::formatCurrency($event->processing_fee),
+                                'category' => $event->category,
+                            ];
+                        })
+                        ->values(),
+                ];
+            })
+            ->toArray();
+
+        return Inertia::render('Competitions/Entries/EditMemberSessionAvailability', [
+            'competition' => [
+                'id' => $competition->id,
+                'name' => $competition->name,
+                'require_times' => $competition->require_times,
+                'processing_fee' => $competition->processing_fee,
+                'processing_fee_formatted' => Money::formatCurrency($competition->processing_fee),
+            ],
+            'entrant' => [
+                'id' => $member->MemberID,
+                'first_name' => $member->MForename,
+                'last_name' => $member->MSurname,
+                'date_of_birth' => $member->DateOfBirth,
+                'sex' => $member->Gender,
+                'age' => $member->age(),
+                'age_on_day' => $member->ageAt($competition->age_at_date),
+            ],
+            'sessions' => $sessionData,
+            'form_initial_values' => [
+                'sessions' => $sessionsFormData,
+            ],
+        ]);
+    }
+
+    private function editEntryWithEntry(Competition $competition, Member $member, ?CompetitionEntry $entry)
+    {
+        // Show competition entry form
+
+        if (! $entry) {
+            $entry = CompetitionEntry::create([
                 'member_MemberID' => $member->MemberID,
                 'competition_id' => $competition->id,
             ]);
-
-            $sessions = $competition
-                ->sessions()
-                ->with('events')
-                ->get();
-
-            $swimsFormData = [];
-
-            $sessionData = $sessions
-                ->map(function (CompetitionSession $session) use ($member, $competition, $entry, &$swimsFormData) {
-                    return [
-                        'id' => $session->id,
-                        'name' => $session->name,
-                        'sequence' => $session->sequence,
-                        'events' => $session
-                            ->events
-                            ->filter(function (CompetitionEvent $event) use ($member, $competition) {
-                                return $event->categoryMatches($member->Gender) && $event->ageMatches($member->ageAt($competition->age_at_date));
-                            })
-                            ->map(function (CompetitionEvent $event) use ($entry, &$swimsFormData) {
-
-                                // Get event entry if exists
-                                /** @var CompetitionEventEntry $eventEntry */
-                                $eventEntry = $entry?->competitionEventEntries->where('competition_event_id', '=', $event->id)->first();
-
-                                $swimsFormData[] = [
-                                    'event_id' => $event->id,
-                                    'sequence' => $event->sequence,
-                                    'entering' => $eventEntry != null,
-                                    'entry_time' => $eventEntry?->entry_time ? EntryTimeHelper::formatted($eventEntry?->entry_time) : null,
-                                    'amount' => $eventEntry ? $eventEntry->amount_string : Money::formatDecimal($event->entry_fee + $event->processing_fee),
-                                    'id' => $eventEntry?->id,
-                                ];
-
-                                return [
-                                    'id' => $event->id,
-                                    'name' => $event->name,
-                                    'sequence' => $event->sequence,
-                                    'distance' => $event->distance,
-                                    'stroke' => $event->stroke,
-                                    'units' => $event->units,
-                                    'event_code' => $event->event_code,
-                                    'entry_fee' => $event->entry_fee,
-                                    'entry_fee_string' => $event->entry_fee_string,
-                                    'processing_fee' => $event->processing_fee,
-                                    'processing_fee_string' => $event->processing_fee_string,
-                                    'category' => $event->category,
-                                    'event_entry' => $eventEntry ? [
-                                        'id' => $eventEntry->id,
-                                        'entry_time' => $eventEntry->entry_time,
-                                        'amount' => $eventEntry->amount,
-                                        'amount_refunded' => $eventEntry->amount_refunded,
-                                        'cancellation_reason' => $eventEntry->cancellation_reason,
-                                        'notes' => $eventEntry->notes,
-                                    ] : null,
-                                ];
-                            })
-                            ->values(),
-                    ];
-                })
-                ->toArray();
-
-            return Inertia::render('Competitions/Entries/EditMemberEntry', [
-                'competition' => [
-                    'id' => $competition->id,
-                    'name' => $competition->name,
-                    'require_times' => $competition->require_times,
-                ],
-                'entrant' => [
-                    'id' => $member->MemberID,
-                    'first_name' => $member->MForename,
-                    'last_name' => $member->MSurname,
-                    'date_of_birth' => $member->DateOfBirth,
-                    'sex' => $member->Gender,
-                    'age' => $member->age(),
-                    'age_on_day' => $member->ageAt($competition->age_at_date),
-                ],
-                'sessions' => $sessionData,
-                'form_initial_values' => [
-                    'entries' => $swimsFormData,
-                ],
-                'paid' => $entry?->paid,
-            ]);
         }
+
+        $sessions = $competition
+            ->sessions()
+            ->with('events')
+            ->get();
+
+        $swimsFormData = [];
+
+        $sessionData = $sessions
+            ->map(function (CompetitionSession $session) use ($member, $competition, $entry, &$swimsFormData) {
+                return [
+                    'id' => $session->id,
+                    'name' => $session->name,
+                    'sequence' => $session->sequence,
+                    'events' => $session
+                        ->events
+                        ->filter(function (CompetitionEvent $event) use ($member, $competition) {
+                            return $event->categoryMatches($member->Gender) && $event->ageMatches($member->ageAt($competition->age_at_date));
+                        })
+                        ->map(function (CompetitionEvent $event) use ($entry, &$swimsFormData) {
+
+                            // Get event entry if exists
+                            /** @var CompetitionEventEntry $eventEntry */
+                            $eventEntry = $entry?->competitionEventEntries->where('competition_event_id', '=', $event->id)->first();
+
+                            $swimsFormData[] = [
+                                'event_id' => $event->id,
+                                'sequence' => $event->sequence,
+                                'entering' => $eventEntry != null,
+                                'entry_time' => $eventEntry?->entry_time ? EntryTimeHelper::formatted($eventEntry?->entry_time) : null,
+                                'amount' => $eventEntry ? $eventEntry->amount_string : Money::formatDecimal($event->entry_fee + $event->processing_fee),
+                                'id' => $eventEntry?->id,
+                            ];
+
+                            return [
+                                'id' => $event->id,
+                                'name' => $event->name,
+                                'sequence' => $event->sequence,
+                                'distance' => $event->distance,
+                                'stroke' => $event->stroke,
+                                'units' => $event->units,
+                                'event_code' => $event->event_code,
+                                'entry_fee' => $event->entry_fee,
+                                'entry_fee_string' => $event->entry_fee_string,
+                                'processing_fee' => $event->processing_fee,
+                                'processing_fee_string' => $event->processing_fee_string,
+                                'category' => $event->category,
+                                'event_entry' => $eventEntry ? [
+                                    'id' => $eventEntry->id,
+                                    'entry_time' => $eventEntry->entry_time,
+                                    'amount' => $eventEntry->amount,
+                                    'amount_refunded' => $eventEntry->amount_refunded,
+                                    'cancellation_reason' => $eventEntry->cancellation_reason,
+                                    'notes' => $eventEntry->notes,
+                                ] : null,
+                            ];
+                        })
+                        ->values(),
+                ];
+            })
+            ->toArray();
+
+        return Inertia::render('Competitions/Entries/EditMemberEntry', [
+            'competition' => [
+                'id' => $competition->id,
+                'name' => $competition->name,
+                'require_times' => $competition->require_times,
+            ],
+            'entrant' => [
+                'id' => $member->MemberID,
+                'first_name' => $member->MForename,
+                'last_name' => $member->MSurname,
+                'date_of_birth' => $member->DateOfBirth,
+                'sex' => $member->Gender,
+                'age' => $member->age(),
+                'age_on_day' => $member->ageAt($competition->age_at_date),
+            ],
+            'sessions' => $sessionData,
+            'form_initial_values' => [
+                'entries' => $swimsFormData,
+            ],
+            'paid' => $entry?->paid,
+        ]);
     }
 
     public function updateEntry(Competition $competition, Member $member, Request $request)
