@@ -115,6 +115,11 @@ class Member extends Model
         return $this->hasMany(CompetitionEntry::class);
     }
 
+    public function competitionEntryAvailableSessions(): BelongsToMany
+    {
+        return $this->belongsToMany(CompetitionSession::class)->withTimestamps();
+    }
+
     public function toSearchableArray(): array
     {
         $array = $this->toArray();

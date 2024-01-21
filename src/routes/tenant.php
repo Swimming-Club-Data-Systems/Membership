@@ -513,6 +513,9 @@ Route::middleware([
                         ->name('enter.edit_entry');
                     Route::put('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'updateEntry'])
                         ->whereNumber(['member']);
+                    Route::put('/member/{member}/session-availability', [CompetitionMemberEntryHeaderController::class, 'updateAvailableSessions'])
+                        ->name('enter.edit-sessions')
+                        ->whereNumber('member');
                 });
                 Route::prefix('/enter-as-guest')->group(function () {
                     Route::get('/', [CompetitionGuestEntryHeaderController::class, 'new'])

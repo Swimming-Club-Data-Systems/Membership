@@ -103,6 +103,11 @@ const EditMemberSessionAvailability: Layout<Props> = (props: Props) => {
                 <Form
                     validationSchema={yup.object().shape({})}
                     initialValues={{}}
+                    action={route("competitions.enter.edit-sessions", {
+                        competition: props.competition.id,
+                        member: props.entrant.id,
+                    })}
+                    method="put"
                 >
                     <div className="grid gap-4">
                         {props.sessions.length === 0 && (

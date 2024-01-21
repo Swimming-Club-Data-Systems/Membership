@@ -88,6 +88,12 @@ class CompetitionMemberEntryHeaderController extends Controller
 
         $sessionData = $sessions
             ->map(function (CompetitionSession $session) use ($member, $competition, &$sessionsFormData) {
+                $sessionsFormData[] = [
+                    'id' => $session->id,
+                    'sequence' => $session->sequence,
+                    'available' => false,
+                ];
+
                 return [
                     'id' => $session->id,
                     'name' => $session->name,
@@ -100,12 +106,7 @@ class CompetitionMemberEntryHeaderController extends Controller
                         ->filter(function (CompetitionEvent $event) use ($member, $competition) {
                             return $event->categoryMatches($member->Gender) && $event->ageMatches($member->ageAt($competition->age_at_date));
                         })
-                        ->map(function (CompetitionEvent $event) use (&$sessionsFormData) {
-                            $sessionsFormData[] = [
-                                'event_id' => $event->id,
-                                'sequence' => $event->sequence,
-                            ];
-
+                        ->map(function (CompetitionEvent $event) {
                             return [
                                 'id' => $event->id,
                                 'name' => $event->name,
@@ -245,6 +246,41 @@ class CompetitionMemberEntryHeaderController extends Controller
             ],
             'paid' => $entry?->paid,
         ]);
+    }
+
+    public function updateAvailableSessions(Request $request, Competition $competition, Member $member)
+    {
+        $request->validate([
+            'sessions.*.available' => ['boolean'],
+        ]);
+
+        //        $sessions = $competition
+        //            ->sessions()
+        //            ->with('events')
+        //            ->get();
+
+        $member
+            ->competitionEntryAvailableSessions()
+            ->where('competition_id', '=', $competition->id)
+            ->delete();
+
+        $sessions = $request->get('sessions', []);
+
+        foreach ($sessions as $session) {
+            if ($session['available']) {
+                $member
+                    ->competitionEntryAvailableSessions()
+                    ->attach(CompetitionSession::find($session['id']));
+            } else {
+                $member
+                    ->competitionEntryAvailableSessions()
+                    ->detach(CompetitionSession::find($session['id']));
+            }
+        }
+
+        return [
+            'success' => true,
+        ];
     }
 
     public function updateEntry(Competition $competition, Member $member, Request $request)

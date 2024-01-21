@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
 
 /**
@@ -61,6 +62,11 @@ class CompetitionSession extends Model
     public function events(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(CompetitionEvent::class)->orderBy('sequence', 'asc');
+    }
+
+    public function competitionEntryAvailableMembers(): BelongsToMany
+    {
+        return $this->belongsToMany(Member::class)->withTimestamps();
     }
 
     public function getRelationshipToPrimaryModel(): string
