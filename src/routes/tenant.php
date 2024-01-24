@@ -10,6 +10,7 @@ use App\Http\Controllers\Tenant\CompetitionGuestEntryController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryPaymentController;
 use App\Http\Controllers\Tenant\CompetitionGuestEntryReportController;
+use App\Http\Controllers\Tenant\CompetitionMemberAvailableController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryPaymentController;
@@ -516,6 +517,10 @@ Route::middleware([
                     Route::put('/member/{member}/session-availability', [CompetitionMemberEntryHeaderController::class, 'updateAvailableSessions'])
                         ->name('enter.edit-sessions')
                         ->whereNumber('member');
+                });
+                Route::prefix('/members-available')->group(function () {
+                    Route::get('/', [CompetitionMemberAvailableController::class, 'index'])
+                        ->name('members-available');
                 });
                 Route::prefix('/enter-as-guest')->group(function () {
                     Route::get('/', [CompetitionGuestEntryHeaderController::class, 'new'])

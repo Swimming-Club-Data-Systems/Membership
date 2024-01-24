@@ -91,7 +91,7 @@ class CompetitionMemberEntryHeaderController extends Controller
                 $sessionsFormData[] = [
                     'id' => $session->id,
                     'sequence' => $session->sequence,
-                    'available' => false,
+                    'available' => $session->competitionEntryAvailableMembers()->where('MemberID', '=', $member->MemberID)->exists(),
                 ];
 
                 return [
@@ -259,11 +259,6 @@ class CompetitionMemberEntryHeaderController extends Controller
         //            ->with('events')
         //            ->get();
 
-        $member
-            ->competitionEntryAvailableSessions()
-            ->where('competition_id', '=', $competition->id)
-            ->delete();
-
         $sessions = $request->get('sessions', []);
 
         foreach ($sessions as $session) {
@@ -278,9 +273,9 @@ class CompetitionMemberEntryHeaderController extends Controller
             }
         }
 
-        return [
-            'success' => true,
-        ];
+        $request->session()->flash('success', 'Changes to '.$member->name.'\'s available sessions saved successfully.');
+
+        return \redirect(route('competitions.enter.edit_entry', [$competition, $member]));
     }
 
     public function updateEntry(Competition $competition, Member $member, Request $request)
