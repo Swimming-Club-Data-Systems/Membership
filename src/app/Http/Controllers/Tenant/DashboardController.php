@@ -54,13 +54,15 @@ class DashboardController extends Controller
                             $response = Http::get('https://asaner.org.uk/feed')->body();
                             $response = new \SimpleXMLElement($response);
 
-                            for ($i = 0; $i < min(count($response->channel->item), 6); $i++) {
-                                $data[] = [
-                                    'id' => (string) $response->channel->item[$i]->guid,
-                                    'title' => (string) $response->channel->item[$i]->title,
-                                    'link' => (string) $response->channel->item[$i]->link,
-                                    'date' => (string) $response->channel->item[$i]->pubDate,
-                                ];
+                            if ($response->channel->item) {
+                                for ($i = 0; $i < min(count($response->channel->item), 6); $i++) {
+                                    $data[] = [
+                                        'id' => (string) $response->channel->item[$i]->guid,
+                                        'title' => (string) $response->channel->item[$i]->title,
+                                        'link' => (string) $response->channel->item[$i]->link,
+                                        'date' => (string) $response->channel->item[$i]->pubDate,
+                                    ];
+                                }
                             }
 
                             return $data;
