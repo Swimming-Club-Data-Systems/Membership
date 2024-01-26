@@ -59,6 +59,7 @@ export type Props = {
     coach_enters: boolean;
     description: string;
     description_html: string;
+    open_to: "members_and_guests" | "members" | "guests";
     venue: {
         name: string;
         id: number;
@@ -465,56 +466,145 @@ const Show: Layout<Props> = (props: Props) => {
                         <div className="col-start-1 col-span-full md:col-span-7 flex flex-col gap-6">
                             <Card title="Entrants">
                                 <ul className="text-sm">
-                                    <li>
-                                        <Link
-                                            href={route(
-                                                "competitions.guest_entries.index",
-                                                [props.id],
-                                            )}
-                                        >
-                                            View guest entries
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href={route(
-                                                "competitions.guest_entries.index",
-                                                {
-                                                    competition: props.id,
-                                                    sex: "Male",
-                                                },
-                                            )}
-                                        >
-                                            View Open Category guest entries
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href={route(
-                                                "competitions.guest_entries.index",
-                                                {
-                                                    competition: props.id,
-                                                    sex: "Female",
-                                                },
-                                            )}
-                                        >
-                                            View Female Category guest entries
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href={route(
-                                                "competitions.guest_entries.report",
-                                                {
-                                                    competition: props.id,
-                                                },
-                                            )}
-                                            external
-                                            download
-                                        >
-                                            Guest entry report (XLSX)
-                                        </Link>
-                                    </li>
+                                    {props.coach_enters &&
+                                        (props.open_to === "members" ||
+                                            props.open_to ===
+                                                "members_and_guests") && (
+                                            <>
+                                                <li>
+                                                    <Link
+                                                        href={route(
+                                                            "competitions.members-available",
+                                                            [props.id],
+                                                        )}
+                                                    >
+                                                        View available members
+                                                    </Link>
+                                                </li>
+                                            </>
+                                        )}
+
+                                    {(props.open_to === "members" ||
+                                        props.open_to ===
+                                            "members_and_guests") && (
+                                        <>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.entries.index",
+                                                        [props.id],
+                                                    )}
+                                                >
+                                                    View entries
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.entries.index",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                            sex: "Male",
+                                                        },
+                                                    )}
+                                                >
+                                                    View Open Category entries
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.entries.index",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                            sex: "Female",
+                                                        },
+                                                    )}
+                                                >
+                                                    View Female Category entries
+                                                </Link>
+                                            </li>
+                                            {/*<li>*/}
+                                            {/*    <Link*/}
+                                            {/*        href={route(*/}
+                                            {/*            "competitions.entries.report",*/}
+                                            {/*            {*/}
+                                            {/*                competition:*/}
+                                            {/*                    props.id,*/}
+                                            {/*            },*/}
+                                            {/*        )}*/}
+                                            {/*        external*/}
+                                            {/*        download*/}
+                                            {/*    >*/}
+                                            {/*        Entry report (XLSX)*/}
+                                            {/*    </Link>*/}
+                                            {/*</li>*/}
+                                        </>
+                                    )}
+
+                                    {(props.open_to === "guests" ||
+                                        props.open_to ===
+                                            "members_and_guests") && (
+                                        <>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.guest_entries.index",
+                                                        [props.id],
+                                                    )}
+                                                >
+                                                    View guest entries
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.guest_entries.index",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                            sex: "Male",
+                                                        },
+                                                    )}
+                                                >
+                                                    View Open Category guest
+                                                    entries
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.guest_entries.index",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                            sex: "Female",
+                                                        },
+                                                    )}
+                                                >
+                                                    View Female Category guest
+                                                    entries
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.guest_entries.report",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                        },
+                                                    )}
+                                                    external
+                                                    download
+                                                >
+                                                    Guest entry report (XLSX)
+                                                </Link>
+                                            </li>
+                                        </>
+                                    )}
                                 </ul>
                             </Card>
                         </div>

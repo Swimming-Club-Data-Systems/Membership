@@ -63,21 +63,20 @@ class CompetitionMemberEntryHeaderController extends Controller
         }
     }
 
-    public function editEntry(Competition $competition, Member $member, Request $request)
+    public function start(Competition $competition, Member $member)
     {
         $entry = CompetitionEntry::where('member_MemberID', '=', $member->MemberID)
             ->where('competition_id', '=', $competition->id)
             ->first();
 
-        if ($competition->coach_enters && ! $entry) {
-            // Show select session availability form if the coach enters and an entry does not yet exist
-            return $this->editEntrySelectSessions($competition, $member);
+        if ($entry || ! $competition->coach_enters) {
+            return \redirect('competitions.enter.edit_entry', [$competition, $member]);
         } else {
-            return $this->editEntryWithEntry($competition, $member, $entry);
+            return \redirect('competitions.enter.edit-session-availability', [$competition, $member]);
         }
     }
 
-    private function editEntrySelectSessions(Competition $competition, Member $member)
+    public function editEntrySelectSessions(Competition $competition, Member $member)
     {
         $sessions = $competition
             ->sessions()
@@ -153,9 +152,11 @@ class CompetitionMemberEntryHeaderController extends Controller
         ]);
     }
 
-    private function editEntryWithEntry(Competition $competition, Member $member, ?CompetitionEntry $entry)
+    public function editEntry(Competition $competition, Member $member)
     {
-        // Show competition entry form
+        $entry = CompetitionEntry::where('member_MemberID', '=', $member->MemberID)
+            ->where('competition_id', '=', $competition->id)
+            ->first();
 
         if (! $entry) {
             $entry = CompetitionEntry::create([
@@ -275,7 +276,7 @@ class CompetitionMemberEntryHeaderController extends Controller
 
         $request->session()->flash('success', 'Changes to '.$member->name.'\'s available sessions saved successfully.');
 
-        return \redirect(route('competitions.enter.edit_entry', [$competition, $member]));
+        return \redirect(route('competitions.enter.edit-session-availability', [$competition, $member]));
     }
 
     public function updateEntry(Competition $competition, Member $member, Request $request)

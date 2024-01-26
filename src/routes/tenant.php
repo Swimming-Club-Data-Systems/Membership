@@ -509,13 +509,19 @@ Route::middleware([
                     //                    Route::post('/{header}/express-pay', [CompetitionGuestEntryPaymentController::class, 'startJson'])
                     //                        ->whereUuid('header')
                     //                        ->name('enter_as_guest.express_pay');
-                    Route::get('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'editEntry'])
+                    Route::get('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'start'])
+                        ->whereNumber(['member'])
+                        ->name('enter.start');
+                    Route::get('/member/{member}/enter', [CompetitionMemberEntryHeaderController::class, 'editEntry'])
                         ->whereNumber(['member'])
                         ->name('enter.edit_entry');
-                    Route::put('/member/{member}', [CompetitionMemberEntryHeaderController::class, 'updateEntry'])
+                    Route::put('/member/{member}/enter', [CompetitionMemberEntryHeaderController::class, 'updateEntry'])
                         ->whereNumber(['member']);
-                    Route::put('/member/{member}/session-availability', [CompetitionMemberEntryHeaderController::class, 'updateAvailableSessions'])
-                        ->name('enter.edit-sessions')
+                    Route::get('/member/{member}/edit-session-availability', [CompetitionMemberEntryHeaderController::class, 'editEntrySelectSessions'])
+                        ->whereNumber(['member'])
+                        ->name('enter.edit-session-availability');
+                    Route::put('/member/{member}/edit-session-availability', [CompetitionMemberEntryHeaderController::class, 'updateAvailableSessions'])
+                        ->name('enter.edit-session-availability')
                         ->whereNumber('member');
                 });
                 Route::prefix('/members-available')->group(function () {
