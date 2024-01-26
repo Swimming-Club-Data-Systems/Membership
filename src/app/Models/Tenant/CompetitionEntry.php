@@ -3,6 +3,8 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Money;
+use App\Events\Tenant\CompetitionEntryCreated;
+use App\Events\Tenant\CompetitionEntryUpdated;
 use App\Interfaces\PaidObject;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -14,8 +16,8 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
- * @property Member $member
- * @property CompetitionGuestEntrant $competitionGuestEntrant
+ * @property ?Member $member
+ * @property ?CompetitionGuestEntrant $competitionGuestEntrant
  * @property bool $paid
  * @property bool $processed
  * @property int $amount
@@ -179,4 +181,14 @@ class CompetitionEntry extends Model implements PaidObject
     {
         // TODO: Implement handleCanceled() method.
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'created' => CompetitionEntryCreated::class,
+        'updated' => CompetitionEntryUpdated::class,
+    ];
 }

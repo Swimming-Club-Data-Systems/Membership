@@ -40,6 +40,12 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Tenant\CompetitionFileDeleted::class => [
             \App\Listeners\Tenant\DeleteCompetitionFileFromStorage::class,
         ],
+        \App\Events\Tenant\CompetitionEntryCreated::class => [
+            \App\Listeners\Tenant\SendCompetitionEntryCreatedNotification::class,
+        ],
+        \App\Events\Tenant\CompetitionEntryUpdated::class => [
+            \App\Listeners\Tenant\SendCompetitionEntryUpdatedNotification::class,
+        ],
     ];
 
     /**
