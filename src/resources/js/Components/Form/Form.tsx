@@ -278,12 +278,13 @@ const Form = (props: FormProps) => {
         ...otherProps
     } = props;
 
-    const [hasErrors, setHasErrors] = useState(false);
+    const [hasErrors, setHasErrors] = useState<boolean>(false);
     // const handleNetErrorDismiss = () => {
     //     setHasErrors(false);
     // };
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [confirmed, setConfirmed] = useState(false);
+    const [showConfirm, setShowConfirm] = useState<boolean>(false);
+    const [confirmed, setConfirmed] = useState<boolean>(false);
+    const [reinit, setReinit] = useState<boolean>(false);
 
     useEffect(() => {
         // If we get an invalid response, don't show any of the response
@@ -313,11 +314,15 @@ const Form = (props: FormProps) => {
             } else {
                 setConfirmed(false);
                 router[method](action, values, {
-                    onSuccess: () => {
+                    onSuccess: (page) => {
                         if (onSuccess) {
                             onSuccess();
                         }
                         formikBag.resetForm();
+                        setReinit(true);
+                        // if (page?.props?.form_initial_values) {
+                        //     formikBag.setValues(page.props.form_initial_values);
+                        // }
                     },
                     ...inertiaOptions,
                     // onError: (error) => {
@@ -349,6 +354,12 @@ const Form = (props: FormProps) => {
         setStatusState(state);
     }, []);
 
+    useEffect(() => {
+        if (reinit) {
+            setReinit(false);
+        }
+    }, [reinit]);
+
     return (
         <FormSpecialContext.Provider
             value={{
@@ -372,7 +383,7 @@ const Form = (props: FormProps) => {
                 initialValues={mergedValues}
                 validationSchema={validationSchema}
                 onSubmit={onSubmitHandler}
-                enableReinitialize={enableReinitialize}
+                enableReinitialize={enableReinitialize || reinit}
             >
                 {(formikProps) => {
                     const onConfirm = async () => {

@@ -4,7 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import { EntryForm } from "@/Components/Competitions/EntryForm";
+import { EntryForm, Session } from "@/Components/Competitions/EntryForm";
 import Alert from "@/Components/Alert";
 import ButtonLink from "@/Components/ButtonLink";
 import FlashAlert from "@/Components/FlashAlert";
@@ -15,6 +15,7 @@ export type Props = {
         name: string;
         id: number;
         require_times: boolean;
+        coach_enters: boolean;
     };
     first_name: string;
     last_name: string;
@@ -29,8 +30,11 @@ export type Props = {
     tenant: {
         name: string;
     };
-    sessions: object[];
+    sessions: Session[];
     paid: boolean;
+    is_coach: boolean;
+    locked: boolean;
+    vetoable: boolean;
 };
 
 const EditMemberEntry: Layout<Props> = (props: Props) => {
@@ -93,13 +97,24 @@ const EditMemberEntry: Layout<Props> = (props: Props) => {
             </Container>
 
             <EntryForm
+                coachEnters={props.competition.coach_enters}
                 requireTimes={props.competition.require_times}
                 sessions={props.sessions}
                 action={route("competitions.enter.edit_entry", {
                     competition: props.competition.id,
                     member: props.entrant.id,
                 })}
-                readOnly={props.paid}
+                readOnly={
+                    props.paid ||
+                    (!props.is_coach && (props.locked || props.vetoable))
+                }
+                isCoach={props.is_coach}
+                vetoable={props.vetoable}
+                locked={props.locked}
+                vetoRoute={route("competitions.enter.veto", {
+                    competition: props.competition.id,
+                    member: props.entrant.id,
+                })}
             />
         </>
     );

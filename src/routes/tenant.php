@@ -517,6 +517,9 @@ Route::middleware([
                         ->name('enter.edit_entry');
                     Route::put('/member/{member}/enter', [CompetitionMemberEntryHeaderController::class, 'updateEntry'])
                         ->whereNumber(['member']);
+                    Route::delete('/member/{member}/veto', [CompetitionMemberEntryHeaderController::class, 'vetoEntry'])
+                        ->whereNumber(['member'])
+                        ->name('enter.veto');
                     Route::get('/member/{member}/edit-session-availability', [CompetitionMemberEntryHeaderController::class, 'editEntrySelectSessions'])
                         ->whereNumber(['member'])
                         ->name('enter.edit-session-availability');

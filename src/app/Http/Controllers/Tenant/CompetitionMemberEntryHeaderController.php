@@ -19,6 +19,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
 class CompetitionMemberEntryHeaderController extends Controller
@@ -152,8 +153,11 @@ class CompetitionMemberEntryHeaderController extends Controller
         ]);
     }
 
-    public function editEntry(Competition $competition, Member $member)
+    public function editEntry(Competition $competition, Member $member, Request $request)
     {
+        /** @var User $user */
+        $user = $request->user();
+
         $entry = CompetitionEntry::where('member_MemberID', '=', $member->MemberID)
             ->where('competition_id', '=', $competition->id)
             ->first();
@@ -231,6 +235,7 @@ class CompetitionMemberEntryHeaderController extends Controller
                 'id' => $competition->id,
                 'name' => $competition->name,
                 'require_times' => $competition->require_times,
+                'coach_enters' => $competition->coach_enters,
             ],
             'entrant' => [
                 'id' => $member->MemberID,
@@ -244,8 +249,13 @@ class CompetitionMemberEntryHeaderController extends Controller
             'sessions' => $sessionData,
             'form_initial_values' => [
                 'entries' => $swimsFormData,
+                'vetoable' => $entry->vetoable,
+                'locked' => $entry->locked,
             ],
             'paid' => $entry?->paid,
+            'is_coach' => $user->hasPermission(['Admin', 'Coach', 'Galas']),
+            'vetoable' => $entry->vetoable,
+            'locked' => $entry->locked,
         ]);
     }
 
@@ -281,13 +291,21 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function updateEntry(Competition $competition, Member $member, Request $request)
     {
+        /** @var User $user */
+        $user = $request->user();
+
+        $isCoach = $user->hasPermission(['Admin', 'Coach', 'Galas']);
+
         $entry = CompetitionEntry::firstOrCreate([
             'member_MemberID' => $member->MemberID,
             'competition_id' => $competition->id,
         ]);
 
-        if ($entry->locked) {
+        if ($entry->locked && ! $isCoach) {
             // return, can't edit
+            throw ValidationException::withMessages([
+                'locked' => 'This competition entry has been locked. You do not have permission to edit it.',
+            ]);
         }
 
         $validated = $request->validate([
@@ -316,6 +334,8 @@ class CompetitionMemberEntryHeaderController extends Controller
                 'nullable',
             ],
             'entries' => ['array'],
+            'locked' => ['boolean'],
+            'vetoable' => ['boolean'],
         ]);
 
         if (Arr::isList($validated['entries'])) {
@@ -355,11 +375,48 @@ class CompetitionMemberEntryHeaderController extends Controller
             }
         }
 
+        if ($isCoach) {
+            $entry->locked = $request->boolean('locked');
+            $entry->vetoable = $request->boolean('vetoable');
+        }
+
         // Sum the totals
         $entry->calculateTotals();
         $entry->save();
 
         $request->session()->flash('success', 'Changes to '.$member->name.'\'s entry saved successfully.');
+
+        return Redirect::route('competitions.enter.edit_entry', [$competition, $member]);
+    }
+
+    public function vetoEntry(Competition $competition, Member $member, Request $request)
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $entry = CompetitionEntry::firstWhere([
+            'member_MemberID' => $member->MemberID,
+            'competition_id' => $competition->id,
+        ]);
+
+        if (! $entry) {
+            abort(404);
+        }
+
+        if (! $entry->vetoable) {
+            // return, can't edit
+            throw ValidationException::withMessages([
+                'not_vetoable' => 'This competition entry is not vetoable.',
+            ]);
+        }
+
+        $entry->competitionEventEntries()->delete();
+
+        // Sum the totals
+        $entry->calculateTotals();
+        $entry->save();
+
+        $request->session()->flash('success', $member->name.'\'s entry has been vetoed.');
 
         return Redirect::route('competitions.enter.edit_entry', [$competition, $member]);
     }
