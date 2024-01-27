@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Business\Helpers\EntryTimeHelper;
 use App\Business\Helpers\Money;
+use App\Events\Tenant\CompetitionEntryUpdated;
+use App\Events\Tenant\CompetitionEntryVetoed;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
@@ -384,6 +386,8 @@ class CompetitionMemberEntryHeaderController extends Controller
         $entry->calculateTotals();
         $entry->save();
 
+        CompetitionEntryUpdated::dispatch($entry);
+
         $request->session()->flash('success', 'Changes to '.$member->name.'\'s entry saved successfully.');
 
         return Redirect::route('competitions.enter.edit_entry', [$competition, $member]);
@@ -414,10 +418,13 @@ class CompetitionMemberEntryHeaderController extends Controller
 
         // Sum the totals
         $entry->calculateTotals();
+        $entry->amount = 0;
         $entry->save();
+
+        CompetitionEntryVetoed::dispatch($entry);
 
         $request->session()->flash('success', $member->name.'\'s entry has been vetoed.');
 
-        return Redirect::route('competitions.enter.edit_entry', [$competition, $member]);
+        return Redirect::route('competitions.show', [$competition]);
     }
 }

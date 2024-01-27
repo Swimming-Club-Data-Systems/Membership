@@ -3,8 +3,6 @@
 namespace App\Models\Tenant;
 
 use App\Business\Helpers\Money;
-use App\Events\Tenant\CompetitionEntryCreated;
-use App\Events\Tenant\CompetitionEntryUpdated;
 use App\Interfaces\PaidObject;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -33,6 +31,7 @@ use Illuminate\Support\Carbon;
  * @property bool $vetoable
  * @property Collection $competitionEventEntries
  * @property Competition $competition
+ * @property bool $editable
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
@@ -62,6 +61,13 @@ class CompetitionEntry extends Model implements PaidObject
         'paid' => false,
         'processing_fee_paid' => false,
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['editable'];
 
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -182,12 +188,12 @@ class CompetitionEntry extends Model implements PaidObject
     }
 
     /**
-     * The event map for the model.
-     *
-     * @var array
+     * Get the user's first name.
      */
-    protected $dispatchesEvents = [
-        'created' => CompetitionEntryCreated::class,
-        'updated' => CompetitionEntryUpdated::class,
-    ];
+    protected function editable(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ! $this->paid && ! $this->processed,
+        );
+    }
 }

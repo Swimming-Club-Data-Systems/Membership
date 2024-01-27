@@ -46,6 +46,9 @@ class EventServiceProvider extends ServiceProvider
         \App\Events\Tenant\CompetitionEntryUpdated::class => [
             \App\Listeners\Tenant\SendCompetitionEntryUpdatedNotification::class,
         ],
+        \App\Events\Tenant\CompetitionEntryVetoed::class => [
+            \App\Listeners\Tenant\SendCompetitionEntryVetoedNotification::class,
+        ],
     ];
 
     /**
