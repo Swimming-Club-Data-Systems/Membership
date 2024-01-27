@@ -526,21 +526,21 @@ const Show: Layout<Props> = (props: Props) => {
                                                     View Female Category entries
                                                 </Link>
                                             </li>
-                                            {/*<li>*/}
-                                            {/*    <Link*/}
-                                            {/*        href={route(*/}
-                                            {/*            "competitions.entries.report",*/}
-                                            {/*            {*/}
-                                            {/*                competition:*/}
-                                            {/*                    props.id,*/}
-                                            {/*            },*/}
-                                            {/*        )}*/}
-                                            {/*        external*/}
-                                            {/*        download*/}
-                                            {/*    >*/}
-                                            {/*        Entry report (XLSX)*/}
-                                            {/*    </Link>*/}
-                                            {/*</li>*/}
+                                            <li>
+                                                <Link
+                                                    href={route(
+                                                        "competitions.entries.report",
+                                                        {
+                                                            competition:
+                                                                props.id,
+                                                        },
+                                                    )}
+                                                    external
+                                                    download
+                                                >
+                                                    Entry report (XLSX)
+                                                </Link>
+                                            </li>
                                         </>
                                     )}
 

@@ -16,7 +16,7 @@ class CompetitionEntryPolicy
         //
     }
 
-    private function before(User $user): ?Response
+    public function before(User $user): ?Response
     {
         if ($user->hasPermission(['Admin', 'Coach', 'Galas'])) {
             return Response::allow();
