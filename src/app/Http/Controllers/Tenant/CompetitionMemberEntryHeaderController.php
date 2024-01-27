@@ -26,6 +26,11 @@ use Inertia\Inertia;
 
 class CompetitionMemberEntryHeaderController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function new(Competition $competition, Request $request)
     {
         $this->authorize('enter', $competition);
@@ -81,6 +86,9 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function editEntrySelectSessions(Competition $competition, Member $member)
     {
+        $this->authorize('view', $competition);
+        $this->authorize('view', $member);
+
         $sessions = $competition
             ->sessions()
             ->with('events')
@@ -157,6 +165,9 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function editEntry(Competition $competition, Member $member, Request $request)
     {
+        $this->authorize('view', $competition);
+        $this->authorize('view', $member);
+
         /** @var User $user */
         $user = $request->user();
 
@@ -258,11 +269,15 @@ class CompetitionMemberEntryHeaderController extends Controller
             'is_coach' => $user->hasPermission(['Admin', 'Coach', 'Galas']),
             'vetoable' => $entry->vetoable,
             'locked' => $entry->locked,
+            'can_update' => $user->can('update', $entry),
         ]);
     }
 
     public function updateAvailableSessions(Request $request, Competition $competition, Member $member)
     {
+        $this->authorize('view', $competition);
+        $this->authorize('view', $member);
+
         $request->validate([
             'sessions.*.available' => ['boolean'],
         ]);
@@ -293,6 +308,9 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function updateEntry(Competition $competition, Member $member, Request $request)
     {
+        $this->authorize('view', $competition);
+        $this->authorize('view', $member);
+
         /** @var User $user */
         $user = $request->user();
 
@@ -302,6 +320,8 @@ class CompetitionMemberEntryHeaderController extends Controller
             'member_MemberID' => $member->MemberID,
             'competition_id' => $competition->id,
         ]);
+
+        $this->authorize('update', $entry);
 
         if ($entry->locked && ! $isCoach) {
             // return, can't edit
@@ -395,6 +415,9 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function vetoEntry(Competition $competition, Member $member, Request $request)
     {
+        $this->authorize('view', $competition);
+        $this->authorize('view', $member);
+
         /** @var User $user */
         $user = $request->user();
 
@@ -406,6 +429,8 @@ class CompetitionMemberEntryHeaderController extends Controller
         if (! $entry) {
             abort(404);
         }
+
+        $this->authorize('veto', $entry);
 
         if (! $entry->vetoable) {
             // return, can't edit

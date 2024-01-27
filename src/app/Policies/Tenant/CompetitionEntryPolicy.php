@@ -16,7 +16,7 @@ class CompetitionEntryPolicy
         //
     }
 
-    public function before(User $user): ?Response
+    private function before(User $user): ?Response
     {
         if ($user->hasPermission(['Admin', 'Coach', 'Galas'])) {
             return Response::allow();
@@ -32,11 +32,46 @@ class CompetitionEntryPolicy
 
     public function view(?User $user, CompetitionEntry $entry)
     {
-
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
     }
 
     public function update(?User $user, CompetitionEntry $entry)
     {
+        if (! $entry->editable) {
+            return false;
+        }
 
+        if ($entry->locked) {
+            return false;
+        }
+
+        if ($entry->processed) {
+            return false;
+        }
+
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
+    }
+
+    public function veto(?User $user, CompetitionEntry $entry)
+    {
+        if (! $entry->editable) {
+            return false;
+        }
+
+        if (! $entry->vetoable) {
+            return false;
+        }
+
+        if ($entry->processed) {
+            return false;
+        }
+
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
     }
 }

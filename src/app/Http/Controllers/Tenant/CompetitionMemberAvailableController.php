@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Competition;
+use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,8 +12,15 @@ use Inertia\Inertia;
 
 class CompetitionMemberAvailableController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     public function index(Competition $competition, Request $request)
     {
+        $this->authorize('viewAny', CompetitionEntry::class);
+
         $members = DB::table('competition_session_member')
             ->join('competition_sessions', 'competition_session_member.competition_session_id', '=', 'competition_sessions.id')
             ->join('members', 'competition_session_member.member_MemberID', '=', 'members.MemberID')
