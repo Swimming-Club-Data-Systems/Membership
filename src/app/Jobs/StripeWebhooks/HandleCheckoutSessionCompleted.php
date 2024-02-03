@@ -23,17 +23,15 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
 
     public WebhookCall $webhookCall;
 
-    public int $webhookCallId;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $webhookCallId)
+    public function __construct(WebhookCall $webhookCall)
     {
-        $this->webhookCallId = $webhookCallId;
-        // $this->onQueue(Queue::STRIPE->value);
+        $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -41,7 +39,6 @@ class HandleCheckoutSessionCompleted implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
         // do your work here
 
         // you can access the payload of the webhook call with `$this->webhookCall->payload`
