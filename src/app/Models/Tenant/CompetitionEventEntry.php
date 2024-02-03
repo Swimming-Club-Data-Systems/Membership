@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Business\Helpers\Money;
 use App\Enums\CompetitionEntryCancellationReason;
 use App\Interfaces\PaidObject;
 use Brick\Math\BigDecimal;
@@ -49,6 +50,13 @@ class CompetitionEventEntry extends Model implements PaidObject
     protected $attributes = [
         'paid' => false,
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['amount_formatted', 'amount_refunded_formatted'];
 
     public function competitionEntry(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -103,6 +111,26 @@ class CompetitionEventEntry extends Model implements PaidObject
             set: fn ($value, $attributes) => [
                 'amount_refunded' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
             ],
+        );
+    }
+
+    /**
+     * Get or set the amount as a string.
+     */
+    protected function amountFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency($attributes['amount']),
+        );
+    }
+
+    /**
+     * Get or set the amount refunded as a string.
+     */
+    protected function amountRefundedFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency($attributes['amount_refunded']),
         );
     }
 

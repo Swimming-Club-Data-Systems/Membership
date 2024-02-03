@@ -67,7 +67,7 @@ class CompetitionEntry extends Model implements PaidObject
      *
      * @var array
      */
-    protected $appends = ['editable'];
+    protected $appends = ['editable', 'amount_formatted', 'amount_refunded_formatted'];
 
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -128,9 +128,26 @@ class CompetitionEntry extends Model implements PaidObject
     {
         return Attribute::make(
             get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['amount_refunded'])->withPointMovedLeft(2),
-            set: fn ($value) => [
-                'amount_refunded' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
-            ],
+        );
+    }
+
+    /**
+     * Get or set the amount as a string.
+     */
+    protected function amountFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency((string) $attributes['amount']),
+        );
+    }
+
+    /**
+     * Get or set the amount refunded as a string.
+     */
+    protected function amountRefundedFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency($attributes['amount_refunded']),
         );
     }
 

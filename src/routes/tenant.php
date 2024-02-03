@@ -14,6 +14,7 @@ use App\Http\Controllers\Tenant\CompetitionMemberAvailableController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryHeaderController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryPaymentController;
+use App\Http\Controllers\Tenant\CompetitionMemberEntryRejectionController;
 use App\Http\Controllers\Tenant\CompetitionMemberEntryReportController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
@@ -469,6 +470,14 @@ Route::middleware([
                         ->name('entries.show');
                     Route::get('/report', [CompetitionMemberEntryReportController::class, 'report'])
                         ->name('entries.report');
+                });
+                Route::prefix('manage-rejections')->group(function () {
+                    Route::name('rejections.')->group(function () {
+                        Route::get('/', [CompetitionMemberEntryRejectionController::class, 'index'])
+                            ->name('index');
+                        Route::post('/', [CompetitionMemberEntryRejectionController::class, 'refund'])
+                            ->name('refund');
+                    });
                 });
                 Route::prefix('guest-entries')->group(function () {
                     Route::get('/', [CompetitionGuestEntryController::class, 'index'])

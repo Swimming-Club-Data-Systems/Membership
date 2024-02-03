@@ -30,7 +30,7 @@ const Link: React.FC<LinkProps> = (props) => {
 };
 
 const BaseLink: React.FC<LinkProps> = ({ external, ...props }) => {
-    if (external) {
+    if (external || props.target === "_blank") {
         return <A {...props} />;
     }
 
