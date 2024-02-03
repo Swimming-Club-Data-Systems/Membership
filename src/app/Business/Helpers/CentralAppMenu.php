@@ -39,6 +39,14 @@ class CentralAppMenu
                 ];
             }
 
+            if (Gate::check('viewPulse', [$user])) {
+                $menu[] = [
+                    'name' => 'Pulse',
+                    'href' => '/pulse',
+                    'external' => true,
+                ];
+            }
+
             if (Gate::check('viewTelescope', [$user])) {
                 $menu[] = [
                     'name' => 'Telescope',
