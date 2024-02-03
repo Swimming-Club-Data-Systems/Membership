@@ -26,6 +26,7 @@
         "laravel/framework": "^10.0",
         "laravel/horizon": "^5.13",
         "laravel/passport": "^11.8.3",
+        "laravel/pulse": "^1.0@beta",
         "laravel/sanctum": "^3.2",
         "laravel/scout": "^9.4",
         "laravel/telescope": "^4.9",
@@ -110,6 +111,6 @@
             "pestphp/pest-plugin": true
         }
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "beta",
     "prefer-stable": true
 }
