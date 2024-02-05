@@ -15,17 +15,15 @@ class HandlePaymentIntentRequiresAction implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
-    public WebhookCall $webhookCall;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
     public function __construct(
-        public int $webhookCallId
+        public WebhookCall $webhookCall
     ) {
-        // $this->onQueue(Queue::STRIPE->value);
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -35,8 +33,6 @@ class HandlePaymentIntentRequiresAction implements ShouldQueue
      */
     public function handle()
     {
-        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
-
         //
     }
 }

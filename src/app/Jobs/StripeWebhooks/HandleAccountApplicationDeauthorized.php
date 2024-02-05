@@ -20,17 +20,15 @@ class HandleAccountApplicationDeauthorized implements ShouldQueue
 
     public WebhookCall $webhookCall;
 
-    public int $webhookCallId;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $webhookCallId)
+    public function __construct(WebhookCall $webhookCall)
     {
-        $this->webhookCallId = $webhookCallId;
-        // $this->onQueue(Queue::STRIPE->value);
+        $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -40,7 +38,6 @@ class HandleAccountApplicationDeauthorized implements ShouldQueue
      */
     public function handle()
     {
-        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
         // Remove Stripe account id from the system to disable all Stripe services in the tenant app
         // Store old Stripe account id so that if set up again we can check it's the same and fail otherwise
         // Email the tenant admins telling them services have been disconnected and are now unavailable

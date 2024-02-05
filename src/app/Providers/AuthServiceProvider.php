@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Models\Central\User;
 use App\Models\Tenant\Passport\Client;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Laravel\Passport\Passport;
 
@@ -50,7 +52,18 @@ class AuthServiceProvider extends ServiceProvider
         //     Passport::routes();
         // }
 
-        Gate::define('manage', function (\App\Models\Central\User $user) {
+        Gate::define('viewPulse', function ($user = null) {
+            /** @var User $user */
+            $user = Auth::guard('central')->user();
+
+            if ($user) {
+                return $user->id == 1;
+            }
+
+            return Response::denyAsNotFound();
+        });
+
+        Gate::define('manage', function (User $user) {
             return $user->id === 1
                 ? Response::allow()
                 : Response::denyAsNotFound(404);

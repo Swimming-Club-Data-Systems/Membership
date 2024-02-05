@@ -19,17 +19,15 @@ class HandlePaymentMethodUpdated implements ShouldQueue
 
     public WebhookCall $webhookCall;
 
-    public int $webhookCallId;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(int $webhookCallId)
+    public function __construct(WebhookCall $webhookCall)
     {
-        $this->webhookCallId = $webhookCallId;
-        // $this->onQueue(Queue::STRIPE->value);
+        $this->webhookCall = $webhookCall;
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -37,8 +35,6 @@ class HandlePaymentMethodUpdated implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
-
         // Find the payment method if it's in the database
 
         /** @var Tenant $tenant */
