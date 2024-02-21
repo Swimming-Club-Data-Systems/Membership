@@ -475,7 +475,8 @@ Route::middleware([
                     Route::name('rejections.')->group(function () {
                         Route::get('/', [CompetitionMemberEntryRejectionController::class, 'index'])
                             ->name('index');
-                        Route::post('/', [CompetitionMemberEntryRejectionController::class, 'refund'])
+                        Route::post('/entries/{entry}', [CompetitionMemberEntryRejectionController::class, 'refund'])
+                            ->whereUuid('entry')
                             ->name('refund');
                     });
                 });

@@ -7,6 +7,7 @@ use App\Models\Tenant\Competition;
 use App\Models\Tenant\CompetitionEntry;
 use App\Models\Tenant\Member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -72,7 +73,7 @@ class CompetitionMemberEntryRejectionController extends Controller
         return Inertia::render('Competitions/Rejections/Index', $data);
     }
 
-    public function refund(CompetitionEntry $entry, Request $request)
+    public function refund(Competition $competition, CompetitionEntry $entry, Request $request)
     {
         $this->authorize('refund', $entry);
 
@@ -85,6 +86,19 @@ class CompetitionMemberEntryRejectionController extends Controller
 
         // Look at submission and refund
         // Redirect back to page
+
+        $events = $request->get('events', []);
+
+        foreach ($events as $event) {
+            if (Arr::get($event, 'is_to_refund')) {
+                // Get and check event is paid and not refunded etc
+                // Then refund
+            }
+        }
+
+        dd($events);
+
+        // Loop over rejections and run Stripe call for refund
 
         $request->session()->flash('success', $entry->member->name.'\'s entry has been partially/fully refunded.');
 

@@ -74,4 +74,11 @@ class CompetitionEntryPolicy
             return true;
         }
     }
+
+    public function refund(?User $user, CompetitionEntry $entry)
+    {
+        if (! $entry->paid && ! $entry->processed) {
+            return false;
+        }
+    }
 }

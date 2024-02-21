@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useRef, useState } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
@@ -27,6 +27,10 @@ interface EntrantProps {
     sex: string;
     age: number;
     age_on_day: number;
+    competition: {
+        id: number;
+        name: string;
+    };
     entries: {
         id: string;
         member_MemberID: number;
@@ -102,6 +106,18 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                     </div>
                     <BasicListTwo>
                         {props.entries.map((entry) => {
+                            const initialValues = {
+                                events: entry.competition_event_entries.map(
+                                    (ev) => {
+                                        return {
+                                            is_to_refund: false,
+                                            refund_reason: "",
+                                            event_entry_id: ev.id,
+                                        };
+                                    },
+                                ),
+                            };
+
                             return (
                                 <BasicListTwoItem key={entry.id}>
                                     <div className="text-sm text-gray-700">
@@ -192,6 +208,7 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                                         Icon={ReceiptRefundIcon}
                                     >
                                         <Form
+                                            initialValues={initialValues}
                                             validationSchema={yup
                                                 .object()
                                                 .shape({
@@ -208,12 +225,23 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                                                                         then: (
                                                                             schema,
                                                                         ) =>
-                                                                            schema.required(),
+                                                                            schema.required(
+                                                                                "A refund reason is required.",
+                                                                            ),
                                                                     },
                                                                 ),
                                                         }),
                                                     ),
                                                 })}
+                                            method="post"
+                                            action={route(
+                                                "competitions.rejections.refund",
+                                                {
+                                                    competition:
+                                                        props.competition.id,
+                                                    entry: entry.id,
+                                                },
+                                            )}
                                         >
                                             <BasicListTwo>
                                                 {entry.competition_event_entries
@@ -235,6 +263,7 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                                                                             .competition_event
                                                                             .name
                                                                     }
+                                                                    help={`${eventEntry.amount_formatted} to be refunded`}
                                                                 />
 
                                                                 <Select
