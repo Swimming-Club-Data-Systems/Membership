@@ -16,7 +16,7 @@ class CompetitionFileController extends Controller
         $this->authorize('update', $competition);
 
         $request->validate([
-            'file' => ['file', 'size:10240'],
+            'file' => ['file', 'max:10240'],
         ]);
 
         try {
