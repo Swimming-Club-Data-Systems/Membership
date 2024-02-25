@@ -30,8 +30,24 @@ const apiCountSlice = createSlice({
     },
 });
 
+const turnstileSlice = createSlice({
+    name: "showCloudflareTurnstile",
+    initialState: {
+        value: false,
+    },
+    reducers: {
+        showTurnstile: (state) => {
+            state.value = true;
+        },
+        hideTurnstile: (state) => {
+            state.value = false;
+        },
+    },
+});
+
 export const { setKey, setKeys } = mainSlice.actions;
 export const { increment, decrement } = apiCountSlice.actions;
+export const { showTurnstile, hideTurnstile } = turnstileSlice.actions;
 
 export const apiCount = (state) => state.apiCount.value;
 
@@ -39,5 +55,11 @@ export const store = configureStore({
     reducer: {
         main: mainSlice.reducer,
         apiCount: apiCountSlice.reducer,
+        showCloudflareTurnstile: turnstileSlice.reducer,
     },
 });
+
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

@@ -44,7 +44,7 @@ class CompetitionFileController extends Controller
                 'sequence' => $sequence,
             ]);
 
-            return $upload->toJson();
+            return response($upload->toJson());
         } catch (\Exception $e) {
             // Report because the failure was after validation
             report($e);

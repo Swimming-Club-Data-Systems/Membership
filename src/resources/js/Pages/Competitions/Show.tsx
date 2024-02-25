@@ -34,6 +34,8 @@ import Uploady, { UPLOADER_EVENTS } from "@rpldy/uploady";
 import { asUploadButton } from "@rpldy/upload-button";
 import FileList from "@/Components/FileList";
 import { router } from "@inertiajs/react";
+import { useDispatch } from "react-redux";
+import { showTurnstile } from "@/Reducers/store";
 
 type Session = {
     id: number;
@@ -107,6 +109,8 @@ const Upload = ({
     csrfToken: string;
     onError: () => void;
 }) => {
+    const dispatch = useDispatch();
+
     const reload = () => {
         router.reload({
             only: ["files"],
@@ -126,12 +130,20 @@ const Upload = ({
             },
             [UPLOADER_EVENTS.ITEM_FINISH]: (item) => {
                 reload();
+
+                if (item?.uploadResponse?.headers?.["cf-mitigated"]) {
+                    dispatch(showTurnstile());
+                }
             },
             [UPLOADER_EVENTS.BATCH_ERROR]: (batch) => {
                 internalOnError();
             },
             [UPLOADER_EVENTS.ITEM_ERROR]: (item) => {
                 internalOnError();
+
+                if (item?.uploadResponse?.headers?.["cf-mitigated"]) {
+                    dispatch(showTurnstile());
+                }
             },
         }),
         [],
