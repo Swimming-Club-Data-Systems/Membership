@@ -70,7 +70,7 @@ Route::middleware([
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
 
-    Route::post('/validate-turnstile-widget', [ValidateTurnstileWidgetController::class])
+    Route::post('/validate-turnstile-widget', ValidateTurnstileWidgetController::class)
         ->name('validate_turnstile_widget');
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
