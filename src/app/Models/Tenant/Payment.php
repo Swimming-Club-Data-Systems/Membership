@@ -194,7 +194,7 @@ class Payment extends Model
     protected function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, $attributes) => $attributes['customer_name'],
+            get: fn ($value, $attributes) => $this->user ? $this->user->name : $attributes['customer_name'],
         );
     }
 

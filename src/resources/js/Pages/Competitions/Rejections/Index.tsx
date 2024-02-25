@@ -107,15 +107,18 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                     <BasicListTwo>
                         {props.entries.map((entry) => {
                             const initialValues = {
-                                events: entry.competition_event_entries.map(
-                                    (ev) => {
+                                events: entry.competition_event_entries
+                                    .filter(
+                                        (eventEntry) =>
+                                            !eventEntry.cancellation_reason,
+                                    )
+                                    .map((ev) => {
                                         return {
                                             is_to_refund: false,
                                             refund_reason: "",
                                             event_entry_id: ev.id,
                                         };
-                                    },
-                                ),
+                                    }),
                             };
 
                             return (
@@ -243,6 +246,9 @@ const EntrantRenderer = (props: EntrantProps): ReactNode => {
                                                 },
                                             )}
                                         >
+                                            <RenderServerErrors />
+                                            <FlashAlert />
+
                                             <BasicListTwo>
                                                 {entry.competition_event_entries
                                                     .filter(

@@ -74,31 +74,35 @@ export const EntryForm = ({
     // @ts-ignore
     const initialEventValues = usePage().props.form_initial_values?.entries;
 
+    const validationSchema: { [key: string]: yup.Schema<any> } = {
+        entries: yup.array().of(
+            yup.object().shape({
+                entering: yup.boolean(),
+                entry_time: yup
+                    .string()
+                    .nullable()
+                    .matches(/^\d{0,2}:?\d{0,2}[.]\d{0,2}$/, {
+                        message: "Entry time must be of the format MM:SS.HH.",
+                        excludeEmptyString: true,
+                    }),
+                amount: yup
+                    .number()
+                    .typeError("Amount must be a number.")
+                    .min(0),
+            }),
+        ),
+    };
+
+    if (isCoach && coachEnters) {
+        validationSchema.vetoable = yup.boolean();
+        validationSchema.locked = yup.boolean();
+    }
+
     return (
         <>
             <Form
                 initialValues={{}}
-                validationSchema={yup.object().shape({
-                    entries: yup.array().of(
-                        yup.object().shape({
-                            entering: yup.boolean(),
-                            entry_time: yup
-                                .string()
-                                .nullable()
-                                .matches(/^\d{0,2}:?\d{0,2}[.]\d{0,2}$/, {
-                                    message:
-                                        "Entry time must be of the format MM:SS.HH.",
-                                    excludeEmptyString: true,
-                                }),
-                            amount: yup
-                                .number()
-                                .typeError("Amount must be a number.")
-                                .min(0),
-                        }),
-                    ),
-                    vetoable: yup.boolean(),
-                    locked: yup.boolean(),
-                })}
+                validationSchema={yup.object().shape(validationSchema)}
                 action={action}
                 method="put"
                 removeDefaultInputMargin
