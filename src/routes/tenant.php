@@ -541,7 +541,7 @@ Route::middleware([
                         ->whereNumber(['member'])
                         ->name('enter.edit-session-availability');
                     Route::put('/member/{member}/edit-session-availability', [CompetitionMemberEntryHeaderController::class, 'updateAvailableSessions'])
-                        ->name('enter.edit-session-availability')
+//                        ->name('enter.edit-session-availability')
                         ->whereNumber('member');
                 });
                 Route::prefix('/members-available')->group(function () {
