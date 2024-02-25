@@ -30,11 +30,11 @@ createInertiaApp({
         Promise.any([
             resolvePageComponent(
                 `./Pages/${name}.jsx`,
-                import.meta.glob("./Pages/**/*.jsx")
+                import.meta.glob("./Pages/**/*.jsx"),
             ),
             resolvePageComponent(
                 `./Pages/${name}.tsx`,
-                import.meta.glob("./Pages/**/*.tsx")
+                import.meta.glob("./Pages/**/*.tsx"),
             ),
         ]),
     setup({ el, App, props }) {
@@ -44,7 +44,7 @@ createInertiaApp({
                 <Wrapper>
                     <App {...props} />
                 </Wrapper>
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
     },
 });

@@ -39,6 +39,7 @@ use App\Http\Controllers\Tenant\UserController;
 use App\Http\Controllers\Tenant\VenueController;
 use App\Http\Controllers\Tenant\VerifyEmailChangeController;
 use App\Http\Controllers\Tenant\WebauthnRegistrationController;
+use App\Http\Controllers\ValidateTurnstileWidgetController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -68,6 +69,9 @@ Route::middleware([
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
 ])->group(function () {
+
+    Route::post('/validate-turnstile-widget', [ValidateTurnstileWidgetController::class])
+        ->name('validate_turnstile_widget');
 
     Route::get('/', [DashboardController::class, 'index'])->name('index');
 

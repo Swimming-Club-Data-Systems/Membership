@@ -36,4 +36,9 @@ return [
         'client_id' => env('STRIPE_CLIENT_ID'),
     ],
 
+    'cloudflare' => [
+        'turnstile_secret' => env('CLOUDFLARE_TURNSTILE_SECRET'),
+        'turnstile_site_key' => env('CLOUDFLARE_TURNSTILE_SITE_KEY'),
+    ],
+
 ];
