@@ -8,14 +8,13 @@ use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 /**
  * @property string $id
- * @property Member $member
- * @property CompetitionGuestEntrant $competitionGuestEntrant
+ * @property ?Member $member
+ * @property ?CompetitionGuestEntrant $competitionGuestEntrant
  * @property bool $paid
  * @property bool $processed
  * @property int $amount
@@ -32,12 +31,13 @@ use Illuminate\Support\Carbon;
  * @property bool $vetoable
  * @property Collection $competitionEventEntries
  * @property Competition $competition
+ * @property bool $editable
  * @property Carbon $created_at
  * @property Carbon $updated_at
  */
 class CompetitionEntry extends Model implements PaidObject
 {
-    use HasFactory, HasUuids;
+    use HasUuids;
 
     protected $fillable = [
         'competition_id',
@@ -61,6 +61,13 @@ class CompetitionEntry extends Model implements PaidObject
         'paid' => false,
         'processing_fee_paid' => false,
     ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['editable', 'amount_formatted', 'amount_refunded_formatted'];
 
     public function member(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
@@ -121,9 +128,26 @@ class CompetitionEntry extends Model implements PaidObject
     {
         return Attribute::make(
             get: fn ($value, $attributes) => (string) BigDecimal::of((string) $attributes['amount_refunded'])->withPointMovedLeft(2),
-            set: fn ($value) => [
-                'amount_refunded' => BigDecimal::of($value)->withPointMovedRight(2)->toInt(),
-            ],
+        );
+    }
+
+    /**
+     * Get or set the amount as a string.
+     */
+    protected function amountFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency((string) $attributes['amount']),
+        );
+    }
+
+    /**
+     * Get or set the amount refunded as a string.
+     */
+    protected function amountRefundedFormatted(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value, $attributes) => Money::formatCurrency($attributes['amount_refunded']),
         );
     }
 
@@ -178,5 +202,15 @@ class CompetitionEntry extends Model implements PaidObject
     public function handleCanceled(): void
     {
         // TODO: Implement handleCanceled() method.
+    }
+
+    /**
+     * Get the user's first name.
+     */
+    protected function editable(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ! $this->paid && ! $this->processed,
+        );
     }
 }

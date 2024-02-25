@@ -16,21 +16,5 @@ class CompetitionGuestEntryReportController extends Controller
         $this->authorize('viewAny', CompetitionEntry::class);
 
         return Excel::download(new CompetitionGuestEntryExport($competition), 'entries.xlsx');
-
-        //        $entries = CompetitionEntry::where('competition_id', $competition->id);
-        //
-        //        if ($request->string('sex') != '') {
-        //            $entries = $entries->whereRelation('competitionGuestEntrant', 'sex', '=', $request->string('sex'));
-        //        }
-        //
-        //        $entries = $entries
-        //            ->with([
-        //                'competitionGuestEntrant',
-        //                'competitionEventEntries',
-        //                'competitionEventEntries.competitionEvent',
-        //            ])
-        //            ->get();
-        //
-        //        return $entries;
     }
 }

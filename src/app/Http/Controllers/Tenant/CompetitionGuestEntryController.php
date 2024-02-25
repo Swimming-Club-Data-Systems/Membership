@@ -19,7 +19,7 @@ class CompetitionGuestEntryController extends Controller
     {
         $this->authorize('viewAny', CompetitionEntry::class);
 
-        $entries = CompetitionEntry::where('competition_id', $competition->id);
+        $entries = CompetitionEntry::where('competition_id', $competition->id)->whereHas('competitionGuestEntrant');
 
         if ($request->string('sex') != '') {
             $entries = $entries->whereRelation('competitionGuestEntrant', 'sex', '=', $request->string('sex'));

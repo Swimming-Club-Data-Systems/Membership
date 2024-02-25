@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use App\Enums\Sex;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -23,7 +24,7 @@ use Laravel\Scout\Searchable;
  * @property string MMiddleNames
  * @property string ASANumber
  * @property \DateTime DateOfBirth
- * @property string Gender
+ * @property Sex Gender
  * @property string OtherNotes
  * @property bool ASAPrimary
  * @property bool ASAPaid
@@ -48,6 +49,7 @@ class Member extends Model
      */
     protected $casts = [
         'DateOfBirth' => 'datetime',
+        'Gender' => Sex::class,
     ];
 
     protected $attributes = [
@@ -106,6 +108,16 @@ class Member extends Model
     public function squadMoves(): HasMany
     {
         return $this->hasMany(SquadMove::class, 'Member');
+    }
+
+    public function competitionEntries(): HasMany
+    {
+        return $this->hasMany(CompetitionEntry::class);
+    }
+
+    public function competitionEntryAvailableSessions(): BelongsToMany
+    {
+        return $this->belongsToMany(CompetitionSession::class)->withTimestamps();
     }
 
     public function toSearchableArray(): array

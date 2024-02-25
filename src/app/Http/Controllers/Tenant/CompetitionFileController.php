@@ -16,34 +16,42 @@ class CompetitionFileController extends Controller
         $this->authorize('update', $competition);
 
         $request->validate([
-            'file' => ['file', 'size:10240'],
+            'file' => ['file', 'max:10240'],
         ]);
 
-        /** @var Tenant $tenant */
-        $tenant = tenant();
+        try {
+            /** @var Tenant $tenant */
+            $tenant = tenant();
 
-        $file = $request->file('file');
+            $file = $request->file('file');
 
-        $name = $file->getClientOriginalName();
-        $size = $file->getSize();
-        $mime = $file->getMimeType();
+            $name = $file->getClientOriginalName();
+            $size = $file->getSize();
+            $mime = $file->getMimeType();
 
-        $path = Storage::putFile($tenant->storagePath().'uploads', $file);
+            $path = Storage::putFile($tenant->storagePath().'uploads', $file);
 
-        $sequence = $competition->files()->max('sequence') + 1;
+            $sequence = $competition->files()->max('sequence') + 1;
 
-        $upload = $competition->files()->create([
-            'path' => $path,
-            'disk' => config('filesystems.default'),
-            'original_name' => $name,
-            'public_name' => $name,
-            'mime_type' => $mime,
-            'size' => $size,
-            'public' => true,
-            'sequence' => $sequence,
-        ]);
+            $upload = $competition->files()->create([
+                'path' => $path,
+                'disk' => config('filesystems.default'),
+                'original_name' => $name,
+                'public_name' => $name,
+                'mime_type' => $mime,
+                'size' => $size,
+                'public' => true,
+                'sequence' => $sequence,
+            ]);
 
-        return $upload;
+            return response($upload->toJson());
+        } catch (\Exception $e) {
+            // Report because the failure was after validation
+            report($e);
+
+            // Return an error to the client
+            return response()->json(['error' => 'File upload failed'], 500);
+        }
     }
 
     public function view(Competition $competition, CompetitionFile $file, Request $request)

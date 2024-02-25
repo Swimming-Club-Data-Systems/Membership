@@ -22,17 +22,15 @@ class HandlePaymentIntentCanceled implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
-    public WebhookCall $webhookCall;
-
     /**
      * Create a new job instance.
      *
      * @return void
      */
     public function __construct(
-        public int $webhookCallId
+        public WebhookCall $webhookCall
     ) {
-        // $this->onQueue(Queue::STRIPE->value);
+        $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -40,8 +38,6 @@ class HandlePaymentIntentCanceled implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
-
         $tenant = Tenant::findByStripeAccountId($this->webhookCall->payload['account']);
 
         $tenant->run(function () {

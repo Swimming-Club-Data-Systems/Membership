@@ -32,11 +32,53 @@ class CompetitionEntryPolicy
 
     public function view(?User $user, CompetitionEntry $entry)
     {
-
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
     }
 
     public function update(?User $user, CompetitionEntry $entry)
     {
+        if (! $entry->editable) {
+            return false;
+        }
 
+        if ($entry->locked) {
+            return false;
+        }
+
+        if ($entry->processed) {
+            return false;
+        }
+
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
+    }
+
+    public function veto(?User $user, CompetitionEntry $entry)
+    {
+        if (! $entry->editable) {
+            return false;
+        }
+
+        if (! $entry->vetoable) {
+            return false;
+        }
+
+        if ($entry->processed) {
+            return false;
+        }
+
+        if ($entry->member?->user->UserID === $user->UserID) {
+            return true;
+        }
+    }
+
+    public function refund(?User $user, CompetitionEntry $entry)
+    {
+        if (! $entry->paid && ! $entry->processed) {
+            return false;
+        }
     }
 }

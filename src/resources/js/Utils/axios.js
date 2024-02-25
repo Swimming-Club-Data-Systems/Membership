@@ -1,4 +1,4 @@
-import { decrement, increment, store } from "@/Reducers/store";
+import { decrement, increment, showTurnstile, store } from "@/Reducers/store";
 import axios from "axios";
 
 /**
@@ -15,7 +15,7 @@ axios.interceptors.request.use(
     function (error) {
         // Do something with request error
         return Promise.reject(error);
-    }
+    },
 );
 
 // Add a response interceptor
@@ -32,8 +32,14 @@ axios.interceptors.response.use(
         // Do something with response error
         // Tell our global state that a request has ended
         store.dispatch(decrement());
+
+        if (error?.response?.headers?.["cf-mitigated"]) {
+            // Cloudflare WAF has intercepted the request, trigger the CF Turnstile
+            store.dispatch(showTurnstile());
+        }
+
         return Promise.reject(error);
-    }
+    },
 );
 
 export default axios;

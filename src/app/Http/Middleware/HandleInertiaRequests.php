@@ -76,6 +76,9 @@ class HandleInertiaRequests extends Middleware
                 'success' => fn () => $request->session()->get('success'),
                 ...$flashBag,
             ],
+            'cf' => [
+                'site_key' => config('services.cloudflare.turnstile_site_key'),
+            ],
         ]);
     }
 }

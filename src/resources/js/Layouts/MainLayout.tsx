@@ -14,6 +14,7 @@ import MainHeader from "./Components/MainHeader.jsx";
 import Container from "@/Components/Container.jsx";
 import TenantLogo from "@/Components/TenantLogo.jsx";
 import { connect } from "react-redux";
+import { TurnstileWidget } from "@/Components/TurnstileWidget";
 
 const userNavigation = [
     { name: "My Account", href: route("my_account.index") },
@@ -156,7 +157,7 @@ const MainLayout: React.FC<Props> = ({
                                                                                     active
                                                                                         ? "bg-gray-100"
                                                                                         : "",
-                                                                                    "block px-4 py-2 text-sm text-gray-700"
+                                                                                    "block px-4 py-2 text-sm text-gray-700",
                                                                                 )}
                                                                                 method={
                                                                                     item.method
@@ -168,7 +169,7 @@ const MainLayout: React.FC<Props> = ({
                                                                             </Link>
                                                                         )}
                                                                     </Menu.Item>
-                                                                )
+                                                                ),
                                                             )}
                                                         </Menu.Items>
                                                     </Transition>
@@ -322,7 +323,7 @@ const MainLayout: React.FC<Props> = ({
                                                                                 <Menu.Items className="mt-2 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                                                                     {item.children.map(
                                                                                         (
-                                                                                            item
+                                                                                            item,
                                                                                         ) => (
                                                                                             <Menu.Item
                                                                                                 key={
@@ -343,7 +344,7 @@ const MainLayout: React.FC<Props> = ({
                                                                                                             active
                                                                                                                 ? "bg-gray-100"
                                                                                                                 : "",
-                                                                                                            "block px-4 py-2 text-gray-700"
+                                                                                                            "block px-4 py-2 text-gray-700",
                                                                                                         )}
                                                                                                         method={
                                                                                                             item.method
@@ -355,7 +356,7 @@ const MainLayout: React.FC<Props> = ({
                                                                                                     </Popover.Button>
                                                                                                 )}
                                                                                             </Menu.Item>
-                                                                                        )
+                                                                                        ),
                                                                                     )}
                                                                                 </Menu.Items>
                                                                             </Transition>
@@ -380,7 +381,7 @@ const MainLayout: React.FC<Props> = ({
                                                                         }
                                                                     </Popover.Button>
                                                                 );
-                                                            }
+                                                            },
                                                         )}
                                                     </div>
                                                 </div>
@@ -444,7 +445,7 @@ const MainLayout: React.FC<Props> = ({
                                                                             item.name
                                                                         }
                                                                     </Popover.Button>
-                                                                )
+                                                                ),
                                                             )}
                                                         </div>
                                                     </div>
@@ -509,7 +510,7 @@ const MainLayout: React.FC<Props> = ({
                                                                         active
                                                                             ? "bg-gray-100"
                                                                             : "",
-                                                                        "block px-4 py-2 text-sm text-gray-700"
+                                                                        "block px-4 py-2 text-sm text-gray-700",
                                                                     )}
                                                                     method={
                                                                         item.method
@@ -522,7 +523,7 @@ const MainLayout: React.FC<Props> = ({
                                                                 </Link>
                                                             )}
                                                         </Menu.Item>
-                                                    )
+                                                    ),
                                                 )}
                                             </Menu.Items>
                                         </Transition>
@@ -545,7 +546,7 @@ const MainLayout: React.FC<Props> = ({
                                                     ].route,
                                                     breadcrumbs[
                                                         breadcrumbs.length - 2
-                                                    ].routeParams
+                                                    ].routeParams,
                                                 )}
                                                 className="group inline-flex space-x-3 text-sm font-medium text-gray-500 hover:text-gray-700"
                                             >
@@ -616,14 +617,14 @@ const MainLayout: React.FC<Props> = ({
                                                                     ? url
                                                                     : route(
                                                                           item.route,
-                                                                          item.routeParams
+                                                                          item.routeParams,
                                                                       )
                                                             }
                                                             className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
                                                             aria-current={
                                                                 route().current(
                                                                     item.route,
-                                                                    item.routeParams
+                                                                    item.routeParams,
                                                                 )
                                                                     ? "page"
                                                                     : undefined
@@ -642,20 +643,22 @@ const MainLayout: React.FC<Props> = ({
                     )}
                 </header>
 
-                <main className="py-10 min-h-screen">
-                    {/* Page header */}
-                    {!hideHeader && (
-                        <Container>
-                            <MainHeader
-                                title={title}
-                                subtitle={subtitle}
-                                buttons={buttons}
-                            ></MainHeader>
-                        </Container>
-                    )}
+                <TurnstileWidget>
+                    <main className="py-10 min-h-screen">
+                        {/* Page header */}
+                        {!hideHeader && (
+                            <Container>
+                                <MainHeader
+                                    title={title}
+                                    subtitle={subtitle}
+                                    buttons={buttons}
+                                ></MainHeader>
+                            </Container>
+                        )}
 
-                    {children}
-                </main>
+                        {children}
+                    </main>
+                </TurnstileWidget>
             </div>
 
             <Footer />
