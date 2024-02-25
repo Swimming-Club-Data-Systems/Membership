@@ -143,6 +143,7 @@ const Upload = ({
                 url: route("competitions.files.upload", id),
                 headers: {
                     "X-CSRF-TOKEN": csrfToken,
+                    Accept: "application/json",
                 },
             }}
             multiple={false}
