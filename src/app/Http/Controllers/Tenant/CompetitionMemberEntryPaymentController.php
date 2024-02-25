@@ -69,8 +69,6 @@ class CompetitionMemberEntryPaymentController extends Controller
             'currency' => 'gbp',
             'payment_method_types' => ['card', 'link'],
         ]);
-
-        return $compEntries;
     }
 
     public function createPayment(Request $request)

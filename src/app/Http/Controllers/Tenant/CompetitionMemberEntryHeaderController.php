@@ -73,6 +73,8 @@ class CompetitionMemberEntryHeaderController extends Controller
 
     public function start(Competition $competition, Member $member)
     {
+        $this->authorize('enter', $competition);
+
         $entry = CompetitionEntry::where('member_MemberID', '=', $member->MemberID)
             ->where('competition_id', '=', $competition->id)
             ->first();
