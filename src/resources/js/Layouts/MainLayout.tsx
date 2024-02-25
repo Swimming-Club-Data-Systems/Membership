@@ -643,22 +643,22 @@ const MainLayout: React.FC<Props> = ({
                     )}
                 </header>
 
-                <main className="py-10 min-h-screen">
-                    {/* Page header */}
-                    {!hideHeader && (
-                        <Container>
-                            <MainHeader
-                                title={title}
-                                subtitle={subtitle}
-                                buttons={buttons}
-                            ></MainHeader>
-                        </Container>
-                    )}
+                <TurnstileWidget>
+                    <main className="py-10 min-h-screen">
+                        {/* Page header */}
+                        {!hideHeader && (
+                            <Container>
+                                <MainHeader
+                                    title={title}
+                                    subtitle={subtitle}
+                                    buttons={buttons}
+                                ></MainHeader>
+                            </Container>
+                        )}
 
-                    <TurnstileWidget />
-
-                    {children}
-                </main>
+                        {children}
+                    </main>
+                </TurnstileWidget>
             </div>
 
             <Footer />

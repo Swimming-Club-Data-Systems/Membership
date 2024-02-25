@@ -688,7 +688,7 @@ const Show: Layout<Props> = (props: Props) => {
 
                                     <FileList
                                         items={props.files}
-                                        editable
+                                        editable={props.editable}
                                         updateRoute={(id) => {
                                             return route(
                                                 "competitions.files.update",
