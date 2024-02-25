@@ -10,7 +10,7 @@ class ValidateTurnstileWidgetController extends Controller
     public function __invoke(Request $request)
     {
         $response = Http::post('https://challenges.cloudflare.com/turnstile/v0/siteverify', [
-            'secret' => config('services.cloudflare.turnstile_site_key'),
+            'secret' => config('services.cloudflare.turnstile_secret'),
             'response' => $request->input('token'),
         ]);
 
