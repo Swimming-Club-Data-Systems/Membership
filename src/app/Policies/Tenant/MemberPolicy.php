@@ -45,6 +45,13 @@ class MemberPolicy
         }
     }
 
+    public function create(User $user)
+    {
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            return true;
+        }
+    }
+
     /**
      * Can the current user view the member?
      *

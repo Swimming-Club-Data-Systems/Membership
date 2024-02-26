@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\Squad;
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class MemberController extends Controller
@@ -24,6 +26,9 @@ class MemberController extends Controller
     {
         $this->authorize('viewAll', Member::class);
 
+        /** @var User $user */
+        $user = Auth::user();
+
         $members = null;
 
         if ($request->query('query')) {
@@ -38,7 +43,20 @@ class MemberController extends Controller
 
         return Inertia::render('Members/Index', [
             'members' => $members->onEachSide(3),
+            'can_create' => $user->can('create', Member::class),
         ]);
+    }
+
+    public function new()
+    {
+        $this->authorize('create', Member::class);
+
+        return Inertia::render('Members/New', []);
+    }
+
+    public function create(Request $request)
+    {
+        $this->authorize('create', Member::class);
     }
 
     public function show(Member $member)

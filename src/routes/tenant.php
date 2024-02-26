@@ -152,6 +152,8 @@ Route::middleware([
     Route::prefix('/members')->group(function () {
         Route::name('members.')->group(function () {
             Route::get('/', [MemberController::class, 'index'])->name('index');
+            Route::get('/new', [MemberController::class, 'new'])->name('new');
+            Route::post('/', [MemberController::class, 'create'])->name('create');
             Route::get('/combobox', [MemberController::class, 'combobox'])
                 ->name('combobox');
             Route::get('/{member}/squads', [MemberController::class, 'squads'])
