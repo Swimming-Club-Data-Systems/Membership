@@ -14,7 +14,7 @@ try {
     try {
       $userDate = new DateTime($_POST['date'], new DateTimeZone('Europe/London'));
       $date = $userDate;
-    } catch (Exception $e) {
+    } catch (Exception) {
       throw new Exception('Date error');
     }
   } else {
@@ -30,7 +30,7 @@ try {
     ob_start();
     echo registerSessionSelectGenerator($date, $sessionId);
     $html = ob_get_clean();
-  } catch (Exception $e) {
+  } catch (Exception) {
     $status = 500;
   }
 } catch (Exception $e) {

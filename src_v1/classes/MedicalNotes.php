@@ -2,7 +2,6 @@
 
 class MedicalNotes
 {
-  private int $id;
   private $conditions;
   private $allergies;
   private $medication;
@@ -12,9 +11,8 @@ class MedicalNotes
   private $gpPhone;
   private $withholdConsent;
 
-  public function __construct($id)
+  public function __construct(private readonly int $id)
   {
-    $this->id = $id;
     $db = app()->db;
 
     $getDetails = $db->prepare("SELECT Conditions, Allergies, Medication, `GPName`, `GPAddress`, `GPPhone`, `WithholdConsent` FROM memberMedical WHERE MemberID = ?");
@@ -43,20 +41,20 @@ class MedicalNotes
 
     if (isset($row['GPAddress']) && $row['GPAddress']) {
       try {
-        $this->gpAddress = json_decode($row['GPAddress']);
-      } catch (\Exception | \Error $e) {
+        $this->gpAddress = json_decode((string) $row['GPAddress']);
+      } catch (\Exception | \Error) {
         // Ignore
       }
     }
 
     $this->withholdConsent = (isset($row['WithholdConsent']) && !bool($row['WithholdConsent']));
 
-    $this->hasInfo = mb_strlen($this->conditions) > 0 || mb_strlen($this->allergies) > 0 || mb_strlen($this->medication) > 0;
+    $this->hasInfo = mb_strlen((string) $this->conditions) > 0 || mb_strlen((string) $this->allergies) > 0 || mb_strlen((string) $this->medication) > 0;
   }
 
   public function getRawConditions()
   {
-    if (mb_strlen($this->conditions) > 0) {
+    if (mb_strlen((string) $this->conditions) > 0) {
       return $this->conditions;
     }
     return 'N/A';
@@ -64,7 +62,7 @@ class MedicalNotes
 
   public function getRawAllergies()
   {
-    if (mb_strlen($this->allergies) > 0) {
+    if (mb_strlen((string) $this->allergies) > 0) {
       return $this->allergies;
     }
     return 'N/A';
@@ -72,7 +70,7 @@ class MedicalNotes
 
   public function getRawMedication()
   {
-    if (mb_strlen($this->medication) > 0) {
+    if (mb_strlen((string) $this->medication) > 0) {
       return $this->medication;
     }
     return 'N/A';

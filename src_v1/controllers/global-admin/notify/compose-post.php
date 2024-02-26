@@ -127,7 +127,7 @@ try {
   // reportError($attachments);
 
   $subject = $_POST['subject'];
-  $message = str_replace($to_remove, "", $_POST['message']);
+  $message = str_replace($to_remove, "", (string) $_POST['message']);
   $force = 0;
   $sender = $_SESSION['SCDS-Notify']['UserID'];
   if (isset($_POST['force'])) {

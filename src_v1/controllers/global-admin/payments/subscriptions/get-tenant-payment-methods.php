@@ -35,7 +35,7 @@ try {
       $title = htmlspecialchars('Payment method ' . $paymentMethod['MethodID']);
       switch ($paymentMethod['Type']) {
         case 'card':
-          $title = htmlspecialchars(mb_convert_case($json->brand, MB_CASE_TITLE)) . ' ' . htmlspecialchars($json->funding) . ' card ' . htmlspecialchars($json->last4);
+          $title = htmlspecialchars(mb_convert_case((string) $json->brand, MB_CASE_TITLE)) . ' ' . htmlspecialchars((string) $json->funding) . ' card ' . htmlspecialchars((string) $json->last4);
           break;
         case 'bacs_debit':
           $title = htmlspecialchars('Direct Debit Ref: ' . ' ' . $methodDetails->bacs_debit->reference);
@@ -43,7 +43,7 @@ try {
       }
 
     ?>
-      <option value="<?= htmlspecialchars($paymentMethod['MethodID']) ?>"><?= $title ?></option>
+      <option value="<?= htmlspecialchars((string) $paymentMethod['MethodID']) ?>"><?= $title ?></option>
     <?php } while ($paymentMethod = $getPaymentMethods->fetch(PDO::FETCH_ASSOC)); ?>
   <?php } else { ?>
     <option value="" disabled selected>No payment methods available</option>
@@ -61,7 +61,7 @@ try {
 } catch (Exception $e) {
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred';
   }
 

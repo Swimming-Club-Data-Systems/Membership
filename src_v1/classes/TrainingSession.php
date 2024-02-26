@@ -72,7 +72,7 @@ class TrainingSession
   /**
    * Refetch stored information from the database
    */
-  public function revalidate()
+  public function revalidate(): void
   {
     $db = app()->db;
     $tenant = app()->tenant;
@@ -167,7 +167,7 @@ class TrainingSession
    * 
    * @param string date string
    */
-  public function handleRegisterSetup($dateString = 'now')
+  public function handleRegisterSetup($dateString = 'now'): void
   {
     $db = app()->db;
 
@@ -305,7 +305,7 @@ class TrainingSession
       $emergencyContacts = [];
       try {
         $emergencyContacts = TrainingSession::getEmergencyContacts($member['uid']);
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Ignore, stay null
       }
 

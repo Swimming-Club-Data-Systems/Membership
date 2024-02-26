@@ -106,11 +106,11 @@ if (!isset($_GET['code'])) {
       }
 
       $geo_string = $city . $subdivision . $country;
-    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+    } catch (\GeoIp2\Exception\AddressNotFoundException) {
       $geo_string = "Unknown Location";
       // } catch (\GeoIp2\Exception\InvalidDatabaseException $e) {
       //   $geo_string = "Location Information Unavailable";
-    } catch (\Exception $e) {
+    } catch (\Exception) {
       $geo_string = "Location Information Unavailable";
     }
 
@@ -157,7 +157,7 @@ if (!isset($_GET['code'])) {
     }
     if ($_SESSION['SCDS-SU-Login2FA']['RememberMe']) {
       $cookiePath = '/';
-      setcookie(COOKIE_PREFIX . 'SUPERUSER-AutoLogin', $hash, time() + 60 * 60 * 24 * 120, $cookiePath, getenv('MAIN_DOMAIN'), $secure, false);
+      setcookie(COOKIE_PREFIX . 'SUPERUSER-AutoLogin', $hash, ['expires' => time() + 60 * 60 * 24 * 120, 'path' => $cookiePath, 'domain' => getenv('MAIN_DOMAIN'), 'secure' => $secure, 'httponly' => false]);
     }
 
     $_SESSION['SCDS-SuperUser'] = $userDetails['ID'];

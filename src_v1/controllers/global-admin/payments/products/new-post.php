@@ -7,8 +7,8 @@ try {
   if (!\SCDS\CSRF::verify()) throw new Exception('CSRF validity error');
 
   $description = null;
-  if (isset($_POST['product-description']) && mb_strlen(trim($_POST['product-description']))) {
-    $description = trim($_POST['product-description']);
+  if (isset($_POST['product-description']) && mb_strlen(trim((string) $_POST['product-description']))) {
+    $description = trim((string) $_POST['product-description']);
   }
 
   $id = Ramsey\Uuid\Uuid::uuid4()->toString();

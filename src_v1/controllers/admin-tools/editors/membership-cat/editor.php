@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-fluid">
   <h1>Membership category editor</h1>
-  <p class="lead">Quickly modify <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> categories for members.</p>
+  <p class="lead">Quickly modify <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> categories for members.</p>
 
   <form method="post" id="cat-form">
     <div class="cell">
@@ -38,13 +38,13 @@ include BASE_PATH . 'views/header.php';
         <label class="form-label" for="squad-select">
           Choose squad
         </label>
-        <select class="form-select" id="squad-select" name="squad-select" data-gala-id="<?=htmlspecialchars($id)?>">
+        <select class="form-select" id="squad-select" name="squad-select" data-gala-id="<?=htmlspecialchars((string) $id)?>">
           <?php if ($noSquad) { ?>
           <option selected>Select a squad</option>
           <?php } ?>
           <?php while ($s = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <option value="<?=$s['id']?>" <?php if ((int) $s['id'] == $squad) { ?>selected<?php } ?>>
-            <?=htmlspecialchars($s['name'])?>
+            <?=htmlspecialchars((string) $s['name'])?>
           </option>
           <?php } ?>
         </select>

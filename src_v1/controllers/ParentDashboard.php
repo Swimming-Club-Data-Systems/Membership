@@ -7,11 +7,11 @@ $user = app()->user;
 $obj = null;
 if (app()->tenant->isCLS()) {
   $file = getCachedFile(CACHE_DIR . 'CLS-ASC-News.json', 'https://chesterlestreetasc.co.uk/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
-  $obj = json_decode($file);
+  $obj = json_decode((string) $file);
 }
 
 $file = getCachedFile(CACHE_DIR . 'SE-News.json', 'https://www.swimming.org/sport/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
-$asa = json_decode($file);
+$asa = json_decode((string) $file);
 
 $file = getCachedFile(CACHE_DIR . 'SE-NE.xml', 'https://asaner.org.uk/feed?rand_id=' . time(), 10800);
 $asa_ne = null;
@@ -41,7 +41,7 @@ try {
 	CURDATE() ORDER BY `GalaDate` ASC, `MForename` ASC, `MSurname` ASC';
   $query = $db->prepare($sql);
   $query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }
 
@@ -80,7 +80,7 @@ $getOnboarding->execute([
 ]);
 $onboardingId = $getOnboarding->fetchColumn();
 
-$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
+$username = htmlspecialchars(explode(" ", (string) getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
 
 $pagetitle = "Home";
 include BASE_PATH . "views/header.php";
@@ -97,7 +97,7 @@ include BASE_PATH . "views/header.php";
       <aside class="row mb-4">
         <div class="col-lg-6">
           <div class="cell bg-tenant-brand tenant-colour">
-            <h2 class="mb-0"><?php if ($bankHoliday['bunting']) { ?>It's <?= htmlspecialchars($bankHoliday['title']) ?>!<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars($bankHoliday['notes']) ?></em>.<?php } ?><?php } else { ?>Today is <?= htmlspecialchars($bankHoliday['title']) ?>.<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars($bankHoliday['notes']) ?></em>.<?php } ?><?php } ?></h2>
+            <h2 class="mb-0"><?php if ($bankHoliday['bunting']) { ?>It's <?= htmlspecialchars((string) $bankHoliday['title']) ?>!<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars((string) $bankHoliday['notes']) ?></em>.<?php } ?><?php } else { ?>Today is <?= htmlspecialchars((string) $bankHoliday['title']) ?>.<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars((string) $bankHoliday['notes']) ?></em>.<?php } ?><?php } ?></h2>
             <p class="lead mb-0">There may be session cancellations or alterations today.</p>
           </div>
         </div>
@@ -116,10 +116,10 @@ include BASE_PATH . "views/header.php";
               $onboarding = \SCDS\Onboarding\Session::retrieve($onboardingId);
             ?>
               <p>
-                Complete your <?= htmlspecialchars($onboarding->type) ?> now
+                Complete your <?= htmlspecialchars((string) $onboarding->type) ?> now
               </p>
               <p class="mb-0">
-                <a href="<?= htmlspecialchars(autoUrl("onboarding/go-to-session?session=" . urlencode($onboarding->id))) ?>" class="btn btn-dark">
+                <a href="<?= htmlspecialchars((string) autoUrl("onboarding/go-to-session?session=" . urlencode((string) $onboarding->id))) ?>" class="btn btn-dark">
                   Start now <i class="fa fa-chevron-right" aria-hidden="true"></i>
                 </a>
               </p>
@@ -168,7 +168,7 @@ include BASE_PATH . "views/header.php";
         <a href="<?= autoUrl('covid/risk-awareness') ?>">
           <span class="mb-3">
             <span class="title mb-0">
-              <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
+              <?php if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars((string) UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
             </span>
             <span>
               Declare that you understand the risks of returning to training
@@ -192,7 +192,7 @@ include BASE_PATH . "views/header.php";
 
             <p>
               <strong>
-                You're missing out on email updates from <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+                You're missing out on email updates from <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
               </strong>
             </p>
             <p>
@@ -299,14 +299,14 @@ include BASE_PATH . "views/header.php";
             <a href="<?= autoUrl("galas/entries/" . $g['EntryID']) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
-                  <?= htmlspecialchars(\SCDS\Formatting\Names::format($g['MForename'], $g['MSurname'])) ?>
+                  <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($g['MForename'], $g['MSurname'])) ?>
                 </span>
                 <span>
                   &pound;<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $g['FeeToPay']))->toScale(2)) ?>
                 </span>
               </span>
               <span class="category">
-                <?= htmlspecialchars($g['GalaName']) ?>
+                <?= htmlspecialchars((string) $g['GalaName']) ?>
               </span>
             </a>
           <?php }
@@ -326,7 +326,7 @@ include BASE_PATH . "views/header.php";
             $max_posts = sizeof($obj);
           }
           for ($i = 0; $i < $max_posts; $i++) { ?>
-            <a href="<?= htmlspecialchars($obj[$i]->link) ?>" target="_blank" title="<?= ($obj[$i]->title->rendered) ?>">
+            <a href="<?= htmlspecialchars((string) $obj[$i]->link) ?>" target="_blank" title="<?= ($obj[$i]->title->rendered) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
                   <?= ($obj[$i]->title->rendered) ?>
@@ -351,7 +351,7 @@ include BASE_PATH . "views/header.php";
             $max_posts = sizeof($asa);
           }
           for ($i = 0; $i < $max_posts; $i++) { ?>
-            <a href="<?= htmlspecialchars($asa[$i]->link) ?>" target="_blank" title="<?= ($asa[$i]->title->rendered) ?>">
+            <a href="<?= htmlspecialchars((string) $asa[$i]->link) ?>" target="_blank" title="<?= ($asa[$i]->title->rendered) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
                   <?= ($asa[$i]->title->rendered) ?>
@@ -376,14 +376,14 @@ include BASE_PATH . "views/header.php";
             $max_posts = sizeof($asa_ne->channel->item);
           }
           for ($i = 0; $i < $max_posts; $i++) { ?>
-            <a href="<?= htmlspecialchars($asa_ne->channel->item[$i]->link) ?>" target="_blank" title="<?= htmlspecialchars($asa_ne->channel->item[$i]->title) ?> (<?= htmlspecialchars($asa_ne->channel->item[$i]->category) ?>)">
+            <a href="<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->link) ?>" target="_blank" title="<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->title) ?> (<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->category) ?>)">
               <span class="mb-3">
                 <span class="title mb-0">
-                  <?= htmlspecialchars($asa_ne->channel->item[$i]->title) ?>
+                  <?= htmlspecialchars((string) $asa_ne->channel->item[$i]->title) ?>
                 </span>
               </span>
               <span class="category">
-                <?= htmlspecialchars($asa_ne->channel->item[$i]->category) ?>
+                <?= htmlspecialchars((string) $asa_ne->channel->item[$i]->category) ?>
               </span>
             </a>
           <?php } ?>

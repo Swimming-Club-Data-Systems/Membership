@@ -14,7 +14,7 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
       <li class="breadcrumb-item active" aria-current="page">Tax Rates</li>
     </ol>
   </nav>
@@ -37,7 +37,7 @@ include BASE_PATH . "views/root/header.php";
       } ?>
 
       <p>
-        <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl('admin/payments/tax-rates/new')) ?>">New Tax Rate</a>
+        <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl('admin/payments/tax-rates/new')) ?>">New Tax Rate</a>
       </p>
 
       <?php if ($taxRate) { ?>
@@ -45,10 +45,10 @@ include BASE_PATH . "views/root/header.php";
           <?php do { ?>
             <div class="list-group-item">
               <p class="mb-0">
-                <strong><?= htmlspecialchars($taxRate['Name']) ?></strong> (<?= htmlspecialchars($taxRate['Type']) ?>)
+                <strong><?= htmlspecialchars((string) $taxRate['Name']) ?></strong> (<?= htmlspecialchars((string) $taxRate['Type']) ?>)
               </p>
               <p class="mb-0">
-              <?= htmlspecialchars($taxRate['Rate']) ?>%, <?= htmlspecialchars($taxRate['InclusiveExclusive']) ?>
+              <?= htmlspecialchars((string) $taxRate['Rate']) ?>%, <?= htmlspecialchars((string) $taxRate['InclusiveExclusive']) ?>
               </p>
             </div>
           <?php } while ($taxRate = $getTaxRates->fetch(PDO::FETCH_ASSOC)); ?>
@@ -59,7 +59,7 @@ include BASE_PATH . "views/root/header.php";
             <strong>No tax rates available</strong>
           </p>
           <p class="mb-0">
-            Please <a class="alert-link" href="<?= htmlspecialchars(autoUrl('admin/payments/tax-rates/new')) ?>">add a tax rate</a>.
+            Please <a class="alert-link" href="<?= htmlspecialchars((string) autoUrl('admin/payments/tax-rates/new')) ?>">add a tax rate</a>.
           </p>
         </div>
       <?php } ?>

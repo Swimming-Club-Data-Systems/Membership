@@ -35,7 +35,7 @@ class Invoice
     $this->paymentIntent = $data['PaymentIntent'];
     $this->date = new \DateTime($data['Date'], new \DateTimeZone('Europe/London'));
     $this->supplyDate = new \DateTime($data['SupplyDate'], new \DateTimeZone('Europe/London'));
-    $this->company = json_decode($data['Company']);
+    $this->company = json_decode((string) $data['Company']);
     $this->currency = $data['Currency'];
     $this->paymentTerms = $data['PaymentTerms'];
     $this->howToPay = $data['HowToPay'];
@@ -85,7 +85,7 @@ class Invoice
     return $this->supplyDate;
   }
 
-  private function totalise()
+  private function totalise(): void
   {
     if (!$this->amount) {
       $amount = 0;

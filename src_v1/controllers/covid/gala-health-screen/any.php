@@ -30,8 +30,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
         <li class="breadcrumb-item active" aria-current="page">Any Member</li>
       </ol>
     </nav>
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
             ?>
 
             <li>
-              <h2><?= htmlspecialchars($gala['GalaName']) ?></h2>
+              <h2><?= htmlspecialchars((string) $gala['GalaName']) ?></h2>
 
               <p>
                 Complete a form for any of your members.
@@ -86,14 +86,14 @@ include BASE_PATH . 'views/header.php';
                     <li class="list-group-item">
                       <div class="row align-items-center">
                         <div class="col-sm">
-                          <h3 class="h6 mb-1"><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong></h3>
+                          <h3 class="h6 mb-1"><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong></h3>
                           <p class="mb-0">
                             <?php if ($latest) {
                               $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
                               $time->setTimezone(new DateTimeZone('Europe/London'));
                             ?>
                               <?php if (bool($latest['MemberAgreement'])) { ?>
-                                <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Signed at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latest['Guardian']) { ?> with <?= htmlspecialchars(\SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?> as parent/guardian<?php } ?></span>
+                                <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Signed at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latest['Guardian']) { ?> with <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?> as parent/guardian<?php } ?></span>
                               <?php } else { ?>
                                 <span class="text-warning"><i class="fa fa-minus-circle" aria-hidden="true"></i> A new declaration form is required</span>
                               <?php } ?>
@@ -105,7 +105,7 @@ include BASE_PATH . 'views/header.php';
                         </div>
                         <div class="col-auto">
                           <div class="btn-group">
-                            <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $gala['GalaID'])) ?>" class="btn btn-success">View and sign form</a>
+                            <a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $gala['GalaID'])) ?>" class="btn btn-success">View and sign form</a>
                           </div>
                         </div>
                       </div>

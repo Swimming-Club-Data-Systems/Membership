@@ -69,7 +69,7 @@ try {
 		$r = $client->request('POST', $url, [
 			'json' => $data
 		]);
-	} catch (Exception $e) {
+	} catch (Exception) {
 		// Ignore
 	}
 } catch (Exception $e) {

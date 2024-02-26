@@ -36,7 +36,7 @@ try {
 		header("Location: " . autoUrl($url_path));
 	}
 	
-} catch (Exception $e) {
+} catch (Exception) {
 	$_SESSION['TENANT-' . app()->tenant->getId()]['PhoneError'] = true;
 	header("Location: " . autoUrl($url_path . "/edit/" . $id));
 }

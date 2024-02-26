@@ -19,12 +19,12 @@ try {
   if (!$customer) throw new Exception('No customer');
 
   $memo = $footer = null;
-  if (isset($_POST['subscription-invoice-memo']) && mb_strlen(trim($_POST['subscription-invoice-memo']))) {
-    $memo = trim($_POST['subscription-invoice-memo']);
+  if (isset($_POST['subscription-invoice-memo']) && mb_strlen(trim((string) $_POST['subscription-invoice-memo']))) {
+    $memo = trim((string) $_POST['subscription-invoice-memo']);
   }
 
-  if (isset($_POST['subscription-invoice-footer']) && mb_strlen(trim($_POST['subscription-invoice-footer']))) {
-    $footer = trim($_POST['subscription-invoice-footer']);
+  if (isset($_POST['subscription-invoice-footer']) && mb_strlen(trim((string) $_POST['subscription-invoice-footer']))) {
+    $footer = trim((string) $_POST['subscription-invoice-footer']);
   }
 
   $date = new DateTime('now', new DateTimeZone('Europe/London'));

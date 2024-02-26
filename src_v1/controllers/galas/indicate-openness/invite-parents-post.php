@@ -23,7 +23,7 @@ $getSessions = $db->prepare("SELECT `Name`, `ID` FROM galaSessions WHERE Gala = 
 $getSessions->execute([$id]);
 $session = $getSessions->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = 'Invite parents to enter ' . htmlspecialchars($gala['name']);
+$pagetitle = 'Invite parents to enter ' . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 

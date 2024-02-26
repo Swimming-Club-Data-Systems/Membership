@@ -64,7 +64,7 @@ if (!$squad) {
     $_GET['squad']
   ]);
 
-  $pagetitle = htmlspecialchars($squad['SquadName']) . ' Squad Check In to ' . htmlspecialchars($location['Name']) . ' - Contact Tracing';
+  $pagetitle = htmlspecialchars((string) $squad['SquadName']) . ' Squad Check In to ' . htmlspecialchars((string) $location['Name']) . ' - Contact Tracing';
 
   $locationAddress = json_decode($location['Address']);
 
@@ -86,8 +86,8 @@ if (!$squad) {
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
           <li class="breadcrumb-item active" aria-current="page">Check In</li>
         </ol>
       </nav>
@@ -95,10 +95,10 @@ if (!$squad) {
       <div class="row align-items-center">
         <div class="col">
           <h1>
-            <?= htmlspecialchars($squad['SquadName']) ?> Check in to <?= htmlspecialchars($location['Name']) ?>
+            <?= htmlspecialchars((string) $squad['SquadName']) ?> Check in to <?= htmlspecialchars((string) $location['Name']) ?>
           </h1>
           <p class="lead mb-0">
-            <?= htmlspecialchars($locationAddress->streetAndNumber) ?>
+            <?= htmlspecialchars((string) $locationAddress->streetAndNumber) ?>
           </p>
         </div>
       </div>
@@ -116,13 +116,13 @@ if (!$squad) {
               <strong>An error occurred</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']);
         } ?>
 
-        <form method="post" action="<?= htmlspecialchars(autoUrl('contact-tracing/check-in/' . $id . '/squad-register')) ?>">
+        <form method="post" action="<?= htmlspecialchars((string) autoUrl('contact-tracing/check-in/' . $id . '/squad-register')) ?>">
 
           <p>
             Tick everyone who is present.
@@ -130,7 +130,7 @@ if (!$squad) {
 
           <?php if ($coach = $getCoaches->fetch(PDO::FETCH_ASSOC)) { ?>
 
-            <input type="hidden" name="squad" value="<?= htmlspecialchars($squad['SquadID']) ?>">
+            <input type="hidden" name="squad" value="<?= htmlspecialchars((string) $squad['SquadID']) ?>">
 
             <?= \SCDS\CSRF::write() ?>
 
@@ -268,7 +268,7 @@ if (!$squad) {
 
           <?php if ($rep = $getReps->fetch(PDO::FETCH_ASSOC)) { ?>
 
-            <input type="hidden" name="squad" value="<?= htmlspecialchars($squad['SquadID']) ?>">
+            <input type="hidden" name="squad" value="<?= htmlspecialchars((string) $squad['SquadID']) ?>">
 
             <?= \SCDS\CSRF::write() ?>
 

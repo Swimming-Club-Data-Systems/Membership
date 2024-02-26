@@ -10,7 +10,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Swimmark</li>
     </ol>
   </nav>
@@ -30,7 +30,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label for="web-address" class="form-label">Web address</label>
-          <input type="url" class="form-control" id="web-address" name="web-address" value="<?= htmlspecialchars(app()->tenant->getWebsite()) ?>" readonly>
+          <input type="url" class="form-control" id="web-address" name="web-address" value="<?= htmlspecialchars((string) app()->tenant->getWebsite()) ?>" readonly>
         </div>
 
         <div class="mb-3">
@@ -39,7 +39,7 @@ include BASE_PATH . 'views/header.php';
             <div class="input-group-text">
               https://www.facebook.com/
             </div>
-            <input type="url" class="form-control" id="facebook" name="facebook" value="<?= htmlspecialchars(app()->tenant->getKey('FACEBOOK_PAGE')) ?>">
+            <input type="url" class="form-control" id="facebook" name="facebook" value="<?= htmlspecialchars((string) app()->tenant->getKey('FACEBOOK_PAGE')) ?>">
           </div>
         </div>
 
@@ -49,7 +49,7 @@ include BASE_PATH . 'views/header.php';
             <div class="input-group-text">
               https://twitter.com/
             </div>
-            <input type="text" class="form-control" id="twitter" name="twitter" value="<?= htmlspecialchars(app()->tenant->getKey('TWITTER_ACCOUNT')) ?>">
+            <input type="text" class="form-control" id="twitter" name="twitter" value="<?= htmlspecialchars((string) app()->tenant->getKey('TWITTER_ACCOUNT')) ?>">
           </div>
         </div>
 
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
         </p>
         <div class="mb-3">
           <label for="noticeboard" class="form-label">Noticeboard locations</label>
-          <textarea class="form-control" id="noticeboard" name="noticeboard"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('NOTICEBOARD_LOCATIONS')) ?></textarea>
+          <textarea class="form-control" id="noticeboard" name="noticeboard"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('NOTICEBOARD_LOCATIONS')) ?></textarea>
         </div>
 
         <p class="mb-2">
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
         </p>
         <div class="mb-3">
           <label for="where-to-find-updates" class="form-label">Members can find news where?</label>
-          <textarea class="form-control" id="where-to-find-updates" name="where-to-find-updates"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('NEWS_LOCATIONS')) ?></textarea>
+          <textarea class="form-control" id="where-to-find-updates" name="where-to-find-updates"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('NEWS_LOCATIONS')) ?></textarea>
         </div>
 
         <p>
@@ -89,7 +89,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label for="welfare-name" class="form-label">Welfare Officer Name</label>
-          <input type="text" class="form-control" id="welfare-name" name="welfare-name" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('WELFARE_NAME')) ?>" required>
+          <input type="text" class="form-control" id="welfare-name" name="welfare-name" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('WELFARE_NAME')) ?>" required>
         </div>
 
         <p>
@@ -98,24 +98,24 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label for="welfare-email" class="form-label">Welfare Officer Email</label>
-          <input type="email" class="form-control" id="welfare-email" name="welfare-email" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('WELFARE_EMAIL')) ?>">
+          <input type="email" class="form-control" id="welfare-email" name="welfare-email" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('WELFARE_EMAIL')) ?>">
         </div>
 
         <div class="mb-3">
           <label for="welfare-phone" class="form-label">Welfare Officer Phone</label>
-          <input type="tel" class="form-control" id="welfare-phone" name="welfare-phone" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('WELFARE_PHONE')) ?>">
+          <input type="tel" class="form-control" id="welfare-phone" name="welfare-phone" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('WELFARE_PHONE')) ?>">
         </div>
 
         <h2>Complaints process</h2>
 
         <div class="mb-3">
           <label for="complaints-process" class="form-label">Explain your complaints and disciplinary processes</label>
-          <textarea class="form-control" id="complaints-process" name="complaints-process"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_PROCESS')) ?></textarea>
+          <textarea class="form-control" id="complaints-process" name="complaints-process"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_PROCESS')) ?></textarea>
         </div>
 
         <div class="mb-3">
           <label for="complaints-name" class="form-label">Officer responsible for complaints name</label>
-          <input type="text" class="form-control" id="complaints-name" name="complaints-name" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_OFFICER')) ?>">
+          <input type="text" class="form-control" id="complaints-name" name="complaints-name" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_OFFICER')) ?>">
         </div>
 
         <p>
@@ -124,19 +124,19 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label for="complaints-email" class="form-label">Officer responsible for complaints email</label>
-          <input type="email" class="form-control" id="complaints-email" name="complaints-email" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_EMAIL')) ?>">
+          <input type="email" class="form-control" id="complaints-email" name="complaints-email" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_EMAIL')) ?>">
         </div>
 
         <div class="mb-3">
           <label for="complaints-phone" class="form-label">Officer responsible for complaints phone</label>
-          <input type="tel" class="form-control" id="complaints-phone" name="complaints-phone" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_PHONE')) ?>">
+          <input type="tel" class="form-control" id="complaints-phone" name="complaints-phone" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('COMPLAINTS_PHONE')) ?>">
         </div>
 
         <h2>Facility information</h2>
 
         <div class="mb-3">
           <label for="facility-info" class="form-label">Information about the facilities you hire - include information about the changing facilities and any relevant rules and regulations applicable to the facility e.g. the use of mobile devices.</label>
-          <textarea class="form-control" id="facility-info" name="facility-info"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('FACILITY_INFORMATION')) ?></textarea>
+          <textarea class="form-control" id="facility-info" name="facility-info"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('FACILITY_INFORMATION')) ?></textarea>
         </div>
 
         <h2>SwimMark Status</h2>
@@ -177,26 +177,26 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label for="swimmark-start" class="form-label">Accreditation start date</label>
-          <input type="date" class="form-control" id="swimmark-start" name="swimmark-start" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('SWIMMARK_START')) ?>">
+          <input type="date" class="form-control" id="swimmark-start" name="swimmark-start" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('SWIMMARK_START')) ?>">
         </div>
 
         <div class="mb-3">
           <label for="swimmark-end" class="form-label">Accreditation end date</label>
-          <input type="date" class="form-control" id="swimmark-end" name="swimmark-end" value="<?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('SWIMMARK_END')) ?>">
+          <input type="date" class="form-control" id="swimmark-end" name="swimmark-end" value="<?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('SWIMMARK_END')) ?>">
         </div>
 
         <h2>Volunteering opportunities</h2>
 
         <div class="mb-3">
           <label for="volunteering-opportunities" class="form-label">Give information on volunteering opportunities for adults and children and how to apply</label>
-          <textarea class="form-control" id="volunteering-opportunities" name="volunteering-opportunities"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('VOLUNTEERING_INFORMATION')) ?></textarea>
+          <textarea class="form-control" id="volunteering-opportunities" name="volunteering-opportunities"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('VOLUNTEERING_INFORMATION')) ?></textarea>
         </div>
 
         <h2>Youth engagement</h2>
 
         <div class="mb-3">
-          <label for="youth-engagement" class="form-label">Explain how members under the age of 18 can contribute to <?= htmlspecialchars(app()->tenant->getName()) ?>. For example youth forums or groups.</label>
-          <textarea class="form-control" id="youth-engagement" name="youth-engagement"><?= htmlspecialchars(app()->tenant->getSwimEnglandComplianceValue('YOUTH_ENGAGEMENT_INFORMATION')) ?></textarea>
+          <label for="youth-engagement" class="form-label">Explain how members under the age of 18 can contribute to <?= htmlspecialchars((string) app()->tenant->getName()) ?>. For example youth forums or groups.</label>
+          <textarea class="form-control" id="youth-engagement" name="youth-engagement"><?= htmlspecialchars((string) app()->tenant->getSwimEnglandComplianceValue('YOUTH_ENGAGEMENT_INFORMATION')) ?></textarea>
         </div>
 
         <p>

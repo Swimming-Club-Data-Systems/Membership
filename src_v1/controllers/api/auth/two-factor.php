@@ -28,7 +28,7 @@ try {
   $auth_via_google_authenticator = false;
   try {
     $auth_via_google_authenticator = isset($_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] && $ga2fa->verifyKey($secret, $json->auth_code);
-  } catch (Exception $e) {
+  } catch (Exception) {
     $auth_via_google_authenticator = false;
   }
 
@@ -52,13 +52,13 @@ try {
 
   $target = autoUrl("");
   if (isset($json->target) && $json->target) {
-    $target = autoUrl(trim($json->target, "/"));
+    $target = autoUrl(trim((string) $json->target, "/"));
   }
   if (!$secret && isset($json->setup_two_factor) && $json->setup_two_factor) {
     $target = autoUrl("my-account/googleauthenticator/setup");
   }
 
-  $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode($target));
+  $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode((string) $target));
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $user;
 

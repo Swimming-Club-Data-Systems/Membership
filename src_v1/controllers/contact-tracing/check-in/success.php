@@ -29,8 +29,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
         <li class="breadcrumb-item active" aria-current="page">Check In</li>
       </ol>
     </nav>
@@ -38,10 +38,10 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          Checked in to <?= htmlspecialchars($location['Name']) ?>
+          Checked in to <?= htmlspecialchars((string) $location['Name']) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($locationAddress->streetAndNumber) ?>
+          <?= htmlspecialchars((string) $locationAddress->streetAndNumber) ?>
         </p>
       </div>
     </div>
@@ -58,11 +58,11 @@ include BASE_PATH . 'views/header.php';
         <strong>Checked in successfully</strong>
       </p>
       <p>
-        Thank you for checking in to <?= htmlspecialchars($location['Name']) ?>. This will help us support NHS Test and Trace if required.
+        Thank you for checking in to <?= htmlspecialchars((string) $location['Name']) ?>. This will help us support NHS Test and Trace if required.
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>" class="btn btn-success">Contact tracing home</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>" class="btn btn-success">Contact tracing home</a>
       </p>
 
     </div>

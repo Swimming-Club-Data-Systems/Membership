@@ -54,7 +54,7 @@ include "galaMenu.php"; ?>
 </div>
 
 <div class="container-xl">
-  <form id="entry-details" data-page-url="<?= htmlspecialchars(autoUrl("galas/entries")) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl("galas/ajax/entries")) ?>" data-processed-url="<?= htmlspecialchars(autoUrl("galas/ajax/entryProcessed")) ?>" class="">
+  <form id="entry-details" data-page-url="<?= htmlspecialchars((string) autoUrl("galas/entries")) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl("galas/ajax/entries")) ?>" data-processed-url="<?= htmlspecialchars((string) autoUrl("galas/ajax/entryProcessed")) ?>" class="">
     <div class="row d-print-none">
       <div class="col-md-4">
         <div class="mb-3">
@@ -66,7 +66,7 @@ include "galaMenu.php"; ?>
 
             <?php while ($row = $galas->fetch(PDO::FETCH_ASSOC)) { ?>
               <option value="<?= $row['GalaID'] ?>" <?php if ($galaIDParam == $row['GalaID']) { ?> selected <?php } ?>>
-                <?= htmlspecialchars($row['GalaName']) ?>
+                <?= htmlspecialchars((string) $row['GalaName']) ?>
               </option>
             <?php } ?>
 
@@ -91,7 +91,7 @@ include "galaMenu.php"; ?>
       <div class="col-md-4">
         <div class="mb-3">
           <label class="form-label" for="gala">Enter Surname</label>
-          <input class="form-control" placeholder="Search" name="search" id="search" value="<?= htmlspecialchars($search) ?>">
+          <input class="form-control" placeholder="Search" name="search" id="search" value="<?= htmlspecialchars((string) $search) ?>">
         </div>
       </div>
     </div>

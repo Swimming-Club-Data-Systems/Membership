@@ -7,7 +7,7 @@ $markdown->setSafeMode(false);
 
 $redirectIndex = false;
 
-$path = ltrim($this[0], '/');
+$path = ltrim((string) $this[0], '/');
 $file = file_get_contents(BASE_PATH . 'help/' . $path . '.md');
 $date = filemtime(BASE_PATH . 'help/' . $path . '.md');
 
@@ -44,7 +44,7 @@ $markdownOutput = $markdown->text($file);
 $headings = $markdown->getHeadings();
 
 if (sizeof($headings) > 0) {
-  $pagetitle = htmlspecialchars($headings[0]);
+  $pagetitle = htmlspecialchars((string) $headings[0]);
 }
 
 include BASE_PATH . 'views/header.php';

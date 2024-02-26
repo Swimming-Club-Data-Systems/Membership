@@ -92,13 +92,13 @@ try {
 
       $message .= '<li>If you\'ve been out of the area for a while,</li>';
       $message .= '<li>You or somebody you\'re in close contact with contracted or was suspected of having COVID-19,</li>';
-      $message .= '<li>Any other reason, which for reasons of confidentiality, does not have to be explained by ' . htmlspecialchars($tenant->getName()) . '.</li>';
+      $message .= '<li>Any other reason, which for reasons of confidentiality, does not have to be explained by ' . htmlspecialchars((string) $tenant->getName()) . '.</li>';
 
-      $message .= '</ul><p>As a result, we will need you to <a href="' . htmlspecialchars(autoUrl('covid/risk-awareness')) . '" target="_blank">complete a new COVID-19 Risk Awareness Form</a> before we can let you back into our training sessions.</p>';
+      $message .= '</ul><p>As a result, we will need you to <a href="' . htmlspecialchars((string) autoUrl('covid/risk-awareness')) . '" target="_blank">complete a new COVID-19 Risk Awareness Form</a> before we can let you back into our training sessions.</p>';
 
       $message .= '<p>If you have received this email, you may also be sent an email asking you to complete a new COVID-19 Health Survey.</p>';
 
-      $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars($tenant->getName()) . ' team.</p>';
+      $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars((string) $tenant->getName()) . ' team.</p>';
 
       notifySend(null, $subject, $message, $memberUser['Forename'] . ' ' . $memberUser['Surname'], $memberUser['EmailAddress']);
     }
@@ -157,7 +157,7 @@ try {
   }
 } catch (Exception $e) {
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred.';
     reportError($e);
   }

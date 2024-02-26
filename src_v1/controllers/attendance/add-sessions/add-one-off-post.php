@@ -17,8 +17,8 @@ if (!\SCDS\CSRF::verify()) {
 
 $sessionName = $venue = $startDate = $endDate = $startTime = $endTime = null;
 
-if (isset($_POST['session-name']) && mb_strlen(trim($_POST['session-name'])) > 0) {
-  $sessionName = mb_ucfirst(trim($_POST['session-name']));
+if (isset($_POST['session-name']) && mb_strlen(trim((string) $_POST['session-name'])) > 0) {
+  $sessionName = mb_ucfirst(trim((string) $_POST['session-name']));
 }
 
 if (isset($_POST['session-venue'])) {
@@ -36,7 +36,7 @@ if (isset($_POST['session-date'])) {
     $startDate = new DateTime($_POST['session-date'], new DateTimeZone('Europe/London'));
 
     $endDate = clone $startDate;
-  } catch (Exception $e) {
+  } catch (Exception) {
   }
 }
 
@@ -44,7 +44,7 @@ if (isset($_POST['recurring']) && $_POST['recurring'] == 'recurring') {
   if (isset($_POST['session-end-date'])) {
     try {
       $endDate = new DateTime($_POST['session-end-date'], new DateTimeZone('Europe/London'));
-    } catch (Exception $e) {
+    } catch (Exception) {
       throw new Exception('End date invalid');
     }
   } else {
@@ -55,14 +55,14 @@ if (isset($_POST['recurring']) && $_POST['recurring'] == 'recurring') {
 if (isset($_POST['session-start-time'])) {
   try {
     $startTime = DateTime::createFromFormat('H:i', $_POST['session-start-time'], new DateTimeZOne('Europe/London'));
-  } catch (Exception $e) {
+  } catch (Exception) {
   }
 }
 
 if (isset($_POST['session-end-time'])) {
   try {
     $endTime = DateTime::createFromFormat('H:i', $_POST['session-end-time'], new DateTimeZOne('Europe/London'));
-  } catch (Exception $e) {
+  } catch (Exception) {
   }
 }
 
@@ -139,7 +139,7 @@ while ($squad = $getSquads->fetchColumn()) {
 if (!$hasSquad || (isset($_POST['go-to-booking-settings']) && bool($_POST['go-to-booking-settings']))) {
   // Begin setup as a booking session
   http_response_code(302);
-  header('location: ' . autoUrl('sessions/booking/book?session=' . urlencode($sessionId) . '&date=' . urlencode($startDate->format('Y-m-d'))));
+  header('location: ' . autoUrl('sessions/booking/book?session=' . urlencode((string) $sessionId) . '&date=' . urlencode($startDate->format('Y-m-d'))));
 } else {
   // Redirect to timetable page
   http_response_code(302);

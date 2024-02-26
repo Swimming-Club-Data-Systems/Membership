@@ -5,7 +5,7 @@ try {
 
   http_response_code(302);
   header("location: " . autoUrl('attendance/history/squads/' . $id . '/week?year=' . $date->format('o') . '&week=' . $date->format('W') . '#day-' . $date->format('w')));
-} catch (Exception $e) {
+} catch (Exception) {
   http_response_code(302);
   header("location: " . autoUrl('attendance/history/squads/' . $id . '/week'));
 }

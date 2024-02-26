@@ -142,7 +142,7 @@ include BASE_PATH . 'views/header.php';
           Timetable - Week <?= htmlspecialchars($startWeek->format('W')) ?> / <?= htmlspecialchars($startWeek->format('o')) ?>
         </h1>
         <p class="lead mb-0">
-          <?php if ($pageSquad) { ?><?= htmlspecialchars($pageSquad['SquadName']) ?><?php } else { ?>All squads<?php } ?>
+          <?php if ($pageSquad) { ?><?= htmlspecialchars((string) $pageSquad['SquadName']) ?><?php } else { ?>All squads<?php } ?>
         </p>
       </div>
       <div class="col d-print-none">
@@ -186,9 +186,9 @@ include BASE_PATH . 'views/header.php';
       <div class="mb-3 d-md-none"></div>
     </div>
     <div class="col-md">
-      <form action="<?= htmlspecialchars(autoUrl('timetable/jump-to-week')) ?>" method="post" class="needs-validation d-print-none" novalidate>
+      <form action="<?= htmlspecialchars((string) autoUrl('timetable/jump-to-week')) ?>" method="post" class="needs-validation d-print-none" novalidate>
         <?php if ($pageSquad) { ?>
-          <input type="hidden" name="squad" value="<?= htmlspecialchars($pageSquad['SquadID']) ?>">
+          <input type="hidden" name="squad" value="<?= htmlspecialchars((string) $pageSquad['SquadID']) ?>">
         <?php } ?>
         <div class="input-group">
           <input type="date" class="form-control" value="<?= htmlspecialchars($startWeek->format('Y-m-d')) ?>" aria-label="Find a week" aria-describedby="go-to-week" name="go-to-week-date" id="go-to-week-date">
@@ -232,8 +232,8 @@ include BASE_PATH . 'views/header.php';
             ?>
 
             <div class="list-group-item" id="<?= htmlspecialchars('session-unique-id-' . $sessionDateTime->format('Y-m-d') . '-S' . $session['SessionID']) ?>">
-              <h3 class="mb-0"><?php if (sizeof($squadNames) > 0) { ?><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squadNames[$i]['SquadName']) ?><?php } ?><?php } else { ?>Any Member<?php } ?></h3>
-              <p class="h3"><small><?= htmlspecialchars($session['SessionName']) ?>, <?= htmlspecialchars($session['VenueName']) ?></small></p>
+              <h3 class="mb-0"><?php if (sizeof($squadNames) > 0) { ?><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?><?php } ?><?php } else { ?>Any Member<?php } ?></h3>
+              <p class="h3"><small><?= htmlspecialchars((string) $session['SessionName']) ?>, <?= htmlspecialchars((string) $session['VenueName']) ?></small></p>
 
               <dl class="row mb-0">
                 <dt class="col-sm-3">Starts at</dt>
@@ -258,11 +258,11 @@ include BASE_PATH . 'views/header.php';
                   $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
 
                 ?>
-                  <dt class="col-sm-3"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+                  <dt class="col-sm-3"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php for ($y = 0; $y < sizeof($coaches); $y++) { ?>
-                        <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
+                        <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
                       <?php } ?>
                       <?php if (sizeof($coaches) == 0) { ?>
                         <li>None assigned</li>
@@ -289,13 +289,13 @@ include BASE_PATH . 'views/header.php';
                 <dd class="col-sm-9">
                   <?php if ($bookingRequired && $futureSession) { ?>
                     <span class="d-block mb-2">Booking is required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success d-print-none">Book a place<?php if ($showAdmin) { ?> or view/edit details<?php } ?></a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success d-print-none">Book a place<?php if ($showAdmin) { ?> or view/edit details<?php } ?></a>
                   <?php } else if ($showAdmin && $futureSession) { ?>
                     <span class="d-block mb-2">Booking is not currently required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">Require pre-booking</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">Require pre-booking</a>
                   <?php } else if ($showAdmin && $bookingRequired && !$futureSession) { ?>
                     <span class="d-block mb-2">Booking was required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">View booking info</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-primary d-print-none">View booking info</a>
                   <?php } else if (!$futureSession) { ?>
                     <span class="d-block">Booking was not required</span>
                   <?php } else { ?>
@@ -308,19 +308,19 @@ include BASE_PATH . 'views/header.php';
                 // GEOCODE AND USE A MAP
                 ?>
                 <dt class="col-sm-3">Location</dt>
-                <dd class="col-sm-9 mb-0"><?= htmlspecialchars($session['Location']) ?></dd>
+                <dd class="col-sm-9 mb-0"><?= htmlspecialchars((string) $session['Location']) ?></dd>
               </dl>
 
               <?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?>
                 <?php if (!bool($squadNames[$i]['ForAllMembers'])) { ?>
                   <div class="alert alert-warning mt-3 mb-0">
-                    <p class="mb-0"><strong>This session is not for all swimmers in <?= htmlspecialchars($squadNames[$i]['SquadName']) ?></strong></p>
+                    <p class="mb-0"><strong>This session is not for all swimmers in <?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?></strong></p>
                     <p class="mb-0">Your coach will tell you if you are to attend this session</p>
                   </div>
                 <?php } ?>
               <?php } ?>
             </div>
-          <?php } ?>
+<?php } ?>
         </div>
       <?php } else { ?>
         <div class="alert alert-warning">

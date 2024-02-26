@@ -75,7 +75,7 @@ try {
       <div class="col-md-8">
         <h1>Success</h1>
         <p class="lead">
-          We've successfully marked <?= htmlspecialchars($name['first'] . ' ' . $name['last']) ?>'s <?= htmlspecialchars($form) ?> form as complete.
+          We've successfully marked <?= htmlspecialchars($name['first'] . ' ' . $name['last']) ?>'s <?= htmlspecialchars((string) $form) ?> form as complete.
         </p>
 
         <p>
@@ -99,6 +99,6 @@ try {
 
   $footer = new \SCDS\Footer();
   $footer->render();
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }

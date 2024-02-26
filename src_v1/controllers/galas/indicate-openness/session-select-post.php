@@ -74,7 +74,7 @@ if ($swimmer != null && $nowDate < $galaDate) {
     } while ($swimmer = $getSwimmers->fetch(PDO::FETCH_ASSOC));
 
     $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
   }
 }

@@ -32,7 +32,7 @@ try {
     <?php
 
     do { ?>
-      <option id="<?= htmlspecialchars('plan-select-' . $plan['ID']) ?>" value="<?= htmlspecialchars($plan['ID']) ?>" data-name="<?= htmlspecialchars($plan['Name']) ?>" data-amount="<?= htmlspecialchars($plan['PricePerUnit']) ?>" data-currency="<?= htmlspecialchars($plan['Currency']) ?>"><?= htmlspecialchars($plan['Name'] . ' (' . $formatter->formatCurrency((string) (\Brick\Math\BigDecimal::of((string) $plan['PricePerUnit']))->withPointMovedLeft(2)->toScale(2), $plan['Currency']) . ')') ?></option>
+      <option id="<?= htmlspecialchars('plan-select-' . $plan['ID']) ?>" value="<?= htmlspecialchars((string) $plan['ID']) ?>" data-name="<?= htmlspecialchars((string) $plan['Name']) ?>" data-amount="<?= htmlspecialchars((string) $plan['PricePerUnit']) ?>" data-currency="<?= htmlspecialchars((string) $plan['Currency']) ?>"><?= htmlspecialchars($plan['Name'] . ' (' . $formatter->formatCurrency((string) (\Brick\Math\BigDecimal::of((string) $plan['PricePerUnit']))->withPointMovedLeft(2)->toScale(2), $plan['Currency']) . ')') ?></option>
     <?php } while ($plan = $getPlans->fetch(PDO::FETCH_ASSOC)); ?>
   <?php } else { ?>
     <option value="" disabled selected>No plans available for this product</option>
@@ -50,7 +50,7 @@ try {
 } catch (Exception $e) {
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred';
   }
 

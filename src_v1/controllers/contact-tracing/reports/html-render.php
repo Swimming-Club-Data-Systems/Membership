@@ -4,7 +4,7 @@ use function GuzzleHttp\json_decode;
 
 $json = json_decode($json);
 
-$pagetitle = htmlspecialchars($json->location->name) . ' Report';
+$pagetitle = htmlspecialchars((string) $json->location->name) . ' Report';
 include BASE_PATH . 'views/header.php';
 
 $fromDate = new DateTime($json->from, new DateTimeZone('UTC'));
@@ -20,8 +20,8 @@ $toDate->setTimezone(new DateTimeZone('Europe/London'));
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/reports')) ?>">Reports</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/reports')) ?>">Reports</a></li>
         <!-- <li class="breadcrumb-item active" aria-current="page">Locations</li> -->
       </ol>
     </nav>
@@ -29,7 +29,7 @@ $toDate->setTimezone(new DateTimeZone('Europe/London'));
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          <?= htmlspecialchars($json->location->name) ?>
+          <?= htmlspecialchars((string) $json->location->name) ?>
         </h1>
         <p class="lead mb-0">
           <?= htmlspecialchars($fromDate->format('H:i j F Y')) ?> to <?= htmlspecialchars($toDate->format('H:i j F Y')) ?>
@@ -58,12 +58,12 @@ $toDate->setTimezone(new DateTimeZone('Europe/London'));
                 <div class="col-md-6">
                   <p class="mb-0">
                     <?php if ($json->visitors[$i]->type == 'user') { ?>
-                      <a target="_blank" href="<?= htmlspecialchars(autoUrl('users/' . $json->visitors[$i]->user)) ?>">
+                      <a target="_blank" href="<?= htmlspecialchars((string) autoUrl('users/' . $json->visitors[$i]->user)) ?>">
                       <?php } ?>
                       <?php if ($json->visitors[$i]->type == 'member') { ?>
-                        <a target="_blank" href="<?= htmlspecialchars(autoUrl('members/' . $json->visitors[$i]->member)) ?>">
+                        <a target="_blank" href="<?= htmlspecialchars((string) autoUrl('members/' . $json->visitors[$i]->member)) ?>">
                         <?php } ?>
-                        <strong><?= htmlspecialchars($json->visitors[$i]->name) ?></strong>
+                        <strong><?= htmlspecialchars((string) $json->visitors[$i]->name) ?></strong>
                         <?php if ($json->visitors[$i]->type == 'user' || $json->visitors[$i]->type == 'member') { ?>
                         </a>
                       <?php } ?>
@@ -87,7 +87,7 @@ $toDate->setTimezone(new DateTimeZone('Europe/London'));
                       </a>
                     </div>
                   <?php
-                  } catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+                  } catch (\Brick\PhoneNumber\PhoneNumberParseException) {
                     // Do nothing
                   }
                   ?>

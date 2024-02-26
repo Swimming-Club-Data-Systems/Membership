@@ -74,7 +74,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" 
         if ($session == (int) $row['SessionID']) {
           $selected = " selected ";
         }
-        $content .= "<option value=\"" . $row['SessionID'] . "\" " . $selected . ">" . htmlspecialchars($row['SessionName']) . ", " . $dayText . " at " . (new DateTime($row['StartTime']))->format("H:i") . "</option>";
+        $content .= "<option value=\"" . $row['SessionID'] . "\" " . $selected . ">" . htmlspecialchars((string) $row['SessionName']) . ", " . $dayText . " at " . (new DateTime($row['StartTime']))->format("H:i") . "</option>";
       }
     }
 
@@ -162,7 +162,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" 
 
       $datetime1 = new DateTime($row['StartTime']);
       $datetime2 = new DateTime($row['EndTime']);
-      $content .= "<div class=\"card-body\"><h2>Take register</h2><p>for " . htmlspecialchars($row['SquadName']) . " Squad, " . htmlspecialchars($row['SessionName']) . " on " . $dayText . " " . $date . " at " . $datetime1->format("H:i") . "</p>";
+      $content .= "<div class=\"card-body\"><h2>Take register</h2><p>for " . htmlspecialchars((string) $row['SquadName']) . " Squad, " . htmlspecialchars((string) $row['SessionName']) . " on " . $dayText . " " . $date . " at " . $datetime1->format("H:i") . "</p>";
       $interval = $datetime1->diff($datetime2);
       $content .= "<p class=\"mb-0\">This session is ";
 
@@ -222,7 +222,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" 
           }
         }
         $no_parent = "";
-        if (date("m-d", strtotime($row['DateOfBirth'])) == date("m-d", $sessionDate)) {
+        if (date("m-d", strtotime((string) $row['DateOfBirth'])) == date("m-d", $sessionDate)) {
           $no_parent .= '<span class="visually-hidden"><em>Birthday is today</em></span><span class="badge bg-success"><i class="fa fa-birthday-cake" aria-hidden="true"></i> ' . $ageOnSession . ' today</span>';
         }
         if ($row['UserID'] == null && $age < 18) {

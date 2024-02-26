@@ -10,8 +10,8 @@ include BASE_PATH . "views/header.php";
 $db = app()->db;
 $tenant = app()->tenant;
 
-$userDetails = mb_strtolower(trim($_POST['email-address']));
-$captcha = trim($_POST['g-recaptcha-response']);
+$userDetails = mb_strtolower(trim((string) $_POST['email-address']));
+$captcha = trim((string) $_POST['g-recaptcha-response']);
 $captchaStatus = null;
 
 #
@@ -21,11 +21,11 @@ $post_data = http_build_query([
   'response' => $_POST['g-recaptcha-response'],
   'remoteip' => getUserIp()
 ]);
-$opts = array('http' => [
+$opts = ['http' => [
   'method'  => 'POST',
   'header'  => 'Content-type: application/x-www-form-urlencoded',
   'content' => $post_data
-]);
+]];
 $context  = stream_context_create($opts);
 $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
 $result = json_decode($response);
@@ -72,7 +72,7 @@ if (!$result->success) { ?>
     // PHP Email
     $subject = "Password Reset for " . $row['Forename'] . " " . $row['Surname'];
     $sContent = '
-    <h1>Hello ' . htmlspecialchars($row['Forename']) . '</h1>
+    <h1>Hello ' . htmlspecialchars((string) $row['Forename']) . '</h1>
     <p>Here\'s your <a href="' . autoUrl("resetpassword/auth/" . $resetLink) . '">password reset link - ' . autoUrl("resetpassword/auth/" . $resetLink) . '</a>.</p>
     <p>Follow this link to reset your password quickly and easily.</p>
     <p>If you did not request a password reset, please delete and ignore this email.</p>

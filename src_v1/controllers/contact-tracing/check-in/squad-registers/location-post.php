@@ -168,7 +168,7 @@ try {
 
   http_response_code(302);
   header("location: " . autoUrl('contact-tracing/check-in/' . $id . '/success'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   // Generalise DB exceptions
   throw new Exception('A database error occurred');
 

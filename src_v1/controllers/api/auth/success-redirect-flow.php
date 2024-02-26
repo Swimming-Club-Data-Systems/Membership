@@ -36,6 +36,6 @@ try {
   ];
 
   header("location: " . $location);
-} catch (Exception $e) {
+} catch (Exception) {
   echo json_encode($output);
 }

@@ -9,7 +9,7 @@ try {
 
   $json = json_decode(file_get_contents('php://input'));
 
-  $email = trim(mb_strtolower($json->email_address));
+  $email = trim(mb_strtolower((string) $json->email_address));
 
   // Test for valid email
   $findUser = $db->prepare("SELECT UserID, Forename, Surname, EmailAddress FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active");
@@ -36,7 +36,7 @@ try {
 
     $subject = "Password Reset for " . $row['Forename'] . " " . $row['Surname'];
     $sContent = '
-    <p>Hi ' . htmlspecialchars($row['Forename']) . '</p>
+    <p>Hi ' . htmlspecialchars((string) $row['Forename']) . '</p>
     <p>Here\'s your <a href="' . $link . '">password reset link - ' . $link . '</a>.</p>
     <p>Follow this link to reset your password quickly and easily.</p>
     <p>If you did not request a password reset, please delete and ignore this email.</p>

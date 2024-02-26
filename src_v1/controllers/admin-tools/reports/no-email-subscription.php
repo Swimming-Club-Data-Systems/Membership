@@ -18,8 +18,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/reports")) ?>">Reports</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/reports")) ?>">Reports</a></li>
       <li class="breadcrumb-item active" aria-current="page">No Sub</li>
     </ol>
   </nav>
@@ -34,9 +34,9 @@ include BASE_PATH . 'views/header.php';
       <?php if ($user = $getUsers->fetch(PDO::FETCH_ASSOC)) { ?>
         <div class="list-group">
           <?php do { ?>
-            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars(autoUrl('users/' . $user['UserID'])) ?>">
-              <div><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?></strong></div>
-              <div class="text-truncate"><?= htmlspecialchars($user['EmailAddress']) ?></div>
+            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars((string) autoUrl('users/' . $user['UserID'])) ?>">
+              <div><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?></strong></div>
+              <div class="text-truncate"><?= htmlspecialchars((string) $user['EmailAddress']) ?></div>
             </a>
           <?php } while ($user = $getUsers->fetch(PDO::FETCH_ASSOC)); ?>
         </div>

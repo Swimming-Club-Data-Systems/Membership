@@ -47,17 +47,17 @@ include "attendanceMenu.php"; ?>
               ]);
               $squadNames = $getSessionSquads->fetchAll(PDO::FETCH_ASSOC);
             ?>
-              <a href="<?= htmlspecialchars(autoUrl("attendance/register?date=" . urlencode($date) . "&session=" . urlencode($sessions[$i]['SessionID']))) ?>" title="<?= htmlspecialchars($sessions[$i]['SquadName']) ?> Register, <?= htmlspecialchars($sessions[$i]['SessionName']) ?>">
+              <a href="<?= htmlspecialchars((string) autoUrl("attendance/register?date=" . urlencode($date) . "&session=" . urlencode((string) $sessions[$i]['SessionID']))) ?>" title="<?= htmlspecialchars((string) $sessions[$i]['SquadName']) ?> Register, <?= htmlspecialchars((string) $sessions[$i]['SessionName']) ?>">
                 <div>
                   <span class="title mb-0">
-                    Take <?php for ($y = 0; $y < sizeof($squadNames); $y++) { ?><?php if ($y > 0) { ?>, <?php } ?><?= htmlspecialchars($squadNames[$y]['SquadName']) ?><?php } ?> Register
+                    Take <?php for ($y = 0; $y < sizeof($squadNames); $y++) { ?><?php if ($y > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squadNames[$y]['SquadName']) ?><?php } ?> Register
                   </span>
                   <span class="d-flex mb-3">
-                    <?= date("H:i", strtotime($sessions[$i]['StartTime'])) ?> - <?= date("H:i", strtotime($sessions[$i]['EndTime'])) ?>
+                    <?= date("H:i", strtotime((string) $sessions[$i]['StartTime'])) ?> - <?= date("H:i", strtotime((string) $sessions[$i]['EndTime'])) ?>
                   </span>
                 </div>
                 <span class="category">
-                  <?= htmlspecialchars($sessions[$i]['SessionName']) ?>, <?= htmlspecialchars($sessions[$i]['VenueName']) ?>
+                  <?= htmlspecialchars((string) $sessions[$i]['SessionName']) ?>, <?= htmlspecialchars((string) $sessions[$i]['VenueName']) ?>
                 </span>
               </a>
             <?php } ?>
@@ -71,7 +71,7 @@ include "attendanceMenu.php"; ?>
         <h2 class="mb-4">Further Attendance Options</h2>
       <?php } ?>
       <div class="news-grid">
-        <a href="<?= htmlspecialchars(autoUrl("attendance/register")) ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("attendance/register")) ?>">
           <div>
             <span class="title mb-0">
               Take a Register
@@ -85,7 +85,7 @@ include "attendanceMenu.php"; ?>
           </span>
         </a>
 
-        <a href="<?= htmlspecialchars(autoUrl("attendance/history/members")) ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("attendance/history/members")) ?>">
           <div>
             <span class="title mb-0">
               Member Attendance
@@ -99,7 +99,7 @@ include "attendanceMenu.php"; ?>
           </span>
         </a>
 
-        <a href="<?= htmlspecialchars(autoUrl("attendance/history/squads")) ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads")) ?>">
           <div>
             <span class="title mb-0">
               Squad Attendance
@@ -113,7 +113,7 @@ include "attendanceMenu.php"; ?>
           </span>
         </a>
 
-        <a href="<?= htmlspecialchars(autoUrl("timetable/booking")) ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("timetable/booking")) ?>">
           <div>
             <span class="title mb-0">
               Session Booking

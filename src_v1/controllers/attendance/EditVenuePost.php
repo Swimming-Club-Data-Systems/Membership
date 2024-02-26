@@ -27,7 +27,7 @@ if ($_POST['name'] != "" && $_POST['name'] != null && $_POST['address'] != "" &&
     ]);
     $db->commit();
     $_SESSION['TENANT-' . app()->tenant->getId()]['EditVenueSuccess'] = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     $db->rollback();
     halt(500);
   }

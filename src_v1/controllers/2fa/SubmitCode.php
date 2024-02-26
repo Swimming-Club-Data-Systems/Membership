@@ -27,7 +27,7 @@ if (SCDS\CSRF::verify()) {
 $auth_via_google_authenticator;
 try {
   $auth_via_google_authenticator = $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR_GOOGLE'] && $ga2fa->verifyKey(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['2FAUserID'], "GoogleAuth2FASecret"), $_POST['auth']);
-} catch (Exception $e) {
+} catch (Exception) {
   $auth_via_google_authenticator = false;
 }
 
@@ -55,7 +55,7 @@ if (($_POST['auth'] == $_SESSION['TENANT-' . app()->tenant->getId()]['TWO_FACTOR
       $event = 'UserLogin-2FA-App';
     }
     AuditLog::new($event, 'Signed in from ' . getUserIp(), $currentUser->getId());
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(403);
   }
 } else {
@@ -76,7 +76,7 @@ unset($_SESSION['TENANT-' . app()->tenant->getId()]['LoginSec']);
 if (isset($_POST['setup-time-based-codes']) && bool($_POST['setup-time-based-codes'])) {
   header("Location: " . autoUrl('my-account/googleauthenticator/setup'));
 } else if (isset($_POST['target']) && $_POST['target']) {
-  header("Location: " . autoUrl(ltrim($_POST['target'], '/'), false));
+  header("Location: " . autoUrl(ltrim((string) $_POST['target'], '/'), false));
 } else {
   header("Location: " . autoUrl(''));
 }

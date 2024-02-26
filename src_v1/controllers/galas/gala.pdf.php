@@ -78,8 +78,8 @@ foreach ($swimsArray as $col => $name) {
   $getCount->execute([$id]);
   $countEntries[$col]['Name'] = $name;
   $countEntries[$col]['Event'] = $col;
-  $countEntries[$col]['Stroke'] = preg_replace("/[^a-zA-Z]+/", "", $col);
-  $countEntries[$col]['Distance'] = preg_replace("/[^0-9]/", '', $col);
+  $countEntries[$col]['Stroke'] = preg_replace("/[^a-zA-Z]+/", "", (string) $col);
+  $countEntries[$col]['Distance'] = preg_replace("/[^0-9]/", '', (string) $col);
   $countEntries[$col]['Count'] = $getCount->fetchColumn();
   $strokeCounts[$countEntries[$col]['Stroke']] += $countEntries[$col]['Count'];
   $distanceCounts[$countEntries[$col]['Distance']] += $countEntries[$col]['Count'];
@@ -115,7 +115,7 @@ ob_start(); ?>
 
   <div class="primary-box mb-3" id="title">
     <h1 class="mb-0">
-      <?= htmlspecialchars($gala['GalaName']) ?>
+      <?= htmlspecialchars((string) $gala['GalaName']) ?>
     </h1>
     <p class="lead mb-0">
       Gala Entry Report
@@ -139,14 +139,14 @@ ob_start(); ?>
             <div class="row">
               <div class="split-50">
                 <h3 style="">
-                  <?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>
+                  <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>
                 </h3>
 
                 <p class="mb-0" style="">
-                  <strong>Year of birth:</strong>&nbsp;<?= date('Y', strtotime($entry['DateOfBirth'])) ?>
+                  <strong>Year of birth:</strong>&nbsp;<?= date('Y', strtotime((string) $entry['DateOfBirth'])) ?>
                 </p>
                 <p class="mb-0">
-                  <strong>Swim&nbsp;England Number:</strong>&nbsp;<?= htmlspecialchars($entry['ASANumber']) ?>
+                  <strong>Swim&nbsp;England Number:</strong>&nbsp;<?= htmlspecialchars((string) $entry['ASANumber']) ?>
                 </p>
               </div>
               <div class="split-50">
@@ -188,7 +188,7 @@ ob_start(); ?>
 
   <h2 id="about">Gala Reports</h2>
 
-  <p>&copy; Swimming Club Data Systems <?= date("Y") ?>. Produced for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.</p>
+  <p>&copy; Swimming Club Data Systems <?= date("Y") ?>. Produced for <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.</p>
 
   <?php include BASE_PATH . 'helperclasses/PDFStyles/PageNumbers.php'; ?>
 </body>

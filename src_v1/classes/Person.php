@@ -5,15 +5,8 @@
  */
 class Person
 {
-  protected int $id;
-  protected string $forename;
-  protected string $surname;
-
-  public function __construct($id, $forename, $surname)
+  public function __construct(protected int $id, protected string $forename, protected string $surname)
   {
-    $this->id = $id;
-    $this->forename = $forename;
-    $this->surname = $surname;
   }
 
   public function getForename()

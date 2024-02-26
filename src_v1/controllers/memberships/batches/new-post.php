@@ -40,7 +40,7 @@ try {
     try {
       $dueDate = new DateTime($_POST['due-date'], new DateTimeZone('Europe/London'));
       $dueDate = $dueDate->format('Y-m-d');
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Ignore
       $dueDate = null;
     }
@@ -59,8 +59,8 @@ try {
   $addBatch->execute([
     $batchId,
     $_GET['user'],
-    trim($_POST['introduction-text']),
-    trim($_POST['footer-text']),
+    trim((string) $_POST['introduction-text']),
+    trim((string) $_POST['footer-text']),
     $dueDate,
     $total,
     json_encode($paymentTypes),

@@ -42,8 +42,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/tier-3")) ?>">Tier 3</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/tier-3")) ?>">Tier 3</a></li>
       <li class="breadcrumb-item active" aria-current="page">Members</li>
     </ol>
   </nav>
@@ -61,7 +61,7 @@ include BASE_PATH . 'views/header.php';
         <ul class="list-group">
           <?php do { ?>
             <li class="list-group-item">
-              <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>
+              <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>
             </li>
           <?php } while ($member = $getMembers->fetch(PDO::FETCH_ASSOC)); ?>
         </ul>

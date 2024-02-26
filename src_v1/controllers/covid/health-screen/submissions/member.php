@@ -52,7 +52,7 @@ $getForms->bindValue(':num', 10, PDO::PARAM_INT);
 $getForms->execute();
 $form = $getForms->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Health Screening';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Health Screening';
 
 $markdown = new ParsedownExtra();
 $markdown->setSafeMode(true);
@@ -66,23 +66,23 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/health-screening')) ?>">Screening</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr($member['MForename'], 0, 1) . mb_substr($member['MSurname'], 0, 1)) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening')) ?>">Screening</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr((string) $member['MForename'], 0, 1) . mb_substr((string) $member['MSurname'], 0, 1)) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          COVID-19 Health Screens <small class="text-muted"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
+          COVID-19 Health Screens <small class="text-muted"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
         </h1>
         <p class="lead mb-0">
           Submitted forms
         </p>
       </div>
       <div class="col">
-        <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
+        <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
       </div>
     </div>
   </div>
@@ -98,7 +98,7 @@ include BASE_PATH . 'views/header.php';
             $time = new DateTime($form['DateTime'], new DateTimeZone('UTC'));
             $time->setTimezone(new DateTimeZone('Europe/London'));
           ?>
-            <li class="list-group-item" id="<?= htmlspecialchars($form['ID']) ?>">
+            <li class="list-group-item" id="<?= htmlspecialchars((string) $form['ID']) ?>">
               <h2>
                 Submission at <?= htmlspecialchars($time->format('H:i, j F Y')) ?>
               </h2>
@@ -107,7 +107,7 @@ include BASE_PATH . 'views/header.php';
               $json = null;
               try {
                 $json = json_decode($form['Document'], true);
-              } catch (Exception $e) {
+              } catch (Exception) {
                 // An error occurred
               }
               ?>
@@ -131,7 +131,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['confirmed-infection']['notes']) && mb_strlen($json['form']['confirmed-infection']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['confirmed-infection']['notes']) && mb_strlen((string) $json['form']['confirmed-infection']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['confirmed-infection']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -143,7 +143,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['exposure']['notes']) && mb_strlen($json['form']['exposure']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['exposure']['notes']) && mb_strlen((string) $json['form']['exposure']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['exposure']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -155,7 +155,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['underlying-medical']['notes']) && mb_strlen($json['form']['underlying-medical']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['underlying-medical']['notes']) && mb_strlen((string) $json['form']['underlying-medical']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['underlying-medical']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -167,7 +167,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['live-with-shielder']['notes']) && mb_strlen($json['form']['live-with-shielder']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['live-with-shielder']['notes']) && mb_strlen((string) $json['form']['live-with-shielder']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['live-with-shielder']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -179,7 +179,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['understand-return']['notes']) && mb_strlen($json['form']['understand-return']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['understand-return']['notes']) && mb_strlen((string) $json['form']['understand-return']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['understand-return']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -209,7 +209,7 @@ include BASE_PATH . 'views/header.php';
                     <?php } else { ?>
                       No
                     <?php } ?>
-                    <?php if (isset($json['form']['advice-received']['notes']) && mb_strlen($json['form']['advice-received']['notes']) > 0) { ?>
+                    <?php if (isset($json['form']['advice-received']['notes']) && mb_strlen((string) $json['form']['advice-received']['notes']) > 0) { ?>
                       <div class="card card-body p-2 pb-0"><?= $markdown->text($json['form']['advice-received']['notes']) ?></div>
                     <?php } ?>
                   </dd>
@@ -261,10 +261,10 @@ include BASE_PATH . 'views/header.php';
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> has never submitted a COVID-19 health survey</strong>
+            <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> has never submitted a COVID-19 health survey</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="alert-link">Start the survey</a>
+            <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="alert-link">Start the survey</a>
           </p>
         </div>
       <?php } ?>

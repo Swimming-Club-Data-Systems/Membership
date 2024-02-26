@@ -32,7 +32,7 @@ try {
   $update->bindValue('entryCode', $id, PDO::PARAM_INT);
   $update->execute();
   $_SESSION['TENANT-' . app()->tenant->getId()]['VetoTrue'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }
 

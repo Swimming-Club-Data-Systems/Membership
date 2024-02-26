@@ -59,8 +59,8 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions')) ?>">Subscriptions</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions')) ?>">Subscriptions</a></li>
       <li class="breadcrumb-item active" aria-current="page">View</li>
     </ol>
   </nav>
@@ -79,7 +79,7 @@ include BASE_PATH . "views/root/header.php";
             <strong>There was a problem trying to save the subscription</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['SubscriptionSaveError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['SubscriptionSaveError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['SubscriptionSaveError']);
@@ -90,7 +90,7 @@ include BASE_PATH . "views/root/header.php";
         <?= \SCDS\CSRF::write() ?>
 
         <p>
-          <strong><?= htmlspecialchars($subscription['Name']) ?></strong>
+          <strong><?= htmlspecialchars((string) $subscription['Name']) ?></strong>
         </p>
 
         <div class="mb-3">
@@ -117,13 +117,13 @@ include BASE_PATH . "views/root/header.php";
 
               do {
 
-                $json = json_decode($paymentMethod['TypeData']);
+                $json = json_decode((string) $paymentMethod['TypeData']);
                 $methodDetails = null;
-                if ($paymentMethod['MethodDetails']) $methodDetails = json_decode($paymentMethod['MethodDetails']);
+                if ($paymentMethod['MethodDetails']) $methodDetails = json_decode((string) $paymentMethod['MethodDetails']);
                 $title = htmlspecialchars('Payment method ' . $paymentMethod['MethodID']);
                 switch ($paymentMethod['Type']) {
                   case 'card':
-                    $title = htmlspecialchars(mb_convert_case($json->brand, MB_CASE_TITLE)) . ' ' . htmlspecialchars($json->funding) . ' card ' . htmlspecialchars($json->last4);
+                    $title = htmlspecialchars(mb_convert_case((string) $json->brand, MB_CASE_TITLE)) . ' ' . htmlspecialchars((string) $json->funding) . ' card ' . htmlspecialchars((string) $json->last4);
                     break;
                   case 'bacs_debit':
                     $title = htmlspecialchars('Direct Debit Ref: ' . ' ' . $methodDetails->bacs_debit->reference);
@@ -131,7 +131,7 @@ include BASE_PATH . "views/root/header.php";
                 }
 
               ?>
-                <option <?php if ($subscription['PaymentMethod'] == $paymentMethod['MethodID']) { ?>selected<?php } ?> value="<?= htmlspecialchars($paymentMethod['MethodID']) ?>"><?= $title ?></option>
+                <option <?php if ($subscription['PaymentMethod'] == $paymentMethod['MethodID']) { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $paymentMethod['MethodID']) ?>"><?= $title ?></option>
               <?php } while ($paymentMethod = $getPaymentMethods->fetch(PDO::FETCH_ASSOC)); ?>
             <?php } else { ?>
               <option value="" disabled selected>No payment methods available</option>
@@ -144,12 +144,12 @@ include BASE_PATH . "views/root/header.php";
 
         <div class="mb-3">
           <label class="form-label" for="subscription-invoice-memo">Invoice memo</label>
-          <textarea class="form-control" name="subscription-invoice-memo" id="subscription-invoice-memo" rows="4"><?php if ($subscription['Memo']) { ?><?= htmlspecialchars($subscription['Memo']) ?><?php } ?></textarea>
+          <textarea class="form-control" name="subscription-invoice-memo" id="subscription-invoice-memo" rows="4"><?php if ($subscription['Memo']) { ?><?= htmlspecialchars((string) $subscription['Memo']) ?><?php } ?></textarea>
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="subscription-invoice-footer">Invoice footer</label>
-          <textarea class="form-control" name="subscription-invoice-footer" id="subscription-invoice-footer" rows="4"><?php if ($subscription['Footer']) { ?><?= htmlspecialchars($subscription['Footer']) ?><?php } ?></textarea>
+          <textarea class="form-control" name="subscription-invoice-footer" id="subscription-invoice-footer" rows="4"><?php if ($subscription['Footer']) { ?><?= htmlspecialchars((string) $subscription['Footer']) ?><?php } ?></textarea>
         </div>
 
         <p>
@@ -181,10 +181,10 @@ include BASE_PATH . "views/root/header.php";
 
           <div class="mb-3">
             <label class="form-label" for="product-select">Product</label>
-            <select name="product-select" id="product-select" class="form-select" required data-plans-ajax-url="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/new/get-product-plans')) ?>">
+            <select name="product-select" id="product-select" class="form-select" required data-plans-ajax-url="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/new/get-product-plans')) ?>">
               <option value="" selected disabled>Select a product</option>
               <?php while ($product = $getProducts->fetch(PDO::FETCH_ASSOC)) { ?>
-                <option id="<?= htmlspecialchars('product-select-' . $product['ID']) ?>" value="<?= htmlspecialchars($product['ID']) ?>" data-name="<?= htmlspecialchars($product['Name']) ?>"><?= htmlspecialchars($product['Name']) ?></option>
+                <option id="<?= htmlspecialchars('product-select-' . $product['ID']) ?>" value="<?= htmlspecialchars((string) $product['ID']) ?>" data-name="<?= htmlspecialchars((string) $product['Name']) ?>"><?= htmlspecialchars((string) $product['Name']) ?></option>
               <?php } ?>
             </select>
             <div class="invalid-feedback">

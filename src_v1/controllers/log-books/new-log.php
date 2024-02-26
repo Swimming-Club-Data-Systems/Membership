@@ -59,15 +59,15 @@ include BASE_PATH . 'views/header.php';
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Log book</a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Log book</a></li>
             <li class="breadcrumb-item active" aria-current="page">New</li>
           </ol>
         </nav>
       <?php } else { ?>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Members</a></li>
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member)) ?>"><?= htmlspecialchars(mb_substr($memberInfo['fn'], 0, 1, 'utf-8') . mb_substr($memberInfo['sn'], 0, 1, 'utf-8')) ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Members</a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books/members/" . $member)) ?>"><?= htmlspecialchars(mb_substr((string) $memberInfo['fn'], 0, 1, 'utf-8') . mb_substr((string) $memberInfo['sn'], 0, 1, 'utf-8')) ?></a></li>
             <li class="breadcrumb-item active" aria-current="page">New</li>
           </ol>
         </nav>
@@ -79,7 +79,7 @@ include BASE_PATH . 'views/header.php';
             New log book entry
           </h1>
           <p class="lead mb-0">
-            <?= htmlspecialchars(\SCDS\Formatting\Names::format($memberInfo['fn'], $memberInfo['sn'])) ?>'s log book
+            <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($memberInfo['fn'], $memberInfo['sn'])) ?>'s log book
           </p>
           <div class="mb-3 d-lg-none"></div>
         </div>
@@ -107,7 +107,7 @@ include BASE_PATH . 'views/header.php';
         <h2>Log entry</h2>
         <div class="mb-3">
           <label class="form-label" for="title">Log title</label>
-          <input type="text" required class="form-control" id="title" name="title" placeholder="e.g. Swimming training" value="<?= htmlspecialchars($title) ?>">
+          <input type="text" required class="form-control" id="title" name="title" placeholder="e.g. Swimming training" value="<?= htmlspecialchars((string) $title) ?>">
           <div class="invalid-feedback">
             You must give this log entry a title.
           </div>
@@ -115,7 +115,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="entry">Log entry</label>
-          <textarea rows="15" required class="form-control" id="entry" name="entry" placeholder="e.g.&#13;&#10;5 x 200m free&#13;&#10;10 x 50m back"><?= htmlspecialchars($entry) ?></textarea>
+          <textarea rows="15" required class="form-control" id="entry" name="entry" placeholder="e.g.&#13;&#10;5 x 200m free&#13;&#10;10 x 50m back"><?= htmlspecialchars((string) $entry) ?></textarea>
           <div class="invalid-feedback">
             You must fill out the log entry.
           </div>
@@ -130,7 +130,7 @@ include BASE_PATH . 'views/header.php';
           </p>
           <div class="mb-3">
             <label class="form-label" for="date">Date</label>
-            <input class="form-control" id="date" name="date" type="date" value="<?= htmlspecialchars($date) ?>">
+            <input class="form-control" id="date" name="date" type="date" value="<?= htmlspecialchars((string) $date) ?>">
             <div class="invalid-feedback">
               You must enter a valid date.
             </div>
@@ -138,7 +138,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="time">Time</label>
-            <input class="form-control" id="time" name="time" type="time" value="<?= htmlspecialchars($time) ?>">
+            <input class="form-control" id="time" name="time" type="time" value="<?= htmlspecialchars((string) $time) ?>">
             <div class="invalid-feedback">
               You must enter a valid time.
             </div>

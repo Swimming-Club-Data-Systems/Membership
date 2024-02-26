@@ -33,7 +33,7 @@ $row = $get->fetch(PDO::FETCH_ASSOC);
 
 $swimmerOld = null;
 
-$pagetitle = "Attendance history for " . htmlspecialchars($squadName) . ' Squad';
+$pagetitle = "Attendance history for " . htmlspecialchars((string) $squadName) . ' Squad';
 include BASE_PATH . "views/header.php";
 include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
@@ -42,17 +42,17 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history/squads')) ?>">Squads</a></li>
-				<li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($squadName) ?></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history/squads')) ?>">Squads</a></li>
+				<li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $squadName) ?></li>
 			</ol>
 		</nav>
 
 		<div class="row align-items-center">
 			<div class="col">
 				<h1>
-					Attendance history for <?= htmlspecialchars($squadName) ?>
+					Attendance history for <?= htmlspecialchars((string) $squadName) ?>
 				</h1>
 				<p class="lead mb-0">
 					Squad history currently only shows the current week
@@ -67,7 +67,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
 		<?php if ($row == null) { ?>
 			<div class="alert alert-warning">
-				<strong>No swimmers or recorded sessions were found for <?= htmlspecialchars($squadName) ?></strong><br>
+				<strong>No swimmers or recorded sessions were found for <?= htmlspecialchars((string) $squadName) ?></strong><br>
 				You need to take a register before swimmers will appear here
 			</div>
 		<?php } else { ?>
@@ -95,7 +95,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 						?>
 								<tr>
 									<td>
-										<?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
+										<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
 									</td>
 									<td>
 										<ul class="list-unstyled mb-0">

@@ -75,7 +75,7 @@ try {
         if ($bookingOpens > $now && $bookingOpens < $bookingCloses) {
           $bookingOpensAt = $bookingOpens->format('Y-m-d H:i:s');
         }
-      } catch (Exception $e) {
+      } catch (Exception) {
         $bookingOpensAt = null;
       }
     }
@@ -86,7 +86,7 @@ try {
       try {
         $amountDec = \Brick\Math\BigDecimal::of((string) $_POST['booking-fees-amount']);
         $bookingFee = $amountDec->withPointMovedRight(2)->toInt();
-      } catch (Exception $e) {
+      } catch (Exception) {
         $bookingFee = 0;
       }
     }
@@ -151,14 +151,14 @@ try {
             $content .= '<dl>';
 
             $content .= '<dt>Member</dt><dd>' . htmlspecialchars($deleteMember['fn'] . ' ' . $deleteMember['sn']) . '</dd>';
-            $content .= '<dt>Session</dt><dd>' . htmlspecialchars($session['SessionName']) . '</dd>';
+            $content .= '<dt>Session</dt><dd>' . htmlspecialchars((string) $session['SessionName']) . '</dd>';
             $content .= '<dt>Date and time</dt><dd>' . htmlspecialchars($sessionDateTime->format('H:i, l j F Y T')) . '</dd>';
-            $content .= '<dt>Location</dt><dd>' . htmlspecialchars($session['VenueName']) . ', <em>' . htmlspecialchars($session['Location']) . '</em></dd>';
-            $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars($session['SessionID']) . '</dd>';
+            $content .= '<dt>Location</dt><dd>' . htmlspecialchars((string) $session['VenueName']) . ', <em>' . htmlspecialchars((string) $session['Location']) . '</em></dd>';
+            $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars((string) $session['SessionID']) . '</dd>';
 
             $content .= '</dl>';
 
-            $content .= '<p>This action was performed by ' . htmlspecialchars($user->getFullName()) . '.</p>';
+            $content .= '<p>This action was performed by ' . htmlspecialchars((string) $user->getFullName()) . '.</p>';
 
             $content .= '<p>Please contact us if you think your booking has been cancelled by mistake.</p>';
 
@@ -191,7 +191,7 @@ try {
           'update' => true,
         ]
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Ignore
     }
 
@@ -203,7 +203,7 @@ try {
     $db->rollBack();
 
     $message = $e->getMessage();
-    if (get_class($e) == 'PDOException') {
+    if ($e::class == 'PDOException') {
       reportError($e);
       $message = 'A database error occurred';
     }

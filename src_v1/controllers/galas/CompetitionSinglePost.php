@@ -20,16 +20,16 @@ $galaName = $courseLength = $galaVenue = $closingDate = $galaDate = $galaFeeCons
 $description = "";
 
 if (!empty($_POST['galaname'])) {
-  $galaName = trim($_POST['galaname']);
+  $galaName = trim((string) $_POST['galaname']);
 }
 if (!empty($_POST['description'])) {
-  $description = trim($_POST['description']);
+  $description = trim((string) $_POST['description']);
 }
 if (!empty($_POST['length'])) {
   $courseLength = $_POST['length'];
 }
 if (!empty($_POST['venue'])) {
-  $galaVenue = trim($_POST['venue']);
+  $galaVenue = trim((string) $_POST['venue']);
 }
 if (!empty($_POST['closingDate']) && !empty($_POST['closingTime']) && v::date()->validate($_POST['closingDate']) && v::time('H:i')->validate($_POST['closingTime'])) {
   $date = DateTime::createFromFormat('Y-m-d H:i', $_POST['closingDate'] . ' ' . $_POST['closingTime'], new DateTimeZone('Europe/London'));
@@ -77,7 +77,7 @@ try {
   AuditLog::new('Galas-Updated', 'Updated ' . $galaName . ', #' . $id);
 
   header("location: " . autoUrl("galas/" . $id));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
   //pre($e);
 }

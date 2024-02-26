@@ -44,7 +44,7 @@ class Member
     $member->id = $sessionInfo->id;
     $member->member = $sessionInfo->member;
     $member->session = Session::retrieve($sessionInfo->session);
-    $member->stages = json_decode($sessionInfo->stages);
+    $member->stages = json_decode((string) $sessionInfo->stages);
 
     return $member;
   }
@@ -66,7 +66,7 @@ class Member
     throw new \Exception('Not found');
   }
 
-  private function loadMembers()
+  private function loadMembers(): void
   {
     $db = app()->db;
     $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname FROM members INNER JOIN onboardingMembers ON members.MemberID = onboardingMembers.member WHERE `session` = ? AND `UserID` = ? ORDER BY MemberID ASC");
@@ -92,7 +92,7 @@ class Member
 
   private function getUrl()
   {
-    return autoUrl("onboarding/go?session=" . urlencode($this->id) . "&token=" . urlencode($this->token));
+    return autoUrl("onboarding/go?session=" . urlencode((string) $this->id) . "&token=" . urlencode((string) $this->token));
   }
 
   public function getMember()
@@ -100,7 +100,7 @@ class Member
     return new \Member($this->member);
   }
 
-  private function findCurrentTask()
+  private function findCurrentTask(): void
   {
     // Loop through stages, Return on first match
     foreach ($this->stages as $stage => $data) {
@@ -128,7 +128,7 @@ class Member
     return $task == $this->getCurrentTask();
   }
 
-  public function completeTask($task)
+  public function completeTask($task): void
   {
     $stages = $this->stages;
 

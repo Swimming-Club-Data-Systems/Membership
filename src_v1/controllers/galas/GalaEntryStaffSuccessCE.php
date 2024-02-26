@@ -14,7 +14,7 @@ if ($row == null) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars($row['MForename']) . "'s Selected Sessions";
+$pagetitle = htmlspecialchars((string) $row['MForename']) . "'s Selected Sessions";
 
 include BASE_PATH . "views/header.php";
 
@@ -25,13 +25,13 @@ include BASE_PATH . "views/header.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas")) ?>">Galas</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">Galas</a></li>
         <li class="breadcrumb-item active" aria-current="page">Enter gala</li>
       </ol>
     </nav>
 
     <h1 class="mb-0">
-      <?= htmlspecialchars($row['MForename']) ?>'s Selected Sessions
+      <?= htmlspecialchars((string) $row['MForename']) ?>'s Selected Sessions
     </h1>
   </div>
 </div>
@@ -52,9 +52,9 @@ include BASE_PATH . "views/header.php";
       unset($_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus']); ?>
 
       <div class="cell">
-        <h3>Make another entry for <?= htmlspecialchars($row['MForename']) ?></h3>
+        <h3>Make another entry for <?= htmlspecialchars((string) $row['MForename']) ?></h3>
 
-        <p>Return to the entry form to make another entry for <?= htmlspecialchars($row['MForename']) ?>.</p>
+        <p>Return to the entry form to make another entry for <?= htmlspecialchars((string) $row['MForename']) ?>.</p>
 
         <p class="mb-0">
           <a href="<?= autoUrl("swimmers/" . $swimmer . "/enter-gala") ?>" class="btn btn-primary">
@@ -66,14 +66,14 @@ include BASE_PATH . "views/header.php";
       <div class="cell">
         <h3>If you're finished here</h3>
 
-        <p>If you've finished making entries, return to the gala homepage or return to the page for <?= htmlspecialchars($row['MForename']) ?>.</p>
+        <p>If you've finished making entries, return to the gala homepage or return to the page for <?= htmlspecialchars((string) $row['MForename']) ?>.</p>
 
         <p class="mb-0">
           <a href="<?= autoUrl("galas") ?>" class="btn btn-primary">
             Gala home
           </a>
           <a href="<?= autoUrl("swimmers/" . $swimmer) ?>" class="btn btn-primary">
-            <?= htmlspecialchars($row['MForename']) ?>'s page
+            <?= htmlspecialchars((string) $row['MForename']) ?>'s page
           </a>
         </p>
       </div>

@@ -43,11 +43,11 @@ include BASE_PATH . 'views/head.php';
     <div class="row mb-4 align-items-center">
       <div class="col-auto">
         <div class="h1 mb-0">
-          <a href="<?= htmlspecialchars($returnUrl) ?>" class="text-decoration-none">
+          <a href="<?= htmlspecialchars((string) $returnUrl) ?>" class="text-decoration-none">
             <?php if ($tenant->getKey('LOGO_DIR')) { ?>
-              <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
+              <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars((string) $tenant->getName()) ?>" class="img-fluid" style="height: 75px">
             <?php } else { ?>
-              <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+              <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
             <?php } ?>
           </a>
         </div>
@@ -56,7 +56,7 @@ include BASE_PATH . 'views/head.php';
     </div>
 
     <h1 class="mb-0">
-      <span class="text-muted small">You paid <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
+      <span class="text-muted small">You paid <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
     </h1>
 
   </div>
@@ -72,13 +72,13 @@ include BASE_PATH . 'views/head.php';
 
       <?php if ($paymentIntent->charges->data[0]->calculated_statement_descriptor) { ?>
         <p>
-          This transaction will appear on your statement as <?= htmlspecialchars($paymentIntent->charges->data[0]->calculated_statement_descriptor) ?>, <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($paymentIntent->charges->data[0]->amount), $paymentIntent->charges->data[0]->currency)) ?>.
+          This transaction will appear on your statement as <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->calculated_statement_descriptor) ?>, <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($paymentIntent->charges->data[0]->amount), $paymentIntent->charges->data[0]->currency)) ?>.
         </p>
       <?php } ?>
 
       <div class="d-grid mb-3">
-        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-success">
-          <?= htmlspecialchars($returnString) ?>
+        <a href="<?= htmlspecialchars((string) $returnUrl) ?>" class="btn btn-success">
+          <?= htmlspecialchars((string) $returnString) ?>
         </a>
       </div>
 
@@ -88,7 +88,7 @@ include BASE_PATH . 'views/head.php';
       <ul class="list-group mb-3 accordion" id="entry-list-group">
         <?php foreach ($items as $item) { ?>
           <li class="list-group-item">
-            <h3><?= htmlspecialchars($item->name) ?></h3>
+            <h3><?= htmlspecialchars((string) $item->name) ?></h3>
 
             <?php if (sizeof($item->subItems) > 0) { ?>
               <p>
@@ -108,7 +108,7 @@ include BASE_PATH . 'views/head.php';
               <?php } ?>
               <div class="col-auto ms-auto">
                 <p class="mb-0">
-                  <strong>Fee <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?></strong>
+                  <strong>Fee <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?></strong>
                 </p>
               </div>
             </div>
@@ -125,10 +125,10 @@ include BASE_PATH . 'views/head.php';
                     <li>
                       <div class="row">
                         <div class="col-auto">
-                          <?= htmlspecialchars($item->name) ?>
+                          <?= htmlspecialchars((string) $item->name) ?>
                         </div>
                         <div class="col-auto ms-auto">
-                          <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?>
+                          <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?>
                         </div>
                       </div>
                     </li>
@@ -147,7 +147,7 @@ include BASE_PATH . 'views/head.php';
             </div>
             <div class="col text-end">
               <p class="mb-0">
-                <strong><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?></strong>
+                <strong><?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?></strong>
               </p>
             </div>
           </div>
@@ -161,19 +161,19 @@ include BASE_PATH . 'views/head.php';
         <?php if ($paymentIntent->charges->data[0]->payment_method_details->card) { ?>
           <dt class="col-3">Card</dt>
           <dd class="col-9">
-            <?= htmlspecialchars(getCardBrand($paymentIntent->charges->data[0]->payment_method_details->card->brand) . ' ' . $paymentIntent->charges->data[0]->payment_method_details->card->funding . ' card') ?> &middot;&middot;&middot;&middot; <?= htmlspecialchars($paymentIntent->charges->data[0]->payment_method_details->card->last4) ?>
+            <?= htmlspecialchars(getCardBrand($paymentIntent->charges->data[0]->payment_method_details->card->brand) . ' ' . $paymentIntent->charges->data[0]->payment_method_details->card->funding . ' card') ?> &middot;&middot;&middot;&middot; <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->payment_method_details->card->last4) ?>
           </dd>
 
           <?php if ($paymentIntent->charges->data[0]->payment_method_details->card->wallet) { ?>
             <dt class="col-3">Mobile wallet</dt>
             <dd class="col-9">
-              <?= htmlspecialchars(getWalletName($paymentIntent->charges->data[0]->payment_method_details->card->wallet->type)) ?>
+              <?= htmlspecialchars((string) getWalletName($paymentIntent->charges->data[0]->payment_method_details->card->wallet->type)) ?>
             </dd>
 
             <?php if ($paymentIntent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) { ?>
               <dt class="col-3">Device account number</dt>
               <dd class="col-9">
-                &middot;&middot;&middot;&middot; <?= htmlspecialchars($paymentIntent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) ?>
+                &middot;&middot;&middot;&middot; <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) ?>
               </dd>
             <?php } ?>
           <?php } ?>
@@ -181,7 +181,7 @@ include BASE_PATH . 'views/head.php';
 
         <dt class="col-3">SCDS Checkout reference</dt>
         <dd class="col-9">
-          <?= htmlspecialchars($id) ?>
+          <?= htmlspecialchars((string) $id) ?>
         </dd>
 
       </dl>
@@ -193,7 +193,7 @@ include BASE_PATH . 'views/head.php';
         <?php if ($paymentIntent->charges->data[0]->billing_details->address->line1) { ?>
           <dt class="col-3">Name</dt>
           <dd class="col-9">
-            <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->name) ?>
+            <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->name) ?>
           </dd>
         <?php } ?>
 
@@ -201,22 +201,22 @@ include BASE_PATH . 'views/head.php';
         <dd class="col-9">
           <address class="mb-0">
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->line1) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->line1) ?><br>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->line1) ?><br>
             <?php } ?>
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->line2) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->line2) ?><br>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->line2) ?><br>
             <?php } ?>
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->city) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->city) ?><br>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->city) ?><br>
             <?php } ?>
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->state) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->state) ?><br>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->state) ?><br>
             <?php } ?>
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->country) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->country) ?><br>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->country) ?><br>
             <?php } ?>
             <?php if ($paymentIntent->charges->data[0]->billing_details->address->postal_code) { ?>
-              <?= htmlspecialchars($paymentIntent->charges->data[0]->billing_details->address->postal_code) ?>
+              <?= htmlspecialchars((string) $paymentIntent->charges->data[0]->billing_details->address->postal_code) ?>
             <?php } ?>
           </address>
         </dd>
@@ -230,16 +230,16 @@ include BASE_PATH . 'views/head.php';
       </p>
 
       <p>
-        Payment services are provided to <?= htmlspecialchars($tenant->getName()) ?> by SCDS and their payment processing partners. PCI DSS compliance is primarily handled by our payment processors.
+        Payment services are provided to <?= htmlspecialchars((string) $tenant->getName()) ?> by SCDS and their payment processing partners. PCI DSS compliance is primarily handled by our payment processors.
       </p>
 
       <p>
-        <?= htmlspecialchars($tenant->getName()) ?> may sometimes place a temporary hold of 0GBP to 1GBP or 1USD on your card when you first add it to your account. This is part of the card authorisation process that allows us to determine that your card is valid. This charge will drop off your statement within a few days.
+        <?= htmlspecialchars((string) $tenant->getName()) ?> may sometimes place a temporary hold of 0GBP to 1GBP or 1USD on your card when you first add it to your account. This is part of the card authorisation process that allows us to determine that your card is valid. This charge will drop off your statement within a few days.
       </p>
 
       <?php if (isset($paymentIntent->charges->data[0]->payment_method_details->card->brand) && $paymentIntent->charges->data[0]->calculated_statement_descriptor && $paymentIntent->charges->data[0]->payment_method_details->card->brand == 'amex') { ?>
         <p>
-          American Express customers may see <strong>Stripe</strong> in online banking and the Amex app while the payment is pending. This will usually update to <strong><?= htmlspecialchars($paymentIntent->charges->data[0]->calculated_statement_descriptor) ?></strong> within 48 hours or when the payment settles.
+          American Express customers may see <strong>Stripe</strong> in online banking and the Amex app while the payment is pending. This will usually update to <strong><?= htmlspecialchars((string) $paymentIntent->charges->data[0]->calculated_statement_descriptor) ?></strong> within 48 hours or when the payment settles.
         </p>
       <?php } ?>
 
@@ -253,8 +253,8 @@ include BASE_PATH . 'views/head.php';
       </p>
 
       <div class="d-grid mb-3">
-        <a href="<?= htmlspecialchars($returnUrl) ?>" class="btn btn-success">
-          <?= htmlspecialchars($returnString) ?>
+        <a href="<?= htmlspecialchars((string) $returnUrl) ?>" class="btn btn-success">
+          <?= htmlspecialchars((string) $returnString) ?>
         </a>
       </div>
 

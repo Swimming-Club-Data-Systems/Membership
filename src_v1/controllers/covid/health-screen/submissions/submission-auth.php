@@ -83,7 +83,7 @@ try {
 
     $message = '<p>Hello ' . htmlspecialchars($memberUser['Forename'] . ' ' . $memberUser['Surname']) . '</p>';
 
-    $message .= '<p>' . htmlspecialchars($user->getFullName()) . ' has <strong>' . htmlspecialchars($type) . '</strong> ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . '\'s COVID-19 Health Screening Survey which was submitted at ' . htmlspecialchars($subTime->format('H:i, j F Y')) . '.</p>';
+    $message .= '<p>' . htmlspecialchars((string) $user->getFullName()) . ' has <strong>' . htmlspecialchars($type) . '</strong> ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . '\'s COVID-19 Health Screening Survey which was submitted at ' . htmlspecialchars($subTime->format('H:i, j F Y')) . '.</p>';
 
     if ($_POST['type'] != 'approve') {
       $message .= '<p><strong>' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . ' can not train until we have approved a COVID-19 Health Screening Survey.</strong></p>';
@@ -93,12 +93,12 @@ try {
       $message .= '<p>You\'re now allowed to attend club sessions until we ask you to complete another survey.</p>';
     }
 
-    $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars($tenant->getName()) . ' team.</p>';
+    $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars((string) $tenant->getName()) . ' team.</p>';
 
     notifySend(null, $subject, $message, $memberUser['Forename'] . ' ' . $memberUser['Surname'], $memberUser['EmailAddress']);
   }
 
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   reportError($e);

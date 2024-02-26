@@ -16,7 +16,7 @@ if (!$location) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars($location['Name']) . ' - Contact Tracing';
+$pagetitle = htmlspecialchars((string) $location['Name']) . ' - Contact Tracing';
 
 $address = json_decode($location['Address']);
 
@@ -29,8 +29,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
         <!-- <li class="breadcrumb-item active" aria-current="page">Edit</li> -->
       </ol>
     </nav>
@@ -38,18 +38,18 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($location['Name']) ?>
+          <?= htmlspecialchars((string) $location['Name']) ?>
         </h1>
         <?php if (isset($address->streetAndNumber)) { ?>
         <p class="lead mb-0">
-          <?= htmlspecialchars($address->streetAndNumber) ?>
+          <?= htmlspecialchars((string) $address->streetAndNumber) ?>
         </p>
         <?php } ?>
         <div class="mb-3 d-lg-none"></div>
       </div>
       <?php if (app()->user->hasPermission('Admin')) {?>
       <div class="col text-end">
-        <a href="<?= htmlspecialchars(autoUrl("contact-tracing/locations/$id/edit")) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars((string) autoUrl("contact-tracing/locations/$id/edit")) ?>" class="btn btn-success">
           Edit
         </a>
       </div>
@@ -66,16 +66,16 @@ include BASE_PATH . 'views/header.php';
       <h3>Address</h3>
       <address>
         <?php if (isset($address->streetAndNumber) && $address->streetAndNumber) { ?>
-          <?= htmlspecialchars($address->streetAndNumber) ?><br>
+          <?= htmlspecialchars((string) $address->streetAndNumber) ?><br>
         <?php } ?>
         <?php if (isset($address->flatOrBuilding) && $address->flatOrBuilding) { ?>
-          <?= htmlspecialchars($address->flatOrBuilding) ?><br>
+          <?= htmlspecialchars((string) $address->flatOrBuilding) ?><br>
         <?php } ?>
         <?php if (isset($address->city) && $address->city) { ?>
-          <?= htmlspecialchars($address->city) ?><br>
+          <?= htmlspecialchars((string) $address->city) ?><br>
         <?php } ?>
         <?php if (isset($address->postCode) && $address->postCode) { ?>
-          <?= htmlspecialchars($address->postCode) ?>
+          <?= htmlspecialchars((string) $address->postCode) ?>
         <?php } ?>
       </address>
 
@@ -84,7 +84,7 @@ include BASE_PATH . 'views/header.php';
       </h3>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl("contact-tracing/locations/$id/poster")) ?>" class="btn btn-primary">
+        <a href="<?= htmlspecialchars((string) autoUrl("contact-tracing/locations/$id/poster")) ?>" class="btn btn-primary">
           Download location help poster
         </a>
       </p>

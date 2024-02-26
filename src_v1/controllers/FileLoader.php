@@ -13,20 +13,20 @@ $client = new S3Client([
 $file = '';
 try {
   $file = $tenant->getFilePath();
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 $file = $file . $filename;
 
 $key = $tenant->getId() . '/' . $filename;
 
-if (substr($filename, 0, 18) !== "notify/attachments") {
+if (!str_starts_with((string) $filename, "notify/attachments")) {
   halt(404);
 }
 
 $disposition = 'inline';
-if (isset($_GET['disposition']) && $_GET['disposition'] == 'attachment' && isset($_GET['filename']) && mb_strlen($_GET['filename']) > 0) {
-  $disposition = 'attachment; filename="' . addslashes($_GET['filename']) . '"';
+if (isset($_GET['disposition']) && $_GET['disposition'] == 'attachment' && isset($_GET['filename']) && mb_strlen((string) $_GET['filename']) > 0) {
+  $disposition = 'attachment; filename="' . addslashes((string) $_GET['filename']) . '"';
 } else if (isset($_GET['disposition']) && $_GET['disposition'] == 'attachment') {
   $disposition = 'attachment';
 }

@@ -3,8 +3,8 @@
 $db = app()->db;
 $tenant = app()->tenant;
 $pagetitle = 'COVID Risk Awareness';
-if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') {
-  $pagetitle = htmlspecialchars(UOS_RETURN_FORM_NAME);
+if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') {
+  $pagetitle = htmlspecialchars((string) UOS_RETURN_FORM_NAME);
 }
 
 $squads = null;
@@ -50,7 +50,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
         <li class="breadcrumb-item active" aria-current="page">Risk Awareness</li>
       </ol>
     </nav>
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>COVID-19 Risk Awareness Forms<?php } ?>
+          <?php if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars((string) UOS_RETURN_FORM_NAME) ?><?php } else { ?>COVID-19 Risk Awareness Forms<?php } ?>
         </h1>
         <p class="lead mb-0">
           Making sure you're safe to train
@@ -83,7 +83,7 @@ include BASE_PATH . 'views/header.php';
       <?php unset($_SESSION['CovidRiskAwarenessSuccess']);
       } ?>
 
-      <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?>
+      <?php if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?>
         <p>
         All members need to complete a COVID-19 Sport Sheffield Return to Training Form.
         </p>
@@ -111,7 +111,7 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <p class="mb-0"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
+                  <p class="mb-0"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
                   <p class="mb-0">
                     <?php if ($latest) {
                       $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
@@ -132,7 +132,7 @@ include BASE_PATH . 'views/header.php';
                 </div>
                 <?php if (!$latest || ($latest && !bool($latest['MemberAgreement']))) { ?>
                   <div class="col-auto">
-                    <a class="btn btn-success" href="<?= htmlspecialchars(autoUrl('covid/risk-awareness/members/' . $member['MemberID'] . '/new-form')) ?>">
+                    <a class="btn btn-success" href="<?= htmlspecialchars((string) autoUrl('covid/risk-awareness/members/' . $member['MemberID'] . '/new-form')) ?>">
                       View and sign form
                     </a>
                   </div>
@@ -160,8 +160,8 @@ include BASE_PATH . 'views/header.php';
         <?php if ($squads && $squad = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <div class="list-group mb-3">
             <?php do { ?>
-              <a href="<?= htmlspecialchars(autoUrl('covid/risk-awareness/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
-                <?= htmlspecialchars($squad['SquadName']) ?>
+              <a href="<?= htmlspecialchars((string) autoUrl('covid/risk-awareness/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
+                <?= htmlspecialchars((string) $squad['SquadName']) ?>
               </a>
             <?php } while ($squad = $squads->fetch(PDO::FETCH_ASSOC)); ?>
           </div>

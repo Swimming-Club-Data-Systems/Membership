@@ -18,7 +18,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
         <li class="breadcrumb-item active" aria-current="page">Locations</li>
       </ol>
     </nav>
@@ -36,7 +36,7 @@ include BASE_PATH . 'views/header.php';
       <?php if (app()->user->hasPermission('Admin')) { ?>
       <div class="col text-end">
         <div class="btn-group" role="group" aria-label="Quick options">
-          <a href="<?=htmlspecialchars(autoUrl("contact-tracing/locations/new"))?>" class="btn btn-success">New</a>
+          <a href="<?=htmlspecialchars((string) autoUrl("contact-tracing/locations/new"))?>" class="btn btn-success">New</a>
         </div>
       </div>
       <?php } ?>
@@ -52,8 +52,8 @@ include BASE_PATH . 'views/header.php';
       <?php if ($location = $getLocations->fetch(PDO::FETCH_ASSOC)) { ?>
         <div class="list-group">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars($location['Name']) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) $location['Name']) ?>
             </a>
           <?php } while ($location = $getLocations->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
@@ -63,7 +63,7 @@ include BASE_PATH . 'views/header.php';
             <strong>No locations yet!</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations/new')) ?>" class="alert-link">Add one</a> to get started.
+            <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations/new')) ?>" class="alert-link">Add one</a> to get started.
           </p>
         </div>
       <?php } ?>

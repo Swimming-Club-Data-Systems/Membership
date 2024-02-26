@@ -21,7 +21,7 @@ $getSessions = $db->prepare("SELECT `Name`, `ID` FROM galaSessions WHERE Gala = 
 $getSessions->execute([$id]);
 $session = $getSessions->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = 'Add sessions to ' . htmlspecialchars($gala['name']);
+$pagetitle = 'Add sessions to ' . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -32,12 +32,12 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
-        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>">#<?= htmlspecialchars($id) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Sessions</li>
       </ol>
     </nav>
 
-    <h1>Manage sessions at <?= htmlspecialchars($gala['name']) ?></h1>
+    <h1>Manage sessions at <?= htmlspecialchars((string) $gala['name']) ?></h1>
     <p class="lead mb-0">Adding sessions allows parents to indicate if a swimmer will be able to enter any given session.</p>
 
   </div>
@@ -87,7 +87,7 @@ include BASE_PATH . 'views/header.php';
               <div class="col">
                 <div class="mb-0">
                   <label class="form-label" for="session-<?= $session['ID'] ?>">Session <?= $i ?> name</label>
-                  <input type="text" class="form-control" id="session-<?= $session['ID'] ?>" name="session-<?= $session['ID'] ?>" value="<?= htmlspecialchars($session['Name']) ?>" placeholder="Enter name of session">
+                  <input type="text" class="form-control" id="session-<?= $session['ID'] ?>" name="session-<?= $session['ID'] ?>" value="<?= htmlspecialchars((string) $session['Name']) ?>" placeholder="Enter name of session">
                 </div>
               </div>
               <div class="col-auto">

@@ -5,10 +5,6 @@
  */
 class PhotoPermission
 {
-  private bool $permitted;
-  private string $type;
-  private string $description;
-
   /**
    * Create a PhotoPermission object
    * 
@@ -16,11 +12,8 @@ class PhotoPermission
    * @param string a description of the type
    * @param bool if photos are allowed
    */
-  public function __construct(string $type, string $description, bool $permitted)
+  public function __construct(private readonly string $type, private readonly string $description, private readonly bool $permitted)
   {
-    $this->type = $type;
-    $this->description = $description;
-    $this->permitted = $permitted;
   }
 
   /**

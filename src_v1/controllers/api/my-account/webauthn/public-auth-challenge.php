@@ -23,9 +23,7 @@ if (isset($post->username)) {
     $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
 
     // Convert the Credential Sources into Public Key Credential Descriptors
-    $allowedCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-        return $credential->getPublicKeyCredentialDescriptor();
-    }, $credentialSources);
+    $allowedCredentials = array_map(fn(PublicKeyCredentialSource $credential) => $credential->getPublicKeyCredentialDescriptor(), $credentialSources);
 }
 
 // We generate the set of options.

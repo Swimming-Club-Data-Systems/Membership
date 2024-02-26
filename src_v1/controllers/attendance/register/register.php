@@ -22,7 +22,7 @@ if (isset($_GET['date'])) {
   try {
     $userDate = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
     $date = $userDate;
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 }
@@ -54,14 +54,14 @@ include BASE_PATH . "views/header.php";
 
 ?>
 
-<div id="data-block" data-ajax-url="<?= htmlspecialchars(autoUrl("attendance/register/data-post")) ?>" data-register-sheet-ajax-url="<?= htmlspecialchars(autoUrl("attendance/register/sheet")) ?>" data-session-list-ajax-url="<?= htmlspecialchars(autoUrl("attendance/register/sessions")) ?>" data-socket-init="<?= htmlspecialchars($socketDataInit) ?>"></div>
+<div id="data-block" data-ajax-url="<?= htmlspecialchars((string) autoUrl("attendance/register/data-post")) ?>" data-register-sheet-ajax-url="<?= htmlspecialchars((string) autoUrl("attendance/register/sheet")) ?>" data-session-list-ajax-url="<?= htmlspecialchars((string) autoUrl("attendance/register/sessions")) ?>" data-socket-init="<?= htmlspecialchars($socketDataInit) ?>"></div>
 
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-fluid">
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
         <li class="breadcrumb-item active" aria-current="page">Register</li>
       </ol>
     </nav>

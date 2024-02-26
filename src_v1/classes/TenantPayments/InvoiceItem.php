@@ -20,7 +20,7 @@ class InvoiceItem
   {
     $this->id = $data['ID'];
     $this->invoice = $data['Invoice'];
-    $this->description = json_decode($data['Description']);
+    $this->description = json_decode((string) $data['Description']);
     $this->amount = $data['Amount'];
     $this->currency = $data['Currency'];
     $this->type = $data['Type'];
@@ -57,9 +57,7 @@ class InvoiceItem
 
     if (sizeof($items) == 0) throw new \Exception('Items not found');
 
-    $items = array_map(function ($data) {
-      return new InvoiceItem($data);
-    }, $items);
+    $items = array_map(fn($data) => new InvoiceItem($data), $items);
 
     return $items;
   }

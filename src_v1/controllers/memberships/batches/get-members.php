@@ -48,7 +48,7 @@ ob_start();
     <select class="form-select" id="member" name="member" required>
       <option disabled selected value="null">Select a member</option>
       <?php while ($member = $getMembers->fetch(PDO::FETCH_OBJ)) { ?>
-        <option value="<?= htmlspecialchars($member->MemberID) ?>"><?= htmlspecialchars($member->MForename . ' ' . $member->MSurname) ?></option>
+        <option value="<?= htmlspecialchars((string) $member->MemberID) ?>"><?= htmlspecialchars($member->MForename . ' ' . $member->MSurname) ?></option>
       <?php } ?>
     </select>
   </div>
@@ -61,7 +61,7 @@ ob_start();
         $start = new DateTime($year->start, new DateTimeZone('Europe/London'));
         $end = new DateTime($year->end, new DateTimeZone('Europe/London'));
       ?>
-        <option value="<?= htmlspecialchars($year->id) ?>"><?= htmlspecialchars($year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
+        <option value="<?= htmlspecialchars((string) $year->id) ?>"><?= htmlspecialchars((string) $year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
       <?php } while ($year = $getYears->fetch(PDO::FETCH_OBJ)); ?>
     </select>
   </div>

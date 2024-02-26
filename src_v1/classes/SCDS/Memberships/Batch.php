@@ -25,7 +25,7 @@ class Batch
 
     if (!$batch) throw new \Exception('No batch found');
 
-    $payMethods = json_decode($batch->payMethods);
+    $payMethods = json_decode((string) $batch->payMethods);
     $user = new \User($batch->user);
 
     $payMethodsClean = [];
@@ -247,7 +247,7 @@ class Batch
     }
   }
 
-  public static function completeBatch($batchId, $paymentInfo)
+  public static function completeBatch($batchId, $paymentInfo): void
   {
     $db = app()->db;
 
@@ -300,7 +300,7 @@ class Batch
     }
   }
 
-  public static function completeDirectDebitBatch($batchId)
+  public static function completeDirectDebitBatch($batchId): void
   {
     $db = app()->db;
     $tenant = app()->tenant;

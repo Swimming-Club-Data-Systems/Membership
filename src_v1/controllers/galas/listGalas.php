@@ -108,7 +108,7 @@ include "galaMenu.php"; ?>
 <div class="front-page" style="margin-bottom: -1rem;">
   <div class="container-xl">
     <h1>Galas</h1>
-    <p class="lead">Gala Entry Management at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p class="lead">Gala Entry Management at <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></p>
 
       <h2 class="mb-4">
         Upcoming Galas
@@ -124,10 +124,10 @@ include "galaMenu.php"; ?>
           <a href="<?=autoUrl("galas/" . $gala['GalaID'])?>">
             <div>
               <span class="title mb-0 justify-content-between align-items-start">
-                <span><?=htmlspecialchars($gala['GalaName'])?></span>
+                <span><?=htmlspecialchars((string) $gala['GalaName'])?></span>
                 <?php if ($now <= $closingDate) {?><span class="ms-2 badge bg-primary">ENTRIES OPEN</span><?php } ?>
               </span>
-              <span class="d-flex mb-3"><?=htmlspecialchars($gala['GalaVenue'])?></span>
+              <span class="d-flex mb-3"><?=htmlspecialchars((string) $gala['GalaVenue'])?></span>
             </div>
             <?php if ($now <= $closingDate) { ?>
             <span class="category">Entries close at <?= htmlspecialchars($closingDate->format('H:i, j F Y')) ?></span>
@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
     data: {
       labels: <?=json_encode(['Free', 'Back', 'Breast', 'Fly', 'IM'])?>,
       datasets: [{
-        label: <?=json_encode(html_entity_decode($gala['GalaName']))?>,
+        label: <?=json_encode(html_entity_decode((string) $gala['GalaName']))?>,
         data: <?=json_encode($strokeCountsData)?>,
         backgroundColor: <?=json_encode($chartColours)?>,
       }],

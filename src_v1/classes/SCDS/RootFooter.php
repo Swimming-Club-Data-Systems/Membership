@@ -17,12 +17,12 @@ class RootFooter
     $this->js = [];
   }
 
-  public function render()
+  public function render(): void
   {
     include BASE_PATH . 'views/root/footer.php';
   }
 
-  public function addJs($path, $module = false)
+  public function addJs($path, $module = false): void
   {
     $this->js[] = [
       'url' => autoUrl($path),
@@ -30,7 +30,7 @@ class RootFooter
     ];
   }
 
-  public function addExternalJs($uri, $module = false)
+  public function addExternalJs($uri, $module = false): void
   {
     $this->js[] = [
       'url' => $uri,
@@ -38,12 +38,12 @@ class RootFooter
     ];
   }
 
-  public function useFluidContainer($bool = true)
+  public function useFluidContainer($bool = true): void
   {
     $this->fluidContainer = $bool;
   }
 
-  public function chrome(bool $bool)
+  public function chrome(bool $bool): void
   {
     $this->chrome = $bool;
   }

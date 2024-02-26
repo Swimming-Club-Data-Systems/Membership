@@ -42,7 +42,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
         <li class="breadcrumb-item active" aria-current="page">Batches</li>
       </ol>
     </nav>
@@ -53,7 +53,7 @@ include BASE_PATH . "views/header.php";
           Membership batches
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($pagination->get_page_description()) ?>
+          <?= htmlspecialchars((string) $pagination->get_page_description()) ?>
         </p>
       </div>
     </div>
@@ -74,7 +74,7 @@ include BASE_PATH . "views/header.php";
         <div class="list-group">
           <?php do {
           ?>
-            <a href="<?= htmlspecialchars(autoUrl('memberships/batches/' . $session->id . '/edit')) ?>" class="list-group-item list-group-item-action">
+            <a href="<?= htmlspecialchars((string) autoUrl('memberships/batches/' . $session->id . '/edit')) ?>" class="list-group-item list-group-item-action">
               <h2><?= htmlspecialchars($session->firstName . ' ' . $session->lastName) ?></h2>
 
               <div class="btn btn-primary">

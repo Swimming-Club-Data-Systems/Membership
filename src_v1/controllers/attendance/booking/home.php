@@ -13,7 +13,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
         <li class="breadcrumb-item active" aria-current="page">Booking</li>
       </ol>
     </nav>
@@ -53,7 +53,7 @@ include BASE_PATH . 'views/header.php';
         </span>
 
         <p class="mb-0 mt-auto sd-flex">
-          <a href="<?= htmlspecialchars(autoUrl('timetable')) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>" class="btn btn-primary">
             View Timetable
           </a>
         </p>
@@ -69,7 +69,7 @@ include BASE_PATH . 'views/header.php';
         </span>
 
         <p class="mb-0 mt-auto d-flex">
-          <a href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings')) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings')) ?>" class="btn btn-primary">
             View Bookings
           </a>
         </p>

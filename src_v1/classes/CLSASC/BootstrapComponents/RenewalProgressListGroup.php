@@ -10,12 +10,10 @@ namespace CLSASC\BootstrapComponents;
  */
 class RenewalProgressListGroup
 {
-  private $renewal;
   private $orderedPossibleValues = [];
 
-  public function __construct(\Renewal $renewal)
+  public function __construct(private readonly \Renewal $renewal)
   {
-    $this->renewal = $renewal;
     $this->orderedPossibleValues = [
       'account_review' => [
         'url' => 'account-review',
@@ -154,7 +152,7 @@ class RenewalProgressListGroup
           $status = '<span class="text-success"><i class="fa fa-fw fa-check-circle" aria-hidden="true"></i></span>';
         }
 
-        $output .= '<a href="' . htmlspecialchars($url) . '" ' . $target . ' ' . htmlspecialchars($title) . ' class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' . $active . '">' . htmlspecialchars($link['name']) . $status . '</a>';
+        $output .= '<a href="' . htmlspecialchars((string) $url) . '" ' . $target . ' ' . htmlspecialchars((string) $title) . ' class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ' . $active . '">' . htmlspecialchars((string) $link['name']) . $status . '</a>';
       }
     }
 

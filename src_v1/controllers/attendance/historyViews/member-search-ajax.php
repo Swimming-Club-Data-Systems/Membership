@@ -48,13 +48,13 @@ try {
           <h4>Mandatory sessions</h4>
           <dl class="row mb-0">
             <dt class="col-sm-7">Mandatory sessions attended</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalMandatoryAttended()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalMandatoryAttended()) ?></dd>
 
             <dt class="col-sm-7">Mandatory sessions excused</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalMandatoryExcused()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalMandatoryExcused()) ?></dd>
 
             <dt class="col-sm-7">Total mandatory sessions</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalMandatorySessions()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalMandatorySessions()) ?></dd>
 
             <dt class="col-sm-7">Attendance percentage (mandatory sessions)</dt>
             <dd class="col-sm-5 mb-0"><?= htmlspecialchars(number_format($history->getPercentageTotal(), 1)) ?>%</dd>
@@ -66,13 +66,13 @@ try {
           <h4>All sessions</h4>
           <dl class="row mb-0">
             <dt class="col-sm-7">Sessions attended</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalAttended()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalAttended()) ?></dd>
 
             <dt class="col-sm-7">Sessions excused</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalExcused()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalExcused()) ?></dd>
 
             <dt class="col-sm-7">Total sessions</dt>
-            <dd class="col-sm-5"><?= htmlspecialchars($history->getTotalSessions()) ?></dd>
+            <dd class="col-sm-5"><?= htmlspecialchars((string) $history->getTotalSessions()) ?></dd>
 
             <dt class="col-sm-7">Attendance percentage (total sessions)</dt>
             <dd class="col-sm-5 mb-0"><?= htmlspecialchars(number_format($history->getPercentageMandatory(), 1)) ?>%</dd>

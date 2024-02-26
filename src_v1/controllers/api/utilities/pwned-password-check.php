@@ -22,7 +22,7 @@ try {
 
   $responseData = [];
 
-  $hash = hash('sha1', $json->password);
+  $hash = hash('sha1', (string) $json->password);
   $hashStart = mb_strtoupper(mb_substr($hash, 0, 5));
   $hashEnd = mb_strtoupper(mb_substr($hash, 5));
 
@@ -55,14 +55,7 @@ try {
     'pwned' => $pwned,
     'count' => $count,
   ];
-} catch (GuzzleHttp\Exception\RequestException $e) {
-
-  $json = [
-    'success' => false,
-    'pwned' => false,
-    'count' => 0,
-  ];
-} catch (Exception $e) {
+} catch (GuzzleHttp\Exception\RequestException|Exception) {
 
   $json = [
     'success' => false,

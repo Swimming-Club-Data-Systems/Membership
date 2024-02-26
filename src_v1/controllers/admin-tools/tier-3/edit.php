@@ -30,7 +30,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Tier 3</li>
     </ol>
   </nav>
@@ -54,7 +54,7 @@ include BASE_PATH . 'views/header.php';
             <strong>An error occurred</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
           </p>
         </div>
       <?php
@@ -63,7 +63,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if ($fees) { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('admin/tier-3/members')) ?>" class="btn btn-primary">See affected members</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('admin/tier-3/members')) ?>" class="btn btn-primary">See affected members</a>
         </p>
       <?php } ?>
 
@@ -84,7 +84,7 @@ include BASE_PATH . 'views/header.php';
             ?>
               <div class="list-group-item">
                 <p class="mb-2">
-                  <strong><?= htmlspecialchars($squad['SquadName']) ?></strong>
+                  <strong><?= htmlspecialchars((string) $squad['SquadName']) ?></strong>
                 </p>
                 <div class="row align-items-start">
                   <!-- Normal -->
@@ -101,7 +101,7 @@ include BASE_PATH . 'views/header.php';
                       <label class="form-label" for="<?= htmlspecialchars('discount-amount-' . $squad['SquadID']) ?>">Discount amount</label>
                       <input class="form-control discount-price-boxes" type="number" name="<?= htmlspecialchars('discount-amount-' . $squad['SquadID']) ?>" id="<?= htmlspecialchars('discount-amount-' . $squad['SquadID']) ?>" value="<?php if (isset($fees['squads'][(string) $squad['SquadID']])) { ?><?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $fees['squads'][(string) $squad['SquadID']]))->withPointMovedLeft(2)->toScale(2)) ?><?php } else { ?><?= htmlspecialchars('0.00') ?><?php } ?>" min="0" max="<?= htmlspecialchars($fee) ?>" required data-bs-target="<?= htmlspecialchars('new-price-' . $squad['SquadID']) ?>" data-fee="<?= htmlspecialchars($fee) ?>" step="0.01">
                       <div class="invalid-feedback">
-                        Please set a discount amount which is between &pound;0 and £<?= htmlspecialchars($squad['SquadFee']) ?>
+                        Please set a discount amount which is between &pound;0 and £<?= htmlspecialchars((string) $squad['SquadFee']) ?>
                       </div>
                     </div>
                   </div>

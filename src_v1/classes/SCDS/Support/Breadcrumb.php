@@ -21,10 +21,10 @@ class Breadcrumb
   {
     // Go up from current location dir until we find the BREADCRUM file or reach BASE_PATH + support loc
     for ($i = 1; $i < 15; $i++) {
-      $currentDirectory = dirname($location, $i);
+      $currentDirectory = dirname((string) $location, $i);
 
       // If we reach the BASE_PATH, break and return
-      if (trim($currentDirectory, '/') == trim(BASE_PATH, '/')) {
+      if (trim($currentDirectory, '/') == trim((string) BASE_PATH, '/')) {
         return null;
       }
 

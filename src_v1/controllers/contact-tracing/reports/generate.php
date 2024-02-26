@@ -77,7 +77,7 @@ try {
     echo $json;
   }
 
-} catch (Exception $e) {
+} catch (Exception) {
   // pre($e);
   http_response_code(302);
   header('location: ' . autoUrl('contact-tracing/reports'));

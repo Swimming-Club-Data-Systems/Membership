@@ -53,10 +53,10 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history/swimmers')) ?>">Members</a></li>
-				<li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr($member['first'], 0, 1) . mb_substr($member['last'], 0, 1)) ?></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history/swimmers')) ?>">Members</a></li>
+				<li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr((string) $member['first'], 0, 1) . mb_substr((string) $member['last'], 0, 1)) ?></li>
 			</ol>
 		</nav>
 
@@ -136,7 +136,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
 						<tr class="<?php if ($present['AttendanceBoolean'] == 1) { ?> table-success <?php } else if ($present['AttendanceBoolean'] == 2) { ?> table-active <?php } else { ?> table-danger <?php } ?>">
 							<td>
-								<?= htmlspecialchars($sessionInfo['SessionName']) ?>, <?= $dayText ?> <?= $date ?> at <?= $sessionInfo['StartTime'] ?>
+								<?= htmlspecialchars((string) $sessionInfo['SessionName']) ?>, <?= $dayText ?> <?= $date ?> at <?= $sessionInfo['StartTime'] ?>
 								<?php if ($present['AttendanceRequired'] != 1) { ?>
 									(Not Mandatory)
 								<?php } ?>

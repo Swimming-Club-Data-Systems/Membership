@@ -13,7 +13,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -57,8 +57,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
         <li class="breadcrumb-item active" aria-current="page">Require Booking</li>
       </ol>
     </nav>
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          Require booking for <?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
+          Require booking for <?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
         </h1>
         <p class="lead mb-0">
           Book numbers limited or pay as you go sessions
@@ -80,7 +80,7 @@ include BASE_PATH . 'views/header.php';
 <div class="container-xl">
   <div class="row">
     <div class="col-lg-8">
-      <form class="needs-validation" method="post" action="<?= htmlspecialchars(autoUrl('sessions/booking/require-booking')) ?>" novalidate>
+      <form class="needs-validation" method="post" action="<?= htmlspecialchars((string) autoUrl('sessions/booking/require-booking')) ?>" novalidate>
 
         <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError'])) { ?>
           <div class="alert alert-warning">
@@ -88,7 +88,7 @@ include BASE_PATH . 'views/header.php';
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']);
@@ -110,7 +110,7 @@ include BASE_PATH . 'views/header.php';
           <input type="text" id="session-text-description" name="session-text-description" readonly class="form-control" value="<?= htmlspecialchars('#' . $session['SessionID'] . ' - ' . $session['SessionName']) ?>" <?php if ($bookingClosed) { ?>disabled<?php } ?>>
         </div>
 
-        <input type="hidden" name="session" value="<?= htmlspecialchars($session['SessionID']) ?>">
+        <input type="hidden" name="session" value="<?= htmlspecialchars((string) $session['SessionID']) ?>">
 
         <div class="mb-3">
           <label class="form-label" for="date">Date</label>

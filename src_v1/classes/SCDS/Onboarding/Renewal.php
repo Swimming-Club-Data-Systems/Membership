@@ -49,9 +49,9 @@ class Renewal
     $renewal->start = new DateTime($sessionInfo->start, new DateTimeZone('Europe/London'));
     $renewal->end = new DateTime($sessionInfo->end, new DateTimeZone('Europe/London'));
     $renewal->end->setTime(23, 59, 59);
-    $renewal->defaultStages = json_decode($sessionInfo->default_stages);
-    $renewal->defaultMemberStages = json_decode($sessionInfo->default_member_stages);
-    $renewal->metadata = json_decode($sessionInfo->metadata);
+    $renewal->defaultStages = json_decode((string) $sessionInfo->default_stages);
+    $renewal->defaultMemberStages = json_decode((string) $sessionInfo->default_member_stages);
+    $renewal->metadata = json_decode((string) $sessionInfo->metadata);
     if ($sessionInfo->club_year) $renewal->clubYear = \SCDS\Memberships\Year::retrieve($sessionInfo->club_year);
     if ($sessionInfo->ngb_year) $renewal->ngbYear = \SCDS\Memberships\Year::retrieve($sessionInfo->ngb_year);
 
@@ -70,7 +70,7 @@ class Renewal
     return $today > $this->end;
   }
 
-  public function generateSessions()
+  public function generateSessions(): void
   {
     // Check if sessions exist
     $db = app()->db;
@@ -100,7 +100,7 @@ class Renewal
     }
   }
 
-  public function generateSession($user)
+  public function generateSession($user): void
   {
     $db = app()->db;
     $tenant = app()->tenant;
@@ -177,7 +177,7 @@ class Renewal
 
         while ($member = $getMembers->fetch(\PDO::FETCH_OBJ)) {
           // Parse fee object
-          $fees = json_decode($member->Fees);
+          $fees = json_decode((string) $member->Fees);
           $amount = (int) $fees->fees[0];
           if ($member->ASAPaid) $amount = 0;
           $total += $amount;
@@ -212,7 +212,7 @@ class Renewal
 
           $classDetails = $getClassDetails->fetch(\PDO::FETCH_OBJ);
 
-          $fees = json_decode($classDetails->Fees);
+          $fees = json_decode((string) $classDetails->Fees);
 
           // Get members with class
 

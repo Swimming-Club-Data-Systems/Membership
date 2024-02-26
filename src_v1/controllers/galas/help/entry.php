@@ -11,8 +11,8 @@ include BASE_PATH . 'views/header.php';
   <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("galas"))?>">Galas</a></li>
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("galas/entergala"))?>">Enter gala</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("galas"))?>">Galas</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("galas/entergala"))?>">Enter gala</a></li>
       <li class="breadcrumb-item active" aria-current="page">Help</li>
     </ol>
   </nav>

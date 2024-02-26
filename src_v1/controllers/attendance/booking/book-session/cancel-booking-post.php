@@ -138,15 +138,15 @@ try {
       $username = $emailUser['ufn'] . ' ' . $emailUser['usn'];
       $emailAddress = $emailUser['email'];
       $content = '<p>Hello ' . htmlspecialchars($username) . ',</p>';
-      $content .= '<p><strong>' . htmlspecialchars($user->getFullName()) . ' has <em>cancelled</em> the following session booking;</strong></p>';
+      $content .= '<p><strong>' . htmlspecialchars((string) $user->getFullName()) . ' has <em>cancelled</em> the following session booking;</strong></p>';
 
       $content .= '<dl>';
 
       $content .= '<dt>Member</dt><dd>' . htmlspecialchars($emailUser['fn'] . ' ' . $emailUser['sn']) . '</dd>';
-      $content .= '<dt>Session</dt><dd>' . htmlspecialchars($session['SessionName']) . '</dd>';
+      $content .= '<dt>Session</dt><dd>' . htmlspecialchars((string) $session['SessionName']) . '</dd>';
       $content .= '<dt>Date and time</dt><dd>' . htmlspecialchars($sessionDateTime->format('H:i, l j F Y T')) . '</dd>';
-      $content .= '<dt>Location</dt><dd>' . htmlspecialchars($session['VenueName']) . ', <em>' . htmlspecialchars($session['Location']) . '</em></dd>';
-      $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars($session['SessionID']) . '</dd>';
+      $content .= '<dt>Location</dt><dd>' . htmlspecialchars((string) $session['VenueName']) . ', <em>' . htmlspecialchars((string) $session['Location']) . '</em></dd>';
+      $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars((string) $session['SessionID']) . '</dd>';
 
       $content .= '</dl>';
 
@@ -167,7 +167,7 @@ try {
   // reportError($e);
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred';
   }
 

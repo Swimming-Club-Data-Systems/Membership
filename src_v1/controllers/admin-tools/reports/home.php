@@ -12,7 +12,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Reports</li>
     </ol>
   </nav>
@@ -24,18 +24,18 @@ include BASE_PATH . 'views/header.php';
 
       <h2>Membership reports</h2>
       <ul>
-        <li><a download href="<?= htmlspecialchars(autoUrl("admin/reports/membership-data-export.csv")) ?>">Membership report (CSV download)</a></li>
-        <li><a download href="<?= htmlspecialchars(autoUrl("admin/reports/photography-permissions-export.csv")) ?>">Photography permissions (CSV download)</a></li>
-        <li><a href="<?= htmlspecialchars(autoUrl("members/reports/upgradeable")) ?>">Upgradeable to Category 2</a></li>
-        <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/no-email-subscription")) ?>">Users not opted in to receive notify emails</a></li>
-        <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/adult-members")) ?>">Adult Members</a></li>
-        <li><a href="<?= htmlspecialchars(autoUrl("admin/reports/junior-league-report")) ?>">List of members valid for Junior or Arena League</a></li>
+        <li><a download href="<?= htmlspecialchars((string) autoUrl("admin/reports/membership-data-export.csv")) ?>">Membership report (CSV download)</a></li>
+        <li><a download href="<?= htmlspecialchars((string) autoUrl("admin/reports/photography-permissions-export.csv")) ?>">Photography permissions (CSV download)</a></li>
+        <li><a href="<?= htmlspecialchars((string) autoUrl("members/reports/upgradeable")) ?>">Upgradeable to Category 2</a></li>
+        <li><a href="<?= htmlspecialchars((string) autoUrl("admin/reports/no-email-subscription")) ?>">Users not opted in to receive notify emails</a></li>
+        <li><a href="<?= htmlspecialchars((string) autoUrl("admin/reports/adult-members")) ?>">Adult Members</a></li>
+        <li><a href="<?= htmlspecialchars((string) autoUrl("admin/reports/junior-league-report")) ?>">List of members valid for Junior or Arena League</a></li>
       </ul>
 
       <h2>Finance reports</h2>
       <ul>
-        <li><a download href="<?= htmlspecialchars(autoUrl("admin/reports/pending-payments-data-export.csv")) ?>">Pending payments report (CSV download)</a></li>
-        <li><a href="<?= htmlspecialchars(autoUrl("payments/history/" . $date->format("Y/m"))) ?>">Payment payout report for <?= htmlspecialchars($date->format("M Y")) ?> (various formats)</a></li>
+        <li><a download href="<?= htmlspecialchars((string) autoUrl("admin/reports/pending-payments-data-export.csv")) ?>">Pending payments report (CSV download)</a></li>
+        <li><a href="<?= htmlspecialchars((string) autoUrl("payments/history/" . $date->format("Y/m"))) ?>">Payment payout report for <?= htmlspecialchars($date->format("M Y")) ?> (various formats)</a></li>
       </ul>
 
     </div>

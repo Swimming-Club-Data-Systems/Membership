@@ -33,7 +33,7 @@ try {
   $galaData->save();
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['PricesSaved'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['PricesNotSaved'] = true;
 }
 

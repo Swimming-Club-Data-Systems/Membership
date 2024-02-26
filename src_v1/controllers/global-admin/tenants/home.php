@@ -25,7 +25,7 @@ include BASE_PATH . "views/root/header.php";
         </div> -->
           <div class="list-group list-group-flush">
             <?php do { ?>
-              <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars(autoUrl("admin/tenants/" . $club['UniqueID'])) ?>"><span><?= htmlspecialchars($club['Name']) ?></span><?php if (bool($club['Verified'])) { ?> <i class="fa fa-check-circle text-primary" aria-hidden="true"></i><?php } ?></a>
+              <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars((string) autoUrl("admin/tenants/" . $club['UniqueID'])) ?>"><span><?= htmlspecialchars((string) $club['Name']) ?></span><?php if (bool($club['Verified'])) { ?> <i class="fa fa-check-circle text-primary" aria-hidden="true"></i><?php } ?></a>
             <?php } while ($club = $getClubs->fetch(PDO::FETCH_ASSOC)); ?>
           </div>
         </div>

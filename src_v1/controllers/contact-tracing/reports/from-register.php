@@ -48,7 +48,7 @@ try {
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
           <li class="breadcrumb-item active" aria-current="page">Reports</li>
         </ol>
       </nav>
@@ -56,10 +56,10 @@ try {
       <div class="row align-items-center">
         <div class="col-lg-12">
           <h1>
-            Generate report <small><?= htmlspecialchars($venue->getName()) ?> via Attendance System</small>
+            Generate report <small><?= htmlspecialchars((string) $venue->getName()) ?> via Attendance System</small>
           </h1>
           <p class="lead mb-0">
-            <?= htmlspecialchars($session->getName()) ?></strong> (<?= htmlspecialchars($session->getStartTime()->format('H:i')) ?> - <?= htmlspecialchars($session->getEndTime()->format('H:i')) ?>, <?= htmlspecialchars($date->format('l j F Y')) ?>)<?php if (sizeof($squads) > 0) { ?>, <em><?php for ($i = 0; $i < sizeof($squads); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squads[$i]->getName()) ?><?php } ?></em><?php } ?>
+            <?= htmlspecialchars($session->getName()) ?></strong> (<?= htmlspecialchars((string) $session->getStartTime()->format('H:i')) ?> - <?= htmlspecialchars((string) $session->getEndTime()->format('H:i')) ?>, <?= htmlspecialchars($date->format('l j F Y')) ?>)<?php if (sizeof($squads) > 0) { ?>, <em><?php for ($i = 0; $i < sizeof($squads); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squads[$i]->getName()) ?><?php } ?></em><?php } ?>
           </p>
         </div>
       </div>
@@ -84,7 +84,7 @@ try {
 
                 try {
                   $number = PhoneNumber::parse($details['Mobile']);
-                } catch (PhoneNumberParseException $e) {
+                } catch (PhoneNumberParseException) {
                   $number = false;
                 }
               }
@@ -92,7 +92,7 @@ try {
               <li class="list-group-item <?php if (!$row['tick']) { ?>bg-light text-muted<?php } ?>">
                 <div class="row">
                   <div class="col-md-6 col-lg-8">
-                    <div class=" <?php if ($row['tick']) { ?>font-weight-bold<?php } ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['fn'], $row['sn'])) ?></div>
+                    <div class=" <?php if ($row['tick']) { ?>font-weight-bold<?php } ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['fn'], $row['sn'])) ?></div>
                     <?php if (!$row['tick']) { ?>
                       <div class="small">Not present at this session</div>
                     <?php } ?>
@@ -113,7 +113,7 @@ try {
                           Email
                         </dt>
                         <dd class="col-8 col-lg-10 mb-0 text-truncate">
-                          <?php if (mb_strlen($details['EmailAddress']) > 0) { ?><a href="<?= htmlspecialchars('mailto:' . $details['EmailAddress']) ?>"><?= htmlspecialchars($details['EmailAddress']) ?></a><?php } else { ?>None<?php } ?>
+                          <?php if (mb_strlen((string) $details['EmailAddress']) > 0) { ?><a href="<?= htmlspecialchars('mailto:' . $details['EmailAddress']) ?>"><?= htmlspecialchars((string) $details['EmailAddress']) ?></a><?php } else { ?>None<?php } ?>
                         </dd>
                       </dl>
 
@@ -154,6 +154,6 @@ try {
 
   $footer = new \SCDS\Footer();
   $footer->render();
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }

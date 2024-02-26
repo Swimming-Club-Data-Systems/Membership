@@ -20,8 +20,8 @@ include BASE_PATH . "views/header.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/venues')) ?>">Venues</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/venues')) ?>">Venues</a></li>
         <li class="breadcrumb-item active" aria-current="page">New</li>
       </ol>
     </nav>
@@ -32,7 +32,7 @@ include BASE_PATH . "views/header.php";
           Add a venue
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
         </p>
         <!-- <div class="mb-3 d-lg-none"></div> -->
       </div>

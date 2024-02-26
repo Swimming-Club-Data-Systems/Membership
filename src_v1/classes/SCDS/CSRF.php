@@ -9,7 +9,7 @@ class CSRF {
   /**
    * Automatically format the CSRF token for use in an HTML form
    */
-  public static function write() {
+  public static function write(): void {
     // If the token is not set, define it
     $csrfName = 'CSRF';
     if (isset(app()->tenant)) {
@@ -18,7 +18,7 @@ class CSRF {
 
     self::getValue();
 
-    echo '<input id="SCDS-GLOBAL-CSRF" name="SCDS-GLOBAL-CSRF" type="hidden" value="' . htmlspecialchars($_SESSION[$csrfName]) . '">';
+    echo '<input id="SCDS-GLOBAL-CSRF" name="SCDS-GLOBAL-CSRF" type="hidden" value="' . htmlspecialchars((string) $_SESSION[$csrfName]) . '">';
   }
 
   /**

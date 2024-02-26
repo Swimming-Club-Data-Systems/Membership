@@ -54,7 +54,7 @@ try {
     $getAvailableSwimmers->execute([$id, true]);
   }
   $swimmers = $getAvailableSwimmers->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
-} catch (Exception $e) {
+} catch (Exception) {
   // reportError($e);
   // halt(500);
 }
@@ -63,7 +63,7 @@ $now = new DateTime('now', new DateTimeZone('Europe/London'));
 $eOY = new DateTime('last day of December ' . $now->format('Y'), new DateTimeZone('Europe/London'));
 
 $fluidContainer = true;
-$pagetitle = "Select entries for " . htmlspecialchars($gala['name']);
+$pagetitle = "Select entries for " . htmlspecialchars((string) $gala['name']);
 include BASE_PATH . 'views/header.php';
 
 ?>
@@ -73,13 +73,13 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas")) ?>">Galas</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas/$id")) ?>">#<?= htmlspecialchars($id) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">Galas</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas/$id")) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Select Swims</li>
       </ol>
     </nav>
 
-    <h1>Select entries for <?= htmlspecialchars($gala['name']) ?></h1>
+    <h1>Select entries for <?= htmlspecialchars((string) $gala['name']) ?></h1>
     <p class="lead mb-0">Below are all members which have indicated they are available at at least one session.</p>
   </div>
 </div>
@@ -121,7 +121,7 @@ include BASE_PATH . 'views/header.php';
         <option disabled>Select a squad</option>
         <option <?php if ($selectedSquad == 'all') { ?>selected<?php } ?> value="all">All</option>
         <?php while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) { ?>
-          <option <?php if ($selectedSquad == $squad['SquadID']) { ?>selected<?php } ?> value="<?= htmlspecialchars($squad['SquadID']) ?>"><?= htmlspecialchars($squad['SquadName']) ?></option>
+          <option <?php if ($selectedSquad == $squad['SquadID']) { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $squad['SquadID']) ?>"><?= htmlspecialchars((string) $squad['SquadName']) ?></option>
         <?php } ?>
       </select>
       <button class="btn btn-primary" type="submit" id="squad-select-button">Show squad</button>
@@ -150,16 +150,16 @@ include BASE_PATH . 'views/header.php';
             <div class="row align-items-center">
               <div class="col-md-6">
                 <h2>
-                  <?= htmlspecialchars(\SCDS\Formatting\Names::format($info[0]['sn'], $info[0]['fn'])) ?>
+                  <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info[0]['sn'], $info[0]['fn'])) ?>
                 </h2>
                 <p class="mb-0">
                   <strong>
-                    <?= htmlspecialchars($info[0]['fn']) ?> has indicated they can enter;
+                    <?= htmlspecialchars((string) $info[0]['fn']) ?> has indicated they can enter;
                   </strong>
                 </p>
                 <ul class="list-unstyled mb-0">
                   <?php foreach ($info as $row) { ?>
-                    <li><?= htmlspecialchars($row['gsname']) ?></li>
+                    <li><?= htmlspecialchars((string) $row['gsname']) ?></li>
                   <?php } ?>
                 </ul>
                 <div class="d-block d-md-none mb-3"></div>
@@ -169,7 +169,7 @@ include BASE_PATH . 'views/header.php';
                   <li><strong>Date of birth:</strong> <?= $dob->format('j F Y') ?></li>
                   <li><strong>Age on day:</strong> <?= $ageOnLastDay->format('%y') ?></li>
                   <li><strong>Age at end of year:</strong> <?= $ageAtEOY->format('%y') ?></li>
-                  <li><strong>Swim England number:</strong> <span class="font-monospace"><?= htmlspecialchars($info[0]['se']) ?></span></li>
+                  <li><strong>Swim England number:</strong> <span class="font-monospace"><?= htmlspecialchars((string) $info[0]['se']) ?></span></li>
                 </ul>
               </div>
             </div>

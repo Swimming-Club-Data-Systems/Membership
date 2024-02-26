@@ -16,7 +16,7 @@ if (!$location) {
   halt(404);
 }
 
-$pagetitle = 'Edit ' . htmlspecialchars($location['Name']) . ' - Contact Tracing';
+$pagetitle = 'Edit ' . htmlspecialchars((string) $location['Name']) . ' - Contact Tracing';
 
 $address = json_decode($location['Address']);
 
@@ -29,8 +29,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
@@ -38,11 +38,11 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($location['Name']) ?>
+          <?= htmlspecialchars((string) $location['Name']) ?>
         </h1>
         <?php if (isset($address->streetAndNumber)) { ?>
         <p class="lead mb-0">
-          <?= htmlspecialchars($address->streetAndNumber) ?>
+          <?= htmlspecialchars((string) $address->streetAndNumber) ?>
         </p>
         <?php } ?>
         <div class="mb-3 d-lg-none"></div>
@@ -88,7 +88,7 @@ include BASE_PATH . 'views/header.php';
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateLocationError']);
@@ -96,7 +96,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="location-name">Name</label>
-          <input type="text" class="form-control" name="location-name" id="location-name" value="<?= htmlspecialchars($location['Name']) ?>" required>
+          <input type="text" class="form-control" name="location-name" id="location-name" value="<?= htmlspecialchars((string) $location['Name']) ?>" required>
           <div class="invalid-feedback">
             Please provide a name for this location.
           </div>
@@ -104,7 +104,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="street-and-number">Address line 1 (street and number)</label>
-          <input class="form-control" name="street-and-number" id="street-and-number" type="text" autocomplete="address-line1" <?php if (isset($address->streetAndNumber) && $address->streetAndNumber) { ?> value="<?= htmlspecialchars($address->streetAndNumber) ?>" <?php } ?> required>
+          <input class="form-control" name="street-and-number" id="street-and-number" type="text" autocomplete="address-line1" <?php if (isset($address->streetAndNumber) && $address->streetAndNumber) { ?> value="<?= htmlspecialchars((string) $address->streetAndNumber) ?>" <?php } ?> required>
           <div class="invalid-feedback">
             Please enter the street and property name or number.
           </div>
@@ -112,12 +112,12 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="flat-building">Address line 2 (optional)</label>
-          <input class="form-control" name="flat-building" id="flat-building" type="text" autocomplete="address-line2" <?php if (isset($address->flatOrBuilding) && $address->flatOrBuilding) { ?> value="<?= htmlspecialchars($address->flatOrBuilding) ?>" <?php } ?>>
+          <input class="form-control" name="flat-building" id="flat-building" type="text" autocomplete="address-line2" <?php if (isset($address->flatOrBuilding) && $address->flatOrBuilding) { ?> value="<?= htmlspecialchars((string) $address->flatOrBuilding) ?>" <?php } ?>>
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="town-city">Town/City</label>
-          <input class="form-control" name="town-city" id="town-city" type="text" autocomplete="address-level2" required <?php if (isset($address->city) && $address->city) { ?> value="<?= htmlspecialchars($address->city) ?>" <?php } ?>>
+          <input class="form-control" name="town-city" id="town-city" type="text" autocomplete="address-level2" required <?php if (isset($address->city) && $address->city) { ?> value="<?= htmlspecialchars((string) $address->city) ?>" <?php } ?>>
           <div class="invalid-feedback">
             Please enter the town or city.
           </div>
@@ -125,7 +125,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="post-code">Post Code</label>
-          <input class="form-control" name="post-code" id="post-code" type="text" autocomplete="postal-code" required pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?[\s]{0,1}[0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" <?php if (isset($address->postCode) && $address->postCode) { ?> value="<?= htmlspecialchars($address->postCode) ?>" <?php } ?>>
+          <input class="form-control" name="post-code" id="post-code" type="text" autocomplete="postal-code" required pattern="[A-Za-z]{1,2}[0-9Rr][0-9A-Za-z]?[\s]{0,1}[0-9][ABD-HJLNP-UW-Zabd-hjlnp-uw-z]{2}" <?php if (isset($address->postCode) && $address->postCode) { ?> value="<?= htmlspecialchars((string) $address->postCode) ?>" <?php } ?>>
           <div class="invalid-feedback">
             Please enter a valid post code.
           </div>

@@ -101,7 +101,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
         </p>
       <?php } ?>
 
-      <form action="<?= htmlspecialchars($actionUrl) ?>" method="post">
+      <form action="<?= htmlspecialchars((string) $actionUrl) ?>" method="post">
         <?php if ($entry != null) { ?>
           <h2>Select entries to pay for</h2>
           <p class="">Select which galas you would like to pay for. <strong>You can pay for all, some or just one of your gala entries in a single payment.</strong></p>
@@ -111,11 +111,11 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
               <?php $notReady = !$entry['EntryProcessed']; ?>
               <?php $galaData = new GalaPrices($db, $entry['GalaID']); ?>
               <li class="list-group-item">
-                <h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?> for <?= htmlspecialchars($entry['GalaName']) ?></h3>
+                <h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?> for <?= htmlspecialchars((string) $entry['GalaName']) ?></h3>
                 <div class="row">
                   <div class="col-sm-5 col-md-4 col-lg-6">
                     <p class="mb-0">
-                      <?= htmlspecialchars($entry['MForename']) ?> is entered in;
+                      <?= htmlspecialchars((string) $entry['MForename']) ?> is entered in;
                     </p>
                     <ul class="list-unstyled">
                       <?php $count = 0; ?>
@@ -141,7 +141,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
                           Processing fee
                         </div>
                         <div class="col">
-                          <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['pFee']), 'GBP')) ?>
+                          <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['pFee']), 'GBP')) ?>
                         </div>
                       </div>
                     <?php } ?>

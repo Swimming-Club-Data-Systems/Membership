@@ -43,12 +43,12 @@ try {
     // Set the name in db
     $credentialId = $publicKeyCredentialSource->getPublicKeyCredentialId();
 
-    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName']) && mb_strlen(trim($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'])) > 0) {
+    if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName']) && mb_strlen(trim((string) $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'])) > 0) {
         $db = app()->db;
         $update = $db->prepare("UPDATE `userCredentials` SET `credential_name` = ? WHERE `credential_id` = ?");
         $update->execute([
             $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialName'],
-            base64_encode($publicKeyCredentialSource->getPublicKeyCredentialId()),
+            base64_encode((string) $publicKeyCredentialSource->getPublicKeyCredentialId()),
         ]);
     }
 

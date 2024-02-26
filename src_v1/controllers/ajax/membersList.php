@@ -16,7 +16,7 @@ if ((isset($_POST["squadID"])) && (isset($_POST["search"]))) {
   // get the search term parameter from post
   $search = $_POST["search"];
 
-  $search_terms = explode(' ', $search);
+  $search_terms = explode(' ', (string) $search);
   $names = [];
   $sql = "";
   for ($i = 0; $i < sizeof($search_terms); $i++) {
@@ -90,23 +90,23 @@ $row = $query->fetch(PDO::FETCH_ASSOC);
       ]);
       // $row = mysqli_fetch_array($resultX, MYSQLI_ASSOC);
       $swimmerLink = autoUrl("swimmers/" . $row['MemberID'] . "");
-      $DOB = date('j F Y', strtotime($row['DateOfBirth']));
+      $DOB = date('j F Y', strtotime((string) $row['DateOfBirth']));
       $age = date_diff(date_create($row['DateOfBirth']), date_create('today'))->y;
       //$ageEoY = date('Y') - date('Y', strtotime($row['DateOfBirth'])); 
     ?>
 
-      <a href="<?= htmlspecialchars(autoUrl("members/" . $row['MemberID'])) ?>" class="list-group-item list-group-item-action">
+      <a href="<?= htmlspecialchars((string) autoUrl("members/" . $row['MemberID'])) ?>" class="list-group-item list-group-item-action">
         <div class="row align-items-center">
           <div class="col-12 col-sm-4 col-md-3">
             <p class="mb-0">
               <strong class="text-link-color">
-                <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
+                <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
               </strong>
             </p>
             <ul class="mb-0 list-unstyled">
               <?php if ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) {
                 do { ?>
-                  <li><?= htmlspecialchars($squad['SquadName']) ?></li>
+                  <li><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
                 <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC));
               } else { ?>
                 <li>No squads</li>
@@ -128,13 +128,13 @@ $row = $query->fetch(PDO::FETCH_ASSOC);
               </p>
             <?php } ?>
             <p class="mb-0">
-              <strong>SE Number:</strong> <?= htmlspecialchars($row['ASANumber']) ?>
+              <strong>SE Number:</strong> <?= htmlspecialchars((string) $row['ASANumber']) ?>
             </p>
           </div>
         </div>
       </a>
 
-    <?php } while ($row = $query->fetch(PDO::FETCH_ASSOC)); ?>
+<?php } while ($row = $query->fetch(PDO::FETCH_ASSOC)); ?>
 
   </div>
 

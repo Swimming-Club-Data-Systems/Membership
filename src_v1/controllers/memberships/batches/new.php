@@ -39,7 +39,7 @@ $member = $getMembers->fetch(PDO::FETCH_OBJ);
 $getCurrentMemberships = $db->prepare("SELECT `Name` `name`, `Description` `description`, `Type` `type`, `memberships`.`Amount` `paid`, `clubMembershipClasses`.`Fees` `expectPaid` FROM `memberships` INNER JOIN clubMembershipClasses ON memberships.Membership = clubMembershipClasses.ID WHERE `Member` = ? AND `Year` = ?");
 $hasMembership = $db->prepare("SELECT COUNT(*) FROM memberships WHERE `Member` = ? AND `Year` = ? AND `Membership` = ?");
 
-$pagetitle = "New batch for " . htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " - Membership Centre";
+$pagetitle = "New batch for " . htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -50,8 +50,8 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/years")) ?>">Years</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/years")) ?>">Years</a></li>
         <li class="breadcrumb-item active" aria-current="page">New Batch</li>
       </ol>
     </nav>
@@ -59,14 +59,14 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          New batch for <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
+          New batch for <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
         </h1>
         <p class="lead mb-0">
           TEST
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl("users/" . urlencode($_GET['user']))) ?>" class="btn btn-warning">Cancel</a>
+        <a href="<?= htmlspecialchars((string) autoUrl("users/" . urlencode((string) $_GET['user']))) ?>" class="btn btn-warning">Cancel</a>
       </div>
     </div>
   </div>
@@ -84,7 +84,7 @@ include BASE_PATH . "views/header.php";
         </p>
 
         <p>
-          Select memberships to add for each member connected to <?= htmlspecialchars($info['Forename']) ?>'s account.
+          Select memberships to add for each member connected to <?= htmlspecialchars((string) $info['Forename']) ?>'s account.
         </p>
 
         <p>
@@ -96,13 +96,13 @@ include BASE_PATH . "views/header.php";
         </p>
 
         <p>
-          Once complete, you can save this batch. If there is a fee to pay, we'll send an email notifying <?= htmlspecialchars($info['Forename']) ?> that they need to log in to pay membership fees. If there's no fee, we'll silently assign the appropriate memberships to the members.
+          Once complete, you can save this batch. If there is a fee to pay, we'll send an email notifying <?= htmlspecialchars((string) $info['Forename']) ?> that they need to log in to pay membership fees. If there's no fee, we'll silently assign the appropriate memberships to the members.
         </p>
 
         <div class="mb-3">
           <label for="introduction-text" class="form-label">Introduction text <span class="text-muted">(optional)</span></label>
           <textarea class="form-control" id="introduction-text" name="introduction-text" rows="3"></textarea>
-          <div class="small">We'll put any text you write here are the top of the email we send to <?= htmlspecialchars($info['Forename']) ?>. Formatting with Markdown is supported.</div>
+          <div class="small">We'll put any text you write here are the top of the email we send to <?= htmlspecialchars((string) $info['Forename']) ?>. Formatting with Markdown is supported.</div>
         </div>
 
         <?php if ($member) { ?>
@@ -110,7 +110,7 @@ include BASE_PATH . "views/header.php";
           <div class="mb-3">
             <label for="footer-text" class="form-label">Footer text <span class="text-muted">(optional)</span></label>
             <textarea class="form-control" id="footer-text" name="footer-text" rows="3"></textarea>
-            <div class="small">We'll put any text you write here are the end of the email we send to <?= htmlspecialchars($info['Forename']) ?>. Formatting with Markdown is supported.</div>
+            <div class="small">We'll put any text you write here are the end of the email we send to <?= htmlspecialchars((string) $info['Forename']) ?>. Formatting with Markdown is supported.</div>
           </div>
 
           <div class="mb-3">

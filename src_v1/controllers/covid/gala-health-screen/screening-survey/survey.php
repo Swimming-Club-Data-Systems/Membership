@@ -61,7 +61,7 @@ $age = new DateTime($member['DateOfBirth'], new DateTimeZone('Europe/London'));
 $age = $age->diff($today);
 $age = (int) $age->format('%y');
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Return to Competition Screening';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Return to Competition Screening';
 
 include BASE_PATH . 'views/header.php';
 
@@ -96,8 +96,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
         <li class="breadcrumb-item active" aria-current="page">Survey</li>
       </ol>
     </nav>
@@ -105,14 +105,14 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          Return to Competition <small class="text-muted"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
+          Return to Competition <small class="text-muted"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
         </h1>
         <p class="lead mb-0">
           COVID-19 and Risk Awareness Declaration.
         </p>
       </div>
       <div class="col">
-        <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
+        <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
       </div>
     </div>
   </div>
@@ -130,7 +130,7 @@ include BASE_PATH . 'views/header.php';
             <strong>There was a problem saving your COVID-19 health survey</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['CovidGalaError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['CovidGalaError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['CovidGalaError']);
@@ -139,16 +139,16 @@ include BASE_PATH . 'views/header.php';
       <div class="row">
         <div class="col-lg-8">
           <p>
-            This form is for <em><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></em> at <em><?= htmlspecialchars($gala['GalaName']) ?></em> only. This declaration will expire seven days after submission. If the gala spans multiple weekends, you must resubmit this form no more than seven days ahead of each weekend.
+            This form is for <em><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></em> at <em><?= htmlspecialchars((string) $gala['GalaName']) ?></em> only. This declaration will expire seven days after submission. If the gala spans multiple weekends, you must resubmit this form no more than seven days ahead of each weekend.
           </p>
 
           <form method="post" class="needs-validation" novalidate>
 
-            <input type="hidden" name="member" value="<?= htmlspecialchars($member['MemberID']) ?>">
-            <input type="hidden" name="gala" value="<?= htmlspecialchars($_GET['gala']) ?>">
+            <input type="hidden" name="member" value="<?= htmlspecialchars((string) $member['MemberID']) ?>">
+            <input type="hidden" name="gala" value="<?= htmlspecialchars((string) $_GET['gala']) ?>">
 
             <p>
-              [I / my child] <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> [am / is] able to participate in this competition having completed and signed the relevant Health Survey and Return to Training Declaration forms as requested by <?= htmlspecialchars(app()->tenant->getName()) ?>.
+              [I / my child] <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?> [am / is] able to participate in this competition having completed and signed the relevant Health Survey and Return to Training Declaration forms as requested by <?= htmlspecialchars((string) app()->tenant->getName()) ?>.
             </p>
 
             <p>
@@ -170,7 +170,7 @@ include BASE_PATH . 'views/header.php';
             </p>
 
             <p>
-              I understand the processes and protocols the <em><?= htmlspecialchars($gala['GalaName']) ?></em> meet organiser have put in place in order to reduce risks and [I / my child] will adhere to these in order to protect [my / my child’s] health and the health of other members, staff and other users of the facility.
+              I understand the processes and protocols the <em><?= htmlspecialchars((string) $gala['GalaName']) ?></em> meet organiser have put in place in order to reduce risks and [I / my child] will adhere to these in order to protect [my / my child’s] health and the health of other members, staff and other users of the facility.
             </p>
 
             <p>
@@ -179,18 +179,18 @@ include BASE_PATH . 'views/header.php';
 
             <div class="form-check mb-3">
               <input class="form-check-input" type="checkbox" id="member-declaration" name="member-declaration" required value="1">
-              <label class="form-check-label" for="member-declaration">I <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong>, agree to this declaration<br><span class="badge bg-dark"><?= $today->format("j F Y") ?></span></label>
+              <label class="form-check-label" for="member-declaration">I <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong>, agree to this declaration<br><span class="badge bg-dark"><?= $today->format("j F Y") ?></span></label>
               <div class="invalid-feedback">
-                You (<?= htmlspecialchars($member['MForename']) ?>) must agree to this declaration to proceed.
+                You (<?= htmlspecialchars((string) $member['MForename']) ?>) must agree to this declaration to proceed.
               </div>
             </div>
 
             <?php if ($parent && $age < 18) { ?>
               <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" id="parent-declaration" name="parent-declaration" required value="1">
-                <label class="form-check-label" for="parent-declaration">As <?= htmlspecialchars($member['MForename']) ?> is under 18 (aged <?= htmlspecialchars($age) ?>), I <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($parent['Forename'], $parent['Surname'])) ?></strong>, also agree to this declaration, <?= $today->format("j F Y") ?></label>
+                <label class="form-check-label" for="parent-declaration">As <?= htmlspecialchars((string) $member['MForename']) ?> is under 18 (aged <?= htmlspecialchars($age) ?>), I <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($parent['Forename'], $parent['Surname'])) ?></strong>, also agree to this declaration, <?= $today->format("j F Y") ?></label>
                 <div class="invalid-feedback">
-                  You (<?= htmlspecialchars($parent['Forename']) ?>) must agree to this declaration to proceed.
+                  You (<?= htmlspecialchars((string) $parent['Forename']) ?>) must agree to this declaration to proceed.
                 </div>
               </div>
             <?php } ?>
@@ -200,7 +200,7 @@ include BASE_PATH . 'views/header.php';
             </p>
 
             <p>
-              For further details of how we process your personal data or your child’s personal data please view our <a href="<?= htmlspecialchars(autoUrl('privacy')) ?>" target="_blank">Privacy Policy</a>.
+              For further details of how we process your personal data or your child’s personal data please view our <a href="<?= htmlspecialchars((string) autoUrl('privacy')) ?>" target="_blank">Privacy Policy</a>.
             </p>
 
             <p>

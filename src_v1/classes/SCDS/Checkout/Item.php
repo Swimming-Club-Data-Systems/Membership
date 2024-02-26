@@ -65,16 +65,16 @@ class Item
     $item->amount = $itemInfo->amount;
     $item->currency = $itemInfo->currency;
     $item->taxAmount = $itemInfo->tax_amount;
-    $item->taxData = json_decode($itemInfo->tax_data);
-    $item->subItems = json_decode($itemInfo->sub_items);
+    $item->taxData = json_decode((string) $itemInfo->tax_data);
+    $item->subItems = json_decode((string) $itemInfo->sub_items);
     $item->type = $itemInfo->type;
-    $item->attributes = json_decode($itemInfo->attributes);
-    $item->metadata = json_decode($itemInfo->metadata);
+    $item->attributes = json_decode((string) $itemInfo->attributes);
+    $item->metadata = json_decode((string) $itemInfo->metadata);
 
     return $item;
   }
 
-  public function save()
+  public function save(): void
   {
     $db = app()->db;
 

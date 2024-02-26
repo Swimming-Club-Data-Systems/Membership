@@ -58,15 +58,15 @@ if ($row['CourseLength'] == 'LONG') {
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
 				<li class="breadcrumb-item"><a href="<?= autoUrl("galas/entries") ?>">Entries</a></li>
-				<li class="breadcrumb-item"><a href="<?= autoUrl("galas/entries/" . $row['EntryID']) ?>"><?= htmlspecialchars(mb_substr($row["MForename"], 0, 1, 'utf-8') . mb_substr($row["MSurname"], 0, 1, 'utf-8')) ?> (<?= htmlspecialchars($row['GalaName']) ?>)</a></li>
+				<li class="breadcrumb-item"><a href="<?= autoUrl("galas/entries/" . $row['EntryID']) ?>"><?= htmlspecialchars(mb_substr((string) $row["MForename"], 0, 1, 'utf-8') . mb_substr((string) $row["MSurname"], 0, 1, 'utf-8')) ?> (<?= htmlspecialchars((string) $row['GalaName']) ?>)</a></li>
 				<li class="breadcrumb-item active" aria-current="page">Times</li>
 			</ol>
 		</nav>
 
 
-		<h1>Add Manual Times for <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></h1>
+		<h1>Add Manual Times for <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></h1>
 		<p class="lead mb-0">
-			<?= htmlspecialchars($row['GalaName']) ?>
+			<?= htmlspecialchars((string) $row['GalaName']) ?>
 		</p>
 	</div>
 </div>
@@ -85,7 +85,7 @@ if ($row['CourseLength'] == 'LONG') {
 					</p>
 					<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'])) { ?>
 						<p class="mb-0 mt-3">
-							<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
+							<?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
 						</p>
 					<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']);
 					} ?>
@@ -100,7 +100,7 @@ if ($row['CourseLength'] == 'LONG') {
 					</p>
 					<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'])) { ?>
 						<p class="mb-0 mt-3">
-							<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
+							<?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']) ?>
 						</p>
 					<?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError']);
 					} ?>
@@ -158,7 +158,7 @@ if ($row['CourseLength'] == 'LONG') {
 									<?php
 									$matches = $mins = $secs = $hunds = "";
 									if ($row[$swimsTimeArray[$i]] != "") {
-										if (preg_match('/([0-9]+)\:([0-9]{0,2})\.([0-9]{0,2})/', $row[$swimsTimeArray[$i]], $matches)) {
+										if (preg_match('/([0-9]+)\:([0-9]{0,2})\.([0-9]{0,2})/', (string) $row[$swimsTimeArray[$i]], $matches)) {
 											if (isset($matches[1]) && $matches[1] != 0) {
 												$mins = $matches[1];
 											}

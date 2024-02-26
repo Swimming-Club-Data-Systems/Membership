@@ -5,7 +5,7 @@ namespace SCDS\Checkout\ItemHandlers;
 class MembershipFeeBatch
 {
 
-  public static function paid($item, $stripePayment, $intentId)
+  public static function paid($item, $stripePayment, $intentId): void
   {
 
     $db = app()->db;

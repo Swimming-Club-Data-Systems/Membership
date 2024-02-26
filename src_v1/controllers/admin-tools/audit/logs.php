@@ -51,8 +51,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/audit")) ?>">Audit</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/audit")) ?>">Audit</a></li>
       <li class="breadcrumb-item active" aria-current="page">Logs</li>
     </ol>
   </nav>
@@ -73,17 +73,17 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row">
                 <div class="col">
-                  <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?></strong>
+                  <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?></strong>
                 </div>
                 <div class="col text-end">
                   <strong><?= htmlspecialchars($time->format('H:i:s d/m/Y')) ?></strong>
                 </div>
               </div>
               <p class="mb-0 font-monospace">
-                <?= htmlspecialchars($row['Event']) ?>
+                <?= htmlspecialchars((string) $row['Event']) ?>
               </p>
               <p class="mb-0">
-                <?= htmlspecialchars($row['Description']) ?>
+                <?= htmlspecialchars((string) $row['Description']) ?>
               </p>
             </li>
           <?php } while ($row = $sql->fetch(PDO::FETCH_ASSOC)); ?>

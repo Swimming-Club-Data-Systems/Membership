@@ -5,15 +5,8 @@ namespace MembershipFees;
 class MembershipFees
 {
 
-  private $classes;
-  private $user;
-  private $partial;
-
-  private function __construct($user, $classes, $partial)
+  private function __construct(private $user, private $classes, private $partial)
   {
-    $this->user = $user;
-    $this->classes = $classes;
-    $this->partial = $partial;
   }
 
   public static function getByUser($user, $partial = false)

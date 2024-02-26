@@ -20,8 +20,8 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
         <li class="breadcrumb-item active" aria-current="page">Squads</li>
       </ol>
     </nav>
@@ -54,7 +54,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
         <ul class="list-group">
           <?php do { ?>
             <li class="list-group-item">
-              <h2 class="mb-3"><?= htmlspecialchars($squad['name']) ?></h2>
+              <h2 class="mb-3"><?= htmlspecialchars((string) $squad['name']) ?></h2>
               <a class="btn btn-primary" href="<?= autoUrl("attendance/history/squads/" . $squad['id'] . '/week') ?>">
                 By sessions in week
               </a>

@@ -18,7 +18,7 @@ class AuditLog
    * @author Chris Heppell
    * @throws Exception if not active user
    */
-  public static function new(string $event, string $description, int $user = null)
+  public static function new(string $event, string $description, int $user = null): void
   {
     // Check user is set
     if (!$user) {

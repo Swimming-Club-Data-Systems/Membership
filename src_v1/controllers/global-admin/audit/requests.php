@@ -27,7 +27,7 @@ $numLogs = $numPages = $sql = $row = $user = null;
 if (isset($_GET['user'])) {
   try {
     $user = new User($_GET['user'], false);
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(404);
   }
 
@@ -80,7 +80,7 @@ include BASE_PATH . "views/root/header.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/audit")) ?>">Audit</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/audit")) ?>">Audit</a></li>
       <li class="breadcrumb-item active" aria-current="page">Logs</li>
     </ol>
   </nav>
@@ -90,11 +90,11 @@ include BASE_PATH . "views/root/header.php";
       <h1>HTTP Requests</h1>
 
       <?php if ($user) { ?>
-        <p class="lead"><?= htmlspecialchars($user->getFullName()) ?>, <?= htmlspecialchars($user->getEmail()) ?></p>
+        <p class="lead"><?= htmlspecialchars($user->getFullName()) ?>, <?= htmlspecialchars((string) $user->getEmail()) ?></p>
       <?php } ?>
 
       <p class="lead">
-        Page <?= htmlspecialchars($page) ?>
+        Page <?= htmlspecialchars((string) $page) ?>
       </p>
 
       <?php if ($row) { ?>
@@ -110,20 +110,20 @@ include BASE_PATH . "views/root/header.php";
             <li class="list-group-item">
               <div class="row">
                 <div class="col">
-                  <strong><a target="_blank" href="<?= htmlspecialchars(autoUrl($tenant->getCodeId() . '/users/' . $row['UserID'])) ?>"><?= htmlspecialchars($row['Forename'] . ' ' . $row['Surname']) ?></a></strong>
+                  <strong><a target="_blank" href="<?= htmlspecialchars((string) autoUrl($tenant->getCodeId() . '/users/' . $row['UserID'])) ?>"><?= htmlspecialchars($row['Forename'] . ' ' . $row['Surname']) ?></a></strong>
                 </div>
                 <div class="col text-center">
                   <strong><?= htmlspecialchars($time->format('H:i:s d/m/Y')) ?></strong>
                 </div>
                 <div class="col text-end">
-                  <strong><a target="_blank" href="<?= htmlspecialchars(autoUrl($tenant->getCodeId())) ?>"><?= htmlspecialchars($tenant->getName()) ?></a></strong>
+                  <strong><a target="_blank" href="<?= htmlspecialchars((string) autoUrl($tenant->getCodeId())) ?>"><?= htmlspecialchars($tenant->getName()) ?></a></strong>
                 </div>
               </div>
               <p class="mb-0 font-monospace">
-                <?= htmlspecialchars($row['Event']) ?>
+                <?= htmlspecialchars((string) $row['Event']) ?>
               </p>
               <p class="mb-0">
-                <?= htmlspecialchars($row['Description']) ?>
+                <?= htmlspecialchars((string) $row['Description']) ?>
               </p>
             </li>
           <?php } while ($row = $sql->fetch(PDO::FETCH_ASSOC)); ?>

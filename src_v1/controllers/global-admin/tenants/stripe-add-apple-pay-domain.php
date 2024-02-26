@@ -18,7 +18,7 @@ if (!isset($_POST['apple-pay-domain'])) throw new Exception('No domain supplied'
 // DELETE
 try {
   $res = \Stripe\ApplePayDomain::create([
-    'domain_name' => trim($_POST['apple-pay-domain'])
+    'domain_name' => trim((string) $_POST['apple-pay-domain'])
   ], [
     'stripe_account' => $tenant->getStripeAccount()
   ]);

@@ -95,7 +95,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
 
       $hyTekPrintDate = "";
       if ($row['HyTek'] == 1) {
-        $hyTekPrintDate = " <br>DoB: " . date('j F Y', strtotime($row['DateOfBirth'])) . "";
+        $hyTekPrintDate = " <br>DoB: " . date('j F Y', strtotime((string) $row['DateOfBirth'])) . "";
         $type;
         $typeB;
         if ($row['CourseLength'] == "SHORT") {
@@ -115,15 +115,15 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
       }
 
       // First part of the row content
-      $content .= "<tr><td><strong><a href=\"" . htmlspecialchars(autoUrl('members/' . $row['MemberID'])) . "\">" . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']))  . "</a></strong>" . $hyTekPrintDate . "<br><a
+      $content .= "<tr><td><strong><a href=\"" . htmlspecialchars((string) autoUrl('members/' . $row['MemberID'])) . "\">" . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']))  . "</a></strong>" . $hyTekPrintDate . "<br><a
       class=\"d-print-none\"
       href=\"https://www.swimmingresults.org/biogs/biogs_details.php?tiref=" .
-        htmlspecialchars($row['ASANumber']) . "\" target=\"_blank\" title=\"Click to see times\">" .
-        htmlspecialchars($row['ASANumber']) . " <i class=\"fa fa-external-link\"
-      aria-hidden=\"true\"></i></a><span class=\"d-none d-print-inline\">" . htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ": " .
-        htmlspecialchars($row['ASANumber']) . "</span><br>
-      <span class=\"small\">" . htmlspecialchars($row['Name']) . "<br>
-      " . htmlspecialchars($row['GalaName']) . "<br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "\">Edit Entry</a><br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "/manual-time\">Set Manual Times</a></span>";
+        htmlspecialchars((string) $row['ASANumber']) . "\" target=\"_blank\" title=\"Click to see times\">" .
+        htmlspecialchars((string) $row['ASANumber']) . " <i class=\"fa fa-external-link\"
+      aria-hidden=\"true\"></i></a><span class=\"d-none d-print-inline\">" . htmlspecialchars((string) app()->tenant->getKey('NGB_NAME')) . ": " .
+        htmlspecialchars((string) $row['ASANumber']) . "</span><br>
+      <span class=\"small\">" . htmlspecialchars((string) $row['Name']) . "<br>
+      " . htmlspecialchars((string) $row['GalaName']) . "<br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "\">Edit Entry</a><br><a class=\"d-print-none\" href=\"" . autoUrl('galas/entries/' . $row['EntryID']) . "/manual-time\">Set Manual Times</a></span>";
 
       $getSquads->execute([
         $row['MemberID']
@@ -132,7 +132,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
       if ($squad) {
         $content .= '<p class="mb-0 mt-3 small"><strong>Member of</strong></p><ul class="list-unstyled small">';
         do {
-          $content .= '<li>' . htmlspecialchars($squad) . '</li>';
+          $content .= '<li>' . htmlspecialchars((string) $squad) . '</li>';
         } while ($squad = $getSquads->fetchColumn());
         $content .= '</ul>';
       }
@@ -154,7 +154,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
           if ($row[$swimsArray[$y]] == 1) {
             $content .= "<li><strong>" . ($swimsTextArray[$y]) . '</strong>';
             if (isset($row[$swimsTimeArray[$y]]) && $row[$swimsTimeArray[$y]]) {
-              $content .= '<br>' . htmlspecialchars($row[$swimsTimeArray[$y]]);
+              $content .= '<br>' . htmlspecialchars((string) $row[$swimsTimeArray[$y]]);
             }
             $content .= "</li>";
           }
@@ -220,7 +220,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
             // }
             $content .= "<li><strong>" . $swimsTextArray[$y] . "</strong> <br>";
             if (isset($row[$swimsTimeArray[$y]]) && $row[$swimsTimeArray[$y]]) {
-              $content .= htmlspecialchars($row[$swimsTimeArray[$y]]) . $output;
+              $content .= htmlspecialchars((string) $row[$swimsTimeArray[$y]]) . $output;
             } else {
               $content .= "No time available";
             }
@@ -264,7 +264,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
       $amount = "0.00";
       try {
         $amount = (string) (\Brick\Math\BigDecimal::of((string) $row['FeeToPay'])->toScale(2));
-      } catch (Exception $e) {
+      } catch (Exception) {
         $amount = "UNKNOWN";
       }
       $content .= " data-button-action=\"mark-paid\" class=\"form-check-input\" id=\"chargedEntry-" . $row['EntryID'] . "\">

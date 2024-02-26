@@ -64,7 +64,7 @@ try {
         if ($bookingOpens > $now && $bookingOpens < $bookingCloses) {
           $bookingOpensAt = $bookingOpens->format('Y-m-d H:i:s');
         }
-      } catch (Exception $e) {
+      } catch (Exception) {
         $bookingOpensAt = null;
       }
     }
@@ -75,7 +75,7 @@ try {
       try {
         $amountDec = \Brick\Math\BigDecimal::of((string) $_POST['booking-fees-amount']);
         $bookingFee = $amountDec->withPointMovedRight(2)->toInt();
-      } catch (Exception $e) {
+      } catch (Exception) {
         $bookingFee = 0;
       }
     }
@@ -97,7 +97,7 @@ try {
   } catch (Exception $e) {
 
     $message = $e->getMessage();
-    if (get_class($e) == 'PDOException') {
+    if ($e::class == 'PDOException') {
       $message = 'A database error occurred';
     }
 

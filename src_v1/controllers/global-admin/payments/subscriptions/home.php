@@ -17,7 +17,7 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
       <li class="breadcrumb-item active" aria-current="page">Subscriptions</li>
     </ol>
   </nav>
@@ -28,7 +28,7 @@ include BASE_PATH . "views/root/header.php";
   <p class="lead">Automatic subscription and billing systems.</p>
 
   <p>
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/new')) ?>" class="btn btn-primary">
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/new')) ?>" class="btn btn-primary">
       New subscription
     </a>
   </p>
@@ -36,12 +36,12 @@ include BASE_PATH . "views/root/header.php";
   <?php if ($subscription) { ?>
   <div class="list-group">
     <?php do { ?>
-      <a href="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/' . $subscription['ID'])) ?>" class="list-group-item list-group-item-action">
+      <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/' . $subscription['ID'])) ?>" class="list-group-item list-group-item-action">
         <p class="mb-0">
-          <strong><?= htmlspecialchars($subscription['Name']) ?></strong>
+          <strong><?= htmlspecialchars((string) $subscription['Name']) ?></strong>
         </p>
         <p class="mb-0">
-          Subscription <?= htmlspecialchars($subscription['ID']) ?>
+          Subscription <?= htmlspecialchars((string) $subscription['ID']) ?>
         </p>
       </a>
     <?php } while ($subscription = $getSubscriptions->fetch(PDO::FETCH_ASSOC)); ?>
@@ -52,7 +52,7 @@ include BASE_PATH . "views/root/header.php";
         <strong>There are no current or upcoming subscriptions</strong>
       </p>
       <p class="mb-0">
-        Create a <a href="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/new')) ?>" class="alert-link">new subscription</a>
+        Create a <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/new')) ?>" class="alert-link">new subscription</a>
       </p>
     </div>
   <?php } ?>

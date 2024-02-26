@@ -4,7 +4,7 @@ use Respect\Validation\Validator as v;
 
 $target = '';
 if (isset($_GET['url'])) {
-	$target = urldecode($_GET['url']);
+	$target = urldecode((string) $_GET['url']);
 }
 
 $pagetitle = "Report an Issue";
@@ -16,7 +16,7 @@ include BASE_PATH . 'views/header.php'; ?>
 		<p>We have reported that page to our team.</p>
 		<p>Thank you for your feedback. It really helps us improve our website.</p>
 		<p>
-			<a href="<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorReportTarget']) ?>" class="btn btn-secondary">
+			<a href="<?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorReportTarget']) ?>" class="btn btn-secondary">
 				Return to Page
 			</a>
 		</p>
@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php'; ?>
 
 			<div class="mb-3">
 				<label class="form-label" for="email-address">Email Address</label>
-				<input type="email" <?php if (isset(app()->user)) { ?>value="<?= htmlspecialchars(app()->user->getEmail()) ?>" readonly<?php } else { ?> <?php } ?> class="form-control" id="email-address" name="email-address" required>
+				<input type="email" <?php if (isset(app()->user)) { ?>value="<?= htmlspecialchars((string) app()->user->getEmail()) ?>" readonly<?php } else { ?> <?php } ?> class="form-control" id="email-address" name="email-address" required>
 				<div class="invalid-feedback">
 					As you're not logged in, please enter your email address so we can get in touch about the issue.
 				</div>

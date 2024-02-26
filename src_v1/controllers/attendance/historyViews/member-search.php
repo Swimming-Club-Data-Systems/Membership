@@ -27,10 +27,10 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history/members')) ?>">Members</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr($member['first'], 0, 1) . mb_substr($member['last'], 0, 1)) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history/members')) ?>">Members</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr((string) $member['first'], 0, 1) . mb_substr((string) $member['last'], 0, 1)) ?></li>
       </ol>
     </nav>
 
@@ -99,7 +99,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
     </div>
   </div>
 
-  <div id="ajax-data" data-page-url="<?= htmlspecialchars(autoUrl('attendance/history/members/' . $id . '/search')) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('attendance/history/members/search')) ?>" data-member-id="<?= htmlspecialchars($id) ?>"></div>
+  <div id="ajax-data" data-page-url="<?= htmlspecialchars((string) autoUrl('attendance/history/members/' . $id . '/search')) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('attendance/history/members/search')) ?>" data-member-id="<?= htmlspecialchars((string) $id) ?>"></div>
 
 </div>
 

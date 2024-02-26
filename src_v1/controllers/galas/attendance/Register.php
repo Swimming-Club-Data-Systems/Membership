@@ -29,7 +29,7 @@ include BASE_PATH . 'views/header.php';
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=autoUrl("galas")?>">Galas</a></li>
-      <li class="breadcrumb-item"><a href="<?=autoUrl("galas/" . $id)?>"><?=htmlspecialchars($gala['name'])?></a></li>
+      <li class="breadcrumb-item"><a href="<?=autoUrl("galas/" . $id)?>"><?=htmlspecialchars((string) $gala['name'])?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Registers</li>
     </ol>
   </nav>
@@ -46,7 +46,7 @@ include BASE_PATH . 'views/header.php';
 
   <div class="row">
     <div class="col-md-8">
-      <h1>Take a register for <?=htmlspecialchars($gala['name'])?></h1>
+      <h1>Take a register for <?=htmlspecialchars((string) $gala['name'])?></h1>
       <p class="lead">Take a register for any session.</p>
     </div>
   </div>
@@ -69,20 +69,20 @@ include BASE_PATH . 'views/header.php';
   <div class="accordion" id="registerAccordion">
     <?php do { ?>
     <div class="card">
-      <div class="card-header py-2" id="heading-<?=htmlspecialchars($session['ID'])?>">
+      <div class="card-header py-2" id="heading-<?=htmlspecialchars((string) $session['ID'])?>">
         <h2 class="mb-0">
-          <button class="btn btn-primary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?=htmlspecialchars($session['ID'])?>" aria-expanded="true" aria-controls="collapse-<?=htmlspecialchars($session['ID'])?>">
-            <?=htmlspecialchars($session['Name'])?> <i class="fa fa-chevron-down" aria-hidden="true"></i>
+          <button class="btn btn-primary collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?=htmlspecialchars((string) $session['ID'])?>" aria-expanded="true" aria-controls="collapse-<?=htmlspecialchars((string) $session['ID'])?>">
+            <?=htmlspecialchars((string) $session['Name'])?> <i class="fa fa-chevron-down" aria-hidden="true"></i>
           </button>
         </h2>
       </div>
 
-      <div id="collapse-<?=htmlspecialchars($session['ID'])?>" class="collapse" aria-labelledby="heading-<?=htmlspecialchars($session['ID'])?>" data-parent="#registerAccordion">
+      <div id="collapse-<?=htmlspecialchars((string) $session['ID'])?>" class="collapse" aria-labelledby="heading-<?=htmlspecialchars((string) $session['ID'])?>" data-parent="#registerAccordion">
         <div class="card-body">
-          <!-- FORM SECTION FOR SESSION <?=htmlspecialchars($session['ID'])?> -->
+          <!-- FORM SECTION FOR SESSION <?=htmlspecialchars((string) $session['ID'])?> -->
           <form method="post">
-            <h2>Take register for <?=htmlspecialchars($session['Name'])?></h2>
-            <input type="hidden" name="selected-session" value="<?=htmlspecialchars($session['ID'])?>">
+            <h2>Take register for <?=htmlspecialchars((string) $session['Name'])?></h2>
+            <input type="hidden" name="selected-session" value="<?=htmlspecialchars((string) $session['ID'])?>">
 
             <ul class="list-group mb-3">
               <?php for ($i = 0; $i < sizeof($swimmers); $i++) { ?>
@@ -90,8 +90,8 @@ include BASE_PATH . 'views/header.php';
                 <div class="row">
                   <div class="col">
                     <div class="form-check">
-                    <input class="form-check-input" type="checkbox" name="s-<?=htmlspecialchars($session['ID'])?>-m-<?=htmlspecialchars($swimmers[$i]['id'])?>" value="1" id="s-<?=htmlspecialchars($session['ID'])?>-m-<?=htmlspecialchars($swimmers[$i]['id'])?>">
-                    <label class="form-check-label d-block" for="s-<?=htmlspecialchars($session['ID'])?>-m-<?=htmlspecialchars($swimmers[$i]['id'])?>">
+                    <input class="form-check-input" type="checkbox" name="s-<?=htmlspecialchars((string) $session['ID'])?>-m-<?=htmlspecialchars((string) $swimmers[$i]['id'])?>" value="1" id="s-<?=htmlspecialchars((string) $session['ID'])?>-m-<?=htmlspecialchars((string) $swimmers[$i]['id'])?>">
+                    <label class="form-check-label d-block" for="s-<?=htmlspecialchars((string) $session['ID'])?>-m-<?=htmlspecialchars((string) $swimmers[$i]['id'])?>">
                       <?=htmlspecialchars($swimmers[$i]['fn'] . " " . $swimmers[$i]['sn'] . ", " . $swimmers[$i]['squad'])?>
                     </label>
                   </div>

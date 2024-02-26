@@ -15,8 +15,8 @@ include BASE_PATH . "views/root/head.php";
     <div class="col-lg-8 col-md-10">
       <div class="">
         <p class="mb-5">
-          <a href="<?= htmlspecialchars(autoUrl('admin/login')) ?>" class="btn btn-outline-primary">Back</a>
-          <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-outline-primary">Quit</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('admin/login')) ?>" class="btn btn-outline-primary">Back</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('')) ?>" class="btn btn-outline-primary">Quit</a>
         </p>
 
         <h1 class="">Reset Password</h1>

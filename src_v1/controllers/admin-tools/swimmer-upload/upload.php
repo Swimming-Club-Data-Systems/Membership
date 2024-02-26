@@ -10,7 +10,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Member upload</li>
     </ol>
   </nav>
@@ -33,7 +33,7 @@ include BASE_PATH . 'views/header.php';
           <p>We've uploaded most of your members but the following could not be uploaded as their squad could not be found;</p>
           <ul class="mb-0">
             <?php foreach ($_SESSION['TENANT-' . app()->tenant->getId()]['FailedSwimmers'] as $s) { ?>
-              <li><?= htmlspecialchars($s) ?></li>
+              <li><?= htmlspecialchars((string) $s) ?></li>
             <?php } ?>
           </ul>
         </div>

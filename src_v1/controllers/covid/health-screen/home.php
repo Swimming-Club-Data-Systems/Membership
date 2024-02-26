@@ -47,7 +47,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
         <li class="breadcrumb-item active" aria-current="page">Screening</li>
       </ol>
     </nav>
@@ -109,7 +109,7 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <h3 class="h6 mb-1"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?><?php if ($latest && bool($latest['OfficerApproval'])) { ?> <span class="badge bg-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by club</span><?php } ?></h3>
+                  <h3 class="h6 mb-1"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?><?php if ($latest && bool($latest['OfficerApproval'])) { ?> <span class="badge bg-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by club</span><?php } ?></h3>
                   <p class="mb-0">
                     <?php if ($latest) {
                       $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
@@ -125,9 +125,9 @@ include BASE_PATH . 'views/header.php';
                 <div class="col-auto">
                   <div class="btn-group">
                     <?php if ($latest) { ?>
-                      <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'])) ?>" class="btn  btn-outline-light-d">View all</a>
+                      <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $member['MemberID'])) ?>" class="btn  btn-outline-light-d">View all</a>
                     <?php } ?>
-                    <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-success">New submission</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-success">New submission</a>
                   </div>
                 </div>
               </div>
@@ -153,8 +153,8 @@ include BASE_PATH . 'views/header.php';
         <?php if ($squads && $squad = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <div class="list-group mb-3">
             <?php do { ?>
-              <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
-                <?= htmlspecialchars($squad['SquadName']) ?>
+              <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
+                <?= htmlspecialchars((string) $squad['SquadName']) ?>
               </a>
             <?php } while ($squad = $squads->fetch(PDO::FETCH_ASSOC)); ?>
           </div>

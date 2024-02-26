@@ -12,7 +12,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -74,7 +74,7 @@ $getSessionSquads->execute([
 $squadNames = $getSessionSquads->fetchAll(PDO::FETCH_ASSOC);
 
 $theTitle = 'Book ' . $session['SessionName'] . ' at ' . $startTime->format('H:i') . ' on ' . $date->format('j F Y') . ' - ' . $tenant->getName();
-$theLink = autoUrl('sessions/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
+$theLink = autoUrl('sessions/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
 
 $bookingOpensTime = null;
 $bookingOpen = true;
@@ -85,7 +85,7 @@ if ($session['BookingOpens']) {
     if ($bookingOpensTime > $now) {
       $bookingOpen = false;
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 }
@@ -105,16 +105,16 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('l j')) ?><sup><?= htmlspecialchars($date->format('S')) ?></sup> <?= htmlspecialchars($date->format('F Y')) ?>
+          <?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars($date->format('l j')) ?><sup><?= htmlspecialchars($date->format('S')) ?></sup> <?= htmlspecialchars($date->format('F Y')) ?>
         </h1>
         <p class="lead mb-0">
           <?php if ($session['MaxPlaces']) { ?>There are <?= htmlspecialchars($numFormatter->format($session['MaxPlaces'])) ?> places at this session<?php } else { ?>There are unlimited places at this session<?php } ?>
@@ -124,17 +124,17 @@ include BASE_PATH . 'views/header.php';
       <div class="col text-lg-end">
         <div class="btn-group">
           <?php if (($user->hasPermission('Admin') || $user->hasPermission('Coach')) && !$bookingClosed) { ?>
-            <a href="<?= htmlspecialchars(autoUrl('sessions/booking/edit?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-primary">
+            <a href="<?= htmlspecialchars((string) autoUrl('sessions/booking/edit?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-primary">
               Edit booking settings
             </a>
           <?php } ?>
-          <button class="btn btn-dark-l btn-outline-light-d" id="share-this" data-share-url="<?= htmlspecialchars($theLink) ?>" data-share-title="<?= htmlspecialchars($theTitle) ?>" data-share-text="<?= htmlspecialchars('Book a space for ' . $session['SessionName'] . ' at ' . $startTime->format('H:i') . ' on ' . $date->format('j F Y') . ' - ' . $tenant->getName()) ?>">
+          <button class="btn btn-dark-l btn-outline-light-d" id="share-this" data-share-url="<?= htmlspecialchars((string) $theLink) ?>" data-share-title="<?= htmlspecialchars($theTitle) ?>" data-share-text="<?= htmlspecialchars('Book a space for ' . $session['SessionName'] . ' at ' . $startTime->format('H:i') . ' on ' . $date->format('j F Y') . ' - ' . $tenant->getName()) ?>">
             Share <i class="fa fa-share" aria-hidden="true"></i>
           </button>
         </div>
         <?php if (($user->hasPermission('Admin') || $user->hasPermission('Coach')) && !$bookingClosed) { ?>
           <div class="mb-3"></div>
-          <a href="<?= htmlspecialchars(autoUrl('sessions/booking/book-on-behalf-of?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('sessions/booking/book-on-behalf-of?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-primary">
             Book on behalf of
           </a>
         <?php } ?>
@@ -149,7 +149,7 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8 order-2 order-lg-1 mb-3">
       <p class="lead d-none d-lg-block">
-        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
+        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
       </p>
 
       <?php if ($bookingClosed) { ?>
@@ -202,11 +202,11 @@ include BASE_PATH . 'views/header.php';
 
             <?php if ($session['MaxPlaces']) { ?>
               <dt class="col-sm-12">Total places available</dt>
-              <dd class="col-sm-12 place-numbers-max-places-int"><?= htmlspecialchars($session['MaxPlaces']) ?></dd>
+              <dd class="col-sm-12 place-numbers-max-places-int"><?= htmlspecialchars((string) $session['MaxPlaces']) ?></dd>
             <?php } ?>
 
             <dt class="col-sm-12">Places booked</dt>
-            <dd class="col-sm-12 place-numbers-places-booked-int"><?= htmlspecialchars($bookedCount) ?></dd>
+            <dd class="col-sm-12 place-numbers-places-booked-int"><?= htmlspecialchars((string) $bookedCount) ?></dd>
 
             <?php if ($session['MaxPlaces']) { ?>
               <dt class="col-sm-12">Places remaining</dt>
@@ -219,11 +219,11 @@ include BASE_PATH . 'views/header.php';
               ]);
               $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
             ?>
-              <dt class="col-sm-12"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+              <dt class="col-sm-12"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
               <dd class="col-sm-12">
                 <ul class="list-unstyled mb-0">
                   <?php for ($y = 0; $y < sizeof($coaches); $y++) { ?>
-                    <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
+                    <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
                   <?php } ?>
                   <?php if (sizeof($coaches) == 0) { ?>
                     <li>None assigned</li>
@@ -233,10 +233,10 @@ include BASE_PATH . 'views/header.php';
             <?php } ?>
 
             <dt class="col-sm-12">Location</dt>
-            <dd class="col-sm-12"><?= htmlspecialchars($session['VenueName']) ?>, <em><?= htmlspecialchars($session['Location']) ?></em></dd>
+            <dd class="col-sm-12"><?= htmlspecialchars((string) $session['VenueName']) ?>, <em><?= htmlspecialchars((string) $session['Location']) ?></em></dd>
 
             <dt class="col-sm-12">Session Unique ID</dt>
-            <dd class="col-sm-12 mb-0"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></dd>
+            <dd class="col-sm-12 mb-0"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></dd>
           </dl>
         </div>
         <div class="d-block d-lg-none">
@@ -264,11 +264,11 @@ include BASE_PATH . 'views/header.php';
 
             <?php if ($session['MaxPlaces']) { ?>
               <dt class="col-sm-3">Total places available</dt>
-              <dd class="col-sm-9 place-numbers-max-places-int"><?= htmlspecialchars($session['MaxPlaces']) ?></dd>
+              <dd class="col-sm-9 place-numbers-max-places-int"><?= htmlspecialchars((string) $session['MaxPlaces']) ?></dd>
             <?php } ?>
 
             <dt class="col-sm-3">Places booked</dt>
-            <dd class="col-sm-9 place-numbers-places-booked-int"><?= htmlspecialchars($bookedCount) ?></dd>
+            <dd class="col-sm-9 place-numbers-places-booked-int"><?= htmlspecialchars((string) $bookedCount) ?></dd>
 
             <?php if ($session['MaxPlaces']) { ?>
               <dt class="col-sm-3">Places remaining</dt>
@@ -281,11 +281,11 @@ include BASE_PATH . 'views/header.php';
               ]);
               $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
             ?>
-              <dt class="col-sm-3"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+              <dt class="col-sm-3"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
               <dd class="col-sm-9">
                 <ul class="list-unstyled mb-0">
                   <?php for ($y = 0; $y < sizeof($coaches); $y++) { ?>
-                    <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
+                    <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
                   <?php } ?>
                   <?php if (sizeof($coaches) == 0) { ?>
                     <li>None assigned</li>
@@ -295,10 +295,10 @@ include BASE_PATH . 'views/header.php';
             <?php } ?>
 
             <dt class="col-sm-3">Location</dt>
-            <dd class="col-sm-9"><?= htmlspecialchars($session['VenueName']) ?>, <em><?= htmlspecialchars($session['Location']) ?></em></dd>
+            <dd class="col-sm-9"><?= htmlspecialchars((string) $session['VenueName']) ?>, <em><?= htmlspecialchars((string) $session['Location']) ?></em></dd>
 
             <dt class="col-sm-3">Session Unique ID</dt>
-            <dd class="col-sm-9 mb-0"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></dd>
+            <dd class="col-sm-9 mb-0"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></dd>
           </dl>
         </div>
       </div>
@@ -331,7 +331,7 @@ include BASE_PATH . 'views/header.php';
             <dd class="col-md-8">&pound;<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $session['BookingFee']))->withPointMovedLeft(2)->toScale(2)) ?></dd>
 
             <dt class="col-md-4">Location</dt>
-            <dd class="col-md-8" id="booking-modal-session-location"><?= htmlspecialchars($session['VenueName']) ?>, <em><?= htmlspecialchars($session['Location']) ?></em></dd>
+            <dd class="col-md-8" id="booking-modal-session-location"><?= htmlspecialchars((string) $session['VenueName']) ?>, <em><?= htmlspecialchars((string) $session['Location']) ?></em></dd>
           </dl>
 
           <p class="mb-0">
@@ -371,7 +371,7 @@ include BASE_PATH . 'views/header.php';
             <dd class="col-md-8">&pound;<?= htmlspecialchars((string) (\Brick\Math\BigDecimal::of((string) $session['BookingFee']))->withPointMovedLeft(2)->toScale(2)) ?> (Charges are only added to accounts when the session register is generated. This means no refund credits need will be applied if you cancel a place now.)</dd>
 
             <dt class="col-md-4">Location</dt>
-            <dd class="col-md-8" id="cancel-modal-session-location"><?= htmlspecialchars($session['VenueName']) ?>, <em><?= htmlspecialchars($session['Location']) ?></em></dd>
+            <dd class="col-md-8" id="cancel-modal-session-location"><?= htmlspecialchars((string) $session['VenueName']) ?>, <em><?= htmlspecialchars((string) $session['Location']) ?></em></dd>
           </dl>
 
           <p class="mb-0">
@@ -401,7 +401,7 @@ include BASE_PATH . 'views/header.php';
         <div class="row gx-0 sharing">
           <div class="col">
             <div class="d-grid gap-2">
-              <a target="_blank" class="btn btn-dark-l btn-outline-light-d dismiss-share-box" href="mailto:?subject=<?= rawurlencode($theTitle); ?>&body=<?= rawurlencode($theLink); ?>"><i class="fa  fa-envelope" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share by Email</span></a>
+              <a target="_blank" class="btn btn-dark-l btn-outline-light-d dismiss-share-box" href="mailto:?subject=<?= rawurlencode($theTitle); ?>&body=<?= rawurlencode((string) $theLink); ?>"><i class="fa  fa-envelope" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share by Email</span></a>
             </div>
           </div>
 
@@ -413,30 +413,30 @@ include BASE_PATH . 'views/header.php';
 
           <div class="col">
             <div class="d-grid gap-2">
-              <a target="_blank" class="btn btn-fb dismiss-share-box" href="http://www.facebook.com/sharer.php?u=<?= rawurlencode($theLink); ?>&amp;t=<?= ($theTitle); ?>"><i class="fa fa-facebook" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Facebook</span></a>
+              <a target="_blank" class="btn btn-fb dismiss-share-box" href="http://www.facebook.com/sharer.php?u=<?= rawurlencode((string) $theLink); ?>&amp;t=<?= ($theTitle); ?>"><i class="fa fa-facebook" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Facebook</span></a>
             </div>
           </div>
 
           <div class="col">
             <div class="d-grid gap-2">
-              <a target="_blank" class="btn btn-tweet dismiss-share-box" href="https://twitter.com/intent/tweet?text=<?= rawurlencode($theTitle); ?>&url=<?= rawurlencode($theLink); ?>"><i class="fa fa-twitter" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Twitter</span></a>
+              <a target="_blank" class="btn btn-tweet dismiss-share-box" href="https://twitter.com/intent/tweet?text=<?= rawurlencode($theTitle); ?>&url=<?= rawurlencode((string) $theLink); ?>"><i class="fa fa-twitter" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Twitter</span></a>
             </div>
           </div>
 
           <div class="col">
             <div class="d-grid gap-2">
-              <a target="_blank" class="btn btn-whatsapp dismiss-share-box" href="https://wa.me/?text=<?= rawurlencode($theLink); ?>" data-action="share/whatsapp/share"><i class="fa fa-whatsapp" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share with Whatsapp</span></a>
+              <a target="_blank" class="btn btn-whatsapp dismiss-share-box" href="https://wa.me/?text=<?= rawurlencode((string) $theLink); ?>" data-action="share/whatsapp/share"><i class="fa fa-whatsapp" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share with Whatsapp</span></a>
             </div>
           </div>
 
           <div class="col">
             <div class="d-grid gap-2">
-              <a target="_blank" class="btn btn-linkedin dismiss-share-box" href="https://www.linkedin.com/shareArticle?mini=true&url=<?= rawurlencode($theLink); ?>&title=<?= rawurlencode($theTitle); ?>&source=<?= rawurlencode($tenant->getName() . ' / SCDS Membership') ?>"><i class="fa fa-linkedin" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Linked In</span></a>
+              <a target="_blank" class="btn btn-linkedin dismiss-share-box" href="https://www.linkedin.com/shareArticle?mini=true&url=<?= rawurlencode((string) $theLink); ?>&title=<?= rawurlencode($theTitle); ?>&source=<?= rawurlencode($tenant->getName() . ' / SCDS Membership') ?>"><i class="fa fa-linkedin" aria-hidden="true"></i><span class="visually-hidden visually-hidden-focusable">Share on Linked In</span></a>
             </div>
           </div>
         </div>
 
-        <p class="small mt-3 mb-0"><?= htmlspecialchars($tenant->getName()) ?> is not responsible for these services</p>
+        <p class="small mt-3 mb-0"><?= htmlspecialchars((string) $tenant->getName()) ?> is not responsible for these services</p>
 
       </div>
       <!-- <div class="modal-footer">
@@ -447,7 +447,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="ajaxData" data-booking-ajax-url="<?= htmlspecialchars(autoUrl('sessions/booking/book')) ?>" data-cancellation-ajax-url="<?= htmlspecialchars(autoUrl('sessions/booking/cancel')) ?>" data-my-member-reload-ajax-url="<?= htmlspecialchars(autoUrl('sessions/booking/my-booking-info?session=' . urlencode($_GET['session']) . '&date=' . urlencode($_GET['date']))) ?>" data-all-member-reload-ajax-url="<?= htmlspecialchars(autoUrl('sessions/booking/all-booking-info?session=' . urlencode($_GET['session']) . '&date=' . urlencode($_GET['date']))) ?>" data-socket-init="<?= htmlspecialchars($socketDataInit) ?>" data-socket-room-name="<?= htmlspecialchars('session_booking_room:' . $date->format('Y-m-d') . '-S' . $session['SessionID']) ?>"></div>
+<div id="ajaxData" data-booking-ajax-url="<?= htmlspecialchars((string) autoUrl('sessions/booking/book')) ?>" data-cancellation-ajax-url="<?= htmlspecialchars((string) autoUrl('sessions/booking/cancel')) ?>" data-my-member-reload-ajax-url="<?= htmlspecialchars((string) autoUrl('sessions/booking/my-booking-info?session=' . urlencode((string) $_GET['session']) . '&date=' . urlencode((string) $_GET['date']))) ?>" data-all-member-reload-ajax-url="<?= htmlspecialchars((string) autoUrl('sessions/booking/all-booking-info?session=' . urlencode((string) $_GET['session']) . '&date=' . urlencode((string) $_GET['date']))) ?>" data-socket-init="<?= htmlspecialchars($socketDataInit) ?>" data-socket-room-name="<?= htmlspecialchars('session_booking_room:' . $date->format('Y-m-d') . '-S' . $session['SessionID']) ?>"></div>
 
 <?php
 

@@ -9,7 +9,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -71,7 +71,7 @@ $getSessionSquads->execute([
 $squadNames = $getSessionSquads->fetchAll(PDO::FETCH_ASSOC);
 
 $theTitle = 'Book ' . $session['SessionName'] . ' at ' . $startTime->format('H:i') . ' on ' . $date->format('j F Y') . ' - ' . $tenant->getName();
-$theLink = autoUrl('sessions/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
+$theLink = autoUrl('sessions/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
 
 // Get session squads
 $getSquads = $db->prepare("SELECT `Squad` FROM `sessionsSquads` WHERE `Session` = ?");
@@ -107,9 +107,9 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page"><abbr title="Book On Behalf Of">BOBO</abbr></li>
       </ol>
     </nav>
@@ -117,7 +117,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
+          <?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
         </h1>
         <p class="lead mb-0">
           <?php if ($session['MaxPlaces']) { ?>There are <?= htmlspecialchars($numFormatter->format($session['MaxPlaces'])) ?> places at this session<?php } else { ?>There are unlimited places at this session<?php } ?>
@@ -126,7 +126,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-lg-end">
         <?php if ($user->hasPermission('Admin') || $user->hasPermission('Coach')) { ?>
-          <a href="<?= htmlspecialchars(autoUrl('sessions/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-dark-l btn-outline-light-d" title="Changes won't be saved">
+          <a href="<?= htmlspecialchars((string) autoUrl('sessions/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-dark-l btn-outline-light-d" title="Changes won't be saved">
             Back
           </a>
         <?php } ?>
@@ -141,7 +141,7 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8 order-2 order-lg-1 mb-3">
       <p class="lead d-none d-lg-block">
-        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
+        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
       </p>
 
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess'])) { ?>
@@ -199,7 +199,7 @@ include BASE_PATH . 'views/header.php';
               <li class="list-group-item <?php if ($booking) { ?>bg-light text-muted user-select-none<?php } ?>" id="<?= htmlspecialchars('member-box-for-member-' . $member['id']) ?>">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" name="<?= htmlspecialchars('member-checkbox-' . $member['id']) ?>" id="<?= htmlspecialchars('member-checkbox-' . $member['id']) ?>" <?php if ($booking) { ?>checked disabled<?php } ?>>
-                  <label class="form-check-label" for="<?= htmlspecialchars('member-checkbox-' . $member['id']) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></label>
+                  <label class="form-check-label" for="<?= htmlspecialchars('member-checkbox-' . $member['id']) ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></label>
                 </div>
               </li>
             <?php } ?>

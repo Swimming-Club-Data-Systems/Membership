@@ -40,7 +40,7 @@ try {
   if (!isset($_POST['post-code']) && mb_strlen((string) $_POST['post-code']) < 1) {
     throw new Exception('You must provide a post code');
   } else {
-    $postCode = (string) $PostcodeFormatter->format('GB', trim($_POST['post-code']));
+    $postCode = (string) $PostcodeFormatter->format('GB', trim((string) $_POST['post-code']));
   }
 
   $addr = [
@@ -58,7 +58,7 @@ try {
   $add = $db->prepare("INSERT INTO covidLocations (`ID`, `Name`, `Address`, `Tenant`) VALUES (?, ?, ?, ?)");
   $add->execute([
     $id,
-    mb_strimwidth($_POST['location-name'], 0, 256),
+    mb_strimwidth((string) $_POST['location-name'], 0, 256),
     $json,
     $tenant->getId()
   ]);
@@ -66,7 +66,7 @@ try {
   $_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationSuccess'] = true;
   header("location: " . autoUrl("contact-tracing/locations/" . $id));
 
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['NewLocationError'] = $e->getMessage();

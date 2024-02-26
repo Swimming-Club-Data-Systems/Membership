@@ -9,7 +9,6 @@ use function GuzzleHttp\json_encode;
 class Renewal
 {
 
-  private string $id;
   private $renewal = null;
   private int $user;
   private $startedOn;
@@ -24,10 +23,8 @@ class Renewal
   private $stripePaymentIntent;
   private $directDebitPayment;
 
-  private function __construct($id)
+  private function __construct(private readonly string $id)
   {
-    // Create renewal object
-    $this->id = $id;
   }
 
   public static function createUserRenewal($user, $members = null, $renewalId = null)
@@ -40,7 +37,7 @@ class Renewal
     return $renewal;
   }
 
-  private function create($user, $members, $renewalId)
+  private function create($user, $members, $renewalId): void
   {
     $db = app()->db;
 
@@ -166,12 +163,10 @@ class Renewal
     $this->complete = false;
   }
 
-  private function revalidateMembers()
+  private function revalidateMembers(): void
   {
     // Sort member list by name
-    usort($this->members, function ($item1, $item2) {
-      return $item1['name'] <=> $item2['name'];
-    });
+    usort($this->members, fn($item1, $item2) => $item1['name'] <=> $item2['name']);
 
     // Fetch latest details from DB
     $getMember = app()->db->prepare("SELECT MForename fn, MSurname sn, UserID FROM members WHERE MemberID = ?");
@@ -197,7 +192,7 @@ class Renewal
     return $object;
   }
 
-  public function update()
+  public function update(): void
   {
     $db = app()->db;
     $getRenewal = $db->prepare("SELECT renewalPeriods.ID PID, renewalPeriods.Opens, renewalPeriods.Closes, renewalPeriods.Name, renewalPeriods.Year, renewalData.ID, renewalData.User, renewalData.Document, renewalData.PaymentIntent, renewalData.PaymentDD FROM renewalData LEFT JOIN renewalPeriods ON renewalPeriods.ID = renewalData.Renewal WHERE renewalData.ID = ?");
@@ -247,7 +242,7 @@ class Renewal
     $this->directDebitPayment = $renewal['PaymentDD'];
   }
 
-  public function save()
+  public function save(): void
   {
     $started = clone $this->startedOn;
     $started->setTimezone(new DateTimeZone('UTC'));
@@ -292,7 +287,7 @@ class Renewal
     // pre($json);
   }
 
-  private function setRenewal($renewal)
+  private function setRenewal($renewal): void
   {
     $this->renewal = $renewal;
   }
@@ -380,7 +375,7 @@ class Renewal
         $state,
         $this->id,
       ]);
-    } catch (PDOException $e) {
+    } catch (PDOException) {
       // Error occurred
       // Throw a more generic error
       throw new Exception('Path did not exist, or another error occurred');

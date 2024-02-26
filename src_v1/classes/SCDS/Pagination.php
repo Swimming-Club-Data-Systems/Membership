@@ -25,7 +25,7 @@ class Pagination extends \Zebra_Pagination
     /**
      * Reset object to default SCDS settings
      */
-    public function reset()
+    public function reset(): void
     {
         $this->selectable_pages(5);
         $this->labels('Previous', 'Next', 'Page %d of %d');
@@ -33,7 +33,7 @@ class Pagination extends \Zebra_Pagination
         $this->padding(false);
     }
 
-    public function records_per_page($recordsPerPage)
+    public function records_per_page($recordsPerPage): void
     {
         $this->recordsPerPage = $recordsPerPage;
         parent::records_per_page($recordsPerPage);

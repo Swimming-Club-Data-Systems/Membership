@@ -23,7 +23,7 @@ $serverRequest = $creator->fromGlobals();
 
 $publicKeyCredentialRequestOptions = PublicKeyCredentialRequestOptions::createFromString($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestOptions']);
 
-$userEntity = $userEntityRepository->findWebauthnUserByUserHandle(base64_decode(json_decode(file_get_contents('php://input'))->response->userHandle));
+$userEntity = $userEntityRepository->findWebauthnUserByUserHandle(base64_decode((string) json_decode(file_get_contents('php://input'))->response->userHandle));
 
 // reportError(json_decode(file_get_contents('php://input')));
 // return;
@@ -42,10 +42,10 @@ try {
 
   $target = autoUrl("");
   if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL'])) {
-    $target = autoUrl(trim($_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL'], "/"));
+    $target = autoUrl(trim((string) $_SESSION['TENANT-' . app()->tenant->getId()]['WebAuthnCredentialRequestTargetURL'], "/"));
   }
 
-  $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode($target));
+  $url = autoUrl("api/auth/login/success-redirect-flow?target=" . urlencode((string) $target));
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['REACT_LOGIN_USER_CONFIRMED'] = $userId;
 

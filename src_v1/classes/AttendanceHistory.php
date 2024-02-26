@@ -24,7 +24,7 @@ class AttendanceHistory
     return $object;
   }
 
-  private function loadData(int $member, string $from, string $until)
+  private function loadData(int $member, string $from, string $until): void
   {
     $db = app()->db;
     $tenant = app()->tenant;
@@ -106,7 +106,7 @@ class AttendanceHistory
           $this->totalExcused++;
         }
       }
-    } catch (Exception $e) {
+    } catch (Exception) {
     }
   }
 

@@ -90,10 +90,10 @@ ob_start(); ?>
   <?php
 
   // Inserts the standard letterhead on PDF pages
-  $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+  $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS'));
   $logoPath = null;
   if ($logos = app()->tenant->getKey('LOGO_DIR')) {
-    $logoPath = app()->tenant->getFilePath() . 'public/' . mb_substr($logos, 8) . 'logo-1024.png';
+    $logoPath = app()->tenant->getFilePath() . 'public/' . mb_substr((string) $logos, 8) . 'logo-1024.png';
   }
 
   ?>
@@ -103,7 +103,7 @@ ob_start(); ?>
       <?php if ($logoPath) { ?>
         <img src="<?= $logoPath ?>" class="logo" style="height: 25mm">
       <?php } else { ?>
-        <h1 class="primary"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></h1>
+        <h1 class="primary"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></h1>
       <?php } ?>
     </div>
     <div class="" style="position: absolute; top: 0; right: 0;>
@@ -120,7 +120,7 @@ ob_start(); ?>
         Contact Tracing Check In
       </h1>
       <h1 class="mb-0" style="line-height: 24pt; margin-bottom:20pt;">
-        <?= htmlspecialchars($location['Name']) ?>
+        <?= htmlspecialchars((string) $location['Name']) ?>
       </h1>
       <hr style="margin-bottom:18pt;">
       <p class="lead" style="font-size: 20pt; margin-bottom:0pt;">
@@ -133,7 +133,7 @@ ob_start(); ?>
     </h2>
 
     <?php include BASE_PATH . 'controllers/barcode-generation-system/qr-safe.php'; ?>
-    <img width="600" class="qr" src="<?= 'data:image/png;base64,' . base64_encode($qrReturn) ?>" style="width: 6cm; height: 6cm; margin-top:24pt; image-rendering: pixelated;">
+    <img width="600" class="qr" src="<?= 'data:image/png;base64,' . base64_encode((string) $qrReturn) ?>" style="width: 6cm; height: 6cm; margin-top:24pt; image-rendering: pixelated;">
 
     <p>
       And follow the on screen instructions
@@ -144,7 +144,7 @@ ob_start(); ?>
     </h2>
 
     <p style="margin: none; padding: none; line-height: 16pt;">
-      Go to <strong><?= htmlspecialchars(app('request')->hostname) ?></strong>, find <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong>, select <strong>Contact Tracing</strong>, select <strong><?= htmlspecialchars($location['Name']) ?></strong> and follow the on screen instructions
+      Go to <strong><?= htmlspecialchars((string) app('request')->hostname) ?></strong>, find <strong><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></strong>, select <strong>Contact Tracing</strong>, select <strong><?= htmlspecialchars((string) $location['Name']) ?></strong> and follow the on screen instructions
     </p>
 
   </div>
@@ -202,4 +202,4 @@ header('Content-Disposition: inline');
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
-$dompdf->stream(preg_replace('@[^0-9a-z\.]+@i', '-', basename($location['Name'])) . ".pdf", ['Attachment' => 0]);
+$dompdf->stream(preg_replace('@[^0-9a-z\.]+@i', '-', basename((string) $location['Name'])) . ".pdf", ['Attachment' => 0]);

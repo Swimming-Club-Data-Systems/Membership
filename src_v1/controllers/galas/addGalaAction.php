@@ -13,7 +13,7 @@ $galaFeeConstant = $hyTek = 0;
 $content = "";
 
 if (!empty($_POST['galaname'])) {
-  $galaName = trim($_POST['galaname']);
+  $galaName = trim((string) $_POST['galaname']);
   if (strlen($galaName) == 0) {
     $status = false;
     $statusInfo .= "<li>No gala name was provided</li>";
@@ -21,11 +21,11 @@ if (!empty($_POST['galaname'])) {
 }
 
 if (!empty($_POST['description'])) {
-  $description = trim($_POST['description']);
+  $description = trim((string) $_POST['description']);
 }
 
 if (!empty($_POST['length'])) {
-  $length = trim($_POST['length']);
+  $length = trim((string) $_POST['length']);
   if (strlen($length) == 0) {
     $status = false;
     $statusInfo .= "<li>There was a problem with the supplied course length</li>";
@@ -33,7 +33,7 @@ if (!empty($_POST['length'])) {
 }
 
 if (!empty($_POST['venue'])) {
-  $venue = trim($_POST['venue']);
+  $venue = trim((string) $_POST['venue']);
   if (strlen($venue) == 0) {
     $status = false;
     $statusInfo .= "<li>You failed to supply a place name</li>";
@@ -49,7 +49,7 @@ if (!empty($_POST['closingDate']) && !empty($_POST['closingTime']) && v::date()-
 }
 
 if (!empty($_POST['lastDate']) && v::date()->validate($_POST['lastDate'])) {
-  $date = strtotime($_POST['lastDate']);
+  $date = strtotime((string) $_POST['lastDate']);
   $lastDate = date("Y-m-d", $date);
 } else {
   $status = false;
@@ -57,7 +57,7 @@ if (!empty($_POST['lastDate']) && v::date()->validate($_POST['lastDate'])) {
 }
 
 if (!empty($_POST['galaFee'])) {
-  $galaFee = trim($_POST['galaFee']);
+  $galaFee = trim((string) $_POST['galaFee']);
 } else {
   $galaFee = 0.00;
 }

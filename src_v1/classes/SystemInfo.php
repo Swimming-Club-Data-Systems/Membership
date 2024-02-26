@@ -8,27 +8,25 @@
  * @author Chris Heppell https://github.com/clheppell
  */
 class SystemInfo {
-  private $db;
   private $systemOptions;
   private $systemOptionsRetrieved;
   private $serverEnvVar;
 
-  public function __construct($db) {
-    $this->db = $db;
+  public function __construct(private $db) {
     $this->systemOptionsRetrieved = false;
     $this->serverEnvVar = [];
   }
 
-  public function revalidate() {
+  public function revalidate(): void {
     // Get all options
     $this->getSystemOptions();
   }
 
-  public function setExistingEnvVar($key) {
+  public function setExistingEnvVar($key): void {
     $this->serverEnvVar[$key] = true;
   }
 
-  public function unsetExistingEnvVar($key) {
+  public function unsetExistingEnvVar($key): void {
     $this->serverEnvVar[$key] = false;
   }
 
@@ -39,12 +37,12 @@ class SystemInfo {
     return false;
   }
 
-  private function getSystemOptions() {
+  private function getSystemOptions(): void {
     try {
       $getOptions = $this->db->query("SELECT `Option`, `Value` FROM systemOptions");
       $this->systemOptions = $getOptions->fetchAll(PDO::FETCH_KEY_PAIR);
       $this->systemOptionsRetrieved = true;
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Couldn't get options
     }
   }
@@ -65,7 +63,7 @@ class SystemInfo {
     return filter_var($this->getSystemOption($name), FILTER_VALIDATE_BOOLEAN);
   }
 
-  public function setSystemOption($option, $value) {
+  public function setSystemOption($option, $value): void {
     if (!is_numeric($value) && $value == "") {
       $value = null;
     }

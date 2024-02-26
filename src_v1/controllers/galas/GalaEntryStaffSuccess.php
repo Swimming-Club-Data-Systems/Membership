@@ -39,7 +39,7 @@ $get->execute([
 ]);
 $row = $get->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = htmlspecialchars($row['MForename']) . "'s Gala Entry to " . htmlspecialchars($row['GalaName']);
+$pagetitle = htmlspecialchars((string) $row['MForename']) . "'s Gala Entry to " . htmlspecialchars((string) $row['GalaName']);
 
 include BASE_PATH . "views/header.php";
 
@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas")) ?>">Galas</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">Galas</a></li>
         <li class="breadcrumb-item active" aria-current="page">Enter gala</li>
       </ol>
     </nav>
@@ -57,7 +57,7 @@ include BASE_PATH . "views/header.php";
     <div class="row">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($row['MForename']) ?>'s Gala Entry to <?= htmlspecialchars($row['GalaName']) ?>
+          <?= htmlspecialchars((string) $row['MForename']) ?>'s Gala Entry to <?= htmlspecialchars((string) $row['GalaName']) ?>
         </h1>
         <p class="lead mb-0">
           Here are the details...
@@ -75,14 +75,14 @@ include BASE_PATH . "views/header.php";
           An email confirmation is on it's way to
         </p>
         <p class="text-truncate mb-0 font-monospace">
-          <?=htmlspecialchars($row['EmailAddress'])?>
+          <?=htmlspecialchars((string) $row['EmailAddress'])?>
         </p>
       </div>
 
       <h2>Swims</h2>
 
       <p>
-        You have entered <?=htmlspecialchars($row['MForename'])?> into;
+        You have entered <?=htmlspecialchars((string) $row['MForename'])?> into;
       </p>
 
       <ul>
@@ -117,9 +117,9 @@ include BASE_PATH . "views/header.php";
       <?php } ?>
 
       <div class="cell">
-        <h3>Make another entry for <?=htmlspecialchars($row['MForename'])?></h3>
+        <h3>Make another entry for <?=htmlspecialchars((string) $row['MForename'])?></h3>
 
-        <p>Return to the entry form to make another entry for <?=htmlspecialchars($row['MForename'])?>.</p>
+        <p>Return to the entry form to make another entry for <?=htmlspecialchars((string) $row['MForename'])?>.</p>
 
         <p class="mb-0">
           <a href="<?=autoUrl("swimmers/" . $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Swimmer'] . "/enter-gala")?>" class="btn btn-primary">
@@ -131,14 +131,14 @@ include BASE_PATH . "views/header.php";
       <div class="cell">
         <h3>If you're finished here</h3>
 
-        <p>If you've finished making entries, return to the gala homepage or return to the page for <?=htmlspecialchars($row['MForename'])?>.</p>
+        <p>If you've finished making entries, return to the gala homepage or return to the page for <?=htmlspecialchars((string) $row['MForename'])?>.</p>
 
         <p class="mb-0">
           <a href="<?=autoUrl("galas")?>" class="btn btn-primary">
             Gala home
           </a>
           <a href="<?=autoUrl("swimmers/" . $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessfulGalaEntry']['Swimmer'])?>" class="btn btn-primary">
-            <?=htmlspecialchars($row['MForename'])?>'s page
+            <?=htmlspecialchars((string) $row['MForename'])?>'s page
           </a>
         </p>
       </div>

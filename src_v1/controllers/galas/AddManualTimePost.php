@@ -48,12 +48,12 @@ try {
 			$time .= '0:';
 		}
 		if (isset($_POST[$swimsTimeArray[$i] . "Secs"]) && $_POST[$swimsTimeArray[$i] . "Secs"] != "") {
-			$time .= str_pad($_POST[$swimsTimeArray[$i] . "Secs"], 2, "0", STR_PAD_LEFT) . '.';
+			$time .= str_pad((string) $_POST[$swimsTimeArray[$i] . "Secs"], 2, "0", STR_PAD_LEFT) . '.';
 		} else {
 			$time .= '00.';
 		}
 		if (isset($_POST[$swimsTimeArray[$i] . "Hunds"]) && $_POST[$swimsTimeArray[$i] . "Hunds"] != "") {
-			$time .= str_pad($_POST[$swimsTimeArray[$i] . "Hunds"], 2, "0", STR_PAD_LEFT);
+			$time .= str_pad((string) $_POST[$swimsTimeArray[$i] . "Hunds"], 2, "0", STR_PAD_LEFT);
 		} else {
 			$time .= '00';
 		}
@@ -68,7 +68,7 @@ try {
 	}
 	$db->commit();
 	$_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'] = true;
-} catch (PDOException $e) {
+} catch (PDOException) {
 	$db->rollBack();
 	$_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'] = false;
 } catch (Exception $e) {

@@ -6,23 +6,23 @@
 $obj = null;
 if (app()->tenant->isCLS()) {
 	$file = getCachedFile(CACHE_DIR . 'CLS-ASC-News.json', 'https://chesterlestreetasc.co.uk/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
-	$obj = json_decode($file);
+	$obj = json_decode((string) $file);
 }
 
 $file = getCachedFile(CACHE_DIR . 'SE-News.json', 'https://www.swimming.org/sport/wp-json/wp/v2/posts?rand_id=' . time(), 10800);
-$asa = json_decode($file);
+$asa = json_decode((string) $file);
 
 $file = getCachedFile(CACHE_DIR . 'SE-NE.xml', 'https://asaner.org.uk/feed?rand_id=' . time(), 10800);
 $asa_ne = null;
 try {
 	$asa_ne = new SimpleXMLElement($file);
-} catch (Exception $e) {
+} catch (Exception) {
 }
 
 $db = app()->db;
 $tenant = app()->tenant;
 
-$username = htmlspecialchars(explode(" ", getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
+$username = htmlspecialchars(explode(" ", (string) getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']))[0]);
 
 $day = (new DateTime('now', new DateTimeZone('Europe/London')))->format("w");
 $time = (new DateTime('-15 minutes', new DateTimeZone('Europe/London')))->format("H:i:s");
@@ -61,7 +61,7 @@ include BASE_PATH . "views/header.php";
 			<aside class="row mb-4">
 				<div class="col-lg-6">
 					<div class="cell bg-tenant-brand tenant-colour">
-						<h2 class="mb-0"><?php if ($bankHoliday['bunting']) { ?>It's <?= htmlspecialchars($bankHoliday['title']) ?>!<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars($bankHoliday['notes']) ?></em>.<?php } ?><?php } else { ?>Today is <?= htmlspecialchars($bankHoliday['title']) ?>.<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars($bankHoliday['notes']) ?></em>.<?php } ?><?php } ?></h2>
+						<h2 class="mb-0"><?php if ($bankHoliday['bunting']) { ?>It's <?= htmlspecialchars((string) $bankHoliday['title']) ?>!<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars((string) $bankHoliday['notes']) ?></em>.<?php } ?><?php } else { ?>Today is <?= htmlspecialchars((string) $bankHoliday['title']) ?>.<?php if ($bankHoliday['notes']) { ?> <em><?= htmlspecialchars((string) $bankHoliday['notes']) ?></em>.<?php } ?><?php } ?></h2>
 						<p class="lead mb-0">There may be session cancellations or alterations today.</p>
 					</div>
 				</div>
@@ -116,7 +116,7 @@ include BASE_PATH . "views/header.php";
 				<a href="<?= autoUrl('covid/risk-awareness') ?>">
 					<span class="mb-3">
 						<span class="title mb-0">
-							<?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
+							<?php if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars((string) UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
 						</span>
 						<span>
 							Declare that you understand the risks of returning to training
@@ -144,17 +144,17 @@ include BASE_PATH . "views/header.php";
 							]);
 							$squadNames = $getSessionSquads->fetchAll(PDO::FETCH_ASSOC);
 						?>
-							<a href="<?= htmlspecialchars(autoUrl("attendance/register?date=" . urlencode($date) . "&session=" . urlencode($sessions[$i]['SessionID']))) ?>" title="<?= htmlspecialchars($sessions[$i]['SessionName']) ?>, <?= htmlspecialchars($sessions[$i]['VenueName']) ?>">
+							<a href="<?= htmlspecialchars((string) autoUrl("attendance/register?date=" . urlencode($date) . "&session=" . urlencode((string) $sessions[$i]['SessionID']))) ?>" title="<?= htmlspecialchars((string) $sessions[$i]['SessionName']) ?>, <?= htmlspecialchars((string) $sessions[$i]['VenueName']) ?>">
 								<div>
 									<span class="title mb-0">
-										Take <?php for ($y = 0; $y < sizeof($squadNames); $y++) { ?><?php if ($y > 0) { ?>, <?php } ?><?= htmlspecialchars($squadNames[$y]['SquadName']) ?><?php } ?> Register
+										Take <?php for ($y = 0; $y < sizeof($squadNames); $y++) { ?><?php if ($y > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squadNames[$y]['SquadName']) ?><?php } ?> Register
 									</span>
 									<span class="d-flex mb-3">
-										<?= date("H:i", strtotime($sessions[$i]['StartTime'])) ?> - <?= date("H:i", strtotime($sessions[$i]['EndTime'])) ?>
+										<?= date("H:i", strtotime((string) $sessions[$i]['StartTime'])) ?> - <?= date("H:i", strtotime((string) $sessions[$i]['EndTime'])) ?>
 									</span>
 								</div>
 								<span class="category">
-									<?= htmlspecialchars($sessions[$i]['SessionName']) ?>, <?= htmlspecialchars($sessions[$i]['VenueName']) ?>
+									<?= htmlspecialchars((string) $sessions[$i]['SessionName']) ?>, <?= htmlspecialchars((string) $sessions[$i]['VenueName']) ?>
 								</span>
 							</a>
 						<?php } ?>
@@ -222,7 +222,7 @@ include BASE_PATH . "views/header.php";
 						$max_posts = sizeof($obj);
 					}
 					for ($i = 0; $i < $max_posts; $i++) { ?>
-						<a href="<?= htmlspecialchars($obj[$i]->link) ?>" target="_blank" title="<?= ($obj[$i]->title->rendered) ?>">
+						<a href="<?= htmlspecialchars((string) $obj[$i]->link) ?>" target="_blank" title="<?= ($obj[$i]->title->rendered) ?>">
 							<span class="mb-3">
 								<span class="title mb-0">
 									<?= ($obj[$i]->title->rendered) ?>
@@ -247,7 +247,7 @@ include BASE_PATH . "views/header.php";
 						$max_posts = sizeof($asa);
 					}
 					for ($i = 0; $i < $max_posts; $i++) { ?>
-						<a href="<?= htmlspecialchars($asa[$i]->link) ?>" target="_blank" title="<?= ($asa[$i]->title->rendered) ?>">
+						<a href="<?= htmlspecialchars((string) $asa[$i]->link) ?>" target="_blank" title="<?= ($asa[$i]->title->rendered) ?>">
 							<span class="mb-3">
 								<span class="title mb-0">
 									<?= ($asa[$i]->title->rendered) ?>
@@ -272,14 +272,14 @@ include BASE_PATH . "views/header.php";
 						$max_posts = sizeof($asa_ne->channel->item);
 					}
 					for ($i = 0; $i < $max_posts; $i++) { ?>
-						<a href="<?= htmlspecialchars($asa_ne->channel->item[$i]->link) ?>" target="_blank" title="<?= htmlspecialchars($asa_ne->channel->item[$i]->title) ?> (<?= htmlspecialchars($asa_ne->channel->item[$i]->category) ?>)">
+						<a href="<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->link) ?>" target="_blank" title="<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->title) ?> (<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->category) ?>)">
 							<span class="mb-3">
 								<span class="title mb-0">
-									<?= htmlspecialchars($asa_ne->channel->item[$i]->title) ?>
+									<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->title) ?>
 								</span>
 							</span>
 							<span class="category">
-								<?= htmlspecialchars($asa_ne->channel->item[$i]->category) ?>
+								<?= htmlspecialchars((string) $asa_ne->channel->item[$i]->category) ?>
 							</span>
 						</a>
 					<?php } ?>
@@ -288,7 +288,7 @@ include BASE_PATH . "views/header.php";
 		<?php } ?>
 
 		<?php
-		if (strpos($userInfo['EmailAddress'], '@chesterlestreetasc.co.uk')) {
+		if (strpos((string) $userInfo['EmailAddress'], '@chesterlestreetasc.co.uk')) {
 		?>
 
 			<div class="mb-4">

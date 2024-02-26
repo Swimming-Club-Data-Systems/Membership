@@ -80,8 +80,8 @@ try {
 
   $memberOutput = [];
   foreach ($members as $age => $data) {
-    $male = isset($data['Male']) ? $data['Male'] : null;
-    $female = isset($data['Female']) ? $data['Female'] : null;
+    $male = $data['Male'] ?? null;
+    $female = $data['Female'] ?? null;
 
     $memberOutput[] = [
       'age' => $age,
@@ -90,9 +90,7 @@ try {
     ];
   }
 
-  usort($memberOutput, function ($a, $b) {
-    return $a['age'] - $b['age'];
-  });
+  usort($memberOutput, fn($a, $b) => $a['age'] - $b['age']);
 
 
   $output['members'] = $memberOutput;

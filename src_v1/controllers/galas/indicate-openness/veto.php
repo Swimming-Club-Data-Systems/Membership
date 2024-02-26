@@ -24,7 +24,7 @@ if ($row == null || !$row['Vetoable']) {
   halt(404);
 }
 
-$pagetitle = 'Veto ' . htmlspecialchars($row['MForename']) . '\'s entry into ' . htmlspecialchars($row['GalaName']);
+$pagetitle = 'Veto ' . htmlspecialchars((string) $row['MForename']) . '\'s entry into ' . htmlspecialchars((string) $row['GalaName']);
 include BASE_PATH . 'views/header.php';
 
 ?>
@@ -33,12 +33,12 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
       <h1>
-        Veto <?=htmlspecialchars($row['MForename'])?>'s entry into <?=htmlspecialchars($row['GalaName'])?>
+        Veto <?=htmlspecialchars((string) $row['MForename'])?>'s entry into <?=htmlspecialchars((string) $row['GalaName'])?>
       </h1>
-      <p class="lead">You are permitted to veto this entry. This will withdraw your entry from <?=htmlspecialchars($row['GalaName'])?>.</p>
+      <p class="lead">You are permitted to veto this entry. This will withdraw your entry from <?=htmlspecialchars((string) $row['GalaName'])?>.</p>
 
       <?php if (!$row['Locked']) { ?>
-      <p>This entry has not been locked by your coach so you may wish to edit the swims <?=htmlspecialchars($row['MForename'])?> is entered into.</p>
+      <p>This entry has not been locked by your coach so you may wish to edit the swims <?=htmlspecialchars((string) $row['MForename'])?> is entered into.</p>
       <?php } ?>
 
       <p>

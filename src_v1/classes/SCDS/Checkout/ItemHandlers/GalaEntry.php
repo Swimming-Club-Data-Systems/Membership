@@ -4,7 +4,7 @@ namespace SCDS\Checkout\ItemHandlers;
 
 class GalaEntry {
 
-  public static function paid($item, $stripePayment) {
+  public static function paid($item, $stripePayment): void {
 
     $db = app()->db;
 

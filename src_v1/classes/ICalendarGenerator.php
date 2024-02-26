@@ -68,7 +68,7 @@
 
 class ICalendarGenerator
 {
-  const DT_FORMAT = 'Ymd\THis\Z';
+  public const DT_FORMAT = 'Ymd\THis\Z';
 
   protected $properties = [];
   private $available_properties = [
@@ -86,7 +86,7 @@ class ICalendarGenerator
     $this->set($props);
   }
 
-  public function set($key, $val = false)
+  public function set($key, $val = false): void
   {
     if (is_array($key)) {
       foreach ($key as $k => $v) {
@@ -108,16 +108,10 @@ class ICalendarGenerator
   private function build_props()
   {
     // Build ICS properties - add header
-    $ics_props = array(
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//hacksw/handcal//NONSGML v1.0//EN',
-      'CALSCALE:GREGORIAN',
-      'BEGIN:VEVENT'
-    );
+    $ics_props = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//hacksw/handcal//NONSGML v1.0//EN', 'CALSCALE:GREGORIAN', 'BEGIN:VEVENT'];
 
     // Build ICS properties - add header
-    $props = array();
+    $props = [];
     foreach ($this->properties as $k => $v) {
       $props[mb_strtoupper($k . ($k === 'url' ? ';VALUE=URI' : ''))] = $v;
     }
@@ -141,15 +135,10 @@ class ICalendarGenerator
 
   private function sanitize_val($val, $key = false)
   {
-    switch ($key) {
-      case 'dtend':
-      case 'dtstamp':
-      case 'dtstart':
-        $val = $this->format_datetime($val);
-        break;
-      default:
-        $val = $this->escape_string($val);
-    }
+    $val = match ($key) {
+        'dtend', 'dtstamp', 'dtstart' => $this->format_datetime($val),
+        default => $this->escape_string($val),
+    };
 
     return $val;
   }
@@ -162,6 +151,6 @@ class ICalendarGenerator
 
   private function escape_string($str)
   {
-    return preg_replace('/([\,;])/', '\\\$1', $str);
+    return preg_replace('/([\,;])/', '\\\$1', (string) $str);
   }
 }

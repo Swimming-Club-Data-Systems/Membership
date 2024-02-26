@@ -6,12 +6,10 @@
 
 class GalaEvent {
 
-  private $name;
   private $price;
   private $enabled;
 
-  public function __construct($name) {
-    $this->name = $name;
+  public function __construct(private $name) {
     $this->price = 0;
     $this->enabled = false;
   }
@@ -19,10 +17,9 @@ class GalaEvent {
   /**
    * Set the event name
    *
-   * @param string $name
    * @return void
    */
-  public function setName(string $name) {
+  public function setName(string $name): void {
     $this->name = $name;
   }
 
@@ -40,7 +37,7 @@ class GalaEvent {
    *
    * @return void
    */
-  public function enableEvent() {
+  public function enableEvent(): void {
     $this->enabled = true;
   }
 
@@ -49,7 +46,7 @@ class GalaEvent {
    *
    * @return void
    */
-  public function disableEvent() {
+  public function disableEvent(): void {
     $this->enabled = false;
   }
 
@@ -65,10 +62,9 @@ class GalaEvent {
   /**
    * Set the price of the event
    *
-   * @param integer $price
    * @return void
    */
-  public function setPrice(int $price) {
+  public function setPrice(int $price): void {
     $this->price = $price;
   }
 
@@ -84,10 +80,9 @@ class GalaEvent {
   /**
    * Set the price from a decimal string
    *
-   * @param string $price
    * @return void
    */
-  public function setPriceFromString(string $price) {
+  public function setPriceFromString(string $price): void {
     $this->price = \Brick\Math\BigDecimal::of((string) $price)->withPointMovedRight(2)->toBigInteger();
   }
 

@@ -9,7 +9,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -73,7 +73,7 @@ $getSessionSquads->execute([
 $squadNames = $getSessionSquads->fetchAll(PDO::FETCH_ASSOC);
 
 $theTitle = 'Book ' . $session['SessionName'] . ' at ' . $startTime->format('H:i') . ' on ' . $date->format('j F Y') . ' - ' . $tenant->getName();
-$theLink = autoUrl('sessions/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
+$theLink = autoUrl('sessions/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')));
 
 // Get session squads
 $getSquads = $db->prepare("SELECT `Squad` FROM `sessionsSquads` WHERE `Session` = ?");
@@ -192,7 +192,7 @@ if (!$bookingClosed) {
             $content .= '<dl>';
 
             $content .= '<dt>Member</dt><dd>' . htmlspecialchars($emailUser['fn'] . ' ' . $emailUser['sn']) . '</dd>';
-            $content .= '<dt>Session</dt><dd>' . htmlspecialchars($session['SessionName']) . '</dd>';
+            $content .= '<dt>Session</dt><dd>' . htmlspecialchars((string) $session['SessionName']) . '</dd>';
             $content .= '<dt>Date and time</dt><dd>' . htmlspecialchars($sessionDateTime->format('H:i, l j F Y T')) . '</dd>';
             $content .= '<dt>End time</dt><dd>' . htmlspecialchars($sessionEndDateTime->format('H:i')) . '</dd>';
 
@@ -228,7 +228,7 @@ if (!$bookingClosed) {
               ]);
               $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
 
-              $content .= '<dt>' . htmlspecialchars($squadNames[$i]['SquadName']) . ' Coach';
+              $content .= '<dt>' . htmlspecialchars((string) $squadNames[$i]['SquadName']) . ' Coach';
 
               if (sizeof($coaches) > 0) {
                 $content .= 'es';
@@ -246,12 +246,12 @@ if (!$bookingClosed) {
               $content .= '</ul></dd>';
             }
 
-            $content .= '<dt>Location</dt><dd>' . htmlspecialchars($session['VenueName']) . ', <em>' . htmlspecialchars($session['Location']) . '</em></dd>';
-            $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars($session['SessionID']) . '</dd>';
+            $content .= '<dt>Location</dt><dd>' . htmlspecialchars((string) $session['VenueName']) . ', <em>' . htmlspecialchars((string) $session['Location']) . '</em></dd>';
+            $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars((string) $session['SessionID']) . '</dd>';
 
             $content .= '</dl>';
 
-            $content .= '<p>Booking made on your behalf by ' . htmlspecialchars($user->getFullName()) . '.</p>';
+            $content .= '<p>Booking made on your behalf by ' . htmlspecialchars((string) $user->getFullName()) . '.</p>';
 
             if ($session['BookingFee'] > 0) {
               $content .= '<p>We will apply the booking fee to your account when we generate the register for this session. This happens approximately fifteen minutes before the session start time. The fee is payable as part of your next direct debit payment.</p>';
@@ -265,14 +265,14 @@ if (!$bookingClosed) {
               "subject" => $subject,
               "message" => $content
             ]);
-          } catch (Exception $e) {
+          } catch (Exception) {
             // Ignore failed send
           }
         }
 
         $_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess'] = true;
       }
-    } catch (Exception $e) {
+    } catch (Exception) {
       $_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfError'] = true;
     }
   }
@@ -296,10 +296,10 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['BookOnBehalfOfSuccess']
         'update' => true,
       ]
     ]);
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 }
 
 http_response_code(302);
-header('location: ' . autoUrl('sessions/booking/book-on-behalf-of?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d'))));
+header('location: ' . autoUrl('sessions/booking/book-on-behalf-of?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d'))));

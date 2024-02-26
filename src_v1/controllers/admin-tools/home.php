@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
         <p class="lead">Set a system-wide emergency message.</p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("emergency-message")) ?>" class="btn btn-danger">
+          <a href="<?= htmlspecialchars((string) autoUrl("emergency-message")) ?>" class="btn btn-danger">
             Set message
           </a>
         </p>

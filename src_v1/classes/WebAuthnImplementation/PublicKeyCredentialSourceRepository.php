@@ -25,7 +25,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
 
     if (!$credential) return null;
 
-    return PublicKeyCredentialSource::createFromArray(json_decode($credential, true));
+    return PublicKeyCredentialSource::createFromArray(json_decode((string) $credential, true));
   }
 
   /**
@@ -43,7 +43,7 @@ class PublicKeyCredentialSourceRepository implements PublicKeyCredentialSourceRe
     ]);
 
     while ($data = $find->fetchColumn()) {
-      $source = PublicKeyCredentialSource::createFromArray(json_decode($data, true));
+      $source = PublicKeyCredentialSource::createFromArray(json_decode((string) $data, true));
       $sources[] = $source;
     }
     return $sources;

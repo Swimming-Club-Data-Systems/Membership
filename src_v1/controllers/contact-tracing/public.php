@@ -44,8 +44,8 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="list-group list-group-flush">
         <?php do { ?>
-          <a href="<?= htmlspecialchars(autoUrl('contact-tracing/check-in/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
-            <?= htmlspecialchars($location['Name']) ?>
+          <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/check-in/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
+            <?= htmlspecialchars((string) $location['Name']) ?>
           </a>
         <?php } while ($location = $getLocations->fetch(PDO::FETCH_ASSOC)); ?>
       </div>

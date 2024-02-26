@@ -15,8 +15,8 @@ class FeeSummer
 {
 
   // Array for users and their payment items
-  private array $users;
-  private int $month;
+  private readonly array $users;
+  private readonly int $month;
   private $squadFeeRequired = true;
 
   /**
@@ -40,8 +40,8 @@ class FeeSummer
 
     $squadFeeMonths = [];
     try {
-      $squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
-    } catch (Exception | Error $e) {
+      $squadFeeMonths = json_decode((string) app()->tenant->getKey('SquadFeeMonths'), true);
+    } catch (Exception | Error) {
       // Do nothing
     }
     if (isset($squadFeeMonths[(string) $feeMonth])) {
@@ -168,9 +168,7 @@ class FeeSummer
 
       // If is CLS handle discounts
       if (app()->tenant->isCLS()) {
-        usort($discountMembers, function ($item1, $item2) {
-          return $item2['fee'] <=> $item1['fee'];
-        });
+        usort($discountMembers, fn($item1, $item2) => $item2['fee'] <=> $item1['fee']);
 
         $number = 0;
         foreach ($discountMembers as $member) {
@@ -191,7 +189,7 @@ class FeeSummer
               $swimmerDiscount = $memberTotalDec->multipliedBy('0.40')->toScale(2, RoundingMode::DOWN)->withPointMovedRight(2)->toInt();
               $discountPercent = '40';
             }
-          } catch (Exception $e) {
+          } catch (Exception) {
             // Something went wrong so ensure these stay zero!
             $swimmerDiscount = 0;
             $discountPercent = '0';
@@ -343,7 +341,7 @@ class FeeSummer
     return $users;
   }
 
-  public function persistData()
+  public function persistData(): void
   {
     $db = app()->db;
 

@@ -9,13 +9,13 @@ if (isset($_GET['member-id'])) {
 
     $options = new \RankingsDB\GetTimesBuilder($member->MemberID());
     $times = $client->getTimes($options);
-  } catch (\RankingsDb\exceptions\ConnectionException $e) {
+  } catch (\RankingsDb\exceptions\ConnectionException) {
     $error = 'Unable to connect to the rankings.';
-  } catch (\RankingsDb\exceptions\MemberNotFound $e) {
-    $error = 'We could not find a member with ' . app()->tenant->getKey('NGB_NAME') . ' number ' . trim($_GET['member-id']) . '.';
-  } catch (\RankingsDb\exceptions\InvalidPersonalKey $e) {
+  } catch (\RankingsDb\exceptions\MemberNotFound) {
+    $error = 'We could not find a member with ' . app()->tenant->getKey('NGB_NAME') . ' number ' . trim((string) $_GET['member-id']) . '.';
+  } catch (\RankingsDb\exceptions\InvalidPersonalKey) {
     $error = 'The personal key provided is invalid.';
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Problem
     $error = 'An unknown problem occurred.';
   }
@@ -31,7 +31,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Lookup</li>
     </ol>
   </nav>
@@ -118,7 +118,7 @@ include BASE_PATH . 'views/header.php';
             <?php } ?> -->
 
             <!-- <dt class="col-sm-3">Membership Category</dt>
-            <dd class="col-sm-9"><?= htmlspecialchars($member->getIClass()) ?></dd> -->
+            <dd class="col-sm-9"><?= htmlspecialchars((string) $member->getIClass()) ?></dd> -->
           </dl>
 
         <?php } ?>
@@ -130,7 +130,7 @@ include BASE_PATH . 'views/header.php';
             <strong>You must enter a membership number and personal key in system variables.</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl('settings/variables')) ?>" class="alert-link">Add personal key</a>
+            <a href="<?= htmlspecialchars((string) autoUrl('settings/variables')) ?>" class="alert-link">Add personal key</a>
           </p>
         </div>
 

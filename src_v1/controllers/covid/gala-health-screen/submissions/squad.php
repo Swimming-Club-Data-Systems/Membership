@@ -36,7 +36,7 @@ $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 
 $getLatestCompletion = $db->prepare("SELECT `ID`, `DateTime`, `MemberAgreement`, `Guardian`, `Forename`, `Surname` FROM covidGalaHealthScreen LEFT JOIN users ON users.UserID = covidGalaHealthScreen.Guardian WHERE Member = ? ORDER BY `DateTime` DESC LIMIT 1");
 
-$pagetitle = htmlspecialchars($squad['SquadName']) . ' - COVID Return to Competition Screening';
+$pagetitle = htmlspecialchars((string) $squad['SquadName']) . ' - COVID Return to Competition Screening';
 
 include BASE_PATH . 'views/header.php';
 
@@ -47,17 +47,17 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening#squads')) ?>">Squads</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($squad['SquadName']) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening#squads')) ?>">Squads</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-12">
         <h1>
-          <?= htmlspecialchars($squad['SquadName']) ?> COVID-19 Return to Competition Health Screening
+          <?= htmlspecialchars((string) $squad['SquadName']) ?> COVID-19 Return to Competition Health Screening
         </h1>
         <p class="lead mb-0">
           Keeping everyone safe
@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <p class="mb-0"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
+                  <p class="mb-0"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
                   <p class="mb-0">
                     <?php if ($latest) {
                       $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
@@ -107,7 +107,7 @@ include BASE_PATH . 'views/header.php';
                 <?php if ($latest && bool($latest['MemberAgreement'])) { ?>
                   <div class="col-auto">
                     <div class="mt-3 d-sm-none"></div>
-                    <button class="btn btn-warning" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars($latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars($member['MForename']) ?> submits a new declaration form">
+                    <button class="btn btn-warning" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars((string) $latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars((string) $member['MForename']) ?> submits a new declaration form">
                       Void form
                     </button>
                   </div>
@@ -119,7 +119,7 @@ include BASE_PATH . 'views/header.php';
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong>There are no members in <?= htmlspecialchars($squad['SquadName']) ?></strong>
+            <strong>There are no members in <?= htmlspecialchars((string) $squad['SquadName']) ?></strong>
           </p>
         </div>
       <?php } ?>
@@ -135,7 +135,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <button id="voidAllButton" class="btn btn-warning" data-squad-name="<?= htmlspecialchars($squad['SquadName']) ?>" data-squad-id="<?= htmlspecialchars($id) ?>">
+        <button id="voidAllButton" class="btn btn-warning" data-squad-name="<?= htmlspecialchars((string) $squad['SquadName']) ?>" data-squad-id="<?= htmlspecialchars((string) $id) ?>">
           Void all
         </button>
       </p>
@@ -163,7 +163,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="js-opts" data-void-ajax-url="<?= htmlspecialchars(autoUrl('covid/risk-awareness/void')) ?>"></div>
+<div id="js-opts" data-void-ajax-url="<?= htmlspecialchars((string) autoUrl('covid/risk-awareness/void')) ?>"></div>
 
 <?php
 

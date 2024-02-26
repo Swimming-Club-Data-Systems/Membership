@@ -25,7 +25,7 @@ try {
 
     $getMember = $db->prepare("SELECT MemberID, ASANumber, PWHash, PWWrong FROM members WHERE ASANumber = ? AND Tenant = ?");
     $getMember->execute([
-      trim($_POST['swim-england']),
+      trim((string) $_POST['swim-england']),
       $tenant->getId()
     ]);
 
@@ -39,7 +39,7 @@ try {
       throw new Exception('You\'ve entered the wrong password too many times so your account has been locked for your own security. Please ask your primary account holder to reset it.');
     }
 
-    if (!password_verify($_POST['password'], $member['PWHash'])) {
+    if (!password_verify((string) $_POST['password'], (string) $member['PWHash'])) {
       $incrementWrongPW = $db->prepare("UPDATE members SET PWWrong = PWWrong + 1 WHERE MemberID = ?");
       $incrementWrongPW->execute([
         $member['MemberID']
@@ -64,7 +64,7 @@ try {
     http_response_code(303);
     header("location: " . autoUrl("log-books"));
   
-  } catch (PDOException $e) {
+  } catch (PDOException) {
 
     // Was a DB error - throw generic exception so info isn't shown
     throw new Exception('A database error occurred. Your club staff may need to check there are no pending database migrations.');

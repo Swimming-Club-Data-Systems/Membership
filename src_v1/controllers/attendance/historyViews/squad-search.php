@@ -14,7 +14,7 @@ if ($squad == null) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars($squad['SquadName']) . " Attendance Search";
+$pagetitle = htmlspecialchars((string) $squad['SquadName']) . " Attendance Search";
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 $dateMinus4 = new DateTime('-4 weeks today', new DateTimeZone('Europe/London'));
@@ -27,9 +27,9 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history/squads')) ?>">Squads</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history/squads')) ?>">Squads</a></li>
         <li class="breadcrumb-item active" aria-current="page">Search</li>
       </ol>
     </nav>
@@ -37,7 +37,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          <?= htmlspecialchars($squad['SquadName']) ?>
+          <?= htmlspecialchars((string) $squad['SquadName']) ?>
         </h1>
         <p class="lead mb-0">
           Search attendance history
@@ -99,7 +99,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
     </div>
   </div>
 
-  <div id="ajax-data" data-page-url="<?= htmlspecialchars(autoUrl('attendance/history/squads/' . $id . '/search')) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('attendance/history/squads/search')) ?>" data-squad-id="<?= htmlspecialchars($id) ?>"></div>
+  <div id="ajax-data" data-page-url="<?= htmlspecialchars((string) autoUrl('attendance/history/squads/' . $id . '/search')) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('attendance/history/squads/search')) ?>" data-squad-id="<?= htmlspecialchars((string) $id) ?>"></div>
 
 </div>
 

@@ -62,7 +62,7 @@ if (isset($renewal_trap) && $renewal_trap) {
     <div class="col-lg-8">
       <p>
         We'll use these emergency contacts for all swimmers connected to your account if we can't reach you on your
-        phone number. You can change your phone number in <a href="<?= htmlspecialchars(autoUrl("my-account")) ?>">My Account</a>.
+        phone number. You can change your phone number in <a href="<?= htmlspecialchars((string) autoUrl("my-account")) ?>">My Account</a>.
       </p>
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess'])) {
         echo $_SESSION['TENANT-' . app()->tenant->getId()]['AddNewSuccess'];
@@ -101,15 +101,15 @@ if (isset($renewal_trap) && $renewal_trap) {
               <div class="col-auto">
                 <p class="mb-0">
                   <strong class="">
-                    <?= htmlspecialchars($contactsArray[$i]->getName()) ?>
+                    <?= htmlspecialchars((string) $contactsArray[$i]->getName()) ?>
                   </strong>
                   <em>
-                    (<?= htmlspecialchars($contactsArray[$i]->getRelation()) ?>)
+                    (<?= htmlspecialchars((string) $contactsArray[$i]->getRelation()) ?>)
                   </em>
                 </p>
                 <p class="mb-0">
-                  <a href="tel:<?= htmlspecialchars($contactsArray[$i]->getRFCContactNumber()) ?>">
-                    <?= htmlspecialchars($contactsArray[$i]->getNationalContactNumber()) ?>
+                  <a href="tel:<?= htmlspecialchars((string) $contactsArray[$i]->getRFCContactNumber()) ?>">
+                    <?= htmlspecialchars((string) $contactsArray[$i]->getNationalContactNumber()) ?>
                   </a>
                 </p>
               </div>

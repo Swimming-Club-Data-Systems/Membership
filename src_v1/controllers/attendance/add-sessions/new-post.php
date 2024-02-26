@@ -29,8 +29,8 @@ try {
 
   $sessionName = $venue = $startDate = $endDate = $startTime = $endTime = null;
 
-  if (isset($_POST['session-name']) && mb_strlen(trim($_POST['session-name'])) > 0) {
-    $sessionName = mb_ucfirst(trim($_POST['session-name']));
+  if (isset($_POST['session-name']) && mb_strlen(trim((string) $_POST['session-name'])) > 0) {
+    $sessionName = mb_ucfirst(trim((string) $_POST['session-name']));
   }
 
   if (isset($_POST['session-venue'])) {
@@ -48,7 +48,7 @@ try {
       $startDate = new DateTime($_POST['session-date'], new DateTimeZone('Europe/London'));
 
       $endDate = clone $startDate;
-    } catch (Exception $e) {
+    } catch (Exception) {
     }
   }
 
@@ -57,7 +57,7 @@ try {
       try {
         $endDate = new DateTime($_POST['session-end-date'], new DateTimeZone('Europe/London'));
         $recurring = true;
-      } catch (Exception $e) {
+      } catch (Exception) {
         throw new Exception('End date invalid');
       }
     } else {
@@ -146,7 +146,7 @@ try {
 
   if ((isset($_POST['recurring']) && $_POST['recurring'] == 'one-off') && (!$hasSquad || (isset($_POST['require-booking']) && bool($_POST['require-booking'])))) {
     // Begin setup as a booking session
-    $responseData['redirect'] = autoUrl('sessions/booking/book?session=' . urlencode($sessionId) . '&date=' . urlencode($startDate->format('Y-m-d')));
+    $responseData['redirect'] = autoUrl('sessions/booking/book?session=' . urlencode((string) $sessionId) . '&date=' . urlencode($startDate->format('Y-m-d')));
   } else if (isset($_POST['recurring']) && $_POST['recurring'] != 'one-off' && !$hasSquad) {
     throw new Exception('No squads provided');
   }

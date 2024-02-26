@@ -28,7 +28,7 @@ $getVenues->execute([
 ]);
 $venue = $getVenues->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = 'Create registers for ' . htmlspecialchars($gala['name']);
+$pagetitle = 'Create registers for ' . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -39,12 +39,12 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
-        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>">#<?= htmlspecialchars($id) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Create Registers</li>
       </ol>
     </nav>
 
-    <h1>Create registers for <?= htmlspecialchars($gala['name']) ?></h1>
+    <h1>Create registers for <?= htmlspecialchars((string) $gala['name']) ?></h1>
     <p class="lead mb-0">X.</p>
 
   </div>
@@ -89,7 +89,7 @@ include BASE_PATH . 'views/header.php';
               <option selected disabled value="">Select a Venue</option>
               <?php if ($venue) { ?>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($venue['VenueID']) ?>"><?= htmlspecialchars($venue['VenueName']) ?></option>
+                  <option value="<?= htmlspecialchars((string) $venue['VenueID']) ?>"><?= htmlspecialchars((string) $venue['VenueName']) ?></option>
                 <?php } while ($venue = $getVenues->fetch(PDO::FETCH_ASSOC)); ?>
               <?php } ?>
             </select>
@@ -106,14 +106,14 @@ include BASE_PATH . 'views/header.php';
             <div class="row align-items-end mb-3 g-2">
               <div class="col">
                 <div class="mb-0">
-                  <label class="form-label" for="session-date-<?= $session['ID'] ?>"><?= htmlspecialchars($session['Name']) ?> Date</label>
+                  <label class="form-label" for="session-date-<?= $session['ID'] ?>"><?= htmlspecialchars((string) $session['Name']) ?> Date</label>
                   <input type="date" class="form-control" id="session-date-<?= $session['ID'] ?>" name="session-date-<?= $session['ID'] ?>" value="<?= htmlspecialchars($nowDate->format('Y-m-d')) ?>">
                   <div class="invalid-feedback">Please provide a valid date</div>
                 </div>
               </div>
               <div class="col">
                 <div class="mb-0">
-                  <label class="form-label" for="session-start-<?= $session['ID'] ?>"><?= htmlspecialchars($session['Name']) ?> Start Time</label>
+                  <label class="form-label" for="session-start-<?= $session['ID'] ?>"><?= htmlspecialchars((string) $session['Name']) ?> Start Time</label>
                   <input type="time" class="form-control" id="session-start-<?= $session['ID'] ?>" name="session-start-<?= $session['ID'] ?>" value="<?= htmlspecialchars($nowDate->format('H:i')) ?>">
                   <div class="invalid-feedback">Please provide a valid date</div>
                 </div>

@@ -52,8 +52,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
         <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
       </ol>
     </nav>
@@ -84,7 +84,7 @@ include BASE_PATH . 'views/header.php';
         </div>
         <div class="col text-end">
           <p class="lead text-muted mb-0">
-            <?= htmlspecialchars($numBookings) ?> booking<?php if ($numBookings != 1) { ?>s<?php } ?> in total
+            <?= htmlspecialchars((string) $numBookings) ?> booking<?php if ($numBookings != 1) { ?>s<?php } ?> in total
           </p>
         </div>
       </div>
@@ -112,8 +112,8 @@ include BASE_PATH . 'views/header.php';
 
           ?>
             <li class="list-group-item" id="<?= htmlspecialchars('session-unique-id-' . $booking['SessionID']) ?>">
-              <h2 class="mb-0"><?php if (sizeof($squadNames) > 0) { ?><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squadNames[$i]['SquadName']) ?><?php } ?><?php } else { ?>Any Member<?php } ?></h2>
-              <p class="h3"><small><?= htmlspecialchars($booking['SessionName']) ?>, <?= htmlspecialchars($booking['VenueName']) ?></small></p>
+              <h2 class="mb-0"><?php if (sizeof($squadNames) > 0) { ?><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?><?php } ?><?php } else { ?>Any Member<?php } ?></h2>
+              <p class="h3"><small><?= htmlspecialchars((string) $booking['SessionName']) ?>, <?= htmlspecialchars((string) $booking['VenueName']) ?></small></p>
 
               <dl class="row mb-0">
                 <dt class="col-sm-3">Date</dt>
@@ -141,11 +141,11 @@ include BASE_PATH . 'views/header.php';
                   $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
 
                 ?>
-                  <dt class="col-sm-3"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+                  <dt class="col-sm-3"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php for ($y = 0; $y < sizeof($coaches); $y++) { ?>
-                        <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
+                        <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
                       <?php } ?>
                       <?php if (sizeof($coaches) == 0) { ?>
                         <li>None assigned</li>
@@ -172,7 +172,7 @@ include BASE_PATH . 'views/header.php';
                 <dd class="col-sm-9">
                   <?php if ($futureSession) { ?>
                     <span class="d-block mb-2">Booking is required for this session</span>
-                    <a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($booking['Session']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success">Manage bookings for this session</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $booking['Session']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d')))) ?>" class="btn btn-success">Manage bookings for this session</a>
                   <?php } else { ?>
                     <span class="d-block">Booking has closed for this session. No changes can be made.</span>
                   <?php } ?>
@@ -186,9 +186,9 @@ include BASE_PATH . 'views/header.php';
                         $bookedAt = new DateTime($bookedMember['BookedAt'], new DateTimeZone('UTC'));
                         $bookedAt->setTimezone(new DateTimeZone('Europe/London'));
                       ?>
-                        <a href="<?= htmlspecialchars(autoUrl('members/' . $bookedMember['id'])) ?>" class="list-group-item list-group-item-action">
+                        <a href="<?= htmlspecialchars((string) autoUrl('members/' . $bookedMember['id'])) ?>" class="list-group-item list-group-item-action">
                           <span class="mb-0 d-block">
-                            <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?></strong>
+                            <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?></strong>
                           </span>
                           <span class="mb-0 d-block">
                             <em>Booked at <?= htmlspecialchars($bookedAt->format('H:i, j F Y')) ?></em>
@@ -204,10 +204,10 @@ include BASE_PATH . 'views/header.php';
                 // GEOCODE AND USE A MAP
                 ?>
                 <dt class="col-sm-3">Location</dt>
-                <dd class="col-sm-9 mb-0"><?= htmlspecialchars($booking['VenueName']) ?>, <em><?= htmlspecialchars($booking['Location']) ?></em></dd>
+                <dd class="col-sm-9 mb-0"><?= htmlspecialchars((string) $booking['VenueName']) ?>, <em><?= htmlspecialchars((string) $booking['Location']) ?></em></dd>
               </dl>
             </li>
-          <?php } while ($booking = $getBookings->fetch(PDO::FETCH_ASSOC)); ?>
+<?php } while ($booking = $getBookings->fetch(PDO::FETCH_ASSOC)); ?>
         </ul>
       <?php } else { ?>
       <div class="alert alert-info">
@@ -224,36 +224,36 @@ include BASE_PATH . 'views/header.php';
       <nav aria-label="Page navigation">
         <ul class="pagination mb-3">
           <?php if ($numBookings <= 10) { ?>
-            <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
+            <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
           <?php } else if ($numBookings <= 20) { ?>
             <?php if ($page == 1) { ?>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>">Previous</a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>"><?= htmlspecialchars($page - 1) ?></a></li>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?><?= htmlspecialchars($page) ?>"><?= htmlspecialchars($page) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>"><?= htmlspecialchars($page - 1) ?></a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?><?= htmlspecialchars($page) ?>"><?= htmlspecialchars($page) ?></a></li>
             <?php } ?>
           <?php } else { ?>
             <?php if ($page == 1) { ?>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 2))) ?>"><?= htmlspecialchars($page + 2) ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 2))) ?>"><?= htmlspecialchars($page + 2) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>">Previous</a></li>
               <?php if ($page > 2) { ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 2))) ?>"><?= htmlspecialchars($page - 2) ?></a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 2))) ?>"><?= htmlspecialchars($page - 2) ?></a></li>
               <?php } ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>"><?= htmlspecialchars($page - 1) ?></a></li>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page - 1))) ?>"><?= htmlspecialchars($page - 1) ?></a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page))) ?>"><?= htmlspecialchars($page) ?></a></li>
               <?php if ($numBookings > $page * 10) { ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>"><?= htmlspecialchars($page + 1) ?></a></li>
                 <?php if ($numBookings > $page * 10 + 10) { ?>
-                  <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 2))) ?>"><?= htmlspecialchars($page + 2) ?></a></li>
+                  <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 2))) ?>"><?= htmlspecialchars($page + 2) ?></a></li>
                 <?php } ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl('timetable/booking/my-bookings?page=' . urlencode($page + 1))) ?>">Next</a></li>
               <?php } ?>
             <?php } ?>
           <?php } ?>

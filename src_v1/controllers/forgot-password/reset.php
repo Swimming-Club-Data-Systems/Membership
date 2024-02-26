@@ -56,7 +56,7 @@ if ($user = $getUser->fetchColumn()) {
 		</form>
 	</div>
 
-	<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars(autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
+	<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars((string) autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
 
 <?php
 	$footer = new \SCDS\Footer();

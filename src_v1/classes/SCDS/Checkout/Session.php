@@ -94,7 +94,7 @@ class Session
         $session->amount = $sessionInfo->amount;
         $session->currency = $sessionInfo->currency;
         $session->state = $sessionInfo->state;
-        $session->allowedTypes = json_decode($sessionInfo->allowed_types);
+        $session->allowedTypes = json_decode((string) $sessionInfo->allowed_types);
         $session->created = new \DateTime($sessionInfo->created, new \DateTimeZone(('UTC')));
         if ($sessionInfo->succeeded) {
             $session->succeeded = new \DateTime($sessionInfo->succeeded, new \DateTimeZone(('UTC')));
@@ -105,14 +105,14 @@ class Session
         $session->method = $sessionInfo->method;
         $session->version = $sessionInfo->version;
         $session->taxId = $sessionInfo->tax_id;
-        $session->totalDetails = json_decode($sessionInfo->total_details);
-        $session->metadata = json_decode($sessionInfo->metadata);
+        $session->totalDetails = json_decode((string) $sessionInfo->total_details);
+        $session->metadata = json_decode((string) $sessionInfo->metadata);
         $session->tenant = $sessionInfo->Tenant;
 
         return $session;
     }
 
-    public function addItem($data)
+    public function addItem($data): void
     {
         $id = \Ramsey\Uuid\Uuid::uuid4();
 
@@ -135,7 +135,7 @@ class Session
         ]);
     }
 
-    public function removeItem($itemId)
+    public function removeItem($itemId): void
     {
         $db = app()->db;
 
@@ -146,7 +146,7 @@ class Session
         ]);
     }
 
-    public function autoCalculateTotal()
+    public function autoCalculateTotal(): void
     {
         $items = $this->getItems();
 
@@ -173,7 +173,7 @@ class Session
         return $this->items;
     }
 
-    private function loadItems()
+    private function loadItems(): void
     {
         $db = app()->db;
         $this->items = [];
@@ -254,7 +254,7 @@ class Session
         return $intent;
     }
 
-    public function save()
+    public function save(): void
     {
         $db = app()->db;
 

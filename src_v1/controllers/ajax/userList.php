@@ -12,10 +12,10 @@ if ($access != "Admin" && $access != "Galas") {
 $users = null;
 if (isset($_POST["search"])) {
   // get the search term parameter from post
-  $search = '%' . trim($_POST["search"]) . '%';
+  $search = '%' . trim((string) $_POST["search"]) . '%';
 
   $sql = "";
-  $search_terms = explode(' ', $_POST["search"]);
+  $search_terms = explode(' ', (string) $_POST["search"]);
   $names = [];
   $names[] = $tenant->getId();
   $sql = "";
@@ -53,7 +53,7 @@ if ($user != null) { ?>
       ]);
     ?>
       <a href="<?= autoUrl("users/" . $user['UserID']) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-        <?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?>
+        <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?>
         <div class="text-end">
           <?php while ($al = $getAccessLevels->fetchColumn()) { ?>
             <span class="badge bg-primary rounded-pill">

@@ -61,8 +61,8 @@ function registerSheetGenerator($date, $sessionId)
 ?>
     <form id="register-form">
 
-      <input type="hidden" name="displayed-reg-date" id="displayed-reg-date" value="<?= htmlspecialchars($date->format("Y-m-d")) ?>">
-      <input type="hidden" name="displayed-reg-session" id="displayed-reg-session" value="<?= htmlspecialchars($sessionId) ?>">
+      <input type="hidden" name="displayed-reg-date" id="displayed-reg-date" value="<?= htmlspecialchars((string) $date->format("Y-m-d")) ?>">
+      <input type="hidden" name="displayed-reg-session" id="displayed-reg-session" value="<?= htmlspecialchars((string) $sessionId) ?>">
       <?= \SCDS\CSRF::write() ?>
 
       <div class="card mb-3">
@@ -71,11 +71,11 @@ function registerSheetGenerator($date, $sessionId)
         </div>
         <div class="card-body">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($session->getName()) ?></strong> (<?= htmlspecialchars($session->getStartTime()->format('H:i')) ?> - <?= htmlspecialchars($session->getEndTime()->format('H:i')) ?>)
+            <strong><?= htmlspecialchars($session->getName()) ?></strong> (<?= htmlspecialchars((string) $session->getStartTime()->format('H:i')) ?> - <?= htmlspecialchars((string) $session->getEndTime()->format('H:i')) ?>)
           </p>
 
           <p class="mb-0">
-            <em><?php for ($i = 0; $i < sizeof($squads); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squads[$i]->getName()) ?><?php } ?></em>
+            <em><?php for ($i = 0; $i < sizeof($squads); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squads[$i]->getName()) ?><?php } ?></em>
           </p>
 
           <?php if ($bookingSessionInfo) { ?>
@@ -94,7 +94,7 @@ function registerSheetGenerator($date, $sessionId)
               </p>
 
               <p class="mb-0">
-                Until then, head to <a href="<?= htmlspecialchars(autoUrl('sessions/booking/book?session=' . urlencode($sessionId) . '&date=' . urlencode($date->format('Y-m-d')))) ?>">the booking page for this session</a> to see who's booked in.
+                Until then, head to <a href="<?= htmlspecialchars((string) autoUrl('sessions/booking/book?session=' . urlencode((string) $sessionId) . '&date=' . urlencode((string) $date->format('Y-m-d')))) ?>">the booking page for this session</a> to see who's booked in.
               </p>
             </div>
           <?php } else if (sizeof($register) == 0) { ?>
@@ -128,8 +128,8 @@ function registerSheetGenerator($date, $sessionId)
                   <div class="row align-items-center">
                     <div class="col">
                       <div class="form-check">
-                        <input type="checkbox" class="form-check-input checkbox-input" id="member-<?= htmlspecialchars($row['id']) ?>" <?php if (bool($row['tick'])) { ?>checked<?php } ?> data-indeterminate="<?php if (bool($row['indeterminate'])) { ?>true<?php } else { ?>false<?php } ?>"" data-week-id=" <?= htmlspecialchars($row['week_id']) ?>" data-session-id="<?= htmlspecialchars($row['session_id']) ?>" data-member-id="<?= htmlspecialchars($row['id']) ?>">
-                        <label class="form-check-label d-block" for="member-<?= htmlspecialchars($row['id']) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['fn'], $row['sn'])) ?><?php if ($row['show_gender']) { ?><br><em><?= htmlspecialchars($row['gender_identity']) ?>, <?= htmlspecialchars($row['gender_pronouns']) ?></em><?php } ?></label>
+                        <input type="checkbox" class="form-check-input checkbox-input" id="member-<?= htmlspecialchars((string) $row['id']) ?>" <?php if (bool($row['tick'])) { ?>checked<?php } ?> data-indeterminate="<?php if (bool($row['indeterminate'])) { ?>true<?php } else { ?>false<?php } ?>"" data-week-id=" <?= htmlspecialchars((string) $row['week_id']) ?>" data-session-id="<?= htmlspecialchars((string) $row['session_id']) ?>" data-member-id="<?= htmlspecialchars((string) $row['id']) ?>">
+                        <label class="form-check-label d-block" for="member-<?= htmlspecialchars((string) $row['id']) ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['fn'], $row['sn'])) ?><?php if ($row['show_gender']) { ?><br><em><?= htmlspecialchars((string) $row['gender_identity']) ?>, <?= htmlspecialchars((string) $row['gender_pronouns']) ?></em><?php } ?></label>
                       </div>
                     </div>
                     <?php if (sizeof($row['medical']) > 0 || sizeof($row['photo']) > 0 || $row['notes'] || sizeof($row['contacts']) > 0) { ?>
@@ -167,10 +167,10 @@ function registerSheetGenerator($date, $sessionId)
                         <div>
                           <div class="btn-group d-flex">
                             <?php if (sizeof($row['medical']) > 0 || sizeof($row['photo']) > 0 || $row['notes']) { ?>
-                              <button class="btn btn-sm btn-warning" type="button" data-show="extra-info-<?= htmlspecialchars($row['id']) ?>" aria-expanded="false" aria-controls="extra-info-<?= htmlspecialchars($row['id']) ?>"><span class="d-none d-md-inline">Medical, photo &amp; notes info</span><span class="d-md-none">Info</span> <span class="fa fa-caret-down"></span></button>
+                              <button class="btn btn-sm btn-warning" type="button" data-show="extra-info-<?= htmlspecialchars((string) $row['id']) ?>" aria-expanded="false" aria-controls="extra-info-<?= htmlspecialchars((string) $row['id']) ?>"><span class="d-none d-md-inline">Medical, photo &amp; notes info</span><span class="d-md-none">Info</span> <span class="fa fa-caret-down"></span></button>
                             <?php } ?>
                             <?php if (sizeof($row['contacts']) > 0) { ?>
-                              <button class="btn btn-sm btn-danger" type="button" data-show="emergency-contacts-<?= htmlspecialchars($row['id']) ?>" aria-expanded="false" aria-controls="emergency-contacts-<?= htmlspecialchars($row['id']) ?>"><span class="fa fa-phone"></span> <span class="fa fa-caret-down"></span></button>
+                              <button class="btn btn-sm btn-danger" type="button" data-show="emergency-contacts-<?= htmlspecialchars((string) $row['id']) ?>" aria-expanded="false" aria-controls="emergency-contacts-<?= htmlspecialchars((string) $row['id']) ?>"><span class="fa fa-phone"></span> <span class="fa fa-caret-down"></span></button>
                             <?php } ?>
                           </div>
                         </div>
@@ -180,7 +180,7 @@ function registerSheetGenerator($date, $sessionId)
                 </div>
                 <?php if (sizeof($row['contacts']) > 0) { ?>
                   <div class="d-block">
-                    <div class="mb-n3 d-none register-hideable" id="emergency-contacts-<?= htmlspecialchars($row['id']) ?>">
+                    <div class="mb-n3 d-none register-hideable" id="emergency-contacts-<?= htmlspecialchars((string) $row['id']) ?>">
                       <hr>
                       <p class="h5 mb-0">
                         Emergency contacts
@@ -197,14 +197,14 @@ function registerSheetGenerator($date, $sessionId)
                               <div class="card card-body mb-2">
                                 <div class="row align-items-center">
                                   <div class="col-12 text-center">
-                                    <div class="text-truncate"><strong><?= htmlspecialchars($ec->getName()) ?></strong></div>
-                                    <div class="text-truncate"><?= htmlspecialchars($ec->getRelation()) ?></div>
+                                    <div class="text-truncate"><strong><?= htmlspecialchars((string) $ec->getName()) ?></strong></div>
+                                    <div class="text-truncate"><?= htmlspecialchars((string) $ec->getRelation()) ?></div>
                                     <div class="mb-2"></div>
                                   </div>
                                   <div class="col">
                                     <div class="d-grid gap-2">
-                                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-success">
-                                        <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars($ec->getInternationalContactNumber()) ?>
+                                      <a href="<?= htmlspecialchars((string) $ec->getRFCContactNumber()) ?>" class="btn btn-success">
+                                        <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars((string) $ec->getInternationalContactNumber()) ?>
                                       </a>
                                     </div>
                                   </div>
@@ -220,7 +220,7 @@ function registerSheetGenerator($date, $sessionId)
                 <?php } ?>
                 <?php if (sizeof($row['medical']) > 0 || sizeof($row['photo']) > 0 || $row['notes']) { ?>
                   <div class="d-block">
-                    <div class="mb-n3 d-none register-hideable" id="extra-info-<?= htmlspecialchars($row['id']) ?>">
+                    <div class="mb-n3 d-none register-hideable" id="extra-info-<?= htmlspecialchars((string) $row['id']) ?>">
                       <hr>
                       <?php if (sizeof($row['medical']) > 0) { ?>
                         <div class="">
@@ -333,7 +333,7 @@ function registerSheetGenerator($date, $sessionId)
                   </div>
                 <?php } ?>
               </li>
-            <?php } ?>
+<?php } ?>
           </ul>
         <?php } ?>
       </div>
@@ -346,13 +346,13 @@ function registerSheetGenerator($date, $sessionId)
 
       <?php if ($user->hasPermission('Admin')) { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('covid/contact-tracing/reports/from-register?date=' . urlencode($date->format('Y-m-d')) . '&session=' . urlencode($sessionId))) ?>">Generate COVID-19 Contact Details List</a> for this register.
+          <a href="<?= htmlspecialchars((string) autoUrl('covid/contact-tracing/reports/from-register?date=' . urlencode((string) $date->format('Y-m-d')) . '&session=' . urlencode((string) $sessionId))) ?>">Generate COVID-19 Contact Details List</a> for this register.
         </p>
       <?php } ?>
     <?php } ?>
 <?php
 
-  } catch (Exception $e) {
+  } catch (Exception) {
     // pre($e);
   }
 }

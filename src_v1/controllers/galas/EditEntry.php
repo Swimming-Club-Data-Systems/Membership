@@ -74,12 +74,12 @@ include "galaMenu.php";
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas/entries") ?>">My entries</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr($row["MForename"], 0, 1, 'utf-8') . mb_substr($row["MSurname"], 0, 1, 'utf-8')) ?> (<?= htmlspecialchars($row['GalaName']) ?>)</li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr((string) $row["MForename"], 0, 1, 'utf-8') . mb_substr((string) $row["MSurname"], 0, 1, 'utf-8')) ?> (<?= htmlspecialchars((string) $row['GalaName']) ?>)</li>
       </ol>
     </nav>
     <div>
-      <h1><?= htmlspecialchars($row['MForename'] . " " . $row['MSurname'][0]) ?>'s entry for <?= htmlspecialchars($row['GalaName']) ?></h1>
-      <p class="lead mb-0">Closing date: <?= date('j F Y', strtotime($row['ClosingDate'])) ?></p>
+      <h1><?= htmlspecialchars($row['MForename'] . " " . $row['MSurname'][0]) ?>'s entry for <?= htmlspecialchars((string) $row['GalaName']) ?></h1>
+      <p class="lead mb-0">Closing date: <?= date('j F Y', strtotime((string) $row['ClosingDate'])) ?></p>
     </div>
   </div>
 </div>
@@ -158,11 +158,11 @@ include "galaMenu.php";
 
         <?php if ($row['ProcessingFee']) { ?>
         <p>
-          Your entry fee includes a processing fee of £<?= htmlspecialchars(MoneyHelpers::intToDecimal($row['ProcessingFee'])) ?>
+          Your entry fee includes a processing fee of £<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($row['ProcessingFee'])) ?>
         </p>
         <?php } ?>
 
-        <input type="hidden" value="<?= htmlspecialchars($row['EntryID']) ?>" name="entryID">
+        <input type="hidden" value="<?= htmlspecialchars((string) $row['EntryID']) ?>" name="entryID">
         <p>
           <button type="submit" id="submit" class="btn btn-success">Update</button>
         </p>
@@ -173,24 +173,24 @@ include "galaMenu.php";
         $getEntryPaymentCount->execute([$row['StripePayment']]);
         $countPaid = $getEntryPaymentCount->fetchColumn(); ?>
         <h2>Payment</h2>
-        <p class="lead"><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>You<?php } else { ?><?= htmlspecialchars($parentName) ?><?php } ?> paid for this gala entry by card</p>
+        <p class="lead"><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>You<?php } else { ?><?= htmlspecialchars((string) $parentName) ?><?php } ?> paid for this gala entry by card</p>
         <div class="row align-items-center mb-3">
           <div class="col-auto">
-            <img alt="" src="<?= autoUrl("img/stripe/" . $row['Brand'] . ".png", false) ?>" srcset="<?= autoUrl("img/stripe/" . $row['Brand'] . "@2x.png", false) ?> 2x, <?= autoUrl("img/stripe/" . $row['Brand'] . "@3x.png", false) ?> 3x" style="width:40px;"> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($row['Brand'])) ?></span>
+            <img alt="" src="<?= autoUrl("img/stripe/" . $row['Brand'] . ".png", false) ?>" srcset="<?= autoUrl("img/stripe/" . $row['Brand'] . "@2x.png", false) ?> 2x, <?= autoUrl("img/stripe/" . $row['Brand'] . "@3x.png", false) ?> 3x" style="width:40px;"> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($row['Brand'])) ?></span>
           </div>
           <div class="col-auto">
             <p class="my-0">
-              &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($row['Last4']) ?>
+              &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $row['Last4']) ?>
             </p>
           </div>
         </div>
         <?php if ($countPaid > 1) { ?>
           <p>
-            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>You<?php } else { ?><?= htmlspecialchars($parentName) ?><?php } ?> paid for <?= htmlspecialchars($numFormat->format($countPaid)) ?> gala entries as part of this transaction.
+            <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>You<?php } else { ?><?= htmlspecialchars((string) $parentName) ?><?php } ?> paid for <?= htmlspecialchars($numFormat->format($countPaid)) ?> gala entries as part of this transaction.
           </p>
         <?php } ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("payments/card-transactions/" . $row['StripePayment'])) ?>" class="btn btn-primary">View transaction</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/card-transactions/" . $row['StripePayment'])) ?>" class="btn btn-primary">View transaction</a>
         </p>
       <?php } ?>
     </form>

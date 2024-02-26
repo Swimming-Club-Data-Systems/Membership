@@ -5,15 +5,8 @@ namespace MembershipFees;
 class MembershipFeeItem
 {
 
-  private $description;
-  private $amount;
-  private $member;
-
-  public function __construct($description, $amount, $member)
+  public function __construct(private $description, private $amount, private $member)
   {
-    $this->description = $description;
-    $this->amount = $amount;
-    $this->member = $member;
   }
 
   public function getDescription()
@@ -36,7 +29,7 @@ class MembershipFeeItem
     return $this->member;
   }
 
-  public function setAmount($amount) {
+  public function setAmount($amount): void {
     $this->amount = $amount;
   }
 }

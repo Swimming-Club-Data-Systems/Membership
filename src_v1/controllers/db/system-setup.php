@@ -29,7 +29,7 @@ if ($getTableCount->fetchColumn() == 0) {
         'Admin',
         $uid
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Could not add user
     }
   }

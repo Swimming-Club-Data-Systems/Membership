@@ -22,7 +22,7 @@ include BASE_PATH . "views/root/head.php";
     <div class="col-lg-8 col-md-10">
       <div class="">
         <p class="mb-5">
-          <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-outline-primary btn-outline-light-d">Quit</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('')) ?>" class="btn btn-outline-primary btn-outline-light-d">Quit</a>
         </p>
 
         <h1 class="">Login</h1>
@@ -43,7 +43,7 @@ include BASE_PATH . "views/root/head.php";
 
       <?php if (isset($_SESSION['SCDS-SU-Login2FA'])) { ?>
 
-        <form method="post" action="<?= htmlspecialchars(autoUrl("admin/login/2fa")) ?>" name="2faform" id="2faform" class="needs-validation" novalidate>
+        <form method="post" action="<?= htmlspecialchars((string) autoUrl("admin/login/2fa")) ?>" name="2faform" id="2faform" class="needs-validation" novalidate>
           <div class="mb-3">
             <label class="form-label" for="auth">Authentication Code</label>
             <input type="number" name="auth" id="auth" class="form-control form-control-lg" required autofocus placeholder="654321" pattern="[0-9]*" inputmode="numeric" min="0" max="999999" step="1">
@@ -51,17 +51,17 @@ include BASE_PATH . "views/root/head.php";
               Please enter a numeric authentication code.
             </div>
           </div>
-          <input type="hidden" name="target" value="<?= htmlspecialchars($target) ?>">
+          <input type="hidden" name="target" value="<?= htmlspecialchars((string) $target) ?>">
           <?= SCDS\CSRF::write() ?>
           <input type="hidden" name="SessionSecurity" value="<?= session_id() ?>">
           <p class="mb-5"><input type="submit" name="verify" id="verify" value="Verify" class="btn btn-lg btn-primary"></p>
         </form>
 
       <?php } else { ?>
-        <form method="post" action="<?= htmlspecialchars(autoUrl("admin/login")) ?>" name="loginform" id="loginform" class="needs-validation" novalidate>
+        <form method="post" action="<?= htmlspecialchars((string) autoUrl("admin/login")) ?>" name="loginform" id="loginform" class="needs-validation" novalidate>
           <div class="mb-3">
             <label class="form-label" for="email-address">Email address</label>
-            <input type="email" name="email-address" id="email-address" class="form-control form-control-lg text-lowercase" <?php if (false) { ?> value="<?= htmlspecialchars($username) ?>" <?php } ?> required <?php if (true) { ?>autofocus<?php } ?> placeholder="yourname@example.com" autocomplete="email">
+            <input type="email" name="email-address" id="email-address" class="form-control form-control-lg text-lowercase" <?php if (false) { ?> value="<?= htmlspecialchars((string) $username) ?>" <?php } ?> required <?php if (true) { ?>autofocus<?php } ?> placeholder="yourname@example.com" autocomplete="email">
             <div class="invalid-feedback">
               Please enter a valid email address.
             </div>
@@ -82,7 +82,7 @@ include BASE_PATH . "views/root/head.php";
               </small>
             </div>
           </div>
-          <input type="hidden" name="target" value="<?= htmlspecialchars($target) ?>">
+          <input type="hidden" name="target" value="<?= htmlspecialchars((string) $target) ?>">
           <?= \SCDS\CSRF::write() ?>
           <input type="hidden" name="SessionSecurity" value="<?= session_id() ?>">
           <p class="mb-5"><input type="submit" name="login" id="login" value="Login" class="btn btn-lg btn-primary"></p>
@@ -91,7 +91,7 @@ include BASE_PATH . "views/root/head.php";
               This is not the login page for club users.
             </p>
             <span>
-              <a href="<?= htmlspecialchars(autoUrl("admin/login/reset-password")) ?>" class="btn btn-dark-l btn-outline-light-d">
+              <a href="<?= htmlspecialchars((string) autoUrl("admin/login/reset-password")) ?>" class="btn btn-dark-l btn-outline-light-d">
                 Forgot password?
               </a>
             </span>

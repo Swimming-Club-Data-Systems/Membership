@@ -14,7 +14,7 @@ $getUsers = $db->prepare("SELECT UserID, Forename, Surname, EmailAddress, Mobile
 $user = null;
 if (isset($_GET['email-address'])) {
   $getUsers->execute([
-    mb_strimwidth($_GET['email-address'], 0, 255),
+    mb_strimwidth((string) $_GET['email-address'], 0, 255),
   ]);
   $user = $getUsers->fetch(PDO::FETCH_ASSOC);
 }
@@ -38,7 +38,7 @@ include BASE_PATH . "views/root/header.php";
   <form method="get" class="needs-validation" novalidate>
     <div class="mb-3">
       <label class="form-label" for="email-address">Email</label>
-      <input type="email" id="email-address" name="email-address" class="form-control" placeholder="name@example.com" <?php if (isset($_GET['email-address'])) { ?>value="<?= htmlspecialchars($_GET['email-address']) ?>" <?php } ?> required>
+      <input type="email" id="email-address" name="email-address" class="form-control" placeholder="name@example.com" <?php if (isset($_GET['email-address'])) { ?>value="<?= htmlspecialchars((string) $_GET['email-address']) ?>" <?php } ?> required>
       <div class="invalid-feedback">
         Please enter a valid email address
       </div>
@@ -71,13 +71,13 @@ include BASE_PATH . "views/root/header.php";
         $number = null;
         try {
           $number = PhoneNumber::parse($user['Mobile']);
-        } catch (PhoneNumberParseException $e) {
+        } catch (PhoneNumberParseException) {
           $number = false;
         }
 
         $tenantUrl = $user['ID'];
         if ($user['Code']) {
-          $tenantUrl = mb_strtolower($user['Code']);
+          $tenantUrl = mb_strtolower((string) $user['Code']);
         }
 
         $logins->execute([$user['UserID']]);
@@ -90,14 +90,14 @@ include BASE_PATH . "views/root/header.php";
         } else {
           $time = new DateTime($loginInfo['Time'], new DateTimeZone('UTC'));
           $time->setTimezone(new DateTimeZone('Europe/London'));
-          $details = $time->format('H:i T \o\n j F Y') . " from " . htmlspecialchars($loginInfo['Browser']) . " on " . htmlspecialchars($loginInfo['Platform']) . " (" . htmlspecialchars($loginInfo['IPAddress']) . ")";
+          $details = $time->format('H:i T \o\n j F Y') . " from " . htmlspecialchars((string) $loginInfo['Browser']) . " on " . htmlspecialchars((string) $loginInfo['Platform']) . " (" . htmlspecialchars((string) $loginInfo['IPAddress']) . ")";
         }
 
         ?>
         <li class="list-group-item">
           <h2><?= htmlspecialchars($user['Forename'] . ' ' . $user['Surname']) ?></h2>
           <p class="lead">
-            <?= htmlspecialchars($user['Name']) ?>
+            <?= htmlspecialchars((string) $user['Name']) ?>
           </p>
 
           <dl class="row">
@@ -105,14 +105,14 @@ include BASE_PATH . "views/root/header.php";
               Email
             </dt>
             <dd class="col-md-9">
-              <?= htmlspecialchars($user['EmailAddress']) ?>
+              <?= htmlspecialchars((string) $user['EmailAddress']) ?>
             </dd>
 
             <dt class="col-md-3">
               Phone
             </dt>
             <dd class="col-md-9">
-              <?php if ($number) { ?><a href="<?= htmlspecialchars($number->format(PhoneNumberFormat::RFC3966)) ?>"><?= htmlspecialchars($number->format(PhoneNumberFormat::INTERNATIONAL)) ?></a><?php } else { ?><?= htmlspecialchars($user['Mobile']) ?><?php } ?>
+              <?php if ($number) { ?><a href="<?= htmlspecialchars($number->format(PhoneNumberFormat::RFC3966)) ?>"><?= htmlspecialchars($number->format(PhoneNumberFormat::INTERNATIONAL)) ?></a><?php } else { ?><?= htmlspecialchars((string) $user['Mobile']) ?><?php } ?>
             </dd>
 
             <dt class="col-md-3">
@@ -124,8 +124,8 @@ include BASE_PATH . "views/root/header.php";
           </dl>
 
           <p class="mb-0">
-            <a target="_blank" href="<?= htmlspecialchars(autoUrl($tenantUrl . '/users/' . $user['UserID'])) ?>" class="btn btn-primary">View in tenant</a>
-            <a target="_self" href="<?= htmlspecialchars(autoUrl('admin/audit/requests?user=' . $user['UserID'])) ?>" class="btn btn-primary">View HTTP requests</a>
+            <a target="_blank" href="<?= htmlspecialchars((string) autoUrl($tenantUrl . '/users/' . $user['UserID'])) ?>" class="btn btn-primary">View in tenant</a>
+            <a target="_self" href="<?= htmlspecialchars((string) autoUrl('admin/audit/requests?user=' . $user['UserID'])) ?>" class="btn btn-primary">View HTTP requests</a>
           </p>
         </li>
       <?php } while ($user = $getUsers->fetch(PDO::FETCH_ASSOC)); ?>

@@ -12,14 +12,14 @@ class ListGroup {
   private $items;
 
   public function __construct($json) {
-    $this->items = json_decode($json);
+    $this->items = json_decode((string) $json);
   }
 
   public function render($current = false) {
     $output = '';
     $listGroupClass = '';
 
-    if (strlen($this->items->title) > 0) {
+    if (strlen((string) $this->items->title) > 0) {
       $output .= '<div class="position-sticky top-3 card mb-3">
         <div class="card-header">' . $this->items->title . '</div>';
       $listGroupClass = ' list-group-flush ';
@@ -35,14 +35,14 @@ class ListGroup {
         }
 
         $target = '';
-        if (isset($link->target) && strlen($link->target) > 0) {
+        if (isset($link->target) && strlen((string) $link->target) > 0) {
           $target = 'target="' . $link->target . '"';
         } else {
           $target = 'target="_self"';
         }
 
         $title = '';
-        if (isset($link->title) && strlen($link->title) > 0) {
+        if (isset($link->title) && strlen((string) $link->title) > 0) {
           $target = 'title="' . $link->title . '"';
         } else {
           $target = 'title="' . $link->name . '"';
@@ -59,7 +59,7 @@ class ListGroup {
 
     $output .= '</div>';
 
-    if (strlen($this->items->title) > 0) {
+    if (strlen((string) $this->items->title) > 0) {
       $output .= '</div>';
     }
 

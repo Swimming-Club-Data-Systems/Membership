@@ -28,8 +28,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/editors")) ?>">Bulk editors</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/editors")) ?>">Bulk editors</a></li>
       <li class="breadcrumb-item active" aria-current="page">Squad Membership</li>
     </ol>
   </nav>
@@ -56,7 +56,7 @@ include BASE_PATH . 'views/header.php';
       <?php do { ?>
 
         <li class="list-group-item">
-          <h2><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></h2>
+          <h2><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></h2>
 
           <?php if (sizeof($squads) > 0) { ?>
             <div class="row">
@@ -69,8 +69,8 @@ include BASE_PATH . 'views/header.php';
               ?>
                 <div class="col">
                   <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="<?= htmlspecialchars('squad-member-check-squad-' . $squad['id'] . '-member-' . $member['id']) ?>" <?php if ($isMember) { ?>checked<?php } ?> data-member="<?= htmlspecialchars($member['id']) ?>" data-squad="<?= htmlspecialchars($squad['id']) ?>" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?>">
-                    <label class="form-check-label" for="<?= htmlspecialchars('squad-member-check-squad-' . $squad['id'] . '-member-' . $member['id']) ?>"><?= htmlspecialchars($squad['name']) ?></label>
+                    <input class="form-check-input" type="checkbox" id="<?= htmlspecialchars('squad-member-check-squad-' . $squad['id'] . '-member-' . $member['id']) ?>" <?php if ($isMember) { ?>checked<?php } ?> data-member="<?= htmlspecialchars((string) $member['id']) ?>" data-squad="<?= htmlspecialchars((string) $squad['id']) ?>" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?>">
+                    <label class="form-check-label" for="<?= htmlspecialchars('squad-member-check-squad-' . $squad['id'] . '-member-' . $member['id']) ?>"><?= htmlspecialchars((string) $squad['name']) ?></label>
                   </div>
                 </div>
               <?php } ?>
@@ -94,7 +94,7 @@ include BASE_PATH . 'views/header.php';
 
 </div>
 
-<div id="options-data" data-ajax-url="<?= htmlspecialchars(autoUrl('admin/editors/squad-membership/add-remove')) ?>"></div>
+<div id="options-data" data-ajax-url="<?= htmlspecialchars((string) autoUrl('admin/editors/squad-membership/add-remove')) ?>"></div>
 
 <?php
 

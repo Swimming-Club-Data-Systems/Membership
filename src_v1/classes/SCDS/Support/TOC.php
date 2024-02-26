@@ -21,10 +21,10 @@ class TOC
   {
     // Go up from current location dir until we find the TOC file or reach BASE_PATH + support loc
     for ($i = 1; $i < 15; $i++) {
-      $currentDirectory = dirname($location, $i);
+      $currentDirectory = dirname((string) $location, $i);
 
       // If we reach the BASE_PATH, break and return
-      if (trim($currentDirectory, '/') == trim(BASE_PATH, '/')) {
+      if (trim($currentDirectory, '/') == trim((string) BASE_PATH, '/')) {
         return null;
       }
 
@@ -32,7 +32,7 @@ class TOC
         $toc = new TOC();
         $toc->yamlData = \Symfony\Component\Yaml\Yaml::parseFile($currentDirectory . '/toc.yml');
         $toc->fileLocation = str_replace(BASE_PATH . 'help', '', $currentDirectory);
-        $toc->currentLocation = str_replace(BASE_PATH . 'help', '', $location);
+        $toc->currentLocation = str_replace(BASE_PATH . 'help', '', (string) $location);
 
         return $toc;
       }
@@ -60,12 +60,12 @@ class TOC
 
       $output .= '<li>';
       if (isset($item['href'])) {
-        $output .= '<a href="' . htmlspecialchars(autoUrl('help-and-support' . $currentLocation . '/' . $item['href'])) . '">';
+        $output .= '<a href="' . htmlspecialchars((string) autoUrl('help-and-support' . $currentLocation . '/' . $item['href'])) . '">';
       } else {
         $output .= '<strong>';
       }
 
-      $output .= htmlspecialchars($item['name']);
+      $output .= htmlspecialchars((string) $item['name']);
 
       if (isset($item['href'])) {
         $output .= '</a>';

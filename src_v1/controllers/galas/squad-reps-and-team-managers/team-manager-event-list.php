@@ -47,10 +47,10 @@ include BASE_PATH . 'views/header.php';
         <a href="<?=autoUrl("galas/" . $gala['id'] . "/team-manager")?>">
           <span class="mb-3">
             <span class="title mb-0">
-              <?=htmlspecialchars($gala['name'])?>
+              <?=htmlspecialchars((string) $gala['name'])?>
             </span>
             <span>
-              <?=htmlspecialchars($gala['venue'])?>
+              <?=htmlspecialchars((string) $gala['venue'])?>
             </span>
           </span>
           <span class="category">

@@ -36,7 +36,7 @@ $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 
 $getLatestCompletion = $db->prepare("SELECT `ID`, `DateTime`, `OfficerApproval`, `ApprovedBy`, `Forename`, `Surname`, `Document` FROM covidHealthScreen LEFT JOIN users ON covidHealthScreen.ApprovedBy = users.UserID WHERE Member = ? ORDER BY `DateTime` DESC LIMIT 1");
 
-$pagetitle = htmlspecialchars($squad['SquadName']) . ' - COVID Health Screening';
+$pagetitle = htmlspecialchars((string) $squad['SquadName']) . ' - COVID Health Screening';
 
 include BASE_PATH . 'views/header.php';
 
@@ -47,17 +47,17 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/health-screening')) ?>">Screening</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/health-screening#squads')) ?>">Squads</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($squad['SquadName']) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening')) ?>">Screening</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening#squads')) ?>">Squads</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($squad['SquadName']) ?> Health Screening
+          <?= htmlspecialchars((string) $squad['SquadName']) ?> Health Screening
         </h1>
         <p class="lead mb-0">
           Keeping everyone safe
@@ -86,10 +86,10 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <h3 class="h6 mb-1"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></h3>
+                  <h3 class="h6 mb-1"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></h3>
                   <?php if ($latest && $latest['Document']) { ?>
                     <p class="mb-0 font-weight-bold">
-                      <?php if (bool($latest['OfficerApproval'])) { ?> <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by <?= htmlspecialchars(\SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?><?php if (!bool($latest['OfficerApproval']) && !$latest['ApprovedBy']) { ?> <span class="text-warning"><i class="fa fa-minus-circle" aria-hidden="true"></i> Awaiting approval</span><?php } else if (!bool($latest['OfficerApproval']) && $latest['ApprovedBy']) { ?> <span class="text-danger"><i class="fa fa-times-circle" aria-hidden="true"></i> Rejected by <?= htmlspecialchars(\SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?>
+                      <?php if (bool($latest['OfficerApproval'])) { ?> <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?><?php if (!bool($latest['OfficerApproval']) && !$latest['ApprovedBy']) { ?> <span class="text-warning"><i class="fa fa-minus-circle" aria-hidden="true"></i> Awaiting approval</span><?php } else if (!bool($latest['OfficerApproval']) && $latest['ApprovedBy']) { ?> <span class="text-danger"><i class="fa fa-times-circle" aria-hidden="true"></i> Rejected by <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?>
                     </p>
                   <?php } ?>
                   <?php if ($latest && $latest['Document']) {
@@ -101,7 +101,7 @@ include BASE_PATH . 'views/header.php';
                     </p>
                     <?php if (!bool($latest['OfficerApproval'])) { ?>
                       <p class="mt-3 mb-0">
-                        <button class="btn btn-primary review-button" type="button" data-review-id="<?= htmlspecialchars($latest['ID']) ?>" data-review-document="<?= htmlspecialchars($latest['Document']) ?>" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>">
+                        <button class="btn btn-primary review-button" type="button" data-review-id="<?= htmlspecialchars((string) $latest['ID']) ?>" data-review-document="<?= htmlspecialchars((string) $latest['Document']) ?>" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>">
                           Review<?php if ($latest['ApprovedBy']) { ?> again<?php } ?>
                         </button>
                       </p>
@@ -111,7 +111,7 @@ include BASE_PATH . 'views/header.php';
                     $time->setTimezone(new DateTimeZone('Europe/London'));
                   ?>
                     <p class="mb-0 text-danger font-weight-bold">
-                      <i class="fa fa-times-circle" aria-hidden="true"></i> New Health Survey requested from <?= htmlspecialchars($member['MForename'])?> at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latest['ApprovedBy']) { ?> by <?= htmlspecialchars(\SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?>
+                      <i class="fa fa-times-circle" aria-hidden="true"></i> New Health Survey requested from <?= htmlspecialchars((string) $member['MForename'])?> at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latest['ApprovedBy']) { ?> by <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latest['Forename'], $latest['Surname'])) ?></span><?php } ?>
                     </p>
                   <?php } else { ?>
                     <p class="mb-0">
@@ -124,13 +124,13 @@ include BASE_PATH . 'views/header.php';
                   <div class="btn-group">
                     <?php if ($latest) { ?>
                       <?php if (bool($latest['OfficerApproval'])) { ?>
-                        <button class="btn btn-warning" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars($latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars($member['MForename']) ?> submits a new health survey">
+                        <button class="btn btn-warning" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars((string) $latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars((string) $member['MForename']) ?> submits a new health survey">
                           Void survey
                         </button>
                       <?php } ?>
-                      <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'])) ?>" class="btn btn-dark-l btn-outline-light-d">View all</a>
+                      <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $member['MemberID'])) ?>" class="btn btn-dark-l btn-outline-light-d">View all</a>
                     <?php } ?>
-                    <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-success">New submission</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $member['MemberID'] . '/new-survey')) ?>" class="btn btn-success">New submission</a>
                   </div>
                 </div>
               </div>
@@ -140,7 +140,7 @@ include BASE_PATH . 'views/header.php';
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong>There are no members in <?= htmlspecialchars($squad['SquadName']) ?></strong>
+            <strong>There are no members in <?= htmlspecialchars((string) $squad['SquadName']) ?></strong>
           </p>
         </div>
       <?php } ?>
@@ -156,7 +156,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <button id="voidAllButton" class="btn btn-warning" data-squad-name="<?= htmlspecialchars($squad['SquadName']) ?>" data-squad-id="<?= htmlspecialchars($id) ?>">
+        <button id="voidAllButton" class="btn btn-warning" data-squad-name="<?= htmlspecialchars((string) $squad['SquadName']) ?>" data-squad-id="<?= htmlspecialchars((string) $id) ?>">
           Void all
         </button>
       </p>
@@ -217,7 +217,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="js-opts" data-ajax-url="<?= htmlspecialchars(autoUrl('covid/health-screening/approval')) ?>" data-void-ajax-url="<?= htmlspecialchars(autoUrl('covid/health-screening/void')) ?>"></div>
+<div id="js-opts" data-ajax-url="<?= htmlspecialchars((string) autoUrl('covid/health-screening/approval')) ?>" data-void-ajax-url="<?= htmlspecialchars((string) autoUrl('covid/health-screening/void')) ?>"></div>
 
 <?php
 

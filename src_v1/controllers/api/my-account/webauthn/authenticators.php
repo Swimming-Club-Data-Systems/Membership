@@ -12,7 +12,7 @@ $find->execute([
 ]);
 
 while ($data = $find->fetch(PDO::FETCH_ASSOC)) {
-  $source = PublicKeyCredentialSource::createFromArray(json_decode($data['credential'], true));
+  $source = PublicKeyCredentialSource::createFromArray(json_decode((string) $data['credential'], true));
   $sources[] = [
     'id' => $data['id'],
     'credential_id' => $data['credential_id'],

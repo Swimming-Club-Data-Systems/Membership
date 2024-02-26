@@ -4,40 +4,26 @@ namespace MembershipFees;
 
 class MembershipFeeClass
 {
-  private string $membershipType;
-  private int $user;
-  private $class;
-  private $name;
-  private $description;
   private $type;
   private $upgradeType;
   private $classFees;
   private $members;
   private $fees;
-  private $partial;
 
-  private function __construct($user, $class, $name, $description, $fees, $type, $partial = false)
+  private function __construct(private readonly int $user, private $class, private $name, private $description, $fees, private readonly string $membershipType, private $partial = false)
   {
     $db = app()->db;
-
-    // Assign values
-    $this->user = $user;
-    $this->class = $class;
-    $this->name = $name;
-    $this->description = $description;
-    $fees = json_decode($fees);
+    $fees = json_decode((string) $fees);
     $this->type = $fees->type;
     $this->upgradeType = $fees->upgrade_type;
     $this->classFees = $fees->fees;
-    $this->partial = $partial;
-    $this->membershipType = $type;
 
     if ($this->membershipType == 'club') {
       // Get members with this class
       $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname, ClubPaid, RR FROM members WHERE UserID = ? AND ClubCategory = ? AND Active ORDER BY ClubPaid ASC, MForename ASC, MSurname ASC");
       $getMembers->execute([
         $this->user,
-        $class,
+        $this->class,
       ]);
       $this->members = $getMembers->fetchAll(\PDO::FETCH_ASSOC);
     } else if ($this->membershipType == 'national_governing_body') {
@@ -45,7 +31,7 @@ class MembershipFeeClass
       $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname, ASAPaid AS ClubPaid, RR FROM members WHERE UserID = ? AND NGBCategory = ? AND Active ORDER BY ClubPaid ASC, MForename ASC, MSurname ASC");
       $getMembers->execute([
         $this->user,
-        $class,
+        $this->class,
       ]);
       $this->members = $getMembers->fetchAll(\PDO::FETCH_ASSOC);
     }

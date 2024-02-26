@@ -18,12 +18,12 @@ class Footer
     $this->showContent = true;
   }
 
-  public function render()
+  public function render(): void
   {
     include BASE_PATH . 'views/footer.php';
   }
 
-  public function addJs($path, $module = false)
+  public function addJs($path, $module = false): void
   {
     $this->js[] = [
       'url' => autoUrl($path),
@@ -31,7 +31,7 @@ class Footer
     ];
   }
 
-  public function addExternalJs($uri, $module = false)
+  public function addExternalJs($uri, $module = false): void
   {
     $this->js[] = [
       'url' => $uri,
@@ -39,12 +39,12 @@ class Footer
     ];
   }
 
-  public function useFluidContainer($bool = true)
+  public function useFluidContainer($bool = true): void
   {
     $this->fluidContainer = $bool;
   }
 
-  public function showContent($bool = true)
+  public function showContent($bool = true): void
   {
     $this->showContent = $bool;
   }

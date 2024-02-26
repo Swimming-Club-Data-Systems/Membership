@@ -9,7 +9,7 @@ if ($access == "Committee" || $access == "Admin") {
 
 		// get the galaID parameter from POST
     $id = $_POST["sessionID"];
-		$endDate = date("Y-m-d", strtotime($_POST["sessionEndDate"]));
+		$endDate = date("Y-m-d", strtotime((string) $_POST["sessionEndDate"]));
 
 		if ($id != null) {
 			$update = $db->prepare("UPDATE `sessions` SET `DisplayUntil` = ? WHERE `SessionID` = ? AND Tenant = ?");

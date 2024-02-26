@@ -64,10 +64,10 @@ try {
       'json' => $data
     ]);
 
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
-} catch (Exception $e) {
+} catch (Exception) {
 
   http_response_code(500);
 

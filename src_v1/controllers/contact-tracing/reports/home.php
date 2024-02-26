@@ -23,7 +23,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
         <li class="breadcrumb-item active" aria-current="page">Reports</li>
       </ol>
     </nav>
@@ -47,7 +47,7 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8">
 
-      <form action="<?= htmlspecialchars(autoUrl('contact-tracing/reports/go')) ?>" method="get" class="needs-validation" novalidate>
+      <form action="<?= htmlspecialchars((string) autoUrl('contact-tracing/reports/go')) ?>" method="get" class="needs-validation" novalidate>
 
         <p>
           Generate a report for a specific time frame at a specific location. Available in HTML, CSV (for Excel, Numbers, Google Sheets etc) or JSON.
@@ -59,7 +59,7 @@ include BASE_PATH . 'views/header.php';
             <option selected>Select a location</option>
             <?php if ($location) { ?>
               <?php do { ?>
-                <option value="<?= htmlspecialchars($location['ID']) ?>"><?= htmlspecialchars($location['Name']) ?></option>
+                <option value="<?= htmlspecialchars((string) $location['ID']) ?>"><?= htmlspecialchars((string) $location['Name']) ?></option>
               <?php } while ($location = $getLocations->fetch(PDO::FETCH_ASSOC)); ?>
             <?php } ?>
           </select>

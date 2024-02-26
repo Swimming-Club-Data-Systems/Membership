@@ -214,7 +214,7 @@ try {
       $content .= '<dl>';
 
       $content .= '<dt>Member</dt><dd>' . htmlspecialchars($emailUser['fn'] . ' ' . $emailUser['sn']) . '</dd>';
-      $content .= '<dt>Session</dt><dd>' . htmlspecialchars($session['SessionName']) . '</dd>';
+      $content .= '<dt>Session</dt><dd>' . htmlspecialchars((string) $session['SessionName']) . '</dd>';
       $content .= '<dt>Date and time</dt><dd>' . htmlspecialchars($sessionDateTime->format('H:i, l j F Y T')) . '</dd>';
       $content .= '<dt>End time</dt><dd>' . htmlspecialchars($sessionEndDateTime->format('H:i')) . '</dd>';
 
@@ -250,7 +250,7 @@ try {
         ]);
         $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
 
-        $content .= '<dt>' . htmlspecialchars($squadNames[$i]['SquadName']) . ' Coach';
+        $content .= '<dt>' . htmlspecialchars((string) $squadNames[$i]['SquadName']) . ' Coach';
 
         if (sizeof($coaches) > 0) {
           $content .= 'es';
@@ -268,8 +268,8 @@ try {
         $content .= '</ul></dd>';
       }
 
-      $content .= '<dt>Location</dt><dd>' . htmlspecialchars($session['VenueName']) . ', <em>' . htmlspecialchars($session['Location']) . '</em></dd>';
-      $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars($session['SessionID']) . '</dd>';
+      $content .= '<dt>Location</dt><dd>' . htmlspecialchars((string) $session['VenueName']) . ', <em>' . htmlspecialchars((string) $session['Location']) . '</em></dd>';
+      $content .= '<dt>Session Unique ID</dt><dd>' . htmlspecialchars($sessionDateTime->format('Y-m-d')) . '-S' . htmlspecialchars((string) $session['SessionID']) . '</dd>';
 
       $content .= '</dl>';
 
@@ -312,7 +312,7 @@ try {
         'dtstart' => $sessionDateTime,
         'dtend' => $sessionEndDateTime,
         'summary' => $session['SessionName'] . ' (' . $sessionDateTime->format('Y-m-d') . '-S' . $session['SessionID'] . ')',
-        'url' => autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d'))),
+        'url' => autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($sessionDateTime->format('Y-m-d'))),
         'uid' => $sessionICalId,
       ]);
 
@@ -377,7 +377,7 @@ try {
   reportError($e);
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred';
   }
 

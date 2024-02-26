@@ -19,7 +19,7 @@ include BASE_PATH . "views/header.php";
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item">
-            <a href="<?= htmlspecialchars(autoUrl("galas")) ?>">
+            <a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">
               Galas
             </a>
           </li>
@@ -59,7 +59,7 @@ include BASE_PATH . "views/header.php";
                   <thead class="">
                     <tr>
                       <th scope="col">Pool Length</th>
-                      <th scope="col">Time (<?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Event']) ?>)</th>
+                      <th scope="col">Time (<?= htmlentities((string) $_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Event']) ?>)</th>
                     </tr>
                   </thead>
                   <tbody>

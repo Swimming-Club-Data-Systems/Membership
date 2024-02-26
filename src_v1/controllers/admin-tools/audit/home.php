@@ -10,7 +10,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Audit</li>
     </ol>
   </nav>
@@ -29,7 +29,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('admin/audit/logs')) ?>" class="btn btn-primary">View logs</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('admin/audit/logs')) ?>" class="btn btn-primary">View logs</a>
       </p>
 
     </div>

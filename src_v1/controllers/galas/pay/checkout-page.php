@@ -191,7 +191,7 @@ include BASE_PATH . "views/header.php";
 include BASE_PATH . "controllers/galas/galaMenu.php";
 ?>
 
-<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-redirect-url-new="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete/new")) ?>" data-redirect-url="<?= htmlspecialchars(autoUrl("galas/pay-for-entries/complete")) ?>" data-org-name="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($intent->amount) ?>" data-intent-currency="<?= htmlspecialchars($intent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($entryRequestDetails)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
+<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-redirect-url-new="<?= htmlspecialchars((string) autoUrl("galas/pay-for-entries/complete/new")) ?>" data-redirect-url="<?= htmlspecialchars((string) autoUrl("galas/pay-for-entries/complete")) ?>" data-org-name="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($intent->amount) ?>" data-intent-currency="<?= htmlspecialchars($intent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($entryRequestDetails)) ?>" data-stripe-account-id="<?= htmlspecialchars((string) $tenant->getStripeAccount()) ?>">
 </div>
 
 <div class="bg-light mt-n3 py-3 mb-3">
@@ -237,7 +237,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
             <li class="list-group-item">
               <div class="row">
                 <div class="col-8 col-sm-5 col-md-4 col-lg-6">
-                  <h3><?= htmlspecialchars($entry['MForename'] . ' ' . $entry['MSurname']) ?> <br><small><?= htmlspecialchars($entry['GalaName']) ?></small></h3>
+                  <h3><?= htmlspecialchars($entry['MForename'] . ' ' . $entry['MSurname']) ?> <br><small><?= htmlspecialchars((string) $entry['GalaName']) ?></small></h3>
                   <p class="mb-0">
                     <a data-bs-toggle="collapse" href="#swims-<?= $entry['EntryID'] ?>" role="button" aria-expanded="false" aria-controls="swims-<?= $entry['EntryID'] ?>">
                       View swims <i class="fa fa-caret-down" aria-hidden="true"></i>
@@ -329,7 +329,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
                   <option value="select">Select card</option>
                   <?php foreach ($cards as $card) { ?>
                     <option value="<?= $card['MethodID'] ?>">
-                      <?= htmlspecialchars(getCardBrand($card['Brand'])) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card['Last4']) ?>
+                      <?= htmlspecialchars((string) getCardBrand($card['Brand'])) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card['Last4']) ?>
                     </option>
                   <?php } ?>
                 </select>
@@ -390,7 +390,7 @@ include BASE_PATH . "controllers/galas/galaMenu.php";
               <label class="form-label" for="addr-post-code">Country</label>
               <select class="form-select pm-can-disable pm-can-disable" required id="addr-country" autocomplete="country">
                 <?php foreach ($countries as $code => $name) { ?>
-                  <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars($code) ?>"><?= htmlspecialchars($name) ?></option>
+                  <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $code) ?>"><?= htmlspecialchars((string) $name) ?></option>
                 <?php } ?>
               </select>
               <div class="invalid-feedback">

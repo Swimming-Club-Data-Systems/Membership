@@ -1,15 +1,15 @@
 <?php
 
-class Tenant
+class Tenant implements \Stringable
 {
-    private int $id;
+    private readonly int $id;
     private string $name;
     private $code;
     private $website;
     private $email;
     private $verified;
     private $keys;
-    private string $uuid;
+    private readonly string $uuid;
     private $goCardlessAccessToken;
     private $goCardlessOrganisationId;
     private $goCardlessLoaded = false;
@@ -28,8 +28,8 @@ class Tenant
         $this->uuid = $details['UniqueID'];
         $this->domain = $details['Domain'];
         try {
-            $this->jsonData = json_decode($details['Data']);
-        } catch (Exception $e) {
+            $this->jsonData = json_decode((string) $details['Data']);
+        } catch (Exception) {
             $this->jsonData = json_decode('{}');
         }
 
@@ -39,7 +39,7 @@ class Tenant
     /**
      * Get tenant keys from db
      */
-    private function getKeys()
+    private function getKeys(): void
     {
         $db = app()->db;
         $getKeys = $db->prepare("SELECT Option, Value FROM tenantOptions WHERE Tenant = ?");
@@ -87,7 +87,7 @@ class Tenant
 
         $defaultKeys['CLUB_NAME'] = $this->name;
         if ($this->code) {
-            $defaultKeys['ASA_CLUB_CODE'] = mb_strtoupper($this->code);
+            $defaultKeys['ASA_CLUB_CODE'] = mb_strtoupper((string) $this->code);
         }
 
         $this->keys = $defaultKeys;
@@ -179,7 +179,7 @@ class Tenant
         return null;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         if ($this->uuid) {
             return $this->uuid;
@@ -228,10 +228,7 @@ class Tenant
      */
     public function getKey(string $key)
     {
-        if (isset($this->keys[$key])) {
-            return $this->keys[$key];
-        }
-        return null;
+        return $this->keys[$key] ?? null;
     }
 
     /**
@@ -331,7 +328,7 @@ class Tenant
      * @param string the GC Org ID
      * @param string the GC Access Token
      */
-    public function setGoCardlessAccessToken(string $orgId, string $accessToken)
+    public function setGoCardlessAccessToken(string $orgId, string $accessToken): void
     {
         $count = app()->db->prepare("SELECT COUNT(*) FROM gcCredentials WHERE OrganisationId = ? OR Tenant = ?");
         $count->execute([
@@ -375,7 +372,7 @@ class Tenant
      *
      * To be called only once when required
      */
-    private function loadGoCardless()
+    private function loadGoCardless(): void
     {
         $db = app()->db;
         $getKey = $db->prepare("SELECT OrganisationId, AccessToken FROM gcCredentials WHERE Tenant = ?");
@@ -556,7 +553,7 @@ class Tenant
     public function getCodeId()
     {
         if ($this->code) {
-            return mb_strtolower($this->code);
+            return mb_strtolower((string) $this->code);
         }
         return $this->id;
     }
@@ -582,7 +579,7 @@ class Tenant
         return $getKeys->fetchColumn();
     }
 
-    public function setSwimEnglandComplianceValue($key, $value)
+    public function setSwimEnglandComplianceValue($key, $value): void
     {
         $db = app()->db;
 

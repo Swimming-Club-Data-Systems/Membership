@@ -68,8 +68,8 @@ class Session
     $session->status = $sessionInfo->status;
     $session->dueDate = new \DateTime($sessionInfo->due_date, new \DateTimeZone(('UTC')));
     $session->completedAt = new \DateTime($sessionInfo->completed_at, new \DateTimeZone(('UTC')));
-    $session->stages = json_decode($sessionInfo->stages);
-    $session->metadata = json_decode($sessionInfo->metadata);
+    $session->stages = json_decode((string) $sessionInfo->stages);
+    $session->metadata = json_decode((string) $sessionInfo->metadata);
     $session->batch = $sessionInfo->batch;
     $session->type = $sessionInfo->type;
     if ($sessionInfo->renewal) {
@@ -87,7 +87,7 @@ class Session
     return $session;
   }
 
-  private function loadMembers()
+  private function loadMembers(): void
   {
     $db = app()->db;
     $getMembers = $db->prepare("SELECT MemberID, MForename, MSurname FROM members INNER JOIN onboardingMembers ON members.MemberID = onboardingMembers.member WHERE `session` = ? AND `UserID` = ? AND members.Active ORDER BY MemberID ASC");
@@ -135,10 +135,10 @@ class Session
 
   private function getUrl()
   {
-    return autoUrl("onboarding/go?session=" . urlencode($this->id) . "&token=" . urlencode($this->token));
+    return autoUrl("onboarding/go?session=" . urlencode((string) $this->id) . "&token=" . urlencode((string) $this->token));
   }
 
-  public function enableToken()
+  public function enableToken(): void
   {
     $updateSession = app()->db->prepare("UPDATE `onboardingSessions` SET `token_on` = ? WHERE `id` = ?");
     $updateSession->execute([
@@ -147,7 +147,7 @@ class Session
     ]);
   }
 
-  public function sendEmail()
+  public function sendEmail(): void
   {
     $this->enableToken();
 
@@ -159,12 +159,12 @@ class Session
     }
 
     $subject = 'Complete your ' . $name . ' at ' . app()->tenant->getName();
-    $content = '<p>Dear ' . htmlspecialchars($user->getFullName()) . ',</p>';
+    $content = '<p>Dear ' . htmlspecialchars((string) $user->getFullName()) . ',</p>';
 
-    $content .= '<p><a href="' . htmlspecialchars($this->getUrl()) . '">Please complete your registration tasks online</a>.</p>';
-    $content .= '<p><a href="' . htmlspecialchars($this->getUrl()) . '">' . htmlspecialchars($this->getUrl()) . '</a></p>';
+    $content .= '<p><a href="' . htmlspecialchars((string) $this->getUrl()) . '">Please complete your registration tasks online</a>.</p>';
+    $content .= '<p><a href="' . htmlspecialchars((string) $this->getUrl()) . '">' . htmlspecialchars((string) $this->getUrl()) . '</a></p>';
 
-    $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+    $content .= '<p>Thank you, <br>The ' . htmlspecialchars((string) app()->tenant->getName()) . ' team.</p>';
 
     notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
   }
@@ -212,7 +212,7 @@ class Session
     return $task == $this->getCurrentTask();
   }
 
-  public function completeTask($task)
+  public function completeTask($task): void
   {
     $stages = $this->stages;
 
@@ -268,10 +268,10 @@ class Session
 
             $content .= '<p>' . htmlspecialchars($user->getFullName()) . ' has completed their onboarding tasks.</p>';
 
-            $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+            $content .= '<p>Thank you, <br>The ' . htmlspecialchars((string) app()->tenant->getName()) . ' team.</p>';
 
             notifySend(null, $subject, $content, $creator->getFullName(), $creator->getEmail(), ['Name' => app()->tenant->getName()]);
-          } catch (\Exception $e) {
+          } catch (\Exception) {
             // Ignore
           }
         }
@@ -285,7 +285,7 @@ class Session
 
           $user = $this->getUser();
           $subject = 'Thank you for completing your ' . $name;
-          $content = '<p>Dear ' . htmlspecialchars($user->getFullName()) . ',</p>';
+          $content = '<p>Dear ' . htmlspecialchars((string) $user->getFullName()) . ',</p>';
 
           $content .= '<p>Thank you for completing your ' . $name . ' tasks.</p>';
 
@@ -295,10 +295,10 @@ class Session
 
           // $content .= '<p>In future this email will contain welcome info (if registration onboarding).</p>';
 
-          $content .= '<p>Thank you, <br>The ' . htmlspecialchars(app()->tenant->getName()) . ' team.</p>';
+          $content .= '<p>Thank you, <br>The ' . htmlspecialchars((string) app()->tenant->getName()) . ' team.</p>';
 
           notifySend(null, $subject, $content, $user->getFullName(), $user->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
           // Ignore
         }
       }

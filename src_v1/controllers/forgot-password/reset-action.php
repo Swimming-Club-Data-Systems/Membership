@@ -12,9 +12,9 @@ $getUser->execute([
 ]);
 
 if ($user = $getUser->fetchColumn()) {
-  if ((isset($_POST['password-1']) && isset($_POST['password-2'])) && (trim($_POST['password-1']) == trim($_POST['password-2'])) && v::stringType()->length(8, null)->validate($_POST['password-1']) && !(\CheckPwned::pwned(trim($_POST['password-1'])))) {
+  if ((isset($_POST['password-1']) && isset($_POST['password-2'])) && (trim((string) $_POST['password-1']) == trim((string) $_POST['password-2'])) && v::stringType()->length(8, null)->validate($_POST['password-1']) && !(\CheckPwned::pwned(trim((string) $_POST['password-1'])))) {
     // Set the password
-    $newHash = password_hash(trim($_POST['password-1']), PASSWORD_ARGON2ID);
+    $newHash = password_hash(trim((string) $_POST['password-1']), PASSWORD_ARGON2ID);
 
     // Update the password in db
     $updatePass = $db->prepare("UPDATE users SET Password = ? WHERE UserID = ?");

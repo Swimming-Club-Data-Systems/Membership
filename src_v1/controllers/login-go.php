@@ -30,8 +30,8 @@ if (SCDS\CSRF::verify()) {
 
 if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($security_status)) {
   // Let the user login
-  $username = trim(mb_strtolower($_POST['email-address']));
-  $target = ltrim(trim($_POST['target']), '/');
+  $username = trim(mb_strtolower((string) $_POST['email-address']));
+  $target = ltrim(trim((string) $_POST['target']), '/');
 
   $getUser = $db->prepare("SELECT Forename, Surname, UserID, EmailAddress, `Password`, WrongPassCount FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active");
   $getUser->execute([
@@ -48,7 +48,7 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
     $surname = $row['Surname'];
     $userID = $row['UserID'];
 
-    $verified = password_verify($_POST['password'], $hash);
+    $verified = password_verify((string) $_POST['password'], (string) $hash);
 
     // if ($verified && CheckPwned::pwned($_POST['password'])) {
     //   // The password is pwned. It must be reset.
@@ -70,8 +70,8 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
         $message = '
           <p>Hello. Confirm your login by entering the following code in your web browser.</p>
           <p><strong>' . htmlspecialchars($code) . '</strong></p>
-          <p>The login was from IP address ' . htmlspecialchars(getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
-          <p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+          <p>The login was from IP address ' . htmlspecialchars((string) getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
+          <p>Kind Regards, <br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
         $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
@@ -91,7 +91,7 @@ if ((!empty($_POST['email-address']) && !empty($_POST['password'])) && ($securit
       //   autoUrl("2fa?target=" . urlencode($_POST['target'])),
       // ]);
       if (!$headerSent) {
-        header("Location: " . autoUrl("2fa?target=" . urlencode($_POST['target'])));
+        header("Location: " . autoUrl("2fa?target=" . urlencode((string) $_POST['target'])));
         $headerSent = true;
       }
     } else {
@@ -134,7 +134,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']) && $_SESS
   // ]);
   if (!$headerSent) {
     if (isset($_POST['target']) && $_POST['target']) {
-      header("Location: " . autoUrl(ltrim($_POST['target'], '/'), false));
+      header("Location: " . autoUrl(ltrim((string) $_POST['target'], '/'), false));
     } else {
       header("Location: " . autoUrl(''));
     }

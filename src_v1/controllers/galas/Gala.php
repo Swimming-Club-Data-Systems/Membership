@@ -78,8 +78,8 @@ foreach ($swimsArray as $col => $name) {
   $getCount->execute([$id]);
   $countEntries[$col]['Name'] = $name;
   $countEntries[$col]['Event'] = $col;
-  $countEntries[$col]['Stroke'] = preg_replace("/[^a-zA-Z]+/", "", $col);
-  $countEntries[$col]['Distance'] = preg_replace("/[^0-9]/", '', $col);
+  $countEntries[$col]['Stroke'] = preg_replace("/[^a-zA-Z]+/", "", (string) $col);
+  $countEntries[$col]['Distance'] = preg_replace("/[^0-9]/", '', (string) $col);
   $countEntries[$col]['Count'] = $getCount->fetchColumn();
   $strokeCounts[$countEntries[$col]['Stroke']] += $countEntries[$col]['Count'];
   $distanceCounts[$countEntries[$col]['Distance']] += $countEntries[$col]['Count'];
@@ -94,7 +94,7 @@ $galaData = new GalaPrices($db, $id);
 $closingDate = new DateTime($gala['ClosingDate'], new DateTimeZone('Europe/London'));
 $finishesBy = new DateTime($gala['GalaDate'], new DateTimeZone('Europe/London'));
 
-$pagetitle = htmlspecialchars($gala['GalaName']) . " - Galas";
+$pagetitle = htmlspecialchars((string) $gala['GalaName']) . " - Galas";
 include BASE_PATH . "views/header.php";
 include "galaMenu.php";
 ?>
@@ -104,16 +104,16 @@ include "galaMenu.php";
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
-        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars($id) ?></li>
+        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars((string) $id) ?></li>
       </ol>
     </nav>
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($gala['GalaName']) ?>
+          <?= htmlspecialchars((string) $gala['GalaName']) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($gala['GalaVenue']) ?>
+          <?= htmlspecialchars((string) $gala['GalaVenue']) ?>
         </p>
       </div>
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Galas" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Committee" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin" || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Coach") { ?>
@@ -131,14 +131,14 @@ include "galaMenu.php";
               <?php if (bool($gala['CoachEnters'])) { ?>
                 <a class="dropdown-item" href="<?= autoUrl("galas/$id/select-entries") ?>">Manage entries</a>
               <?php } ?>
-              <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("galas/$id/team-manager-view.pdf")) ?>">Entry report</a>
+              <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("galas/$id/team-manager-view.pdf")) ?>">Entry report</a>
               <!--<div class="dropdown-divider"></div>-->
               <?php if ($numEntries > 0 && false) { ?>
                 <a class="dropdown-item" href="<?= autoUrl("galas/$id/timesheet") ?>">Timesheet</a>
               <?php } ?>
               <?php if ($numEntries > 0) { ?>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("galas/$id/photography-permissions.pdf")) ?>">Photography permissions</a>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("galas/$id/create-registers")) ?>">Create Registers</a>
+                <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("galas/$id/photography-permissions.pdf")) ?>">Photography permissions</a>
+                <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("galas/$id/create-registers")) ?>">Create Registers</a>
               <?php } ?>
             </div>
           </div>
@@ -167,12 +167,12 @@ include "galaMenu.php";
   <div class="row">
     <div class="col-sm-6 col-md-4">
       <h3 class="h6">Gala Name</h3>
-      <p><?= htmlspecialchars($gala['GalaName']) ?></p>
+      <p><?= htmlspecialchars((string) $gala['GalaName']) ?></p>
     </div>
 
     <div class="col-sm-6 col-md-4">
       <h3 class="h6">Venue</h3>
-      <p><?= htmlspecialchars($gala['GalaVenue']) ?></p>
+      <p><?= htmlspecialchars((string) $gala['GalaVenue']) ?></p>
     </div>
 
     <div class="col-sm-6 col-md-4">
@@ -243,7 +243,7 @@ include "galaMenu.php";
 
       <div class="col-sm-6 col-md-4">
         <h3 class="h6"><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>Total refunded to you<?php } else { ?>Total refunded to parents<?php } ?></h3>
-        <p>&pound;<?= htmlspecialchars(MoneyHelpers::intToDecimal($amountRefunded)) ?></p>
+        <p>&pound;<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($amountRefunded)) ?></p>
       </div>
 
     <?php } ?>
@@ -251,7 +251,7 @@ include "galaMenu.php";
     <?php if ($gala['ProcessingFee'] > 0) { ?>
       <div class="col-sm-6 col-md-4">
         <h3 class="h6">Per entry processing fee</h3>
-        <p>&pound;<?= htmlspecialchars(MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?></p>
+        <p>&pound;<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?></p>
       </div>
     <?php } ?>
   </div>
@@ -284,7 +284,7 @@ include "galaMenu.php";
 
     <h2>Entry report</h2>
     <p class="lead">Export a PDF entry report that can be shared with parents</p>
-    <p><a href="<?= htmlspecialchars(autoUrl("galas/" . $id . "/team-manager-view.pdf")) ?>" class="btn btn-success">Export PDF</a></p>
+    <p><a href="<?= htmlspecialchars((string) autoUrl("galas/" . $id . "/team-manager-view.pdf")) ?>" class="btn btn-success">Export PDF</a></p>
 
     <?php if (bool($gala['CoachEnters'])) { ?>
       <h2>Manage entries</h2>
@@ -332,13 +332,13 @@ include "galaMenu.php";
       <?php do { ?>
         <div class="col-md-6 col-lg-4">
           <h3>
-            <?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>
+            <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>
           </h3>
 
           <p>
             <small class="text-muted">
-              <strong>Date of Birth:</strong>&nbsp;<?= date('d/m/Y', strtotime($entry['DateOfBirth'])) ?>,
-              <strong>Swim&nbsp;England:</strong>&nbsp;<?= htmlspecialchars($entry['ASANumber']) ?>
+              <strong>Date of Birth:</strong>&nbsp;<?= date('d/m/Y', strtotime((string) $entry['DateOfBirth'])) ?>,
+              <strong>Swim&nbsp;England:</strong>&nbsp;<?= htmlspecialchars((string) $entry['ASANumber']) ?>
             </small>
           </p>
 
@@ -375,11 +375,11 @@ include "galaMenu.php";
         labels: [<?php
                   foreach ($countEntries as $key => $event) {
                     if ($event['Count'] > 0) {
-                  ?> <?= json_encode(html_entity_decode($event['Name'])) ?>, <?php
+                  ?> <?= json_encode(html_entity_decode((string) $event['Name'])) ?>, <?php
                                                                             }
                                                                           } ?>],
         datasets: [{
-          label: <?= json_encode(html_entity_decode($gala['GalaName'])) ?>,
+          label: <?= json_encode(html_entity_decode((string) $gala['GalaName'])) ?>,
           data: [<?php
                   foreach ($countEntries as $key => $event) {
                     if ($event['Count'] > 0) {
@@ -439,7 +439,7 @@ include "galaMenu.php";
                                                 }
                                               } ?>],
         datasets: [{
-          label: <?= json_encode(html_entity_decode($gala['GalaName'])) ?>,
+          label: <?= json_encode(html_entity_decode((string) $gala['GalaName'])) ?>,
           data: [<?php
                   foreach ($strokeCounts as $stroke => $count) { ?> "<?= $count ?>", <?php } ?>],
           backgroundColor: <?= json_encode(chartColours(5)) ?>,

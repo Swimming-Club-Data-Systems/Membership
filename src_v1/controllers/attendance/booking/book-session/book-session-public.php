@@ -11,7 +11,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -85,7 +85,7 @@ if ($session['BookingOpens']) {
     if ($bookingOpensTime > $now) {
       $bookingOpen = false;
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 }
@@ -100,16 +100,16 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('l j')) ?><sup><?= htmlspecialchars($date->format('S')) ?></sup> <?= htmlspecialchars($date->format('F Y')) ?>
+          <?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars($date->format('l j')) ?><sup><?= htmlspecialchars($date->format('S')) ?></sup> <?= htmlspecialchars($date->format('F Y')) ?>
         </h1>
         <p class="lead mb-0">
           <?php if ($session['MaxPlaces']) { ?>There are <?= htmlspecialchars($numFormatter->format($session['MaxPlaces'])) ?> places at this session<?php } else { ?>There are unlimited places at this session<?php } ?>
@@ -117,7 +117,7 @@ include BASE_PATH . 'views/header.php';
         <div class="mb-3 d-lg-none"></div>
       </div>
       <div class="col text-lg-end">
-        <a href="<?= htmlspecialchars($bookingLoginLink) ?>" class="btn btn-primary">
+        <a href="<?= htmlspecialchars((string) $bookingLoginLink) ?>" class="btn btn-primary">
           Login to book<?php if (!$bookingOpen) { ?> once open<?php } ?>
         </a>
       </div>
@@ -131,7 +131,7 @@ include BASE_PATH . 'views/header.php';
   <div class="row">
     <div class="col-lg-8 order-2 order-lg-1 mb-3">
       <p class="lead">
-        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars(mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
+        <span class="place-numbers-places-booked-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($bookedCount))) ?></span> <span id="place-numbers-booked-places-member-string"><?php if ($bookedCount == 1) { ?>member has<?php } else { ?>members have<?php } ?></span> booked onto this session. <?php if ($session['MaxPlaces']) { ?><span class="place-numbers-places-remaining-string uc-first"><?= htmlspecialchars((string) mb_ucfirst($numFormatter->format($session['MaxPlaces'] - $bookedCount))) ?></span> <span id="place-numbers-places-remaining-member-string"><?php if (($session['MaxPlaces'] - $bookedCount) == 1) { ?>place remains<?php } else { ?>places remain<?php } ?></span> available.<?php } ?>
       </p>
 
       <?php if ($bookingClosed) { ?>
@@ -169,11 +169,11 @@ include BASE_PATH . 'views/header.php';
 
         <?php if ($session['MaxPlaces']) { ?>
           <dt class="col-sm-3">Total places available</dt>
-          <dd class="col-sm-9 place-numbers-max-places-int"><?= htmlspecialchars($session['MaxPlaces']) ?></dd>
+          <dd class="col-sm-9 place-numbers-max-places-int"><?= htmlspecialchars((string) $session['MaxPlaces']) ?></dd>
         <?php } ?>
 
         <dt class="col-sm-3">Places booked</dt>
-        <dd class="col-sm-9 place-numbers-places-booked-int"><?= htmlspecialchars($bookedCount) ?></dd>
+        <dd class="col-sm-9 place-numbers-places-booked-int"><?= htmlspecialchars((string) $bookedCount) ?></dd>
 
         <?php if ($session['MaxPlaces']) { ?>
           <dt class="col-sm-3">Places remaining</dt>
@@ -186,11 +186,11 @@ include BASE_PATH . 'views/header.php';
           ]);
           $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
         ?>
-          <dt class="col-sm-3"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+          <dt class="col-sm-3"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
           <dd class="col-sm-9">
             <ul class="list-unstyled mb-0">
               <?php for ($y = 0; $y < sizeof($coaches); $y++) { ?>
-                <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
+                <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$y]['fn'], $coaches[$y]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$y]['code'])) ?></li>
               <?php } ?>
               <?php if (sizeof($coaches) == 0) { ?>
                 <li>None assigned</li>
@@ -200,19 +200,19 @@ include BASE_PATH . 'views/header.php';
         <?php } ?>
 
         <dt class="col-sm-3">Location</dt>
-        <dd class="col-sm-9"><?= htmlspecialchars($session['Location']) ?></dd>
+        <dd class="col-sm-9"><?= htmlspecialchars((string) $session['Location']) ?></dd>
 
         <dt class="col-sm-3">Session Unique ID</dt>
-        <dd class="col-sm-9"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></dd>
+        <dd class="col-sm-9"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></dd>
       </dl>
 
       <h2>Book a place</h2>
       <?php if ($bookingOpen) { ?>
         <p class="lead">
-          To book a place, please log into your <?= htmlspecialchars($tenant->getName()) ?> account.
+          To book a place, please log into your <?= htmlspecialchars((string) $tenant->getName()) ?> account.
         </p>
         <p>
-          <a href="<?= htmlspecialchars($bookingLoginLink) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) $bookingLoginLink) ?>" class="btn btn-primary">
             Login
           </a>
         </p>

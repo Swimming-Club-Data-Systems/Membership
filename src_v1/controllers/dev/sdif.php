@@ -10,7 +10,7 @@ while (!feof($file)) {
   $line = fgets($file);
   // pre($line);
 
-  if (mb_strlen($line) > 1 && substr($line, 0, 2) == 'B1') {
+  if (mb_strlen($line) > 1 && str_starts_with($line, 'B1')) {
     try {
       $b1 = new \CLSASC\SDIF\B1();
       $b1->createFromLine($line);
@@ -25,7 +25,7 @@ while (!feof($file)) {
     }
   }
 
-  if (mb_strlen($line) > 1 && substr($line, 0, 2) == 'D0') {
+  if (mb_strlen($line) > 1 && str_starts_with($line, 'D0')) {
     try {
       $d0 = new \CLSASC\SDIF\D0();
       $d0->createFromLine($line);

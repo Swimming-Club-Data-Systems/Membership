@@ -52,7 +52,7 @@ include "attendanceMenu.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
         <li class="breadcrumb-item active" aria-current="page">Manage Sessions</li>
       </ol>
     </nav>
@@ -75,7 +75,7 @@ include "attendanceMenu.php";
   </div>
 </div>
 
-<div id="ajax-info" data-page-url="<?= htmlspecialchars(autoUrl('attendance/sessions')) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('attendance/sessions/ajax/handler')) ?>" data-ajax-add-session-url="<?= htmlspecialchars(autoUrl('attendance/sessions/new')) ?>"></div>
+<div id="ajax-info" data-page-url="<?= htmlspecialchars((string) autoUrl('attendance/sessions')) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('attendance/sessions/ajax/handler')) ?>" data-ajax-add-session-url="<?= htmlspecialchars((string) autoUrl('attendance/sessions/new')) ?>"></div>
 
 <div class="container-fluid">
   <div class="row mb-3">
@@ -89,7 +89,7 @@ include "attendanceMenu.php";
               <option value="" selected disabled>Choose a squad</option>
               <?php do { ?>
                 <option value="<?= $squad['id'] ?>" <?php if ($selectedSquad == $squad['id']) { ?>selected<?php } ?>>
-                  <?= htmlspecialchars($squad['name']) ?>
+                  <?= htmlspecialchars((string) $squad['name']) ?>
                 </option>
               <?php } while ($squad = $squads->fetch(PDO::FETCH_ASSOC)); ?>
             </select>
@@ -125,7 +125,7 @@ include "attendanceMenu.php";
               <strong>You must add a venue before you can add a session</strong>
             </p>
             <p class="mb-0">
-              <a href="<?= htmlspecialchars(autoUrl('attendance/venues/new')) ?>" class="alert-link">Add a new venue now</a>
+              <a href="<?= htmlspecialchars((string) autoUrl('attendance/venues/new')) ?>" class="alert-link">Add a new venue now</a>
             </p>
           </div>
         <?php } ?>
@@ -138,7 +138,7 @@ include "attendanceMenu.php";
                 <strong>An error occurred:</strong>
               </p>
               <p class="mb-0">
-                <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
+                <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
               </p>
             </div>
           <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']);
@@ -158,7 +158,7 @@ include "attendanceMenu.php";
               <option selected disabled value="">Select a Venue</option>
               <?php if ($venue) { ?>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($venue['VenueID']) ?>"><?= htmlspecialchars($venue['VenueName']) ?></option>
+                  <option value="<?= htmlspecialchars((string) $venue['VenueID']) ?>"><?= htmlspecialchars((string) $venue['VenueName']) ?></option>
                 <?php } while ($venue = $getVenues->fetch(PDO::FETCH_ASSOC)); ?>
               <?php } ?>
             </select>
@@ -236,8 +236,8 @@ include "attendanceMenu.php";
               <?php do { ?>
                 <div class="col-6 col-md-4 col-lg-3 mb-2">
                   <div class="form-check">
-                    <input type="checkbox" class="form-check-input add-session-form-squad-checkboxes" id="squad-check-<?= htmlspecialchars($squadNew['SquadID']) ?>" name="squad-<?= htmlspecialchars($squadNew['SquadID']) ?>" value="1">
-                    <label class="form-check-label" for="squad-check-<?= htmlspecialchars($squadNew['SquadID']) ?>"><?= htmlspecialchars($squadNew['SquadName']) ?></label>
+                    <input type="checkbox" class="form-check-input add-session-form-squad-checkboxes" id="squad-check-<?= htmlspecialchars((string) $squadNew['SquadID']) ?>" name="squad-<?= htmlspecialchars((string) $squadNew['SquadID']) ?>" value="1">
+                    <label class="form-check-label" for="squad-check-<?= htmlspecialchars((string) $squadNew['SquadID']) ?>"><?= htmlspecialchars((string) $squadNew['SquadName']) ?></label>
                   </div>
                 </div>
               <?php } while ($squadNew = $getSquadsNew->fetch(PDO::FETCH_ASSOC)); ?>

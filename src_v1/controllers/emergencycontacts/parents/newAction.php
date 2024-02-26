@@ -36,7 +36,7 @@ if ($_POST['name'] != null && $_POST['name'] != "" && $_POST['num'] != null && $
 		} else {
 			header("Location: " . autoUrl($url_path));
 		}
-	} catch (Exception $e) {
+	} catch (Exception) {
 		$_SESSION['TENANT-' . app()->tenant->getId()]['AddNewError'] = '
 		<div class="alert alert-warning">
 			<p class="mb-0">

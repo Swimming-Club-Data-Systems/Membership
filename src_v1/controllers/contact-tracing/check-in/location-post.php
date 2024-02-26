@@ -61,24 +61,22 @@ try {
     for ($i = 0; $i < sizeof($_POST['guest_name']); $i++) {
 
       // Go ahead if form filled out, otherwise ignore it
-      if (mb_strlen($_POST['guest_phone'][$i]) > 0 && mb_strlen($_POST['guest_name'][$i]) > 0) {
+      if (mb_strlen((string) $_POST['guest_phone'][$i]) > 0 && mb_strlen((string) $_POST['guest_name'][$i]) > 0) {
 
         $phone = null;
         try {
           $numberParser = PhoneNumber::parse($_POST['guest_phone'][$i], 'GB');
           $phone = $numberParser->format(PhoneNumberFormat::E164);
-        } catch (PhoneNumberParseException $e) {
-          throw new Exception('Invalid phone number');
-        } catch (Exception $e) {
+        } catch (PhoneNumberParseException|Exception) {
           throw new Exception('Invalid phone number');
         }
 
-        if (!(mb_strlen($_POST['guest_name'][$i])) > 0) {
+        if (!(mb_strlen((string) $_POST['guest_name'][$i])) > 0) {
           throw new Exception('Missing guest name');
         }
 
         $guests[] = [
-          'name' => mb_strimwidth($_POST['guest_name'][$i], 0, 256),
+          'name' => mb_strimwidth((string) $_POST['guest_name'][$i], 0, 256),
           'phone' => $phone,
         ];
       }
@@ -175,7 +173,7 @@ try {
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingSuccess'] = true;
   header("location: " . autoUrl('contact-tracing/check-in/' . $id . '/success'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $db->rollBack();

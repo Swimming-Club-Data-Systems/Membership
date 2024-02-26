@@ -16,7 +16,7 @@ try {
 
   $json = json_decode(file_get_contents('php://input'));
 
-  $email = trim(mb_strtolower($json->email_address));
+  $email = trim(mb_strtolower((string) $json->email_address));
 
   $getUser = $db->prepare("SELECT Forename, Surname, UserID, EmailAddress, `Password`, WrongPassCount FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active");
   $getUser->execute([
@@ -33,7 +33,7 @@ try {
     $surname = $row['Surname'];
     $userID = $row['UserID'];
 
-    $verified = password_verify($json->password, $hash);
+    $verified = password_verify((string) $json->password, (string) $hash);
 
     if ($verified) {
 
@@ -56,8 +56,8 @@ try {
         $message = '
           <p>Hello. Confirm your login by entering the following code in your web browser.</p>
           <p><strong>' . htmlspecialchars($code) . '</strong></p>
-          <p>The login was from IP address ' . htmlspecialchars(getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
-          <p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+          <p>The login was from IP address ' . htmlspecialchars((string) getUserIp()) . ' using ' . htmlspecialchars($browserDetails->toString()) . '. If you did not just try to log in, you should reset your password immediately.</p>
+          <p>Kind Regards, <br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
         $date = new DateTime('now', new DateTimeZone('Europe/London'));
 

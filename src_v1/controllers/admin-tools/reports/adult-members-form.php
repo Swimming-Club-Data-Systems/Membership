@@ -20,8 +20,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/reports")) ?>">Reports</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/reports")) ?>">Reports</a></li>
       <li class="breadcrumb-item active" aria-current="page">Adults</li>
     </ol>
   </nav>
@@ -33,7 +33,7 @@ include BASE_PATH . 'views/header.php';
 
   <div class="row">
     <div class="col-lg-8">
-      <form method="get" class="needs-validation" novalidate action="<?= htmlspecialchars(autoUrl('admin/reports/adult-members-list')) ?>">
+      <form method="get" class="needs-validation" novalidate action="<?= htmlspecialchars((string) autoUrl('admin/reports/adult-members-list')) ?>">
 
         <div class="mb-3">
           <label for="date" class="form-label">18+ on date</label>

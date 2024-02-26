@@ -18,7 +18,7 @@ include BASE_PATH . 'views/header.php';
   </p>
 
   <p>
-    <a href="<?= htmlspecialchars(autoUrl("login")) ?>" class="btn btn-primary">
+    <a href="<?= htmlspecialchars((string) autoUrl("login")) ?>" class="btn btn-primary">
       Login
     </a>
   </p>
@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
   </p>
 
   <p>
-    <a href="<?= htmlspecialchars(autoUrl("log-books/login")) ?>" class="btn btn-primary">
+    <a href="<?= htmlspecialchars((string) autoUrl("log-books/login")) ?>" class="btn btn-primary">
       Login
     </a>
   </p>

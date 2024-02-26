@@ -40,7 +40,7 @@ try {
   $tenant->setKey('TIER3_SQUAD_FEES', $json);
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['FormSuccess'] = true;
-} catch (PDOException $e) {
+} catch (PDOException) {
 
   throw new Exception('A database error occurred');
 } catch (Exception $e) {

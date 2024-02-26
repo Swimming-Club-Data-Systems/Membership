@@ -33,7 +33,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
         <li class="breadcrumb-item active" aria-current="page">Sign Out</li>
       </ol>
     </nav>
@@ -59,8 +59,8 @@ include BASE_PATH . 'views/header.php';
       <?php if ($location = $getLocations->fetch(PDO::FETCH_ASSOC)) { ?>
         <div class="list-group">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl('contact-tracing/sign-out/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars($location['Name']) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/sign-out/' . $location['ID'])) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) $location['Name']) ?>
             </a>
           <?php } while ($location = $getLocations->fetch(PDO::FETCH_ASSOC)); ?>
         </div>

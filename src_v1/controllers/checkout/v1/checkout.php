@@ -62,7 +62,7 @@ include BASE_PATH . 'views/head.php';
 
 ?>
 
-<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-redirect-url-new="<?= htmlspecialchars($checkoutSession->getUrl()) ?>" data-redirect-url="<?= htmlspecialchars($redirect) ?>" data-org-name="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars($paymentIntent->amount) ?>" data-intent-currency="<?= htmlspecialchars($paymentIntent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($paymentRequestItems)) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
+<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-redirect-url-new="<?= htmlspecialchars((string) $checkoutSession->getUrl()) ?>" data-redirect-url="<?= htmlspecialchars((string) $redirect) ?>" data-org-name="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>" data-intent-amount="<?= htmlspecialchars((string) $paymentIntent->amount) ?>" data-intent-currency="<?= htmlspecialchars((string) $paymentIntent->currency) ?>" data-payment-request-line-items="<?= htmlspecialchars(json_encode($paymentRequestItems)) ?>" data-stripe-account-id="<?= htmlspecialchars((string) $tenant->getStripeAccount()) ?>">
 </div>
 
 <div class="bg-light py-3 mb-3">
@@ -71,23 +71,23 @@ include BASE_PATH . 'views/head.php';
     <div class="row mb-4 align-items-center">
       <div class="col-auto">
         <div class="h1 mb-0">
-          <a href="<?= htmlspecialchars($cancelUrl) ?>" class="text-decoration-none">
+          <a href="<?= htmlspecialchars((string) $cancelUrl) ?>" class="text-decoration-none">
             <?php if ($tenant->getKey('LOGO_DIR')) { ?>
-              <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid" style="height: 75px">
+              <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars((string) $tenant->getName()) ?>" class="img-fluid" style="height: 75px">
             <?php } else { ?>
-              <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+              <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
             <?php } ?>
           </a>
         </div>
       </div>
       <div class="col-auto ms-auto">
-        <a href="<?= htmlspecialchars($cancelUrl) ?>" class="btn btn-outline-dark rounded-pill"><span class="d-none d-lg-inline">Cancel </span><span class="fa fa-close"></span></a>
+        <a href="<?= htmlspecialchars((string) $cancelUrl) ?>" class="btn btn-outline-dark rounded-pill"><span class="d-none d-lg-inline">Cancel </span><span class="fa fa-close"></span></a>
       </div>
 
     </div>
 
     <h1 class="mb-0">
-      <span class="text-muted small">Pay <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
+      <span class="text-muted small">Pay <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></span> <br><?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?>
     </h1>
 
     <p class="mb-0 mt-3 d-block d-lg-none">You'll pay for <?= htmlspecialchars($numFormatter->format(sizeof($items))) ?> item<?php if (sizeof($items) != 1) { ?>s<?php } ?>. <a data-bs-toggle="collapse" href="#entry-list-group" role="button" aria-expanded="false" aria-controls="entry-list-group">Show details <i class="fa fa-caret-down" aria-hidden="true"></i></a></p>
@@ -105,7 +105,7 @@ include BASE_PATH . 'views/head.php';
         <ul class="collapse d-lg-flex list-group mb-3 accordion" id="entry-list-group">
           <?php foreach ($items as $item) { ?>
             <li class="list-group-item">
-              <h3><?= htmlspecialchars($item->name) ?></h3>
+              <h3><?= htmlspecialchars((string) $item->name) ?></h3>
 
               <?php if (sizeof($item->subItems) > 0) { ?>
                 <p>
@@ -125,7 +125,7 @@ include BASE_PATH . 'views/head.php';
                 <?php } ?>
                 <div class="col-auto ms-auto">
                   <p class="mb-0">
-                    <strong>Fee <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?></strong>
+                    <strong>Fee <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?></strong>
                   </p>
                 </div>
               </div>
@@ -142,10 +142,10 @@ include BASE_PATH . 'views/head.php';
                       <li>
                         <div class="row">
                           <div class="col-auto">
-                            <?= htmlspecialchars($item->name) ?>
+                            <?= htmlspecialchars((string) $item->name) ?>
                           </div>
                           <div class="col-auto ms-auto">
-                            <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?>
+                            <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) ?>
                           </div>
                         </div>
                       </li>
@@ -164,7 +164,7 @@ include BASE_PATH . 'views/head.php';
               </div>
               <div class="col text-end">
                 <p class="mb-0">
-                  <strong><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?></strong>
+                  <strong><?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?></strong>
                 </p>
               </div>
             </div>
@@ -202,7 +202,7 @@ include BASE_PATH . 'views/head.php';
                   <option value="select">Select card</option>
                   <?php foreach ($cards as $card) { ?>
                     <option value="<?= $card['MethodID'] ?>">
-                      <?= htmlspecialchars(getCardBrand($card['Brand'])) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card['Last4']) ?>
+                      <?= htmlspecialchars((string) getCardBrand($card['Brand'])) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card['Last4']) ?>
                     </option>
                   <?php } ?>
                 </select>
@@ -215,7 +215,7 @@ include BASE_PATH . 'views/head.php';
                 <p>
                 <div class="d-grid">
                   <button id="saved-card-button" class="btn btn-success pm-can-disable" type="button" data-secret="<?= $paymentIntent->client_secret ?>">
-                    Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
+                    Pay <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
                   </button>
                 </div>
                 </p>
@@ -263,7 +263,7 @@ include BASE_PATH . 'views/head.php';
               <label class="form-label" for="addr-post-code">Country</label>
               <select class="form-select pm-can-disable pm-can-disable" required id="addr-country" autocomplete="country">
                 <?php foreach ($countries as $code => $name) { ?>
-                  <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars($code) ?>"><?= htmlspecialchars($name) ?></option>
+                  <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $code) ?>"><?= htmlspecialchars((string) $name) ?></option>
                 <?php } ?>
               </select>
               <div class="invalid-feedback">
@@ -323,7 +323,7 @@ include BASE_PATH . 'views/head.php';
 
             <div class="d-grid">
               <button id="new-card-button" class="btn btn-success pm-can-disable" type="submit" data-secret="<?= $paymentIntent->client_secret ?>">
-                Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
+                Pay <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($checkoutSession->amount), $checkoutSession->currency)) ?> now
               </button>
             </div>
           </form>
@@ -345,11 +345,11 @@ include BASE_PATH . 'views/head.php';
 
   <div class="row align-items-center my-4 d-none">
     <div class="col-12">
-      <img src="<?= htmlspecialchars(autoUrl('img/corporate/scds.png')) ?>" class="img-fluid mb-2 d-none d-lg-flex rounded" alt="SCDS Logo" width="75" height="75">
+      <img src="<?= htmlspecialchars((string) autoUrl('img/corporate/scds.png')) ?>" class="img-fluid mb-2 d-none d-lg-flex rounded" alt="SCDS Logo" width="75" height="75">
     </div>
     <div class="col">
       <p class="mb-0 fs-5 lh-1">
-        A service provided by Swimming Club Data Systems to <?= htmlspecialchars($tenant->getName()) ?>
+        A service provided by Swimming Club Data Systems to <?= htmlspecialchars((string) $tenant->getName()) ?>
       </p>
     </div>
   </div>

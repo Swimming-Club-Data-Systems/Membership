@@ -62,7 +62,7 @@ ob_start();
   }
   </style>
 
-  <title><?=htmlspecialchars($info['GalaName'])?> Photography Permissions</title>
+  <title><?=htmlspecialchars((string) $info['GalaName'])?> Photography Permissions</title>
   </head>
   <body>
     <?php include BASE_PATH . 'helperclasses/PDFStyles/Letterhead.php'; ?>
@@ -73,7 +73,7 @@ ob_start();
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        <?=htmlspecialchars($info['GalaName'])?>
+        <?=htmlspecialchars((string) $info['GalaName'])?>
       </h1>
       <p class="lead mb-0">Photography Permissions Report</p>
     </div>
@@ -96,7 +96,7 @@ ob_start();
       <p>&copy; Chester-le-Street ASC <?=date("Y")?></p>
       <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?=date("Y")?></p>
-      <p>Produced by Swimming Club Data Systems for <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+      <p>Produced by Swimming Club Data Systems for <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></p>
       <?php } ?>
     </div>
 
@@ -110,10 +110,10 @@ ob_start();
       <div class="swimmer">
         <h3><?=htmlspecialchars($data['first'] . ' ' . $data['last'])?> <small class="text-muted"><?=$age?></small></h3>
         <?php if ($age >= 18) { ?>
-          <p><?=htmlspecialchars($data['first'])?> is an adult so has <strong>no restrictions</strong> on photography.</p>
+          <p><?=htmlspecialchars((string) $data['first'])?> is an adult so has <strong>no restrictions</strong> on photography.</p>
         <?php } else { ?>
           <?php if (bool($data['Website']) || bool($data['Social']) || bool($data['Noticeboard']) || bool($data['FilmTraining']) || bool($data['ProPhoto'])) { ?>
-            <p>You <strong>may</strong> take photos/videos of <?=htmlspecialchars($data['first'])?> for;</p>
+            <p>You <strong>may</strong> take photos/videos of <?=htmlspecialchars((string) $data['first'])?> for;</p>
             <ul>
               <?php if (bool($data['Website'])) { ?>
                 <li>Our website</li>
@@ -133,7 +133,7 @@ ob_start();
             </ul>
           <?php } ?>
           <?php if (!bool($data['Website']) || !bool($data['Social']) || !bool($data['Noticeboard']) || !bool($data['FilmTraining']) || !bool($data['ProPhoto'])) { ?>
-            <p>You <strong>cannot</strong> take photos/videos of <?=htmlspecialchars($data['first'])?> for;</p>
+            <p>You <strong>cannot</strong> take photos/videos of <?=htmlspecialchars((string) $data['first'])?> for;</p>
             <ul>
               <?php if (!bool($data['Website'])) { ?>
                 <li>Our website</li>

@@ -83,7 +83,7 @@ try {
 
   $_SESSION['CovidRiskAwarenessSuccess'] = true;
   header('location: ' . autoUrl('covid/risk-awareness'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   // throw new Exception('A database error occurred');
   $_SESSION['CovidRiskAwarenessError'] = 'A database error occurred';
   header('location: ' . autoUrl('covid/risk-awareness/members/' . $id . '/new-form'));

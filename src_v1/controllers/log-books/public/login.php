@@ -23,7 +23,7 @@ include BASE_PATH . "views/header.php";
             <strong>We could not log you in</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoginError']);
@@ -32,14 +32,14 @@ include BASE_PATH . "views/header.php";
       <form method="post" action="<?= autoUrl("log-books/login") ?>" name="loginform" id="loginform" class="needs-validation" novalidate>
         <div class="mb-3">
           <label class="form-label" for="swim-england">Swim England Membership Number</label>
-          <input type="text" name="swim-england" id="swim-england" class="form-control form-control-lg text-lowercase" value="<?= htmlspecialchars($username) ?>" required <?php if (!$username) { ?>autofocus<?php } ?> placeholder="123456" autocomplete="">
+          <input type="text" name="swim-england" id="swim-england" class="form-control form-control-lg text-lowercase" value="<?= htmlspecialchars((string) $username) ?>" required <?php if (!$username) { ?>autofocus<?php } ?> placeholder="123456" autocomplete="">
           <div class="invalid-feedback">
             Please enter a valid membership number.
           </div>
         </div>
         <div class="mb-3">
           <label class="form-label" for="password">Password</label>
-          <input type="password" name="password" id="password" class="form-control form-control-lg" required placeholder="Password" <?php if (mb_strlen($username) > 0) { ?>autofocus<?php } ?> aria-describedby="password-help" autocomplete="current-password">
+          <input type="password" name="password" id="password" class="form-control form-control-lg" required placeholder="Password" <?php if (mb_strlen((string) $username) > 0) { ?>autofocus<?php } ?> aria-describedby="password-help" autocomplete="current-password">
           <div class="invalid-feedback">
             Please enter a password.
           </div>
@@ -56,7 +56,7 @@ include BASE_PATH . "views/header.php";
             </small>
           </div>
         </div>
-        <input type="hidden" name="target" value="<?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL']) ?>">
+        <input type="hidden" name="target" value="<?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['TARGET_URL']) ?>">
         <?= SCDS\CSRF::write() ?>
         <input type="hidden" name="SessionSecurity" value="<?= htmlspecialchars(session_id()) ?>">
         <p class="mb-5"><input type="submit" name="login" id="login" value="Login" class="btn btn-lg btn-primary"></p>
@@ -86,7 +86,7 @@ include BASE_PATH . "views/header.php";
 
       <!--
       <p class="small mb-5">
-        Unauthorised access to or misuse of this system is prohibited and constitutes an offence under the Computer Misuse Act 1990. If you disclose any information obtained through this system without authority then <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> or Swimming Club Data Systems may take legal action against you.
+        Unauthorised access to or misuse of this system is prohibited and constitutes an offence under the Computer Misuse Act 1990. If you disclose any information obtained through this system without authority then <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> or Swimming Club Data Systems may take legal action against you.
       </p>
       -->
 

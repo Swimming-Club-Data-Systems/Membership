@@ -81,19 +81,19 @@ try {
 
       $message = '<p>Hello ' . htmlspecialchars($memberUser['Forename'] . ' ' . $memberUser['Surname']) . '</p>';
 
-      $message .= '<p>We have voided ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . '\'s COVID-19 Return to Competition for ' . htmlspecialchars($galaName) . ' which was submitted at ' . htmlspecialchars($subTime->format('H:i, j F Y')) . '.</p>';
+      $message .= '<p>We have voided ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . '\'s COVID-19 Return to Competition for ' . htmlspecialchars((string) $galaName) . ' which was submitted at ' . htmlspecialchars($subTime->format('H:i, j F Y')) . '.</p>';
 
       $message .= '<p>We might have done this because of one of the following:</p><ul>';
 
       $message .= '<li>If you\'ve been out of the area for a while,</li>';
       $message .= '<li>You or somebody you\'re in close contact with contracted or was suspected of having COVID-19,</li>';
-      $message .= '<li>Any other reason, which for reasons of confidentiality, does not have to be explained by ' . htmlspecialchars($tenant->getName()) . '.</li>';
+      $message .= '<li>Any other reason, which for reasons of confidentiality, does not have to be explained by ' . htmlspecialchars((string) $tenant->getName()) . '.</li>';
 
-      $message .= '</ul><p>As a result, we will need you to <a href="' . htmlspecialchars(autoUrl('covid/competition-health-screening')) . '" target="_blank">complete a new COVID-19 (' . htmlspecialchars($galaName) . ') Return to Competition Form</a> before we can let you compete.</p>';
+      $message .= '</ul><p>As a result, we will need you to <a href="' . htmlspecialchars((string) autoUrl('covid/competition-health-screening')) . '" target="_blank">complete a new COVID-19 (' . htmlspecialchars((string) $galaName) . ') Return to Competition Form</a> before we can let you compete.</p>';
 
       $message .= '<p>If you have received this email, you may also be sent an email asking you to complete a new COVID-19 Health Survey or COVID-19 Risk Awareness Form.</p>';
 
-      $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars($tenant->getName()) . ' team.</p>';
+      $message .= '<p>Thank you for your support at this time, <br>The ' . htmlspecialchars((string) $tenant->getName()) . ' team.</p>';
 
       notifySend(null, $subject, $message, $memberUser['Forename'] . ' ' . $memberUser['Surname'], $memberUser['EmailAddress']);
     }
@@ -146,7 +146,7 @@ try {
   }
 } catch (Exception $e) {
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred.';
     reportError($e);
   }

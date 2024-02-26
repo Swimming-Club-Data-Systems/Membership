@@ -18,9 +18,9 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
 		$verify = $_POST["verify"];
 
 		if ($verify == "markProcessed" /*&& $itemChecked != null*/) {
-			if (strpos($id, 'processedEntry-') !== false) {
+			if (str_contains((string) $id, 'processedEntry-')) {
 				// Okay it's what we want. Lets remove the "processedEntry" so we just have the ID left over
-				$id = mb_substr($id, 15);
+				$id = mb_substr((string) $id, 15);
 				// Verify entry id
 				$verifyEntryId->execute([
 					$id,
@@ -42,9 +42,9 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
 				}
 			}
 		} else if ($verify == "markPaid") {
-			if (strpos($id, 'chargedEntry-') !== false) {
+			if (str_contains((string) $id, 'chargedEntry-')) {
 				// Okay it's what we want. Lets remove the "chargedEntry" so we just have the ID left over
-				$id = mb_substr($id, 13);
+				$id = mb_substr((string) $id, 13);
 				// Verify entry id
 				$verifyEntryId->execute([
 					$id,

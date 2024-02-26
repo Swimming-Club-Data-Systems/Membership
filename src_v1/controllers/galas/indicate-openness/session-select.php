@@ -36,7 +36,7 @@ if ($swimmer == null) {
   $hasSwimmers = false;
 }
 
-$pagetitle = 'Select available sessions for ' . htmlspecialchars($gala['name']);
+$pagetitle = 'Select available sessions for ' . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -46,13 +46,13 @@ include BASE_PATH . 'views/header.php';
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
-      <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>"><?= htmlspecialchars($gala['name']) ?></a></li>
+      <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>"><?= htmlspecialchars((string) $gala['name']) ?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Sessions</li>
     </ol>
   </nav>
   <div class="row">
     <div class="col-lg-8">
-      <h1>Select available sessions at <?= htmlspecialchars($gala['name']) ?></h1>
+      <h1>Select available sessions at <?= htmlspecialchars((string) $gala['name']) ?></h1>
       <p class="lead">Select sessions your swimmers will be able to swim at.</p>
       <p>Your coaches will use this information to make suggested entries for your swimmers.</p>
 
@@ -100,8 +100,8 @@ include BASE_PATH . 'views/header.php';
               }
 
             ?>
-              <h2><?= htmlspecialchars(\SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?></h2>
-              <p class="lead"><?= htmlspecialchars($swimmer['fn']) ?> is able to enter;</p>
+              <h2><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?></h2>
+              <p class="lead"><?= htmlspecialchars((string) $swimmer['fn']) ?> is able to enter;</p>
               <div class="row">
                 <?php for ($i = 0; $i < sizeof($sessions); $i++) { ?>
                   <div class="col-sm-6 col-lg-4 col-xl-3">
@@ -109,7 +109,7 @@ include BASE_PATH . 'views/header.php';
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" id="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>" name="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>" <?= $checked[$i] ?>>
                         <label class="form-check-label" for="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>">
-                          <?= htmlspecialchars($sessions[$i]['Name']) ?>
+                          <?= htmlspecialchars((string) $sessions[$i]['Name']) ?>
                         </label>
                       </div>
                     </div>

@@ -43,7 +43,7 @@ $datetime1 = new DateTime($row['StartTime']);
 $datetime2 = new DateTime($row['EndTime']);
 $interval = $datetime1->diff($datetime2);
 
-$pagetitle = htmlspecialchars($row['SessionName']);
+$pagetitle = htmlspecialchars((string) $row['SessionName']);
 
 include BASE_PATH . "views/header.php";
 include BASE_PATH . "controllers/attendance/attendanceMenu.php";
@@ -52,16 +52,16 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php";
 
 
 <div class="container-xl">
-	<h1><?= htmlspecialchars($row['SessionName']) ?></h1>
+	<h1><?= htmlspecialchars((string) $row['SessionName']) ?></h1>
 	<p class="lead"><?= $dayText ?> at <?= $row['StartTime'] ?></p>
 	<form>
 		<dl>
 			<dt>Session Name</dt>
-			<dd><?= htmlspecialchars($row['SessionName']) ?></dd>
+			<dd><?= htmlspecialchars((string) $row['SessionName']) ?></dd>
 			<dt>Count towards attendance &percnt;</dt>
 			<dd><?php if (bool($row['ForAllMembers'])) { ?>Yes<?php } else { ?>No<?php } ?></dd>
 			<dt>Venue</dt>
-			<dd><?= htmlspecialchars($row['VenueName']) ?></dd>
+			<dd><?= htmlspecialchars((string) $row['VenueName']) ?></dd>
 			<dt>Start Time</dt>
 			<dd><?= htmlspecialchars($datetime1->format("H:i")) ?></dd>
 			<dt>Finish Time</dt>
@@ -69,7 +69,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php";
 			<dd><?= htmlspecialchars($interval->format('%h hours %I minutes')) ?></dd>
 			<div id="successAlert"></div>
 			<dt><label class="form-label" for="endDate">Display Until</label></dt>
-			<dd><input type="date" class="form-control mb-3" id="endDate" name="endDate" value="<?php if ($row['DisplayUntil'] != null) { ?><?= htmlspecialchars($row['DisplayUntil']) ?><?php } ?>" data-ajax-url="<?= htmlspecialchars(autoUrl("attendance/sessions/ajax/endDateHandler")) ?>" data-session-id="<?= htmlspecialchars($row['SessionID']) ?>">
+			<dd><input type="date" class="form-control mb-3" id="endDate" name="endDate" value="<?php if ($row['DisplayUntil'] != null) { ?><?= htmlspecialchars((string) $row['DisplayUntil']) ?><?php } ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl("attendance/sessions/ajax/endDateHandler")) ?>" data-session-id="<?= htmlspecialchars((string) $row['SessionID']) ?>">
 				<button id="saveDate" type="button" class="btn btn-outline-dark">Save End Date</button></dd>
 		</dl>
 	</form>

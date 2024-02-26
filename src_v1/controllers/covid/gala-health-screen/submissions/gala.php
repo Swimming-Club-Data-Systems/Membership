@@ -31,7 +31,7 @@ $member = $getMembers->fetch(PDO::FETCH_ASSOC);
 
 $getLatestCompletion = $db->prepare("SELECT `ID`, `DateTime`, `MemberAgreement`, `Guardian`, `Forename`, `Surname` FROM covidGalaHealthScreen LEFT JOIN users ON users.UserID = covidGalaHealthScreen.Guardian WHERE Member = ? ORDER BY `DateTime` DESC LIMIT 1");
 
-$pagetitle = htmlspecialchars($gala['GalaName']) . ' - COVID Return to Competition Screening';
+$pagetitle = htmlspecialchars((string) $gala['GalaName']) . ' - COVID Return to Competition Screening';
 
 include BASE_PATH . 'views/header.php';
 
@@ -42,17 +42,17 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening#galas')) ?>">Galas</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($gala['GalaName']) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening')) ?>">Competition</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening#galas')) ?>">Galas</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $gala['GalaName']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-12">
         <h1>
-          <?= htmlspecialchars($gala['GalaName']) ?> COVID-19 Return to Competition Health Screening
+          <?= htmlspecialchars((string) $gala['GalaName']) ?> COVID-19 Return to Competition Health Screening
         </h1>
         <p class="lead mb-0">
           Keeping everyone safe
@@ -80,7 +80,7 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <p class="mb-0"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
+                  <p class="mb-0"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></p>
                   <p class="mb-0">
                     <?php if ($latest) {
                       $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
@@ -102,7 +102,7 @@ include BASE_PATH . 'views/header.php';
                 <?php if ($latest && bool($latest['MemberAgreement'])) { ?>
                   <div class="col-auto">
                     <div class="mt-3 d-sm-none"></div>
-                    <button class="btn btn-warning" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars($latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars($member['MForename']) ?> submits a new declaration form">
+                    <button class="btn btn-warning" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>" data-form-submission-id="<?= htmlspecialchars((string) $latest['ID']) ?>" data-action="void" title="Require that <?= htmlspecialchars((string) $member['MForename']) ?> submits a new declaration form">
                       Void form
                     </button>
                   </div>
@@ -114,7 +114,7 @@ include BASE_PATH . 'views/header.php';
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong>No members have entered <?= htmlspecialchars($gala['GalaName']) ?></strong>
+            <strong>No members have entered <?= htmlspecialchars((string) $gala['GalaName']) ?></strong>
           </p>
         </div>
       <?php } ?>
@@ -130,10 +130,10 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <div class="btn-group" role="group" aria-label="Options">
-        <button id="voidOutdatedButton" class="btn btn-warning" data-gala-name="<?= htmlspecialchars($gala['GalaName']) ?>" data-gala-id="<?= htmlspecialchars($id) ?>">
+        <button id="voidOutdatedButton" class="btn btn-warning" data-gala-name="<?= htmlspecialchars((string) $gala['GalaName']) ?>" data-gala-id="<?= htmlspecialchars((string) $id) ?>">
           Void outdated
         </button>
-        <button id="voidAllButton" class="btn btn-danger" data-gala-name="<?= htmlspecialchars($gala['GalaName']) ?>" data-gala-id="<?= htmlspecialchars($id) ?>">
+        <button id="voidAllButton" class="btn btn-danger" data-gala-name="<?= htmlspecialchars((string) $gala['GalaName']) ?>" data-gala-id="<?= htmlspecialchars((string) $id) ?>">
           Void all
         </button>
       </div>
@@ -161,7 +161,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="js-opts" data-void-ajax-url="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/void')) ?>"></div>
+<div id="js-opts" data-void-ajax-url="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening/void')) ?>"></div>
 
 <?php
 

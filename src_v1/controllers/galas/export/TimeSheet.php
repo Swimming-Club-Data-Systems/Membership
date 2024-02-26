@@ -51,20 +51,20 @@ if ($noTimeSheet) {
 } else {
 	// output headers so that the file is downloaded rather than displayed
 	header('Content-Type: text/csv; charset=utf-8');
-	header('Content-Disposition: attachment; filename=' . str_replace(' ', '', $info['GalaName']) . '-TimeSheet.csv');
+	header('Content-Disposition: attachment; filename=' . str_replace(' ', '', (string) $info['GalaName']) . '-TimeSheet.csv');
 
 	// create a file pointer connected to the output stream
 	$output = fopen('php://output', 'w');
 
-	fputcsv($output, array(app()->tenant->getKey('CLUB_NAME') . ' Gala Time Sheet'));
-	fputcsv($output, array($info['GalaName'] . " - " . $info['GalaVenue'] . " - " . date("d/m/Y", strtotime($info['GalaDate']))));
-	fputcsv($output, array('Time Sheet Report Generated on ' . date("d/m/Y, H:i")));
-	fputcsv($output, array(''));
+	fputcsv($output, [app()->tenant->getKey('CLUB_NAME') . ' Gala Time Sheet']);
+	fputcsv($output, [$info['GalaName'] . " - " . $info['GalaVenue'] . " - " . date("d/m/Y", strtotime((string) $info['GalaDate']))]);
+	fputcsv($output, ['Time Sheet Report Generated on ' . date("d/m/Y, H:i")]);
+	fputcsv($output, ['']);
 
 	$swimsArray = ['25Free', '50Free', '100Free', '200Free', '400Free', '800Free', '1500Free', '25Back', '50Back', '100Back', '200Back', '25Breast', '50Breast', '100Breast', '200Breast', '25Fly', '50Fly', '100Fly', '200Fly', '100IM', '150IM', '200IM', '400IM',];
 	$swimsTextArray = ['25 Fr', '50 Fr', '100 Fr', '200 Fr', '400 Fr', '800 Fr', '1500 Fr', '25 Bk', '50 Bk', '100 Bk', '200 Bk', '25 Br', '50 Br', '100 Br', '200 Br', '25 Fly', '50 Fly', '100 Fly', '200 Fly', '100 IM', '200 IM', '400 IM'];
 
-	fputcsv($output, array('Forename', 'Surname', 'Swims'));
+	fputcsv($output, ['Forename', 'Surname', 'Swims']);
 
 	// loop over the rows, outputting them
 	do {

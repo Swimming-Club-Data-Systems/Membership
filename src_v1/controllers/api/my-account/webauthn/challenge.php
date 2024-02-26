@@ -30,9 +30,7 @@ $credentialSourceRepository = new WebAuthnImplementation\PublicKeyCredentialSour
 $credentialSources = $credentialSourceRepository->findAllForUserEntity($userEntity);
 
 // Convert the Credential Sources into Public Key Credential Descriptors
-$excludeCredentials = array_map(function (PublicKeyCredentialSource $credential) {
-  return $credential->getPublicKeyCredentialDescriptor();
-}, $credentialSources);
+$excludeCredentials = array_map(fn(PublicKeyCredentialSource $credential) => $credential->getPublicKeyCredentialDescriptor(), $credentialSources);
 /** End of optional part**/
 
 $publicKeyCredentialCreationOptions = $server->generatePublicKeyCredentialCreationOptions(

@@ -99,13 +99,13 @@ function sessionManagement($squadID, $old = null)
 							<p class="mb-0">
 								<a data-bs-toggle="modal" href="#sessionModal<?= $row['SessionID'] ?>">
 									<strong class="text-gray-dark">
-										<?= htmlspecialchars($row['SessionName']) ?>, <?= $dayText ?> at <?= htmlspecialchars($datetime1->format("H:i")) ?>
+										<?= htmlspecialchars((string) $row['SessionName']) ?>, <?= $dayText ?> at <?= htmlspecialchars($datetime1->format("H:i")) ?>
 									</strong>
 								</a>
 							</p>
 
 							<p class="mb-0">
-								<?= htmlspecialchars($row['VenueName']) ?>
+								<?= htmlspecialchars((string) $row['VenueName']) ?>
 							</p>
 
 							<p class="mb-0">
@@ -120,7 +120,7 @@ function sessionManagement($squadID, $old = null)
 				<div class="modal-dialog modal-dialog-centered" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="sessionModalTitle' . $row['SessionID'] . '">' . htmlspecialchars($row['SessionName']) . ', ' . $dayText . ' at ' . $row['StartTime'] . '</h5>
+							<h5 class="modal-title" id="sessionModalTitle' . $row['SessionID'] . '">' . htmlspecialchars((string) $row['SessionName']) . ', ' . $dayText . ' at ' . $row['StartTime'] . '</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 								
 							</button>
@@ -128,7 +128,7 @@ function sessionManagement($squadID, $old = null)
 						<div class="modal-body">
 							<dl>
 								<dt>Session Name</dt>
-								<dd>' . htmlspecialchars($row['SessionName']) . '</dd>
+								<dd>' . htmlspecialchars((string) $row['SessionName']) . '</dd>
 								<dt>Include in attendance calculations</dt>';
 							if ($row['ForAllMembers']) {
 								$modals .= '<dd>This session is included in attendance calculations</dd>';
@@ -136,7 +136,7 @@ function sessionManagement($squadID, $old = null)
 								$modals .= '<dd>This session is <strong>not included</strong> in attendance calculations</dd>';
 							}
 							$modals .= '<dt>Venue</dt>
-								<dd>' . htmlspecialchars($row['VenueName']) . '</dd>
+								<dd>' . htmlspecialchars((string) $row['VenueName']) . '</dd>
 								<dt>Start Time</dt>
 								<dd>' . htmlspecialchars($datetime1->format("H:i")) . '</dd>
 								<dt>Finish Time</dt>
@@ -224,13 +224,13 @@ function sessionManagement($squadID, $old = null)
 						<p class="mb-0">
 							<a data-bs-toggle="modal" href="#sessionModal<?= $row['SessionID'] ?>">
 								<strong class="text-gray-dark">
-									<?= htmlspecialchars($row['SessionName']) ?>, <?= $dayText ?> at <?= htmlspecialchars($datetime1->format("H:i")) ?>
+									<?= htmlspecialchars((string) $row['SessionName']) ?>, <?= $dayText ?> at <?= htmlspecialchars($datetime1->format("H:i")) ?>
 								</strong>
 							</a>
 						</p>
 
 						<p class="mb-0">
-							<?= htmlspecialchars($row['VenueName']) ?>
+							<?= htmlspecialchars((string) $row['VenueName']) ?>
 						</p>
 
 						<p class="mb-0">
@@ -245,7 +245,7 @@ function sessionManagement($squadID, $old = null)
 				<div class="modal-dialog modal-dialog-centered" role="document">
 					<div class="modal-content">
 						<div class="modal-header">
-							<h5 class="modal-title" id="sessionModalTitle' . $row['SessionID'] . '">' . htmlspecialchars($row['SessionName']) . ', ' . $dayText . ' at ' . $row['StartTime'] . '</h5>
+							<h5 class="modal-title" id="sessionModalTitle' . $row['SessionID'] . '">' . htmlspecialchars((string) $row['SessionName']) . ', ' . $dayText . ' at ' . $row['StartTime'] . '</h5>
 							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 								
 							</button>
@@ -253,7 +253,7 @@ function sessionManagement($squadID, $old = null)
 						<div class="modal-body">
 							<dl>
 								<dt>Session Name</dt>
-								<dd>' . htmlspecialchars($row['SessionName']) . '</dd>
+								<dd>' . htmlspecialchars((string) $row['SessionName']) . '</dd>
 								<dt>Include in attendance calculations</dt>';
 						if ($row['ForAllMembers']) {
 							$modals .= '<dd>This session is included in attendance calculations</dd>';
@@ -261,7 +261,7 @@ function sessionManagement($squadID, $old = null)
 							$modals .= '<dd>This session is <strong>not included</strong> in attendance calculations</dd>';
 						}
 						$modals .= '<dt>Venue</dt>
-								<dd>' . htmlspecialchars($row['VenueName']) . '</dd>
+								<dd>' . htmlspecialchars((string) $row['VenueName']) . '</dd>
 								<dt>Start Time</dt>
 								<dd>' . htmlspecialchars($datetime1->format("H:i")) . '</dd>
 								<dt>Finish Time</dt>
@@ -334,7 +334,7 @@ function sessionManagement($squadID, $old = null)
 								<option selected value="0">Select a Venue</option>
 								<?php while ($venue = $venues->fetch(PDO::FETCH_ASSOC)) { ?>
 									<option value="<?= $venue['id'] ?>">
-										<?= htmlspecialchars($venue['name']) ?>
+										<?= htmlspecialchars((string) $venue['name']) ?>
 									</option>
 								<?php } ?>
 

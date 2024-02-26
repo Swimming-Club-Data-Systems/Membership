@@ -15,7 +15,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
 		$query = $db->prepare("SELECT COUNT(*) FROM `members` WHERE UserID = ? AND RR = ?");
 		try {
 			$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 1]);
-		} catch (PDOException $e) {
+		} catch (PDOException) {
 			halt(500);
 		}
 		$new_swimmers = $query->fetchColumn();
@@ -33,10 +33,6 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
 		include BASE_PATH . 'controllers/renewal/admin/list.php';
 	});
 }
-
-$this->group('/ac', function() {
-  include 'join-from-trial/router.php';
-});
 
 
 $this->get('/welcome-pack', function() {

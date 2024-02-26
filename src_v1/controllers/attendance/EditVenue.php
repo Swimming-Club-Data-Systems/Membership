@@ -14,7 +14,7 @@ if (!$venue) {
   halt(404);
 }
 
-$pagetitle = "Editing " . htmlspecialchars($venue['VenueName']);
+$pagetitle = "Editing " . htmlspecialchars((string) $venue['VenueName']);
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -24,19 +24,19 @@ include BASE_PATH . "views/header.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/venues')) ?>">Venues</a></li>
-        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars($id) ?></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/venues')) ?>">Venues</a></li>
+        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars((string) $id) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg">
         <h1>
-          Edit <?= htmlspecialchars($venue['VenueName']) ?>
+          Edit <?= htmlspecialchars((string) $venue['VenueName']) ?>
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
         </p>
         <!-- <div class="mb-3 d-lg-none"></div> -->
       </div>

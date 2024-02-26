@@ -58,7 +58,7 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 
 		<div class="alert alert-warning">
 			<strong>Oops. You've aleady entered this member into this gala</strong> <br>
-			You might want to check that. <?php if ($row['EntryProcessed'] == 0) { ?>We've not processed your entry yet, so you <a class="alert-link" href="<?= htmlspecialchars(autoUrl("galas/entries/" . $row["EntryID"])) ?>">can edit your gala entry</a> if you need to make changes.<?php } else { ?>We've already processed your gala entry - You'll need to contact your gala administrator if you need to make any changes.<?php } ?>
+			You might want to check that. <?php if ($row['EntryProcessed'] == 0) { ?>We've not processed your entry yet, so you <a class="alert-link" href="<?= htmlspecialchars((string) autoUrl("galas/entries/" . $row["EntryID"])) ?>">can edit your gala entry</a> if you need to make changes.<?php } else { ?>We've already processed your gala entry - You'll need to contact your gala administrator if you need to make any changes.<?php } ?>
 		</div>
 
 		<?php } else {
@@ -95,12 +95,12 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 			<?php if (bool($gala['RequiresApproval']) && $numReps > 0) { ?>
 				<p>This entry must be approved by a squad rep before the gala team will submit it to the host club.</p>
 			<?php } else if (bool($gala['RequiresApproval'])) { ?>
-				<p>There is no squad rep assigned to <?= htmlspecialchars($swimmer['fn']) ?>'s squad. This means nobody will be able to review your entry before it goes to the gala team.</p>
+				<p>There is no squad rep assigned to <?= htmlspecialchars((string) $swimmer['fn']) ?>'s squad. This means nobody will be able to review your entry before it goes to the gala team.</p>
 			<?php } ?>
 
 			<?php if ($gala['ProcessingFee'] > 0) { ?>
 				<p>
-					This gala includes a per entry processing fee of £<?= htmlspecialchars(MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?>.
+					This gala includes a per entry processing fee of £<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?>.
 				</p>
 			<?php } ?>
 
@@ -318,7 +318,7 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 		</div>
 
 		<p>
-			Your entry fee is <strong>&pound;<span id="total-field" data-total="<?= htmlspecialchars($gala['ProcessingFee']) ?>" data-count="0"><?= htmlspecialchars(MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?></span></strong><span id="entries-field"></span>. <?php if ($gala['ProcessingFee'] > 0) { ?>This includes the processing fee of £<?= htmlspecialchars(MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?>.<?php } ?>
+			Your entry fee is <strong>&pound;<span id="total-field" data-total="<?= htmlspecialchars((string) $gala['ProcessingFee']) ?>" data-count="0"><?= htmlspecialchars((string) MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?></span></strong><span id="entries-field"></span>. <?php if ($gala['ProcessingFee'] > 0) { ?>This includes the processing fee of £<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($gala['ProcessingFee'])) ?>.<?php } ?>
 		</p>
 
 	<?php } ?>
@@ -412,7 +412,7 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 	</div>
 
 	<h2>Select available sessions</h2>
-	<p class="lead">Select sessions which <?= htmlspecialchars($swimmer['fn']) ?> will be able to swim at.</p>
+	<p class="lead">Select sessions which <?= htmlspecialchars((string) $swimmer['fn']) ?> will be able to swim at.</p>
 	<p>Your coaches will use this information when making suggested entries to this gala.</p>
 
 	<?php if ($sessions == null) { ?>
@@ -440,7 +440,7 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 
 		<!--
 		<h2><?= htmlspecialchars($swimmer['fn'] . ' ' . $swimmer['sn']) ?></h2>
-		<p class="lead"><?= htmlspecialchars($swimmer['fn']) ?> is able to enter;</p>
+		<p class="lead"><?= htmlspecialchars((string) $swimmer['fn']) ?> is able to enter;</p>
 		-->
 		<div class="row">
 			<?php for ($i = 0; $i < sizeof($sessions); $i++) { ?>
@@ -449,7 +449,7 @@ if (!$coachEnters && (isset($_REQUEST["galaID"])) && (isset($_REQUEST["swimmer"]
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" id="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>" name="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>" <?= $checked[$i] ?>>
 							<label class="form-check-label" for="<?= $swimmer['id'] ?>-<?= $sessions[$i]['ID'] ?>">
-								<?= htmlspecialchars($sessions[$i]['Name']) ?>
+								<?= htmlspecialchars((string) $sessions[$i]['Name']) ?>
 							</label>
 						</div>
 					</div>

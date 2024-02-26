@@ -17,7 +17,7 @@ if (isset($_SESSION['SCDS-SuperUser'])) {
 
 $getUser = $db->prepare("SELECT ID, Email, PWHash, TwoFactor FROM superUsers WHERE Email = ?");
 $getUser->execute([
-  mb_strtolower($_POST['email-address']),
+  mb_strtolower((string) $_POST['email-address']),
 ]);
 $user = $getUser->fetch(PDO::FETCH_ASSOC);
 
@@ -33,7 +33,7 @@ try {
     throw new Exception('Not Found');
   }
 
-  if (!password_verify($_POST['password'], $user['PWHash'])) {
+  if (!password_verify((string) $_POST['password'], (string) $user['PWHash'])) {
     throw new Exception('Not Found');
   }
 
@@ -46,7 +46,7 @@ try {
 
   header('location: ' . autoUrl('admin/login'));
 
-} catch (Exception $e) {
+} catch (Exception) {
 
   $_SESSION['SCDS-SU-LoginError'] = true;
 

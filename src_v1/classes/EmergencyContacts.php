@@ -2,14 +2,12 @@
 
 class EmergencyContacts {
 	private $contacts;
-	private $dbconn;
 
-	public function __construct($dbconn) {
+	public function __construct(private $dbconn) {
 		$this->contacts = [];
-		$this->dbconn = $dbconn;
 	}
 
-	public function byParent(int $id) {
+	public function byParent(int $id): void {
     $sql = $this->dbconn->prepare("SELECT ID, UserID, `Name`, ContactNumber, `Relation` FROM `emergencyContacts` WHERE `UserID` = ?");
     $sql->execute([
 			$id
@@ -27,7 +25,7 @@ class EmergencyContacts {
 		}
 	}
 
-	public function bySwimmer(int $id) {
+	public function bySwimmer(int $id): void {
 		$sql = $this->dbconn->prepare("SELECT ID, UserID, `Name`, ContactNumber FROM `members` LEFT JOIN `emergencyContacts` ON members.UserID = emergencyContacts.UserID WHERE `MemberID` = ?");
     $sql->execute([$id]);
     while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {

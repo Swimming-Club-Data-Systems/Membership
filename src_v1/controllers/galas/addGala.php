@@ -25,7 +25,7 @@ include "galaMenu.php";
   } ?>
   <h1>Add a gala</h1>
   <p class="lead">Add a gala for members to enter</p>
-  <form method="post" action="<?= htmlspecialchars(autoUrl("galas/addgala")) ?>" class="needs-validation" novalidate>
+  <form method="post" action="<?= htmlspecialchars((string) autoUrl("galas/addgala")) ?>" class="needs-validation" novalidate>
     <div class="row">
       <div class="col-lg-8">
         <div class="mb-3">
@@ -105,7 +105,7 @@ include "galaMenu.php";
           <label for="per-entry-fee" class="form-label">Per gala entry processing fee</label>
           <div class="input-group">
             <span class="input-group-text">&pound;</span>
-            <input type="number" min="0" step="0.01" class="form-control" id="per-entry-fee" name="per-entry-fee" aria-describedby="per-entry-fee-help" placeholder="0.00" required value="<?= htmlspecialchars(MoneyHelpers::intToDecimal($tenant->getKey('DEFAULT_GALA_PROCESSING_FEE'))) ?>">
+            <input type="number" min="0" step="0.01" class="form-control" id="per-entry-fee" name="per-entry-fee" aria-describedby="per-entry-fee-help" placeholder="0.00" required value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($tenant->getKey('DEFAULT_GALA_PROCESSING_FEE'))) ?>">
             <div class="invalid-feedback">You must enter a numeric value for the per gala entry processing fee - it can be £0</div>
           </div>
           <small id="per-entry-fee-help" class="form-text text-muted">This is the amount added per swimmer entered, not per swim entered. If you apply a processing fee for each swim, add the amount to the fee per swim. To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer</small>

@@ -50,6 +50,6 @@ try {
 	header('Content-Type: '.$qrCode->getContentType());
 	echo $qrCode->writeString();
 
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }

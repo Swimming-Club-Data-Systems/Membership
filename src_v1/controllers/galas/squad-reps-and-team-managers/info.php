@@ -6,7 +6,7 @@ $tenant = app()->tenant;
 $noSquad = false;
 $doNotHalt = true;
 require 'info.json.php';
-$data = json_decode($output);
+$data = json_decode((string) $output);
 
 $squads = null;
 $leavers = app()->tenant->getKey('LeaversSquad');
@@ -57,7 +57,7 @@ $swimsArray = [
 
 $numFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
-$pagetitle = htmlspecialchars($data->squad->name) . " Squad Rep View for " . htmlspecialchars($data->gala->name);
+$pagetitle = htmlspecialchars((string) $data->squad->name) . " Squad Rep View for " . htmlspecialchars((string) $data->gala->name);
 
 include BASE_PATH . 'views/header.php';
 
@@ -72,9 +72,9 @@ include BASE_PATH . 'views/header.php';
       </ol>
     </nav>
 
-    <h1><?= htmlspecialchars($data->squad->name) ?> entries for <?= htmlspecialchars($data->gala->name) ?></h1>
+    <h1><?= htmlspecialchars((string) $data->squad->name) ?> entries for <?= htmlspecialchars((string) $data->gala->name) ?></h1>
     <p class="lead mb-0">
-      <?= htmlspecialchars($data->gala->venue) ?>
+      <?= htmlspecialchars((string) $data->gala->venue) ?>
     </p>
   </div>
 </div>
@@ -91,7 +91,7 @@ include BASE_PATH . 'views/header.php';
           <label class="form-label" for="squad-select">
             Choose squad
           </label>
-          <select class="form-select" id="squad-select" name="squad-select" data-gala-id="<?= htmlspecialchars($id) ?>" data-page="<?= htmlspecialchars(autoUrl('')) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('galas/squad-reps/entry-states')) ?>">
+          <select class="form-select" id="squad-select" name="squad-select" data-gala-id="<?= htmlspecialchars((string) $id) ?>" data-page="<?= htmlspecialchars((string) autoUrl('')) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('galas/squad-reps/entry-states')) ?>">
             <?php if ($noSquad) { ?>
               <option selected>Select a squad</option>
             <?php } ?>
@@ -102,7 +102,7 @@ include BASE_PATH . 'views/header.php';
             <?php } ?>
             <?php while ($s = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
               <option value="<?= $s['id'] ?>" <?php if ((int) $s['id'] == $squad) { ?>selected<?php } ?>>
-                <?= htmlspecialchars($s['name']) ?>
+                <?= htmlspecialchars((string) $s['name']) ?>
               </option>
             <?php } ?>
           </select>
@@ -135,7 +135,7 @@ include BASE_PATH . 'views/header.php';
 
         <h2>Entries for this gala</h2>
         <p class="lead">
-          This list shows all entries by swimmers in <?= htmlspecialchars($data->squad->name) ?>.
+          This list shows all entries by swimmers in <?= htmlspecialchars((string) $data->squad->name) ?>.
         </p>
 
         <p>
@@ -150,20 +150,20 @@ include BASE_PATH . 'views/header.php';
           <ul class="list-group mb-3">
             <?php foreach ($data->entries as $entry) { ?>
               <?php $hasNoDD = (!isset($entry->mandate->id) || $entry->mandate->id == null) || (getUserOption($entry->user, 'GalaDirectDebitOptOut')); ?>
-              <li class="list-group-item <?php if (bool($entry->charged)) { ?>list-group-item-success<?php } ?>" id="refund-box-<?= htmlspecialchars($entry->id) ?>">
+              <li class="list-group-item <?php if (bool($entry->charged)) { ?>list-group-item-success<?php } ?>" id="refund-box-<?= htmlspecialchars((string) $entry->id) ?>">
                 <div class="row">
                   <div class="col-sm-5 col-md-4 col-lg-6">
-                    <h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
+                    <h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
 
                     <p>
-                      <strong>Swim England Number:</strong> <?= htmlspecialchars($entry->asa_number) ?><br>
-                      <strong>Age today:</strong> <?= htmlspecialchars($entry->age_today) ?><br>
-                      <strong>Age on day:</strong> <?= htmlspecialchars($entry->age_on_last_day) ?><br>
-                      <strong>Age at end of year:</strong> <?= htmlspecialchars($entry->age_at_end_of_year) ?><br>
+                      <strong>Swim England Number:</strong> <?= htmlspecialchars((string) $entry->asa_number) ?><br>
+                      <strong>Age today:</strong> <?= htmlspecialchars((string) $entry->age_today) ?><br>
+                      <strong>Age on day:</strong> <?= htmlspecialchars((string) $entry->age_on_last_day) ?><br>
+                      <strong>Age at end of year:</strong> <?= htmlspecialchars((string) $entry->age_at_end_of_year) ?><br>
                     </p>
 
                     <p class="mb-0">
-                      <?= htmlspecialchars($entry->forename) ?> was entered in;
+                      <?= htmlspecialchars((string) $entry->forename) ?> was entered in;
                     </p>
                     <ul class="list-unstyled">
                       <?php $count = 0; ?>
@@ -172,11 +172,11 @@ include BASE_PATH . 'views/header.php';
                           $count++; ?>
                           <li class="row">
                             <div class="col">
-                              <?= htmlspecialchars($event->name) ?><?php if (isset($event->entry_time) && $event->entry_time != null) { ?> <em><?= htmlspecialchars($event->entry_time) ?></em><?php } ?>
+                              <?= htmlspecialchars((string) $event->name) ?><?php if (isset($event->entry_time) && $event->entry_time != null) { ?> <em><?= htmlspecialchars((string) $event->entry_time) ?></em><?php } ?>
                             </div>
                             <?php if ($event->allowed) { ?>
                               <div class="col">
-                                &pound;<?= htmlspecialchars($event->price_string) ?>
+                                &pound;<?= htmlspecialchars((string) $event->price_string) ?>
                               </div>
                             <?php } ?>
                           </li>
@@ -191,7 +191,7 @@ include BASE_PATH . 'views/header.php';
                         <strong>
                           Paid with
                         </strong><br>
-                        <i class="fa <?= htmlspecialchars(getCardFA($entry->payment_intent->brand)) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($entry->payment_intent->brand)) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($entry->payment_intent->last4) ?>
+                        <i class="fa <?= htmlspecialchars((string) getCardFA($entry->payment_intent->brand)) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($entry->payment_intent->brand)) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $entry->payment_intent->last4) ?>
                       </p>
                     <?php } ?>
 
@@ -203,7 +203,7 @@ include BASE_PATH . 'views/header.php';
                       <strong>
                         <?php if (bool($entry->charged)) { ?>Amount charged<?php } else { ?>Fee to pay<?php } ?>
                       </strong><br>
-                      &pound;<?= htmlspecialchars($entry->amount_charged_string) ?>
+                      &pound;<?= htmlspecialchars((string) $entry->amount_charged_string) ?>
                     </p>
 
                     <?php if ($entry->refunded) { ?>
@@ -211,7 +211,7 @@ include BASE_PATH . 'views/header.php';
                         <strong>
                           Amount refunded
                         </strong><br>
-                        &pound;<?= htmlspecialchars($entry->amount_refunded_string) ?> has been refunded<?php if ($entry->payment_intent->id != null) { ?> to <?= htmlspecialchars(getCardBrand($entry->payment_intent->brand)) ?> <?= htmlspecialchars($entry->payment_intent->funding) ?> card ending <?= htmlspecialchars($entry->payment_intent->last4) ?><?php } ?>
+                        &pound;<?= htmlspecialchars((string) $entry->amount_refunded_string) ?> has been refunded<?php if ($entry->payment_intent->id != null) { ?> to <?= htmlspecialchars((string) getCardBrand($entry->payment_intent->brand)) ?> <?= htmlspecialchars((string) $entry->payment_intent->funding) ?> card ending <?= htmlspecialchars((string) $entry->payment_intent->last4) ?><?php } ?>
                       </p>
 
                       <?php if ($hasNoDD && (!isset($entry->payment_intent->id) || $entry->payment_intent->id == null)) { ?>
@@ -228,16 +228,16 @@ include BASE_PATH . 'views/header.php';
                 </div>
                 <hr>
                 <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="checkbox" id="paid-<?= htmlspecialchars($entry->id) ?>" name="paid-<?= htmlspecialchars($entry->id) ?>" <?php if (isset($entry->charged) && $entry->charged) { ?>checked<?php } ?> <?php if (isset($entry->charge_lock) && $entry->charge_lock) { ?>disabled<?php } ?> data-ajax-action="mark-paid" data-entry-id="<?= htmlspecialchars($entry->id) ?>">
-                  <label class="form-check-label" for="paid-<?= htmlspecialchars($entry->id) ?>">Entry paid</label>
+                  <input class="form-check-input" type="checkbox" id="paid-<?= htmlspecialchars((string) $entry->id) ?>" name="paid-<?= htmlspecialchars((string) $entry->id) ?>" <?php if (isset($entry->charged) && $entry->charged) { ?>checked<?php } ?> <?php if (isset($entry->charge_lock) && $entry->charge_lock) { ?>disabled<?php } ?> data-ajax-action="mark-paid" data-entry-id="<?= htmlspecialchars((string) $entry->id) ?>">
+                  <label class="form-check-label" for="paid-<?= htmlspecialchars((string) $entry->id) ?>">Entry paid</label>
                 </div>
                 <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="checkbox" id="approved-<?= htmlspecialchars($entry->id) ?>" name="approved-<?= htmlspecialchars($entry->id) ?>" <?php if (isset($entry->approved) && $entry->approved) { ?>checked<?php } ?> data-ajax-action="approve-entry" data-entry-id="<?= htmlspecialchars($entry->id) ?>">
-                  <label class="form-check-label" for="approved-<?= htmlspecialchars($entry->id) ?>">Entry approved</label>
+                  <input class="form-check-input" type="checkbox" id="approved-<?= htmlspecialchars((string) $entry->id) ?>" name="approved-<?= htmlspecialchars((string) $entry->id) ?>" <?php if (isset($entry->approved) && $entry->approved) { ?>checked<?php } ?> data-ajax-action="approve-entry" data-entry-id="<?= htmlspecialchars((string) $entry->id) ?>">
+                  <label class="form-check-label" for="approved-<?= htmlspecialchars((string) $entry->id) ?>">Entry approved</label>
                 </div>
                 <div class="form-check custom-control-inline">
-                  <input class="form-check-input" type="checkbox" id="processed-<?= htmlspecialchars($entry->id) ?>" name="processed-<?= htmlspecialchars($entry->id) ?>" <?php if (isset($entry->processed) && $entry->processed) { ?>checked<?php } ?> disabled data-ajax-action="approve-entry" data-entry-id="<?= htmlspecialchars($entry->id) ?>">
-                  <label class="form-check-label" for="processed-<?= htmlspecialchars($entry->id) ?>"><abbr title="Only staff can mark an entry processed, meaning it has been entered into HyTek or SportSystems">Entry processed</abbr></label>
+                  <input class="form-check-input" type="checkbox" id="processed-<?= htmlspecialchars((string) $entry->id) ?>" name="processed-<?= htmlspecialchars((string) $entry->id) ?>" <?php if (isset($entry->processed) && $entry->processed) { ?>checked<?php } ?> disabled data-ajax-action="approve-entry" data-entry-id="<?= htmlspecialchars((string) $entry->id) ?>">
+                  <label class="form-check-label" for="processed-<?= htmlspecialchars((string) $entry->id) ?>"><abbr title="Only staff can mark an entry processed, meaning it has been entered into HyTek or SportSystems">Entry processed</abbr></label>
                 </div>
               </li>
             <?php } ?>

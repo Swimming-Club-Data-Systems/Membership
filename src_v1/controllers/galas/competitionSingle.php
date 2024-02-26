@@ -28,8 +28,8 @@ include "galaMenu.php"; ?>
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas")) ?>">Galas</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas/" . $id)) ?>">#<?= htmlspecialchars($id) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">Galas</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas/" . $id)) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
@@ -43,12 +43,12 @@ include "galaMenu.php"; ?>
       <form method="post">
         <div class="mb-3">
           <label class="form-label" for="galaname" class="form-label">Gala Name</label>
-          <input type="text" class="form-control" id="galaname" name="galaname" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Open Meet') ?>" value="<?= htmlspecialchars($row['GalaName']) ?>" required>
+          <input type="text" class="form-control" id="galaname" name="galaname" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Open Meet') ?>" value="<?= htmlspecialchars((string) $row['GalaName']) ?>" required>
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="description" class="form-label">Description (optional)</label>
-          <textarea name="description" id="description" class="form-control font-monospace" aria-describedby="descriptionHelp"><?= htmlspecialchars($row['Description']) ?></textarea>
+          <textarea name="description" id="description" class="form-control font-monospace" aria-describedby="descriptionHelp"><?= htmlspecialchars((string) $row['Description']) ?></textarea>
           <small id="descriptionHelp" class="form-text text-muted">
             A description is optional and will only be displayed if you enter something. Markdown is supported here.
           </small>
@@ -72,7 +72,7 @@ include "galaMenu.php"; ?>
         </div>
         <div class="mb-3">
           <label class="form-label" for="venue" class="form-label">Gala Venue</label>
-          <input type="text" class="form-control" id="venue" name="venue" value="<?= htmlspecialchars($row['GalaVenue']) ?>" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Pool') ?>" required>
+          <input type="text" class="form-control" id="venue" name="venue" value="<?= htmlspecialchars((string) $row['GalaVenue']) ?>" placeholder="<?= htmlspecialchars('e.g. ' . app()->tenant->getKey('CLUB_NAME') . ' Pool') ?>" required>
         </div>
         <div class="row">
           <div class="col">
@@ -90,14 +90,14 @@ include "galaMenu.php"; ?>
         </div>
         <div class="mb-3">
           <label class="form-label" for="lastDate" class="form-label">Last Day of Gala</label>
-          <input type="date" class="form-control" id="galaDate" name="galaDate" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="<?= htmlspecialchars($row['GalaDate']) ?>" required>
+          <input type="date" class="form-control" id="galaDate" name="galaDate" placeholder="YYYY-MM-DD" pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" value="<?= htmlspecialchars((string) $row['GalaDate']) ?>" required>
         </div>
 
         <div class="mb-3">
           <label for="per-entry-fee" class="form-label">Per gala entry processing fee</label>
           <div class="input-group">
             <span class="input-group-text">&pound;</span>
-            <input type="number" min="0" step="0.01" class="form-control" id="per-entry-fee" name="per-entry-fee" aria-describedby="per-entry-fee-help" placeholder="0.00" required value="<?= htmlspecialchars(MoneyHelpers::intToDecimal($row['ProcessingFee'])) ?>">
+            <input type="number" min="0" step="0.01" class="form-control" id="per-entry-fee" name="per-entry-fee" aria-describedby="per-entry-fee-help" placeholder="0.00" required value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($row['ProcessingFee'])) ?>">
             <div class="invalid-feedback">You must enter a numeric value for the per gala entry processing fee - it can be £0</div>
           </div>
           <small id="per-entry-fee-help" class="form-text text-muted">This is the amount added per swimmer entered, not per swim entered. If you apply a processing fee for each swim, add the amount to the fee per swim. To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer</small>

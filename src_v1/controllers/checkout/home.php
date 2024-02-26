@@ -13,7 +13,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
         <li class="breadcrumb-item active" aria-current="page">Checkout</li>
       </ol>
     </nav>
@@ -26,7 +26,7 @@ include BASE_PATH . 'views/header.php';
         </p>
       </div>
       <div class="col">
-        <img src="<?= htmlspecialchars(autoUrl('img/corporate/scds.png')) ?>" class="img-fluid ms-auto d-none d-lg-flex rounded" alt="SCDS Logo" width="75" height="75">
+        <img src="<?= htmlspecialchars((string) autoUrl('img/corporate/scds.png')) ?>" class="img-fluid ms-auto d-none d-lg-flex rounded" alt="SCDS Logo" width="75" height="75">
       </div>
     </div>
   </div>
@@ -69,11 +69,11 @@ include BASE_PATH . 'views/header.php';
       <h2>Is SCDS Checkout secure?</h2>
 
       <p>
-        Yes! SCDS Checkout is very secure. SCDS and our underlying payment providers are PCI DSS compliant and neither SCDS nor <?= htmlspecialchars($tenant->getName()) ?> will ever see your card or bank details.
+        Yes! SCDS Checkout is very secure. SCDS and our underlying payment providers are PCI DSS compliant and neither SCDS nor <?= htmlspecialchars((string) $tenant->getName()) ?> will ever see your card or bank details.
       </p>
 
       <p>
-        While SCDS and our underlying payment providers are PCI DSS compliant, we can not vouch for <?= htmlspecialchars($tenant->getName()) ?>'s compliance. Please check with a member of staff from <?= htmlspecialchars($tenant->getName()) ?> if you have any concerns.
+        While SCDS and our underlying payment providers are PCI DSS compliant, we can not vouch for <?= htmlspecialchars((string) $tenant->getName()) ?>'s compliance. Please check with a member of staff from <?= htmlspecialchars((string) $tenant->getName()) ?> if you have any concerns.
       </p>
 
     </div>

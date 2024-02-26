@@ -21,7 +21,7 @@ include BASE_PATH . "views/root/header.php";
   <div class="row justify-content-center py-3">
     <div class="col-lg-8 col-md-10">
       <div class="bg-primary text-white p-4 mb-4 d-inline-block rounded">
-        <h1 class="mb-0"><?= htmlspecialchars($club['Name']) ?><?php if (bool($club['Verified'])) { ?> <i class="fa fa-check-circle text-white" aria-hidden="true"></i><?php } ?></h1>
+        <h1 class="mb-0"><?= htmlspecialchars((string) $club['Name']) ?><?php if (bool($club['Verified'])) { ?> <i class="fa fa-check-circle text-white" aria-hidden="true"></i><?php } ?></h1>
         <!-- <p class="mb-0">Find your club to get started.</p> -->
       </div>
 
@@ -85,13 +85,13 @@ include BASE_PATH . "views/root/header.php";
             <?= htmlspecialchars($tenant->getStripeAccount()) ?>
           </div>
           <div class="">
-            <a href="<?= htmlspecialchars(autoUrl("admin/tenants/$id/stripe")) ?>" class="btn btn-primary">Stripe settings</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("admin/tenants/$id/stripe")) ?>" class="btn btn-primary">Stripe settings</a>
           </div>
         </dd>
       </dl>
 
       <h2>Domain</h2>
-      <form action="<?= htmlspecialchars(autoUrl("admin/tenants/$id/set-domain")) ?>" method="post" class="needs-validation" novalidate>
+      <form action="<?= htmlspecialchars((string) autoUrl("admin/tenants/$id/set-domain")) ?>" method="post" class="needs-validation" novalidate>
         <div class="mb-3">
           <label for="domain-name" class="form-label">Tenant Domain Name</label>
           <input type="text" name="domain-name" id="domain-name" class="form-control" required value="<?= htmlspecialchars($tenant->getDomain()) ?>">

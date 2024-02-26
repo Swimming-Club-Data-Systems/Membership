@@ -9,7 +9,7 @@ if (!isset($_GET['session']) && !isset($_GET['date'])) halt(404);
 $date = null;
 try {
   $date = new DateTime($_GET['date'], new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -78,7 +78,7 @@ if ($session['BookingOpens']) {
     if ($bookingOpensTime < $now) {
       $min = clone $bookingOpensTime;
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     $bookingOpensTime = $now;
   }
 }
@@ -93,9 +93,9 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable')) ?>">Timetable</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking')) ?>">Booking</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('timetable/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars($session['SessionID']) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable')) ?>">Timetable</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking')) ?>">Booking</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('timetable/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>"><?= htmlspecialchars($date->format('Y-m-d')) ?>-S<?= htmlspecialchars((string) $session['SessionID']) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
@@ -103,7 +103,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
+          <?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>
         </h1>
         <p class="lead mb-0">
           Edit booking options
@@ -111,7 +111,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-end">
         <?php if ($user->hasPermission('Admin') || $user->hasPermission('Coach')) { ?>
-          <a href="<?= htmlspecialchars(autoUrl('sessions/booking/book?session=' . urlencode($session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-dark-l btn-outline-light-d" title="Changes won't be saved">
+          <a href="<?= htmlspecialchars((string) autoUrl('sessions/booking/book?session=' . urlencode((string) $session['SessionID']) . '&date=' . urlencode($date->format('Y-m-d')))) ?>" class="btn btn-dark-l btn-outline-light-d" title="Changes won't be saved">
             Back
           </a>
         <?php } ?>
@@ -124,7 +124,7 @@ include BASE_PATH . 'views/header.php';
 <div class="container-xl">
   <div class="row">
     <div class="col-lg-8">
-      <form class="needs-validation" method="post" action="<?= htmlspecialchars(autoUrl('sessions/booking/edit')) ?>" novalidate>
+      <form class="needs-validation" method="post" action="<?= htmlspecialchars((string) autoUrl('sessions/booking/edit')) ?>" novalidate>
 
         <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError'])) { ?>
           <div class="alert alert-warning">
@@ -132,7 +132,7 @@ include BASE_PATH . 'views/header.php';
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['RequireBookingError']);
@@ -163,7 +163,7 @@ include BASE_PATH . 'views/header.php';
           <input type="text" id="session-text-description" name="session-text-description" readonly class="form-control" value="<?= htmlspecialchars('#' . $session['SessionID'] . ' - ' . $session['SessionName']) ?>" <?php if ($bookingClosed) { ?>disabled<?php } ?>>
         </div>
 
-        <input type="hidden" name="session" value="<?= htmlspecialchars($session['SessionID']) ?>">
+        <input type="hidden" name="session" value="<?= htmlspecialchars((string) $session['SessionID']) ?>">
 
         <div class="mb-3">
           <label class="form-label" for="date">Date</label>
@@ -184,7 +184,7 @@ include BASE_PATH . 'views/header.php';
         <div class="<?php if (!$session['MaxPlaces']) { ?>d-none<?php } ?>" id="max-places-container">
           <div class="mb-3">
             <label class="form-label" for="max-count">Maximum places</label>
-            <input type="number" id="max-count" name="max-count" min="1" step="1" class="form-control" value="<?php if ($session['MaxPlaces']) { ?><?= htmlspecialchars($session['MaxPlaces']) ?><?php } ?>" <?php if ($bookingClosed) { ?>disabled<?php } ?>>
+            <input type="number" id="max-count" name="max-count" min="1" step="1" class="form-control" value="<?php if ($session['MaxPlaces']) { ?><?= htmlspecialchars((string) $session['MaxPlaces']) ?><?php } ?>" <?php if ($bookingClosed) { ?>disabled<?php } ?>>
             <div class="invalid-feedback">
               Please provide a positive integer
             </div>

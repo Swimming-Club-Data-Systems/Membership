@@ -17,7 +17,7 @@ if (!$year) halt(404);
 $start = new DateTime('first day of January next year', new DateTimeZone('Europe/London'));
 $end = new DateTime('last day of December next year', new DateTimeZone('Europe/London'));
 
-$pagetitle = htmlspecialchars($year['Name']) . " - Membership Years - Membership Centre";
+$pagetitle = htmlspecialchars((string) $year['Name']) . " - Membership Years - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -28,9 +28,9 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/years")) ?>">Years</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/years/$id")) ?>"><?= htmlspecialchars($year['Name']) ?></a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/years")) ?>">Years</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/years/$id")) ?>"><?= htmlspecialchars((string) $year['Name']) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
@@ -38,7 +38,7 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          Editing <?= htmlspecialchars($year['Name']) ?>
+          Editing <?= htmlspecialchars((string) $year['Name']) ?>
         </h1>
         <p class="lead mb-0">
           EDIT X
@@ -57,20 +57,20 @@ include BASE_PATH . "views/header.php";
 
           <div class="mb-3">
             <label for="name" class="form-label">Membership year name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="<?= htmlspecialchars($start->format('y')) ?> Membership Year" value="<?= htmlspecialchars($year['Name']) ?>" required>
+            <input type="text" class="form-control" id="name" name="name" placeholder="<?= htmlspecialchars($start->format('y')) ?> Membership Year" value="<?= htmlspecialchars((string) $year['Name']) ?>" required>
           </div>
 
           <div class="row">
             <div class="col">
               <div class="mb-3">
                 <label for="start" class="form-label">Membership year start date</label>
-                <input type="date" class="form-control" id="start" name="start" placeholder="<?= htmlspecialchars($start->format('Y-m-d')) ?>" value="<?= htmlspecialchars($year['StartDate']) ?>" required>
+                <input type="date" class="form-control" id="start" name="start" placeholder="<?= htmlspecialchars($start->format('Y-m-d')) ?>" value="<?= htmlspecialchars((string) $year['StartDate']) ?>" required>
               </div>
             </div>
             <div class="col">
               <div class="mb-3">
                 <label for="end" class="form-label">Membership year end date</label>
-                <input type="date" class="form-control" id="end" name="end" placeholder="<?= htmlspecialchars($end->format('Y-m-d')) ?>" value="<?= htmlspecialchars($year['EndDate']) ?>" required>
+                <input type="date" class="form-control" id="end" name="end" placeholder="<?= htmlspecialchars($end->format('Y-m-d')) ?>" value="<?= htmlspecialchars((string) $year['EndDate']) ?>" required>
               </div>
             </div>
           </div>

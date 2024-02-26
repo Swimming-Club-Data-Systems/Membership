@@ -23,7 +23,7 @@ $getSessions = $db->prepare("SELECT `Name`, `ID` FROM galaSessions WHERE Gala = 
 $getSessions->execute([$id]);
 $session = $getSessions->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = 'Invite parents to enter ' . htmlspecialchars($gala['name']);
+$pagetitle = 'Invite parents to enter ' . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -34,12 +34,12 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("galas") ?>">Galas</a></li>
-        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>"><?= htmlspecialchars($gala['name']) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= autoUrl("galas/" . $id) ?>"><?= htmlspecialchars((string) $gala['name']) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Invite Parents</li>
       </ol>
     </nav>
 
-    <h1>Invite members to enter <?= htmlspecialchars($gala['name']) ?></h1>
+    <h1>Invite members to enter <?= htmlspecialchars((string) $gala['name']) ?></h1>
     <p class="lead mb-0">Send an email to parents/members letting them know they can enter this gala.</p>
   </div>
 </div>
@@ -75,7 +75,7 @@ include BASE_PATH . 'views/header.php';
               <div class="mb-3">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="squad-<?= $squad['id'] ?>" name="squad-<?= $squad['id'] ?>">
-                  <label class="form-check-label" for="squad-<?= $squad['id'] ?>"><?= htmlspecialchars($squad['name']) ?></label>
+                  <label class="form-check-label" for="squad-<?= $squad['id'] ?>"><?= htmlspecialchars((string) $squad['name']) ?></label>
                 </div>
               </div>
             </div>

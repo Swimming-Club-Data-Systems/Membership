@@ -27,9 +27,9 @@ include BASE_PATH . 'views/header.php';
       <?php if ($squad) { ?>
       <div class="list-group mb-3">
         <?php do { ?>
-        <a href="<?=htmlspecialchars(autoUrl("log-books/squads/" . $squad['id']))?>" class="list-group-item list-group-item-action">
+        <a href="<?=htmlspecialchars((string) autoUrl("log-books/squads/" . $squad['id']))?>" class="list-group-item list-group-item-action">
           <p class="mb-0">
-            <strong><?=htmlspecialchars($squad['squad'])?></strong>
+            <strong><?=htmlspecialchars((string) $squad['squad'])?></strong>
           </p>
         </a>
         <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>

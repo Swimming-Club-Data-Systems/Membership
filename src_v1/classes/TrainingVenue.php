@@ -49,7 +49,7 @@ class TrainingVenue
   /**
    * Refetch stored information from the database
    */
-  public function revalidate()
+  public function revalidate(): void
   {
     $db = app()->db;
     $tenant = app()->tenant;

@@ -89,7 +89,7 @@ try {
     ob_start();
     echo getMySessionBookingMembers($session, $date);
     $html = ob_get_clean();
-  } catch (Exception $e) {
+  } catch (Exception) {
     $status = 500;
   }
 } catch (Exception $e) {
@@ -98,7 +98,7 @@ try {
 
   reportError($e);
 
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $error = 'A database error occurred';
   }
 }

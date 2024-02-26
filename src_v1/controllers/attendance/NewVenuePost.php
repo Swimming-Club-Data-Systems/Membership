@@ -17,7 +17,7 @@ if ($_POST['name'] != "" && $_POST['name'] != null && $_POST['address'] != "" &&
     $db->commit();
     $_SESSION['TENANT-' . app()->tenant->getId()]['NewVenueSuccess'] = true;
     header("Location: " . autoUrl("attendance/venues/" . $id));
-  } catch (Exception $e) {
+  } catch (Exception) {
     $db->rollback();
     halt(500);
   }

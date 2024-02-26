@@ -52,7 +52,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
       <form method="post" class="needs-validation" novalidate>
         <div class="mb-3">
           <label class="form-label" for="name">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?= htmlspecialchars($v['name']) ?>" required>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?= htmlspecialchars((string) $v['name']) ?>" required>
           <div class="invalid-feedback">
             You must provide the name of the emergency contact
           </div>
@@ -61,7 +61,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
 
         <div class="mb-3">
           <label class="form-label" for="relation">Relation</label>
-          <input type="text" class="form-control" id="relation" name="relation" placeholder="Relation" value="<?= htmlspecialchars($v['relation']) ?>" required>
+          <input type="text" class="form-control" id="relation" name="relation" placeholder="Relation" value="<?= htmlspecialchars((string) $v['relation']) ?>" required>
           <div class="invalid-feedback">
             You must provide the relation so we can decide who is best to call
           </div>
@@ -69,7 +69,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['POST_DATA'])) {
 
         <div class="mb-3">
           <label class="form-label" for="num">Contact Number</label>
-          <input type="tel" pattern="\+{0,1}[0-9]*" class="form-control" id="num" name="num" placeholder="Phone" value="<?= htmlspecialchars($v['num']) ?>" required>
+          <input type="tel" pattern="\+{0,1}[0-9]*" class="form-control" id="num" name="num" placeholder="Phone" value="<?= htmlspecialchars((string) $v['num']) ?>" required>
           <div class="invalid-feedback">
             You must provide a valid UK phone number
           </div>

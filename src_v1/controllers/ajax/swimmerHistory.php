@@ -47,12 +47,12 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
             <div class="col-md-4">
               <p class="mb-0">
                 <strong>
-                  <a href="<?= htmlspecialchars(autoUrl("members/" . $row['MemberID'])) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></a>
+                  <a href="<?= htmlspecialchars((string) autoUrl("members/" . $row['MemberID'])) ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></a>
                 </strong>
               </p>
               <p class="mb-0"><?php if ($squad) {
                                 $i = 0;
-                                do { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squad['SquadName']) ?><?php $i++;
+                                do { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squad['SquadName']) ?><?php $i++;
                                                                                                                     } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>
               <?php } else { ?>
                 No squads
@@ -66,10 +66,10 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
                 <dd class="col-md-9"><?= getAttendanceByID(null, $row['MemberID'], 4) ?>%</dd>
 
                 <dt class="col-md-3">20 Week History</dt>
-                <dd class="col-md-9"><a href="<?= htmlspecialchars(autoUrl("attendance/history/members/" . $row['MemberID'])) ?>">View</a></dd>
+                <dd class="col-md-9"><a href="<?= htmlspecialchars((string) autoUrl("attendance/history/members/" . $row['MemberID'])) ?>">View</a></dd>
 
                 <dt class="col-md-3">Custom History</dt>
-                <dd class="col-md-9 mb-0"><a href="<?= htmlspecialchars(autoUrl("attendance/history/members/" . $row['MemberID'] . '/search')) ?>">View</a></dd>
+                <dd class="col-md-9 mb-0"><a href="<?= htmlspecialchars((string) autoUrl("attendance/history/members/" . $row['MemberID'] . '/search')) ?>">View</a></dd>
               </dl>
             </div>
           </div>

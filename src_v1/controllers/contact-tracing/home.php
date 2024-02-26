@@ -41,7 +41,7 @@ if (!$showSignOut) {
             Contact Tracing
           </h1>
           <p class="lead mb-0">
-            <?= htmlspecialchars($tenant->getName()) ?> <em>Supporting NHS Test and Trace</em>
+            <?= htmlspecialchars((string) $tenant->getName()) ?> <em>Supporting NHS Test and Trace</em>
           </p>
         </div>
       </div>
@@ -61,11 +61,11 @@ if (!$showSignOut) {
               For contact tracing purposes.
             </p>
             <p>
-              <?= htmlspecialchars($tenant->getName()) ?> will use this data if required to support NHS Test and Trace. Data will be deleted automatically after 21 days.
+              <?= htmlspecialchars((string) $tenant->getName()) ?> will use this data if required to support NHS Test and Trace. Data will be deleted automatically after 21 days.
             </p>
           </div>
           <p class="mb-0 mt-auto d-flex">
-            <a href="<?= htmlspecialchars(autoUrl('contact-tracing/check-in')) ?>" class="btn btn-outline-light btn-outline-light-d">
+            <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/check-in')) ?>" class="btn btn-outline-light btn-outline-light-d">
               Register <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
             </a>
           </p>
@@ -86,7 +86,7 @@ if (!$showSignOut) {
               </p>
             </div>
             <p class="mb-0 mt-auto d-flex">
-              <a href="<?= htmlspecialchars(autoUrl('contact-tracing/sign-out')) ?>" class="btn btn-outline-light btn-outline-light-d">
+              <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/sign-out')) ?>" class="btn btn-outline-light btn-outline-light-d">
                 Sign Out <i class="fa fa-arrow-circle-right" aria-hidden="true"></i>
               </a>
             </p>
@@ -102,7 +102,7 @@ if (!$showSignOut) {
               </h2>
             </div>
             <p class="mb-0 mt-auto d-flex">
-              <a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>" class="btn btn-dark btn-light-d">
+              <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>" class="btn btn-dark btn-light-d">
                 Manage
               </a>
             </p>
@@ -117,7 +117,7 @@ if (!$showSignOut) {
               </h2>
             </div>
             <p class="mb-0 mt-auto d-flex">
-              <a href="<?= htmlspecialchars(autoUrl('contact-tracing/reports')) ?>" class="btn btn-dark btn-light-d">
+              <a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/reports')) ?>" class="btn btn-dark btn-light-d">
                 Reports
               </a>
             </p>

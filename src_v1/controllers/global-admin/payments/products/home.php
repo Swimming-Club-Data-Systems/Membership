@@ -14,7 +14,7 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
       <li class="breadcrumb-item active" aria-current="page">Products</li>
     </ol>
   </nav>
@@ -25,19 +25,19 @@ include BASE_PATH . "views/root/header.php";
   <p class="lead">Automatic subscription and billing systems.</p>
 
   <p>
-    <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl('admin/payments/products/new')) ?>">New Product</a>
+    <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl('admin/payments/products/new')) ?>">New Product</a>
   </p>
 
   <?php if ($product) { ?>
     <div class="list-group">
       <?php do { ?>
-        <a href="<?= htmlspecialchars(autoUrl('admin/payments/products/' . $product['ID'])) ?>" class="list-group-item list-group-item-action">
+        <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/products/' . $product['ID'])) ?>" class="list-group-item list-group-item-action">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($product['Name']) ?></strong>
+            <strong><?= htmlspecialchars((string) $product['Name']) ?></strong>
           </p>
           <?php if ($product['Description']) { ?>
             <p class="mb-0">
-              <?= htmlspecialchars($product['Description']) ?>
+              <?= htmlspecialchars((string) $product['Description']) ?>
             </p>
           <?php } ?>
         </a>
@@ -49,7 +49,7 @@ include BASE_PATH . "views/root/header.php";
         <strong>No products available</strong>
       </p>
       <p class="mb-0">
-        Please <a class="alert-link" href="<?= htmlspecialchars(autoUrl('admin/payments/products/new')) ?>">add a product</a>.
+        Please <a class="alert-link" href="<?= htmlspecialchars((string) autoUrl('admin/payments/products/new')) ?>">add a product</a>.
       </p>
     </div>
   <?php } ?>

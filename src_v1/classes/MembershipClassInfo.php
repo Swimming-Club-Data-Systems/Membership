@@ -32,7 +32,7 @@ class MembershipClassInfo {
 
     if (!$fees) throw new \Exception('Not found');
 
-    $json = json_decode($fees);
+    $json = json_decode((string) $fees);
 
     if ($json->type == 'PerPerson') {
       return $json->fees[0];

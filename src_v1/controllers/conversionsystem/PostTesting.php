@@ -38,7 +38,7 @@ try {
 		try {
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m'] = $time->getConversion("25m") . "0";
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m-fail'] = false;
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m-fail'] = true;
 		}
 		$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m'] = htmlentities(sprintf('%02d', $mins)) . ":" . htmlentities(sprintf('%02d', $secs)) . ":" . htmlentities(sprintf('%02d', $hunds)) . " - Origin";
@@ -46,7 +46,7 @@ try {
 		try {
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m'] = $time->getConversion("50m") . "0";
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m-fail'] = false;
-		} catch (\Exception $e) {
+		} catch (\Exception) {
 			$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-50m-fail'] = true;
 		}
 		$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-25m'] = htmlentities(sprintf('%02d', $mins)) . ":" . htmlentities(sprintf('%02d', $secs)) . ":" . htmlentities(sprintf('%02d', $hunds)) . " - Origin";
@@ -98,12 +98,12 @@ try {
 	try {
 		$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20y'] = $time->getConversion("20y") . "0";
 		$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20y-fail'] = false;
-	} catch (\Exception $e) {
+	} catch (\Exception) {
 		$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Conv-20y-fail'] = true;
 	}
 
 	$_SESSION['TENANT-' . app()->tenant->getId()]['Time']['Event'] = $_POST['event'];
-} catch (Exception $e) {
+} catch (Exception) {
 
 }
 

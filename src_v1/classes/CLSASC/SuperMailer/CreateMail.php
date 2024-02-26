@@ -19,28 +19,28 @@ class CreateMail
   {
   }
 
-  public function setUnsubscribable()
+  public function setUnsubscribable(): void
   {
     $this->allowUnsubscribe = true;
   }
 
-  public function setForced()
+  public function setForced(): void
   {
     $this->allowUnsubscribe = false;
   }
 
-  public function showName($name = null)
+  public function showName($name = null): void
   {
     $this->showName = true;
     $this->name = $name;
   }
 
-  public function hideName()
+  public function hideName(): void
   {
     $this->showName = false;
   }
 
-  public function setHtmlContent($htmlContent)
+  public function setHtmlContent($htmlContent): void
   {
     $this->htmlContent = $htmlContent;
   }
@@ -50,9 +50,9 @@ class CreateMail
     return $this->htmlContent;
   }
 
-  public function setPlainContent($plainContent)
+  public function setPlainContent($plainContent): void
   {
-    $this->plainContent = html_entity_decode($plainContent);
+    $this->plainContent = html_entity_decode((string) $plainContent);
   }
 
   public function getPlainContent()
@@ -60,7 +60,7 @@ class CreateMail
     if ($this->plainContent != null) {
       return $this->plainContent;
     } else {
-      return html_entity_decode(strip_tags($this->getHtmlContent()));
+      return html_entity_decode(strip_tags((string) $this->getHtmlContent()));
     }
   }
 
@@ -115,9 +115,9 @@ class CreateMail
     if (isset(app()->tenant) && $logos = app()->tenant->getKey('LOGO_DIR')) {
       $head .= "<img src=\"" . getUploadedAssetUrl($logos . 'logo-75.png') . "\" srcset=\"" .
         getUploadedAssetUrl($logos . 'logo-75@2x.png') . " 2x, " .
-        getUploadedAssetUrl($logos . 'logo-75@3x.png') . " 3x\" style=\"max-width:100%;max-height:75px;\" alt=\"" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " Logo\">";
+        getUploadedAssetUrl($logos . 'logo-75@3x.png') . " 3x\" style=\"max-width:100%;max-height:75px;\" alt=\"" . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . " Logo\">";
     } else if (isset(app()->tenant)) {
-      $head .= htmlspecialchars(app()->tenant->getKey('CLUB_NAME'));
+      $head .= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'));
     } else {
       $head .= "<img src=\"" . autoUrl('public/img/corporate/icons/apple-touch-icon-152x152.png') . "\" alt=\"SCDS Membership Logo\">";
     }
@@ -127,7 +127,7 @@ class CreateMail
     if (isset($this->showName) && $this->showName && (!isset($this->name) || $this->name == null)) {
       $head .= '<p class="small text-muted">Hello -name-, </p>';
     } else if (isset($this->showName) && $this->showName && isset($this->name) && $this->name != null) {
-      $head .= '<p class="small text-muted">Hello  ' . htmlspecialchars($this->name) .  ', </p>';
+      $head .= '<p class="small text-muted">Hello  ' . htmlspecialchars((string) $this->name) .  ', </p>';
     }
 
     $foot = "</td></tr></table>
@@ -136,11 +136,11 @@ class CreateMail
     class=\"bottom text-center\">";
     if (isset(app()->tenant)) {
       $foot .= "
-      <p class=\"small\" align=\"center\"><strong>" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . "</strong><br>";
-      $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+      <p class=\"small\" align=\"center\"><strong>" . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . "</strong><br>";
+      $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS'));
       if ($addr) {
         for ($i = 0; $i < sizeof($addr); $i++) {
-          $foot .= htmlspecialchars($addr[$i]) . '<br>';
+          $foot .= htmlspecialchars((string) $addr[$i]) . '<br>';
           if (isset($addr[$i + 1]) && $addr[$i + 1] == "") {
             break;
           }
@@ -152,9 +152,9 @@ class CreateMail
     $foot .= "</p>";
     if (isset(app()->tenant)) {
       $foot .= "
-    <p class=\"small\" align=\"center\">This email was sent via the " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " Membership System.</p>";
+    <p class=\"small\" align=\"center\">This email was sent via the " . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . " Membership System.</p>";
       $foot .= "<p class=\"small\" align=\"center\">Have questions? Contact us at <a
-    href=\"mailto:" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a>.</p>
+    href=\"mailto:" . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "</a>.</p>
     <p class=\"small\" align=\"center\">To control your email options, go to <a href=\"" .
         autoUrl("myaccount/email") . "\">My Account</a>.</p>
     <p class=\"small\" align=\"center\">Unwanted email? <a href=\"https://forms.office.com/Pages/ResponsePage.aspx?id=eUyplshmHU2mMHhet4xottqTRsfDlXxPnyldf9tMT9ZUODZRTFpFRzJWOFpQM1pLQ0hDWUlXRllJVS4u\" target=\"_blank\" title=\"Report email abuse\">Report email abuse</a>.</p>";
@@ -162,7 +162,7 @@ class CreateMail
         $foot .= '<p class="small" align="center"><a href="-unsub_link-">Click to Unsubscribe</a></p>';
       }
       $foot .= "
-    <p class=\"small\" align=\"center\">&copy; " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " " . date("Y") . ", Design &copy; SCDS</p>";
+    <p class=\"small\" align=\"center\">&copy; " . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . " " . date("Y") . ", Design &copy; SCDS</p>";
     }
     $foot .= "
       </div>
@@ -182,13 +182,13 @@ class CreateMail
     if (isset($this->showName) && $this->showName && (!isset($this->name) || $this->name == null)) {
       $head .= "Hello -name-,\r\n\r\n";
     } else if (isset($this->showName) && $this->showName && isset($this->name) && $this->name != null) {
-      $head .= "Hello " . htmlspecialchars($this->name) . ",\r\n\r\n";
+      $head .= "Hello " . htmlspecialchars((string) $this->name) . ",\r\n\r\n";
     }
 
     if (isset(app()->tenant)) {
       $foot = "\r\n\n\n " . app()->tenant->getKey('CLUB_NAME') . "\r\n\r\n";
       $foot .= app()->tenant->getKey('CLUB_NAME') . "\r\n";
-      $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+      $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS'));
       if ($addr) {
         for ($i = 0; $i < sizeof($addr); $i++) {
           $foot .= $addr[$i] . "\r\n";

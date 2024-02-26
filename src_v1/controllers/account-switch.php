@@ -8,7 +8,7 @@ setUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'DefaultA
 $userObject = new \User($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], true);
 
 if (isset($_GET['redirect'])) {
-  header("location: " . urldecode($_GET['redirect']));
+  header("location: " . urldecode((string) $_GET['redirect']));
 } else {
   header("location: " . autoUrl(""));
 }

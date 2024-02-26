@@ -9,8 +9,8 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments/tax-rates')) ?>">Tax Rates</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments/tax-rates')) ?>">Tax Rates</a></li>
       <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
   </nav>
@@ -29,7 +29,7 @@ include BASE_PATH . "views/root/header.php";
             <strong>There was a problem trying to create the new tax rate</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TaxRateAddError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TaxRateAddError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TaxRateAddError']);

@@ -71,18 +71,18 @@ try {
   if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') {
     $message .= "<p><strong>Changes have been made to this gala entry by a member of staff. This is a courtesy email for you.</strong></p>";
   }
-  $message .= "<p>Here are the swims selected for " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "'s updated " . htmlspecialchars($row['GalaName']) . " entry.</p>";
+  $message .= "<p>Here are the swims selected for " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "'s updated " . htmlspecialchars((string) $row['GalaName']) . " entry.</p>";
   $message .= "<ul>" . $entryList . "</ul>";
   $message .= "<p>You have entered " . (new NumberFormatter("en", NumberFormatter::SPELLOUT))->format($numEntered) . " events. The <strong>total fee payable is &pound;" . $galaFee . "</strong>.</p>";
   if ($row['ProcessingFee'] > 0) {
-    $message .= "<p>Your entry includes a processing fee of <strong>&pound;" . htmlspecialchars(MoneyHelpers::intToDecimal($row['ProcessingFee'])) . "</strong>.</p>";
+    $message .= "<p>Your entry includes a processing fee of <strong>&pound;" . htmlspecialchars((string) MoneyHelpers::intToDecimal($row['ProcessingFee'])) . "</strong>.</p>";
   }
-  $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
+  $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
   $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
   `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 1, 'Galas')";
   $db->prepare($notify)->execute([$row['UserID'], $subject, $message]);
   $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateSuccess'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['UpdateError'] = true;
 }
 

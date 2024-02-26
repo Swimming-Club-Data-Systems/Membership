@@ -22,7 +22,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
         <li class="breadcrumb-item active" aria-current="page">Years</li>
       </ol>
     </nav>
@@ -37,7 +37,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl('memberships/years/new')) ?>" class="btn btn-success">New</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('memberships/years/new')) ?>" class="btn btn-success">New</a>
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@ include BASE_PATH . "views/header.php";
       <?php if ($year) { ?>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars(autoUrl('memberships/years/' . $year['ID'])) ?>"><?= htmlspecialchars($year['Name']) ?></a>
+            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars((string) autoUrl('memberships/years/' . $year['ID'])) ?>"><?= htmlspecialchars((string) $year['Name']) ?></a>
           <?php } while ($year = $getYears->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
       <?php } else { ?>

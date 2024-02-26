@@ -2,7 +2,7 @@
 
 require 'info.json.php';
 
-$data = json_decode($output);
+$data = json_decode((string) $output);
 
 header('Content-Type: text/csv; charset=utf-8');
 header('Content-Disposition: attachment; filename=SCDSMembership-GalaEntriesSquadRepReport.csv');

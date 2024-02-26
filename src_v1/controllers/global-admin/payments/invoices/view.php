@@ -14,8 +14,8 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices')) ?>">Invoices</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices')) ?>">Invoices</a></li>
       <li class="breadcrumb-item active" aria-current="page">View</li>
     </ol>
   </nav>
@@ -59,17 +59,17 @@ include BASE_PATH . "views/root/header.php";
       <?php foreach ($invoice->getItems() as $item) { ?>
         <tr>
           <td class="align-middle">
-            <p class="mb-0"><strong><?= htmlspecialchars($item->getName()) ?></strong></p>
-            <p class="mb-0"><?= htmlspecialchars($item->getDescription()) ?></p>
+            <p class="mb-0"><strong><?= htmlspecialchars((string) $item->getName()) ?></strong></p>
+            <p class="mb-0"><?= htmlspecialchars((string) $item->getDescription()) ?></p>
           </td>
           <td class="align-middle">
-            <?= htmlspecialchars($item->getQuantity()) ?> &times; <?= htmlspecialchars($item->getFormattedPricePerUnit()) ?>
+            <?= htmlspecialchars((string) $item->getQuantity()) ?> &times; <?= htmlspecialchars((string) $item->getFormattedPricePerUnit()) ?>
           </td>
           <td class="align-middle">
-            <?= htmlspecialchars($item->getFormattedVatAmount()) ?>
+            <?= htmlspecialchars((string) $item->getFormattedVatAmount()) ?>
           </td>
           <td class="align-middle">
-            <?= htmlspecialchars($item->getFormattedAmount()) ?>
+            <?= htmlspecialchars((string) $item->getFormattedAmount()) ?>
           </td>
         </tr>
       <?php } ?>
@@ -88,21 +88,21 @@ include BASE_PATH . "views/root/header.php";
             Subtotal
           </dt>
           <dd class="col-sm-9">
-            <?= htmlspecialchars($invoice->getFormattedTotal()) ?>
+            <?= htmlspecialchars((string) $invoice->getFormattedTotal()) ?>
           </dd>
 
           <dt class="col-sm-3">
             Value Added Tax
           </dt>
           <dd class="col-sm-9">
-            <?= htmlspecialchars($invoice->getFormattedVatTotal()) ?>
+            <?= htmlspecialchars((string) $invoice->getFormattedVatTotal()) ?>
           </dd>
 
           <dt class="col-sm-3">
             Total
           </dt>
           <dd class="col-sm-9 mb-0">
-            <?= htmlspecialchars($invoice->getFormattedTotalWithVat()) ?>
+            <?= htmlspecialchars((string) $invoice->getFormattedTotalWithVat()) ?>
           </dd>
         </dl>
       </div>
@@ -115,14 +115,14 @@ include BASE_PATH . "views/root/header.php";
             Payment terms
           </dt>
           <dd class="col-sm-9">
-            <?= htmlspecialchars($invoice->getPaymentTerms()) ?>
+            <?= htmlspecialchars((string) $invoice->getPaymentTerms()) ?>
           </dd>
 
           <dt class="col-sm-3">
             How to pay
           </dt>
           <dd class="col-sm-9 mb-0">
-            <?= htmlspecialchars($invoice->getHowToPay()) ?>
+            <?= htmlspecialchars((string) $invoice->getHowToPay()) ?>
           </dd>
         </dl>
       </div>

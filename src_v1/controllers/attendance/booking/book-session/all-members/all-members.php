@@ -41,8 +41,8 @@ function getAllBookedMembersForSession($session, $date)
           <div class="row align-items-center">
             <div class="col">
               <div>
-                <a class="font-weight-bold" href="<?= htmlspecialchars(autoUrl('members/' . $bookedMember['id'])) ?>">
-                  <?= htmlspecialchars(\SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?>
+                <a class="font-weight-bold" href="<?= htmlspecialchars((string) autoUrl('members/' . $bookedMember['id'])) ?>">
+                  <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?>
                 </a>
               </div>
               <div>
@@ -53,7 +53,7 @@ function getAllBookedMembersForSession($session, $date)
               <?php if ($bookingClosed) { ?>
                 <span class="text-muted">Booking closed</span>
               <?php } else { ?>
-                <button class="btn btn-danger" type="button" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?>" data-member-id="<?= htmlspecialchars($bookedMember['id']) ?>" data-operation="cancel-place" data-session-id="<?= htmlspecialchars($session['SessionID']) ?>" data-session-name="<?= htmlspecialchars($session['SessionName']) ?> on <?= htmlspecialchars($date->format('j F Y')) ?>" data-session-location="<?= htmlspecialchars($session['Location']) ?>" data-session-date="<?= htmlspecialchars($date->format('Y-m-d')) ?>">Remove</button>
+                <button class="btn btn-danger" type="button" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?>" data-member-id="<?= htmlspecialchars((string) $bookedMember['id']) ?>" data-operation="cancel-place" data-session-id="<?= htmlspecialchars((string) $session['SessionID']) ?>" data-session-name="<?= htmlspecialchars((string) $session['SessionName']) ?> on <?= htmlspecialchars((string) $date->format('j F Y')) ?>" data-session-location="<?= htmlspecialchars((string) $session['Location']) ?>" data-session-date="<?= htmlspecialchars((string) $date->format('Y-m-d')) ?>">Remove</button>
               <?php } ?>
             </div>
           </div>

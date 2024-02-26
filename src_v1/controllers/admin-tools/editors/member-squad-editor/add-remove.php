@@ -65,7 +65,7 @@ try {
   $status = 500;
   $error = $e->getMessage();
 
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $error = 'A database error occurred';
   }
 }

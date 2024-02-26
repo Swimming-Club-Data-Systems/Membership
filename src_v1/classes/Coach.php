@@ -4,21 +4,14 @@
  * Class to represent coaches
  */
 class Coach {
-  private int $id;
-  // private string $forename;
-  // private string $surname;
-  private string $type;
-
   /**
    * Create a coach object
    */
-  public function __construct($id, $forename, $surname, $squad, $type)
+  public function __construct(private readonly int $id, $forename, $surname, $squad, private readonly string $type)
   {
-    $this->id = $id;
     $this->forename = $forename;
     $this->surname = $surname;
     $this->squad = $squad;
-    $this->type = $type;
   }
 
   // /**

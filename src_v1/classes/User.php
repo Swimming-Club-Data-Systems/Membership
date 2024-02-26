@@ -14,18 +14,16 @@ class User extends Person
   private $accessLevel;
   private $userOptions;
   private $userOptionsRetrieved;
-  private $setSession;
   private $permissions;
 
-  public function __construct($id, $setSession = false)
+  public function __construct($id, private $setSession = false)
   {
     $this->id = (int) $id;
     $this->userOptionsRetrieved = false;
-    $this->setSession = $setSession;
     $this->revalidate();
   }
 
-  public function revalidate()
+  public function revalidate(): void
   {
     $db = app()->db;
     // Get the user
@@ -41,7 +39,7 @@ class User extends Person
         $this->id
       ]);
       $this->permissions = $getPermissions->fetchAll(PDO::FETCH_COLUMN);
-    } catch (PDOException $e) {
+    } catch (PDOException) {
       // Table does not exist
     }
 
@@ -127,7 +125,7 @@ class User extends Person
     return $this->mobile;
   }
 
-  private function getUserOptions()
+  private function getUserOptions(): void
   {
     $db = app()->db;
 
@@ -136,7 +134,7 @@ class User extends Person
       $getOptions->execute([$this->id]);
       $this->userOptions = $getOptions->fetchAll(PDO::FETCH_KEY_PAIR);
       $this->userOptionsRetrieved = true;
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Couldn't get options
     }
   }
@@ -162,7 +160,7 @@ class User extends Person
     return bool($this->getUserOption($name));
   }
 
-  public function setUserOption($option, $value)
+  public function setUserOption($option, $value): void
   {
     $db = app()->db;
 
@@ -233,7 +231,7 @@ class User extends Person
         $this->id
       ]);
       return true;
-    } catch (PDOException $e) {
+    } catch (PDOException) {
       return false;
     }
   }
@@ -248,7 +246,7 @@ class User extends Person
         $this->id
       ]);
       return true;
-    } catch (PDOException $e) {
+    } catch (PDOException) {
       return false;
     }
   }

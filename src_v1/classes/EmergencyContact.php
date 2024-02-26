@@ -18,8 +18,8 @@ class EmergencyContact {
 		// DO NOTHING
   }
 
-	public function new($name, $contactNumber, int $user, $relation = null) {
-		$this->name = ucwords($name);
+	public function new($name, $contactNumber, int $user, $relation = null): void {
+		$this->name = ucwords((string) $name);
 		try {
 			$number = \Brick\PhoneNumber\PhoneNumber::parse($contactNumber, 'GB');
 			$this->contactNumber = $number->format(\Brick\PhoneNumber\PhoneNumberFormat::E164);
@@ -27,7 +27,7 @@ class EmergencyContact {
 				// strict check relying on up-to-date metadata library
 				throw new Exception('Advanced check invalid');
 			}		
-		} catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+		} catch (\Brick\PhoneNumber\PhoneNumberParseException) {
 			throw new Exception('Parse exception');
 		}
 		$this->user = $user;
@@ -36,7 +36,7 @@ class EmergencyContact {
 		}
   }
 
-	public function existing(int $contactId, int $user, $name, $contactNumber, $relation = null) {
+	public function existing(int $contactId, int $user, $name, $contactNumber, $relation = null): void {
 		$this->contactId = $contactId;
 		$this->user = $user;
 		$this->name = $name;
@@ -69,17 +69,14 @@ class EmergencyContact {
 	}
 
 	public function getRelation() {
-		if (isset($this->relation)) {
-			return $this->relation;
-		}
-		return null;
+		return $this->relation ?? null;
 	}
 
 	public function getContactNumber() {
 		try {
 			$number = \Brick\PhoneNumber\PhoneNumber::parse($this->contactNumber, 'GB');
 			return $this->contactNumber = $number->format(\Brick\PhoneNumber\PhoneNumberFormat::E164);
-		} catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+		} catch (\Brick\PhoneNumber\PhoneNumberParseException) {
 			return false;
 		}
 	}
@@ -88,7 +85,7 @@ class EmergencyContact {
 		try {
 			$number = \Brick\PhoneNumber\PhoneNumber::parse($this->contactNumber, 'GB');
 			return $this->contactNumber = $number->format(\Brick\PhoneNumber\PhoneNumberFormat::NATIONAL);
-		} catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+		} catch (\Brick\PhoneNumber\PhoneNumberParseException) {
 			return false;
 		}
 	}
@@ -97,7 +94,7 @@ class EmergencyContact {
 		try {
 			$number = \Brick\PhoneNumber\PhoneNumber::parse($this->contactNumber, 'GB');
 			return $this->contactNumber = $number->format(\Brick\PhoneNumber\PhoneNumberFormat::INTERNATIONAL);
-		} catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+		} catch (\Brick\PhoneNumber\PhoneNumberParseException) {
 			return false;
 		}
 	}
@@ -106,7 +103,7 @@ class EmergencyContact {
 		try {
 			$number = \Brick\PhoneNumber\PhoneNumber::parse($this->contactNumber, 'GB');
 			return $this->contactNumber = $number->format(\Brick\PhoneNumber\PhoneNumberFormat::RFC3966);
-		} catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+		} catch (\Brick\PhoneNumber\PhoneNumberParseException) {
 			return false;
 		}
 	}
@@ -123,11 +120,11 @@ class EmergencyContact {
 		if ($this->dbconn == null) {
 			return false;
 		}
-		$this->name = ucwords($name);
+		$this->name = ucwords((string) $name);
     try {
   		$sql = $this->dbconn->prepare("UPDATE `emergencyContacts` SET `Name` = ? WHERE `ID` = ?");
       $sql->execute([$this->name, $this->contactId]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       return false;
     }
     return true;
@@ -141,7 +138,7 @@ class EmergencyContact {
     try {
   		$sql = $this->dbconn->prepare("UPDATE `emergencyContacts` SET `Relation` = ? WHERE `ID` = ?");
       $sql->execute([$this->relation, $this->contactId]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       return false;
     }
     return true;
@@ -167,7 +164,7 @@ class EmergencyContact {
     try {
   		$sql = $this->dbconn->prepare("UPDATE `emergencyContacts` SET `ContactNumber` = ? WHERE `ID` = ?");
       $sql->execute([$this->contactNumber, $this->contactId]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       return false;
     }
 		return true;
@@ -180,7 +177,7 @@ class EmergencyContact {
     try {
   		$sql = $this->dbconn->prepare("DELETE FROM `emergencyContacts` WHERE `ID` = ?");
       $sql->execute([$this->contactId]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       return false;
     }
     return true;
@@ -198,13 +195,13 @@ class EmergencyContact {
 				$this->contactNumber,
 				$this->relation
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       return false;
     }
     return true;
 	}
 
-	public function connect($dbconn) {
+	public function connect($dbconn): void {
 		$this->dbconn = $dbconn;
 	}
 }

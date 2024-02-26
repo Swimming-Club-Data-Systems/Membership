@@ -20,7 +20,7 @@ $getEntries->execute([
   $id
 ]);
 
-$pagetitle = "Register for " . htmlspecialchars($gala['name']);
+$pagetitle = "Register for " . htmlspecialchars((string) $gala['name']);
 
 ob_start();?>
 
@@ -62,7 +62,7 @@ ob_start();?>
   }
 
   </style>
-  <title><?=htmlspecialchars($gala['name'])?> Register</title>
+  <title><?=htmlspecialchars((string) $gala['name'])?> Register</title>
   </head>
   <body>
     <?php include BASE_PATH . 'helperclasses/PDFStyles/Letterhead.php'; ?>
@@ -73,14 +73,14 @@ ob_start();?>
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        <?=htmlspecialchars($gala['name'])?>
+        <?=htmlspecialchars((string) $gala['name'])?>
       </h1>
       <p class="lead mb-0">Attendance register</p>
     </div>
 
     <p>Paper registers are an interim measure before we introduce online registers for gala sessions. They currently allow you to take a register at up to ten sessions for a gala.</p>
 
-    <div class="border"><div class="item-cell name"><strong>Last</strong></div><div class="item-cell name"><strong>First</strong></div><div class="item-cell squad"><strong>Squad</strong></div><?php for ($i=0; $i < 10; $i++) { ?><div class="item-cell tick"><strong><?=$i+1?></strong></div><?php } ?><?php while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) { ?><div style="display: block;"></div><div class="item-cell name"><?=htmlspecialchars($entry['sn'])?></div><div class="item-cell name"><?=htmlspecialchars($entry['fn'])?></div><div class="item-cell squad"><?=htmlspecialchars($entry['squad'])?></div><?php for ($i=0; $i < 10; $i++) { ?><div class="item-cell tick"></div><?php } ?><?php } ?></div>
+    <div class="border"><div class="item-cell name"><strong>Last</strong></div><div class="item-cell name"><strong>First</strong></div><div class="item-cell squad"><strong>Squad</strong></div><?php for ($i=0; $i < 10; $i++) { ?><div class="item-cell tick"><strong><?=$i+1?></strong></div><?php } ?><?php while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) { ?><div style="display: block;"></div><div class="item-cell name"><?=htmlspecialchars((string) $entry['sn'])?></div><div class="item-cell name"><?=htmlspecialchars((string) $entry['fn'])?></div><div class="item-cell squad"><?=htmlspecialchars((string) $entry['squad'])?></div><?php for ($i=0; $i < 10; $i++) { ?><div class="item-cell tick"></div><?php } ?><?php } ?></div>
       
     <?php include BASE_PATH . 'helperclasses/PDFStyles/PageNumbers.php'; ?>
   </body>

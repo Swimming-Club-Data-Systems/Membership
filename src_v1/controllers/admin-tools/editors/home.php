@@ -10,7 +10,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("admin"))?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("admin"))?>">Admin</a></li>
       <li class="breadcrumb-item active" aria-current="page">Bulk editors</li>
     </ol>
   </nav>
@@ -24,8 +24,8 @@ include BASE_PATH . 'views/header.php';
 
       <h2>Members</h2>
       <ul>
-        <li><a href="<?=htmlspecialchars(autoUrl("members/reports/upgradeable"))?>">Edit SE category of members upgradeable to Category 2</a></li>
-        <li><a href="<?=htmlspecialchars(autoUrl("admin/editors/squad-membership"))?>">Edit squad membership</a></li>
+        <li><a href="<?=htmlspecialchars((string) autoUrl("members/reports/upgradeable"))?>">Edit SE category of members upgradeable to Category 2</a></li>
+        <li><a href="<?=htmlspecialchars((string) autoUrl("admin/editors/squad-membership"))?>">Edit squad membership</a></li>
       </ul>
 
     </div>

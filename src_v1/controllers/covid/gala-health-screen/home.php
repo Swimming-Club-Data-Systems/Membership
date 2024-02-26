@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
         <li class="breadcrumb-item active" aria-current="page">Competition</li>
       </ol>
     </nav>
@@ -124,7 +124,7 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item">
               <div class="row align-items-center">
                 <div class="col-sm">
-                  <h3 class="h6 mb-1"><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong> <?= htmlspecialchars($member['GalaName']) ?></h3>
+                  <h3 class="h6 mb-1"><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></strong> <?= htmlspecialchars((string) $member['GalaName']) ?></h3>
                   <p class="mb-0">
                     <?php if ($latest) {
                       $time = new DateTime($latest['DateTime'], new DateTimeZone('UTC'));
@@ -143,7 +143,7 @@ include BASE_PATH . 'views/header.php';
                 </div>
                 <div class="col-auto">
                   <div class="btn-group">
-                    <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $member['GalaID'])) ?>" class="btn btn-success">View and sign form</a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening/new-survey?member=' . $member['MemberID'] . '&gala=' . $member['GalaID'])) ?>" class="btn btn-success">View and sign form</a>
                   </div>
                 </div>
               </div>
@@ -162,7 +162,7 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <p>
-        If asked by a member of club staff, you can <a href="<?= htmlspecialchars(autoUrl("covid/competition-health-screening/any")) ?>">complete a Return to Competition form for a competition you haven't entered</a>.
+        If asked by a member of club staff, you can <a href="<?= htmlspecialchars((string) autoUrl("covid/competition-health-screening/any")) ?>">complete a Return to Competition form for a competition you haven't entered</a>.
       </p>
 
       <?php if (false) { ?>
@@ -173,8 +173,8 @@ include BASE_PATH . 'views/header.php';
         <?php if ($squads && $squad = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <div class="list-group mb-3">
             <?php do { ?>
-              <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
-                <?= htmlspecialchars($squad['SquadName']) ?>
+              <a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening/squads/' . $squad['SquadID'])) ?>" class="list-group-item list-group-item-action">
+                <?= htmlspecialchars((string) $squad['SquadName']) ?>
               </a>
             <?php } while ($squad = $squads->fetch(PDO::FETCH_ASSOC)); ?>
           </div>
@@ -188,8 +188,8 @@ include BASE_PATH . 'views/header.php';
         </p>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening/galas/' . $gala['GalaID'])) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars($gala['GalaName']) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening/galas/' . $gala['GalaID'])) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) $gala['GalaName']) ?>
             </a>
           <?php } while ($gala = $getGalas->fetch(PDO::FETCH_ASSOC)); ?>
         </div>

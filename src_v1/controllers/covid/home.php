@@ -84,11 +84,11 @@ include BASE_PATH . 'views/header.php';
               We're keeping a record of those attending sessions.
             </p>
             <p>
-              <?= htmlspecialchars($tenant->getName()) ?> can use your contact data (if required) to support NHS Test and Trace.
+              <?= htmlspecialchars((string) $tenant->getName()) ?> can use your contact data (if required) to support NHS Test and Trace.
             </p>
           </div>
           <p class="mb-0 mt-auto d-flex">
-            <a href="<?= htmlspecialchars(autoUrl('covid/contact-tracing')) ?>" class="btn btn-primary">
+            <a href="<?= htmlspecialchars((string) autoUrl('covid/contact-tracing')) ?>" class="btn btn-primary">
               Go
             </a>
           </p>
@@ -110,7 +110,7 @@ include BASE_PATH . 'views/header.php';
           </p>
         </div>
         <p class="mb-0 mt-auto d-flex">
-          <a href="<?= htmlspecialchars(autoUrl('covid/health-screening')) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening')) ?>" class="btn btn-primary">
             Go
           </a>
         </p>
@@ -121,7 +121,7 @@ include BASE_PATH . 'views/header.php';
       <div class="card card-body h-100" style="display: grid;">
         <div>
           <h2>
-            <?php if (mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars(UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
+            <?php if (mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) == 'UOSZ') { ?><?= htmlspecialchars((string) UOS_RETURN_FORM_NAME) ?><?php } else { ?>Risk Awareness Declaration<?php } ?>
           </h2>
           <p class="lead">
             Declare that you understand the risks of returning to training.
@@ -131,7 +131,7 @@ include BASE_PATH . 'views/header.php';
           </p>
         </div>
         <p class="mb-0 mt-auto d-flex">
-          <a href="<?= htmlspecialchars(autoUrl('covid/risk-awareness')) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('covid/risk-awareness')) ?>" class="btn btn-primary">
             Go
           </a>
         </p>
@@ -152,7 +152,7 @@ include BASE_PATH . 'views/header.php';
           </p>
         </div>
         <p class="mb-0 mt-auto d-flex">
-          <a href="<?= htmlspecialchars(autoUrl('covid/competition-health-screening')) ?>" class="btn btn-primary">
+          <a href="<?= htmlspecialchars((string) autoUrl('covid/competition-health-screening')) ?>" class="btn btn-primary">
             Go
           </a>
         </p>

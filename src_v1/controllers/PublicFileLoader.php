@@ -40,7 +40,7 @@ if (file_exists($file) && mime_content_type($file) != 'directory') {
   if (mime_content_type($file) == 'application/pdf' || mime_content_type($file) == 'text/html' || mime_content_type($file) == 'text/css' || strpos($file, '.css') || mime_content_type($file) == 'application/javascript' || mb_substr(mime_content_type($file), 0, mb_strlen('image')) === 'image') {
     header('content-disposition: inline');
   } else {
-    header('content-disposition: attachment; filename="'.basename($filename).'"');
+    header('content-disposition: attachment; filename="'.basename((string) $filename).'"');
   }
   if (strpos($file, '.css') || mb_strpos($file, '.js')) {
     header('expires: ' . date('D, d M Y H:i:s', strtotime("+1 year")) . ' GMT');

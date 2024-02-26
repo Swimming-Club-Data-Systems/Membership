@@ -17,7 +17,7 @@ if ($contact->getUserID() != $user) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars($contact->getName()) . " - Emergency Contacts";
+$pagetitle = htmlspecialchars((string) $contact->getName()) . " - Emergency Contacts";
 
 include BASE_PATH . 'views/header.php';
 if (isset($renewal_trap) && $renewal_trap) {
@@ -33,13 +33,13 @@ if (isset($renewal_trap) && $renewal_trap) {
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("emergency-contacts") ?>">Emergency Contacts</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Edit <?= htmlspecialchars($contact->getName()) ?></li>
+          <li class="breadcrumb-item active" aria-current="page">Edit <?= htmlspecialchars((string) $contact->getName()) ?></li>
         </ol>
       </nav>
     <?php } ?>
 
     <h1 class="mb-0">
-      Edit <?= htmlspecialchars($contact->getName()) ?>
+      Edit <?= htmlspecialchars((string) $contact->getName()) ?>
     </h1>
   </div>
 </div>
@@ -63,7 +63,7 @@ if (isset($renewal_trap) && $renewal_trap) {
       <form method="post" class="needs-validation" novalidate>
         <div class="mb-3">
           <label class="form-label" for="name">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?= htmlspecialchars($contact->getName()) ?>" required>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="<?= htmlspecialchars((string) $contact->getName()) ?>" required>
           <div class="invalid-feedback">
             You must provide the name of the emergency contact
           </div>
@@ -71,7 +71,7 @@ if (isset($renewal_trap) && $renewal_trap) {
 
         <div class="mb-3">
           <label class="form-label" for="relation">Relation</label>
-          <input type="text" class="form-control" id="relation" name="relation" placeholder="Relation" value="<?= htmlspecialchars($contact->getRelation()) ?>" required>
+          <input type="text" class="form-control" id="relation" name="relation" placeholder="Relation" value="<?= htmlspecialchars((string) $contact->getRelation()) ?>" required>
           <div class="invalid-feedback">
             You must provide the relation so we can decide who is best to call
           </div>
@@ -79,7 +79,7 @@ if (isset($renewal_trap) && $renewal_trap) {
 
         <div class="mb-3">
           <label class="form-label" for="num">Contact Number</label>
-          <input type="tel" pattern="\+{0,1}[0-9]*" class="form-control" id="num" name="num" placeholder="Phone" value="<?= htmlspecialchars($contact->getContactNumber()) ?>" required>
+          <input type="tel" pattern="\+{0,1}[0-9]*" class="form-control" id="num" name="num" placeholder="Phone" value="<?= htmlspecialchars((string) $contact->getContactNumber()) ?>" required>
           <div class="invalid-feedback">
             You must provide a valid UK phone number
           </div>
@@ -87,7 +87,7 @@ if (isset($renewal_trap) && $renewal_trap) {
 
         <p>
           <button type="submit" class="btn btn-success">Save</button>
-          <a href="<?= htmlspecialchars(autoUrl($url_path . "/" . $id . "/delete")) ?>" class="btn btn-danger">Delete</a>
+          <a href="<?= htmlspecialchars((string) autoUrl($url_path . "/" . $id . "/delete")) ?>" class="btn btn-danger">Delete</a>
         </p>
       </form>
 

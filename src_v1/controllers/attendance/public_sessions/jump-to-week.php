@@ -7,11 +7,11 @@ try {
 
   $squadString = '';
   if (isset($_POST['squad'])) {
-    $squadString = '&squad=' . urlencode($_POST['squad']);
+    $squadString = '&squad=' . urlencode((string) $_POST['squad']);
   }
 
   header("location: " . autoUrl('timetable?&year=' . urlencode($date->format('o')) . $squadString . '&week=' . urlencode($date->format('W')) . '#day-' . $date->format('w')));
-} catch (Exception $e) {
+} catch (Exception) {
   http_response_code(302);
   header("location: " . autoUrl('timetable'));
 }

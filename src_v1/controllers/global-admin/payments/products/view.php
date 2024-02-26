@@ -19,7 +19,7 @@ $plan = $getPlans->fetch(PDO::FETCH_ASSOC);
 $markdown = new ParsedownExtra();
 $markdown->setSafeMode(true);
 
-$pagetitle = htmlspecialchars($product['Name']) . " - Products - Payments - Admin Dashboard - SCDS";
+$pagetitle = htmlspecialchars((string) $product['Name']) . " - Products - Payments - Admin Dashboard - SCDS";
 
 $formatter = new NumberFormatter(app()->locale, NumberFormatter::CURRENCY);
 
@@ -30,14 +30,14 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments/products')) ?>">Products</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments/products')) ?>">Products</a></li>
       <li class="breadcrumb-item active" aria-current="page">Product</li>
     </ol>
   </nav>
 
   <h1>
-    <?= htmlspecialchars($product['Name']) ?>
+    <?= htmlspecialchars((string) $product['Name']) ?>
   </h1>
   <p class="lead">Product</p>
 
@@ -84,7 +84,7 @@ include BASE_PATH . "views/root/header.php";
       ?>
         <div class="list-group-item">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($plan['Name']) ?></strong>
+            <strong><?= htmlspecialchars((string) $plan['Name']) ?></strong>
           </p>
           <p class="mb-0">
             <?= htmlspecialchars($formatter->formatCurrency((string) (\Brick\Math\BigDecimal::of((string) $plan['PricePerUnit']))->withPointMovedLeft(2)->toScale(2), $plan['Currency'])) ?><?php if ($plan['UsageType'] == 'recurring') { ?>, Recurs every <?= htmlspecialchars($intervalString) ?><?php } ?>
@@ -120,9 +120,9 @@ include BASE_PATH . "views/root/header.php";
         </button>
       </div>
       <div class="modal-body">
-        <form id="new-plan-form" class="needs-validation" novalidate data-ajax-url="<?= htmlspecialchars(autoUrl('admin/payments/plans/new')) ?>">
+        <form id="new-plan-form" class="needs-validation" novalidate data-ajax-url="<?= htmlspecialchars((string) autoUrl('admin/payments/plans/new')) ?>">
 
-          <input type="hidden" name="product" id="plan-product" value="<?= htmlspecialchars($id) ?>" required>
+          <input type="hidden" name="product" id="plan-product" value="<?= htmlspecialchars((string) $id) ?>" required>
 
           <?= \SCDS\CSRF::write() ?>
 

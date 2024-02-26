@@ -43,28 +43,28 @@ if ($nowDate < $galaDate) {
   } else {
     $updateSessions = $db->prepare("UPDATE galaSessions SET `Name` = ? WHERE ID = ?");
     do {
-      if (isset($_POST['session-' . $session['ID']]) && mb_strlen(trim($_POST['session-' . $session['ID']])) > 0) {
+      if (isset($_POST['session-' . $session['ID']]) && mb_strlen(trim((string) $_POST['session-' . $session['ID']])) > 0) {
         try {
           $updateSessions->execute([
-            trim($_POST['session-' . $session['ID']]),
+            trim((string) $_POST['session-' . $session['ID']]),
             $session['ID']
           ]);
           $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
-        } catch (Exception $e) {
+        } catch (Exception) {
           $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
         }
       }
     } while ($session = $getSessions->fetch(PDO::FETCH_ASSOC));
 
-    if (isset($_POST['newSession']) && mb_strlen(trim($_POST['newSession'])) > 0) {
+    if (isset($_POST['newSession']) && mb_strlen(trim((string) $_POST['newSession'])) > 0) {
       try {
         $insertSessions = $db->prepare("INSERT INTO galaSessions (`Gala`, `Name`) VALUES (?, ?)");
         $insertSessions->execute([
           $id,
-          trim($_POST['newSession'])
+          trim((string) $_POST['newSession'])
         ]);
         $_SESSION['TENANT-' . app()->tenant->getId()]['SuccessStatus'] = true;
-      } catch (Exception $e) {
+      } catch (Exception) {
         $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;
       }
     }

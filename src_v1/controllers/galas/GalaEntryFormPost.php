@@ -159,16 +159,16 @@ if (isset($_POST['is-select-sessions']) && bool($_POST['is-select-sessions'])) {
       $to = $row['Forename'] . " " . $row['Surname'] . "<" . $row['EmailAddress'] . ">";
 
       $subject = $row['MForename'] . "'s Gala Entry to " . $row['GalaName'];
-      $message .= "<p>Here are the swims selected for " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "'s " . htmlspecialchars($row['GalaName']) . " entry.</p>";
+      $message .= "<p>Here are the swims selected for " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "'s " . htmlspecialchars((string) $row['GalaName']) . " entry.</p>";
       $message .= "<ul>" . $entryList . "</ul>";
       $message .= "<p>You have entered " . (new NumberFormatter("en", NumberFormatter::SPELLOUT))->format($counter) . " events. The <strong>total fee payable is &pound;" . $fee . "</strong>.</p>";
       if ($row['ProcessingFee'] > 0) {
-        $message .= "<p>Your entry includes a processing fee of <strong>&pound;" . htmlspecialchars(MoneyHelpers::intToDecimal($row['ProcessingFee'])) . "</strong>.</p>";
+        $message .= "<p>Your entry includes a processing fee of <strong>&pound;" . htmlspecialchars((string) MoneyHelpers::intToDecimal($row['ProcessingFee'])) . "</strong>.</p>";
       }
       if (bool($row['HyTek'])) {
         $message .= "<p><strong>This is a HyTek gala.</strong> Please remember to add times for this entry.</p>";
       }
-      $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
+      $message .= '<p>If you have any questions, please contact the ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' gala team as soon as possible.</p>';
       $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
       `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 1, 'Galas')";
 

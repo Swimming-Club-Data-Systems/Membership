@@ -70,6 +70,6 @@ try {
 		echo $qrCode->writeString();
 	}
 
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }

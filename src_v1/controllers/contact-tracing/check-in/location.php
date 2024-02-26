@@ -58,7 +58,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_S
   ]);
 }
 
-$pagetitle = 'Check In to ' . htmlspecialchars($location['Name']) . ' - Contact Tracing';
+$pagetitle = 'Check In to ' . htmlspecialchars((string) $location['Name']) . ' - Contact Tracing';
 
 $locationAddress = json_decode($location['Address']);
 
@@ -71,9 +71,9 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
         <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
         <?php } ?>
         <li class="breadcrumb-item active" aria-current="page">Check In</li>
       </ol>
@@ -82,10 +82,10 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          Check in to <?= htmlspecialchars($location['Name']) ?>
+          Check in to <?= htmlspecialchars((string) $location['Name']) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($locationAddress->streetAndNumber) ?>
+          <?= htmlspecialchars((string) $locationAddress->streetAndNumber) ?>
         </p>
       </div>
     </div>
@@ -104,7 +104,7 @@ include BASE_PATH . 'views/header.php';
             <strong>An error occurred</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']);
@@ -126,13 +126,13 @@ include BASE_PATH . 'views/header.php';
               Are you the COVID Liason for this session?
             </p>
 
-            <form action="<?= htmlspecialchars(autoUrl('contact-tracing/check-in/' . $id)) ?>" method="get">
+            <form action="<?= htmlspecialchars((string) autoUrl('contact-tracing/check-in/' . $id)) ?>" method="get">
 
               <div class="mb-3">
                 <label class="form-label" for="squad-list">Select squad</label>
                 <select class="form-select" id="squad-list" name="squad">
                   <?php do { ?>
-                    <option value="<?= htmlspecialchars($squad['SquadID']) ?>"><?= htmlspecialchars($squad['SquadName']) ?></option>
+                    <option value="<?= htmlspecialchars((string) $squad['SquadID']) ?>"><?= htmlspecialchars((string) $squad['SquadName']) ?></option>
                   <?php } while ($squad = $userSquads->fetch(PDO::FETCH_ASSOC)); ?>
                 </select>
               </div>
@@ -172,7 +172,7 @@ include BASE_PATH . 'views/header.php';
 
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="user" name="user" value="1">
-              <label class="form-check-label" for="user"><?= htmlspecialchars(app()->user->getName()) ?></label>
+              <label class="form-check-label" for="user"><?= htmlspecialchars((string) app()->user->getName()) ?></label>
             </div>
           </div>
 
@@ -199,7 +199,7 @@ include BASE_PATH . 'views/header.php';
               <?php do { ?>
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" id="<?= htmlspecialchars('guest-' . $guest['ID']) ?>" name="<?= htmlspecialchars('guest-' . $guest['ID']) ?>" value="1">
-                  <label class="form-check-label" for="<?= htmlspecialchars('guest-' . $guest['ID']) ?>"><?= htmlspecialchars($guest['GuestName']) ?> <em><?= htmlspecialchars($guest['GuestPhone']) ?></em></label>
+                  <label class="form-check-label" for="<?= htmlspecialchars('guest-' . $guest['ID']) ?>"><?= htmlspecialchars((string) $guest['GuestName']) ?> <em><?= htmlspecialchars((string) $guest['GuestPhone']) ?></em></label>
                 </div>
               <?php } while ($guest = $guests->fetch(PDO::FETCH_ASSOC)); ?>
             </div>
@@ -245,7 +245,7 @@ include BASE_PATH . 'views/header.php';
         </h2>
 
         <p>
-          If you have an account, <a href="<?= htmlspecialchars(autoUrl('login?target=' . urlencode('contact-tracing/check-in/' . $id))) ?>">please sign in</a> so we can pre-fill your details
+          If you have an account, <a href="<?= htmlspecialchars((string) autoUrl('login?target=' . urlencode('contact-tracing/check-in/' . $id))) ?>">please sign in</a> so we can pre-fill your details
         </p>
 
         <form method="post" class="needs-validation" novalidate>
@@ -270,7 +270,7 @@ include BASE_PATH . 'views/header.php';
                   <select class="form-select" id="squad" name="squad">
                     <option selected>Select a squad</option>
                     <?php do { ?>
-                      <option value="<?= htmlspecialchars($squad['SquadID']) ?>"><?= htmlspecialchars($squad['SquadName']) ?></option>
+                      <option value="<?= htmlspecialchars((string) $squad['SquadID']) ?>"><?= htmlspecialchars((string) $squad['SquadName']) ?></option>
                     <?php } while ($squad = $squads->fetch(PDO::FETCH_ASSOC)); ?>
                   </select>
                 </div>
@@ -317,7 +317,7 @@ include BASE_PATH . 'views/header.php';
             What do I need to do?
           </h2>
           <p class="lead">
-            Every time you visit a session run by <?= htmlspecialchars($tenant->getName()) ?>, you should check in to your current location.
+            Every time you visit a session run by <?= htmlspecialchars((string) $tenant->getName()) ?>, you should check in to your current location.
           </p>
 
           <p>

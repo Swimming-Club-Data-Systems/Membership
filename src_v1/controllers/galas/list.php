@@ -44,7 +44,7 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item">
-          <a href="<?= htmlspecialchars(autoUrl("galas")) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">
             Galas
           </a>
         </li>
@@ -80,12 +80,12 @@ include BASE_PATH . 'views/header.php';
         <div class="row mb-3">
           <div class="col">
             <p class="lead mb-0">
-              Page <?= htmlspecialchars($page) ?> of <?= htmlspecialchars($numPages) ?>
+              Page <?= htmlspecialchars((string) $page) ?> of <?= htmlspecialchars($numPages) ?>
             </p>
           </div>
           <div class="col text-end">
             <p class="lead text-muted mb-0">
-              <?= htmlspecialchars($numGalas) ?> gala<?php if ($numGalas != 1) { ?>s<?php } ?> in total
+              <?= htmlspecialchars((string) $numGalas) ?> gala<?php if ($numGalas != 1) { ?>s<?php } ?> in total
             </p>
           </div>
         </div>
@@ -102,19 +102,19 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item" id="<?= htmlspecialchars("gala-" . $gala['id']) ?>">
               <div class="row justify-content-between">
                 <div class="col-12 col-sm">
-                  <h2 class="mb-0"><a href="<?= htmlspecialchars(autoUrl("galas/" . $gala['id'])) ?>"><?= htmlspecialchars($gala['name']) ?></a></h2>
+                  <h2 class="mb-0"><a href="<?= htmlspecialchars((string) autoUrl("galas/" . $gala['id'])) ?>"><?= htmlspecialchars((string) $gala['name']) ?></a></h2>
                   <p class="lead d-sm-none">
-                    <?= htmlspecialchars($gala['venue']) ?>
+                    <?= htmlspecialchars((string) $gala['venue']) ?>
                   </p>
                   <div class="mb-3 d-sm-none"></div>
                 </div>
                 <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>
                   <div class="col-12 col-sm-auto">
                     <div class="btn-group" role="group">
-                      <a href="<?= htmlspecialchars(autoUrl("galas/entries?gala=" . $gala['id'])) ?>" class="btn btn-primary">
+                      <a href="<?= htmlspecialchars((string) autoUrl("galas/entries?gala=" . $gala['id'])) ?>" class="btn btn-primary">
                         Entries
                       </a>
-                      <a href="<?= htmlspecialchars(autoUrl("galas/" . $gala['id'] . "/edit")) ?>" class="btn btn-dark-l btn-outline-light-d">
+                      <a href="<?= htmlspecialchars((string) autoUrl("galas/" . $gala['id'] . "/edit")) ?>" class="btn btn-dark-l btn-outline-light-d">
                         Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                       </a>
                     </div>
@@ -122,7 +122,7 @@ include BASE_PATH . 'views/header.php';
                   </div>
               </div>
               <p class="lead d-none d-sm-block">
-                <?= htmlspecialchars($gala['venue']) ?>
+                <?= htmlspecialchars((string) $gala['venue']) ?>
               </p>
               <dl class="row mb-0">
                 <dt class="col-3">Entries close<?php if ($closed) { ?>d<?php } ?></dt>

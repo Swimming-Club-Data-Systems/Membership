@@ -51,7 +51,7 @@ if (isset($_GET['from-date']) && isset($_GET['from-time']) && isset($_GET['to-da
   try {
     $from = DateTime::createFromFormat("Y-m-d H:i", $_GET['from-date'] . ' ' . $_GET['from-time'], new DateTimeZone('Europe/London'));
     $to = DateTime::createFromFormat("Y-m-d H:i", $_GET['to-date'] . ' ' . $_GET['to-time'], new DateTimeZone('Europe/London'));
-  } catch (Exception $e) {
+  } catch (Exception) {
   }
 }
 
@@ -69,7 +69,7 @@ $getVisitors->execute([
   'endTime' => $toUTC->format('Y-m-d H:i:s'),
 ]);
 
-$pagetitle = 'Sign Out of ' . htmlspecialchars($location['Name']) . ' - Contact Tracing';
+$pagetitle = 'Sign Out of ' . htmlspecialchars((string) $location['Name']) . ' - Contact Tracing';
 
 $locationAddress = json_decode($location['Address']);
 
@@ -82,8 +82,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing')) ?>">Tracing</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing')) ?>">Tracing</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('contact-tracing/locations')) ?>">Locations</a></li>
         <li class="breadcrumb-item active" aria-current="page">Sign Out</li>
       </ol>
     </nav>
@@ -91,10 +91,10 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          Sign Out of <?= htmlspecialchars($location['Name']) ?>
+          Sign Out of <?= htmlspecialchars((string) $location['Name']) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($locationAddress->streetAndNumber) ?>
+          <?= htmlspecialchars((string) $locationAddress->streetAndNumber) ?>
         </p>
       </div>
     </div>
@@ -112,13 +112,13 @@ include BASE_PATH . 'views/header.php';
             <strong>An error occurred</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']['message']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ContactTracingError']);
       } ?>
 
-      <form action="<?= htmlspecialchars(autoUrl('contact-tracing/sign-out/' . $id)) ?>" method="get">
+      <form action="<?= htmlspecialchars((string) autoUrl('contact-tracing/sign-out/' . $id)) ?>" method="get">
         <div class="mb-3">
           <p class="mb-2">
             From
@@ -174,8 +174,8 @@ include BASE_PATH . 'views/header.php';
             ?>
             <li class="list-group-item">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>" name="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>" value="1" data-id="<?= htmlspecialchars($visitor['ID']) ?>" <?php if (bool($visitor['SignedOut'])) { ?>checked<?php } ?> >
-                <label class="form-check-label d-block" for="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>"><?= htmlspecialchars($visitor['GuestName']) ?> <small>Arrived <?= htmlspecialchars($date->format('H:i, j F')) ?></small>
+                <input class="form-check-input" type="checkbox" id="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>" name="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>" value="1" data-id="<?= htmlspecialchars((string) $visitor['ID']) ?>" <?php if (bool($visitor['SignedOut'])) { ?>checked<?php } ?> >
+                <label class="form-check-label d-block" for="<?= htmlspecialchars('visitor-' . $visitor['ID']) ?>"><?= htmlspecialchars((string) $visitor['GuestName']) ?> <small>Arrived <?= htmlspecialchars($date->format('H:i, j F')) ?></small>
               </div>
             </li>
             <?php } while ($visitor = $getVisitors->fetch(PDO::FETCH_ASSOC)); ?>
@@ -185,7 +185,7 @@ include BASE_PATH . 'views/header.php';
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong>There are no people to Sign Out of <?= htmlspecialchars($location['Name']) ?></strong>
+            <strong>There are no people to Sign Out of <?= htmlspecialchars((string) $location['Name']) ?></strong>
           </p>
           <p class="mb-0">
             Try changing your time frame
@@ -196,7 +196,7 @@ include BASE_PATH . 'views/header.php';
     </div>
   </div>
 
-  <div id="socket-info" data-init="<?= htmlspecialchars($dataInit) ?>" data-room="<?= htmlspecialchars($id) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('contact-tracing/sign-out/ajax')) ?>"></div>
+  <div id="socket-info" data-init="<?= htmlspecialchars($dataInit) ?>" data-room="<?= htmlspecialchars((string) $id) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('contact-tracing/sign-out/ajax')) ?>"></div>
 
 </div>
 

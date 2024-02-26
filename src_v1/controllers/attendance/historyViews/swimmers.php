@@ -27,8 +27,8 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
         <li class="breadcrumb-item active" aria-current="page">Members</li>
       </ol>
     </nav>
@@ -55,14 +55,14 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
         <option value="allSquads">Show All Squads</option>
         <?php while ($squad = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <option value="<?= $squad['id'] ?>" <?php if ($squad['id'] == $squadID) { ?>selected<?php } ?>>
-            <?= htmlspecialchars($squad['name']) ?>
+            <?= htmlspecialchars((string) $squad['name']) ?>
           </option>
         <?php } ?>
       </select>
     </div>
     <div class="col-md-6 mb-3">
       <label class="visually-hidden" for="search">Search by Surname</label>
-      <input class="form-control" placeholder="Surname" id="search" name="search" value="<?= htmlspecialchars($search) ?>">
+      <input class="form-control" placeholder="Surname" id="search" name="search" value="<?= htmlspecialchars((string) $search) ?>">
     </div>
   </div>
 
@@ -76,7 +76,7 @@ include BASE_PATH . "controllers/attendance/attendanceMenu.php"; ?>
     </div>
   </div>
 
-  <div id="ajax-data" data-page-url="<?= htmlspecialchars(autoUrl('attendance/history/members')) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl('attendance/history/ajax/swimmers')) ?>"></div>
+  <div id="ajax-data" data-page-url="<?= htmlspecialchars((string) autoUrl('attendance/history/members')) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl('attendance/history/ajax/swimmers')) ?>"></div>
 
 </div>
 

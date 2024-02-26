@@ -64,20 +64,20 @@ include "galaMenu.php";
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Swimmers</a></li>
-          <li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $swimmer) ?>"><?= htmlspecialchars($mySwimmer['fn']) ?> <?= htmlspecialchars(mb_substr($mySwimmer['sn'], 0, 1, 'utf-8')) ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $swimmer) ?>"><?= htmlspecialchars((string) $mySwimmer['fn']) ?> <?= htmlspecialchars(mb_substr((string) $mySwimmer['sn'], 0, 1, 'utf-8')) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Enter a gala</li>
         </ol>
       </nav>
     <?php } else { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("galas")) ?>">Galas</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("galas")) ?>">Galas</a></li>
           <li class="breadcrumb-item active" aria-current="page">Enter gala</li>
         </ol>
       </nav>
     <?php } ?>
 
-    <div id="gala-data" data-ajax-url="<?= htmlspecialchars(autoUrl('galas/ajax/entryForm')) ?>"></div>
+    <div id="gala-data" data-ajax-url="<?= htmlspecialchars((string) autoUrl('galas/ajax/entryForm')) ?>"></div>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
@@ -86,7 +86,7 @@ include "galaMenu.php";
       <div class="col text-lg-end">
         <div class="d-lg-none mb-3"></div>
         <aside>
-          <a href="<?= htmlspecialchars(autoUrl("galas/entergala/help")) ?>" class="btn btn-info">
+          <a href="<?= htmlspecialchars((string) autoUrl("galas/entergala/help")) ?>" class="btn btn-info">
             Gala entry help <i class="fa fa-info-circle" aria-hidden="true"></i>
           </a>
         </aside>
@@ -105,8 +105,8 @@ include "galaMenu.php";
           <select class="form-select" id="swimmer" name="swimmer" required>
             <option value="null" <?php if ($swimmerCount > 1) { ?>selected<?php } ?> disabled>Select a swimmer</option>
             <?php do { ?>
-              <option value="<?= htmlspecialchars($mySwimmer['id']) ?>" <?php if ($swimmerCount == 1) { ?>selected<?php } ?>>
-                <?= htmlspecialchars(\SCDS\Formatting\Names::format($mySwimmer['fn'], $mySwimmer['sn'])) ?>
+              <option value="<?= htmlspecialchars((string) $mySwimmer['id']) ?>" <?php if ($swimmerCount == 1) { ?>selected<?php } ?>>
+                <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($mySwimmer['fn'], $mySwimmer['sn'])) ?>
               </option>
             <?php } while ($mySwimmer = $mySwimmers->fetch(PDO::FETCH_ASSOC)); ?>
           </select>
@@ -116,8 +116,8 @@ include "galaMenu.php";
           <select class="form-select" id="gala" name="gala" required>
             <option value="null" disabled selected>Select a gala</option>
             <?php do { ?>
-              <option value="<?= htmlspecialchars($gala['id']) ?>">
-                <?= htmlspecialchars($gala['name']) ?>
+              <option value="<?= htmlspecialchars((string) $gala['id']) ?>">
+                <?= htmlspecialchars((string) $gala['name']) ?>
               </option>
             <?php } while ($gala = $galas->fetch(PDO::FETCH_ASSOC)); ?>
           </select>

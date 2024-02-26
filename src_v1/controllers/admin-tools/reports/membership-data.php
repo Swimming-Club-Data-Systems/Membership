@@ -66,7 +66,7 @@ while ($info = $getInfo->fetch(PDO::FETCH_ASSOC)) {
     $fee = '£0.00';
     try {
       $fee = '£' . (string) \Brick\Math\BigDecimal::of((string) $squad['SquadFee'])->toScale(2);
-    } catch (Exception $e) { }
+    } catch (Exception) { }
     $fees .= $fee;
   }
 

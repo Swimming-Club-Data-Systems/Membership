@@ -11,7 +11,7 @@ try {
 
   $json = json_decode(file_get_contents('php://input'));
 
-  $token = trim(mb_strtolower($json->token));
+  $token = trim(mb_strtolower((string) $json->token));
 
   $getUser = $db->prepare("SELECT users.UserID, users.Forename, users.Surname, passwordTokens.Date FROM passwordTokens INNER JOIN users ON users.UserID = passwordTokens.UserID WHERE `Type` = ? AND `Token` = ? AND users.Tenant = ? ORDER BY TokenID DESC LIMIT 1");
   $getUser->execute([
@@ -35,7 +35,7 @@ try {
   }
 
 
-  $password = trim($json->password);
+  $password = trim((string) $json->password);
 
   if (v::stringType()->length(8, null)->validate($password) && !(\CheckPwned::pwned($password))) {
     // Set the password

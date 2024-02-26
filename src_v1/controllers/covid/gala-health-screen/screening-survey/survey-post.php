@@ -129,22 +129,22 @@ try {
 
     $message = '<p>Hello ' . htmlspecialchars($member['Forename'] . ' ' . $member['Surname']) . '</p>';
 
-    $message .= '<p>We have received your signed COVID-19 Return to Competition form for ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . ' for ' . htmlspecialchars($gala['GalaName']) . '. The form was submitted at ' . htmlspecialchars($date->format('H:i:s, j F Y')) . '.</p>';
+    $message .= '<p>We have received your signed COVID-19 Return to Competition form for ' . htmlspecialchars($member['MForename'] . ' ' . $member['MSurname']) . ' for ' . htmlspecialchars((string) $gala['GalaName']) . '. The form was submitted at ' . htmlspecialchars($date->format('H:i:s, j F Y')) . '.</p>';
 
     $message .= '<p>Please take a lateral flow test within the two days before the start of the competition and <a href="https://www.gov.uk/report-covid19-result" target="_blank">report the result to the NHS</a>. You can <a href="https://www.nhs.uk/conditions/coronavirus-covid-19/testing/regular-rapid-coronavirus-tests-if-you-do-not-have-symptoms/" target="_blank">order rapid lateral flow coronavirus (COVID-19) tests from the NHS</a> for free.</p>';
 
     $message .= '<p>This declaration will expire seven days after submission at ' . htmlspecialchars($expires->format('H:i:s, j F Y')) . '. If the gala spans multiple weekends, you must resubmit the form no more than seven days ahead of each weekend. </p>';
 
-    $message .= '<p>For further details of how we process your personal data or your child’s personal data please view our <a href="' . htmlspecialchars(autoUrl('privacy')) . '" target="_blank">Privacy Policy</a>.</p>';
+    $message .= '<p>For further details of how we process your personal data or your child’s personal data please view our <a href="' . htmlspecialchars((string) autoUrl('privacy')) . '" target="_blank">Privacy Policy</a>.</p>';
 
-    $message .= '<p>Thank you for your support at this time,</p><p>The ' . htmlspecialchars($tenant->getName()) . ' team.</p>';
+    $message .= '<p>Thank you for your support at this time,</p><p>The ' . htmlspecialchars((string) $tenant->getName()) . ' team.</p>';
 
     notifySend(null, $subject, $message, $member['Forename'] . ' ' . $member['Surname'], $member['EmailAddress']);
   }
 
   $_SESSION['CovidGalaSuccess'] = true;
   header('location: ' . autoUrl('covid/competition-health-screening'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   // throw new Exception('A database error occurred');
   $_SESSION['CovidGalaError'] = 'A database error occurred';
   header('location: ' . autoUrl('competition-health-screening/new-survey?member=' . $_POST['member'] . '?gala=' . $_POST['gala']));

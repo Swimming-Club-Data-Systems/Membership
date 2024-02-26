@@ -23,9 +23,9 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin")) ?>">Admin</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/galas")) ?>">Galas</a></li>
-      <!-- <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/galas/sdif")) ?>">Admin</a></li> -->
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>">Admin</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/galas")) ?>">Galas</a></li>
+      <!-- <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/galas/sdif")) ?>">Admin</a></li> -->
       <li class="breadcrumb-item active" aria-current="page">Upload</li>
     </ol>
   </nav>
@@ -84,8 +84,8 @@ include BASE_PATH . 'views/header.php';
           <label class="form-label" for="gala">Select a gala to link this file to</label>
           <select class="form-select" id="gala" name="gala" aria-describedby="galaHelp" required>
             <?php while ($gala = $getRecentGalas->fetch(PDO::FETCH_ASSOC)) { ?>
-              <option value="<?= htmlspecialchars($gala['GalaID']) ?>">
-                <?= htmlspecialchars($gala['GalaName']) ?>
+              <option value="<?= htmlspecialchars((string) $gala['GalaID']) ?>">
+                <?= htmlspecialchars((string) $gala['GalaName']) ?>
               </option>
             <?php } ?>
           </select>

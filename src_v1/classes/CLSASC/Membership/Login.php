@@ -7,18 +7,16 @@ use DateTimeZone;
 
 class Login
 {
-  private $db;
   private $user;
   private $stayLoggedIn;
   private $noUserWarning;
   private $reLogin;
 
-  function __construct($db)
+  function __construct(private $db)
   {
-    $this->db = $db;
   }
 
-  public function setUser($user)
+  public function setUser($user): void
   {
     $this->user = $user;
     $checkExists = $this->db->prepare("SELECT COUNT(*) FROM users WHERE UserID = ?");
@@ -28,17 +26,17 @@ class Login
     }
   }
 
-  public function stayLoggedIn($option = true)
+  public function stayLoggedIn($option = true): void
   {
     $this->stayLoggedIn = $option;
   }
 
-  public function reLogin($option = true)
+  public function reLogin($option = true): void
   {
     $this->reLogin = $option;
   }
 
-  public function preventWarningEmail($option = true)
+  public function preventWarningEmail($option = true): void
   {
     $this->noUserWarning = $option;
   }
@@ -78,11 +76,9 @@ class Login
       }
 
       $geo_string = $city . $subdivision . $country;
-    } catch (\GeoIp2\Exception\AddressNotFoundException $e) {
+    } catch (\GeoIp2\Exception\AddressNotFoundException) {
       $geo_string = "Unknown Location";
-    } catch (\GeoIp2\Exception\InvalidDatabaseException $e) {
-      $geo_string = "Location Information Unavailable";
-    } catch (\Exception $e) {
+    } catch (\GeoIp2\Exception\InvalidDatabaseException|\Exception) {
       $geo_string = "Location Information Unavailable";
     }
 
@@ -125,7 +121,7 @@ class Login
       try {
         $query = $this->db->prepare($sql);
         $query->execute($login_details);
-      } catch (\Exception $e) {
+      } catch (\Exception) {
         halt(500);
       }
     }
@@ -150,15 +146,15 @@ class Login
       if (getenv('MAIN_DOMAIN')) {
         $cookiePath = '/';
       }
-      setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', $hash, time() + 60 * 60 * 24 * 120, $cookiePath, app('request')->hostname, $secure, false);
+      setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', $hash, ['expires' => time() + 60 * 60 * 24 * 120, 'path' => $cookiePath, 'domain' => (string) app('request')->hostname, 'secure' => $secure, 'httponly' => false]);
     }
 
     // Test if we've seen a login from here before
     $login_before_data = [
       $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
       getUserIp(),
-      ucwords(app('request')->browser()),
-      ucwords(app('request')->platform())
+      ucwords((string) app('request')->browser()),
+      ucwords((string) app('request')->platform())
     ];
 
     $login_before = $this->db->prepare("SELECT COUNT(*) FROM `userLogins` WHERE `UserID` = ? AND `IPAddress` = ? AND `Browser` = ? AND `Platform` = ?");
@@ -168,12 +164,12 @@ class Login
     if ($login_before_count == 1 && !$this->noUserWarning && !$this->reLogin) {
 
       $subject = "New Account Login";
-      $message = '<p>Somebody just logged into your ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Account from ' . $browser . ', using a device running ' . $browser_details->os->toString() . ' we believe was located in ' . $geo_string . '*.</p><p>We haven\'t seen a login from this location and device before.</p><p>If this was you then you can ignore this email. If this was not you, please <a href="' . autoUrl("") . '">log in to your account</a> and <a href="' . autoUrl("myaccount/password") . '">change your password</a> as soon as possible.</p><p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p><p class="text-muted small">* We\'ve estimated your location from your public IP Address. The location given may not be where you live.</p>';
+      $message = '<p>Somebody just logged into your ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Account from ' . $browser . ', using a device running ' . $browser_details->os->toString() . ' we believe was located in ' . $geo_string . '*.</p><p>We haven\'t seen a login from this location and device before.</p><p>If this was you then you can ignore this email. If this was not you, please <a href="' . autoUrl("") . '">log in to your account</a> and <a href="' . autoUrl("myaccount/password") . '">change your password</a> as soon as possible.</p><p>Kind Regards, <br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p><p class="text-muted small">* We\'ve estimated your location from your public IP Address. The location given may not be where you live.</p>';
       $notify = "INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`,
       `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 0, 'Security')";
       try {
         $this->db->prepare($notify)->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $subject, $message]);
-      } catch (\Exception $e) {
+      } catch (\Exception) {
         halt(500);
       }
     }

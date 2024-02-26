@@ -80,20 +80,20 @@ $db->beginTransaction();
 try {
   if ($swimmers != null) {
     foreach ($swimmers as $member => $info) {
-    
+
       // Date of birth data
       $dob = new DateTime($info[0]['dob'], new DateTimeZone('Europe/London'));
       $ageOnLastDay = $now->diff($dob);
       $ageAtEOY = $eOY->diff($dob);
-      
+
       htmlspecialchars($info[0]['sn'] . ', ' . $info[0]['fn']);
       foreach ($info as $row) {
-        htmlspecialchars($row['gsname']);
+        htmlspecialchars((string) $row['gsname']);
       }
       $dob->format('j F Y');
       $ageOnLastDay->format('%y');
       $ageAtEOY->format('%y');
-      htmlspecialchars($info[0]['se']);
+      htmlspecialchars((string) $info[0]['se']);
 
       $entering = [
         'gala' => $id,
@@ -160,14 +160,14 @@ try {
 
     $message = '<p>' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . app()->tenant->getId()]['Surname']) . ' has entered ';
     for ($i = 0; $i < sizeof($entries); $i++) {
-      $message .= htmlspecialchars($entries[$i]['forename']);
+      $message .= htmlspecialchars((string) $entries[$i]['forename']);
       if ($i < sizeof($entries) - 2) {
         $message.= ', ';
       } else if ($i < sizeof($entries) - 1) {
         $message.= ' and ';
       }
     }
-    $message .= ' into ' . htmlspecialchars($gala['name']) . '. Full details of the entries are as follows;</p>';
+    $message .= ' into ' . htmlspecialchars((string) $gala['name']) . '. Full details of the entries are as follows;</p>';
 
     $totalCost = \Brick\Math\BigDecimal::zero();
     foreach ($entries as $entry) {
@@ -178,7 +178,7 @@ try {
         }
       }
       $message .= '</ul>';
-      $message .= '<p>The cost of ' . htmlspecialchars($entry['forename']) . '\'s entry is <strong>&pound;' . $entry['fee'] . '</strong>.</p>';
+      $message .= '<p>The cost of ' . htmlspecialchars((string) $entry['forename']) . '\'s entry is <strong>&pound;' . $entry['fee'] . '</strong>.</p>';
       $totalCost->plus($entry['fee']);
     }
 
@@ -187,7 +187,7 @@ try {
     }
 
     if ($gala['ProcessingFee'] > 0) {
-      $message .= "<p>For this gala there is a per entry processing fee of <strong>&pound;" . htmlspecialchars(MoneyHelpers::intToDecimal($gala['ProcessingFee'])) . "</strong>.</p>";
+      $message .= "<p>For this gala there is a per entry processing fee of <strong>&pound;" . htmlspecialchars((string) MoneyHelpers::intToDecimal($gala['ProcessingFee'])) . "</strong>.</p>";
     }
 
     if (bool($gala['HyTek'])) {

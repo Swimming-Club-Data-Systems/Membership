@@ -29,7 +29,7 @@ if (!$rep && !$user->hasPermission('Admin') && !$user->hasPermission('Coach') &&
   }
 }
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Health Screening';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) . ' - COVID Health Screening';
 
 include BASE_PATH . 'views/header.php';
 
@@ -64,8 +64,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid')) ?>">COVID</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('covid/health-screening')) ?>">Screening</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>">COVID</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening')) ?>">Screening</a></li>
         <li class="breadcrumb-item active" aria-current="page">Survey</li>
       </ol>
     </nav>
@@ -73,14 +73,14 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          COVID-19 Health Screening <small class="text-muted"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
+          COVID-19 Health Screening <small class="text-muted"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?></small>
         </h1>
         <p class="lead mb-0">
           The purpose of this screen is to inform and make you aware of the risks involved in returning to training.
         </p>
       </div>
       <div class="col">
-        <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
+        <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/se.png')) ?>" class="w-50 ms-auto d-none d-lg-flex" alt="Swim England Logo">
       </div>
     </div>
   </div>
@@ -98,7 +98,7 @@ include BASE_PATH . 'views/header.php';
             <strong>There was a problem saving your COVID-19 health survey</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['CovidHealthSurveyError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['CovidHealthSurveyError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['CovidHealthSurveyError']);
@@ -420,11 +420,11 @@ include BASE_PATH . 'views/header.php';
         </ol>
 
         <p>
-          By signing this form I consent to <?= htmlspecialchars($tenant->getName()) ?> using my/my child's personal data for the protection and safeguarding of my/my child's health as well as safeguarding wider public health in response to the impact of COVID-19 on club training activities. I understand that <?= htmlspecialchars($tenant->getName()) ?> may still have a lawful need to use this information for such purposes even if I later seek to withdraw this consent.
+          By signing this form I consent to <?= htmlspecialchars((string) $tenant->getName()) ?> using my/my child's personal data for the protection and safeguarding of my/my child's health as well as safeguarding wider public health in response to the impact of COVID-19 on club training activities. I understand that <?= htmlspecialchars((string) $tenant->getName()) ?> may still have a lawful need to use this information for such purposes even if I later seek to withdraw this consent.
         </p>
 
         <p>
-          For further details of how we process your personal data or your child’s personal data please view our <a href="<?= htmlspecialchars(autoUrl('privacy')) ?>" target="_blank">Privacy Policy</a>.
+          For further details of how we process your personal data or your child’s personal data please view our <a href="<?= htmlspecialchars((string) autoUrl('privacy')) ?>" target="_blank">Privacy Policy</a>.
         </p>
 
         <p>

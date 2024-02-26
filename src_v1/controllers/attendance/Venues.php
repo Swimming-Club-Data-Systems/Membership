@@ -18,7 +18,7 @@ include BASE_PATH . "views/header.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
         <li class="breadcrumb-item active" aria-current="page">Venues</li>
       </ol>
     </nav>
@@ -29,7 +29,7 @@ include BASE_PATH . "views/header.php";
           Venues
         </h1>
         <p class="lead mb-0">
-          Venues used for sessions at <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>
+          Venues used for sessions at <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>
         </p>
         <div class="mb-3 d-lg-none"></div>
       </div>
@@ -49,9 +49,9 @@ include BASE_PATH . "views/header.php";
       <?php
       if ($row = $venues->fetch(PDO::FETCH_ASSOC)) {
         do {
-          $address = explode(',', $row['Location']) ?>
+          $address = explode(',', (string) $row['Location']) ?>
           <div class="card card-body mb-3">
-            <h2><?= htmlspecialchars($row['VenueName']) ?></h2>
+            <h2><?= htmlspecialchars((string) $row['VenueName']) ?></h2>
             <ul class="list-unstyled">
               <?php for ($i = 0; $i < sizeof($address); $i++) {
                 $strong = $strong_end = "";

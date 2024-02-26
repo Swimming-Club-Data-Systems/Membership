@@ -93,7 +93,7 @@ $pageHead = [
     'data-bs-target="#member-page-menu"'
   ]
 ];
-$pagetitle = 'Week ' . htmlspecialchars($startWeek->format('W')) . ', ' . htmlspecialchars($startWeek->format('o')) . ' - ' . htmlspecialchars($pageSquad['SquadName']) . " Session Attendance";
+$pagetitle = 'Week ' . htmlspecialchars($startWeek->format('W')) . ', ' . htmlspecialchars($startWeek->format('o')) . ' - ' . htmlspecialchars((string) $pageSquad['SquadName']) . " Session Attendance";
 
 include BASE_PATH . 'views/header.php';
 
@@ -104,9 +104,9 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history')) ?>">History</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/history/squads')) ?>">Squads</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history')) ?>">History</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/history/squads')) ?>">Squads</a></li>
         <li class="breadcrumb-item active" aria-current="page">Week</li>
       </ol>
     </nav>
@@ -114,7 +114,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          Attendance at <?= htmlspecialchars($pageSquad['SquadName']) ?> sessions
+          Attendance at <?= htmlspecialchars((string) $pageSquad['SquadName']) ?> sessions
         </h1>
         <p class="lead">
           Week <?= htmlspecialchars($startWeek->format('W')) ?> / <?= htmlspecialchars($startWeek->format('o')) ?>
@@ -128,7 +128,7 @@ include BASE_PATH . 'views/header.php';
 
 <div class="container-xl">
 
-  <!-- <h1>Attendance at <?= htmlspecialchars($pageSquad['SquadName']) ?> sessions</h1>
+  <!-- <h1>Attendance at <?= htmlspecialchars((string) $pageSquad['SquadName']) ?> sessions</h1>
   <p class="lead">Week <?= htmlspecialchars($startWeek->format('W')) ?> / <?= htmlspecialchars($startWeek->format('o')) ?></p> -->
 
   <?php if ($sessionToday) { ?>
@@ -142,19 +142,19 @@ include BASE_PATH . 'views/header.php';
       <nav aria-label="Page navigation example">
         <ul class="pagination my-0">
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>
           <?php $weeks->add(new DateInterval('P7D')); ?>
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>
           <?php $weeks->add(new DateInterval('P7D')); ?>
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>
@@ -163,7 +163,7 @@ include BASE_PATH . 'views/header.php';
       <div class="mb-3 d-md-none"></div>
     </div>
     <div class="col-md">
-      <form action="<?= htmlspecialchars(autoUrl('attendance/history/squads/' . $id . '/week/jump-to-week')) ?>" method="post" class="needs-validation" novalidate>
+      <form action="<?= htmlspecialchars((string) autoUrl('attendance/history/squads/' . $id . '/week/jump-to-week')) ?>" method="post" class="needs-validation" novalidate>
         <div class="input-group">
           <input type="date" class="form-control" value="<?= htmlspecialchars($startWeek->format('Y-m-d')) ?>" aria-label="Find a week" aria-describedby="go-to-week" name="go-to-week-date" id="go-to-week-date">
           <button class="btn btn-secondary" type="submit" id="go-to-week">Go to week</button>
@@ -192,7 +192,7 @@ include BASE_PATH . 'views/header.php';
 
               try {
                 $weekId = TrainingSession::weekId($day->format('Y-m-d'));
-              } catch (Exception $e) {
+              } catch (Exception) {
                 // Ignore
                 $weekId = null;
               }
@@ -205,8 +205,8 @@ include BASE_PATH . 'views/header.php';
             <?php } ?>
 
             <div class="list-group-item">
-              <h3 class="mb-0"><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars($squadNames[$i]['SquadName']) ?><?php } ?></h3>
-              <p class="h3"><small><?= htmlspecialchars($session['SessionName']) ?>, <?= htmlspecialchars($session['VenueName']) ?></small></p>
+              <h3 class="mb-0"><?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?><?php if ($i > 0) { ?>, <?php } ?><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?><?php } ?></h3>
+              <p class="h3"><small><?= htmlspecialchars((string) $session['SessionName']) ?>, <?= htmlspecialchars((string) $session['VenueName']) ?></small></p>
 
               <?php
               $startTime = new DateTime($session['StartTime'], new DateTimeZone('UTC'));
@@ -243,11 +243,11 @@ include BASE_PATH . 'views/header.php';
                   $coaches = $getCoaches->fetchAll(PDO::FETCH_ASSOC);
 
                 ?>
-                  <dt class="col-sm-3"><?= htmlspecialchars($squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
+                  <dt class="col-sm-3"><?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?> Coach<?php if (sizeof($coaches) > 0) { ?>es<?php } ?></dt>
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php for ($i = 0; $i < sizeof($coaches); $i++) { ?>
-                        <li><strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($coaches[$i]['fn'], $coaches[$i]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$i]['code'])) ?></li>
+                        <li><strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($coaches[$i]['fn'], $coaches[$i]['sn'])) ?></strong>, <?= htmlspecialchars(coachTypeDescription($coaches[$i]['code'])) ?></li>
                       <?php } ?>
                       <?php if (sizeof($coaches) == 0) { ?>
                         <li>None assigned</li>
@@ -264,14 +264,14 @@ include BASE_PATH . 'views/header.php';
                 ?>
 
                 <dt class="col-sm-3">Location</dt>
-                <dd class="col-sm-9"><?= htmlspecialchars($session['Location']) ?></dd>
+                <dd class="col-sm-9"><?= htmlspecialchars((string) $session['Location']) ?></dd>
 
                 <?php if ((isset($attendees['0']) && sizeof($attendees['0']) > 0) || (isset($attendees['1']) && sizeof($attendees['1']) > 0) || (isset($attendees['2']) && sizeof($attendees['2']) > 0)) { ?>
                   <dt class="col-sm-3">Links</dt>
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
-                      <li><a href="<?= htmlspecialchars(autoUrl('attendance/register?date=' . urlencode($day->format('Y-m-d')) . '&session=' . $session['SessionID'])) ?>">Go to register</a></li>
-                      <li><a href="<?= htmlspecialchars(autoUrl('covid/contact-tracing/reports/from-register?date=' . urlencode($day->format('Y-m-d')) . '&session=' . $session['SessionID'])) ?>">View COVID-19 contact details list</a></li>
+                      <li><a href="<?= htmlspecialchars((string) autoUrl('attendance/register?date=' . urlencode($day->format('Y-m-d')) . '&session=' . $session['SessionID'])) ?>">Go to register</a></li>
+                      <li><a href="<?= htmlspecialchars((string) autoUrl('covid/contact-tracing/reports/from-register?date=' . urlencode($day->format('Y-m-d')) . '&session=' . $session['SessionID'])) ?>">View COVID-19 contact details list</a></li>
                     </ul>
                   </dd>
                 <?php } ?>
@@ -281,7 +281,7 @@ include BASE_PATH . 'views/header.php';
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php foreach ($attendees['1'] as $member) { ?>
-                        <li><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
+                        <li><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
                       <?php } ?>
                     </ul>
                   </dd>
@@ -292,7 +292,7 @@ include BASE_PATH . 'views/header.php';
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php foreach ($attendees['0'] as $member) { ?>
-                        <li><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
+                        <li><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
                       <?php } ?>
                     </ul>
                   </dd>
@@ -303,7 +303,7 @@ include BASE_PATH . 'views/header.php';
                   <dd class="col-sm-9">
                     <ul class="list-unstyled mb-0">
                       <?php foreach ($attendees['2'] as $member) { ?>
-                        <li><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
+                        <li><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></li>
                       <?php } ?>
                     </ul>
                   </dd>
@@ -313,13 +313,13 @@ include BASE_PATH . 'views/header.php';
               <?php for ($i = 0; $i < sizeof($squadNames); $i++) { ?>
                 <?php if (!bool($squadNames[$i]['ForAllMembers'])) { ?>
                   <div class="alert alert-warning mt-3 mb-0">
-                    <p class="mb-0"><strong>This session is not for all swimmers in <?= htmlspecialchars($squadNames[$i]['SquadName']) ?></strong></p>
+                    <p class="mb-0"><strong>This session is not for all swimmers in <?= htmlspecialchars((string) $squadNames[$i]['SquadName']) ?></strong></p>
                     <p class="mb-0">Your coach will tell you if you are to attend this session</p>
                   </div>
                 <?php } ?>
               <?php } ?>
             </div>
-          <?php } ?>
+<?php } ?>
         </div>
       <?php } else { ?>
         <div class="alert alert-warning">
@@ -332,19 +332,19 @@ include BASE_PATH . 'views/header.php';
       <nav aria-label="Page navigation example">
         <ul class="pagination">
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>
           <?php $weeks->add(new DateInterval('P7D')); ?>
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>
           <?php $weeks->add(new DateInterval('P7D')); ?>
           <li class="page-item">
-            <a class="page-link" href="<?= htmlspecialchars(autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
+            <a class="page-link" href="<?= htmlspecialchars((string) autoUrl("attendance/history/squads/$id/week?year=" . $weeks->format('o') . "&week=" . $weeks->format('W'))) ?>">
               Week <?= (int) $weeks->format('W') ?> / <?= $weeks->format('o') ?>
             </a>
           </li>

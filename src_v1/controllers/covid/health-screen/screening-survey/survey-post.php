@@ -100,7 +100,7 @@ try {
 
   $_SESSION['CovidHealthSurveySuccess'] = true;
   header('location: ' . autoUrl('covid/health-screening'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $_SESSION['CovidHealthSurveyError'] = $e->getMessage();

@@ -25,7 +25,7 @@ $toHash = $info['GalaID'];
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
   $toHash .= $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 }
-$hash = hash('sha256', $toHash);
+$hash = hash('sha256', (string) $toHash);
 
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") {
   $uid = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
@@ -82,7 +82,7 @@ ob_start(); ?>
       padding: 2pt;
     }
   </style>
-  <title><?= htmlspecialchars($info['GalaName']) ?> Timesheet</title>
+  <title><?= htmlspecialchars((string) $info['GalaName']) ?> Timesheet</title>
 </head>
 
 <body>
@@ -105,10 +105,10 @@ ob_start(); ?>
 
   <div class="primary-box mb-3" id="title">
     <h1 class="mb-0">
-      <?= htmlspecialchars($info['GalaName']) ?>
+      <?= htmlspecialchars((string) $info['GalaName']) ?>
     </h1>
-    <p class="lead mb-0">Gala Timesheet Report<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?> for <?= htmlspecialchars(getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) ?><?php } ?></p>
-    <p class="lead mb-0"><?= htmlspecialchars($info['GalaVenue']) . " - " . date("d/m/Y", strtotime($info['GalaDate'])) ?></p>
+    <p class="lead mb-0">Gala Timesheet Report<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?> for <?= htmlspecialchars((string) getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) ?><?php } ?></p>
+    <p class="lead mb-0"><?= htmlspecialchars((string) $info['GalaVenue']) . " - " . date("d/m/Y", strtotime((string) $info['GalaDate'])) ?></p>
   </div>
 
   <h2>How to use this document</h2>
@@ -131,7 +131,7 @@ ob_start(); ?>
       <p>&copy; Chester-le-Street ASC <?= date("Y") ?></p>
     <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?= date("Y") ?></p>
-      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></p>
     <?php } ?>
   </div>
 
@@ -204,7 +204,7 @@ ob_start(); ?>
 
     <div class="avoid-page-break-inside">
       <div class="mb-3">
-        <h2 class="d-inline"><?= htmlspecialchars(\SCDS\Formatting\Names::format($data['MForename'], $data['MSurname'])) ?></h2>
+        <h2 class="d-inline"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($data['MForename'], $data['MSurname'])) ?></h2>
         <p class="d-inline">Born <?= $birth->format("j F Y") ?>, Age on day: <?= $ageOnDay->format('%y') ?>, Age at end of year: <?= $ageEndOfYear->format('%y') ?></p>
       </div>
 
@@ -222,7 +222,7 @@ ob_start(); ?>
           <tr>
             <?php for ($i = 0; $i < sizeof($timesArrayA); $i++) { ?>
               <td <?php if ($i > 0) { ?> class="text-center" <?php } ?>>
-                <?= htmlspecialchars($timesArrayA[$i]) ?>
+                <?= htmlspecialchars((string) $timesArrayA[$i]) ?>
               </td>
             <?php } ?>
           </tr>
@@ -230,7 +230,7 @@ ob_start(); ?>
           <tr>
             <?php for ($i = 0; $i < sizeof($timesArrayB); $i++) { ?>
               <td <?php if ($i > 0) { ?> class="text-center" <?php } ?>>
-                <?= htmlspecialchars($timesArrayB[$i]) ?>
+                <?= htmlspecialchars((string) $timesArrayB[$i]) ?>
               </td>
             <?php } ?>
           </tr>
@@ -309,4 +309,4 @@ header('Content-Disposition: inline');
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
-$dompdf->stream(str_replace(' ', '', $pagetitle) . ".pdf", ['Attachment' => 0]);
+$dompdf->stream(str_replace(' ', '', (string) $pagetitle) . ".pdf", ['Attachment' => 0]);

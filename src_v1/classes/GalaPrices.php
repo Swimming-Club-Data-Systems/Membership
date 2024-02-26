@@ -7,22 +7,17 @@
 class GalaPrices {
 
   private $events;
-  private $gala;
-  private $db;
 
-  public function __construct(PDO $db, int $gala) {
-    $this->db = $db;
-    $this->gala = $gala;
-
+  public function __construct(private readonly PDO $db, private readonly int $gala) {
     // Verify the gala exists in the database
-    $verifyGalaExists = $db->prepare("SELECT COUNT(*) FROM galas WHERE GalaID = ?");
+    $verifyGalaExists = $this->db->prepare("SELECT COUNT(*) FROM galas WHERE GalaID = ?");
     $verifyGalaExists->execute([$this->gala]);
     if ($verifyGalaExists->fetchColumn() == 0) {
       throw new Exception('Gala does not exist');
     }
 
     // Get the events and pricing
-    $getEvents = $db->prepare("SELECT Prices, Events FROM galaData WHERE Gala = ?");
+    $getEvents = $this->db->prepare("SELECT Prices, Events FROM galaData WHERE Gala = ?");
     $getEvents->execute([$this->gala]);
     $data = $getEvents->fetch(PDO::FETCH_ASSOC);
 
@@ -38,8 +33,8 @@ class GalaPrices {
       // Data is stored in the JSON format
 
       try {
-        $events = json_decode($data['Events']);
-        $prices = json_decode($data['Prices'], true);
+        $events = json_decode((string) $data['Events']);
+        $prices = json_decode((string) $data['Prices'], true);
 
         // Events then prices
         foreach ($sysEvents as $key => $value) {
@@ -48,7 +43,7 @@ class GalaPrices {
             $this->events[$key]->setPrice($prices[$key]);
           }
         }
-      } catch (Exception $e) {
+      } catch (Exception) {
         // What to do?
       }
     } else {
@@ -59,7 +54,6 @@ class GalaPrices {
   /**
    * Get the event object
    *
-   * @param string $event
    * @return GalaEvent
    */
   public function getEvent(string $event) {
@@ -89,7 +83,7 @@ class GalaPrices {
    *
    * @return void
    */
-  public function save() {
+  public function save(): void {
     // Turn data for events and prices into JSON data
     $outputEvents = GalaEvents::getEvents();
     $outputPrices = GalaEvents::getEvents();
@@ -125,7 +119,7 @@ class GalaPrices {
     }
   }
 
-  public function setupDefault() {
+  public function setupDefault(): void {
     // Get the standard price
     $getPrice = $this->db->prepare("SELECT GalaFee FROM galas WHERE GalaID = ?");
     $getPrice->execute([$this->gala]);

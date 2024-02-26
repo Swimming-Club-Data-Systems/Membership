@@ -14,7 +14,7 @@ class CheckPwned
         'timeout'  => 1.0,
       ]);
 
-      $hash = hash('sha1', $password);
+      $hash = hash('sha1', (string) $password);
       $hashStart = mb_strtoupper(mb_substr($hash, 0, 5));
       $hashEnd = mb_strtoupper(mb_substr($hash, 5));
 
@@ -36,7 +36,7 @@ class CheckPwned
           return true;
         }
       }
-    } catch (\Exception $e) {
+    } catch (\Exception) {
       // Ignore it
     }
 

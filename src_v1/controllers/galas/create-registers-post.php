@@ -101,7 +101,7 @@ try {
   http_response_code(302);
   header("location: " . autoUrl("galas/$id"));
 
-} catch (Exception $e) {
+} catch (Exception) {
   $db->rollBack();
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorStatus'] = true;

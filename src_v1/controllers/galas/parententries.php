@@ -57,7 +57,7 @@ include "galaMenu.php";
           <a href="<?= autoUrl("galas/entries/" . $entry['EntryID']) ?>">
             <div>
               <span class="title mb-0 justify-content-between align-items-start">
-                <span><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></span>
+                <span><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></span>
                 <span class="text-end">
                   <?php if ($now <= $closingDate && !$entry['Charged'] && !$entry['Processed'] && !$entry['Locked']) { ?><span class="ms-2 badge bg-success">EDITABLE</span><?php } ?>
                   <?php if ($entry['Charged']) { ?><span class="ms-2 badge bg-warning"><i class="fa fa-money" aria-hidden="true"></i> PAID</span><?php } ?>
@@ -66,9 +66,9 @@ include "galaMenu.php";
                   <?php if ($entry['Refunded'] && $entry['FeeToPay'] > 0) { ?><span class="ms-2 badge bg-warning">PART REFUNDED</span><?php } else if ($entry['Refunded'] && $entry['FeeToPay'] == 0) { ?><span class="ms-2 badge bg-warning">FULLY REFUNDED</span><?php } ?>
                 </span>
               </span>
-              <span class="d-flex mb-3"><?= htmlspecialchars($entry['GalaName']) ?></span>
+              <span class="d-flex mb-3"><?= htmlspecialchars((string) $entry['GalaName']) ?></span>
             </div>
-            <span class="category"><?= htmlspecialchars($entry['GalaVenue']) ?></span>
+            <span class="category"><?= htmlspecialchars((string) $entry['GalaVenue']) ?></span>
           </a>
         <?php } while ($entry = $entries->fetch(PDO::FETCH_ASSOC)); ?>
       </div>
@@ -108,9 +108,9 @@ include "galaMenu.php";
           <a href="<?= autoUrl("galas/competitions/" . $timesheet['GalaID'] . "/timesheet") ?>">
             <div>
               <span class="title mb-0 justify-content-between align-items-start">
-                <span><?= htmlspecialchars($timesheet['GalaName']) ?></span>
+                <span><?= htmlspecialchars((string) $timesheet['GalaName']) ?></span>
               </span>
-              <span class="d-flex mb-3"><?= htmlspecialchars($timesheet['GalaVenue']) ?></span>
+              <span class="d-flex mb-3"><?= htmlspecialchars((string) $timesheet['GalaVenue']) ?></span>
             </div>
             <span class="category">
               <i class="fa fa-file-pdf-o" aria-hidden="true"></i>

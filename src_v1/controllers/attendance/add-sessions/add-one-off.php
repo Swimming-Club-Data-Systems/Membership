@@ -36,8 +36,8 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance')) ?>">Attendance</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('attendance/sessions')) ?>">Manage Sessions</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance')) ?>">Attendance</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('attendance/sessions')) ?>">Manage Sessions</a></li>
         <li class="breadcrumb-item active" aria-current="page">New One Off</li>
       </ol>
     </nav>
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
             <strong>You must add a venue before you can add a session</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl('attendance/venues/new')) ?>" class="alert-link">Add a new venue now</a>
+            <a href="<?= htmlspecialchars((string) autoUrl('attendance/venues/new')) ?>" class="alert-link">Add a new venue now</a>
           </p>
         </div>
       <?php } ?>
@@ -79,7 +79,7 @@ include BASE_PATH . 'views/header.php';
               <strong>An error occurred:</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['AddSessionError']);
@@ -99,7 +99,7 @@ include BASE_PATH . 'views/header.php';
             <option selected value="">Select a Venue</option>
             <?php if ($venue) { ?>
               <?php do { ?>
-                <option value="<?= htmlspecialchars($venue['VenueID']) ?>"><?= htmlspecialchars($venue['VenueName']) ?></option>
+                <option value="<?= htmlspecialchars((string) $venue['VenueID']) ?>"><?= htmlspecialchars((string) $venue['VenueName']) ?></option>
               <?php } while ($venue = $getVenues->fetch(PDO::FETCH_ASSOC)); ?>
             <?php } ?>
           </select>
@@ -177,8 +177,8 @@ include BASE_PATH . 'views/header.php';
             <?php do { ?>
               <div class="col-6 col-md-4 col-lg-3 mb-2">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" id="squad-check-<?= htmlspecialchars($squad['SquadID']) ?>" name="squad-<?= htmlspecialchars($squad['SquadID']) ?>" value="1">
-                  <label class="form-check-label" for="squad-check-<?= htmlspecialchars($squad['SquadID']) ?>"><?= htmlspecialchars($squad['SquadName']) ?></label>
+                  <input class="form-check-input" type="checkbox" id="squad-check-<?= htmlspecialchars((string) $squad['SquadID']) ?>" name="squad-<?= htmlspecialchars((string) $squad['SquadID']) ?>" value="1">
+                  <label class="form-check-label" for="squad-check-<?= htmlspecialchars((string) $squad['SquadID']) ?>"><?= htmlspecialchars((string) $squad['SquadName']) ?></label>
                 </div>
               </div>
             <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>

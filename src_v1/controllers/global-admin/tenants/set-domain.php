@@ -10,7 +10,7 @@ $db = app()->db;
 
 $set = $db->prepare("UPDATE tenants SET Domain = ? WHERE UniqueID = ?");
 $set->execute([
-  trim($_POST['domain-name']),
+  trim((string) $_POST['domain-name']),
   $id
 ]);
 

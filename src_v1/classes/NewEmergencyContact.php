@@ -5,22 +5,11 @@
  */
 class NewEmergencyContact
 {
-  private $id;
-  private $number;
-  private $name;
-  private $relation;
-  private $isUser;
-
   /**
    * Create an object
    */
-  public function __construct($number, $name, $relation, $id, $isUser = false)
+  public function __construct(private $number, private $name, private $relation, private $id, private $isUser = false)
   {
-    $this->number = $number;
-    $this->name = $name;
-    $this->relation = $relation;
-    $this->id = $id;
-    $this->isUser = $isUser;
   }
 
   /**
@@ -67,7 +56,7 @@ class NewEmergencyContact
     try {
       $number = \Brick\PhoneNumber\PhoneNumber::parse($this->number);
       return $number->format(\Brick\PhoneNumber\PhoneNumberFormat::E164);
-    } catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+    } catch (\Brick\PhoneNumber\PhoneNumberParseException) {
       return null;
     }
   }
@@ -82,7 +71,7 @@ class NewEmergencyContact
     try {
       $number = \Brick\PhoneNumber\PhoneNumber::parse($this->number);
       return $number->format(\Brick\PhoneNumber\PhoneNumberFormat::NATIONAL);
-    } catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+    } catch (\Brick\PhoneNumber\PhoneNumberParseException) {
       return null;
     }
   }
@@ -97,7 +86,7 @@ class NewEmergencyContact
     try {
       $number = \Brick\PhoneNumber\PhoneNumber::parse($this->number);
       return $number->format(\Brick\PhoneNumber\PhoneNumberFormat::INTERNATIONAL);
-    } catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+    } catch (\Brick\PhoneNumber\PhoneNumberParseException) {
       return null;
     }
   }
@@ -112,7 +101,7 @@ class NewEmergencyContact
     try {
       $number = \Brick\PhoneNumber\PhoneNumber::parse($this->number);
       return $number->format(\Brick\PhoneNumber\PhoneNumberFormat::RFC3966);
-    } catch (\Brick\PhoneNumber\PhoneNumberParseException $e) {
+    } catch (\Brick\PhoneNumber\PhoneNumberParseException) {
       return null;
     }
   }
