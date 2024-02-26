@@ -34,10 +34,10 @@ $entriesOpen = false;
 			<a href="<?=autoUrl("galas/" . $gala['GalaID'])?>">
 				<div>
 					<span class="title mb-0 justify-content-between align-items-start">
-						<span><?=htmlspecialchars($gala['GalaName'])?></span>
+						<span><?=htmlspecialchars((string) $gala['GalaName'])?></span>
 						<span class="ms-2 badge bg-success">ENTRIES OPEN</span>
 					</span>
-					<span class="d-flex mb-3"><?=htmlspecialchars($gala['GalaVenue'])?></span>
+					<span class="d-flex mb-3"><?=htmlspecialchars((string) $gala['GalaVenue'])?></span>
 				</div>
 				<span class="category">Entries close on <?=$closingDate->format('j F Y')?></span>
 			</a>

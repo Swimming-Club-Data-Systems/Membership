@@ -120,7 +120,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 				$entry['EntryID']
 			]);
 
-			$message = '<p>We\'ve issued a refund for ' . htmlspecialchars($entry['MForename']) .  '\'s entry into ' . htmlspecialchars($gala['name']) . '.</p>';
+			$message = '<p>We\'ve issued a refund for ' . htmlspecialchars((string) $entry['MForename']) .  '\'s entry into ' . htmlspecialchars((string) $gala['name']) . '.</p>';
 
 			$message .= '<p>This refund is to the value of <strong>&pound;' . $amountString . '</strong>.</p>';
 
@@ -137,7 +137,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 				$message .= '<p>As you don\'t pay your club fees by direct debit or have opted out of paying for galas by direct debit, you\'ll need to collect this refund from the treasurer or gala coordinator.</p>';
 			}
 
-			$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+			$message .= '<p>Kind Regards<br> The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
 			$notify->execute([
 				$entry['UserID'],
@@ -148,7 +148,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 			]);
 
 			$db->commit();
-		} catch (Exception $e) {
+		} catch (Exception) {
 			// A problem occured
 			$db->rollBack();
 			$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'] = true;

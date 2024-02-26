@@ -31,7 +31,7 @@ $squads = $db->prepare("SELECT SquadName FROM squads INNER JOIN squadMembers ON 
 
 $markdown = new ParsedownExtra();
 
-$pagetitle = htmlspecialchars($gala['name']) . " Swimmer Information";
+$pagetitle = htmlspecialchars((string) $gala['name']) . " Swimmer Information";
 
 include BASE_PATH . 'views/header.php';
 
@@ -50,7 +50,7 @@ include BASE_PATH . 'views/header.php';
                 </ol>
             </nav>
 
-            <h1><?= htmlspecialchars($gala['name']) ?> swimmer information</h1>
+            <h1><?= htmlspecialchars((string) $gala['name']) ?> swimmer information</h1>
             <p class="lead mb-0">View swimmer medical information and emergency contact details</p>
         </div>
     </div>
@@ -83,20 +83,20 @@ include BASE_PATH . 'views/header.php';
                             $mobile = null;
                             try {
                                 $mobile = PhoneNumber::parse(strval($swimmer['Mobile']));
-                            } catch (PhoneNumberParseException|Exception $e) {
+                            } catch (PhoneNumberParseException|Exception) {
                                 // Do nothing we'll test for null later
                             }
                             ?>
                             <li class="list-group-item <?php if ($i % 2 == 1) { ?>bg-light<?php } ?>">
                                 <div class="row align-items-center">
                                     <div class="col-md">
-                                        <h2><?= htmlspecialchars(\SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?></h2>
+                                        <h2><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?></h2>
                                         <p class="lead mb-0">
                                             <?php for ($y = 0; $y < sizeof($s); $y++) {
                                                 if ($y > 0) {
                                                     ?>, <?php
                                                 }
-                                                ?><?= htmlspecialchars($s[$y]) ?><?php
+                                                ?><?= htmlspecialchars((string) $s[$y]) ?><?php
                                             } ?>
                                         </p>
                                         <div class="d-md-none mb-3"></div>
@@ -150,7 +150,7 @@ include BASE_PATH . 'views/header.php';
                                                         Consent
                                                     </dt>
                                                     <dd>
-                                                        <?= htmlspecialchars($medical->hasConsent()) ?>
+                                                        <?= htmlspecialchars((string) $medical->hasConsent()) ?>
                                                     </dd>
 
                                                     <?php if ($medical->getGpName()) { ?>
@@ -158,7 +158,7 @@ include BASE_PATH . 'views/header.php';
                                                             Name of GP
                                                         </dt>
                                                         <dd>
-                                                            <?= htmlspecialchars($medical->getGpName()) ?>
+                                                            <?= htmlspecialchars((string) $medical->getGpName()) ?>
                                                         </dd>
                                                     <?php } ?>
 
@@ -168,7 +168,7 @@ include BASE_PATH . 'views/header.php';
                                                         </dt>
                                                         <dd>
                                                             <?php foreach ($medical->getGpAddress() as $line) { ?>
-                                                                <?= htmlspecialchars($line) ?><br>
+                                                                <?= htmlspecialchars((string) $line) ?><br>
                                                             <?php } ?>
                                                         </dd>
                                                     <?php } ?>
@@ -185,7 +185,7 @@ include BASE_PATH . 'views/header.php';
                                                                 <a href="<?= htmlspecialchars($number->format(PhoneNumberFormat::RFC3966)) ?>"><?= htmlspecialchars($number->format(PhoneNumberFormat::INTERNATIONAL)) ?></a>
                                                             </dd>
                                                             <?php
-                                                        } catch (PhoneNumberParseException $e) {
+                                                        } catch (PhoneNumberParseException) {
                                                             // Ignore
                                                         }
                                                     } ?>
@@ -195,7 +195,7 @@ include BASE_PATH . 'views/header.php';
                                             <?php if (!$medical->hasMedicalNotes()) { ?>
 
                                                 <p>
-                                                    <?= htmlspecialchars($member->getForename()) ?> does not have any
+                                                    <?= htmlspecialchars((string) $member->getForename()) ?> does not have any
                                                     specific medical notes to display.
                                                 </p>
 
@@ -225,12 +225,12 @@ include BASE_PATH . 'views/header.php';
                                                         <?php for ($y = 0; $y < sizeof($contactsArray); $y++) { ?>
                                                             <li class="list-group-item">
                                                                 <p class="mb-0">
-                                                                    <strong><?= htmlspecialchars($contactsArray[$y]->getName()) ?></strong>
+                                                                    <strong><?= htmlspecialchars((string) $contactsArray[$y]->getName()) ?></strong>
                                                                 </p>
                                                                 <div class="d-grid mt-2">
-                                                                    <a href="<?= htmlspecialchars($contactsArray[$y]->getRFCContactNumber()) ?>"
+                                                                    <a href="<?= htmlspecialchars((string) $contactsArray[$y]->getRFCContactNumber()) ?>"
                                                                        class="btn btn-success">
-                                                                        <?= htmlspecialchars($contactsArray[$y]->getNationalContactNumber()) ?>
+                                                                        <?= htmlspecialchars((string) $contactsArray[$y]->getNationalContactNumber()) ?>
                                                                     </a>
                                                                 </div>
                                                             </li>

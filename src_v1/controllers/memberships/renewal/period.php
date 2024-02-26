@@ -48,24 +48,24 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal")) ?>">Renewal</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars($renewal->end->format('d/m/Y')) ?></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal")) ?>">Renewal</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('d/m/Y')) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($renewal->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->end->format('j M Y')) ?> Renewal
+          <?= htmlspecialchars((string) $renewal->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('j M Y')) ?> Renewal
         </h1>
         <p class="lead mb-0">
-          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars($renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars($renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
+          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars((string) $renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars((string) $renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
         </p>
       </div>
       <div class="col text-lg-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id/edit")) ?>" class="btn btn-success">Edit</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal/$id/edit")) ?>" class="btn btn-success">Edit</a>
         </p>
       </div>
     </div>
@@ -95,17 +95,17 @@ include BASE_PATH . "views/header.php";
           <h2>View member renewal status</h2>
 
           <div class="d-grid gap-2 mb-3">
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id/renewal-member-list")) ?>">Classic Report</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("memberships/renewal/$id/renewal-member-list")) ?>">Classic Report</a>
           </div>
 
           <h2>View associated onboarding sessions</h2>
 
           <div class="d-grid gap-2 mb-3">
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?renewal=" . urlencode($id))) ?>">All</a>
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?renewal=" . urlencode($id) . "&type=not_ready")) ?>">Not Ready</a>
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?renewal=" . urlencode($id) . "&type=pending")) ?>">Pending</a>
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?renewal=" . urlencode($id) . "&type=in_progress")) ?>">In Progress</a>
-            <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?renewal=" . urlencode($id) . "&type=complete")) ?>">Complete</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?renewal=" . urlencode((string) $id))) ?>">All</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?renewal=" . urlencode((string) $id) . "&type=not_ready")) ?>">Not Ready</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?renewal=" . urlencode((string) $id) . "&type=pending")) ?>">Pending</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?renewal=" . urlencode((string) $id) . "&type=in_progress")) ?>">In Progress</a>
+            <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?renewal=" . urlencode((string) $id) . "&type=complete")) ?>">Complete</a>
           </div>
 
         <?php } ?>
@@ -120,7 +120,7 @@ include BASE_PATH . "views/header.php";
         </div>
 
         <p>
-          <?= htmlspecialchars($complete) ?> renewals completed of <?= htmlspecialchars($complete + $notComplete) ?> total.
+          <?= htmlspecialchars((string) $complete) ?> renewals completed of <?= htmlspecialchars($complete + $notComplete) ?> total.
         </p>
 
       </main>

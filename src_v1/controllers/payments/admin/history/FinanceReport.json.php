@@ -50,7 +50,7 @@ while ($row = $getPayments->fetch(PDO::FETCH_ASSOC)) {
     } else if ($row['Provider'] == 'Stripe' && $row['DebitCredit'] == 'Payment') {
       $in = $row['Amount'];
     }
-    $json = json_decode($row['Info']);
+    $json = json_decode((string) $row['Info']);
     $name = $row['Name'];
     $infoText = '';
     if (isset($json->PaymentType) && $json->PaymentType == 'SquadFees' && isset($json->Members)) {

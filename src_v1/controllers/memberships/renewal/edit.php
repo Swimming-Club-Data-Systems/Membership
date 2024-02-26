@@ -35,9 +35,9 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal")) ?>">Renewal</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id")) ?>"><?= htmlspecialchars($renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars($renewal->end->format('d/m/Y')) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal")) ?>">Renewal</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal/$id")) ?>"><?= htmlspecialchars((string) $renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('d/m/Y')) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
@@ -45,15 +45,15 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($renewal->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->end->format('j M Y')) ?> Renewal
+          <?= htmlspecialchars((string) $renewal->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('j M Y')) ?> Renewal
         </h1>
         <p class="lead mb-0">
-          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars($renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars($renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
+          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars((string) $renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars((string) $renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
         </p>
       </div>
       <div class="col text-lg-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id")) ?>" class="btn btn-success">Back</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal/$id")) ?>" class="btn btn-success">Back</a>
         </p>
       </div>
     </div>
@@ -71,13 +71,13 @@ include BASE_PATH . "views/header.php";
             <div class="col">
               <div class="mb-3">
                 <label for="start" class="form-label">Renewal period start date</label>
-                <input type="date" class="form-control" id="start" name="start" placeholder="<?= htmlspecialchars($renewal->start->format('Y-m-d')) ?>" value="<?= htmlspecialchars($renewal->start->format('Y-m-d')) ?>" required>
+                <input type="date" class="form-control" id="start" name="start" placeholder="<?= htmlspecialchars((string) $renewal->start->format('Y-m-d')) ?>" value="<?= htmlspecialchars((string) $renewal->start->format('Y-m-d')) ?>" required>
               </div>
             </div>
             <div class="col">
               <div class="mb-3">
                 <label for="end" class="form-label">Renewal period end date</label>
-                <input type="date" class="form-control" id="end" name="end" placeholder="<?= htmlspecialchars($renewal->start->format('Y-m-d')) ?>" value="<?= htmlspecialchars($renewal->start->format('Y-m-d')) ?>" required>
+                <input type="date" class="form-control" id="end" name="end" placeholder="<?= htmlspecialchars((string) $renewal->start->format('Y-m-d')) ?>" value="<?= htmlspecialchars((string) $renewal->start->format('Y-m-d')) ?>" required>
               </div>
             </div>
           </div>
@@ -106,7 +106,7 @@ include BASE_PATH . "views/header.php";
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars($stage . '-main-check') ?>" name="<?= htmlspecialchars($stage . '-main-check') ?>" <?php if ($stages->$stage->required) { ?>checked<?php } ?> <?php if ($stages->$stage->required_locked || $started) { ?>disabled<?php } ?>>
                 <label class="form-check-label" for="<?= htmlspecialchars($stage . '-main-check') ?>">
-                  <?= htmlspecialchars($desc) ?>
+                  <?= htmlspecialchars((string) $desc) ?>
                 </label>
               </div>
             <?php } ?>
@@ -121,7 +121,7 @@ include BASE_PATH . "views/header.php";
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars($stage . '-member-check') ?>" name="<?= htmlspecialchars($stage . '-member-check') ?>" <?php if ($memberStages->$stage->required) { ?>checked<?php } ?> <?php if ($memberStages->$stage->required_locked || $started) { ?>disabled<?php } ?>>
                 <label class="form-check-label" for="<?= htmlspecialchars($stage . '-member-check') ?>">
-                  <?= htmlspecialchars($desc) ?>
+                  <?= htmlspecialchars((string) $desc) ?>
                 </label>
               </div>
             <?php } ?>
@@ -163,12 +163,12 @@ include BASE_PATH . "views/header.php";
 
               <div class="mb-3">
                 <label for="dd-ngb-bills-date" class="form-label">DD Swim England Bill Date</label>
-                <input type="date" class="form-control" id="dd-ngb-bills-date" name="dd-ngb-bills-date" value="<?php if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->ngb) { ?><?= htmlspecialchars($renewal->metadata->custom_direct_debit_bill_dates->ngb) ?><?php } ?>">
+                <input type="date" class="form-control" id="dd-ngb-bills-date" name="dd-ngb-bills-date" value="<?php if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->ngb) { ?><?= htmlspecialchars((string) $renewal->metadata->custom_direct_debit_bill_dates->ngb) ?><?php } ?>">
               </div>
 
               <div class="">
                 <label for="dd-club-bills-date" class="form-label">DD Club Membership Bill Date</label>
-                <input type="date" class="form-control" id="dd-club-bills-date" name="dd-club-bills-date" value="<?php if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->club) { ?><?= htmlspecialchars($renewal->metadata->custom_direct_debit_bill_dates->club) ?><?php } ?>">
+                <input type="date" class="form-control" id="dd-club-bills-date" name="dd-club-bills-date" value="<?php if ($renewal->metadata->custom_direct_debit_bill_dates && $renewal->metadata->custom_direct_debit_bill_dates->club) { ?><?= htmlspecialchars((string) $renewal->metadata->custom_direct_debit_bill_dates->club) ?><?php } ?>">
               </div>
             </div>
 

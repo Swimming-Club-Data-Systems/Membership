@@ -31,7 +31,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent' && 
 
 $month = (new DateTime('now', new DateTimeZone('Europe/London')))->format('m');
 
-$discounts = json_decode(app()->tenant->getKey('MembershipDiscounts'), true);
+$discounts = json_decode((string) app()->tenant->getKey('MembershipDiscounts'), true);
 $clubDiscount = $swimEnglandDiscount = 0;
 if ($discounts != null && isset($discounts['CLUB'][$month])) {
   $clubDiscount = $discounts['CLUB'][$month];
@@ -62,7 +62,7 @@ include BASE_PATH . 'views/header.php';
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("users") ?>">Users</a></li>
-          <li class="breadcrumb-item"><a href="<?= autoUrl("users/" . $id) ?>"><?= htmlspecialchars(mb_substr($info["Forename"], 0, 1, 'utf-8') . mb_substr($info["Surname"], 0, 1, 'utf-8')) ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= autoUrl("users/" . $id) ?>"><?= htmlspecialchars(mb_substr((string) $info["Forename"], 0, 1, 'utf-8') . mb_substr((string) $info["Surname"], 0, 1, 'utf-8')) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Annual membership</li>
         </ol>
       </nav>
@@ -77,7 +77,7 @@ include BASE_PATH . 'views/header.php';
 
     <div class="row">
       <div class="col-lg-8">
-        <h1>Membership fees<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?> for <?= htmlspecialchars($info['Forename']) ?><?php } ?></h1>
+        <h1>Membership fees<?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?> for <?= htmlspecialchars((string) $info['Forename']) ?><?php } ?></h1>
         <p class="lead mb-0">Club and Swim England membership fees are paid yearly and are due on 1 January.</p>
       </div>
     </div>
@@ -106,7 +106,7 @@ include BASE_PATH . 'views/header.php';
             <thead class="">
               <tr class="">
                 <th>
-                  <?= htmlspecialchars($class->getName()) ?>
+                  <?= htmlspecialchars((string) $class->getName()) ?>
                 </th>
                 <th>
                 </th>
@@ -126,10 +126,10 @@ include BASE_PATH . 'views/header.php';
               <?php foreach ($class->getFeeItems() as $item) { ?>
                 <tr>
                   <td>
-                    <?= htmlspecialchars($item->getDescription()) ?>
+                    <?= htmlspecialchars((string) $item->getDescription()) ?>
                   </td>
                   <td>
-                    &pound;<?= htmlspecialchars($item->getFormattedAmount()) ?>
+                    &pound;<?= htmlspecialchars((string) $item->getFormattedAmount()) ?>
                   </td>
                 </tr>
               <?php } ?>
@@ -138,7 +138,7 @@ include BASE_PATH . 'views/header.php';
           <thead class="">
             <tr class="">
               <th>
-                <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership
+                <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership
               </th>
               <th>
               </th>
@@ -148,7 +148,7 @@ include BASE_PATH . 'views/header.php';
             <thead class="">
               <tr class="">
                 <th>
-                  <?= htmlspecialchars($class->getName()) ?>
+                  <?= htmlspecialchars((string) $class->getName()) ?>
                 </th>
                 <th>
                 </th>
@@ -168,10 +168,10 @@ include BASE_PATH . 'views/header.php';
               <?php foreach ($class->getFeeItems() as $item) { ?>
                 <tr>
                   <td>
-                    <?= htmlspecialchars($item->getDescription()) ?>
+                    <?= htmlspecialchars((string) $item->getDescription()) ?>
                   </td>
                   <td>
-                    &pound;<?= htmlspecialchars($item->getFormattedAmount()) ?>
+                    &pound;<?= htmlspecialchars((string) $item->getFormattedAmount()) ?>
                   </td>
                 </tr>
               <?php } ?>

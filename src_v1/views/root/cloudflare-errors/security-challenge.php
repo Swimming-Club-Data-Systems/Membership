@@ -22,12 +22,12 @@ $stylesheet = autoUrl(getCompiledAsset('scds.css'));
   <meta name="og:site_name" content="SCDS">
   <link rel="manifest" href="<?= autoUrl("manifest.webmanifest") ?>">
   <meta name="X-SCDS-Membership-Tracking" content="no">
-  <link rel="stylesheet preload" href="<?= htmlspecialchars(autoUrl(getCompiledAsset('scds.css'))) ?>">
+  <link rel="stylesheet preload" href="<?= htmlspecialchars((string) autoUrl(getCompiledAsset('scds.css'))) ?>">
   <meta name="color-scheme" content="dark light">
-  <!-- <link rel="stylesheet preload" href="<?= htmlspecialchars($stylesheetDarkMode) ?>" media="(prefers-color-scheme: dark)"> -->
+  <!-- <link rel="stylesheet preload" href="<?= htmlspecialchars((string) $stylesheetDarkMode) ?>" media="(prefers-color-scheme: dark)"> -->
 
   <!-- Generic icon -->
-  <link rel="icon" href="<?= htmlspecialchars(autoUrl("img/corporate/scds.png")) ?>">
+  <link rel="icon" href="<?= htmlspecialchars((string) autoUrl("img/corporate/scds.png")) ?>">
 
 </head>
 
@@ -40,7 +40,7 @@ $stylesheet = autoUrl(getCompiledAsset('scds.css'));
           <div class="row justify-content-center py-5">
             <div class="col-lg-8 col-md-10">
 
-              <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+              <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
 
             </div>
           </div>

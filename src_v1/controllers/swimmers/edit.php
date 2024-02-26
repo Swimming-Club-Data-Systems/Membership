@@ -54,7 +54,7 @@ $date18 = $date18->format('Y-m-d');
 
 // AuditLog::new('Members-Edited', 'Edited ' . $forename . ' ' . $surname . ' (#' . $id . ')');
 
-$pagetitle = "Edit " . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . " - Members";
+$pagetitle = "Edit " . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . " - Members";
 
 $date = new DateTime('now', new DateTimeZone('Europe/London'));
 
@@ -69,18 +69,18 @@ include BASE_PATH . "views/swimmersMenu.php";
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Members</a></li>
 
-        <li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $id) ?>"><?= htmlspecialchars($row["MForename"]) ?> <?= htmlspecialchars(mb_substr($row["MSurname"], 0, 1, 'utf-8')) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $id) ?>"><?= htmlspecialchars((string) $row["MForename"]) ?> <?= htmlspecialchars(mb_substr((string) $row["MSurname"], 0, 1, 'utf-8')) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-md-8">
-        <h1>Editing <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?> </h1>
+        <h1>Editing <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?> </h1>
       </div>
       <div class="col text-md-end">
         <button type="submit" class="btn btn-success" form="edit-form">Save</button>
-        <a class="btn btn-dark-l btn-outline-light-d" href="<?= htmlspecialchars(autoUrl("members/$id")) ?>">Back</a>
+        <a class="btn btn-dark-l btn-outline-light-d" href="<?= htmlspecialchars((string) autoUrl("members/$id")) ?>">Back</a>
       </div>
     </div>
   </div>
@@ -106,7 +106,7 @@ include BASE_PATH . "views/swimmersMenu.php";
             <strong>An error occured trying to save your changes</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
@@ -123,7 +123,7 @@ include BASE_PATH . "views/swimmersMenu.php";
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="forename">First name</label>
-              <input type="text" name="forename" id="forename" class="form-control" required min="1" max="255" value="<?= htmlspecialchars($row['MForename']) ?>">
+              <input type="text" name="forename" id="forename" class="form-control" required min="1" max="255" value="<?= htmlspecialchars((string) $row['MForename']) ?>">
               <div class="invalid-feedback">
                 You must enter a first name
               </div>
@@ -133,14 +133,14 @@ include BASE_PATH . "views/swimmersMenu.php";
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="middle-names">Middle names</label>
-              <input type="text" name="middle-names" id="foremiddle-namesname" class="form-control" max="255" value="<?= htmlspecialchars($row['MMiddleNames']) ?>">
+              <input type="text" name="middle-names" id="foremiddle-namesname" class="form-control" max="255" value="<?= htmlspecialchars((string) $row['MMiddleNames']) ?>">
             </div>
           </div>
 
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="surname">Last name</label>
-              <input type="text" name="surname" id="surname" class="form-control" required min="1" max="255" value="<?= htmlspecialchars($row['MSurname']) ?>">
+              <input type="text" name="surname" id="surname" class="form-control" required min="1" max="255" value="<?= htmlspecialchars((string) $row['MSurname']) ?>">
               <div class="invalid-feedback">
                 You must enter a last name
               </div>
@@ -150,7 +150,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
         <div class="mb-3">
           <label class="form-label" for="dob">Date of birth</label>
-          <input type="date" name="dob" id="dob" class="form-control" required max="<?= htmlspecialchars($date->format("Y-m-d")) ?>" pattern="[0-9]{4}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}" placeholder="YYYY-MM-DD" value="<?= htmlspecialchars($row['DateOfBirth']) ?>">
+          <input type="date" name="dob" id="dob" class="form-control" required max="<?= htmlspecialchars($date->format("Y-m-d")) ?>" pattern="[0-9]{4}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}" placeholder="YYYY-MM-DD" value="<?= htmlspecialchars((string) $row['DateOfBirth']) ?>">
           <div class="invalid-feedback">
             You must enter a valid date - If you have not been shown a date picker, enter the date in the format YYYY-MM-DD
           </div>
@@ -158,7 +158,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
         <div class="mb-3">
           <p class="mb-2">
-            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="<?php if ($isMemberUser) { ?>Please select the sex you compete under, even if this is not the same as your gender identity. You can select your gender identity (for use internally at <?= htmlspecialchars(app()->tenant->getName()) ?>) below.<?php } else { ?>Select the sex <?= htmlspecialchars($row['MForename']) ?> competes under, even if this is not the same as their gender identity. They can select their gender identity (for use internally at <?= htmlspecialchars(app()->tenant->getName()) ?>) if they visit this page themselves.<?php } ?>" data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="<?php if ($isMemberUser) { ?>Please select the sex you compete under, even if this is not the same as your gender identity. You can select your gender identity (for use internally at <?= htmlspecialchars((string) app()->tenant->getName()) ?>) below.<?php } else { ?>Select the sex <?= htmlspecialchars((string) $row['MForename']) ?> competes under, even if this is not the same as their gender identity. They can select their gender identity (for use internally at <?= htmlspecialchars((string) app()->tenant->getName()) ?>) if they visit this page themselves.<?php } ?>" data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
           </p>
           <div class="form-check">
             <input type="radio" id="sex-m" name="sex" class="form-check-input" value="Male" <?php if ($row['Gender'] == 'Male') { ?>checked<?php } ?>>
@@ -203,7 +203,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
                 <div class="mb-3 mb-0">
                   <label class="form-label" for="gender-custom">Other...</label>
-                  <input type="text" name="gender-custom" id="gender-custom" class="form-control" <?php if (!$other) { ?>disabled<?php } else { ?>required value="<?= htmlspecialchars($row['GenderIdentity']) ?>" <?php } ?> max="256">
+                  <input type="text" name="gender-custom" id="gender-custom" class="form-control" <?php if (!$other) { ?>disabled<?php } else { ?>required value="<?= htmlspecialchars((string) $row['GenderIdentity']) ?>" <?php } ?> max="256">
                   <div class="invalid-feedback">
                     Please enter a custom gender identity.
                   </div>
@@ -242,7 +242,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
                 <div class="mb-3 mb-0">
                   <label class="form-label" for="gender-pronoun-custom">Other...</label>
-                  <input type="text" name="gender-pronoun-custom" id="gender-pronoun-custom" class="form-control" <?php if (!$other) { ?>disabled<?php } else { ?>required value="<?= htmlspecialchars($row['GenderPronouns']) ?>" <?php } ?> max="256">
+                  <input type="text" name="gender-pronoun-custom" id="gender-pronoun-custom" class="form-control" <?php if (!$other) { ?>disabled<?php } else { ?>required value="<?= htmlspecialchars((string) $row['GenderPronouns']) ?>" <?php } ?> max="256">
                   <div class="invalid-feedback">
                     Please enter a custom pronoun. Where appropriate, use a similar format to those above.
                   </div>
@@ -273,21 +273,21 @@ include BASE_PATH . "views/swimmersMenu.php";
           <div class="row">
             <div class="col">
               <div class="mb-3">
-                <label class="form-label" for="asa"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Registration Number</label>
-                <input type="text" name="asa" id="asa" class="form-control" value="<?= htmlspecialchars($row['ASANumber']) ?>">
+                <label class="form-label" for="asa"><?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Registration Number</label>
+                <input type="text" name="asa" id="asa" class="form-control" value="<?= htmlspecialchars((string) $row['ASANumber']) ?>">
               </div>
             </div>
             <div class="col">
               <div class="mb-3">
-                <label class="form-label" for="ngb-cat"><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Category</label>
+                <label class="form-label" for="ngb-cat"><?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership Category</label>
                 <select class="form-select overflow-hidden" id="ngb-cat" name="ngb-cat" placeholder="Select" required>
-                  <option value="none">No <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership</option>
+                  <option value="none">No <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> membership</option>
                   <?php do {
                     $selected = '';
                     if ($row['NGBCategory'] == $ngbCategory['ID']) {
                       $selected = ' selected ';
                     } ?>
-                    <option value="<?= htmlspecialchars($ngbCategory['ID']) ?>" <?= $selected ?>><?= htmlspecialchars($ngbCategory['Name']) ?></option>
+                    <option value="<?= htmlspecialchars((string) $ngbCategory['ID']) ?>" <?= $selected ?>><?= htmlspecialchars((string) $ngbCategory['Name']) ?></option>
                   <?php } while ($ngbCategory = $getNGBCategories->fetch(PDO::FETCH_ASSOC)); ?>
                 </select>
               </div>
@@ -304,7 +304,7 @@ include BASE_PATH . "views/swimmersMenu.php";
                 if ($row['ClubCategory'] == $clubCategory['ID']) {
                   $selected = ' selected ';
                 } ?>
-                <option value="<?= htmlspecialchars($clubCategory['ID']) ?>" <?= $selected ?>><?= htmlspecialchars($clubCategory['Name']) ?></option>
+                <option value="<?= htmlspecialchars((string) $clubCategory['ID']) ?>" <?= $selected ?>><?= htmlspecialchars((string) $clubCategory['Name']) ?></option>
               <?php } while ($clubCategory = $getClubCategories->fetch(PDO::FETCH_ASSOC)); ?>
             </select>
           </div>
@@ -317,7 +317,7 @@ include BASE_PATH . "views/swimmersMenu.php";
                 if ($row['Country'] == $key) {
                   $selected = ' selected ';
                 } ?>
-                <option value="<?= htmlspecialchars($key) ?>" <?= $selected ?>><?= htmlspecialchars($value) ?></option>
+                <option value="<?= htmlspecialchars((string) $key) ?>" <?= $selected ?>><?= htmlspecialchars((string) $value) ?></option>
               <?php } ?>
             </select>
           </div>
@@ -326,7 +326,7 @@ include BASE_PATH . "views/swimmersMenu.php";
             <div class="col-lg">
               <div class="mb-3">
                 <p class="mb-2">
-                  Club pays <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees?
+                  Club pays <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> fees?
                 </p>
                 <div class="form-check">
                   <input type="radio" id="sep-no" name="sep" class="form-check-input" <?php if (!bool($row['ASAPaid'])) { ?>checked<?php } ?> value="0">
@@ -377,12 +377,12 @@ include BASE_PATH . "views/swimmersMenu.php";
 
         <div class="mb-3">
           <label>Medical notes</label>
-          <a class="d-block" href="<?= htmlspecialchars(autoUrl("members/$id/medical")) ?>" target="_self">Edit medical notes</a>
+          <a class="d-block" href="<?= htmlspecialchars((string) autoUrl("members/$id/medical")) ?>" target="_self">Edit medical notes</a>
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="other-notes">Other Notes</label>
-          <textarea class="form-control" id="other-notes" name="other-notes" rows="3" placeholder="Tell us any other notes for coaches"><?= htmlspecialchars($row['OtherNotes']) ?></textarea>
+          <textarea class="form-control" id="other-notes" name="other-notes" rows="3" placeholder="Tell us any other notes for coaches"><?= htmlspecialchars((string) $row['OtherNotes']) ?></textarea>
         </div>
 
         <?php if ($isMemberUser) { ?>
@@ -390,15 +390,15 @@ include BASE_PATH . "views/swimmersMenu.php";
             <h2>Photography permissions</h2>
 
             <p>
-              You should complete this form after <a href="https://www.swimming.org/swimengland/wavepower-child-safeguarding-for-clubs/">reading the Swim England Photography and Filming guidance contained in Wavepower (opens in new tab)</a> and the <a href="<?= htmlspecialchars(autoUrl('privacy')) ?>" target="_blank"><?= htmlspecialchars($tenant->getName()) ?> Privacy Policy</a>.
+              You should complete this form after <a href="https://www.swimming.org/swimengland/wavepower-child-safeguarding-for-clubs/">reading the Swim England Photography and Filming guidance contained in Wavepower (opens in new tab)</a> and the <a href="<?= htmlspecialchars((string) autoUrl('privacy')) ?>" target="_blank"><?= htmlspecialchars((string) $tenant->getName()) ?> Privacy Policy</a>.
             </p>
 
             <p>
-              <?= htmlspecialchars($tenant->getName()) ?> may wish to take photographs or film individual or groups of members under the age of 18 that may include <?= htmlspecialchars($member->getFullName()) ?> during their membership of <?= htmlspecialchars($tenant->getName()) ?>. All photographs and filming and all use of such images will be in accordance with the Swim England Photography and Filming Guidance and <?= htmlspecialchars($tenant->getName()) ?>'s Privacy Policy.
+              <?= htmlspecialchars((string) $tenant->getName()) ?> may wish to take photographs or film individual or groups of members under the age of 18 that may include <?= htmlspecialchars($member->getFullName()) ?> during their membership of <?= htmlspecialchars((string) $tenant->getName()) ?>. All photographs and filming and all use of such images will be in accordance with the Swim England Photography and Filming Guidance and <?= htmlspecialchars((string) $tenant->getName()) ?>'s Privacy Policy.
             </p>
 
             <p>
-              <?= htmlspecialchars($tenant->getName()) ?> will take all reasonable steps to ensure images and any footage is being used solely for their intended purpose and not kept for any longer than is necessary for that purpose. If you have any concerns or questions about how they are being used please contact the Welfare Officer to discuss this further.
+              <?= htmlspecialchars((string) $tenant->getName()) ?> will take all reasonable steps to ensure images and any footage is being used solely for their intended purpose and not kept for any longer than is necessary for that purpose. If you have any concerns or questions about how they are being used please contact the Welfare Officer to discuss this further.
             </p>
 
             <p>
@@ -416,7 +416,7 @@ include BASE_PATH . "views/swimmersMenu.php";
               <div class="list-group list-group-flush">
                 <div class="list-group-item">
                   <div class="mb-2">
-                    <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used on the <?= htmlspecialchars($tenant->getName()) ?> website.
+                    <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used on the <?= htmlspecialchars((string) $tenant->getName()) ?> website.
                   </div>
 
                   <div>
@@ -433,7 +433,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
                 <div class="list-group-item">
                   <div class="mb-2">
-                    <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used on <?= htmlspecialchars($tenant->getName()) ?> social media platform/s.
+                    <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used on <?= htmlspecialchars((string) $tenant->getName()) ?> social media platform/s.
                   </div>
 
                   <div>
@@ -450,7 +450,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
                 <div class="list-group-item">
                   <div class="mb-2">
-                    <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used within other printed publications such as newspaper articles about <?= htmlspecialchars($tenant->getName()) ?>.
+                    <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used within other printed publications such as newspaper articles about <?= htmlspecialchars((string) $tenant->getName()) ?>.
                   </div>
 
                   <div>
@@ -467,7 +467,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
                 <div class="list-group-item">
                   <div class="mb-2">
-                    <?= htmlspecialchars($member->getForename()) ?>'s photograph to be taken by a professional photographer employed by <?= htmlspecialchars($tenant->getName()) ?> as the official photographer at competitions, galas and other organisational events.
+                    <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be taken by a professional photographer employed by <?= htmlspecialchars((string) $tenant->getName()) ?> as the official photographer at competitions, galas and other organisational events.
                   </div>
 
                   <div>
@@ -491,7 +491,7 @@ include BASE_PATH . "views/swimmersMenu.php";
               <div class="list-group list-group-flush">
                 <div class="list-group-item">
                   <div class="mb-2">
-                    <?= htmlspecialchars($member->getForename()) ?> to be filmed by <?= htmlspecialchars($tenant->getName()) ?> for training purposes.
+                    <?= htmlspecialchars((string) $member->getForename()) ?> to be filmed by <?= htmlspecialchars((string) $tenant->getName()) ?> for training purposes.
                   </div>
 
                   <div>
@@ -509,7 +509,7 @@ include BASE_PATH . "views/swimmersMenu.php";
             </div>
 
             <p>
-              If you do not give your consent, please also inform <?= htmlspecialchars($row['MForename']) ?> so that they know, if possible, not to get into any photos.
+              If you do not give your consent, please also inform <?= htmlspecialchars((string) $row['MForename']) ?> so that they know, if possible, not to get into any photos.
             </p>
           </div>
         <?php } ?>
@@ -531,7 +531,7 @@ include BASE_PATH . "views/swimmersMenu.php";
             By deleting this member, we will remove all personal information. Some information will be retained for the completeness of your club's records.
           </p>
           <p class="mb-0">
-            <button data-ajax-url="<?= htmlspecialchars(autoUrl("members/delete")) ?>" data-members-url="<?= htmlspecialchars(autoUrl("members")) ?>" data-member-id="<?= htmlspecialchars($id) ?>" data-member-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>" id="delete-button" class="btn btn-danger">
+            <button data-ajax-url="<?= htmlspecialchars((string) autoUrl("members/delete")) ?>" data-members-url="<?= htmlspecialchars((string) autoUrl("members")) ?>" data-member-id="<?= htmlspecialchars((string) $id) ?>" data-member-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>" id="delete-button" class="btn btn-danger">
               Delete member
             </button>
           </p>

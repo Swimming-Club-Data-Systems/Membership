@@ -48,7 +48,7 @@ if ($selectSchedule->fetchColumn() == 0) {
         $setOutOfUse->execute([
           $oldMandate['MandateID']
         ]);
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Returns cancellation_failed error on failure
         // Oops can't cancel
       }

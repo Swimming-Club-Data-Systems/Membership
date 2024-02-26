@@ -7,12 +7,12 @@ namespace SCDS\TickSheet;
  */
 class TickSheet
 {
-  private string $uuid;
-  private string $colour;
-  private string $name;
-  private string $member;
-  private string $tenant;
-  private Group $component;
+  private readonly string $uuid;
+  private readonly string $colour;
+  private readonly string $name;
+  private readonly string $member;
+  private readonly string $tenant;
+  private readonly Group $component;
 
   /**
    * Private constructor - we will create or get objects via factories

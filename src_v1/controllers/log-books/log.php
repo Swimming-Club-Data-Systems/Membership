@@ -22,7 +22,7 @@ if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn
   halt(404);
 }
 
-$pagetitle = htmlspecialchars("Log #" . htmlspecialchars($id) . " - " . \SCDS\Formatting\Names::format($info['fn'], $info['sn']));
+$pagetitle = htmlspecialchars("Log #" . htmlspecialchars((string) $id) . " - " . \SCDS\Formatting\Names::format($info['fn'], $info['sn']));
 
 $contentType = "text/plain";
 if (isset($info['ContentType'])) {
@@ -46,16 +46,16 @@ include BASE_PATH . 'views/header.php';
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("log-books"))?>">Log book</a></li>
-          <li class="breadcrumb-item active" aria-current="page">#<?=htmlspecialchars($id)?></li>
+        <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("log-books"))?>">Log book</a></li>
+          <li class="breadcrumb-item active" aria-current="page">#<?=htmlspecialchars((string) $id)?></li>
         </ol>
       </nav>
       <?php } else { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("log-books"))?>">Members</a></li>
-          <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("log-books/members/" . $info['MemberID']))?>"><?=htmlspecialchars(mb_substr($info['fn'], 0, 1, 'utf-8') . mb_substr($info['sn'], 0, 1, 'utf-8'))?></a></li>
-          <li class="breadcrumb-item active" aria-current="page">#<?=htmlspecialchars($id)?></li>
+          <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("log-books"))?>">Members</a></li>
+          <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("log-books/members/" . $info['MemberID']))?>"><?=htmlspecialchars(mb_substr((string) $info['fn'], 0, 1, 'utf-8') . mb_substr((string) $info['sn'], 0, 1, 'utf-8'))?></a></li>
+          <li class="breadcrumb-item active" aria-current="page">#<?=htmlspecialchars((string) $id)?></li>
         </ol>
       </nav>
       <?php } ?>
@@ -63,7 +63,7 @@ include BASE_PATH . 'views/header.php';
       <div class="row align-items-center">
         <div class="col-lg-8">
           <h1>
-            <?=htmlspecialchars($info['Title'])?>
+            <?=htmlspecialchars((string) $info['Title'])?>
           </h1>
           <p class="lead mb-0">
             <?=htmlspecialchars($dateObject->format("H:i \\o\\n j F Y"))?>
@@ -72,7 +72,7 @@ include BASE_PATH . 'views/header.php';
         </div>
         <div class="col text-end">
           <p class="mb-0">
-            <a href="<?=htmlspecialchars(autoUrl("log-books/logs/" . $id . "/edit"))?>" class="btn btn-dark-l btn-outline-light-d">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+            <a href="<?=htmlspecialchars((string) autoUrl("log-books/logs/" . $id . "/edit"))?>" class="btn btn-dark-l btn-outline-light-d">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
           </p>
         </div>
       </div>
@@ -84,17 +84,17 @@ include BASE_PATH . 'views/header.php';
     <div class="row">
       <div class="col-lg-8">
 
-        <?php if (mb_strtolower($info['ContentType']) == 'text/markdown') { ?>
+        <?php if (mb_strtolower((string) $info['ContentType']) == 'text/markdown') { ?>
         <div class="blog-main">
           <?= $markdown->text($info['Content']) ?>
         </div>
-        <?php } else if (mb_strtolower($info['ContentType']) == 'text/plain-font-monospacespace') { ?>
+        <?php } else if (mb_strtolower((string) $info['ContentType']) == 'text/plain-font-monospacespace') { ?>
         <div class="font-monospace">
-          <?=nl2br(htmlspecialchars($info['Content']))?>
+          <?=nl2br(htmlspecialchars((string) $info['Content']))?>
         </div>
         <?php } else { ?>
         <div>
-          <?=nl2br(htmlspecialchars($info['Content']))?>
+          <?=nl2br(htmlspecialchars((string) $info['Content']))?>
         </div>
         <?php } ?>
 

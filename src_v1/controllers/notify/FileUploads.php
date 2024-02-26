@@ -65,14 +65,14 @@ try {
   $s3Path = $tenant->getId() . '/' . $urlPath;
 
   $uuid = Ramsey\Uuid\Uuid::uuid4()->toString();
-  $filename = $uuid . '-' . preg_replace('@[^0-9a-z\.]+@i', '-', basename($_FILES['file']['name']));
+  $filename = $uuid . '-' . preg_replace('@[^0-9a-z\.]+@i', '-', basename((string) $_FILES['file']['name']));
 
   $filenamePath = $s3Path . $filename;
   $url = $urlPath . $filename;
 
   try {
     $filesystem->write($filenamePath, file_get_contents($_FILES['file']['tmp_name']), ['visibility' => 'private']);
-  } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile $exception) {
+  } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile) {
     throw new Exception('Flysystem upload failure');
   }
 

@@ -22,7 +22,7 @@ $getBatchItems->execute([
 ]);
 $item = $getBatchItems->fetch(PDO::FETCH_OBJ);
 
-$payMethods = json_decode($batch->payMethods);
+$payMethods = json_decode((string) $batch->payMethods);
 
 $canPay = true;
 $due = new DateTime($batch->due, new DateTimeZone('Europe/London'));
@@ -45,8 +45,8 @@ $sessionId = $getSession->fetchColumn();
 if ($sessionId) $session = \SCDS\Onboarding\Session::retrieve($sessionId);
 
 $message = '<p>There are membership fees for you to review in your club account.</p>';
-$message .= '<p>Please <a href="' . htmlspecialchars(autoUrl("memberships/batches/$id")) . '">visit the membership system</a> to review the fees and pay ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) . '.</p>';
-$message .= '<p>' . htmlspecialchars(autoUrl("memberships/batches/$id")) . '</p>';
+$message .= '<p>Please <a href="' . htmlspecialchars((string) autoUrl("memberships/batches/$id")) . '">visit the membership system</a> to review the fees and pay ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) . '.</p>';
+$message .= '<p>' . htmlspecialchars((string) autoUrl("memberships/batches/$id")) . '</p>';
 notifySend(null, 'New Memberships', $message, $batchUser->getFullName(), $batchUser->getEmail(), ['Name' => app()->tenant->getName() . ' Membership Secretary']);
 
 $_SESSION['SentEmail'] = true;

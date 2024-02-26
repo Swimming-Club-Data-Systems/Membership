@@ -39,7 +39,7 @@ if (isset($_POST['name']) && $_POST['name'] != "" && isset($_POST['num']) && $_P
 			</p>
 		</div>
 		';
-  } catch (Exception $e) {
+  } catch (Exception) {
     $good = false;
   }
 } else {

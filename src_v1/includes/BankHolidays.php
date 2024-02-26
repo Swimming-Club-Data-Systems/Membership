@@ -13,7 +13,7 @@
 function isBankHoliday($date = 'now') {
   $date = (new DateTime($date, new DateTimeZone('Europe/London')))->format("Y-m-d");
   $dataFile = getCachedFile(CACHE_DIR . 'bank-holidays.json', 'https://www.gov.uk/bank-holidays.json', 2419200);
-  $data = json_decode($dataFile, true);
+  $data = json_decode((string) $dataFile, true);
 
   foreach ($data['england-and-wales']['events'] as $event) {
     if ($event['date'] == $date) {

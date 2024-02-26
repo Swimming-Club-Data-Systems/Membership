@@ -36,7 +36,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("payments/categories/new")) ?>" class="btn btn-success">New category</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/categories/new")) ?>" class="btn btn-success">New category</a>
         </p>
       </div>
     </div>
@@ -55,7 +55,7 @@ include BASE_PATH . 'views/header.php';
             <strong>Category hidden successfully</strong>
           </p>
           <p class="mb-0">
-            <em><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess']) ?></em> will no longer be shown as an option for future payments.
+            <em><?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess']) ?></em> will no longer be shown as an option for future payments.
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess']);
@@ -64,8 +64,8 @@ include BASE_PATH . 'views/header.php';
       <?php if ($category = $categories->fetch(PDO::FETCH_ASSOC)) { ?>
         <div class="list-group">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl("payments/categories/" . $category['UniqueID'])) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars($category['Name']) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl("payments/categories/" . $category['UniqueID'])) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) $category['Name']) ?>
             </a>
           <?php } while ($category = $categories->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
@@ -75,7 +75,7 @@ include BASE_PATH . 'views/header.php';
             <strong>Your organisation has no existing categories</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl("payments/categories/new")) ?>" class="alert-link">Add one</a> to get started.
+            <a href="<?= htmlspecialchars((string) autoUrl("payments/categories/new")) ?>" class="alert-link">Add one</a> to get started.
           </p>
         </div>
       <?php } ?>

@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php';
               <strong>We were unable to connect your GoCardless Account</strong>
             </p>
             <p class="mb-0">
-              <a href="<?= htmlspecialchars(autoUrl("settings/direct-debit/register")) ?>" class="alert-link">Try again now</a> or try again later.
+              <a href="<?= htmlspecialchars((string) autoUrl("settings/direct-debit/register")) ?>" class="alert-link">Try again now</a> or try again later.
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['GC-Reg-Error']);
@@ -66,7 +66,7 @@ include BASE_PATH . 'views/header.php';
           </p>
 
           <p>
-            <a href="<?= htmlspecialchars(autoUrl("settings/direct-debit/register")) ?>" class="btn btn-primary">Get started</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("settings/direct-debit/register")) ?>" class="btn btn-primary">Get started</a>
           </p>
 
           <p>

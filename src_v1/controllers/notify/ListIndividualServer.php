@@ -27,11 +27,11 @@ if ($_POST['response'] == "getSwimmers") {
                 <div class="col-auto">
                   <p class="mb-0">
                     <strong>
-                      <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
+                      <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
                     </strong>
                   </p>
                   <p class="mb-0">
-                    <?= htmlspecialchars($row['SquadName']) ?>
+                    <?= htmlspecialchars((string) $row['SquadName']) ?>
                   </p>
                 </div>
                 <div class="col text-end">
@@ -73,10 +73,10 @@ if ($_POST['response'] == "getSwimmers") {
       ]);
     }
     while ($row = $members->fetch(PDO::FETCH_ASSOC)) {
-      $output .= '<option value="' . htmlspecialchars($row['MemberID']) . '">' . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . '</option>';
+      $output .= '<option value="' . htmlspecialchars((string) $row['MemberID']) . '">' . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . '</option>';
       $status = true;
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Do nothing, an empty, disabled select will be returned.
   }
 
@@ -89,7 +89,7 @@ if ($_POST['response'] == "getSwimmers") {
   $output = ' <option value="null" selected>Search for a user</option>';
 
   try {
-    if (mb_strlen($_POST['searchTerm']) > 0) {
+    if (mb_strlen((string) $_POST['searchTerm']) > 0) {
       $searchTerm = '%' . $_POST['searchTerm'] . '%';
       $members = null;
       $members = $db->prepare("SELECT UserID, Forename, Surname FROM `users` WHERE Active AND Tenant = :tenant AND (`Forename` COLLATE utf8mb4_general_ci LIKE :searchTerm OR `Surname` COLLATE utf8mb4_general_ci LIKE :searchTerm) AND UserID NOT IN (SELECT ReferenceID FROM targetedListMembers WHERE ListID = :list AND ReferenceType = 'User') ORDER BY `Forename` ASC, `Surname` ASC");
@@ -101,14 +101,14 @@ if ($_POST['response'] == "getSwimmers") {
 
       $usersOutput = '<option value="null" selected>Select a user</option>';
       while ($row = $members->fetch(PDO::FETCH_ASSOC)) {
-        $usersOutput .= '<option value="' . htmlspecialchars($row['UserID']) . '">' . htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) . '</option>';
+        $usersOutput .= '<option value="' . htmlspecialchars((string) $row['UserID']) . '">' . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) . '</option>';
         $status = true;
       }
       if ($status) {
         $output = $usersOutput;
       }
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Do nothing, an empty, disabled select will be returned.
   }
 
@@ -149,7 +149,7 @@ if ($_POST['response'] == "getSwimmers") {
         $swimmer,
         'Member'
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       halt(403);
     }
   }
@@ -185,7 +185,7 @@ if ($_POST['response'] == "getSwimmers") {
         $swimmer,
         'User'
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       halt(403);
     }
   }
@@ -204,7 +204,7 @@ if ($_POST['response'] == "getSwimmers") {
 
     $drop = $db->prepare("DELETE FROM `targetedListMembers` WHERE `ID` = ?");
     $drop->execute([$_POST['relation']]);
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(403);
   }
 } else {

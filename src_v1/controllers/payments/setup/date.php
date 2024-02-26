@@ -16,7 +16,7 @@ try {
   if ($scheduleExists != null) {
   	header("Location: " . autoUrl($url_path . "/setup/2"));
   }
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }
 

@@ -5,6 +5,6 @@ function pdfStringReplace($content) {
   $search = ['<p>-page-break-</p>'];
   $replace = ['<div class="page-break"></div>'];
 
-  $content = str_replace($search, $replace, $content);
+  $content = str_replace($search, $replace, (string) $content);
   return $content;
 }

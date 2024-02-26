@@ -31,7 +31,7 @@ $getClasses = $db->prepare("SELECT DISTINCT Membership, clubMembershipClasses.Na
 
 $getMembershipMembers = $db->prepare("SELECT MForename, MSurname, Amount, StartDate, EndDate FROM memberships INNER JOIN members ON memberships.Member = members.MemberID WHERE Membership = ? AND `Year` = ? AND UserID = ? ORDER BY MSurname ASC, MForename ASC");
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " Information";
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " Information";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -42,8 +42,8 @@ include BASE_PATH . "views/header.php";
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users")) ?>">Users</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users/$id")) ?>"><?= htmlspecialchars(mb_substr($info["Forename"], 0, 1, 'utf-8') . mb_substr($info["Surname"], 0, 1, 'utf-8')) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users")) ?>">Users</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users/$id")) ?>"><?= htmlspecialchars(mb_substr((string) $info["Forename"], 0, 1, 'utf-8') . mb_substr((string) $info["Surname"], 0, 1, 'utf-8')) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Current Memberships</li>
       </ol>
     </nav>
@@ -52,7 +52,7 @@ include BASE_PATH . "views/header.php";
       <div class="col-sm-9 col-md-10 col-lg-11">
         <h1 class="mb-0">
           Current Memberships
-          <small><?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?></small>
+          <small><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?></small>
         </h1>
       </div>
     </div>
@@ -75,7 +75,7 @@ include BASE_PATH . "views/header.php";
         ?>
 
           <h2>
-            <?= htmlspecialchars($year['Name']) ?>
+            <?= htmlspecialchars((string) $year['Name']) ?>
           </h2>
 
           <?php
@@ -99,7 +99,7 @@ include BASE_PATH . "views/header.php";
               ?>
               <div class="card mb-3">
                 <div class="card-header">
-                  <?= htmlspecialchars($class['Name']) ?>
+                  <?= htmlspecialchars((string) $class['Name']) ?>
                 </div>
                 <div class="card-body py-2">
                   <?php if ($memberships) {
@@ -110,11 +110,11 @@ include BASE_PATH . "views/header.php";
                     ?>
                       <div class="row mb-2 pb-2 align-items-center border-bottom">
                         <div class="col-9">
-                          <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($memberships['MForename'], $memberships['MSurname'])) ?></strong><br>
-                          <?= htmlspecialchars($memberships['StartDate']) ?> until <?= htmlspecialchars($memberships['EndDate']) ?>
+                          <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($memberships['MForename'], $memberships['MSurname'])) ?></strong><br>
+                          <?= htmlspecialchars((string) $memberships['StartDate']) ?> until <?= htmlspecialchars((string) $memberships['EndDate']) ?>
                         </div>
                         <div class="col text-end fw-bold">
-                          <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $memberships['Amount']), 'GBP')) ?>
+                          <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $memberships['Amount']), 'GBP')) ?>
                         </div>
                       </div>
                     <?php } while ($memberships = $getMembershipMembers->fetch(PDO::FETCH_ASSOC)); ?>
@@ -123,7 +123,7 @@ include BASE_PATH . "views/header.php";
                         <strong>Total</strong> for this membership year
                       </div>
                       <div class="col text-end fw-bold">
-                        <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $total), 'GBP')) ?>
+                        <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $total), 'GBP')) ?>
                       </div>
                     </div>
                     <?php
@@ -144,7 +144,7 @@ include BASE_PATH . "views/header.php";
                   Total paid for this membership year<br>(Across all membership classes)
                 </div>
                 <div class="col text-end fw-bold">
-                  <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $yearTotal), 'GBP')) ?>
+                  <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal((int) $yearTotal), 'GBP')) ?>
                 </div>
               </div>
             </div>

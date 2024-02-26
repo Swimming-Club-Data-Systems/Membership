@@ -19,10 +19,10 @@ include BASE_PATH . "views/root/header.php";
   <p class="lead">Automatic subscription and billing systems.</p>
 
   <div class="list-group">
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/products')) ?>" class="list-group-item list-group-item-action">Products</a>
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions')) ?>" class="list-group-item list-group-item-action">Subscriptions</a>
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/tax-rates')) ?>" class="list-group-item list-group-item-action">Tax Rates</a>
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices')) ?>" class="list-group-item list-group-item-action">Invoices</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/products')) ?>" class="list-group-item list-group-item-action">Products</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions')) ?>" class="list-group-item list-group-item-action">Subscriptions</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/tax-rates')) ?>" class="list-group-item list-group-item-action">Tax Rates</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices')) ?>" class="list-group-item list-group-item-action">Invoices</a>
   </div>
 </div>
 

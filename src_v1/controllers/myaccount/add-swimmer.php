@@ -50,18 +50,18 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { 
                   account.</p>
               </div>
             <?php } ?>
-            <form method="post" class="cell needs-validation" action="<?= htmlspecialchars(autoUrl("my-account/add-member")) ?>" name="register" id="register" novalidate>
+            <form method="post" class="cell needs-validation" action="<?= htmlspecialchars((string) autoUrl("my-account/add-member")) ?>" name="register" id="register" novalidate>
               <h2>Details</h2>
               <div class="mb-3">
                 <label class="form-label" for="asa">Member's Swim England Number or Temporary Membership Number</label>
-                <input class="form-control mb-0" type="text" name="asa" id="asa" placeholder="123456" required value="<?= htmlspecialchars($id) ?>">
+                <input class="form-control mb-0" type="text" name="asa" id="asa" placeholder="123456" required value="<?= htmlspecialchars((string) $id) ?>">
                 <div class="invalid-feedback">
                   A Swim England or Member Number is required
                 </div>
               </div>
               <div class="mb-3">
                 <label class="form-label" for="accessKey">Access Key</label>
-                <input class="form-control mb-0 font-monospace" type="text" name="accessKey" id="accessKey" placeholder="1A3B5C" required value="<?= htmlspecialchars($acs) ?>">
+                <input class="form-control mb-0 font-monospace" type="text" name="accessKey" id="accessKey" placeholder="1A3B5C" required value="<?= htmlspecialchars((string) $acs) ?>">
                 <div class="invalid-feedback">
                   An access key is required
                 </div>

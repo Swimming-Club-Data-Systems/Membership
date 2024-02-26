@@ -1,7 +1,7 @@
 <?php
 
 require 'tm.json.php';
-$data = json_decode($output);
+$data = json_decode((string) $output);
 
 $swimsArray = [
   '25Free' => '25&nbsp;Free',
@@ -29,7 +29,7 @@ $swimsArray = [
   '400IM' => '400&nbsp;IM'
 ];
 
-$pagetitle = "Team Manager View for " . htmlspecialchars($data->gala->name);
+$pagetitle = "Team Manager View for " . htmlspecialchars((string) $data->gala->name);
 
 include BASE_PATH . 'views/header.php';
 
@@ -46,9 +46,9 @@ include BASE_PATH . 'views/header.php';
       </ol>
     </nav>
 
-    <h1>Entries for <?= htmlspecialchars($data->gala->name) ?></h1>
+    <h1>Entries for <?= htmlspecialchars((string) $data->gala->name) ?></h1>
     <p class="lead mb-0">
-      At <?= htmlspecialchars($data->gala->venue) ?>
+      At <?= htmlspecialchars((string) $data->gala->venue) ?>
     </p>
   </div>
 </div>
@@ -85,19 +85,19 @@ include BASE_PATH . 'views/header.php';
         <ul class="list-group mb-3">
           <?php foreach ($data->entries as $entry) { ?>
             <?php $hasNoDD = (!isset($entry->mandate->id) || $entry->mandate->id == null) || (getUserOption($entry->user, 'GalaDirectDebitOptOut')); ?>
-            <li class="list-group-item" id="entry-<?= htmlspecialchars($entry->id) ?>">
-              <h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
+            <li class="list-group-item" id="entry-<?= htmlspecialchars((string) $entry->id) ?>">
+              <h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
               <div class="row">
                 <div class="col-sm-5 col-md-4 col-lg-6">
                   <p class="mb-0">
-                    <?= htmlspecialchars($entry->forename) ?> was entered in;
+                    <?= htmlspecialchars((string) $entry->forename) ?> was entered in;
                   </p>
                   <ul class="list-unstyled">
                     <?php $count = 0; ?>
                     <?php foreach ($entry->events as $event) { ?>
                       <?php if ($event->selected) {
                         $count++; ?>
-                        <li><?= htmlspecialchars($event->name) ?><?php if (isset($event->entry_time) && $event->entry_time != null) { ?> <em><?= htmlspecialchars($event->entry_time) ?></em><?php } ?></li>
+                        <li><?= htmlspecialchars((string) $event->name) ?><?php if (isset($event->entry_time) && $event->entry_time != null) { ?> <em><?= htmlspecialchars((string) $event->entry_time) ?></em><?php } ?></li>
                       <?php } ?>
                     <?php } ?>
                 </div>
@@ -105,10 +105,10 @@ include BASE_PATH . 'views/header.php';
                   <div class="d-sm-none mb-3"></div>
 
                   <p>
-                    <strong>Swim England Number:</strong> <?= htmlspecialchars($entry->asa_number) ?><br>
-                    <strong>Age today:</strong> <?= htmlspecialchars($entry->age_today) ?><br>
-                    <strong>Age on day:</strong> <?= htmlspecialchars($entry->age_on_last_day) ?><br>
-                    <strong>Age at end of year:</strong> <?= htmlspecialchars($entry->age_at_end_of_year) ?><br>
+                    <strong>Swim England Number:</strong> <?= htmlspecialchars((string) $entry->asa_number) ?><br>
+                    <strong>Age today:</strong> <?= htmlspecialchars((string) $entry->age_today) ?><br>
+                    <strong>Age on day:</strong> <?= htmlspecialchars((string) $entry->age_on_last_day) ?><br>
+                    <strong>Age at end of year:</strong> <?= htmlspecialchars((string) $entry->age_at_end_of_year) ?><br>
                   </p>
 
                   <p class="mb-0">

@@ -28,7 +28,7 @@ if ($email_comms != $row['EmailComms']) {
   $sql = "UPDATE `users` SET `EmailComms` = ? WHERE `UserID` = ?";
   try {
   	$db->prepare($sql)->execute([$emailCommsDb, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
-  } catch (Exception $e) {
+  } catch (Exception) {
 		// Could not update settings
 		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateError'] = '<p class="mb-0"><strong>We were unable to change your email subscription preferences</strong></p><p class="mb-0">Please try again. If the issue persists, please contact support referencing <span class="font-monospace">Email Preferences Update Error</span></p>';
   }
@@ -49,14 +49,14 @@ while ($category = $getCategories->fetch(PDO::FETCH_OBJ)) {
 	updateSubscription(isset($_POST['email-category-' . $category->id]), $category->id);
 }
 
-if (mb_strtolower($_POST['EmailAddress']) != mb_strtolower($row['EmailAddress'])) {
-	if (v::email()->validate(mb_strtolower($_POST['EmailAddress']))) {
+if (mb_strtolower((string) $_POST['EmailAddress']) != mb_strtolower((string) $row['EmailAddress'])) {
+	if (v::email()->validate(mb_strtolower((string) $_POST['EmailAddress']))) {
 		$authCode = hash('sha256', random_bytes(64) . time());
 
 		$user_details = [
 			'User'		   => $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
 			'OldEmail'   => $row['EmailAddress'],
-			'NewEmail'	 => mb_strtolower($_POST['EmailAddress'])
+			'NewEmail'	 => mb_strtolower((string) $_POST['EmailAddress'])
 		];
 		$user_details = json_encode($user_details);
 
@@ -84,11 +84,11 @@ if (mb_strtolower($_POST['EmailAddress']) != mb_strtolower($row['EmailAddress'])
 	  <p>You will need to use your email address, ' . $email . ' to sign in.</p>
 	  <p>If you did not make a change to your email address, please ignore this email and consider reseting your password.</p>
 	  <p>For help, send an email to <a
-	  href="mailto:' . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . '">' . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . '</a>/</p>
+	  href="mailto:' . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . '">' . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . '</a>/</p>
 	  ';
-	  notifySend($to, $subject, $sContent, $name, mb_strtolower($_POST['EmailAddress']), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME') . " Security"]);
+	  notifySend($to, $subject, $sContent, $name, mb_strtolower((string) $_POST['EmailAddress']), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME') . " Security"]);
 		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate'] = true;
-		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'] = mb_strtolower($_POST['EmailAddress']);
+		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'] = mb_strtolower((string) $_POST['EmailAddress']);
 	} else {
 		$_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdate'] = false;
 	}

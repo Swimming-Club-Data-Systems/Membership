@@ -132,18 +132,18 @@ try {
 
     $notify = $db->prepare("INSERT INTO notify (UserID, `Status`, `Subject`, `Message`, EmailType) VALUES (?, ?, ?, ?, ?)");
 
-    $message = '<p>We\'ve issued a refund of <strong>' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($refundAmount), 'GBP')) . '</strong> for <em>' . htmlspecialchars($item->itemName) .  ', ' . htmlspecialchars($item->description) . '</em> to your ' . htmlspecialchars(getCardBrand($item->brand) . ' ' . $item->funding . ' card ending ' . $item->last4) . '.</p>';
+    $message = '<p>We\'ve issued a refund of <strong>' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($refundAmount), 'GBP')) . '</strong> for <em>' . htmlspecialchars((string) $item->itemName) .  ', ' . htmlspecialchars((string) $item->description) . '</em> to your ' . htmlspecialchars(getCardBrand($item->brand) . ' ' . $item->funding . ' card ending ' . $item->last4) . '.</p>';
 
     if ($item->refunded > 0) {
-      $message .= '<p>This brings the total amount refunded for <em>' . htmlspecialchars($item->itemName) .  ', ' . htmlspecialchars($item->description) . '</em> to ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->refunded), 'GBP')) . ' and the total amount refunded for this card payment to ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->totalRefunded), 'GBP')) . '.</p>';
-      $message .= '<p>Your adjusted total is ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->totalAmount - $item->totalRefunded), 'GBP')) . '.</p>';
+      $message .= '<p>This brings the total amount refunded for <em>' . htmlspecialchars((string) $item->itemName) .  ', ' . htmlspecialchars((string) $item->description) . '</em> to ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->refunded), 'GBP')) . ' and the total amount refunded for this card payment to ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->totalRefunded), 'GBP')) . '.</p>';
+      $message .= '<p>Your adjusted total is ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->totalAmount - $item->totalRefunded), 'GBP')) . '.</p>';
     }
 
     $message .= '<p>It can take 10+ days to appear on your statement, if it takes longer please contact your bank for assistance.</p>';
 
-    $message .= '<p><a href="' . htmlspecialchars(autoUrl('payments/card-transactions/' . $item->paymentId)) . '">View your up to date receipt online</a>.</p>';
+    $message .= '<p><a href="' . htmlspecialchars((string) autoUrl('payments/card-transactions/' . $item->paymentId)) . '">View your up to date receipt online</a>.</p>';
 
-    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
     $notify->execute([
 

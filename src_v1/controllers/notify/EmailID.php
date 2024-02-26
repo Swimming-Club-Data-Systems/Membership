@@ -32,7 +32,7 @@ include BASE_PATH . "views/notifyMenu.php";
  ?>
 
 <div class="container-xl">
-	<h1><strong><?=htmlspecialchars($subject)?></strong></h1>
+	<h1><strong><?=htmlspecialchars((string) $subject)?></strong></h1>
 	<p class="lead">Sent to <?=htmlspecialchars($row['Forename'] . " " . $row['Surname'])?></p>
 
 	<div class="card">

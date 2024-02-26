@@ -29,9 +29,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -45,7 +45,7 @@ include BASE_PATH . "views/head.php";
         <h1 class="text-center">Parent/Guardian Code of Conduct</h1>
 
         <p class="lead mb-5 text-center">
-          Read and agree to the <?= htmlspecialchars(app()->tenant->getName()) ?> Parent/Guardian Code of Conduct.
+          Read and agree to the <?= htmlspecialchars((string) app()->tenant->getName()) ?> Parent/Guardian Code of Conduct.
         </p>
 
         <form method="post" class="needs-validation" novalidate>
@@ -68,7 +68,7 @@ include BASE_PATH . "views/head.php";
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="agree" name="agree" value="1" required>
                 <label class="form-check-label" for="agree">
-                  I, <?= htmlspecialchars($user->getName()) ?> agree to all of the codes of conduct that are shown to me on this page
+                  I, <?= htmlspecialchars((string) $user->getName()) ?> agree to all of the codes of conduct that are shown to me on this page
                 </label>
                 <div class="invalid-feedback">
                   Confirm your agreement

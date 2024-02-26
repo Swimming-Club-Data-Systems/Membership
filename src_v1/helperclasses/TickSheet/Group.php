@@ -7,8 +7,8 @@ namespace SCDS\TickSheet;
  */
 class Group
 {
-  private string $name;
-  private Array $components;
+  private readonly string $name;
+  private readonly Array $components;
 
   /**
    * Protected constructor

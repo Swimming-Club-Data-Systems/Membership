@@ -32,7 +32,7 @@ $getSwimmers->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']])
 					<a href="<?= autoUrl("members/" . $swimmer['id']) ?>">
 						<span class="mb-3">
 							<span class="title mb-0">
-								<?= htmlspecialchars(\SCDS\Formatting\Names::format($swimmer['first'], $swimmer['last'])) ?>
+								<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($swimmer['first'], $swimmer['last'])) ?>
 							</span>
 							<span>
 								<!-- Squads -->

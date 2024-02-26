@@ -22,8 +22,8 @@ $setDesc = $db->prepare("UPDATE squadReps SET ContactDescription = ? WHERE User 
 while ($squad = $squads->fetch(PDO::FETCH_ASSOC)) {
   if (isset($_POST['field-' . $squad['SquadID']])) {
     $details = null;
-    if (mb_strlen(trim($_POST['field-' . $squad['SquadID']])) > 0) {
-      $details = mb_strimwidth(trim($_POST['field-' . $squad['SquadID']]), 0, 255);
+    if (mb_strlen(trim((string) $_POST['field-' . $squad['SquadID']])) > 0) {
+      $details = mb_strimwidth(trim((string) $_POST['field-' . $squad['SquadID']]), 0, 255);
     }
     $setDesc->execute([
       $details, 

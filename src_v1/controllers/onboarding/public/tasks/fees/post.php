@@ -42,7 +42,7 @@ if (!$session->batch) {
       if ($batchPay->type == 'checkout') {
         $checkoutSession = $batchPay->checkoutSession;
 
-        $checkoutSession->metadata['return']['url'] = autoUrl('onboarding/go/fees/success?checkout_session=' . urlencode($checkoutSession->id));
+        $checkoutSession->metadata['return']['url'] = autoUrl('onboarding/go/fees/success?checkout_session=' . urlencode((string) $checkoutSession->id));
         $checkoutSession->metadata['return']['instant'] = false;
         $checkoutSession->metadata['return']['buttonString'] = 'Return to fee information page';
 

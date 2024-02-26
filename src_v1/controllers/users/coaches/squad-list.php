@@ -81,11 +81,7 @@ try {
     $responseData['canAssign'] = true;
   }
 
-} catch (PDOException $e) {
-
-  $responseData['status'] = 500;
-
-} catch (Exception $e) {
+} catch (PDOException|Exception) {
 
   $responseData['status'] = 500;
 

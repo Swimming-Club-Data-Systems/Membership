@@ -7,11 +7,11 @@ $tenant = app()->tenant;
 // Registration Form Handler
 
 $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
-$asaNumber = trim(($_POST['asa']));
-$accessKey = trim($_POST['accessKey']);
+$asaNumber = trim(((string) $_POST['asa']));
+$accessKey = trim((string) $_POST['accessKey']);
 
 $isTemporaryNumber = false;
-if (mb_stripos($asaNumber, app()->tenant->getKey('ASA_CLUB_CODE'))) {
+if (mb_stripos($asaNumber, (string) app()->tenant->getKey('ASA_CLUB_CODE'))) {
   $asaNumber = str_replace(app()->tenant->getKey('ASA_CLUB_CODE'), '', $asaNumber);
 }
 
@@ -34,10 +34,10 @@ if ($asaNumber != null && $accessKey != null && v::alnum()->validate($asaNumber)
       $oldUser = $getCurrentUser->fetch(PDO::FETCH_ASSOC);
       // Warn old parent by email
       $message = "
-      <h1>Hello " . htmlspecialchars($oldUser['Forename']) . "</h1>
+      <h1>Hello " . htmlspecialchars((string) $oldUser['Forename']) . "</h1>
       <p>Your swimmer, " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . " has been removed
       from your account.</p>
-      <p>If this was not you, contact <a href=\"mailto:" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
+      <p>If this was not you, contact <a href=\"mailto:" . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "\">" . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
       notifySend("", "Swimmer removed from your account", $message,
       $oldUser['Forename'] . " " . $oldUser['Surname'],
       $oldUser['EmailAddress']);
@@ -60,16 +60,16 @@ if ($asaNumber != null && $accessKey != null && v::alnum()->validate($asaNumber)
 
     // Notify new parent with email
     $message = "
-    <p>Hello " . htmlspecialchars($row['Forename']) . ",</p>
+    <p>Hello " . htmlspecialchars((string) $row['Forename']) . ",</p>
     <p>Your member, " . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . " has been registered
     with your account.</p>
     <ul>
       <li>" . htmlspecialchars($row['MForename'] . " " . $row['MSurname']) . "</li>
-      <li>Swim England Number: " . htmlspecialchars($row['ASANumber']) . "</li>
-      <li>" . htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME')) . " Member ID: " . htmlspecialchars($row['MemberID']) . "</li>
+      <li>Swim England Number: " . htmlspecialchars((string) $row['ASANumber']) . "</li>
+      <li>" . htmlspecialchars((string) app()->tenant->getKey('CLUB_SHORT_NAME')) . " Member ID: " . htmlspecialchars((string) $row['MemberID']) . "</li>
     </ul>
-    <p>If this was not you, contact <a href=\"mailto:"  . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "\">
-    "  . htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
+    <p>If this was not you, contact <a href=\"mailto:"  . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "\">
+    "  . htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) . "</a> as soon as possible</p>";
     notifySend($row['EmailAddress'], "You've added " . $row['MForename'] . " to your account",
     $message, $row['Forename'] . " " . $row['Surname'],
     $row['EmailAddress']);

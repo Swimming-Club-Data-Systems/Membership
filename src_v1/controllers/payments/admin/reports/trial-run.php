@@ -27,7 +27,7 @@ include BASE_PATH . 'views/header.php';
       <li class="list-group-item px-3 pb-0 bg-light">
         <div class="row mb-3">
           <div class="col-sm-9">
-            <h2><a href="<?=htmlspecialchars(autoUrl("users/" . $data['user']))?>"><?=htmlspecialchars($data['forename'] . ' ' . $data['surname'])?></a></h2>
+            <h2><a href="<?=htmlspecialchars((string) autoUrl("users/" . $data['user']))?>"><?=htmlspecialchars($data['forename'] . ' ' . $data['surname'])?></a></h2>
           </div>
           <div class="col">
             <div class="row">
@@ -67,15 +67,15 @@ include BASE_PATH . 'views/header.php';
           <?php 
           foreach ($data['items']['provisional'] as $item) { ?>
           <li class="list-group-item">
-            <?=htmlspecialchars($item['description'])?>, &pound;<?=htmlspecialchars((string) \Brick\Math\BigInteger::of((string) $item['amount'])->toBigDecimal()->withPointMovedLeft(2))?><br>
-            <?=htmlspecialchars($item['type'])?>, Provisional amount
+            <?=htmlspecialchars((string) $item['description'])?>, &pound;<?=htmlspecialchars((string) \Brick\Math\BigInteger::of((string) $item['amount'])->toBigDecimal()->withPointMovedLeft(2))?><br>
+            <?=htmlspecialchars((string) $item['type'])?>, Provisional amount
           </li>
           <?php } ?>
           <?php 
           foreach ($data['items']['existing'] as $item) { ?>
           <li class="list-group-item">
-            <?=htmlspecialchars($item['description'])?>, &pound;<?=htmlspecialchars((string) \Brick\Math\BigInteger::of((string) $item['amount'])->toBigDecimal()->withPointMovedLeft(2))?><br>
-            <?=htmlspecialchars($item['type'])?>, Provisional amount
+            <?=htmlspecialchars((string) $item['description'])?>, &pound;<?=htmlspecialchars((string) \Brick\Math\BigInteger::of((string) $item['amount'])->toBigDecimal()->withPointMovedLeft(2))?><br>
+            <?=htmlspecialchars((string) $item['type'])?>, Provisional amount
           </li>
           <?php } ?>
         </ul>

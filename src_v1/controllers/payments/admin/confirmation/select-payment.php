@@ -44,11 +44,11 @@ include BASE_PATH . 'views/header.php';
 
             <div class="list-group-item">
               <div class="form-check">
-                <input type="radio" id="payment-<?= htmlspecialchars($paymentId) ?>" name="payment" value="<?= htmlspecialchars($paymentId) ?>" class="form-check-input">
-                <label class="form-check-label d-block" for="payment-<?= htmlspecialchars($paymentId) ?>">
-                  <?= htmlspecialchars(\SCDS\Formatting\Names::format($payment['Forename'], $payment['Surname'])) ?>:
+                <input type="radio" id="payment-<?= htmlspecialchars((string) $paymentId) ?>" name="payment" value="<?= htmlspecialchars((string) $paymentId) ?>" class="form-check-input">
+                <label class="form-check-label d-block" for="payment-<?= htmlspecialchars((string) $paymentId) ?>">
+                  <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($payment['Forename'], $payment['Surname'])) ?>:
                   <span class="font-monospace">
-                    &pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $payment['Amount']))->withPointMovedLeft(2)->toScale(2) ?>, <?= htmlspecialchars($payment['Name']) ?>, <?= htmlspecialchars($payment['Date']) ?>
+                    &pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $payment['Amount']))->withPointMovedLeft(2)->toScale(2) ?>, <?= htmlspecialchars((string) $payment['Name']) ?>, <?= htmlspecialchars((string) $payment['Date']) ?>
                   </span>
                 </label>
               </div>

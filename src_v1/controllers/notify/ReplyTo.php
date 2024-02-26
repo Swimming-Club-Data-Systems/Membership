@@ -10,7 +10,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify"))?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify"))?>">Notify</a></li>
       <li class="breadcrumb-item active" aria-current="page">Reply address</li>
     </ol>
   </nav>
@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
       <form method="post">
         <div class="mb-3">
           <label class="form-label" for="reply">Reply-To email address</label>
-          <input type="email" class="form-control" id="reply" name="reply" placeholder="Enter email" value="<?=htmlspecialchars(getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress'))?>">
+          <input type="email" class="form-control" id="reply" name="reply" placeholder="Enter email" value="<?=htmlspecialchars((string) getUserOption($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], 'NotifyReplyAddress'))?>">
         </div>
 
         <p>

@@ -26,7 +26,7 @@ if (app()->tenant->getKey('EMERGENCY_MESSAGE_TYPE') != 'NONE' && app()->tenant->
   $message .= '"><div class="container emergency-message">';
   try {
     $message .= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE'));
-  } catch (Exception $e) {
+  } catch (Exception) {
     $message .= '<p>An emergency message has been set but cannot be rendered.</p>';
   }
   $message .= '</div> </div>';

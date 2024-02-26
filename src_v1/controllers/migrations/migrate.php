@@ -44,7 +44,7 @@ foreach($undone as $file) {
     include BASE_PATH . 'db/migrations/' . $file;
 
     // Add to schema table
-    $insertDoneMigration->execute([str_replace('.php', '', $file)]);
+    $insertDoneMigration->execute([str_replace('.php', '', (string) $file)]);
 
     // Commit changes to the database
     $db->commit();

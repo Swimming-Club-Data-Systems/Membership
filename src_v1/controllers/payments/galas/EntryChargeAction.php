@@ -137,16 +137,16 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 					$entry['EntryID']
 				]);
 
-				$message = '<p>We\'ve charged <strong>&pound;' . $amountString . '</strong> to your account for ' . htmlspecialchars($entry['MForename']) .  '\'s entry into ' . htmlspecialchars($gala['name']) . '.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . '.</p>';
+				$message = '<p>We\'ve charged <strong>&pound;' . $amountString . '</strong> to your account for ' . htmlspecialchars((string) $entry['MForename']) .  '\'s entry into ' . htmlspecialchars((string) $gala['name']) . '.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . '.</p>';
 
 				$message .= '<p>You entered the following events;</p>';
 				$message .= $swimsList;
 
 				if ($entry['ProcessingFee'] > 0) {
-					$message .= '<p>Your entry fee includes a processing fee of ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['ProcessingFee']), 'gbp')) . '.</p>';
+					$message .= '<p>Your entry fee includes a processing fee of ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['ProcessingFee']), 'gbp')) . '.</p>';
 				}
 
-				$message .= '<p>Kind Regards<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+				$message .= '<p>Kind Regards<br> The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
 				$notify->execute([
 					$entry['UserID'],
@@ -157,7 +157,7 @@ while ($entry = $getEntries->fetch(PDO::FETCH_ASSOC)) {
 				]);
 
 				$db->commit();
-			} catch (Exception $e) {
+			} catch (Exception) {
 				// A problem occured
 				$db->rollBack();
 				$_SESSION['TENANT-' . app()->tenant->getId()]['ChargeUsersFailure'] = true;

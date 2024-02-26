@@ -45,7 +45,7 @@ include BASE_PATH . "views/header.php";
 
 ?>
 
-<div id="data" data-has-user="<?= json_encode($user != null)  ?>" data-expanded="<?= json_encode($user != null)  ?>" data-check-user-url="<?= htmlspecialchars(autoUrl('onboarding/new/user-lookup'))  ?>"></div>
+<div id="data" data-has-user="<?= json_encode($user != null)  ?>" data-expanded="<?= json_encode($user != null)  ?>" data-check-user-url="<?= htmlspecialchars((string) autoUrl('onboarding/new/user-lookup'))  ?>"></div>
 
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-xl">
@@ -53,7 +53,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">Onboarding</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>">Onboarding</a></li>
         <li class="breadcrumb-item active" aria-current="page">New</li>
       </ol>
     </nav>
@@ -161,19 +161,19 @@ include BASE_PATH . "views/header.php";
                   Email
                 </dt>
                 <dd class="col-9 text-truncate">
-                  <a href="<?= htmlspecialchars("mailto:" . $user->email) ?>"><?= htmlspecialchars($user->email) ?></a>
+                  <a href="<?= htmlspecialchars("mailto:" . $user->email) ?>"><?= htmlspecialchars((string) $user->email) ?></a>
                 </dd>
 
                 <dt class="col-3">
                   Phone
                 </dt>
                 <dd class="col-9 mb-0">
-                  <?= htmlspecialchars($user->phone) ?>
+                  <?= htmlspecialchars((string) $user->phone) ?>
                 </dd>
               </dl>
             </div>
 
-            <input type="hidden" name="user" value="<?= htmlspecialchars($_GET['user']) ?>">
+            <input type="hidden" name="user" value="<?= htmlspecialchars((string) $_GET['user']) ?>">
 
           <?php } ?>
 
@@ -196,15 +196,15 @@ include BASE_PATH . "views/header.php";
               ?>
                 <div class="card card-body mb-3">
                   <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="member-<?= htmlspecialchars($swimmer['id']) ?>" name="member-<?= htmlspecialchars($swimmer['id']) ?>" data-collapse="member-<?= htmlspecialchars($swimmer['id']) ?>-collapse" value="1" autocomplete="off">
-                    <label class="form-check-label" for="member-<?= htmlspecialchars($swimmer['id']) ?>">
+                    <input class="form-check-input" type="checkbox" id="member-<?= htmlspecialchars((string) $swimmer['id']) ?>" name="member-<?= htmlspecialchars((string) $swimmer['id']) ?>" data-collapse="member-<?= htmlspecialchars((string) $swimmer['id']) ?>-collapse" value="1" autocomplete="off">
+                    <label class="form-check-label" for="member-<?= htmlspecialchars((string) $swimmer['id']) ?>">
                       <p class="mb-0 fw-bold">
                         <?= htmlspecialchars($swimmer['first'] . ' ' . $swimmer['last']) ?>
                       </p>
                       <ul class="mb-0 list-unstyled">
                         <?php if ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) {
                           do { ?>
-                            <li><?= htmlspecialchars($squad['SquadName']) ?></li>
+                            <li><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
                           <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC));
                         } else { ?>
                           <li>No squads</li>
@@ -213,14 +213,14 @@ include BASE_PATH . "views/header.php";
                     </label>
                   </div>
 
-                  <div class="collapse" id="member-<?= htmlspecialchars($swimmer['id']) ?>-collapse">
+                  <div class="collapse" id="member-<?= htmlspecialchars((string) $swimmer['id']) ?>-collapse">
                     <div class="form-check custom-control-inline mt-2">
-                      <input type="radio" id="member-rr-yes-<?= htmlspecialchars($swimmer['id']) ?>" name="member-rr-<?= htmlspecialchars($swimmer['id']) ?>" class="form-check-input" checked value="yes">
-                      <label class="form-check-label" for="member-rr-yes-<?= htmlspecialchars($swimmer['id']) ?>">Require registration</label>
+                      <input type="radio" id="member-rr-yes-<?= htmlspecialchars((string) $swimmer['id']) ?>" name="member-rr-<?= htmlspecialchars((string) $swimmer['id']) ?>" class="form-check-input" checked value="yes">
+                      <label class="form-check-label" for="member-rr-yes-<?= htmlspecialchars((string) $swimmer['id']) ?>">Require registration</label>
                     </div>
                     <div class="form-check custom-control-inline mb-0">
-                      <input type="radio" id="member-rr-no-<?= htmlspecialchars($swimmer['id']) ?>" name="member-rr-<?= htmlspecialchars($swimmer['id']) ?>" class="form-check-input" value="no">
-                      <label class="form-check-label" for="member-rr-no-<?= htmlspecialchars($swimmer['id']) ?>">Add to account quietly</label>
+                      <input type="radio" id="member-rr-no-<?= htmlspecialchars((string) $swimmer['id']) ?>" name="member-rr-<?= htmlspecialchars((string) $swimmer['id']) ?>" class="form-check-input" value="no">
+                      <label class="form-check-label" for="member-rr-no-<?= htmlspecialchars((string) $swimmer['id']) ?>">Add to account quietly</label>
                     </div>
                   </div>
                 </div>
@@ -228,7 +228,7 @@ include BASE_PATH . "views/header.php";
             <?php } ?>
 
             <?php if ($user && $member) { ?>
-              <h2>Select members linked to <?= htmlspecialchars($user->firstName) ?>'s account</h2>
+              <h2>Select members linked to <?= htmlspecialchars((string) $user->firstName) ?>'s account</h2>
 
               <?php do {
                 $getSquads->execute([
@@ -237,15 +237,15 @@ include BASE_PATH . "views/header.php";
               ?>
                 <div class="card card-body mb-3">
                   <div class="form-check mb-0">
-                    <input class="form-check-input" type="checkbox" id="exisiting-member-<?= htmlspecialchars($member->id) ?>" name="exisiting-member-<?= htmlspecialchars($member->id) ?>" data-collapse="exisiting-member-<?= htmlspecialchars($member->id) ?>-collapse" value="1" autocomplete="off">
-                    <label class="form-check-label" for="exisiting-member-<?= htmlspecialchars($member->id) ?>">
+                    <input class="form-check-input" type="checkbox" id="exisiting-member-<?= htmlspecialchars((string) $member->id) ?>" name="exisiting-member-<?= htmlspecialchars((string) $member->id) ?>" data-collapse="exisiting-member-<?= htmlspecialchars((string) $member->id) ?>-collapse" value="1" autocomplete="off">
+                    <label class="form-check-label" for="exisiting-member-<?= htmlspecialchars((string) $member->id) ?>">
                       <p class="mb-0 fw-bold">
                         <?= htmlspecialchars($member->firstName . ' ' . $member->lastName) ?>
                       </p>
                       <ul class="mb-0 list-unstyled">
                         <?php if ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) {
                           do { ?>
-                            <li><?= htmlspecialchars($squad['SquadName']) ?></li>
+                            <li><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
                           <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC));
                         } else { ?>
                           <li>No squads</li>
@@ -254,14 +254,14 @@ include BASE_PATH . "views/header.php";
                     </label>
                   </div>
 
-                  <div class="collapse" id="exisiting-member-<?= htmlspecialchars($member->id) ?>-collapse">
+                  <div class="collapse" id="exisiting-member-<?= htmlspecialchars((string) $member->id) ?>-collapse">
                     <div class="form-check custom-control-inline mt-2">
-                      <input type="radio" id="exisiting-member-rr-yes-<?= htmlspecialchars($member->id) ?>" name="exisiting-member-rr-<?= htmlspecialchars($member->id) ?>" class="form-check-input" checked value="yes">
-                      <label class="form-check-label" for="exisiting-member-rr-yes-<?= htmlspecialchars($member->id) ?>">Require registration</label>
+                      <input type="radio" id="exisiting-member-rr-yes-<?= htmlspecialchars((string) $member->id) ?>" name="exisiting-member-rr-<?= htmlspecialchars((string) $member->id) ?>" class="form-check-input" checked value="yes">
+                      <label class="form-check-label" for="exisiting-member-rr-yes-<?= htmlspecialchars((string) $member->id) ?>">Require registration</label>
                     </div>
                     <div class="form-check custom-control-inline mb-0">
-                      <input type="radio" id="exisiting-member-rr-no-<?= htmlspecialchars($member->id) ?>" name="exisiting-member-rr-<?= htmlspecialchars($member->id) ?>" class="form-check-input" value="no">
-                      <label class="form-check-label" for="exisiting-member-rr-no-<?= htmlspecialchars($member->id) ?>">Add to account quietly</label>
+                      <input type="radio" id="exisiting-member-rr-no-<?= htmlspecialchars((string) $member->id) ?>" name="exisiting-member-rr-<?= htmlspecialchars((string) $member->id) ?>" class="form-check-input" value="no">
+                      <label class="form-check-label" for="exisiting-member-rr-no-<?= htmlspecialchars((string) $member->id) ?>">Add to account quietly</label>
                     </div>
                   </div>
                 </div>

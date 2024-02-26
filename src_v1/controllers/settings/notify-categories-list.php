@@ -19,21 +19,21 @@ ob_start();
   <ul class="list-group">
     <?php do { ?>
       <li class="list-group-item">
-        <form class="needs-validation" novalidate id="<?= htmlspecialchars($category->id) ?>-cat-form">
+        <form class="needs-validation" novalidate id="<?= htmlspecialchars((string) $category->id) ?>-cat-form">
           <h2>
-            <?= htmlspecialchars($category->name) ?>
+            <?= htmlspecialchars((string) $category->name) ?>
           </h2>
 
-          <input type="hidden" name="category" value="<?= htmlspecialchars($category->id) ?>">
+          <input type="hidden" name="category" value="<?= htmlspecialchars((string) $category->id) ?>">
 
           <div class="mb-3">
             <label for="name" class="form-label">Category name</label>
-            <input type="text" class="form-control" id="name" name="name" required value="<?= htmlspecialchars($category->name) ?>">
+            <input type="text" class="form-control" id="name" name="name" required value="<?= htmlspecialchars((string) $category->name) ?>">
             <div class="invalid-feedback">You must provide a category name</div>
           </div>
           <div class="mb-3">
             <label for="description" class="form-label">Category description</label>
-            <textarea rows="3" class="form-control" id="description" name="description" required><?= htmlspecialchars($category->description) ?></textarea>
+            <textarea rows="3" class="form-control" id="description" name="description" required><?= htmlspecialchars((string) $category->description) ?></textarea>
             <div class="invalid-feedback">You must provide a textual description of this category</div>
           </div>
 
@@ -42,7 +42,7 @@ ob_start();
               <button type="submit" class="btn btn-success">Save</button>
             </div>
             <div class="col-auto ms-auto">
-              <button type="button" class="btn btn-danger" data-action="delete" data-category-id="<?= htmlspecialchars($category->id) ?>">Delete category</button>
+              <button type="button" class="btn btn-danger" data-action="delete" data-category-id="<?= htmlspecialchars((string) $category->id) ?>">Delete category</button>
             </div>
           </div>
         </form>

@@ -128,18 +128,18 @@
   <?php if (!app()->tenant->isCLS()) { ?>
   
   .primary {
-    color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    color: <?= htmlspecialchars((string) app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
   }
 
   .primary-box {
-    background-color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    background-color: <?= htmlspecialchars((string) app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
   }
 
   a,
   a:hover,
   a:active,
   a:visited {
-    color: <?= htmlspecialchars(app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
+    color: <?= htmlspecialchars((string) app()->tenant->getKey('SYSTEM_COLOUR')) ?>;
     text-decoration: underline;
   }
 

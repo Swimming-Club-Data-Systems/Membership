@@ -49,12 +49,12 @@ $getDetails = $db->prepare("SELECT Forename, Surname, EmailAddress FROM users WH
 $getDetails->execute([$user->getId()]);
 $row = $getDetails->fetch(PDO::FETCH_ASSOC);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['Token'] = hash('sha256', $user->getId() . "-" . rand(1000, 9999));
+$_SESSION['TENANT-' . app()->tenant->getId()]['Token'] = hash('sha256', $user->getId() . "-" . random_int(1000, 9999));
 
 $addr = null;
 $json = $user->getUserOption('MAIN_ADDRESS');
 if ($json != null) {
-  $addr = json_decode($json);
+  $addr = json_decode((string) $json);
 }
 
 $prefilledCustomer = [
@@ -95,6 +95,6 @@ try {
   $_SESSION['TENANT-' . app()->tenant->getId()]['GC_REDIRECTFLOW_ID'] = $redirectFlow->id;
   http_response_code(303);
   header("Location: " . $redirectFlow->redirect_url);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(902);
 }

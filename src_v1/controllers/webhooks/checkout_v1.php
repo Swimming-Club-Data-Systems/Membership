@@ -165,7 +165,7 @@ try {
   $markdown = new \ParsedownExtra();
   $markdown->setSafeMode(true);
 
-  $html .= '<p>Thank you for making an online payment at ' . htmlspecialchars($tenant->getName()) . '. Here is your payment receipt.</p>';
+  $html .= '<p>Thank you for making an online payment at ' . htmlspecialchars((string) $tenant->getName()) . '. Here is your payment receipt.</p>';
 
   $html .= '<p>You paid for;</p>';
 
@@ -173,7 +173,7 @@ try {
 
   foreach ($checkoutItems as $item) {
 
-    $html .= '<tr style="border: 1px solid #dddddd;"><td style="border: 1px solid #dddddd; padding: 5px;"><strong>' . htmlspecialchars($item->name) . '</strong>';
+    $html .= '<tr style="border: 1px solid #dddddd;"><td style="border: 1px solid #dddddd; padding: 5px;"><strong>' . htmlspecialchars((string) $item->name) . '</strong>';
     if ($item->description) {
       $html .= $markdown->text($item->description);
     }
@@ -181,33 +181,33 @@ try {
     if (sizeof($item->subItems) > 0) {
       $html .= '<ul>';
       foreach ($item->subItems as $subItem) {
-        $html .= '<li>' . htmlspecialchars($subItem->name) . ', ' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($subItem->amount), $subItem->currency)) . '</li>';
+        $html .= '<li>' . htmlspecialchars((string) $subItem->name) . ', ' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($subItem->amount), $subItem->currency)) . '</li>';
       }
       $html .= '</ul>';
     }
 
-    $html .= '</td><td style="border: 1px solid #dddddd; text-align: right; padding: 5px;">' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) . '</td></tr>';
+    $html .= '</td><td style="border: 1px solid #dddddd; text-align: right; padding: 5px;">' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), $item->currency)) . '</td></tr>';
   }
 
-  $html .= '<tr style="border: 1px solid #dddddd;"><td style="border: 1px solid #dddddd; padding: 5px;"><strong>Total</strong></td><td style="border: 1px solid #dddddd; text-align: right; padding: 5px;">' . htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($intent->amount), $intent->currency)) . '</td></tr>';
+  $html .= '<tr style="border: 1px solid #dddddd;"><td style="border: 1px solid #dddddd; padding: 5px;"><strong>Total</strong></td><td style="border: 1px solid #dddddd; text-align: right; padding: 5px;">' . htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($intent->amount), $intent->currency)) . '</td></tr>';
 
   $html .= '</tbody></table>';
 
-  $html .= '<p><strong>Payment ID</strong> <br>SPM' . htmlspecialchars($paymentId) . '</p>';
+  $html .= '<p><strong>Payment ID</strong> <br>SPM' . htmlspecialchars((string) $paymentId) . '</p>';
 
   if ($intent->charges->data[0]->payment_method_details->card) {
-    $html .= '<p><strong>Card</strong> <br>' . getCardBrand($intent->charges->data[0]->payment_method_details->card->brand) . ' ' . htmlspecialchars($intent->charges->data[0]->payment_method_details->card->funding) . ' card <br>&middot;&middot;&middot;&middot; ' . htmlspecialchars($intent->charges->data[0]->payment_method_details->card->last4) . '</p>';
+    $html .= '<p><strong>Card</strong> <br>' . getCardBrand($intent->charges->data[0]->payment_method_details->card->brand) . ' ' . htmlspecialchars((string) $intent->charges->data[0]->payment_method_details->card->funding) . ' card <br>&middot;&middot;&middot;&middot; ' . htmlspecialchars((string) $intent->charges->data[0]->payment_method_details->card->last4) . '</p>';
 
     if ($intent->charges->data[0]->payment_method_details->card->wallet) {
       $html .= '<p><strong>Mobile wallet</strong> <br>' . getWalletName($intent->charges->data[0]->payment_method_details->card->wallet->type) . '</p>';
 
       if ($intent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) {
-        $html .= '<p><strong>Device account number</strong> <br>&middot;&middot;&middot;&middot; ' . htmlspecialchars($intent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) . '</p>';
+        $html .= '<p><strong>Device account number</strong> <br>&middot;&middot;&middot;&middot; ' . htmlspecialchars((string) $intent->charges->data[0]->payment_method_details->card->wallet->dynamic_last4) . '</p>';
       }
     }
   }
 
-  $html .= '<p><strong>SCDS Checkout reference</strong> <br>' . htmlspecialchars($session->id) . '</p>';
+  $html .= '<p><strong>SCDS Checkout reference</strong> <br>' . htmlspecialchars((string) $session->id) . '</p>';
 
   if ($intent->charges->data[0]->billing_details->address) {
     $billingAddress = $intent->charges->data[0]->billing_details->address;
@@ -216,38 +216,38 @@ try {
     $html .= '<address>';
 
     if ($billingAddress->name) {
-      $html .= htmlspecialchars($billingAddress->name) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->name) . '<br>';
     }
 
     if ($billingAddress->line1) {
-      $html .= htmlspecialchars($billingAddress->line1) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->line1) . '<br>';
     }
 
     if ($billingAddress->line2) {
-      $html .= htmlspecialchars($billingAddress->line2) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->line2) . '<br>';
     }
 
     if ($billingAddress->postal_code) {
-      $html .= htmlspecialchars($billingAddress->postal_code) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->postal_code) . '<br>';
     }
 
     if ($billingAddress->state) {
-      $html .= htmlspecialchars($billingAddress->state) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->state) . '<br>';
     }
 
     if ($billingAddress->country) {
-      $html .= htmlspecialchars($billingAddress->country) . '<br>';
+      $html .= htmlspecialchars((string) $billingAddress->country) . '<br>';
     }
 
     $html .= '</address>';
   }
 
   $html .= '<p><strong>General notes for payments</strong> <br>You can find more information about our payment terms and returns policy on our website. All payments are subject to scheme or network rules.</p>';
-  $html .= '<p>Payment services are provided to ' . htmlspecialchars($tenant->getName()) . ' by SCDS and their payment processing partners. PCI DSS compliance is primarily handled by our payment processors.</p>';
-  $html .= '<p>' . htmlspecialchars($tenant->getName()) . ' may sometimes place a temporary hold of 0GBP to 1GBP or 1USD on your card when you first add it to your account. This is part of the card authorisation process that allows us to determine that your card is valid. This charge will drop off your statement within a few days.</p>';
+  $html .= '<p>Payment services are provided to ' . htmlspecialchars((string) $tenant->getName()) . ' by SCDS and their payment processing partners. PCI DSS compliance is primarily handled by our payment processors.</p>';
+  $html .= '<p>' . htmlspecialchars((string) $tenant->getName()) . ' may sometimes place a temporary hold of 0GBP to 1GBP or 1USD on your card when you first add it to your account. This is part of the card authorisation process that allows us to determine that your card is valid. This charge will drop off your statement within a few days.</p>';
 
   if (isset($intent->charges->data[0]->payment_method_details->card->brand) && $intent->charges->data[0]->calculated_statement_descriptor && $intent->charges->data[0]->payment_method_details->card->brand == 'amex') {
-    $html .= '<p>American Express customers may see <strong>Stripe</strong> in online banking and the Amex app while the payment is pending. This will usually update to <strong>' . htmlspecialchars($intent->charges->data[0]->calculated_statement_descriptor) . '</strong> within 48 hours or when the payment settles.</p>';
+    $html .= '<p>American Express customers may see <strong>Stripe</strong> in online banking and the Amex app while the payment is pending. This will usually update to <strong>' . htmlspecialchars((string) $intent->charges->data[0]->calculated_statement_descriptor) . '</strong> within 48 hours or when the payment settles.</p>';
   }
 
   $html .= '<p><strong>Notes for gala entry payments</strong> <br>In accordance with card network rules, refunds for gala rejections will only be made to the payment card which was used.</p>';

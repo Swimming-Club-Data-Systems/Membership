@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="js-data" data-list-ajax-url="<?= htmlspecialchars(autoUrl('settings/notify-categories/list')) ?>" data-add-ajax-url="<?= htmlspecialchars(autoUrl('settings/notify-categories/new')) ?>" data-delete-ajax-url="<?= htmlspecialchars(autoUrl('settings/notify-categories/delete')) ?>" data-update-ajax-url="<?= htmlspecialchars(autoUrl('settings/notify-categories/update')) ?>"></div>
+<div id="js-data" data-list-ajax-url="<?= htmlspecialchars((string) autoUrl('settings/notify-categories/list')) ?>" data-add-ajax-url="<?= htmlspecialchars((string) autoUrl('settings/notify-categories/new')) ?>" data-delete-ajax-url="<?= htmlspecialchars((string) autoUrl('settings/notify-categories/delete')) ?>" data-update-ajax-url="<?= htmlspecialchars((string) autoUrl('settings/notify-categories/update')) ?>"></div>
 
 <!-- Modal for use by JS code -->
 <div class="modal fade" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="main-modal-title" aria-hidden="true">

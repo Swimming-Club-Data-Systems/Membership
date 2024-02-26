@@ -14,7 +14,7 @@ $user = $getUser->fetch(PDO::FETCH_OBJ);
 
 $redirect = null;
 if ($user) {
-  $redirect = autoUrl('onboarding/new?user=' . urlencode($user->id));
+  $redirect = autoUrl('onboarding/new?user=' . urlencode((string) $user->id));
 }
 
 header('content-type: application/json');

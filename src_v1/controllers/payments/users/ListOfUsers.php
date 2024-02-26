@@ -5,7 +5,7 @@
 $search = null;
 
 if (isset($_GET['search'])) {
-	$search = trim($_GET['search']);
+	$search = trim((string) $_GET['search']);
 }
 
 $pagetitle = "Find a Parent's Current Fees";
@@ -22,7 +22,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 	    <label class="visually-hidden" for="search">Search by Surname</label>
 			<div class="input-group">
 				<span class="input-group-text">Search</span>
-	    	<input class="form-control" placeholder="Surname" id="search" name="search" value="<?=htmlspecialchars($search)?>">
+	    	<input class="form-control" placeholder="Surname" id="search" name="search" value="<?=htmlspecialchars((string) $search)?>">
 			</div>
 	  </div>
 		<div id="output">

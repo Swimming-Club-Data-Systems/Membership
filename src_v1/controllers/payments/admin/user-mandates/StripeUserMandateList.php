@@ -32,7 +32,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
       <li class="breadcrumb-item active" aria-current="page">Mandates</li>
     </ol>
   </nav>
@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php';
       <p class="lead">(Stripe) Direct Debit mandates by user</p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('payments/user-mandates/go-cardless')) ?>">View GoCardless Mandates</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('payments/user-mandates/go-cardless')) ?>">View GoCardless Mandates</a>
       </p>
     </div>
   </div>
@@ -62,17 +62,17 @@ include BASE_PATH . 'views/header.php';
         $stripeDD = $getStripeDD->fetch(PDO::FETCH_ASSOC);
 
       ?>
-        <a href="<?= htmlspecialchars(autoUrl("users/" . $mandate['UserID'] . '#payment-information')) ?>" class="list-group-item list-group-item-action <?php if (!$stripeDD) { ?> list-group-item-danger <?php } ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("users/" . $mandate['UserID'] . '#payment-information')) ?>" class="list-group-item list-group-item-action <?php if (!$stripeDD) { ?> list-group-item-danger <?php } ?>">
           <div class="row align-items-center">
             <div class="col-md-6">
-              <h2 class="mb-0 h4"><?= htmlspecialchars(\SCDS\Formatting\Names::format($mandate['Surname'], $mandate['Forename'])) ?></h2>
+              <h2 class="mb-0 h4"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($mandate['Surname'], $mandate['Forename'])) ?></h2>
               <div class="mb-3 d-md-none"></div>
             </div>
             <div class="col text-md-end">
               <?php if ($stripeDD) { ?>
-                <p class="font-monospace mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split($stripeDD['SortCode'], 2))) ?></span>
+                <p class="font-monospace mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split((string) $stripeDD['SortCode'], 2))) ?></span>
                 </p>
-                <p class="font-monospace mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($stripeDD['Last4']) ?></span></p>
+                <p class="font-monospace mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $stripeDD['Last4']) ?></span></p>
               <?php } else { ?>
                 <p class="font-monospace mb-0">No mandate</p>
                 <p class="font-monospace mb-0">Contact user</p>

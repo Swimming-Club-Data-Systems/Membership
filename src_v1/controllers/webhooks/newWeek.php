@@ -25,7 +25,7 @@ $getLatestWeek->execute([
 ]);
 $latestWeekDB = $getLatestWeek->fetchColumn();
 if ($latestWeekDB != null) {
-	date('Y-m-d', strtotime($latestWeekDB));
+	date('Y-m-d', strtotime((string) $latestWeekDB));
 	if ($week_start != $latestWeekDB) {
 		insertWeekStart($week_start);
 	}

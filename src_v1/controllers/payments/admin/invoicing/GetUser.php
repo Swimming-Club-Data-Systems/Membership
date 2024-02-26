@@ -25,13 +25,13 @@ if ($row != null) {
   $json = $userObj->getUserOption('MAIN_ADDRESS');
   $address = null;
   if ($json != null) {
-    $address = json_decode($json, true);
+    $address = json_decode((string) $json, true);
   }
 
   $number = null;
   try {
     $number = PhoneNumber::parse((string) $row['Mobile']);
-  } catch (Exception $e) {
+  } catch (Exception) {
     $number = false;
   }
 

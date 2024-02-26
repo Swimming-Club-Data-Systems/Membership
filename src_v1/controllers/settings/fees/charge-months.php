@@ -6,7 +6,7 @@ $fluidContainer = true;
 
 //app()->tenant->setKey('SquadFeeMonths', '');
 
-$squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
+$squadFeeMonths = json_decode((string) app()->tenant->getKey('SquadFeeMonths'), true);
 
 $pagetitle = "Squad Fee Payment Months";
 
@@ -26,8 +26,8 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees')) ?>">Fees</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees')) ?>">Fees</a></li>
           <li class="breadcrumb-item active" aria-current="page">Billing Months</li>
         </ol>
       </nav>

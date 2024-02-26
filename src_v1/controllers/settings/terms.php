@@ -24,14 +24,14 @@ $welcome = app()->tenant->getKey('WelcomeLetter');
 
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
-$search  = array("\n##### ", "\n#### ", "\n### ", "\n## ", "\n# ");
-$replace = array("\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### ");
+$search  = ["\n##### ", "\n#### ", "\n### ", "\n## ", "\n# "];
+$replace = ["\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### "];
 
 $termsDocument = null;
 if ($terms != null && $terms != "") {
   $termsDocument = $db->prepare("SELECT Content FROM posts WHERE ID = ?");
   $termsDocument->execute([$terms]);
-  $termsDocument = str_replace($search, $replace, $termsDocument->fetchColumn());
+  $termsDocument = str_replace($search, $replace, (string) $termsDocument->fetchColumn());
   if ($termsDocument[0] == '#') {
     $termsDocument = '##' . $termsDocument;
   }
@@ -72,8 +72,8 @@ include BASE_PATH . 'views/header.php';
                 Select an option
               </option>
               <?php foreach ($termsDocuments as $termsPosts) { ?>
-                <option value="<?= htmlspecialchars($termsPosts['ID']) ?>" <?php if ($terms == $termsPosts['ID']) { ?>selected<?php } ?>>
-                  <?= htmlspecialchars($termsPosts['Title']) ?>
+                <option value="<?= htmlspecialchars((string) $termsPosts['ID']) ?>" <?php if ($terms == $termsPosts['ID']) { ?>selected<?php } ?>>
+                  <?= htmlspecialchars((string) $termsPosts['Title']) ?>
                 </option>
               <?php } ?>
             </select>
@@ -89,8 +89,8 @@ include BASE_PATH . 'views/header.php';
                 Select an option
               </option>
               <?php foreach ($termsDocuments as $termsPosts) { ?>
-                <option value="<?= htmlspecialchars($termsPosts['ID']) ?>" <?php if ($privacy == $termsPosts['ID']) { ?>selected<?php } ?>>
-                  <?= htmlspecialchars($termsPosts['Title']) ?>
+                <option value="<?= htmlspecialchars((string) $termsPosts['ID']) ?>" <?php if ($privacy == $termsPosts['ID']) { ?>selected<?php } ?>>
+                  <?= htmlspecialchars((string) $termsPosts['Title']) ?>
                 </option>
               <?php } ?>
             </select>
@@ -106,8 +106,8 @@ include BASE_PATH . 'views/header.php';
                 Select an option
               </option>
               <?php foreach ($welcomeDocuments as $welcomePosts) { ?>
-                <option value="<?= htmlspecialchars($welcomePosts['ID']) ?>" <?php if ($welcome == $welcomePosts['ID']) { ?>selected<?php } ?>>
-                  <?= htmlspecialchars($welcomePosts['Title']) ?>
+                <option value="<?= htmlspecialchars((string) $welcomePosts['ID']) ?>" <?php if ($welcome == $welcomePosts['ID']) { ?>selected<?php } ?>>
+                  <?= htmlspecialchars((string) $welcomePosts['Title']) ?>
                 </option>
               <?php } ?>
             </select>

@@ -16,7 +16,7 @@ $mobile = null;
 try {
   $number = PhoneNumber::parse($_POST['user-phone'], 'GB');
   $mobile = $number->format(PhoneNumberFormat::E164);
-} catch (PhoneNumberParseException $e) {
+} catch (PhoneNumberParseException) {
   // 'The string supplied is too short to be a phone number.'
   $status = false;
 }
@@ -46,15 +46,15 @@ $db = app()->db;
 $getCount = $db->prepare("SELECT COUNT(*) FROM tenants WHERE Code = ?");
 
 $code = null;
-$email = trim(mb_strtolower($_POST['user-email']));
+$email = trim(mb_strtolower((string) $_POST['user-email']));
 
 if ($_POST['club'] != 'select' && $_POST['club'] != 'not-se') {
   $getCount->execute([
-    mb_strtoupper($_POST['club'])
+    mb_strtoupper((string) $_POST['club'])
   ]);
   if ($getCount->fetchColumn() == 0) {
     // All good to go
-    $code = mb_strtoupper($_POST['club']);
+    $code = mb_strtoupper((string) $_POST['club']);
   } else {
     halt(403);
   }
@@ -69,7 +69,7 @@ $add->execute([
   $_POST['CLUB_NAME'],
   $code,
   $_POST['CLUB_WEBSITE'],
-  mb_strtolower($_POST['user-email']),
+  mb_strtolower((string) $_POST['user-email']),
   0,
   $uuid->toString(),
 ]);
@@ -82,7 +82,7 @@ $tenant->setKey('CLUB_NAME', $_POST['CLUB_NAME']);
 $tenant->setKey('CLUB_SHORT_NAME', $_POST['CLUB_SHORT_NAME']);
 
 $addr = $_POST['CLUB_ADDRESS'];
-$addr = str_replace("\r\n", "\n", $addr);
+$addr = str_replace("\r\n", "\n", (string) $addr);
 $addr = explode("\n", $addr);
 $addr = json_encode($addr);
 
@@ -101,9 +101,9 @@ $addAccessLevel = $db->prepare("INSERT INTO `permissions` (`Permission`, `User`)
 
 $insert->execute([
   $email,
-  password_hash($_POST['user-password'], PASSWORD_BCRYPT),
-  trim($_POST['fn']),
-  trim($_POST['ln']),
+  password_hash((string) $_POST['user-password'], PASSWORD_BCRYPT),
+  trim((string) $_POST['fn']),
+  trim((string) $_POST['ln']),
   $mobile,
   0,
   0,
@@ -118,8 +118,8 @@ $addAccessLevel->execute([
   $uid
 ]);
 
-$message = '<p>Hello ' . htmlspecialchars(trim($_POST['fn'])) . '. Thanks for signing up for SCDS Membership MT.</p>';
-$message .= '<p>Your club\'s system url is ' . htmlspecialchars(autoUrl($tenant->getCodeId())) . '.</p>';
+$message = '<p>Hello ' . htmlspecialchars(trim((string) $_POST['fn'])) . '. Thanks for signing up for SCDS Membership MT.</p>';
+$message .= '<p>Your club\'s system url is ' . htmlspecialchars((string) autoUrl($tenant->getCodeId())) . '.</p>';
 $message .= '<p>Contact support@myswimmingclub.uk for support.</p>';
 
 // Not quite ready yet

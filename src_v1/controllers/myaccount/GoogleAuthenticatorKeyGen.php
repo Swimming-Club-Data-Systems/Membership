@@ -67,7 +67,7 @@ include BASE_PATH . 'views/header.php';
             $qr_url = urlencode($google2fa->getQRCodeUrl(app()->tenant->getKey('CLUB_NAME'), $_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress'], $_SESSION['TENANT-' . app()->tenant->getId()]['G2FAKey']));
             ?>
             <div>
-              <img src="<?= htmlspecialchars(autoUrl("services/qr-generator?size=200&margin=0&text=" . $qr_url)) ?>" srcset="<?= htmlspecialchars(autoUrl("services/qr-generator?size=400&margin=0&text=" . $qr_url)) ?> 2x, <?= htmlspecialchars(autoUrl("services/qr-generator?size=600&margin=0&text=" . $qr_url)) ?> 3x" class="img-fluid mb-3">
+              <img src="<?= htmlspecialchars((string) autoUrl("services/qr-generator?size=200&margin=0&text=" . $qr_url)) ?>" srcset="<?= htmlspecialchars((string) autoUrl("services/qr-generator?size=400&margin=0&text=" . $qr_url)) ?> 2x, <?= htmlspecialchars((string) autoUrl("services/qr-generator?size=600&margin=0&text=" . $qr_url)) ?> 3x" class="img-fluid mb-3">
             </div>
             <p class="mb-0">
               Scan this QR Code with your Authenticator App.
@@ -77,7 +77,7 @@ include BASE_PATH . 'views/header.php';
       </div>
 
       <p>
-        If your app does not support these setup methods, please use the code below;<br> <span class="font-monospace"><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['G2FAKey']) ?></span>
+        If your app does not support these setup methods, please use the code below;<br> <span class="font-monospace"><?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['G2FAKey']) ?></span>
       </p>
 
       <h2>Confirm Setup</h2>

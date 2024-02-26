@@ -26,7 +26,7 @@ if ($info == null) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Squad Rep Options';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Squad Rep Options';
 
 include BASE_PATH . "views/header.php";
 
@@ -37,7 +37,7 @@ include BASE_PATH . "views/header.php";
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?= autoUrl("users") ?>">Users</a></li>
-      <li class="breadcrumb-item"><a href="<?= autoUrl("users/" . $id) ?>"><?= htmlspecialchars(mb_substr($info['Forename'], 0, 1, 'utf-8') . mb_substr($info['Surname'], 0, 1, 'utf-8')) ?></a></li>
+      <li class="breadcrumb-item"><a href="<?= autoUrl("users/" . $id) ?>"><?= htmlspecialchars(mb_substr((string) $info['Forename'], 0, 1, 'utf-8') . mb_substr((string) $info['Surname'], 0, 1, 'utf-8')) ?></a></li>
       <li class="breadcrumb-item"><a href="<?= autoUrl("users/" . $id . "/rep") ?>">Rep Settings</a></li>
       <li class="breadcrumb-item active" aria-current="page">Assign</li>
     </ol>
@@ -46,14 +46,14 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
       <h1>
-        Assign a squad to <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
+        Assign a squad to <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
       </h1>
 
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadError']) { ?>
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
-              We were unable to assign that squad to <?= htmlspecialchars($info['Forename']) ?>
+              We were unable to assign that squad to <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -71,7 +71,7 @@ include BASE_PATH . "views/header.php";
               <option selected>Select a squad</option>
               <?php do { ?>
                 <option value="<?= $squad['SquadID'] ?>">
-                  <?= htmlspecialchars($squad['SquadName']) ?>
+                  <?= htmlspecialchars((string) $squad['SquadName']) ?>
                 </option>
               <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>
             </select>

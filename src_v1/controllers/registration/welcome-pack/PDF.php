@@ -32,7 +32,7 @@ $userObj = new \User($id);
 $json = $userObj->getUserOption('MAIN_ADDRESS');
 $address = null;
 if ($json != null) {
-  $address = json_decode($json);
+  $address = json_decode((string) $json);
 }
 
 ob_start();?>
@@ -72,12 +72,12 @@ ob_start();?>
     <?php if ($address != null && isset($address->streetAndNumber)) { ?>
     <address class="mb-3 address-font address-box">
       <strong><?=htmlspecialchars($email_info['Forename'] . " " . $email_info['Surname'])?></strong><br>
-      <?=htmlspecialchars($address->streetAndNumber)?><br>
+      <?=htmlspecialchars((string) $address->streetAndNumber)?><br>
       <?php if (isset($address->flatOrBuilding)) { ?>
-      <?=htmlspecialchars($address->flatOrBuilding)?><br>
+      <?=htmlspecialchars((string) $address->flatOrBuilding)?><br>
       <?php } ?>
-      <?=htmlspecialchars($address->city)?><br>
-      <?=htmlspecialchars(mb_strtoupper($address->postCode))?>
+      <?=htmlspecialchars((string) $address->city)?><br>
+      <?=htmlspecialchars(mb_strtoupper((string) $address->postCode))?>
     </address>
     <div class="after-address-box"></div>
     <?php } else { ?>
@@ -89,7 +89,7 @@ ob_start();?>
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+        Welcome to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>
       </h1>
       <p class="lead">
         Your Welcome Pack
@@ -101,7 +101,7 @@ ob_start();?>
 
       <ul class="mb-0 list-unstyled"> 
         <?php foreach ($swimmers as $s) { ?>
-        <li><?=htmlspecialchars($s['fn'] . ' ' . $s['sn'])?>, <?=htmlspecialchars($s['squad'])?></li>
+        <li><?=htmlspecialchars($s['fn'] . ' ' . $s['sn'])?>, <?=htmlspecialchars((string) $s['squad'])?></li>
         <?php } ?>
       </ul>
     </div>
@@ -154,7 +154,7 @@ ob_start();?>
 
     <?php if ($welcome != null) { ?>
     <div class="page-break"></div>
-    <h1>Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></h1>
+    <h1>Welcome to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></h1>
     <?=pdfStringReplace(getPostContent($welcome))?>
     <?php } ?>
 
@@ -163,9 +163,9 @@ ob_start();?>
     <h1>Your swimmers and their squads</h1>
 
     <?php foreach ($swimmers as $s) { ?>
-    <h2><?=htmlspecialchars($s['fn'])?> <?=htmlspecialchars($s['sn'])?></h2>
+    <h2><?=htmlspecialchars((string) $s['fn'])?> <?=htmlspecialchars((string) $s['sn'])?></h2>
     
-    <p><?=htmlspecialchars($s['fn'])?> is in <?=htmlspecialchars($s['squad'])?> which has a monthly fee of &pound;<?=htmlspecialchars(number_format($s['fee'], 2, '.', ''))?>.</p>
+    <p><?=htmlspecialchars((string) $s['fn'])?> is in <?=htmlspecialchars((string) $s['squad'])?> which has a monthly fee of &pound;<?=htmlspecialchars(number_format($s['fee'], 2, '.', ''))?>.</p>
 
     <?php
 
@@ -173,10 +173,10 @@ ob_start();?>
     $extra = $swimmerExtras->fetch(PDO::FETCH_ASSOC);
 
     if ($extra != null) { ?>
-      <p>There are additional monthly fees for <?=htmlspecialchars($s['fn'])?></p>
+      <p>There are additional monthly fees for <?=htmlspecialchars((string) $s['fn'])?></p>
       <ul>
       <?php do { ?>
-        <li><?=htmlspecialchars($extra['name'])?> costing &pound;<?=htmlspecialchars(number_format($extra['fee'], 2, '.', ''))?></li>
+        <li><?=htmlspecialchars((string) $extra['name'])?> costing &pound;<?=htmlspecialchars(number_format($extra['fee'], 2, '.', ''))?></li>
       <?php } while ($extra = $swimmerExtras->fetch(PDO::FETCH_ASSOC)); ?>
       </ul>
     <?php } else { ?>
@@ -198,7 +198,7 @@ ob_start();?>
     -->
 
     <?php foreach ($swimmers as $s) { ?>
-    <h1>Code of Conduct for <?=htmlspecialchars($s['fn'])?></h1>
+    <h1>Code of Conduct for <?=htmlspecialchars((string) $s['fn'])?></h1>
     <?=pdfStringReplace(getPostContent($s['SquadCoC']))?>
     <?php } ?>
 
@@ -211,7 +211,7 @@ ob_start();?>
     <?php if (app()->tenant->isCLS() && sizeof($swimmers) > 2) { ?>
     <p>As you have <?=sizeof($swimmers)?> swimmers, you qualify for a reduction on your squad fees.</p>
     <?php } else if (app()->tenant->isCLS()) { ?>
-    <p>If you ever have three or more swimmers while at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, you'll qualify for a discount on your monthly fees.</p>
+    <p>If you ever have three or more swimmers while at <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, you'll qualify for a discount on your monthly fees.</p>
     <?php } ?>
     <?php if (app()->tenant->isCLS()) { ?>
     <p>Reductions are applied as follows;</p>
@@ -251,7 +251,7 @@ ob_start();?>
             <?=htmlspecialchars($s['fn'] . ' ' . $s['sn'])?>
           </td>
           <td>
-            <?=htmlspecialchars($s['squad'])?>
+            <?=htmlspecialchars((string) $s['squad'])?>
           </td>
           <td>
             <?php if ($s['exempt']) { ?>
@@ -329,7 +329,7 @@ ob_start();?>
             <?=htmlspecialchars($extra['fn'] . ' ' . $extra['sn'])?>
           </td>
           <td>
-            <?=htmlspecialchars($extra['name'])?>
+            <?=htmlspecialchars((string) $extra['name'])?>
           </td>
           <td>
             &pound;<?=number_format($extra['fee'], 2)?>
@@ -371,7 +371,7 @@ ob_start();?>
 
     <h1>Direct Debit Payments</h1>
 
-    <p class="lead">Squad fees at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> are paid by Direct Debit.</p>
+    <p class="lead">Squad fees at <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> are paid by Direct Debit.</p>
 
     <p>You must register for Direct Debit payments by signing into your club account and following the instructions shown.</p>
     <p>
@@ -390,21 +390,21 @@ ob_start();?>
         <img src="<?=BASE_PATH?>public/img/directdebit/directdebit@3x.png" style="height:1cm;" class="mb-3" alt="Direct Debit Logo">
       </div>
     </div>
-    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></p>
 
     <ul>
       <li>
         This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits
       </li>
       <li>
-        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
+        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
       </li>
       <li>
-        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
+        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
       </li>
         <ul>
           <li>
-            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> asks you to
           </li>
         </ul>
       <li>
@@ -412,7 +412,7 @@ ob_start();?>
       </li>
     </ul>
 
-    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.</p>
 
     <div class="page-break"></div>
 

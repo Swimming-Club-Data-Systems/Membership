@@ -40,6 +40,6 @@ $this->get('/{id}:int/print.pdf', function ($id) {
 
 $this->get(['/*'], function () {
 	$int = false;
-	$id = ltrim($this[0], '/');
+	$id = ltrim((string) $this[0], '/');
 	include 'Post.php';
 });

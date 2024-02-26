@@ -32,12 +32,12 @@ include BASE_PATH . 'views/header.php';
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('qualifications')) ?>">Qualifications</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('qualifications')) ?>">Qualifications</a></li>
         <li class="breadcrumb-item active" aria-current="page">Edit</li>
       </ol>
     </nav>
 
-    <h1>Edit <?= htmlspecialchars($qualification['Name']) ?></h1>
+    <h1>Edit <?= htmlspecialchars((string) $qualification['Name']) ?></h1>
     <p class="lead mb-0">
       Track member qualifications
     </p>
@@ -63,7 +63,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="qualification-name">Qualification name</label>
-          <input type="text" name="qualification-name" id="qualification-name" class="form-control" required value="<?= htmlspecialchars($qualification['Name']) ?>">
+          <input type="text" name="qualification-name" id="qualification-name" class="form-control" required value="<?= htmlspecialchars((string) $qualification['Name']) ?>">
           <div class="invalid-feedback">
             Please enter a name for this qualification
           </div>
@@ -71,7 +71,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="qualification-description">Qualification description (optional)</label>
-          <textarea name="qualification-description" id="qualification-description" class="form-control"><?= htmlspecialchars($qualification['Description']) ?></textarea>
+          <textarea name="qualification-description" id="qualification-description" class="form-control"><?= htmlspecialchars((string) $qualification['Description']) ?></textarea>
           <div class="invalid-feedback">
             Please enter a name for this qualification
           </div>
@@ -110,7 +110,7 @@ include BASE_PATH . 'views/header.php';
           <div class="mb-3">
             <label class="form-label" for="expires-when">Expires after</label>
             <div class="input-group">
-              <input type="number" placeholder="0" name="expires-when" id="expires-when" class="form-control requirable" min="1" step="1" value="<?= htmlspecialchars($expiry->expiry_schedule->value) ?>">
+              <input type="number" placeholder="0" name="expires-when" id="expires-when" class="form-control requirable" min="1" step="1" value="<?= htmlspecialchars((string) $expiry->expiry_schedule->value) ?>">
               <span class="input-group-text rounded-end" id="expires-when-addon">years</span>
               <div class="invalid-feedback">
                 Please enter the normal expected lifetime of this qualification

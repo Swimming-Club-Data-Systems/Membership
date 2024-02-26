@@ -69,7 +69,7 @@ ob_start();
   <?php include BASE_PATH . 'helperclasses/PDFStyles/Letterhead.php'; ?>
 
   <p>
-    Generated at <?= date("H:i \o\\n d/m/Y") ?> by <?= htmlspecialchars($currentUser->getName()) ?>
+    Generated at <?= date("H:i \o\\n d/m/Y") ?> by <?= htmlspecialchars((string) $currentUser->getName()) ?>
   </p>
 
   <!--
@@ -98,7 +98,7 @@ ob_start();
       <p>&copy; Chester-le-Street ASC <?= date("Y") ?></p>
     <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?= date("Y") ?></p>
-      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></p>
     <?php } ?>
   </div>
 
@@ -110,7 +110,7 @@ ob_start();
     <div class="page-break"></div>
 
     <div class="mb-3">
-      <h2><?= htmlspecialchars($squad['SquadName']) ?></h2>
+      <h2><?= htmlspecialchars((string) $squad['SquadName']) ?></h2>
       <table>
         <thead>
           <tr>
@@ -129,7 +129,7 @@ ob_start();
           <?php while ($swimmer = $swimmers->fetch(PDO::FETCH_ASSOC)) { ?>
             <tr>
               <td>
-                <?= htmlspecialchars(\SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?>
+                <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($swimmer['fn'], $swimmer['sn'])) ?>
               </td>
               <td>
               </td>
@@ -185,4 +185,4 @@ header('Content-Disposition: inline');
 header('Expires: 0');
 header('Cache-Control: must-revalidate');
 header('Pragma: public');
-$dompdf->stream(str_replace(' ', '', $pagetitle) . ".pdf", ['Attachment' => 0]);
+$dompdf->stream(str_replace(' ', '', (string) $pagetitle) . ".pdf", ['Attachment' => 0]);

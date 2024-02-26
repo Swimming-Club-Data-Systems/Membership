@@ -23,7 +23,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments'))?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments'))?>">Payments</a></li>
       <li class="breadcrumb-item active" aria-current="page">Extras</li>
     </ol>
   </nav>
@@ -45,11 +45,11 @@ include BASE_PATH . "views/paymentsMenu.php";
           <?php do { ?>
             <tr>
               <td>
-                <a href="<?=autoUrl("payments/extrafees/" . htmlspecialchars($row['ExtraID']))?>">
-                  <?=htmlspecialchars($row['ExtraName'])?>
+                <a href="<?=autoUrl("payments/extrafees/" . htmlspecialchars((string) $row['ExtraID']))?>">
+                  <?=htmlspecialchars((string) $row['ExtraName'])?>
                 </a>
               </td>
-              <td>&pound;<?=htmlspecialchars($row['ExtraFee'])?><?php if ($row['Type'] == 'Refund') { ?> (credit/refund)<?php } ?></td>
+              <td>&pound;<?=htmlspecialchars((string) $row['ExtraFee'])?><?php if ($row['Type'] == 'Refund') { ?> (credit/refund)<?php } ?></td>
             </tr>
           <?php } while ($row = $extras->fetch(PDO::FETCH_ASSOC)); ?>
         </tbody>

@@ -9,7 +9,7 @@ if (!isset($_GET['type']) || !in_array($_GET['type'], ['club', 'national_governi
 $type = 'Club Membership';
 switch ($_GET['type']) {
   case 'national_governing_body':
-    $type = htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ' Membership';
+    $type = htmlspecialchars((string) app()->tenant->getKey('NGB_NAME')) . ' Membership';
     break;
   case 'other':
     $type = 'Other (Arbitrary) Membership';
@@ -34,9 +34,9 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees')) ?>">Fees</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees')) ?>">Memberships</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees')) ?>">Fees</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees')) ?>">Memberships</a></li>
           <li class="breadcrumb-item active" aria-current="page">New Class</li>
         </ol>
       </nav>
@@ -57,7 +57,7 @@ include BASE_PATH . 'views/header.php';
             <input type="text" name="membership-type-name" id="membership-type-name" class="form-control" value="<?= htmlspecialchars($type) ?>" readonly>
           </div>
 
-          <input type="hidden" name="membership-type" value="<?= htmlspecialchars($_GET['type']) ?>">
+          <input type="hidden" name="membership-type" value="<?= htmlspecialchars((string) $_GET['type']) ?>">
 
           <div class="mb-3">
             <label class="form-label" for="class-name">Class Name</label>

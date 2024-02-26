@@ -15,14 +15,14 @@ function getCachedFile($cacheFile, $url, $maxAge) {
         $cache = $res->getBody();
         try {
           file_put_contents($cacheFile, $cache);
-        } catch (Error $e) {
+        } catch (Error) {
 
         }
         $file = $cache;
       } else if (file_exists($cacheFile)) {
         $file = file_get_contents($cacheFile);
       }
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Do nothing
     }
   }

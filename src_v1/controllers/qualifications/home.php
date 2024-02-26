@@ -45,8 +45,8 @@ include BASE_PATH . 'views/header.php';
       <?php if ($qualification) { ?>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl("qualifications/" . $qualification['ID'])) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars($qualification['Name']) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl("qualifications/" . $qualification['ID'])) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) $qualification['Name']) ?>
             </a>
           <?php } while ($qualification = $getQualifications->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
@@ -64,7 +64,7 @@ include BASE_PATH . 'views/header.php';
       <?php } ?>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('qualifications/new')) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars((string) autoUrl('qualifications/new')) ?>" class="btn btn-success">
           Add new qualification type
         </a>
       </p>

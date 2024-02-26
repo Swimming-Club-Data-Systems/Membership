@@ -38,8 +38,8 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees')) ?>">Fees</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees')) ?>">Fees</a></li>
           <li class="breadcrumb-item active" aria-current="page">Discounts</li>
         </ol>
       </nav>
@@ -83,7 +83,7 @@ include BASE_PATH . 'views/header.php';
                     Swim England Membership Discount
                   </label>
                   <div class="input-group">
-                    <input type="number" min="0" max="100" class="form-control font-monospace" id="se-<?= htmlspecialchars(date('m', $month)) ?>" name="se-<?= htmlspecialchars(date('m', $month)) ?>" placeholder="0" value="<?= htmlspecialchars($discounts['ASA'][date('m', $month)]) ?>">
+                    <input type="number" min="0" max="100" class="form-control font-monospace" id="se-<?= htmlspecialchars(date('m', $month)) ?>" name="se-<?= htmlspecialchars(date('m', $month)) ?>" placeholder="0" value="<?= htmlspecialchars((string) $discounts['ASA'][date('m', $month)]) ?>">
                     <div class="input-group-append">
                       <label class="input-group-text">%</label>
                     </div>
@@ -97,7 +97,7 @@ include BASE_PATH . 'views/header.php';
                     Club Membership Discount
                   </label>
                   <div class="input-group">
-                    <input type="number" min="0" max="100" class="form-control font-monospace" id="club-<?= htmlspecialchars(date('m', $month)) ?>" name="club-<?= htmlspecialchars(date('m', $month)) ?>" placeholder="0" value="<?= htmlspecialchars($discounts['CLUB'][date('m', $month)]) ?>">
+                    <input type="number" min="0" max="100" class="form-control font-monospace" id="club-<?= htmlspecialchars(date('m', $month)) ?>" name="club-<?= htmlspecialchars(date('m', $month)) ?>" placeholder="0" value="<?= htmlspecialchars((string) $discounts['CLUB'][date('m', $month)]) ?>">
                     <div class="input-group-append">
                       <label class="input-group-text">%</label>
                     </div>

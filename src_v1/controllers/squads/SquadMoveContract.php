@@ -13,7 +13,7 @@ $email_info = $email_info->fetch(PDO::FETCH_ASSOC);
 
 $pagetitle = htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname']) . " Squad Move Contract";
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("form-agreement/m/" . urlencode('CodeOfConduct') . '/' . urlencode(date("Y-m-d")) . "/" . urlencode($id) . '/' . urlencode("Squad: " . $email_info['SquadName']));
+$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("form-agreement/m/" . urlencode('CodeOfConduct') . '/' . urlencode(date("Y-m-d")) . "/" . urlencode((string) $id) . '/' . urlencode("Squad: " . $email_info['SquadName']));
 $_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['size'] = 600;
 $qrFile = true;
 
@@ -23,7 +23,7 @@ $userObj = new \User($email_info['UserID']);
 $json = $userObj->getUserOption('MAIN_ADDRESS');
 $address = null;
 if ($json != null) {
-  $address = json_decode($json);
+  $address = json_decode((string) $json);
 }
 
 ob_start();?>
@@ -80,12 +80,12 @@ ob_start();?>
     <?php if ($addr != null && isset($address->streetAndNumber)) { ?>
     <address class="mb-3 address-font address-box">
       <strong><?=htmlspecialchars($email_info['Forename'] . " " . $email_info['Surname'])?></strong><br>
-      <?=htmlspecialchars($address->streetAndNumber)?><br>
+      <?=htmlspecialchars((string) $address->streetAndNumber)?><br>
       <?php if (isset($address->flatOrBuilding)) { ?>
-      <?=htmlspecialchars($address->flatOrBuilding)?><br>
+      <?=htmlspecialchars((string) $address->flatOrBuilding)?><br>
       <?php } ?>
-      <?=htmlspecialchars($address->city)?><br>
-      <?=htmlspecialchars(mb_strtoupper($address->postCode))?>
+      <?=htmlspecialchars((string) $address->city)?><br>
+      <?=htmlspecialchars(mb_strtoupper((string) $address->postCode))?>
     </address>
     <div class="after-address-box"></div>
     <?php } else { ?>
@@ -100,12 +100,12 @@ ob_start();?>
         Squad move contract
       </h1>
       <p class="lead mb-0">
-        <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?>'s move to <?=htmlspecialchars($email_info['SquadName'])?> Squad
+        <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?>'s move to <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad
       </p>
     </div>
 
     <p>
-      We're very excited to let you know that <?=htmlspecialchars($email_info['MForename'])?> will be moving from <?=htmlspecialchars($email_info['OldSquad'])?> Squad to <?=htmlspecialchars($email_info['SquadName'])?> Squad on <?=date("l j F Y", strtotime($email_info['MovingDate']))?>. The Squad Fee you will pay will be &pound;<?=number_format($email_info['SquadFee'], 2)?>*.
+      We're very excited to let you know that <?=htmlspecialchars((string) $email_info['MForename'])?> will be moving from <?=htmlspecialchars((string) $email_info['OldSquad'])?> Squad to <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad on <?=date("l j F Y", strtotime((string) $email_info['MovingDate']))?>. The Squad Fee you will pay will be &pound;<?=number_format($email_info['SquadFee'], 2)?>*.
       <?php if ($email_info['SquadFee'] > $email_info['OldFee']) { ?>
       This is an increase of &pound;<?=number_format($email_info['SquadFee'] - $email_info['OldFee'], 2)?> on your existing squad fee.
       <?php } else if ($email_info['SquadFee'] < $email_info['OldFee']) { ?>
@@ -131,12 +131,12 @@ ob_start();?>
 
     <?php if ($email_info['SquadTimetable'] != "" && $email_info['SquadTimetable'] != null) { ?>
     <p>
-      You can get the timetable for <?=htmlspecialchars($email_info['SquadName'])?> Squad at <a href="<?=htmlspecialchars($email_info['SquadTimetable'])?>" target="_blank"><?=htmlspecialchars($email_info['SquadTimetable'])?></a>.
+      You can get the timetable for <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad at <a href="<?=htmlspecialchars((string) $email_info['SquadTimetable'])?>" target="_blank"><?=htmlspecialchars((string) $email_info['SquadTimetable'])?></a>.
     </p>
     <?php } ?>
 
     <p>
-      If you do not think <?=htmlspecialchars($email_info['MForename'])?> will be able to take up their place in <?=htmlspecialchars($email_info['SquadName'])?> Squad, please contact us as soon as possible. We must however warn you that we may not be able keep <?=htmlspecialchars($email_info['MForename'])?> in <?=htmlspecialchars($email_info['OldSquad'])?> Squad if it would prevent us from moving up swimmers in our lower squads.
+      If you do not think <?=htmlspecialchars((string) $email_info['MForename'])?> will be able to take up their place in <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad, please contact us as soon as possible. We must however warn you that we may not be able keep <?=htmlspecialchars((string) $email_info['MForename'])?> in <?=htmlspecialchars((string) $email_info['OldSquad'])?> Squad if it would prevent us from moving up swimmers in our lower squads.
     </p>
 
     <?php if ((app()->tenant->isCLS())) { ?>
@@ -152,7 +152,7 @@ ob_start();?>
         <p>
           This document contains a form which your swimmer <strong>must sign before starting in their new squad</strong>.
           <?php if (date_diff(date_create($email_info['DateOfBirth']), date_create('today'))->y < 18) { ?>
-          As <?=htmlspecialchars($email_info['MForename'])?> is under the age of 18, you must also sign to confirm that you have explained the content and implications of the code of conduct to <?=htmlspecialchars($email_info['MForename'])?>.
+          As <?=htmlspecialchars((string) $email_info['MForename'])?> is under the age of 18, you must also sign to confirm that you have explained the content and implications of the code of conduct to <?=htmlspecialchars((string) $email_info['MForename'])?>.
           <?php } ?>
         </p>
       </div>
@@ -173,7 +173,7 @@ ob_start();?>
     <?php if ($hasDD) { ?>
     <div class="page-break"></div>
 
-    <h1 id="payment-questions">Paying Squad Fees for <?=htmlspecialchars($email_info['SquadName'])?></h1>
+    <h1 id="payment-questions">Paying Squad Fees for <?=htmlspecialchars((string) $email_info['SquadName'])?></h1>
     <?php if (app()->tenant->isCLS()) { ?>
     <p>
       Your monthly direct debit will be automatically adjusted accordingly. Payments by Direct Debit are covered by the <a href="#payment-dd-guarantee">Direct Debit Guarantee</a>.
@@ -196,21 +196,21 @@ ob_start();?>
         <img src="<?=BASE_PATH?>public/img/directdebit/directdebit@3x.png" style="height:1cm;" class="mb-3" alt="Direct Debit Logo">
       </div>
     </div>
-    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></p>
 
     <ul>
       <li>
         This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits
       </li>
       <li>
-        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
+        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
       </li>
       <li>
-        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
+        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
       </li>
         <ul>
           <li>
-            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> asks you to
           </li>
         </ul>
       <li>
@@ -218,9 +218,9 @@ ob_start();?>
       </li>
     </ul>
 
-    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.</p>
 
-    <!--<p>&copy; <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> <?=date("Y")?></p>-->
+    <!--<p>&copy; <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> <?=date("Y")?></p>-->
 
     <?php } ?>
 
@@ -233,11 +233,11 @@ ob_start();?>
     </h1>
 
     <p>
-      By moving into this squad, you must agree to its code of conduct. <?php if ((app()->tenant->isCLS())) { ?><strong>You are required to sign and return this form to the club before <?=date("l j F Y", strtotime($email_info['MovingDate']))?>.<?php } else { ?><strong>If instructed to do so</strong> by your club, you should sign and return this document.<?php } ?>
+      By moving into this squad, you must agree to its code of conduct. <?php if ((app()->tenant->isCLS())) { ?><strong>You are required to sign and return this form to the club before <?=date("l j F Y", strtotime((string) $email_info['MovingDate']))?>.<?php } else { ?><strong>If instructed to do so</strong> by your club, you should sign and return this document.<?php } ?>
     </p>
 
     <p>
-      The code of conduct for <?=htmlspecialchars($email_info['SquadName'])?> Squad is as follows;
+      The code of conduct for <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad is as follows;
     </p>
 
     <?=getPostContent($email_info['SquadCoC'])?>
@@ -250,7 +250,7 @@ ob_start();?>
 
     <p><strong>
       <?php if ((app()->tenant->isCLS())) { ?>
-        Please sign and return this form to any squad coach before you move into this squad on <?=date("l j F Y", strtotime($email_info['MovingDate']))?>. If you've been sent this form by email, please print it out. Electronic signatures will not be accepted.
+        Please sign and return this form to any squad coach before you move into this squad on <?=date("l j F Y", strtotime((string) $email_info['MovingDate']))?>. If you've been sent this form by email, please print it out. Electronic signatures will not be accepted.
       <?php } else { ?>
         If required to do so by your club, please sign and return this form.
       <?php } ?>
@@ -264,7 +264,7 @@ ob_start();?>
 
         <?php if (date_diff(date_create($email_info['DateOfBirth']), date_create('today'))->y < 18) { ?>
           <p>
-            As <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?> is under the age of 18 you, their parent/guardian, must sign to confirm you have explained the squad code of conduct to <?=htmlspecialchars($email_info['MForename'])?>.
+            As <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?> is under the age of 18 you, their parent/guardian, must sign to confirm you have explained the squad code of conduct to <?=htmlspecialchars((string) $email_info['MForename'])?>.
           </p>
 
           <p>
@@ -277,7 +277,7 @@ ob_start();?>
         <?php } ?>
 
         <p>
-          I, <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?> agree to the Code of Conduct for <?=htmlspecialchars($email_info['SquadName'])?> Squad as outlined above as required by the Terms and Conditions of Membership of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.
+          I, <?=htmlspecialchars($email_info['MForename'] . " " . $email_info['MSurname'])?> agree to the Code of Conduct for <?=htmlspecialchars((string) $email_info['SquadName'])?> Squad as outlined above as required by the Terms and Conditions of Membership of <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.
         </p>
 
         <div class="signature-box mb-0">
@@ -291,7 +291,7 @@ ob_start();?>
         <div class="row">
           <div class="split-30">
             <?php include BASE_PATH . 'controllers/barcode-generation-system/qr-safe.php'; ?>
-            <img width="100" class="qr" src="<?='data:image/png;base64,'.base64_encode($qrReturn)?>">
+            <img width="100" class="qr" src="<?='data:image/png;base64,'.base64_encode((string) $qrReturn)?>">
           </div>
           <div class="split-70">
             <p class="mb-0">

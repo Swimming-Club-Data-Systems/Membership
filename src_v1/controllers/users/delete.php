@@ -40,7 +40,7 @@ try {
     throw new Exception('Current user does not exist. This means an unknown error occurred.');
   }
 
-  if (!password_verify($_POST['password'], $currentUser['Password'])) {
+  if (!password_verify((string) $_POST['password'], (string) $currentUser['Password'])) {
     throw new Exception('The password provided was incorrect.');
   }
 
@@ -153,7 +153,7 @@ try {
       try {
         include BASE_PATH . 'controllers/payments/GoCardlessSetupClient.php';
         $client->mandates()->cancel($oldMandate['Mandate']);
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Ignore - no GC
       }
 
@@ -161,7 +161,7 @@ try {
       $setOutOfUse->execute([
         $oldMandate['MandateID']
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Returns cancellation_failed error on failure
       // Oops can't cancel
     }
@@ -176,9 +176,9 @@ try {
   // Clear user contact details and set inactive
   $update = $db->prepare("UPDATE users SET EmailAddress = ?, EmailComms = ?, Mobile = ?, MobileComms = ?, Active = ? WHERE UserID = ?");
   $update->execute([
-    hash('sha256', $_POST['user']),
+    hash('sha256', (string) $_POST['user']),
     0,
-    hash('sha256', $_POST['user']),
+    hash('sha256', (string) $_POST['user']),
     0,
     0,
     $_POST['user']
@@ -192,7 +192,7 @@ try {
 
   $responseData['status'] = 200;
   $responseData['message'] = $deleteUser['Forename'] . '\'s account has been deleted successfully.';
-} catch (PDOException $e) {
+} catch (PDOException) {
   $responseData['status'] = 500;
   $responseData['message'] = 'A database error occurred. All changes have been rolled back. If direct debit mandates were cancelled, this cannot be rolled back and you may need to ask the user to setup their direct debit again.';
   $db->rollBack();

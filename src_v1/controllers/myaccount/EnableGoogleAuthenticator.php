@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
           You can use an time-based one-time password generator such as iCloud Keychain (Safari 15 onwards), Google Authenticator or Microsoft Authenticator to get your Two-Factor Authentication codes. You can always still get codes by email as a backup if you don't have your device on you.
         </p>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("my-account/googleauthenticator/setup")) ?>" class="btn btn-primary btn-lg">
+          <a href="<?= htmlspecialchars((string) autoUrl("my-account/googleauthenticator/setup")) ?>" class="btn btn-primary btn-lg">
             Set up app
           </a>
         </p>

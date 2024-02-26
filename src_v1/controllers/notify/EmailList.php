@@ -43,8 +43,8 @@ include BASE_PATH . "views/notifyMenu.php";
 							if ($mail['PSubject'] == null) {
 								$subject = $mail['HSubject'];
 							} ?>
-							<a href="<?=autoUrl("notify/email/" . $mail['EmailID'])?>" title="View <?=htmlspecialchars($subject)?>">
-								<?=htmlspecialchars($subject)?>
+							<a href="<?=autoUrl("notify/email/" . $mail['EmailID'])?>" title="View <?=htmlspecialchars((string) $subject)?>">
+								<?=htmlspecialchars((string) $subject)?>
 							</a>
 						</td>
 					</tr>

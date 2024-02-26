@@ -22,7 +22,7 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
           <li class="breadcrumb-item active" aria-current="page">Fees</li>
         </ol>
       </nav>
@@ -36,13 +36,13 @@ include BASE_PATH . 'views/header.php';
             Fees for members in multiple squads
           </a>
           <a href="<?= autoUrl("settings/fees/membership-fees") ?>" class="list-group-item list-group-item-action">
-            Club and <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership fees
+            Club and <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> membership fees
           </a>
           <a href="<?= autoUrl("settings/fees/charge-months") ?>" class="list-group-item list-group-item-action">
             Months without squad fees
           </a>
           <a href="<?= autoUrl("settings/fees/membership-fee-payment-methods") ?>" class="list-group-item list-group-item-action">
-            Payment methods for club and <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees
+            Payment methods for club and <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> fees
           </a>
         </div>
       </main>

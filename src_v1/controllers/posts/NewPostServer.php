@@ -16,7 +16,7 @@ $data = [
 	$_POST['content'],
 	$_POST['title'],
 	$_POST['excerpt'],
-	trim($_POST['path'], " \t\n\r\0\x0B/"),
+	trim((string) $_POST['path'], " \t\n\r\0\x0B/"),
 	$_POST['type'],
 	$_POST['mime'],
 	$tenant->getId()
@@ -24,7 +24,7 @@ $data = [
 
 try {
 	$db->prepare("INSERT INTO `posts` (`Author`, `Date`, `Content`, `Title`, `Excerpt`, `Path`, `Type`, `MIME`, `Tenant`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")->execute($data);
-} catch (PDOException $e) {
+} catch (PDOException) {
 	halt(500);
 }
 

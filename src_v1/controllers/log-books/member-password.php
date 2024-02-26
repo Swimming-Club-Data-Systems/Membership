@@ -35,7 +35,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col text-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("log-books")) ?>" class="btn btn-dark-l btn-outline-light-d">Log books</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>" class="btn btn-dark-l btn-outline-light-d">Log books</a>
           <button type="submit" class="btn btn-success">Save <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
         </p>
       </div>
@@ -55,7 +55,7 @@ include BASE_PATH . 'views/header.php';
             <strong>We could not update your password.</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SetMemberPassError']);
@@ -63,16 +63,16 @@ include BASE_PATH . 'views/header.php';
 
       <p>You can change your password quickly and easily on this page.</p>
 
-      <p>Usual <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> password policies apply - Use 8 characters or more, with at least one lowercase letter, at least one uppercase letter and at least one number</p>
+      <p>Usual <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> password policies apply - Use 8 characters or more, with at least one lowercase letter, at least one uppercase letter and at least one number</p>
 
       <form method="post" class="needs-validation" novalidate>
         <?php if (isset($_GET['return'])) { ?>
-          <input type="hidden" name="return" value="<?= htmlspecialchars(autoUrl("log-books")) ?>">
+          <input type="hidden" name="return" value="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">
         <?php } ?>
 
         <div class="mb-3">
           <label class="form-label" for="username">Swim England number</label>
-          <input type="text" class="form-control" id="username" name="username" aria-describedby="username-help" value="<?= htmlspecialchars($member['se']) ?>" disabled>
+          <input type="text" class="form-control" id="username" name="username" aria-describedby="username-help" value="<?= htmlspecialchars((string) $member['se']) ?>" disabled>
           <small id="username-help" class="form-text text-muted">You use your Swim England number alongside your password to sign in</small>
         </div>
 

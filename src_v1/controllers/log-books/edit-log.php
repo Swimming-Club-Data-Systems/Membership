@@ -55,17 +55,17 @@ include BASE_PATH . 'views/header.php';
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Log book</a></li>
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books/logs/" . $id)) ?>">#<?= htmlspecialchars($id) ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Log book</a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books/logs/" . $id)) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit</li>
           </ol>
         </nav>
       <?php } else { ?>
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Members</a></li>
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $info['MemberID'])) ?>"><?= htmlspecialchars(mb_substr($info['fn'], 0, 1, 'utf-8') . mb_substr($info['sn'], 0, 1, 'utf-8')) ?></a></li>
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books/logs/" . $id)) ?>">#<?= htmlspecialchars($id) ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Members</a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books/members/" . $info['MemberID'])) ?>"><?= htmlspecialchars(mb_substr((string) $info['fn'], 0, 1, 'utf-8') . mb_substr((string) $info['sn'], 0, 1, 'utf-8')) ?></a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books/logs/" . $id)) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
             <li class="breadcrumb-item active" aria-current="page">Edit</li>
           </ol>
         </nav>
@@ -77,7 +77,7 @@ include BASE_PATH . 'views/header.php';
             Edit log book entry
           </h1>
           <p class="lead mb-0">
-            <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['fn'], $info['sn'])) ?>'s log book
+            <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['fn'], $info['sn'])) ?>'s log book
           </p>
           <div class="mb-3 d-lg-none"></div>
         </div>
@@ -114,7 +114,7 @@ include BASE_PATH . 'views/header.php';
         <h2>Log entry</h2>
         <div class="mb-3">
           <label class="form-label" for="title">Log title</label>
-          <input type="text" required class="form-control" id="title" name="title" placeholder="e.g. Swimming training" value="<?= htmlspecialchars($title) ?>">
+          <input type="text" required class="form-control" id="title" name="title" placeholder="e.g. Swimming training" value="<?= htmlspecialchars((string) $title) ?>">
           <div class="invalid-feedback">
             You must give this log entry a title.
           </div>
@@ -122,7 +122,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="entry">Log entry</label>
-          <textarea rows="15" required class="form-control" id="entry" name="entry" placeholder="e.g.&#13;&#10;5 x 200m free&#13;&#10;10 x 50m back"><?= htmlspecialchars($entry) ?></textarea>
+          <textarea rows="15" required class="form-control" id="entry" name="entry" placeholder="e.g.&#13;&#10;5 x 200m free&#13;&#10;10 x 50m back"><?= htmlspecialchars((string) $entry) ?></textarea>
           <div class="invalid-feedback">
             You must fill out the log entry.
           </div>

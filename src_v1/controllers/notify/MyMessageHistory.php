@@ -90,7 +90,7 @@ include BASE_PATH . "views/header.php";
 
       <?php if ($numMails == 0) { ?>
         <p class="lead">
-          All emails sent to you using our <a href="<?= htmlspecialchars(autoUrl('notify')) ?>">Notify</a> system.
+          All emails sent to you using our <a href="<?= htmlspecialchars((string) autoUrl('notify')) ?>">Notify</a> system.
         </p>
 
         <div class="alert alert-warning">
@@ -104,10 +104,10 @@ include BASE_PATH . "views/header.php";
       <?php
       } else { ?>
         <p class="lead">
-          Page <?= htmlspecialchars($page) ?> of <?= $numPages ?>
+          Page <?= htmlspecialchars((string) $page) ?> of <?= $numPages ?>
         </p>
         <?php do {
-          $info = json_decode($row['JSONData']);
+          $info = json_decode((string) $row['JSONData']);
           $sender = null;
           if ($row['ForceSend']) {
             $sender .= "<dt class=\"col-sm-3\">Force Send</dt>
@@ -117,7 +117,7 @@ include BASE_PATH . "views/header.php";
           <div class="card mb-3">
             <div class="card-header">
               <h5 class="card-title">
-                <?= htmlspecialchars($row['Subject']) ?>
+                <?= htmlspecialchars((string) $row['Subject']) ?>
               </h5>
               <dl class="row mb-0 small">
                 <?= $sender ?>
@@ -141,7 +141,7 @@ include BASE_PATH . "views/header.php";
                     sort($array);
                     foreach ($array as $s) { ?>
                       <span class="badge rounded-pill rounded bg-dark">
-                        <?= htmlspecialchars(mb_strimwidth($s, 0, 40)) ?>
+                        <?= htmlspecialchars(mb_strimwidth((string) $s, 0, 40)) ?>
                       </span><?php
                             } ?>
                   </dd>
@@ -167,15 +167,15 @@ include BASE_PATH . "views/header.php";
                             $faClass = ' fa-file-pdf-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('image')) === 'image') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('image')) === 'image') {
                             $faClass = ' fa-file-image-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('video')) === 'video') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('video')) === 'video') {
                             $faClass = ' fa-file-video-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('text')) === 'text') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('text')) === 'text') {
                             $faClass = ' fa-file-text-o ';
                             $download = true;
                           }
@@ -200,8 +200,8 @@ include BASE_PATH . "views/header.php";
 
                         if ($download) $disposition = 'attachment';
                       ?>
-                        <a href="<?= htmlspecialchars(autoUrl("files/" . $a->URI . "?filename=" . urlencode($a->Filename) . "&disposition=" . urlencode($disposition))) ?>" class="d-block mb-1 text-truncate text-decoration-none" <?php if ($download) { ?> download="" <?php } else { ?> target="_blank" <?php } ?>>
-                          <span class="fa <?= htmlspecialchars($faClass) ?> fa-fw"></span> <?= htmlspecialchars($a->Filename) ?>
+                        <a href="<?= htmlspecialchars((string) autoUrl("files/" . $a->URI . "?filename=" . urlencode((string) $a->Filename) . "&disposition=" . urlencode($disposition))) ?>" class="d-block mb-1 text-truncate text-decoration-none" <?php if ($download) { ?> download="" <?php } else { ?> target="_blank" <?php } ?>>
+                          <span class="fa <?= htmlspecialchars($faClass) ?> fa-fw"></span> <?= htmlspecialchars((string) $a->Filename) ?>
                         </a>
                       <?php
                       } ?>
@@ -217,7 +217,7 @@ include BASE_PATH . "views/header.php";
         <?php } while ($row = $sql->fetch(PDO::FETCH_ASSOC)); ?>
 
         <?= $pagination->render() ?>
-        
+
       <?php } ?>
     </div>
   </div>

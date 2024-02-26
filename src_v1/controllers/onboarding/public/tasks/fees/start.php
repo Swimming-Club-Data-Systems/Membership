@@ -68,9 +68,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -89,7 +89,7 @@ include BASE_PATH . "views/head.php";
 
         <?php if (!$batch->completed && $batch->total > 0 && sizeof($payMethods) > 0 && $canPay) { ?>
           <form method="post" class="needs-validation" novalidate>
-            <h2>Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?></h2>
+            <h2>Pay <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?></h2>
             <?php if (sizeof($payMethods) > 1) { ?>
               <!-- Select payment method -->
               <p class="mb-2">Choose a payment method</p>
@@ -131,7 +131,7 @@ include BASE_PATH . "views/head.php";
               </div>
             <?php } else if (sizeof($payMethods) > 0) { ?>
               <!-- Just go straight to payment -->
-              <input type="hidden" name="pay-method" value="<?= htmlspecialchars($payMethods[0]) ?>">
+              <input type="hidden" name="pay-method" value="<?= htmlspecialchars((string) $payMethods[0]) ?>">
               <p>You can only pay for this batch with <?= htmlspecialchars($payMethodStrings[$payMethods[0]]) ?>.</p>
             <?php } ?>
 
@@ -160,7 +160,7 @@ include BASE_PATH . "views/head.php";
           </form>
         <?php } else if (!$batch->completed && $batch->total == 0) { ?>
           <form method="post" class="needs-validation" novalidate>
-            <h2>Pay <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?></h2>
+            <h2>Pay <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?></h2>
 
             <p>
               It appears you have nothing to pay.
@@ -182,35 +182,35 @@ include BASE_PATH . "views/head.php";
             <?php do { ?>
               <li class="list-group-item">
                 <h3><?= htmlspecialchars($item->firstName . ' ' . $item->lastName) ?></h3>
-                <p class="lead"><?= htmlspecialchars($item->membershipName) ?></p>
+                <p class="lead"><?= htmlspecialchars((string) $item->membershipName) ?></p>
 
                 <dl class="row">
                   <dt class="col-3">
                     Membership ID
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars($item->membershipId) ?>
+                    <?= htmlspecialchars((string) $item->membershipId) ?>
                   </dd>
 
                   <dt class="col-3">
                     Period
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars($item->yearName) ?> (<?= htmlspecialchars((new DateTime($item->yearStart))->format('j F Y')) ?> to <?= htmlspecialchars((new DateTime($item->yearEnd))->format('j F Y')) ?>)
+                    <?= htmlspecialchars((string) $item->yearName) ?> (<?= htmlspecialchars((new DateTime($item->yearStart))->format('j F Y')) ?> to <?= htmlspecialchars((new DateTime($item->yearEnd))->format('j F Y')) ?>)
                   </dd>
 
                   <dt class="col-3">
                     Amount
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), 'GBP')) ?>
+                    <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), 'GBP')) ?>
                   </dd>
 
                   <dt class="col-3">
                     NGB ID
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars($item->ngbId) ?>
+                    <?= htmlspecialchars((string) $item->ngbId) ?>
                   </dd>
 
                   <?php if ($item->notes) { ?>
@@ -277,21 +277,21 @@ include BASE_PATH . "views/head.php";
             Batch ID
           </dt>
           <dd class="col-9">
-            <?= htmlspecialchars($batch->id) ?>
+            <?= htmlspecialchars((string) $batch->id) ?>
           </dd>
 
           <dt class="col-3">
             Amount
           </dt>
           <dd class="col-9">
-            <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
+            <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
           </dd>
 
           <dt class="col-3">
             Due by end
           </dt>
           <dd class="col-9">
-            <?= htmlspecialchars($session->dueDate->format('j F Y')) ?>
+            <?= htmlspecialchars((string) $session->dueDate->format('j F Y')) ?>
           </dd>
 
           <?php if (!$batch->completed) { ?>

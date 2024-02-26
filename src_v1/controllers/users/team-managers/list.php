@@ -22,7 +22,7 @@ $getGalas->execute([
 ]);
 $gala = $getGalas->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Team Manager Options';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Team Manager Options';
 
 include BASE_PATH . "views/header.php";
 
@@ -41,14 +41,14 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
       <h1>
-        <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Team Manager Settings</small>
+        <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Team Manager Settings</small>
       </h1>
 
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignGalaSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
-              We've assigned that gala to <?= htmlspecialchars($info['Forename']) ?>
+              We've assigned that gala to <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -60,7 +60,7 @@ include BASE_PATH . "views/header.php";
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
-              We've removed that gala from <?= htmlspecialchars($info['Forename']) ?>
+              We've removed that gala from <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -72,7 +72,7 @@ include BASE_PATH . "views/header.php";
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
-              We could not remove that gala from <?= htmlspecialchars($info['Forename']) ?>
+              We could not remove that gala from <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -82,14 +82,14 @@ include BASE_PATH . "views/header.php";
 
       <?php if ($gala != null) { ?>
         <p>
-          <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> is a team manager for the following upcoming galas.
+          <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> is a team manager for the following upcoming galas.
         </p>
         <ul class="list-group mb-3">
           <?php do { ?>
             <li class="list-group-item">
               <div class="row align-items-center justify-content-between">
                 <div class="col">
-                  <?= htmlspecialchars($gala['GalaName']) ?>
+                  <?= htmlspecialchars((string) $gala['GalaName']) ?>
                 </div>
                 <div class="col text-end">
                   <span>
@@ -107,7 +107,7 @@ include BASE_PATH . "views/header.php";
         <div class="alert alert-warning">
           <p class="mb-0">
             <strong>
-              <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> is not a team manager for any future galas
+              <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> is not a team manager for any future galas
             </strong>
           </p>
         </div>

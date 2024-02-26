@@ -27,13 +27,13 @@ $stripeDD = $getStripeDD->fetch(PDO::FETCH_ASSOC);
 $bankName = $bank = $has_logo = $logo_path = null;
 $hasGC = false;
 if (userHasMandates($id)) {
-  $bankName = mb_strtoupper(bankDetails($id, "account_holder_name"));
+  $bankName = mb_strtoupper((string) bankDetails($id, "account_holder_name"));
   if ($bankName != "UNKNOWN") {
     $bankName = $bankName . ', ';
   } else {
     $bankName = null;
   }
-  $bank = mb_strtoupper(bankDetails($id, "bank_name"));
+  $bank = mb_strtoupper((string) bankDetails($id, "bank_name"));
   $logo_path = getBankLogo($bank);
   $hasGC = true;
 }
@@ -68,12 +68,12 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
 ?>
 
 <p>
-  We can start an early Direct Debit payment collection for <?= htmlspecialchars($info['Forename']) ?>. This allows you to take additional fees earlier than scheduled.
+  We can start an early Direct Debit payment collection for <?= htmlspecialchars((string) $info['Forename']) ?>. This allows you to take additional fees earlier than scheduled.
 </p>
 
 <?php if ($monthExists && ($item || $squadFee || $extraFee)) { ?>
 
-  <form id="trigger-early-payment-form" class="needs-validation" novalidate data-submit-url="<?= htmlspecialchars(autoUrl("users/$id/direct-debit/force-run-submission")) ?>">
+  <form id="trigger-early-payment-form" class="needs-validation" novalidate data-submit-url="<?= htmlspecialchars((string) autoUrl("users/$id/direct-debit/force-run-submission")) ?>">
 
     <p>
       Please select the pending payment items you would like to include in this Direct Debit charge.
@@ -102,10 +102,10 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
             <div class="row">
               <div class="col">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("squad-fee-" . $squadFee->squadId . "-" . $squadFee->memberId) ?>" id="<?= htmlspecialchars("squad-fee-" . $squadFee->squadId . "-" . $squadFee->memberId) ?>" data-amount="<?= htmlspecialchars(MoneyHelpers::decimalToInt($amount)) ?>">
+                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("squad-fee-" . $squadFee->squadId . "-" . $squadFee->memberId) ?>" id="<?= htmlspecialchars("squad-fee-" . $squadFee->squadId . "-" . $squadFee->memberId) ?>" data-amount="<?= htmlspecialchars((string) MoneyHelpers::decimalToInt($amount)) ?>">
                   <label class="form-check-label fw-bold" for="<?= htmlspecialchars("squad-fee-" . $squadFee->squadId . "-" . $squadFee->memberId) ?>">
-                    <div><?= htmlspecialchars($squadFee->squad) ?> (<?= htmlspecialchars(\SCDS\Formatting\Names::format($squadFee->forename, $squadFee->surname)) ?>)</div>
-                    <div><?= htmlspecialchars(MoneyHelpers::formatCurrency((float) $amount, 'GBP')) ?></div>
+                    <div><?= htmlspecialchars((string) $squadFee->squad) ?> (<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($squadFee->forename, $squadFee->surname)) ?>)</div>
+                    <div><?= htmlspecialchars((string) MoneyHelpers::formatCurrency((float) $amount, 'GBP')) ?></div>
                   </label>
                 </div>
               </div>
@@ -114,7 +114,7 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
               </div>
             </div>
           </li>
-        <?php } while ($squadFee = $getSquadMetadata->fetch(PDO::FETCH_OBJ)); ?>
+<?php } while ($squadFee = $getSquadMetadata->fetch(PDO::FETCH_OBJ)); ?>
       <?php } ?>
       <?php if ($extraFee) { ?>
         <li class="list-group-item bg-light fw-bold">
@@ -130,10 +130,10 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
             <div class="row">
               <div class="col">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("extra-fee-" . $extraFee->extraId . "-" . $extraFee->memberId) ?>" id="<?= htmlspecialchars("extra-fee-" . $extraFee->extraId . "-" . $extraFee->memberId) ?>" data-amount="<?= htmlspecialchars(MoneyHelpers::decimalToInt($amount)) ?>">
+                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("extra-fee-" . $extraFee->extraId . "-" . $extraFee->memberId) ?>" id="<?= htmlspecialchars("extra-fee-" . $extraFee->extraId . "-" . $extraFee->memberId) ?>" data-amount="<?= htmlspecialchars((string) MoneyHelpers::decimalToInt($amount)) ?>">
                   <label class="form-check-label fw-bold" for="<?= htmlspecialchars("extra-fee-" . $extraFee->extraId . "-" . $extraFee->memberId) ?>">
-                    <div><?= htmlspecialchars($extraFee->extra) ?> (<?= htmlspecialchars(\SCDS\Formatting\Names::format($extraFee->forename, $extraFee->surname)) ?>)</div>
-                    <div><?= htmlspecialchars(MoneyHelpers::formatCurrency((float) $amount, 'GBP')) ?></div>
+                    <div><?= htmlspecialchars((string) $extraFee->extra) ?> (<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($extraFee->forename, $extraFee->surname)) ?>)</div>
+                    <div><?= htmlspecialchars((string) MoneyHelpers::formatCurrency((float) $amount, 'GBP')) ?></div>
                   </label>
                 </div>
               </div>
@@ -158,10 +158,10 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
             <div class="row">
               <div class="col">
                 <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("invoice-item-" . $item->id) ?>" id="<?= htmlspecialchars("invoice-item-" . $item->id) ?>" data-amount="<?= htmlspecialchars($amount) ?>">
+                  <input class="form-check-input" type="checkbox" value="1" name="<?= htmlspecialchars("invoice-item-" . $item->id) ?>" id="<?= htmlspecialchars("invoice-item-" . $item->id) ?>" data-amount="<?= htmlspecialchars((string) $amount) ?>">
                   <label class="form-check-label fw-bold" for="<?= htmlspecialchars("invoice-item-" . $item->id) ?>">
-                    <div><?= htmlspecialchars($item->name) ?></div>
-                    <div><?= htmlspecialchars(MoneyHelpers::formatCurrency((float) MoneyHelpers::intToDecimal($amount), $item->currency)) ?></div>
+                    <div><?= htmlspecialchars((string) $item->name) ?></div>
+                    <div><?= htmlspecialchars((string) MoneyHelpers::formatCurrency((float) MoneyHelpers::intToDecimal($amount), $item->currency)) ?></div>
                   </label>
                 </div>
               </div>
@@ -189,7 +189,7 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
     <div class="form-check">
       <input class="form-check-input" type="checkbox" value="1" id="confirm-charge" required disabled>
       <label class="form-check-label" for="confirm-charge">
-        I have checked the amount I am charging <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> and confirm I want to proceed.
+        I have checked the amount I am charging <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?> and confirm I want to proceed.
       </label>
     </div>
 
@@ -214,10 +214,10 @@ $extraFee = $getExtraMetadata->fetch(PDO::FETCH_OBJ);
 
   <div class="alert alert-warning">
     <p class="mb-0">
-      <strong>There are no pending payments for <?= htmlspecialchars($info['Forename']) ?></strong>
+      <strong>There are no pending payments for <?= htmlspecialchars((string) $info['Forename']) ?></strong>
     </p>
     <p class="mb-0">
-      Please <a class="alert-link" href="<?= htmlspecialchars(autoUrl("payments/invoice-payments/new")) ?>">add invoice payment items</a>.
+      Please <a class="alert-link" href="<?= htmlspecialchars((string) autoUrl("payments/invoice-payments/new")) ?>">add invoice payment items</a>.
     </p>
   </div>
 

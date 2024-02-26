@@ -30,8 +30,8 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees')) ?>">Fees</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees')) ?>">Fees</a></li>
           <li class="breadcrumb-item active" aria-current="page">Memberships</li>
         </ol>
       </nav>
@@ -66,14 +66,14 @@ include BASE_PATH . 'views/header.php';
 
             <div class="list-group mb-3">
               <?php do { ?>
-                <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
-                  <p class="mb-0"><strong><?= htmlspecialchars($class['Name']) ?></strong></p>
+                <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
+                  <p class="mb-0"><strong><?= htmlspecialchars((string) $class['Name']) ?></strong></p>
                 </a>
               <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>
@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
               <select class="form-select" id="default-class" name="default-class">
                 <option selected disabled>Open this select menu</option>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
+                  <option value="<?= htmlspecialchars((string) $class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars((string) $class['Name']) ?></option>
                 <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
               </select>
             </div>
@@ -104,13 +104,13 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=club')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>
           <?php } ?>
 
-          <h2><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Classes</h2>
+          <h2><?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership Classes</h2>
 
           <?php
 
@@ -126,14 +126,14 @@ include BASE_PATH . 'views/header.php';
 
             <div class="list-group mb-3">
               <?php do { ?>
-                <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
-                  <p class="mb-0"><strong><?= htmlspecialchars($class['Name']) ?></strong></p>
+                <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
+                  <p class="mb-0"><strong><?= htmlspecialchars((string) $class['Name']) ?></strong></p>
                 </a>
               <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>
@@ -141,11 +141,11 @@ include BASE_PATH . 'views/header.php';
             <?php $getClasses->execute(); ?>
             <?php $class = $getClasses->fetch(PDO::FETCH_ASSOC); ?>
             <div class="mb-3">
-              <label class="form-label" for="default-ngb-class">Select default <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> membership class</label>
+              <label class="form-label" for="default-ngb-class">Select default <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> membership class</label>
               <select class="form-select" id="default-ngb-class" name="default-ngb-class">
                 <option selected disabled>Select a default</option>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_NGB_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($class['Name']) ?></option>
+                  <option value="<?= htmlspecialchars((string) $class['ID']) ?>" <?php if ($tenant->getKey('DEFAULT_NGB_MEMBERSHIP_CLASS') == $class['ID']) { ?>selected<?php } ?>><?= htmlspecialchars((string) $class['Name']) ?></option>
                 <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
               </select>
             </div>
@@ -164,7 +164,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=national_governing_body')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>
@@ -186,14 +186,14 @@ include BASE_PATH . 'views/header.php';
 
             <div class="list-group mb-3">
               <?php do { ?>
-                <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
-                  <p class="mb-0"><strong><?= htmlspecialchars($class['Name']) ?></strong></p>
+                <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/' . $class['ID'])) ?>" class="list-group-item list-group-item-action">
+                  <p class="mb-0"><strong><?= htmlspecialchars((string) $class['Name']) ?></strong></p>
                 </a>
               <?php } while ($class = $getClasses->fetch(PDO::FETCH_ASSOC)); ?>
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>
@@ -206,7 +206,7 @@ include BASE_PATH . 'views/header.php';
             </div>
 
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
+              <a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees/new?type=other')) ?>" class="btn btn-success">
                 Add new
               </a>
             </p>

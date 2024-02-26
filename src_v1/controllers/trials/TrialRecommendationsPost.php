@@ -20,7 +20,7 @@ $squad = $_POST['squad'];
 if ($squad == "null") {
   $query = $db->prepare("UPDATE joinSwimmers SET Comments = ? WHERE ID = ? AND Tenant = ?");
   $query->execute([
-    htmlspecialchars(trim($_POST['comments'])),
+    htmlspecialchars(trim((string) $_POST['comments'])),
     $request,
     $tenant->getId()
   ]);
@@ -39,7 +39,7 @@ if ($squad == "null") {
 
   $query = $db->prepare("UPDATE joinSwimmers SET Comments = ?, SquadSuggestion = ? WHERE ID = ? AND Tenant = ?");
   $query->execute([
-    htmlspecialchars(trim($_POST['comments'])), 
+    htmlspecialchars(trim((string) $_POST['comments'])), 
     $squad, 
     $request,
     $tenant->getId()

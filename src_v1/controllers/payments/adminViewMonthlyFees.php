@@ -37,7 +37,7 @@ include BASE_PATH . 'views/header.php'; ?>
 			<tbody>
 				<?php while ($row = $getDetails->fetch(PDO::FETCH_ASSOC)) { ?>
 					<tr>
-						<td><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?></td>
+						<td><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?></td>
 						<td><?= swimmers(null, $row['UserID'], true) ?></td>
 						<td>
 							Squads: <?= (monthlyFeeCost(null, $row['UserID'], "string")) ?> <br>

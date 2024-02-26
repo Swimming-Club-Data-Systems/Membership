@@ -11,7 +11,7 @@ header('Content-Disposition: attachment; filename=access-keys.csv');
 $output = fopen('php://output', 'w');
 
 // output the column headings
-fputcsv($output, array('Forename', 'Surname', 'Squads', 'Swim England Number', 'Access Key'));
+fputcsv($output, ['Forename', 'Surname', 'Squads', 'Swim England Number', 'Access Key']);
 
 // fetch the data
 $swimmers = $db->prepare("SELECT members.MemberID, members.MForename, members.MSurname, members.ASANumber, members.AccessKey FROM members WHERE members.Tenant = ? ORDER BY `members`.`MForename` , `members`.`MSurname` ASC");

@@ -38,7 +38,7 @@ if ($good) {
   try {
     $mobile = PhoneNumber::parse($_POST['phone-number'], 'GB');
     $phone = $mobile->format(PhoneNumberFormat::E164);
-  } catch (Exception $e) {
+  } catch (Exception) {
     $good = false;
   }
 }
@@ -47,11 +47,11 @@ if ($good) {
   // If all good, update the DB
   $update = $db->prepare("UPDATE `users` SET `Forename` = ?, `Surname` = ?, `EmailAddress` = ?, `Mobile` = ?, `Password` = ? WHERE `UserID` = ?");
   $update->execute([
-    trim($_POST['first-name']),
-    trim($_POST['last-name']),
-    trim($_POST['email-address']),
+    trim((string) $_POST['first-name']),
+    trim((string) $_POST['last-name']),
+    trim((string) $_POST['email-address']),
     $phone,
-    password_hash($_POST['password-1'], PASSWORD_ARGON2ID),
+    password_hash((string) $_POST['password-1'], PASSWORD_ARGON2ID),
     $user->getId(),
   ]);
 

@@ -18,7 +18,7 @@ try {
 
   $id = Ramsey\Uuid\Uuid::uuid4()->toString();
 
-  if (!isset($_POST['qualification-name']) || (mb_strlen(trim($_POST['qualification-name'])) == 0)) {
+  if (!isset($_POST['qualification-name']) || (mb_strlen(trim((string) $_POST['qualification-name'])) == 0)) {
     throw new Exception('You must provide a name for this qualification');
   }
 
@@ -42,8 +42,8 @@ try {
 
   $insert->execute([
     $id,
-    mb_convert_case(trim($_POST['qualification-name']), MB_CASE_TITLE_SIMPLE),
-    trim($_POST['qualification-description']),
+    mb_convert_case(trim((string) $_POST['qualification-name']), MB_CASE_TITLE_SIMPLE),
+    trim((string) $_POST['qualification-description']),
     $expiry,
     (int) true,
     $tenant->getId(),

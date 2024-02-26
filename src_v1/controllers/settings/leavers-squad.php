@@ -42,7 +42,7 @@ include BASE_PATH . 'views/header.php';
 
         <div id="leavers-squad-help">
           <p>
-            Setting a leaver's squad allows parents to indicate a swimmer is leaving <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>. This will remove the swimmer on the first day of the next calendar month.
+            Setting a leaver's squad allows parents to indicate a swimmer is leaving <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>. This will remove the swimmer on the first day of the next calendar month.
           </p>
           <p>
             e.g. if today a parent told the system a swimmer was leaving, that swimmer would be removed from squad registers on <?=$dateDeparture->format("j F Y")?>.
@@ -56,9 +56,9 @@ include BASE_PATH . 'views/header.php';
               Select an option
             </option>
             <?php while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) { ?>
-            <option value="<?=htmlspecialchars($squad['id'])?>"
+            <option value="<?=htmlspecialchars((string) $squad['id'])?>"
               <?php if ($leavers == $squad['id']) { ?>selected<?php } ?>>
-              <?=htmlspecialchars($squad['name'])?>
+              <?=htmlspecialchars((string) $squad['name'])?>
             </option>
             <?php } ?>
           </select>

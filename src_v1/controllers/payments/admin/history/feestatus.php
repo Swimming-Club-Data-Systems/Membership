@@ -126,12 +126,12 @@ include BASE_PATH . "views/paymentsMenu.php";
 						<?php
 						$link;
 						do {
-							$metadata = json_decode($row['metadataJSON']);
+							$metadata = json_decode((string) $row['metadataJSON']);
 							$swimmer_name = null;
 							if (isset($metadata->Members)) {
 								for ($j = 0; $j < sizeof($metadata->Members); $j++) {
 									if ($metadata->Members[$j]->Member == $row['MemberID']) {
-										$swimmer_name = htmlspecialchars($metadata->Members[$j]->MemberName);
+										$swimmer_name = htmlspecialchars((string) $metadata->Members[$j]->MemberName);
 									}
 								}
 							}
@@ -152,7 +152,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 																				} ?>
 								<td>
 									<?php if ($row['Forename'] != null && $row['Surname'] != null) { ?>
-										<?= htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?><br>
+										<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?><br>
 										<small><strong>
 												<a target="_blank" href="<?= autoUrl("notify/newemail/individual/" . $row['UserID']) ?>">
 													Contact Parent
@@ -166,9 +166,9 @@ include BASE_PATH . "views/paymentsMenu.php";
 										<?php if ($row['MForename'] == null || $row['MSurname'] == null || $row['MForename'] == "" || $row['MSurname'] == "") { ?>
 											<li><?= $swimmer_name ?></li>
 										<?php } else { ?>
-											<li><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></li>
+											<li><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></li>
 										<?php } ?>
-										<li><em><?= htmlspecialchars($row['Description']) ?></em></li>
+										<li><em><?= htmlspecialchars((string) $row['Description']) ?></em></li>
 									</ul>
 								</td>
 								<td>

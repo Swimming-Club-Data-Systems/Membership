@@ -65,7 +65,7 @@ while ($id = $getRenewals->fetchColumn()) {
   $renewal = \SCDS\Onboarding\Renewal::retrieve($id);
   try {
     $renewal->generateSessions();
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 }

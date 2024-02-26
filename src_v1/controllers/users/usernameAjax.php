@@ -13,7 +13,7 @@ $userID = $_POST['userID'];
 		$userID
 	]);
 	if ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
-		echo htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname']));
+		echo htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname']));
 	} else {
 		?>Not Found<?php
 	}
@@ -37,7 +37,7 @@ if (isset($_POST['userSur'])) {
 		<?php
 		do { ?>
 			<option value="<?=$row['UserID']?>">
-				<?=htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname']))?>
+				<?=htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname']))?>
 			</option> <?php
 		} while ($row = $sql->fetch(PDO::FETCH_ASSOC));
 	} else {

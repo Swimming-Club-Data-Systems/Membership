@@ -41,7 +41,7 @@ include BASE_PATH . 'views/header.php';
       <div class="cell">
         <h2><?=htmlspecialchars($parent['First'] . ' ' . $parent['Last'])?></h2>
         <p>
-          Contact <?=htmlspecialchars($parent['PFirst'] . ' ' . $parent['PLast'])?> via email at <a href="mailto:<?=htmlspecialchars($parent['Email'])?>"><?=htmlspecialchars($parent['Email'])?></a>
+          Contact <?=htmlspecialchars($parent['PFirst'] . ' ' . $parent['PLast'])?> via email at <a href="mailto:<?=htmlspecialchars((string) $parent['Email'])?>"><?=htmlspecialchars((string) $parent['Email'])?></a>
         </p>
 
         <div class="row">
@@ -69,7 +69,7 @@ include BASE_PATH . 'views/header.php';
                 Advanced
               </button>
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="deleteDropdown">
-                <a class="dropdown-item" href="<?=autoUrl($url_path . $parent['Hash'] . "/cancel/" . $parent['ID'])?>?redirect=<?=urlencode(autoUrl("trials"))?>">Cancel Trial Request</a>
+                <a class="dropdown-item" href="<?=autoUrl($url_path . $parent['Hash'] . "/cancel/" . $parent['ID'])?>?redirect=<?=urlencode((string) autoUrl("trials"))?>">Cancel Trial Request</a>
               </div>
             </div>
           </div>

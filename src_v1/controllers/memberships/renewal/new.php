@@ -34,8 +34,8 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal")) ?>">Renewal</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal")) ?>">Renewal</a></li>
         <li class="breadcrumb-item active" aria-current="page">New</li>
       </ol>
     </nav>
@@ -97,7 +97,7 @@ include BASE_PATH . "views/header.php";
                   $start = new DateTime($year->start, new DateTimeZone('Europe/London'));
                   $end = new DateTime($year->end, new DateTimeZone('Europe/London'));
                 ?>
-                  <option value="<?= htmlspecialchars($year->id) ?>"><?= htmlspecialchars($year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
+                  <option value="<?= htmlspecialchars((string) $year->id) ?>"><?= htmlspecialchars((string) $year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
                 <?php } while ($year = $getYears->fetch(PDO::FETCH_OBJ)); ?>
               </select>
             </div>
@@ -121,7 +121,7 @@ include BASE_PATH . "views/header.php";
                   $start = new DateTime($year->start, new DateTimeZone('Europe/London'));
                   $end = new DateTime($year->end, new DateTimeZone('Europe/London'));
                 ?>
-                  <option value="<?= htmlspecialchars($year->id) ?>"><?= htmlspecialchars($year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
+                  <option value="<?= htmlspecialchars((string) $year->id) ?>"><?= htmlspecialchars((string) $year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
                 <?php } while ($year = $getYears->fetch(PDO::FETCH_OBJ)); ?>
               </select>
             </div>
@@ -154,7 +154,7 @@ include BASE_PATH . "views/header.php";
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars($stage . '-main-check') ?>" name="<?= htmlspecialchars($stage . '-main-check') ?>" <?php if ($details['required']) { ?>checked<?php } ?> <?php if ($details['required_locked']) { ?>disabled<?php } ?>>
                   <label class="form-check-label" for="<?= htmlspecialchars($stage . '-main-check') ?>">
-                    <?= htmlspecialchars($stageNames[$stage]) ?>
+                    <?= htmlspecialchars((string) $stageNames[$stage]) ?>
                   </label>
                 </div>
               <?php } ?>
@@ -169,7 +169,7 @@ include BASE_PATH . "views/header.php";
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars($stage . '-member-check') ?>" name="<?= htmlspecialchars($stage . '-member-check') ?>" <?php if ($details['required']) { ?>checked<?php } ?> <?php if ($details['required_locked']) { ?>disabled<?php } ?>>
                   <label class="form-check-label" for="<?= htmlspecialchars($stage . '-member-check') ?>">
-                    <?= htmlspecialchars($memberStageNames[$stage]) ?>
+                    <?= htmlspecialchars((string) $memberStageNames[$stage]) ?>
                   </label>
                 </div>
               <?php } ?>

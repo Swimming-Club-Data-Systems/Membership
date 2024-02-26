@@ -17,7 +17,7 @@ $sql = "SELECT `EmailAddress`, `EmailComms` FROM `users` WHERE `UserID` = ?";
 try {
 	$query = $db->prepare($sql);
 	$query->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }
 
@@ -114,7 +114,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 					<p class="mb-0">
 						<strong>Once verified, your account email
 							address will change to
-							<?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></strong>
+							<?= htmlentities((string) $_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></strong>
 					</p>
 				</div>
 			<?php } ?>
@@ -123,9 +123,9 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 				<form method="post">
 					<div class="mb-3">
 						<label class="form-label" for="EmailAddress">Your email address</label>
-						<input type="email" class="form-control" id="EmailAddress" name="EmailAddress" placeholder="name@example.com" value="<?= htmlentities($email) ?>">
+						<input type="email" class="form-control" id="EmailAddress" name="EmailAddress" placeholder="name@example.com" value="<?= htmlentities((string) $email) ?>">
 						<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew'])) { ?>
-							<small class="form-text">Once verified, your account email address will change to <?= htmlentities($_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></small>
+							<small class="form-text">Once verified, your account email address will change to <?= htmlentities((string) $_SESSION['TENANT-' . app()->tenant->getId()]['EmailUpdateNew']) ?></small>
 						<?php } ?>
 					</div>
 
@@ -169,8 +169,8 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 						<div class="mb-3">
 							<div class="form-switch mb-2">
 								<input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars('email-category-' . $category->id) ?>" aria-describedby="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" name="<?= htmlspecialchars('email-category-' . $category->id) ?>" <?php if (isAbsolutelySubscribed(app()->user->getId(), $category->id)) { ?>checked<?php } ?>>
-								<label class="form-check-label" for="<?= htmlspecialchars('email-category-' . $category->id) ?>"><?= htmlspecialchars($category->name) ?></label>
-								<small id="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" class="form-text text-muted"><?= htmlspecialchars($category->description) ?></small>
+								<label class="form-check-label" for="<?= htmlspecialchars('email-category-' . $category->id) ?>"><?= htmlspecialchars((string) $category->name) ?></label>
+								<small id="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" class="form-text text-muted"><?= htmlspecialchars((string) $category->description) ?></small>
 							</div>
 						</div>
 					<?php } ?>
@@ -199,7 +199,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 						<?php while ($extraEmails = $getExtraEmails->fetch(PDO::FETCH_ASSOC)) { ?>
 							<li class="mb-2">
 								<p class="text-truncate mb-0">
-									<strong><?= htmlspecialchars($extraEmails['EmailAddress']) ?></strong> <?php if (!bool($extraEmails['Verified'])) { ?><i title="Email awaiting verification" class="text-warning fa fa-times-circle fa-fw" aria-hidden="true"></i><?php } else { ?><i title="Email address verified" class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i><?php } ?>
+									<strong><?= htmlspecialchars((string) $extraEmails['EmailAddress']) ?></strong> <?php if (!bool($extraEmails['Verified'])) { ?><i title="Email awaiting verification" class="text-warning fa fa-times-circle fa-fw" aria-hidden="true"></i><?php } else { ?><i title="Email address verified" class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i><?php } ?>
 								</p>
 								<p>
 									<a href="<?= autoUrl("my-account/email/cc/" . $extraEmails['ID'] . "/delete") ?>">

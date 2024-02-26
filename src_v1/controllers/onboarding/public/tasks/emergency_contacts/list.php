@@ -60,24 +60,24 @@ ob_start();
         <div class="col-auto">
           <p class="mb-0">
             <strong class="">
-              <?= htmlspecialchars($contactsArray[$i]->getName()) ?>
+              <?= htmlspecialchars((string) $contactsArray[$i]->getName()) ?>
             </strong>
             <em>
-              (<?= htmlspecialchars($contactsArray[$i]->getRelation()) ?>)
+              (<?= htmlspecialchars((string) $contactsArray[$i]->getRelation()) ?>)
             </em>
           </p>
           <p class="mb-0">
-            <a href="tel:<?= htmlspecialchars($contactsArray[$i]->getRFCContactNumber()) ?>">
-              <?= htmlspecialchars($contactsArray[$i]->getNationalContactNumber()) ?>
+            <a href="tel:<?= htmlspecialchars((string) $contactsArray[$i]->getRFCContactNumber()) ?>">
+              <?= htmlspecialchars((string) $contactsArray[$i]->getNationalContactNumber()) ?>
             </a>
           </p>
         </div>
         <div class="col text-end">
           <div class="btn-group">
-            <button type="button" data-action="edit" data-id="<?= htmlspecialchars($contactsArray[$i]->getID()) ?>" data-name="<?= htmlspecialchars($contactsArray[$i]->getName()) ?>" data-relation="<?= htmlspecialchars($contactsArray[$i]->getRelation()) ?>" data-number="<?= htmlspecialchars($contactsArray[$i]->getContactNumber()) ?>" class="btn btn-primary">
+            <button type="button" data-action="edit" data-id="<?= htmlspecialchars((string) $contactsArray[$i]->getID()) ?>" data-name="<?= htmlspecialchars((string) $contactsArray[$i]->getName()) ?>" data-relation="<?= htmlspecialchars((string) $contactsArray[$i]->getRelation()) ?>" data-number="<?= htmlspecialchars((string) $contactsArray[$i]->getContactNumber()) ?>" class="btn btn-primary">
               Edit
             </button>
-            <button type="button" data-action="delete" data-id="<?= htmlspecialchars($contactsArray[$i]->getID()) ?>" data-name="<?= htmlspecialchars($contactsArray[$i]->getName()) ?>" data-relation="<?= htmlspecialchars($contactsArray[$i]->getRelation()) ?>" data-number="<?= htmlspecialchars($contactsArray[$i]->getContactNumber()) ?>" class="btn btn-danger">
+            <button type="button" data-action="delete" data-id="<?= htmlspecialchars((string) $contactsArray[$i]->getID()) ?>" data-name="<?= htmlspecialchars((string) $contactsArray[$i]->getName()) ?>" data-relation="<?= htmlspecialchars((string) $contactsArray[$i]->getRelation()) ?>" data-number="<?= htmlspecialchars((string) $contactsArray[$i]->getContactNumber()) ?>" class="btn btn-danger">
               Delete
             </button>
           </div>

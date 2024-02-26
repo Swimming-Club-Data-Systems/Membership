@@ -90,7 +90,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 									<tr><?php
 																					} ?>
 									<td>
-										<?= htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?><br>
+										<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) ?><br>
 										<small>
 											<a target="_blank" href="<?= autoUrl("notify/newemail/individual/" . $row['UserID']) ?>">
 												Contact Parent
@@ -98,15 +98,15 @@ include BASE_PATH . "views/paymentsMenu.php";
 										</small>
 									</td>
 									<td>
-										<a href="<?= htmlspecialchars(autoUrl("payments/statements/" . $row['PaymentID'])) ?>" title="<?= htmlspecialchars("Statement " . $row['PaymentID']) ?>">
-											<?= htmlspecialchars($row['Name']) ?>
+										<a href="<?= htmlspecialchars((string) autoUrl("payments/statements/" . $row['PaymentID'])) ?>" title="<?= htmlspecialchars("Statement " . $row['PaymentID']) ?>">
+											<?= htmlspecialchars((string) $row['Name']) ?>
 										</a>
 									</td>
 									<td>
 										&pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $row['Amount']))->withPointMovedLeft(2)->toScale(2) ?>
 									</td>
 									<td>
-										<?= htmlspecialchars(paymentStatusString($row['Status'], $row['stripeFailureCode'])) ?>
+										<?= htmlspecialchars((string) paymentStatusString($row['Status'], $row['stripeFailureCode'])) ?>
 									</td>
 									</tr>
 								<?php

@@ -22,7 +22,7 @@ $getBatchItems->execute([
 ]);
 $item = $getBatchItems->fetch(PDO::FETCH_OBJ);
 
-$payMethods = json_decode($batch->payMethods);
+$payMethods = json_decode((string) $batch->payMethods);
 
 $canPay = true;
 $due = new DateTime($batch->due, new DateTimeZone('Europe/London'));
@@ -44,7 +44,7 @@ $getSession->execute([
 $sessionId = $getSession->fetchColumn();
 if ($sessionId) $session = \SCDS\Onboarding\Session::retrieve($sessionId);
 
-$pagetitle = "Batch " . htmlspecialchars($id) . " - Membership Centre";
+$pagetitle = "Batch " . htmlspecialchars((string) $id) . " - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -56,13 +56,13 @@ include BASE_PATH . "views/header.php";
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <?php if ($session) { ?>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">Onboarding</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding/' . $session->id)) ?>"><?= htmlspecialchars($session->getUser()->getName()) ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>">Onboarding</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding/' . $session->id)) ?>"><?= htmlspecialchars((string) $session->getUser()->getName()) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Edit Batch</li>
         <?php } else { ?>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/batches")) ?>">Batches</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id")) ?>">Batch</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/batches")) ?>">Batches</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/batches/$id")) ?>">Batch</a></li>
           <li class="breadcrumb-item active" aria-current="page">Edit</li>
         <?php } ?>
       </ol>
@@ -74,12 +74,12 @@ include BASE_PATH . "views/header.php";
           Edit batch for <?= htmlspecialchars($batchUser->getFullName()) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($id) ?>
+          <?= htmlspecialchars((string) $id) ?>
         </p>
       </div>
       <?php if ($session) { ?>
         <div class="col-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="btn btn-success">Back to onboarding</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="btn btn-success">Back to onboarding</a>
         </div>
       <?php } ?>
     </div>
@@ -110,7 +110,7 @@ include BASE_PATH . "views/header.php";
           Batch ID
         </dt>
         <dd class="col-9">
-          <?= htmlspecialchars($batch->id) ?>
+          <?= htmlspecialchars((string) $batch->id) ?>
         </dd>
 
         <?php
@@ -126,7 +126,7 @@ include BASE_PATH . "views/header.php";
           Amount
         </dt>
         <dd class="col-9" id="formatted-total">
-          <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
+          <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
         </dd>
 
         <dt class="col-3">
@@ -234,7 +234,7 @@ include BASE_PATH . "views/header.php";
 
 </div>
 
-<div id="js-data" data-list-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/edit-items')) ?>" data-add-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/get-members')) ?>" data-select-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/select-membership')) ?>" data-add-item-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/add-membership')) ?>" data-batch-id="<?= htmlspecialchars($id) ?>" data-delete-item-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/delete')) ?>" data-update-item-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/update')) ?>" data-options-update-ajax-url="<?= htmlspecialchars(autoUrl('memberships/batches/options')) ?>"></div>
+<div id="js-data" data-list-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/edit-items')) ?>" data-add-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/get-members')) ?>" data-select-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/select-membership')) ?>" data-add-item-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/add-membership')) ?>" data-batch-id="<?= htmlspecialchars((string) $id) ?>" data-delete-item-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/delete')) ?>" data-update-item-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/update')) ?>" data-options-update-ajax-url="<?= htmlspecialchars((string) autoUrl('memberships/batches/options')) ?>"></div>
 
 <!-- Modal for use by JS code -->
 <div class="modal fade" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="main-modal-title" aria-hidden="true">

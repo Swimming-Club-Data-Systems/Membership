@@ -28,7 +28,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
                   <?php if (!isset($_SESSION['SCDS-SuperUser'])) { ?>
                     <li><strong>Admin</strong></li>
                     <li>
-                      <a href="<?= htmlspecialchars(autoUrl("admin")) ?>" title="Sign in to your admin account">
+                      <a href="<?= htmlspecialchars((string) autoUrl("admin")) ?>" title="Sign in to your admin account">
                         Login
                       </a>
                     </li>
@@ -43,7 +43,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
                 <ul class="list-unstyled cls-global-footer-link-spacer">
                   <li><strong>Membership System Support</strong></li>
                   <li>
-                    <a href="<?= htmlspecialchars(autoUrl('help-and-support')) ?>" title="Help and Support">
+                    <a href="<?= htmlspecialchars((string) autoUrl('help-and-support')) ?>" title="Help and Support">
                       Help and Support
                     </a>
                   </li>
@@ -70,7 +70,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
                   <li><a title="British Swimming" target="_blank" href="https://www.swimming.org/britishswimming/">British
                       Swimming</a></li>
                   <li><a title="the Amateur Swimming Association" target="_blank" href="https://www.swimming.org/swimengland/">Swim England</a></li>
-                  <li><img class="fa fa-fw" src="<?= htmlspecialchars(autoUrl('img/stripe/climate/badge.svg')) ?>" alt=""> <a title="SCDS is a Stripe Climate Member contributing to remove CO2 from the atmosphere" href="https://climate.stripe.com/pkIT9H" target="_blank">Carbon Removal</a></li>
+                  <li><img class="fa fa-fw" src="<?= htmlspecialchars((string) autoUrl('img/stripe/climate/badge.svg')) ?>" alt=""> <a title="SCDS is a Stripe Climate Member contributing to remove CO2 from the atmosphere" href="https://climate.stripe.com/pkIT9H" target="_blank">Carbon Removal</a></li>
                 </ul>
 
               </div>
@@ -92,7 +92,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
 
             <?php if (defined('SOFTWARE_VERSION')) { ?>
               <p class="mb-2">
-                Software version <?= mb_substr(SOFTWARE_VERSION, 0, 7); ?>.
+                Software version <?= mb_substr((string) SOFTWARE_VERSION, 0, 7); ?>.
               </p>
             <?php } ?>
 
@@ -107,7 +107,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
   </footer>
 <?php } ?>
 
-<div id="app-js-info" data-root="<?= htmlspecialchars(autoUrl("")) ?>" data-service-worker-url="<?= htmlspecialchars(autoUrl("sw.js")) ?>"></div>
+<div id="app-js-info" data-root="<?= htmlspecialchars((string) autoUrl("")) ?>" data-service-worker-url="<?= htmlspecialchars((string) autoUrl("sw.js")) ?>"></div>
 
 <!-- Modals and Other Hidden HTML -->
 <?php
@@ -115,12 +115,12 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
 $script = autoUrl(getCompiledAsset('main.js'));
 
 ?>
-<script rel="preload" src="<?= htmlspecialchars($script) ?>"></script>
+<script rel="preload" src="<?= htmlspecialchars((string) $script) ?>"></script>
 
 <?php if (isset($this->js)) { ?>
   <!-- Load per page JS -->
   <?php foreach ($this->js as $script) {
-  ?><script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars($script['url']) ?>"></script><?php
+  ?><script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars((string) $script['url']) ?>"></script><?php
                                                                                                                             }
                                                                                                                           } ?>
 

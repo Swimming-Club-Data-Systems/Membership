@@ -44,7 +44,7 @@ try {
   $query->bindParam('user', $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], PDO::PARAM_INT);
   $query->bindParam('start', $start, PDO::PARAM_INT);
 	$query->execute();
-} catch (PDOException $e) {
+} catch (PDOException) {
 	//  halt(500);
 }
 
@@ -88,15 +88,15 @@ include BASE_PATH . "views/header.php";
             <p class="mb-0">
               <strong>
                 Login at <?= $date->format('H:i \o\\n l j F Y') ?>
-                using <?= htmlentities($row[$i]['Browser']) ?>
+                using <?= htmlentities((string) $row[$i]['Browser']) ?>
               </strong>
             </p>
             <p class="mb-0">
               <?php if ($row[$i]['Mobile']) { ?>
-              Login from a mobile device running <?= htmlentities($row[$i]['Platform']) ?>
+              Login from a mobile device running <?= htmlentities((string) $row[$i]['Platform']) ?>
               <?php } else { ?>
-              Login from a desktop computer running <?= htmlentities($row[$i]['Platform']) ?><?php } ?><?php if ($row[$i]['GeoLocation']) { ?> located in <?= htmlentities($row[$i]['GeoLocation']) ?><?php } ?>.
-              IP Address: <?= htmlentities($row[$i]['IPAddress']) ?>
+              Login from a desktop computer running <?= htmlentities((string) $row[$i]['Platform']) ?><?php } ?><?php if ($row[$i]['GeoLocation']) { ?> located in <?= htmlentities((string) $row[$i]['GeoLocation']) ?><?php } ?>.
+              IP Address: <?= htmlentities((string) $row[$i]['IPAddress']) ?>
             </p>
           </div>
         </div>

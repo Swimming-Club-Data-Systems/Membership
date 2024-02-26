@@ -7,7 +7,7 @@ $name = $price = $errorMessage = null;
 $errorState = false;
 
 if (isset($_POST['name']) && $_POST['name'] != null && $_POST['name'] != "") {
-	$name =	trim($_POST['name']);
+	$name =	trim((string) $_POST['name']);
 } else {
 	$errorState = true;
 	$errorMessage .= "<li>There was a problem with that name</li>";
@@ -45,7 +45,7 @@ if (!$errorState) {
 			$tenant->getId()
 		]);
     header("Location: " . autoUrl("payments/extrafees/" . $id));
-	} catch (Exception $e) {
+	} catch (Exception) {
 		$errorState = true;
 		$errorMessage .= "<li>Unable to edit item in database</li>";
 	}

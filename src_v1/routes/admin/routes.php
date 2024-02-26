@@ -31,7 +31,7 @@ if (!isset($_SESSION['SCDS-SuperUser'])) {
 
   $this->any(['/', '/*'], function () {
     http_response_code(303);
-    header("Location: " . autoUrl('admin/login?target=' . urlencode(app('request')->path)));
+    header("Location: " . autoUrl('admin/login?target=' . urlencode((string) app('request')->path)));
   });
 } else {
   $this->group('/login', function () {

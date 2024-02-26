@@ -40,7 +40,7 @@ try {
     '&nbsp;'
   ];
 
-  $message = $message = str_replace($to_remove, "", $_POST['message']);
+  $message = $message = str_replace($to_remove, "", (string) $_POST['message']);
 
   $name = $userInfo['Forename'] . ' ' . $userInfo['Surname'];
   $userEmail = $userInfo['EmailAddress'];

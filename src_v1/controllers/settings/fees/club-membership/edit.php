@@ -20,7 +20,7 @@ if (!$class) {
 $type = 'Club Membership';
 switch ($class['Type']) {
   case 'national_governing_body':
-    $type = htmlspecialchars(app()->tenant->getKey('NGB_NAME')) . ' Membership';
+    $type = htmlspecialchars((string) app()->tenant->getKey('NGB_NAME')) . ' Membership';
     break;
   case 'other':
     $type = 'Other (Arbitrary) Membership';
@@ -36,7 +36,7 @@ foreach ($json->fees as $value) {
 
 $fluidContainer = true;
 
-$pagetitle = "Edit " . htmlspecialchars($class['Name']);
+$pagetitle = "Edit " . htmlspecialchars((string) $class['Name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -54,15 +54,15 @@ include BASE_PATH . 'views/header.php';
 
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings')) ?>">Settings</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees')) ?>">Fees</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('settings/fees/membership-fees')) ?>">Memberships</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings')) ?>">Settings</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees')) ?>">Fees</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('settings/fees/membership-fees')) ?>">Memberships</a></li>
           <li class="breadcrumb-item active" aria-current="page">Edit Class</li>
         </ol>
       </nav>
 
       <main>
-        <h1><?= htmlspecialchars($class['Name']) ?></h1>
+        <h1><?= htmlspecialchars((string) $class['Name']) ?></h1>
         <p class="lead">Set amounts for membership fees</p>
 
         <form method="post" class="needs-validation" novalidate>
@@ -74,7 +74,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="class-name">Class Name</label>
-            <input type="text" name="class-name" id="class-name" class="form-control" required value="<?= htmlspecialchars($class['Name']) ?>">
+            <input type="text" name="class-name" id="class-name" class="form-control" required value="<?= htmlspecialchars((string) $class['Name']) ?>">
             <div class="invalid-feedback">
               Please provide a name for this type of membership
             </div>
@@ -82,7 +82,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="class-description">Description (optional)</label>
-            <textarea class="form-control" name="class-description" id="class-description" rows="5"><?= htmlspecialchars($class['Description']) ?></textarea>
+            <textarea class="form-control" name="class-description" id="class-description" rows="5"><?= htmlspecialchars((string) $class['Description']) ?></textarea>
           </div>
 
           <div class="mb-3" id="fee-type">
@@ -142,13 +142,13 @@ include BASE_PATH . 'views/header.php';
               <div class="col">
                 <div class="mb-3">
                   <label for="<?= htmlspecialchars("value-" . $date->format("m")) ?>" class="form-label"><span class="sr-only"><?= htmlspecialchars($date->format("F")) ?></span> Discount Value</label>
-                  <input type="num" class="form-control" id="<?= htmlspecialchars("value-" . $date->format("m")) ?>" name="<?= htmlspecialchars("value-" . $date->format("m")) ?>" <?php if (isset($json->discounts->value[$i-1])) { ?>value="<?= htmlspecialchars(MoneyHelpers::intToDecimal($json->discounts->value[$i-1])) ?>"<?php } ?>>
+                  <input type="num" class="form-control" id="<?= htmlspecialchars("value-" . $date->format("m")) ?>" name="<?= htmlspecialchars("value-" . $date->format("m")) ?>" <?php if (isset($json->discounts->value[$i-1])) { ?>value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($json->discounts->value[$i-1])) ?>"<?php } ?>>
                 </div>
               </div>
               <div class="col">
                 <div class="mb-3">
                   <label for="<?= htmlspecialchars("percent-" . $date->format("m")) ?>" class="form-label"><span class="sr-only"><?= htmlspecialchars($date->format("F")) ?></span> Discount Percentage</label>
-                  <input type="num" class="form-control" id="<?= htmlspecialchars("percent-" . $date->format("m")) ?>" name="<?= htmlspecialchars("percent-" . $date->format("m")) ?>" <?php if (isset($json->discounts->percent[$i-1])) { ?>value="<?= htmlspecialchars($json->discounts->percent[$i-1]) ?>"<?php } ?>>
+                  <input type="num" class="form-control" id="<?= htmlspecialchars("percent-" . $date->format("m")) ?>" name="<?= htmlspecialchars("percent-" . $date->format("m")) ?>" <?php if (isset($json->discounts->percent[$i-1])) { ?>value="<?= htmlspecialchars((string) $json->discounts->percent[$i-1]) ?>"<?php } ?>>
                 </div>
               </div>
             </div>

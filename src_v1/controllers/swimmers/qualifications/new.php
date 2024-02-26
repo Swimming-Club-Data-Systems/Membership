@@ -5,7 +5,7 @@ $tenant = app()->tenant;
 
 try {
   $member = new Member($id);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Members</a></li>
-        <li class="breadcrumb-item"><a href="<?= autoUrl("members/$id") ?>">#<?= htmlspecialchars($member->getId()) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= autoUrl("members/$id") ?>">#<?= htmlspecialchars((string) $member->getId()) ?></a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("members/$id/qualifications") ?>">Qualifications</a></li>
         <li class="breadcrumb-item active" aria-current="page">Add</li>
       </ol>
@@ -47,7 +47,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          Add qualification for <?= htmlspecialchars($member->getFullName()) ?>
+          Add qualification for <?= htmlspecialchars((string) $member->getFullName()) ?>
         </h1>
         <p class="lead mb-0" id="leadDesc">
           Lorem ipsum
@@ -69,7 +69,7 @@ include BASE_PATH . 'views/header.php';
             <strong>Error</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);
@@ -80,10 +80,10 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="qualification">Select qualification</label>
-            <select class="form-select" name="qualification" id="qualification" required data-ajax-url="<?= htmlspecialchars(autoUrl('qualifications/lookup')) ?>">
+            <select class="form-select" name="qualification" id="qualification" required data-ajax-url="<?= htmlspecialchars((string) autoUrl('qualifications/lookup')) ?>">
               <option selected disabled>Choose qualification</option>
               <?php do { ?>
-                <option value="<?= htmlspecialchars($qualification['ID']) ?>"><?= htmlspecialchars($qualification['Name']) ?></option>
+                <option value="<?= htmlspecialchars((string) $qualification['ID']) ?>"><?= htmlspecialchars((string) $qualification['Name']) ?></option>
               <?php } while ($qualification = $getQualifications->fetch(PDO::FETCH_ASSOC)); ?>
             </select>
             <div class="invalid-feedback">
@@ -136,11 +136,11 @@ include BASE_PATH . 'views/header.php';
         <div class="alert alert-warning">
           <p class="mb-0">
             <strong>
-              There are no new qualifications available to add for <?= htmlspecialchars($member->getForename()) ?>
+              There are no new qualifications available to add for <?= htmlspecialchars((string) $member->getForename()) ?>
             </strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($member->getForename()) ?> either already has all available qualifications, or no qualifications are available.
+            <?= htmlspecialchars((string) $member->getForename()) ?> either already has all available qualifications, or no qualifications are available.
           </p>
         </div>
 

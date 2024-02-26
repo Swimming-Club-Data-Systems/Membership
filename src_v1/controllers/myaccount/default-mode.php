@@ -47,7 +47,7 @@ include BASE_PATH . "views/header.php";
           <select class="form-select" name="selector" id="selector" required <?php if (sizeof($perms) < 2) { ?>disabled<?php } ?>>
             <option>Choose your default mode</option>
             <?php foreach ($perms as $key => $value) { ?>
-            <option <?php if ($key == $default) { ?>selected<?php } ?> value="<?=htmlspecialchars($key)?>"><?=htmlspecialchars($value)?></option>
+            <option <?php if ($key == $default) { ?>selected<?php } ?> value="<?=htmlspecialchars((string) $key)?>"><?=htmlspecialchars((string) $value)?></option>
             <?php } ?>
           </select>
         </div>

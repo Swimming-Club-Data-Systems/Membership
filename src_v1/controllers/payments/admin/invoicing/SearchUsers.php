@@ -12,10 +12,10 @@ try {
   $db = app()->db;
   $tenant = app()->tenant;
 
-  $search = '%' . trim($_POST["search"]) . '%';
+  $search = '%' . trim((string) $_POST["search"]) . '%';
 
   $sql = "";
-  $search_terms = explode(' ', $_POST["search"]);
+  $search_terms = explode(' ', (string) $_POST["search"]);
   $names = [];
   $names[] = $tenant->getId();
   $sql = "";
@@ -41,7 +41,7 @@ try {
   <?php if ($user = $users->fetch(PDO::FETCH_ASSOC)) { ?>
     <option value="none">Select a user...</option>
     <?php do { ?>
-      <option value="<?= htmlspecialchars($user['UserID']) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> (<?= htmlspecialchars($user['EmailAddress']) ?>)</option>
+      <option value="<?= htmlspecialchars((string) $user['UserID']) ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> (<?= htmlspecialchars((string) $user['EmailAddress']) ?>)</option>
     <?php } while ($user = $users->fetch(PDO::FETCH_ASSOC)); ?>
   <?php } else {
     $disabled = true; ?>

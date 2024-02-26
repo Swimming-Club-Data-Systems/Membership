@@ -30,13 +30,13 @@ $stripeDD = $getStripeDD->fetch(PDO::FETCH_ASSOC);
 $bankName = $bank = $has_logo = $logo_path = null;
 $hasGC = false;
 if (userHasMandates($id)) {
-  $bankName = mb_strtoupper(bankDetails($id, "account_holder_name"));
+  $bankName = mb_strtoupper((string) bankDetails($id, "account_holder_name"));
   if ($bankName != "UNKNOWN") {
     $bankName = $bankName . ', ';
   } else {
     $bankName = null;
   }
-  $bank = mb_strtoupper(bankDetails($id, "bank_name"));
+  $bank = mb_strtoupper((string) bankDetails($id, "bank_name"));
   $logo_path = getBankLogo($bank);
   $hasGC = true;
 }

@@ -18,16 +18,16 @@ $logos = $tenant->getKey('LOGO_DIR')
           <div class="row">
             <div class="col">
               <address>
-                <?php $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS')); ?>
-                <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
+                <?php $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS')); ?>
+                <strong><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
                 <?php if ($addr) {
                   for ($i = 0; $i < sizeof($addr); $i++) { ?>
-                    <?= htmlspecialchars($addr[$i]) ?><br>
+                    <?= htmlspecialchars((string) $addr[$i]) ?><br>
                 <?php }
                 } ?>
               </address>
               <!--<p><i class="fa fa-envelope fa-fw" aria-hidden="true"></i> <a href="mailto:enquiries@chesterlestreetasc.co.uk" target="new">E-Mail Us</a></p>-->
-              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= htmlspecialchars("/report-an-issue?url=" . urlencode(app('request')->curl)) ?>">Report an issue with this page</a>
+              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= htmlspecialchars("/report-an-issue?url=" . urlencode((string) app('request')->curl)) ?>">Report an issue with this page</a>
               </p>
               <p><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i> <a href="/about">Support information</a>
               </p>
@@ -40,7 +40,7 @@ $logos = $tenant->getKey('LOGO_DIR')
               <ul class="list-unstyled cls-global-footer-link-spacer">
                 <li><strong>Membership System Support</strong></li>
                 <li>
-                  <a href="/privacy" target="_blank" title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
+                  <a href="/privacy" target="_blank" title="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
                     Our Privacy Policy
                   </a>
                 </li>
@@ -77,10 +77,10 @@ $logos = $tenant->getKey('LOGO_DIR')
                 <li><a title="British Swimming" target="_blank" href="https://www.swimming.org/britishswimming/">British
                     Swimming</a></li>
                 <li><a title="the Amateur Swimming Association" target="_blank" href="https://www.swimming.org/swimengland/">Swim England</a></li>
-                <li><a title="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['name']) ?></a></li>
-                <li><a title="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['name']) ?></a></li>
                 <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
-                  <li><a title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Website" target="_blank" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></a></li>
+                  <li><a title="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Website" target="_blank" href="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_WEBSITE')) ?>"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></a></li>
                 <?php } ?>
               </ul>
 
@@ -104,7 +104,7 @@ $logos = $tenant->getKey('LOGO_DIR')
             <!-- <?php if ($logos) { ?>
             <div class="col-auto d-none d-md-flex">
               <div style="height: 100px; padding: 0 12.5px 0 12.5px; max-width: 100%;" class="bg-white d-flex">
-                <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars($tenant->getName()) ?>" class="img-fluid my-auto">
+                <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="<?= htmlspecialchars((string) $tenant->getName()) ?>" class="img-fluid my-auto">
               </div>
             </div>
             <?php } ?> -->
@@ -120,9 +120,9 @@ $logos = $tenant->getKey('LOGO_DIR')
           $seconds = $time_end - $time_start;
           ?>
           <p class="hidden-print mb-1">
-            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
           </p>
-          <p class="mb-1">Page rendered in <?= number_format($seconds, 3) ?> seconds. <?php if (defined('SOFTWARE_VERSION')) { ?>Software version <?= mb_substr(SOFTWARE_VERSION, 0, 7); ?>.<?php } ?>
+          <p class="mb-1">Page rendered in <?= number_format($seconds, 3) ?> seconds. <?php if (defined('SOFTWARE_VERSION')) { ?>Software version <?= mb_substr((string) SOFTWARE_VERSION, 0, 7); ?>.<?php } ?>
           </p>
           <p class="mb-0">
             &copy; <?= $time->format('Y') ?> <span class="org fn">Swimming Club Data Systems</span>. Swimming Club Data Systems is not responsible
@@ -132,5 +132,5 @@ $logos = $tenant->getKey('LOGO_DIR')
       </div>
     </div>
   </div><!-- /.container -->
-  <div id="app-js-info" data-root="<?= htmlspecialchars(autoUrl("")) ?>" data-check-login-url="<?= htmlspecialchars(autoUrl("check-login.json")) ?>" data-service-worker-url="<?= htmlspecialchars(autoUrl("sw.js")) ?>"></div>
+  <div id="app-js-info" data-root="<?= htmlspecialchars((string) autoUrl("")) ?>" data-check-login-url="<?= htmlspecialchars((string) autoUrl("check-login.json")) ?>" data-service-worker-url="<?= htmlspecialchars((string) autoUrl("sw.js")) ?>"></div>
 </footer>

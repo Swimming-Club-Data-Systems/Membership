@@ -12,7 +12,7 @@ if ($card == null) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars(getCardBrand($card['Brand'])) . ' &#0149;&#0149;&#0149;&#0149; ' . htmlspecialchars($card['Last4']);
+$pagetitle = htmlspecialchars((string) getCardBrand($card['Brand'])) . ' &#0149;&#0149;&#0149;&#0149; ' . htmlspecialchars((string) $card['Last4']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -32,7 +32,7 @@ $pm = \Stripe\PaymentMethod::retrieve(
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("payments") ?>">Payments</a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("payments/cards") ?>">Cards</a></li>
-        <li class="breadcrumb-item active" aria-current="page">&#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card['Last4']) ?></li>
+        <li class="breadcrumb-item active" aria-current="page">&#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card['Last4']) ?></li>
       </ol>
     </nav>
 
@@ -40,16 +40,16 @@ $pm = \Stripe\PaymentMethod::retrieve(
       <div class="col-lg-8">
         <div class="row align-items-center mb-2">
           <div class="col-auto">
-            <img class="d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_light.svg") ?>" style="width:40px;"><img class="d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_dark.svg") ?>" style="width:48px;"> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($card['Brand'])) ?></span> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($card['Brand'])) ?></span>
+            <img class="d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_light.svg") ?>" style="width:40px;"><img class="d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_dark.svg") ?>" style="width:48px;"> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($card['Brand'])) ?></span> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($card['Brand'])) ?></span>
           </div>
           <div class="col-auto">
             <h1 class="h1 my-0">
-              <?= getCardBrand($card['Brand']) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card['Last4']) ?>
+              <?= getCardBrand($card['Brand']) ?> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card['Last4']) ?>
             </h1>
           </div>
         </div>
         <p class="lead mb-0">
-          <?= htmlspecialchars(mb_convert_case($card['Funding'], MB_CASE_TITLE)) ?> card
+          <?= htmlspecialchars(mb_convert_case((string) $card['Funding'], MB_CASE_TITLE)) ?> card
         </p>
       </div>
     </div>
@@ -79,13 +79,13 @@ $pm = \Stripe\PaymentMethod::retrieve(
         <h2>Billing details</h2>
         <address class="mb-3">
           <?php if (isset($pm->billing_details->name)) { ?>
-            <strong><?= htmlspecialchars($pm->billing_details->name) ?><br></strong>
+            <strong><?= htmlspecialchars((string) $pm->billing_details->name) ?><br></strong>
           <?php } ?>
           <?php if (isset($pm->billing_details->address->line1)) { ?>
-            <?= htmlspecialchars($pm->billing_details->address->line1) ?><br>
+            <?= htmlspecialchars((string) $pm->billing_details->address->line1) ?><br>
           <?php } ?>
           <?php if (isset($pm->billing_details->address->postal_code)) { ?>
-            <?= htmlspecialchars(mb_strtoupper($pm->billing_details->address->postal_code)) ?>
+            <?= htmlspecialchars(mb_strtoupper((string) $pm->billing_details->address->postal_code)) ?>
           <?php } ?>
         </address>
       <?php } ?>
@@ -94,7 +94,7 @@ $pm = \Stripe\PaymentMethod::retrieve(
         <h2>Forget card</h2>
         <p class="lead">Forget this card to remove it from your list</p>
         <p class="mb-5">
-          <a href="<?= htmlspecialchars(autoUrl("payments/cards/" . $id . "/delete")) ?>" class="btn btn-danger">
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/cards/" . $id . "/delete")) ?>" class="btn btn-danger">
             Forget card
           </a>
         </p>

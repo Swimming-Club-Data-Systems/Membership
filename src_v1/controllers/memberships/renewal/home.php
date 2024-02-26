@@ -34,7 +34,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
         <li class="breadcrumb-item active" aria-current="page">Renewal</li>
       </ol>
     </nav>
@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl('memberships/renewal/new')) ?>" class="btn btn-success">New</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('memberships/renewal/new')) ?>" class="btn btn-success">New</a>
       </div>
     </div>
   </div>
@@ -68,7 +68,7 @@ include BASE_PATH . "views/header.php";
           <?php do { 
             $renewal = \SCDS\Onboarding\Renewal::retrieve($renewal->id);
             ?>
-            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars(autoUrl('memberships/renewal/' . $renewal->id)) ?>" title="<?= htmlspecialchars($renewal->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->end->format('j M Y')) ?> <?= htmlspecialchars($renewal->id) ?>"><?= htmlspecialchars($renewal->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->end->format('j M Y')) ?><br>For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars($renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?><br><?php } ?><?php if ($renewal->ngbYear) { ?> For the Swim England membership year <?= htmlspecialchars($renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->ngbYear->end->format('j M Y')) ?><?php } ?></a>
+            <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars((string) autoUrl('memberships/renewal/' . $renewal->id)) ?>" title="<?= htmlspecialchars((string) $renewal->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('j M Y')) ?> <?= htmlspecialchars((string) $renewal->id) ?>"><?= htmlspecialchars((string) $renewal->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('j M Y')) ?><br>For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars((string) $renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?><br><?php } ?><?php if ($renewal->ngbYear) { ?> For the Swim England membership year <?= htmlspecialchars((string) $renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->ngbYear->end->format('j M Y')) ?><?php } ?></a>
           <?php } while ($renewal = $getRenewals->fetch(PDO::FETCH_OBJ)); ?>
         </div>
 
@@ -86,7 +86,7 @@ include BASE_PATH . "views/header.php";
     </div>
 
     <p>
-      Are you looking for information from previous renewals? <a href="<?= htmlspecialchars(autoUrl('renewal')) ?>">Visit the legacy renewal system instead</a>.
+      Are you looking for information from previous renewals? <a href="<?= htmlspecialchars((string) autoUrl('renewal')) ?>">Visit the legacy renewal system instead</a>.
     </p>
   </div>
 

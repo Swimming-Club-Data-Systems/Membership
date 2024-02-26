@@ -33,7 +33,7 @@ function stripe_handlePayout($payout) {
         $amount,
         $date->format("Y-m-d")
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       // 
     }
   }
@@ -164,7 +164,7 @@ function stripe_handlePaymentMethodUpdate($pm) {
       $id
     ]);
     echo "Success";
-  } catch (Exception $e) {
+  } catch (Exception) {
     
   }
 }

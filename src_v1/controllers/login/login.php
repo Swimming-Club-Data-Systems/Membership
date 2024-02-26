@@ -39,7 +39,7 @@ try {
   app()->tenant = $club;
 
   // Try finding user
-  $email = mb_strtolower(trim($body->email));
+  $email = mb_strtolower(trim((string) $body->email));
   $password = $body->password;
 
   $getUser = $db->prepare("SELECT Forename, Surname, UserID, EmailAddress, `Password`, WrongPassCount FROM users WHERE EmailAddress = ? AND Tenant = ? AND Active");
@@ -53,7 +53,7 @@ try {
     throw new Exception('incorrect');
   }
 
-  if (!password_verify($password, $user['Password'])) {
+  if (!password_verify((string) $password, (string) $user['Password'])) {
     // Password is incorrect
     throw new Exception('incorrect');
   }

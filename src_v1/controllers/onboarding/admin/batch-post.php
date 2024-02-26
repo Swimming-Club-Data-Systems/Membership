@@ -70,7 +70,7 @@ try {
         $member->ngb,
         $member->id,
         $amount,
-        trim($_POST[$member->id . '-' . $member->ngb . '-notes']),
+        trim((string) $_POST[$member->id . '-' . $member->ngb . '-notes']),
       ];
     }
 
@@ -94,7 +94,7 @@ try {
         $member->club,
         $member->id,
         $amount,
-        trim($_POST[$member->id . '-' . $member->club . '-notes']),
+        trim((string) $_POST[$member->id . '-' . $member->club . '-notes']),
       ];
     }
   }

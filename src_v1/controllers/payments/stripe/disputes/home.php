@@ -46,7 +46,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
         <li class="breadcrumb-item active" aria-current="page">Disputes</li>
       </ol>
     </nav>
@@ -78,7 +78,7 @@ include BASE_PATH . 'views/header.php';
               try {
                 $created = new DateTime($dispute['Created'], new DateTimeZone('UTC'));
                 $created->setTimezone(new DateTimeZone('Europe/London'));
-              } catch (Exception $e) {
+              } catch (Exception) {
                 // Ignore
               }
             }
@@ -87,7 +87,7 @@ include BASE_PATH . 'views/header.php';
               try {
                 $evidenceDue = new DateTime($dispute['EvidenceDueBy'], new DateTimeZone('UTC'));
                 $evidenceDue->setTimezone(new DateTimeZone('Europe/London'));
-              } catch (Exception $e) {
+              } catch (Exception) {
                 // Ignore
               }
             }
@@ -96,17 +96,17 @@ include BASE_PATH . 'views/header.php';
 
             <li class="list-group-item" id="<?= htmlspecialchars('containing-box:' . $dispute['ID']) ?>">
 
-              <h2><?= htmlspecialchars($dispute['SID']) ?></h2>
+              <h2><?= htmlspecialchars((string) $dispute['SID']) ?></h2>
               <p class="lead">
                 <?php if ($created) { ?>Created at <?= htmlspecialchars($created->format("H:i, j F Y")) ?><?php } else { ?>No creation time available<?php } ?>
               </p>
 
               <p>
-                Status: <span class="font-monospace bg-light p-1"><?= htmlspecialchars($dispute['Status']) ?></span>
+                Status: <span class="font-monospace bg-light p-1"><?= htmlspecialchars((string) $dispute['Status']) ?></span>
               </p>
 
               <p>
-                Reason: <span class="font-monospace bg-light p-1"><?= htmlspecialchars($dispute['Reason']) ?></span>
+                Reason: <span class="font-monospace bg-light p-1"><?= htmlspecialchars((string) $dispute['Reason']) ?></span>
               </p>
 
               <?php if (!bool($dispute['EvidencePastDue']) && $evidenceDue) { ?>
@@ -142,36 +142,36 @@ include BASE_PATH . 'views/header.php';
       <nav aria-label="Page navigation">
         <ul class="pagination">
           <?php if ($count <= 10) { ?>
-            <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
+            <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
           <?php } else if ($count <= 20) { ?>
             <?php if ($page == 1) { ?>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>">Previous</a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>"><?php echo $page - 1 ?></a></li>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>"><?php echo $page - 1 ?></a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
             <?php } ?>
           <?php } else { ?>
             <?php if ($page == 1) { ?>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
             <?php } else { ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>">Previous</a></li>
               <?php if ($page > 2) { ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page - 2 ?>"><?php echo $page - 2 ?></a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page - 2 ?>"><?php echo $page - 2 ?></a></li>
               <?php } ?>
-              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>"><?php echo $page - 1 ?></a></li>
-              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
+              <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page - 1 ?>"><?php echo $page - 1 ?></a></li>
+              <li class="page-item active"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page ?>"><?php echo $page ?></a></li>
               <?php if ($count > $page * 10) { ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>"><?php echo $page + 1 ?></a></li>
                 <?php if ($count > $page * 10 + 10) { ?>
-                  <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li>
+                  <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 2 ?>"><?php echo $page + 2 ?></a></li>
                 <?php } ?>
-                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars(autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
+                <li class="page-item"><a class="page-link" href="<?= htmlspecialchars((string) autoUrl("payments/disputes?page=")) ?><?php echo $page + 1 ?>">Next</a></li>
               <?php } ?>
             <?php } ?>
           <?php } ?>

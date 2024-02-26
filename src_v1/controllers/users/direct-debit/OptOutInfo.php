@@ -18,7 +18,7 @@ if ($user == null) {
 $renewalAvailable = true;
 try {
   include 'GetRenewal.php';
-} catch (Exception $e) {
+} catch (Exception) {
   $renewalAvailable = false;
 }
 
@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
 
         <?php if ($renewalAvailable) { ?>
 
-          <p>Allow <?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> to not use Direct Debit.</p>
+          <p>Allow <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> to not use Direct Debit.</p>
 
           <?= \SCDS\FormIdempotency::write() ?>
           <?= \SCDS\CSRF::write() ?>
@@ -70,7 +70,7 @@ include BASE_PATH . 'views/header.php';
           </p>
         <?php } else { ?>
 
-          <p>There's not currently a registration or renewal open for <?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?>, so you're not able to authorise a direct debit opt out.</p>
+          <p>There's not currently a registration or renewal open for <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?>, so you're not able to authorise a direct debit opt out.</p>
 
         <?php } ?>
       </form>

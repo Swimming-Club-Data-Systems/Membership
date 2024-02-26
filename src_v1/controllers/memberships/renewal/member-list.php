@@ -59,9 +59,9 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal")) ?>">Renewal</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/renewal/$id")) ?>"><?= htmlspecialchars($renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars($renewal->end->format('d/m/Y')) ?></a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal")) ?>">Renewal</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/renewal/$id")) ?>"><?= htmlspecialchars((string) $renewal->start->format('d/m/Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('d/m/Y')) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Member list</li>
       </ol>
     </nav>
@@ -69,10 +69,10 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col">
         <h1>
-          Member list for <?= htmlspecialchars($renewal->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->end->format('j M Y')) ?> Renewal
+          Member list for <?= htmlspecialchars((string) $renewal->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->end->format('j M Y')) ?> Renewal
         </h1>
         <p class="lead mb-0">
-          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars($renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars($renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars($renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
+          For the <?php if ($renewal->clubYear) { ?> club membership year <?= htmlspecialchars((string) $renewal->clubYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->clubYear->end->format('j M Y')) ?><?php } ?><?php if ($renewal->clubYear && $renewal->ngbYear) { ?> and the <?php } ?><?php if ($renewal->ngbYear) { ?> Swim England membership year <?= htmlspecialchars((string) $renewal->ngbYear->start->format('j M Y')) ?> - <?= htmlspecialchars((string) $renewal->ngbYear->end->format('j M Y')) ?><?php } ?>
         </p>
       </div>
     </div>
@@ -88,7 +88,7 @@ include BASE_PATH . "views/header.php";
         <?php if ($member) { ?>
 
           <p>
-            <?= htmlspecialchars($count) ?> records
+            <?= htmlspecialchars((string) $count) ?> records
           </p>
 
           <?php if ($type == "member-list") { ?>
@@ -130,7 +130,7 @@ include BASE_PATH . "views/header.php";
                     $session->batch,
                   ]);
                   $batchItem = $getBatchItems->fetch(PDO::FETCH_OBJ);
-                } catch (Exception $e) {
+                } catch (Exception) {
                   // Ignore
                 }
               ?>
@@ -147,19 +147,19 @@ include BASE_PATH . "views/header.php";
                   </td>
                   <td>
                     <?php if ($member->uFirstName) { ?>
-                      <?= htmlspecialchars(\SCDS\Formatting\Names::format($member->uFirstName, $member->uLastName)) ?>
+                      <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member->uFirstName, $member->uLastName)) ?>
                     <?php } else { ?>
                       No user currently assigned
                     <?php } ?>
                   </td>
                   <td>
-                    <?= htmlspecialchars(\SCDS\Formatting\Names::format($member->firstName, $member->lastName)) ?>
+                    <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member->firstName, $member->lastName)) ?>
                   </td>
                   <td>
                     <?php if ($batchItem) { ?>
                     <ul class="mb-0 list-unstyled">
                       <?php do { ?>
-                      <li><?= htmlspecialchars($batchItem->Name) ?> (<?= htmlspecialchars($batchItem->yearName) ?>), <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batchItem->Amount), 'gbp')) ?></li>
+                      <li><?= htmlspecialchars((string) $batchItem->Name) ?> (<?= htmlspecialchars((string) $batchItem->yearName) ?>), <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batchItem->Amount), 'gbp')) ?></li>
                       <?php } while ($batchItem = $getBatchItems->fetch(PDO::FETCH_OBJ)); ?>
                     </ul>
                     <?php } else { ?>
@@ -168,7 +168,7 @@ include BASE_PATH . "views/header.php";
                   </td>
                   <td class="font-monospace text-end">
                     <?php if ($member->completedAt && $member->Total) { ?>
-                      <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($member->Total), 'gbp')) ?>
+                      <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($member->Total), 'gbp')) ?>
                     <?php } ?>
                   </td>
                 </tr>

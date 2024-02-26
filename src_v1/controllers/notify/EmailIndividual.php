@@ -79,23 +79,23 @@ include BASE_PATH . "views/notifyMenu.php";
     <?php if (isset($userOnly) && $userOnly) { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users")) ?>">Users</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users/" . $user)) ?>"><?= htmlspecialchars(mb_substr($userInfo['Forename'], 0, 1)) ?><?= htmlspecialchars(mb_substr($userInfo['Surname'], 0, 1)) ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users")) ?>">Users</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users/" . $user)) ?>"><?= htmlspecialchars(mb_substr((string) $userInfo['Forename'], 0, 1)) ?><?= htmlspecialchars(mb_substr((string) $userInfo['Surname'], 0, 1)) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Email</li>
         </ol>
       </nav>
     <?php } else { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("swimmers")) ?>">Members</a></li>
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("swimmers/" . $id)) ?>"><?= htmlspecialchars(mb_substr($mySwimmer['fn'], 0, 1)) ?><?= htmlspecialchars(mb_substr($mySwimmer['sn'], 0, 1)) ?></a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("swimmers")) ?>">Members</a></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("swimmers/" . $id)) ?>"><?= htmlspecialchars(mb_substr((string) $mySwimmer['fn'], 0, 1)) ?><?= htmlspecialchars(mb_substr((string) $mySwimmer['sn'], 0, 1)) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Contact parent</li>
         </ol>
       </nav>
     <?php } ?>
 
     <h1>Contact a user</h1>
-    <p class="lead mb-0">Send an email<?php if ($mySwimmer) { ?> to <?= htmlspecialchars(\SCDS\Formatting\Names::format($mySwimmer['fn'], $mySwimmer['sn'])) ?>'s account<?php } ?></p>
+    <p class="lead mb-0">Send an email<?php if ($mySwimmer) { ?> to <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($mySwimmer['fn'], $mySwimmer['sn'])) ?>'s account<?php } ?></p>
 
   </div>
 </div>
@@ -154,7 +154,7 @@ include BASE_PATH . "views/notifyMenu.php";
           <label class="form-label" for="from">Send message as</label>
           <div class="form-check">
             <input type="radio" id="from-club" name="from" class="form-check-input" value="club-sending-account" <?php if ($from == "club-sending-account") { ?>checked<?php } ?> required>
-            <label class="form-check-label" for="from-club"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></label>
+            <label class="form-check-label" for="from-club"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></label>
           </div>
           <div class="form-check">
             <input type="radio" id="from-user" name="from" class="form-check-input" value="current-user" <?php if ($from == "current-user") { ?>checked<?php } ?>>
@@ -178,7 +178,7 @@ include BASE_PATH . "views/notifyMenu.php";
             <label class="form-check-label" for="ReplyTo-Me">My reply-to email address</label>
           </div>
           <small class="form-text text-muted">
-            <a href="<?= htmlspecialchars(autoUrl("notify/reply-to")) ?>" target="_blank">Manage reply-to address</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("notify/reply-to")) ?>" target="_blank">Manage reply-to address</a>
           </small>
           <div class="invalid-feedback">
             Choose a reply-to address
@@ -189,7 +189,7 @@ include BASE_PATH . "views/notifyMenu.php";
 
     <div class="mb-3">
       <label class="form-label" for="subject">Message Subject</label>
-      <input type="text" class="form-control" name="subject" id="subject" placeholder="Message Subject" autocomplete="off" value="<?= htmlspecialchars($subject) ?>" required>
+      <input type="text" class="form-control" name="subject" id="subject" placeholder="Message Subject" autocomplete="off" value="<?= htmlspecialchars((string) $subject) ?>" required>
       <div class="invalid-feedback">
         You must enter a subject
       </div>
@@ -197,7 +197,7 @@ include BASE_PATH . "views/notifyMenu.php";
 
     <div class="mb-3">
       <label class="form-label" for="message">Your Message</label>
-      <textarea class="form-control" id="message" name="message" rows="10" required><?= htmlspecialchars($content) ?></textarea>
+      <textarea class="form-control" id="message" name="message" rows="10" required><?= htmlspecialchars((string) $content) ?></textarea>
       <small id="messageHelp" class="form-text text-muted">
         Styling will be stripped from this message
       </small>

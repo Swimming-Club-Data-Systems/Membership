@@ -20,7 +20,7 @@ if ($info == null) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Squad Rep Options';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . ' Squad Rep Options';
 
 include BASE_PATH . "views/header.php";
 
@@ -39,14 +39,14 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
       <h1>
-        <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Squad Rep Settings</small>
+        <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?><br><small>Squad Rep Settings</small>
       </h1>
 
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['AssignSquadSuccess']) { ?>
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
-              We've assigned that squad to <?= htmlspecialchars($info['Forename']) ?>
+              We've assigned that squad to <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -58,7 +58,7 @@ include BASE_PATH . "views/header.php";
         <div class="alert alert-success">
           <p class="mb-0">
             <strong>
-              We've removed that squad from <?= htmlspecialchars($info['Forename']) ?>
+              We've removed that squad from <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -70,7 +70,7 @@ include BASE_PATH . "views/header.php";
         <div class="alert alert-danger">
           <p class="mb-0">
             <strong>
-              We could not remove that squad from <?= htmlspecialchars($info['Forename']) ?>
+              We could not remove that squad from <?= htmlspecialchars((string) $info['Forename']) ?>
             </strong>
           </p>
         </div>
@@ -87,7 +87,7 @@ include BASE_PATH . "views/header.php";
             <li class="list-group-item">
               <div class="row align-items-center justify-content-between">
                 <div class="col">
-                  <?= htmlspecialchars($squad['SquadName']) ?>
+                  <?= htmlspecialchars((string) $squad['SquadName']) ?>
                 </div>
                 <div class="col text-end">
                   <span>

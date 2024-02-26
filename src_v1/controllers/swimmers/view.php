@@ -12,7 +12,7 @@ use Brick\PhoneNumber\PhoneNumberFormat;
 
 try {
   $member = new Member($id);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }
 
@@ -39,7 +39,7 @@ $getMemberships->execute([
 ]);
 $membership = $getMemberships->fetch(PDO::FETCH_OBJ);
 
-$pagetitle = htmlspecialchars($member->getFullName());
+$pagetitle = htmlspecialchars((string) $member->getFullName());
 
 $pageHead = [
   'body' => [
@@ -88,14 +88,14 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Members</a></li>
-        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars($member->getId()) ?></li>
+        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars((string) $member->getId()) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($member->getFullName()) ?>
+          <?= htmlspecialchars((string) $member->getFullName()) ?>
         </h1>
         <p class="lead mb-0" id="leadDesc">
           Member
@@ -105,7 +105,7 @@ include BASE_PATH . 'views/header.php';
       <div class="text-lg-end col-lg">
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
           <p>
-            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
               Edit basic details
             </a>
           </p>
@@ -116,12 +116,12 @@ include BASE_PATH . 'views/header.php';
               Quick actions
             </button>
             <div class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/enter-gala")) ?>">Enter a gala</a>
-              <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("users/" . $user->getId())) ?>">View linked user</a>
-              <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/contact-parent")) ?>">Email user/parent/guardian</a>
+              <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/enter-gala")) ?>">Enter a gala</a>
+              <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("users/" . $user->getId())) ?>">View linked user</a>
+              <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/contact-parent")) ?>">Email user/parent/guardian</a>
               <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Galas') { ?>
                 <button class="dropdown-item" id="new-move-dropdown" type="button">New squad move</button>
-                <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("members/" . $id . "/parenthelp")) ?>">Print access key</a>
+                <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/parenthelp")) ?>">Print access key</a>
               <?php } ?>
             </div>
           </div>
@@ -188,7 +188,7 @@ include BASE_PATH . 'views/header.php';
             Date of birth
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getDateOfBirth()->format("j F Y")) ?>
+            <?= htmlspecialchars((string) $member->getDateOfBirth()->format("j F Y")) ?>
           </dd>
         </div>
 
@@ -197,36 +197,36 @@ include BASE_PATH . 'views/header.php';
             Country
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getCountry()) ?>
+            <?= htmlspecialchars((string) $member->getCountry()) ?>
           </dd>
         </div>
 
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership #
+            <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership #
           </dt>
           <dd>
             <a href="<?= htmlspecialchars('https://www.swimmingresults.org/biogs/biogs_details.php?tiref=' . $member->getSwimEnglandNumber()) ?>">
-              <?= htmlspecialchars($member->getSwimEnglandNumber()) ?>
+              <?= htmlspecialchars((string) $member->getSwimEnglandNumber()) ?>
             </a>
           </dd>
         </div>
 
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership
+            <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getGoverningBodyCategoryName()) ?>
+            <?= htmlspecialchars((string) $member->getGoverningBodyCategoryName()) ?>
           </dd>
         </div>
 
         <div class="col-6">
           <dt class="text-truncate">
-            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="The sex <?= htmlspecialchars($member->getForename()) ?> competes under, even if this is not the same as their gender identity." data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+            Sex (for the purposes of competition) <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="The sex <?= htmlspecialchars((string) $member->getForename()) ?> competes under, even if this is not the same as their gender identity." data-original-title="What does this mean?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getSex()) ?>
+            <?= htmlspecialchars((string) $member->getSex()) ?>
           </dd>
         </div>
 
@@ -236,7 +236,7 @@ include BASE_PATH . 'views/header.php';
               Gender Identity <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="Your gender identity is a way to describe how you feel about your gender. You might identify your gender as a boy or a girl or something different. This is different from your sex, which is related to your physical body and biology." data-original-title="What is gender identity?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
             </dt>
             <dd>
-              <?= htmlspecialchars($member->getGenderIdentity()) ?>
+              <?= htmlspecialchars((string) $member->getGenderIdentity()) ?>
             </dd>
           </div>
 
@@ -245,7 +245,7 @@ include BASE_PATH . 'views/header.php';
               Gender Pronouns <a tabindex="0" data-bs-toggle="popover" data-bs-trigger="focus" title="" data-bs-content="The words we use to refer to someone like, ‘he’, ‘she’ and ‘they’. Members can choose their pronouns so that club staff don't misgender them." data-original-title="What are pronouns?"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
             </dt>
             <dd>
-              <?= htmlspecialchars($member->getGenderPronouns()) ?>
+              <?= htmlspecialchars((string) $member->getGenderPronouns()) ?>
             </dd>
           </div>
         <?php } ?>
@@ -268,16 +268,16 @@ include BASE_PATH . 'views/header.php';
         <p>
           Latest submission <?= htmlspecialchars($time->format('H:i, j F Y')) ?><br>
           <?php if (bool($latestCovidSurvey['OfficerApproval'])) { ?>
-            <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by <?= htmlspecialchars(\SCDS\Formatting\Names::format($latestCovidSurvey['Forename'], $latestCovidSurvey['Surname'])) ?></span>
+            <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Approved by <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latestCovidSurvey['Forename'], $latestCovidSurvey['Surname'])) ?></span>
           <?php } else if (!bool($latestCovidSurvey['OfficerApproval']) && $latestCovidSurvey['ApprovedBy']) { ?>
-            <span class="text-danger"><i class="fa fa-times-circle" aria-hidden="true"></i> Rejected by <?= htmlspecialchars(\SCDS\Formatting\Names::format($latestCovidSurvey['Forename'], $latestCovidSurvey['Surname'])) ?></span>
+            <span class="text-danger"><i class="fa fa-times-circle" aria-hidden="true"></i> Rejected by <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latestCovidSurvey['Forename'], $latestCovidSurvey['Surname'])) ?></span>
           <?php } else if (!bool($latestCovidSurvey['OfficerApproval'])) { ?>
             <span class="text-warning"><i class="fa fa-minus-circle" aria-hidden="true"></i> Awaiting approval</span>
           <?php } ?>
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('covid/health-screening/members/' . $id)) ?>" class="btn btn-success">
+          <a href="<?= htmlspecialchars((string) autoUrl('covid/health-screening/members/' . $id)) ?>" class="btn btn-success">
             View all submissions
           </a>
         </p>
@@ -296,7 +296,7 @@ include BASE_PATH . 'views/header.php';
         $time->setTimezone(new DateTimeZone('Europe/London'));
       ?>
         <?php if (bool($latestCovidRAForm['MemberAgreement'])) { ?>
-          <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Signed at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latestCovidRAForm['Guardian']) { ?> with <?= htmlspecialchars(\SCDS\Formatting\Names::format($latestCovidRAForm['Forename'], $latestCovidRAForm['Surname'])) ?> as parent/guardian<?php } ?></span>
+          <span class="text-success"><i class="fa fa-check-circle" aria-hidden="true"></i> Signed at <?= htmlspecialchars($time->format('H:i, j F Y')) ?><?php if ($latestCovidRAForm['Guardian']) { ?> with <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($latestCovidRAForm['Forename'], $latestCovidRAForm['Surname'])) ?> as parent/guardian<?php } ?></span>
         <?php } else { ?>
           <span class="text-warning"><i class="fa fa-minus-circle" aria-hidden="true"></i> A new declaration form is required</span>
         <?php } ?>
@@ -340,7 +340,7 @@ include BASE_PATH . 'views/header.php';
             Consent
           </dt>
           <dd>
-            <?= htmlspecialchars($medical->hasConsent()) ?>
+            <?= htmlspecialchars((string) $medical->hasConsent()) ?>
           </dd>
 
           <?php if ($medical->getGpName()) { ?>
@@ -348,7 +348,7 @@ include BASE_PATH . 'views/header.php';
               Name of GP
             </dt>
             <dd>
-              <?= htmlspecialchars($medical->getGpName()) ?>
+              <?= htmlspecialchars((string) $medical->getGpName()) ?>
             </dd>
           <?php } ?>
 
@@ -358,7 +358,7 @@ include BASE_PATH . 'views/header.php';
             </dt>
             <dd>
               <?php foreach ($medical->getGpAddress() as $line) { ?>
-                <?= htmlspecialchars($line) ?><br>
+                <?= htmlspecialchars((string) $line) ?><br>
               <?php } ?>
             </dd>
           <?php } ?>
@@ -375,7 +375,7 @@ include BASE_PATH . 'views/header.php';
                 <a href="<?= htmlspecialchars($number->format(PhoneNumberFormat::RFC3966)) ?>"><?= htmlspecialchars($number->format(PhoneNumberFormat::INTERNATIONAL)) ?></a>
               </dd>
           <?php
-            } catch (PhoneNumberParseException $e) {
+            } catch (PhoneNumberParseException) {
               // Ignore
             }
           } ?>
@@ -385,7 +385,7 @@ include BASE_PATH . 'views/header.php';
       <?php if (!$medical->hasMedicalNotes()) { ?>
 
         <p>
-          <?= htmlspecialchars($member->getForename()) ?> does not have any specific medical notes to display.
+          <?= htmlspecialchars((string) $member->getForename()) ?> does not have any specific medical notes to display.
         </p>
 
       <?php } ?>
@@ -398,7 +398,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent' || $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" class="btn btn-success">
+          <a href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/medical")) ?>" class="btn btn-success">
             Edit medical notes
           </a>
         </p>
@@ -424,14 +424,14 @@ include BASE_PATH . 'views/header.php';
               <div class="card card-body py-2 px-3 mb-2">
                 <div class="row align-items-center">
                   <div class="col-sm-6 col-md-12 col-lg-6">
-                    <div class="text-truncate"><strong><?= htmlspecialchars($ec->getName()) ?></strong></div>
-                    <div class="text-truncate"><?= htmlspecialchars($ec->getRelation()) ?></div>
+                    <div class="text-truncate"><strong><?= htmlspecialchars((string) $ec->getName()) ?></strong></div>
+                    <div class="text-truncate"><?= htmlspecialchars((string) $ec->getRelation()) ?></div>
                     <div class="mb-2 d-sm-none d-md-flex d-lg-none"></div>
                   </div>
                   <div class="col">
                     <div class="d-grid gap-2">
-                      <a href="<?= htmlspecialchars($ec->getRFCContactNumber()) ?>" class="btn btn-success">
-                        <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars($ec->getNationalContactNumber()) ?>
+                      <a href="<?= htmlspecialchars((string) $ec->getRFCContactNumber()) ?>" class="btn btn-success">
+                        <i class="fa fa-phone" aria-hidden="true"></i> <?= htmlspecialchars((string) $ec->getNationalContactNumber()) ?>
                       </a>
                     </div>
                   </div>
@@ -449,7 +449,7 @@ include BASE_PATH . 'views/header.php';
             <strong>No emergency contact details are available.</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($member->getForename()) ?> should not be allowed to train until details have been provided.
+            <?= htmlspecialchars((string) $member->getForename()) ?> should not be allowed to train until details have been provided.
           </p>
         </div>
 
@@ -462,7 +462,7 @@ include BASE_PATH . 'views/header.php';
       <?php if ($member->getAge() >= 18) { ?>
 
         <p>
-          <?= htmlspecialchars($member->getForename()) ?> is <?= htmlspecialchars($member->getAge()) ?> so has no photography restrictions in place.
+          <?= htmlspecialchars((string) $member->getForename()) ?> is <?= htmlspecialchars((string) $member->getAge()) ?> so has no photography restrictions in place.
         </p>
 
       <?php } else { ?>
@@ -483,7 +483,7 @@ include BASE_PATH . 'views/header.php';
 
                 <ul class="list-unstyled mb-0">
                   <?php foreach ($perms['allowed'] as $text) { ?>
-                    <li><?= htmlspecialchars($text->getDescription()) ?></li>
+                    <li><?= htmlspecialchars((string) $text->getDescription()) ?></li>
                   <?php } ?>
                 </ul>
               </div>
@@ -503,7 +503,7 @@ include BASE_PATH . 'views/header.php';
 
                 <ul class="list-unstyled mb-0">
                   <?php foreach ($perms['disallowed'] as $text) { ?>
-                    <li><?= htmlspecialchars($text->getDescription()) ?></li>
+                    <li><?= htmlspecialchars((string) $text->getDescription()) ?></li>
                   <?php } ?>
                 </ul>
               </div>
@@ -513,7 +513,7 @@ include BASE_PATH . 'views/header.php';
 
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
           <p class="mt-3">
-            <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/edit")) ?>" class="btn btn-success">
               Edit photography preferences
             </a>
           </p>
@@ -527,13 +527,13 @@ include BASE_PATH . 'views/header.php';
       <h2 id="squads">Squad<?php if (sizeof($squads) != 1) { ?>s<?php } ?></h2>
       <div id="squadDetails">
         <!-- <p>
-        <?= htmlspecialchars($member->getForename()) ?> is a member of <?= htmlspecialchars((new NumberFormatter("en", NumberFormatter::SPELLOUT))->format(sizeof($squads))) ?><?php if (sizeof($squads) != 1) { ?>s<?php } ?>.
+        <?= htmlspecialchars((string) $member->getForename()) ?> is a member of <?= htmlspecialchars((new NumberFormatter("en", NumberFormatter::SPELLOUT))->format(sizeof($squads))) ?><?php if (sizeof($squads) != 1) { ?>s<?php } ?>.
       </p>
 
       <div class="list-group mb-3">
         <?php foreach ($squads as $squad) { ?>
           <a href="<?= htmlspecialchars('/squads/' . $squad->getId()) ?>" class="list-group-item list-group-item-action">
-            <?= htmlspecialchars($squad->getName()) ?>
+            <?= htmlspecialchars((string) $squad->getName()) ?>
           </a>
         <?php } ?>
       </div> -->
@@ -541,18 +541,18 @@ include BASE_PATH . 'views/header.php';
 
       <?php if ($manageSquads) { ?>
         <p>
-          <button class="btn btn-success" id="new-move-button" data-member="<?= htmlspecialchars($id) ?>" data-squads-url="<?= htmlspecialchars(autoUrl("members/$id/squads.json")) ?>" data-move-url="<?= htmlspecialchars(autoUrl("members/move-squad")) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>">
+          <button class="btn btn-success" id="new-move-button" data-member="<?= htmlspecialchars((string) $id) ?>" data-squads-url="<?= htmlspecialchars((string) autoUrl("members/$id/squads.json")) ?>" data-move-url="<?= htmlspecialchars((string) autoUrl("members/move-squad")) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>">
             Manage squads
           </button>
         </p>
 
         <p>
-            To change whether <?= htmlspecialchars($member->getForename()) ?> pays for a squad, edit the squad move from <a href="/squad-moves">the Squad Moves page</a>.
+            To change whether <?= htmlspecialchars((string) $member->getForename()) ?> pays for a squad, edit the squad move from <a href="/squad-moves">the Squad Moves page</a>.
         </p>
       <?php } ?>
-      <div id="squads-data" data-squads-url="<?= htmlspecialchars(autoUrl("members/$id/squads.json")) ?>"></div>
+      <div id="squads-data" data-squads-url="<?= htmlspecialchars((string) autoUrl("members/$id/squads.json")) ?>"></div>
 
-      <div id="squad-moves-area" data-show-options="<?php if ($manageSquads) { ?>true<?php } else { ?>false<?php } ?>" data-operations-url="<?= htmlspecialchars(autoUrl('members/move-operations')) ?>"></div>
+      <div id="squad-moves-area" data-show-options="<?php if ($manageSquads) { ?>true<?php } else { ?>false<?php } ?>" data-operations-url="<?= htmlspecialchars((string) autoUrl('members/move-operations')) ?>"></div>
 
       <hr>
 
@@ -567,11 +567,11 @@ include BASE_PATH . 'views/header.php';
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewQualificationSuccess']);
       } ?>
 
-      <div id="qualifications-box" data-qualifications-url="<?= htmlspecialchars(autoUrl("members/$id/qualifications/current")) ?>"></div>
+      <div id="qualifications-box" data-qualifications-url="<?= htmlspecialchars((string) autoUrl("members/$id/qualifications/current")) ?>"></div>
 
       <?php if (app()->user->hasPermissions(['Admin'])) { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("members/$id/qualifications/new")) ?>" class="btn btn-success" id="add-qualification">
+          <a href="<?= htmlspecialchars((string) autoUrl("members/$id/qualifications/new")) ?>" class="btn btn-success" id="add-qualification">
             Add qualification
           </a>
         </p>
@@ -586,18 +586,18 @@ include BASE_PATH . 'views/header.php';
           <?php do { ?>
             <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>
               <div class="list-group-item">
-                <?= htmlspecialchars($extra['ExtraName']) ?> <em><?php if ($extra['Type'] == 'Refund') { ?>(Credit) <?php } ?>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $extra['ExtraFee'])->toScale(2) ?>/month</em>
+                <?= htmlspecialchars((string) $extra['ExtraName']) ?> <em><?php if ($extra['Type'] == 'Refund') { ?>(Credit) <?php } ?>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $extra['ExtraFee'])->toScale(2) ?>/month</em>
               </div>
             <?php } else { ?>
-              <a href="<?= htmlspecialchars(autoUrl('payments/extrafees/' . $extra['ExtraID'])) ?>" class="list-group-item list-group-item-action">
-                <?= htmlspecialchars($extra['ExtraName']) ?> <em><?php if ($extra['Type'] == 'Refund') { ?>(Credit) <?php } ?>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $extra['ExtraFee'])->toScale(2) ?>/month</em>
+              <a href="<?= htmlspecialchars((string) autoUrl('payments/extrafees/' . $extra['ExtraID'])) ?>" class="list-group-item list-group-item-action">
+                <?= htmlspecialchars((string) $extra['ExtraName']) ?> <em><?php if ($extra['Type'] == 'Refund') { ?>(Credit) <?php } ?>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $extra['ExtraFee'])->toScale(2) ?>/month</em>
               </a>
             <?php } ?>
           <?php } while ($extra = $extraFees->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
       <?php } else { ?>
         <p>
-          <?= htmlspecialchars($member->getForename()) ?> has no additional fees to pay.
+          <?= htmlspecialchars((string) $member->getForename()) ?> has no additional fees to pay.
         </p>
       <?php } ?>
 
@@ -606,11 +606,11 @@ include BASE_PATH . 'views/header.php';
       <!-- Times -->
       <h2 id="personal-bests">Personal bests</h2>
       <p>
-        View <?= htmlspecialchars($member->getForename()) ?>'s personal best times.
+        View <?= htmlspecialchars((string) $member->getForename()) ?>'s personal best times.
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl("members/" . $id . "/times")) ?>" class="btn btn-success">
+        <a href="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/times")) ?>" class="btn btn-success">
           See personal bests
         </a>
       </p>
@@ -624,7 +624,7 @@ include BASE_PATH . 'views/header.php';
             <ul class="list-unstyled">
               <?php foreach ($pbs->long_course as $eventCode => $event) {
                 $swim = $event->swims[0]; ?>
-                <li><strong><?= htmlspecialchars($event->event_name) ?></strong><br><?= htmlspecialchars($swim->time) ?> - <?= htmlspecialchars($swim->meet->name) ?> on <?= htmlspecialchars((new DateTime($swim->swim_date, new DateTimeZone('Europe/London')))->format("j F Y")) ?></li>
+                <li><strong><?= htmlspecialchars((string) $event->event_name) ?></strong><br><?= htmlspecialchars((string) $swim->time) ?> - <?= htmlspecialchars((string) $swim->meet->name) ?> on <?= htmlspecialchars((new DateTime($swim->swim_date, new DateTimeZone('Europe/London')))->format("j F Y")) ?></li>
               <?php } ?>
             </ul>
           </div>
@@ -633,7 +633,7 @@ include BASE_PATH . 'views/header.php';
             <ul class="list-unstyled">
               <?php foreach ($pbs->short_course as $eventCode => $event) {
                 $swim = $event->swims[0]; ?>
-                <li><strong><?= htmlspecialchars($event->event_name) ?></strong><br><?= htmlspecialchars($swim->time) ?> - <?= htmlspecialchars($swim->meet->name) ?> on <?= htmlspecialchars((new DateTime($swim->swim_date, new DateTimeZone('Europe/London')))->format("j F Y")) ?></li>
+                <li><strong><?= htmlspecialchars((string) $event->event_name) ?></strong><br><?= htmlspecialchars((string) $swim->time) ?> - <?= htmlspecialchars((string) $swim->meet->name) ?> on <?= htmlspecialchars((new DateTime($swim->swim_date, new DateTimeZone('Europe/London')))->format("j F Y")) ?></li>
               <?php } ?>
             </ul>
           </div>
@@ -653,7 +653,7 @@ include BASE_PATH . 'views/header.php';
             Club membership category
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getClubCategory()) ?>
+            <?= htmlspecialchars((string) $member->getClubCategory()) ?>
           </dd>
         </div>
 
@@ -667,20 +667,20 @@ include BASE_PATH . 'views/header.php';
         </div>
       </dl>
 
-      <h3><?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership</h3>
+      <h3><?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership</h3>
       <dl class="row">
         <div class="col-6">
           <dt class="text-truncate">
-            <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> Membership Type
+            <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> Membership Type
           </dt>
           <dd>
-            <?= htmlspecialchars($member->getGoverningBodyCategoryName()) ?>
+            <?= htmlspecialchars((string) $member->getGoverningBodyCategoryName()) ?>
           </dd>
         </div>
 
         <div class="col-6">
           <dt class="text-truncate">
-            Club pays <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> fees
+            Club pays <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> fees
           </dt>
           <dd>
             <?php if ($member->swimEnglandFeesPaid()) { ?>Yes<?php } else { ?>No, member pays<?php } ?>
@@ -698,7 +698,7 @@ include BASE_PATH . 'views/header.php';
           $end = new DateTime($membership->ends, new DateTimeZone('Europe/London'));
         ?>
           <div class="card card-body mb-3">
-            <h4><?= htmlspecialchars($membership->membershipName) ?> <small class="text-muted">Paid <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->amount), 'GBP')) ?></small></h4>
+            <h4><?= htmlspecialchars((string) $membership->membershipName) ?> <small class="text-muted">Paid <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->amount), 'GBP')) ?></small></h4>
             <p class="mb-0">
               <?= htmlspecialchars($start->format('j F Y')) ?> - <?= htmlspecialchars($end->format('j F Y')) ?>
             </p>
@@ -706,22 +706,22 @@ include BASE_PATH . 'views/header.php';
         <?php } while ($membership = $getMemberships->fetch(PDO::FETCH_OBJ)); ?>
 
         <?php if ($user && app()->user->hasPermission('Admin')) { ?>
-          <a href="<?= htmlspecialchars(autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>">Create a membership batch</a> to add more memberships.
+          <a href="<?= htmlspecialchars((string) autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>">Create a membership batch</a> to add more memberships.
         <?php } ?>
 
       <?php } else { ?>
         <div class="alert alert-warning">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($member->getForename()) ?> currently has no assigned memberships</strong>
+            <strong><?= htmlspecialchars((string) $member->getForename()) ?> currently has no assigned memberships</strong>
           </p>
           <?php if (app()->user->hasPermission('Admin')) { ?>
             <?php if ($user) { ?>
               <p class="mb-0">
-                <a href="<?= htmlspecialchars(autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>" class="alert-link">Create a membership batch</a> to add memberships.
+                <a href="<?= htmlspecialchars((string) autoUrl('users/' . $user->getId() . '/new-membership-batch')) ?>" class="alert-link">Create a membership batch</a> to add memberships.
               </p>
             <?php } else { ?>
               <p class="mb-0">
-                <a href="<?= htmlspecialchars(autoUrl('onboarding/new')) ?>" class="alert-link">Create an onboarding session</a> to create or assign a user and add memberships.
+                <a href="<?= htmlspecialchars((string) autoUrl('onboarding/new')) ?>" class="alert-link">Create an onboarding session</a> to create or assign a user and add memberships.
               </p>
             <?php } ?>
           <?php } ?>
@@ -737,7 +737,7 @@ include BASE_PATH . 'views/header.php';
         <?= $md ?>
       <?php } else { ?>
         <p>
-          No additional notes for <?= htmlspecialchars($member->getForename()) ?>
+          No additional notes for <?= htmlspecialchars((string) $member->getForename()) ?>
         </p>
       <?php } ?>
 

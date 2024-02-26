@@ -35,11 +35,11 @@ $contentTypes = [
   'text/markdown'
 ];
 
-if (!(isset($_POST['title']) && mb_strlen($_POST['title']) > 0)) {
+if (!(isset($_POST['title']) && mb_strlen((string) $_POST['title']) > 0)) {
   $errors[] = "The log entry does not have a title";
 }
 
-if (!(isset($_POST['entry']) && mb_strlen($_POST['entry']) > 0)) {
+if (!(isset($_POST['entry']) && mb_strlen((string) $_POST['entry']) > 0)) {
   $errors[] = "The log entry has no content";
 }
 
@@ -73,14 +73,14 @@ if (sizeof($errors) > 0) {
       $dateTimeObject = DateTime::createFromFormat ("Y-m-d H:i", $_POST['date'] . ' ' . $_POST['time'], new DateTimeZone('Europe/London'));
       $dateTimeObject->setTimezone(new DateTimeZone('UTC'));
       $time = $dateTimeObject->format("Y-m-d H:i:s");
-    } catch (Exception | Error $e) {
+    } catch (Exception | Error) {
       $time = $info['DateTime'];
     }
 
     $update->execute([
       $time,
       $_POST['title'],
-      trim($_POST['entry']),
+      trim((string) $_POST['entry']),
       $_POST['content-type'],
       $id
     ]);

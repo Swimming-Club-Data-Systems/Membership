@@ -17,18 +17,18 @@ try {
   if ($scheduleExists != null) {
   	header("Location: " . autoUrl($url_path . "/setup/2"));
   }
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }
 
-if ($date == null || $date == "") {
+if ($date == null || $date == 0) {
 	header("Location: " . autoUrl($url_path . "/setup/1"));
 } else {
   try {
     $insert = $db->prepare("INSERT INTO `paymentSchedule` (`UserID`, `Day`) VALUES (?, ?)");
     $insert->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID'], $date]);
   	header("Location: " . autoUrl($url_path . "/setup/2"));
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(500);
   }
 }

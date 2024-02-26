@@ -1,6 +1,6 @@
 <?php
 
-if (!isset($_GET['auth_code']) || mb_strlen($_GET['auth_code']) == 0) {
+if (!isset($_GET['auth_code']) || mb_strlen((string) $_GET['auth_code']) == 0) {
   header("location: " . autoUrl("login"));
   return;
 } else {

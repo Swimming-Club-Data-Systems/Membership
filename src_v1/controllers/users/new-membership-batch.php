@@ -34,5 +34,5 @@ if ($count == 0) {
   // If one, go straight to it
 
   http_response_code(302);
-  header("location: " . autoUrl("memberships/batches/new?user=" . urlencode($id)));
+  header("location: " . autoUrl("memberships/batches/new?user=" . urlencode((string) $id)));
 }

@@ -3,9 +3,9 @@
 function getContrastColor($hexColor) {
 
   // hexColor RGB
-  $R1 = hexdec(substr($hexColor, 1, 2));
-  $G1 = hexdec(substr($hexColor, 3, 2));
-  $B1 = hexdec(substr($hexColor, 5, 2));
+  $R1 = hexdec(substr((string) $hexColor, 1, 2));
+  $G1 = hexdec(substr((string) $hexColor, 3, 2));
+  $B1 = hexdec(substr((string) $hexColor, 5, 2));
 
   // Black RGB
   $blackColor = "#000000";
@@ -14,13 +14,13 @@ function getContrastColor($hexColor) {
   $B2BlackColor = hexdec(substr($blackColor, 5, 2));
 
    // Calc contrast ratio
-   $L1 = 0.2126 * pow($R1 / 255, 2.2) +
-         0.7152 * pow($G1 / 255, 2.2) +
-         0.0722 * pow($B1 / 255, 2.2);
+   $L1 = 0.2126 * ($R1 / 255) ** 2.2 +
+         0.7152 * ($G1 / 255) ** 2.2 +
+         0.0722 * ($B1 / 255) ** 2.2;
 
-  $L2 = 0.2126 * pow($R2BlackColor / 255, 2.2) +
-        0.7152 * pow($G2BlackColor / 255, 2.2) +
-        0.0722 * pow($B2BlackColor / 255, 2.2);
+  $L2 = 0.2126 * ($R2BlackColor / 255) ** 2.2 +
+        0.7152 * ($G2BlackColor / 255) ** 2.2 +
+        0.0722 * ($B2BlackColor / 255) ** 2.2;
 
   $contrastRatio = 0;
   if ($L1 > $L2) {

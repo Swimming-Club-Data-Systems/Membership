@@ -30,7 +30,7 @@ include BASE_PATH . 'views/header.php';
         <div class="form-check">
           <input type="radio" id="select-card-<?=$pm['ID']?>" name="select-card" class="form-check-input" value="<?=$pm['ID']?>">
           <label class="form-check-label" for="select-card-<?=$pm['ID']?>">
-            <i class="fa <?=htmlspecialchars(getCardFA($pm['Brand']))?>" aria-hidden="true"></i> <span class="visually-hidden"><?=htmlspecialchars($pm['Brand'])?></span> <?=htmlspecialchars($pm['Name'] . ' (Card ending ' . $pm['Last4'] . ')')?>
+            <i class="fa <?=htmlspecialchars((string) getCardFA($pm['Brand']))?>" aria-hidden="true"></i> <span class="visually-hidden"><?=htmlspecialchars((string) $pm['Brand'])?></span> <?=htmlspecialchars($pm['Name'] . ' (Card ending ' . $pm['Last4'] . ')')?>
           </label>
         </div>
         <?php } ?>

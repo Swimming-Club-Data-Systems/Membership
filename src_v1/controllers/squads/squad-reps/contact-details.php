@@ -28,7 +28,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('squad-reps')) ?>">Rep Home</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('squad-reps')) ?>">Rep Home</a></li>
         <li class="breadcrumb-item active" aria-current="page">Contact Details</li>
       </ol>
     </nav>
@@ -73,7 +73,7 @@ include BASE_PATH . 'views/header.php';
 
         <?php while ($squad = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
           <div class="mb-3">
-            <label class="form-label" for="<?= htmlspecialchars('field-' . $squad['SquadID']) ?>"><?= htmlspecialchars($squad['SquadName']) ?></label>
+            <label class="form-label" for="<?= htmlspecialchars('field-' . $squad['SquadID']) ?>"><?= htmlspecialchars((string) $squad['SquadName']) ?></label>
             <textarea class="form-control font-monospace" id="<?= htmlspecialchars('field-' . $squad['SquadID']) ?>" name="<?= htmlspecialchars('field-' . $squad['SquadID']) ?>" rows="3" maxlength="255"><?= htmlspecialchars((string) $squad['ContactDescription']) ?></textarea>
             <div class="invalid-feedback">
               Please use no more than 255 characters.

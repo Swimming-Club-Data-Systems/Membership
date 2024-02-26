@@ -72,7 +72,7 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("notify")) ?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("notify")) ?>">Notify</a></li>
       <li class="breadcrumb-item active" aria-current="page">History</li>
     </ol>
   </nav>
@@ -91,18 +91,18 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
         </div>
       <?php } else { ?>
         <p class="lead">
-          Page <?= htmlspecialchars($page) ?> of <?= htmlspecialchars($numPages) ?>
+          Page <?= htmlspecialchars((string) $page) ?> of <?= htmlspecialchars($numPages) ?>
         </p>
         <?php do {
-          $info = json_decode($row['JSONData']);
+          $info = json_decode((string) $row['JSONData']);
           $sender = null;
           if ($row['Forename'] != "" && $row['Surname'] != "") {
-            $sender = "<dt class=\"col-sm-3\">Sent by</dt><dd class=\"col-sm-9\">" . htmlspecialchars(\SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) . "</dd>";
+            $sender = "<dt class=\"col-sm-3\">Sent by</dt><dd class=\"col-sm-9\">" . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['Forename'], $row['Surname'])) . "</dd>";
             if ($row['ForceSend']) {
               $sender .= "<dt class=\"col-sm-3\">Force Sent</dt><dd class=\"col-sm-9\">True</dd>";
             }
           } else {
-            $sender = "<dt class=\"col-sm-3\">Sent by</dt><dd class=\"col-sm-9\">" . htmlspecialchars($info->Sender->Name) . "</dd>";
+            $sender = "<dt class=\"col-sm-3\">Sent by</dt><dd class=\"col-sm-9\">" . htmlspecialchars((string) $info->Sender->Name) . "</dd>";
             if ($row['ForceSend']) {
               $sender .= "<dt class=\"col-sm-3\">Force Sent</dt><dd class=\"col-sm-9\">True</dd>";
             }
@@ -111,7 +111,7 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
           <div class="card mb-3">
             <div class="card-header">
               <h5 class="card-title">
-                <?= htmlspecialchars($row['Subject']) ?>
+                <?= htmlspecialchars((string) $row['Subject']) ?>
               </h5>
               <dl class="row mb-0 small">
                 <?php echo $sender; ?>
@@ -135,21 +135,21 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
                     sort($array);
                     foreach ($array as $s) { ?>
                       <span class="badge rounded-pill rounded bg-dark">
-                        <?= htmlspecialchars(mb_strimwidth($s, 0, 40)) ?>
+                        <?= htmlspecialchars(mb_strimwidth((string) $s, 0, 40)) ?>
                       </span><?php
                             } ?>
                   </dd>
                   <?php if (isset($info->NamedSender->Name)) { ?>
                     <dt class="col-sm-3">Sent as</dt>
                     <dd class="col-sm-9 text-truncate">
-                      <?= htmlspecialchars($info->NamedSender->Name) ?>
+                      <?= htmlspecialchars((string) $info->NamedSender->Name) ?>
                     </dd>
                   <?php } ?>
                   <?php if (isset($info->ReplyToMe->Name) && isset($info->ReplyToMe->Email)) { ?>
                     <dt class="col-sm-3">Custom reply to</dt>
                     <dd class="col-sm-9 text-truncate">
-                      <a href="mailto:<?= htmlspecialchars($info->ReplyToMe->Email) ?>">
-                        <?= htmlspecialchars($info->ReplyToMe->Name) ?> &lt;<?= htmlspecialchars($info->ReplyToMe->Email) ?>&gt;
+                      <a href="mailto:<?= htmlspecialchars((string) $info->ReplyToMe->Email) ?>">
+                        <?= htmlspecialchars((string) $info->ReplyToMe->Name) ?> &lt;<?= htmlspecialchars((string) $info->ReplyToMe->Email) ?>&gt;
                       </a>
                     </dd>
                   <?php } ?>
@@ -175,15 +175,15 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
                             $faClass = ' fa-file-pdf-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('image')) === 'image') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('image')) === 'image') {
                             $faClass = ' fa-file-image-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('video')) === 'video') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('video')) === 'video') {
                             $faClass = ' fa-file-video-o ';
                           }
 
-                          if (mb_substr($a->MIME, 0, mb_strlen('text')) === 'text') {
+                          if (mb_substr((string) $a->MIME, 0, mb_strlen('text')) === 'text') {
                             $faClass = ' fa-file-text-o ';
                             $download = true;
                           }
@@ -209,8 +209,8 @@ include BASE_PATH . "views/notifyMenu.php"; ?>
                         if ($download) $disposition = 'attachment';
 
                       ?>
-                        <a href="<?= htmlspecialchars(autoUrl("files/" . $a->URI . "?filename=" . urlencode($a->Filename) . "&disposition=" . urlencode($disposition))) ?>" class="d-block mb-1 text-truncate text-decoration-none" <?php if ($download) { ?> download="" <?php } else { ?> target="_blank" <?php } ?>>
-                          <span class="fa <?= htmlspecialchars($faClass) ?> fa-fw"></span> <?= htmlspecialchars($a->Filename) ?>
+                        <a href="<?= htmlspecialchars((string) autoUrl("files/" . $a->URI . "?filename=" . urlencode((string) $a->Filename) . "&disposition=" . urlencode($disposition))) ?>" class="d-block mb-1 text-truncate text-decoration-none" <?php if ($download) { ?> download="" <?php } else { ?> target="_blank" <?php } ?>>
+                          <span class="fa <?= htmlspecialchars($faClass) ?> fa-fw"></span> <?= htmlspecialchars((string) $a->Filename) ?>
                         </a>
                       <?php
                       } ?>

@@ -16,7 +16,7 @@ if ($rows) {
 
 if ($found) {
 
-	$array = json_decode($row['UserJSON']);
+	$array = json_decode((string) $row['UserJSON']);
 
 	//pre($array);
 

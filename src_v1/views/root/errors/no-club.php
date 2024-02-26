@@ -4,7 +4,7 @@ http_response_code(404);
 $pagetitle = "Error 404 - Tenant not found";
 
 $clubDetails = null;
-$code = mb_strtoupper($club);
+$code = mb_strtoupper((string) $club);
 
 if (($handle = fopen(BASE_PATH . "includes/regions/clubs.csv", "r")) !== false) {
   while (($data = fgetcsv($handle, 1000)) !== false) {
@@ -31,13 +31,13 @@ include BASE_PATH . "views/root/header.php";
     <div class="col-lg-8">
 
       <?php if ($clubDetails) { ?>
-        <h1><?= htmlspecialchars($clubDetails['Name']) ?> is not an SCDS Customer</h1>
+        <h1><?= htmlspecialchars((string) $clubDetails['Name']) ?> is not an SCDS Customer</h1>
         <p class="lead">
           <a href="mailto:sales@myswimmingclub.uk">Contact sales</a> to get SCDS Membership for your club.
         </p>
 
         <p>
-          If you were looking for a different club, <a href="<?= htmlspecialchars(autoUrl('clubs')) ?>">please try searching our list</a>.
+          If you were looking for a different club, <a href="<?= htmlspecialchars((string) autoUrl('clubs')) ?>">please try searching our list</a>.
         </p>
 
         <p>
@@ -52,7 +52,7 @@ include BASE_PATH . "views/root/header.php";
       <?php } else { ?>
         <h1>No club</h1>
         <p class="lead">
-          We could not find a tenant matching <span class="font-monospace"><?= htmlspecialchars($club) ?></span>.
+          We could not find a tenant matching <span class="font-monospace"><?= htmlspecialchars((string) $club) ?></span>.
         </p>
 
         <p>
@@ -60,7 +60,7 @@ include BASE_PATH . "views/root/header.php";
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('clubs')) ?>">Please try searching our list</a> to find your club.
+          <a href="<?= htmlspecialchars((string) autoUrl('clubs')) ?>">Please try searching our list</a> to find your club.
         </p>
 
         <p>

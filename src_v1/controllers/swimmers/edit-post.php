@@ -45,17 +45,17 @@ try {
   $update = $db->prepare("UPDATE `members` SET `MForename` = ?, `MSurname` = ?, `MMiddleNames` = ?, `DateOfBirth` = ?, `Gender` = ?, `OtherNotes` = ? WHERE MemberID = ?");
 
   // Validate
-  if (!isset($_POST['forename']) || mb_strlen(trim($_POST['forename'])) == 0) {
+  if (!isset($_POST['forename']) || mb_strlen(trim((string) $_POST['forename'])) == 0) {
     throw new Exception('Forename not provided');
   }
 
-  if (!isset($_POST['surname']) || mb_strlen(trim($_POST['surname'])) == 0) {
+  if (!isset($_POST['surname']) || mb_strlen(trim((string) $_POST['surname'])) == 0) {
     throw new Exception('Surname not provided');
   }
 
   $middlenames = null;
-  if (isset($_POST['middle-names']) || mb_strlen(trim($_POST['middle-names'])) > 0) {
-    $middlenames = trim($_POST['middle-names']);
+  if (isset($_POST['middle-names']) || mb_strlen(trim((string) $_POST['middle-names'])) > 0) {
+    $middlenames = trim((string) $_POST['middle-names']);
   }
 
   if (!isset($_POST['dob'])) {
@@ -66,7 +66,7 @@ try {
   $tomorrow = new DateTime('+1 day', new DateTimeZOne('Europe/London'));
   try {
     $dob = new DateTime($_POST['dob'], new DateTimeZone('Europe/London'));
-  } catch (Exception $e) {
+  } catch (Exception) {
     throw new Exception('Invalid date of birth provided');
   }
 
@@ -80,13 +80,13 @@ try {
   }
 
   $otherNotes = '';
-  if (isset($_POST['other-notes']) && mb_strlen(trim($_POST['other-notes'])) > 0) {
-    $otherNotes = trim($_POST['other-notes']);
+  if (isset($_POST['other-notes']) && mb_strlen(trim((string) $_POST['other-notes'])) > 0) {
+    $otherNotes = trim((string) $_POST['other-notes']);
   }
 
   $update->execute([
-    trim($_POST['forename']),
-    trim($_POST['surname']),
+    trim((string) $_POST['forename']),
+    trim((string) $_POST['surname']),
     $middlenames,
     $dob->format('Y-m-d'),
     $_POST['sex'],
@@ -116,10 +116,10 @@ try {
           $genderIdentity = 'Non binary';
           break;
         default:
-          if (!isset($_POST['gender-custom']) || mb_strlen(trim($_POST['gender-custom'])) == 0) {
+          if (!isset($_POST['gender-custom']) || mb_strlen(trim((string) $_POST['gender-custom'])) == 0) {
             throw new Exception('No custom gender supplied');
           }
-          $genderIdentity = mb_strimwidth(mb_convert_case(trim($_POST['gender-custom']), MB_CASE_TITLE), 0, 256);
+          $genderIdentity = mb_strimwidth(mb_convert_case(trim((string) $_POST['gender-custom']), MB_CASE_TITLE), 0, 256);
           break;
       }
     }
@@ -137,10 +137,10 @@ try {
           $genderPronouns = 'They/Them/Theirs';
           break;
         default:
-          if (!isset($_POST['gender-pronoun-custom']) || mb_strlen(trim($_POST['gender-pronoun-custom'])) == 0) {
+          if (!isset($_POST['gender-pronoun-custom']) || mb_strlen(trim((string) $_POST['gender-pronoun-custom'])) == 0) {
             throw new Exception('No custom pronoun supplied');
           }
-          $genderPronouns = mb_strimwidth(mb_convert_case(trim($_POST['gender-pronoun-custom']), MB_CASE_TITLE), 0, 256);
+          $genderPronouns = mb_strimwidth(mb_convert_case(trim((string) $_POST['gender-pronoun-custom']), MB_CASE_TITLE), 0, 256);
           break;
       }
     }
@@ -168,9 +168,9 @@ try {
   if ($adminMode) {
     $update = $db->prepare("UPDATE `members` SET `ASANumber` = ?, `NGBCategory` = ?, `ClubCategory` = ?, `Country` = ?, `ASAPaid` = ?, `ClubPaid` = ? WHERE MemberID = ?");
 
-    $asaNumber = mb_strtoupper(app()->tenant->getKey('ASA_CLUB_CODE')) . $id;
-    if (isset($_POST['asa']) && mb_strlen(trim($_POST['asa']))) {
-      $asaNumber = mb_strtoupper(trim($_POST['asa']));
+    $asaNumber = mb_strtoupper((string) app()->tenant->getKey('ASA_CLUB_CODE')) . $id;
+    if (isset($_POST['asa']) && mb_strlen(trim((string) $_POST['asa']))) {
+      $asaNumber = mb_strtoupper(trim((string) $_POST['asa']));
     }
 
     $checkCat = $db->prepare("SELECT COUNT(*) FROM `clubMembershipClasses` WHERE `ID` = ? AND `Tenant` = ? AND `Type` = ?");

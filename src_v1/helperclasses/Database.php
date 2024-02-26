@@ -5,20 +5,13 @@
  */
 
 class Database {
-	private $hostname;
-	private $username;
-	private $password;
-	private $database;
 	private $connection;
 
-	function __construct($hostname, $username, $password, $database) {
-			$this->hostname = $hostname;
-			$this->username = $username;
-			$this->password = $password;
-			$this->database = $database;
-    }
+	function __construct(private $hostname, private $username, private $password, private $database)
+ {
+ }
 
-	public function connect() {
+	public function connect(): void {
 		$this->connection = mysqli_connect($hostname, $username, $password, $database);
 
 		if ($this->connection->connect_error) {
@@ -30,7 +23,7 @@ class Database {
 		return $this->connection;
 	}
 
-	public function disconnect() {
+	public function disconnect(): void {
 		mysqli_close($this->connection);
 	}
 }

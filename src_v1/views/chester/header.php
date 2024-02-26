@@ -5,7 +5,7 @@ $db = app()->db;
 require 'GlobalHead.php';
 
 if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'])) {
-  if (rand() < 0.5) {
+  if (random_int(0, mt_getrandmax()) < 0.5) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'] = false;
   } else {
     $_SESSION['TENANT-' . app()->tenant->getId()]['AlphaBeta'] = true;
@@ -88,7 +88,7 @@ if (isset($customBackground) && $customBackground) {
         <div class="<?= $container_class ?> emergency-message">
           <?php try { ?>
             <?= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE')) ?>
-          <?php } catch (Exception $e) { ?>
+          <?php } catch (Exception) { ?>
             <p>An emergency message has been set but cannot be rendered.</p>
           <?php } ?>
         </div>
@@ -146,7 +146,7 @@ if (isset($customBackground) && $customBackground) {
             </strong>
           </p>
           <p>
-            It looks like you're using Android version <?= htmlspecialchars($_SESSION['Browser']['OSVersion']) ?>. From February, you won't be able to access this site on your device because the DST Root X3 certificate will expire.
+            It looks like you're using Android version <?= htmlspecialchars((string) $_SESSION['Browser']['OSVersion']) ?>. From February, you won't be able to access this site on your device because the DST Root X3 certificate will expire.
           </p>
           <p class="mb-0">
             Upgrade to at least Android 7.1.1 now or <strong><a class="text-dark" href="https://www.firefox.com">install Firefox by Mozilla</a></strong>. Firefox uses it's own root certificate list which avoids this problem and has great protections for your privacy with built in features including tracking protection.
@@ -168,7 +168,7 @@ if (isset($customBackground) && $customBackground) {
             browser which we do support as soon as possible. <strong><a class="text-dark" href="http://browsehappy.com/" target="_blank">Upgrade your browser today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install
+            <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a class="text-dark" href="https://www.firefox.com">install
                 Firefox by Mozilla</a></strong>. Firefox has great protections for your privacy with built in features
             including tracking protection.
           </p>

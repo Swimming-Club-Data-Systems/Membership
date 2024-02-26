@@ -73,7 +73,7 @@ try {
       $setOutOfUse->execute([
         $oldMandate['MandateID']
       ]);
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Returns cancellation_failed error on failure
       // Oops can't cancel
     }
@@ -116,16 +116,12 @@ try {
     'Last4' => '······' . $accNumEnd,
   ];
   header('location: ' . autoUrl('onboarding/go'));
-} catch (\GoCardlessPro\Core\Exception\ApiException | \GoCardlessPro\Core\Exception\MalformedResponseException $e) {
+} catch (\GoCardlessPro\Core\Exception\ApiException | \GoCardlessPro\Core\Exception\MalformedResponseException) {
   $db->rollBack();
   header('location: ' . autoUrl('onboarding/go/start-task'));
-} catch (\GoCardlessPro\Core\Exception\ApiConnectionException $e) {
+} catch (\GoCardlessPro\Core\Exception\ApiConnectionException|Exception $e) {
   $db->rollBack();
   reportError($e);
 
-  header('location: ' . autoUrl('onboarding/go/start-task'));
-} catch (Exception $e) {
-  $db->rollBack();
-  reportError($e);
   header('location: ' . autoUrl('onboarding/go/start-task'));
 }

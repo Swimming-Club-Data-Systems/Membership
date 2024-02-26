@@ -5,7 +5,7 @@ header('Content-Type: application/manifest+json');
 $icons = [];
 
 $clubName = 'My Club';
-if (mb_strlen(app()->tenant->getKey('CLUB_SHORT_NAME')) > 0 && mb_strlen(app()->tenant->getKey('CLUB_SHORT_NAME')) < 14) {
+if (mb_strlen((string) app()->tenant->getKey('CLUB_SHORT_NAME')) > 0 && mb_strlen((string) app()->tenant->getKey('CLUB_SHORT_NAME')) < 14) {
   $clubName = app()->tenant->getKey('CLUB_SHORT_NAME');
 }
 

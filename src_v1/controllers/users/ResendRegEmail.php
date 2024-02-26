@@ -33,8 +33,8 @@ if ($info != null) {
 
   try {
     $subject = "Complete your registration at " . app()->tenant->getKey('CLUB_NAME');
-    $message = "<p>Hello " . htmlspecialchars($info['Forename']) . ", </p>";
-    $message .= "<p>We've pre-registered you for a " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " account. To continue, <a href=\"" . htmlspecialchars(autoUrl("assisted-registration/" . $_POST['user'] . "/" . $password)) . "\">please follow this link</a></p>";
+    $message = "<p>Hello " . htmlspecialchars((string) $info['Forename']) . ", </p>";
+    $message .= "<p>We've pre-registered you for a " . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . " account. To continue, <a href=\"" . htmlspecialchars((string) autoUrl("assisted-registration/" . $_POST['user'] . "/" . $password)) . "\">please follow this link</a></p>";
     $message .= "<p>As part of the registration process, we'll ask you to set a password, let us know your communication preferences and fill in important information about you and/or your members.</p>";
 
     if (!app()->tenant->isCLS()) {
@@ -48,7 +48,7 @@ if ($info != null) {
     $status = true;
 
     $db->commit();
-  } catch (Exception $e) {
+  } catch (Exception) {
     $alertContent = '<p class="mb-0"><strong>Unable to resend registration email</strong></p><p class="mb-0">We\'ve been unable to send a registration emails to ' . htmlspecialchars($info['Forename'] . ' ' . $info['Surname']) . '. Please check their email address before trying again.</p>';
     $alertContextualClass = 'alert-danger';
 

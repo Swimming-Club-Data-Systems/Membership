@@ -1,7 +1,7 @@
 <?php
 
 use Respect\Validation\Validator as v;
-$email = trim(mb_convert_case($_POST['email'], MB_CASE_LOWER));
+$email = trim(mb_convert_case((string) $_POST['email'], MB_CASE_LOWER));
 
 $valid = true;
 $message = 'Email address is allowed.';
@@ -34,7 +34,7 @@ try {
     $message = $email . ' is not a valid email address.';
   }
 
-} catch (Exception $e) {
+} catch (Exception) {
   $valid = false;
   $message = 'An unknown error occurred while verifying the email address.';
 }

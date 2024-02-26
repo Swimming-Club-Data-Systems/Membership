@@ -36,7 +36,7 @@ ob_start(); ?>
     </div>
     <div class="split-50">
       <p>
-        <?= date("d/m/Y", strtotime($data->date_produced)) ?>
+        <?= date("d/m/Y", strtotime((string) $data->date_produced)) ?>
       </p>
     </div>
   </div>
@@ -94,13 +94,13 @@ ob_start(); ?>
           </td>
           <td>
             <?php if ($item->object == 'Payment') {
-              echo htmlspecialchars($item->type);
+              echo htmlspecialchars((string) $item->type);
             } else {
-              echo htmlspecialchars($item->object);
+              echo htmlspecialchars((string) $item->object);
             } ?>
           </td>
           <td>
-            <?= htmlspecialchars($item->details) ?>
+            <?= htmlspecialchars((string) $item->details) ?>
           </td>
           <td class="font-monospace">
             <?= number_format($item->credits / 100, 2, '.', '') ?>
@@ -109,10 +109,10 @@ ob_start(); ?>
             <?= number_format($item->debits / 100, 2, '.', '') ?>
           </td>
           <td>
-            <?= htmlspecialchars($item->income) ?>
+            <?= htmlspecialchars((string) $item->income) ?>
           </td>
           <td>
-            <?= htmlspecialchars($item->status) ?>
+            <?= htmlspecialchars((string) $item->status) ?>
           </td>
         </tr>
       <?php } ?>
@@ -159,7 +159,7 @@ ob_start(); ?>
   </p>
 
   <p>
-    Payments are handled by Stripe and GoCardless on behalf of <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>. You can also download reports from the Stripe Dashboard at <a href="https://dashboard.stripe.com/">dashboard.stripe.com</a> and from within the GoCardless user interface at <a href="https://manage.gocardless.com/">manage.gocardless.com</a>.
+    Payments are handled by Stripe and GoCardless on behalf of <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>. You can also download reports from the Stripe Dashboard at <a href="https://dashboard.stripe.com/">dashboard.stripe.com</a> and from within the GoCardless user interface at <a href="https://manage.gocardless.com/">manage.gocardless.com</a>.
   </p>
 
   <p>
@@ -172,7 +172,7 @@ ob_start(); ?>
   </p>
 
   <p>
-    &copy; Swimming Club Data Systems <?= date("Y", strtotime($data->date_produced)) ?>. Produced for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+    &copy; Swimming Club Data Systems <?= date("Y", strtotime((string) $data->date_produced)) ?>. Produced for <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
   </p>
 
   <?php $landscape = true;

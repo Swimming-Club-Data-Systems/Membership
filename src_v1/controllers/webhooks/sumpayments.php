@@ -13,7 +13,7 @@ $tenant = app()->tenant;
 
 $squadFeeMonths = [];
 try {
-  $squadFeeMonths = json_decode(app()->tenant->getKey('SquadFeeMonths'), true);
+  $squadFeeMonths = json_decode((string) app()->tenant->getKey('SquadFeeMonths'), true);
 } catch (Exception | Error $e) {
   // Do nothing
 }
@@ -33,7 +33,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
 
   $tier3 = $tenant->getKey('TIER3_SQUAD_FEES');
   if ($tier3) {
-    $tier3 = json_decode($tier3, true);
+    $tier3 = json_decode((string) $tier3, true);
     $tier3Date = new DateTime($tier3['eighteen_by'], new DateTimeZone('Europe/London'));
     $tier3Date->sub(new DateInterval('P18Y'));
   }
@@ -214,9 +214,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
 
           // If is CLS handle discounts
           if (app()->tenant->isCLS()) {
-            usort($discountMembers, function ($item1, $item2) {
-              return $item2['fee'] <=> $item1['fee'];
-            });
+            usort($discountMembers, fn($item1, $item2) => $item2['fee'] <=> $item1['fee']);
 
             $number = 0;
             foreach ($discountMembers as $member) {
@@ -237,7 +235,7 @@ if ($tenant->getBooleanKey('ENABLE_BILLING_SYSTEM')) {
                   $swimmerDiscount = $memberTotalDec->multipliedBy('0.40')->toScale(2, RoundingMode::DOWN)->withPointMovedRight(2)->toInt();
                   $discountPercent = '40';
                 }
-              } catch (Exception $e) {
+              } catch (Exception) {
                 // Something went wrong so ensure these stay zero!
                 $swimmerDiscount = 0;
                 $discountPercent = '0';

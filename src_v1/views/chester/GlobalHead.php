@@ -37,11 +37,11 @@ Chester-le-Street ASC is a non profit unincorporated association.
 <head>
   <meta charset="utf-8">
   <?php if (isset($pagetitle) && ($pagetitle != "" || $pagetitle != null)) { ?>
-    <title><?= $pagetitle ?> - <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
+    <title><?= $pagetitle ?> - <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
   <?php } else { ?>
-    <title><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
+    <title><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
   <?php } ?>
-  <meta name="description" content="Your <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Account lets you make gala entries online and gives you access to all your information about your swimmers, including attendance.">
+  <meta name="description" content="Your <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Account lets you make gala entries online and gives you access to all your information about your swimmers, including attendance.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0,
     user-scalable=no,maximum-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,8 +58,8 @@ Chester-le-Street ASC is a non profit unincorporated association.
   <meta name="X-SCDS-Membership-Tracking" content="no">
   <script src="https://js.stripe.com/v3/"></script>
   <link rel="stylesheet preload" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400i,600,700|Roboto+font-monospace|Merriweather:400,600">
-  <link rel="stylesheet preload" href="<?= htmlspecialchars($stylesheet) ?>">
-  <link rel="icon" sizes="196x196" href="<?= htmlspecialchars(autoUrl("img/touchicons/touch-icon-196x196.png", false)) ?>">
+  <link rel="stylesheet preload" href="<?= htmlspecialchars((string) $stylesheet) ?>">
+  <link rel="icon" sizes="196x196" href="<?= htmlspecialchars((string) autoUrl("img/touchicons/touch-icon-196x196.png", false)) ?>">
   <!-- For Chrome for Android: -->
   <link rel="icon" sizes="192x192" href="<?= autoUrl("img/touchicons/touch-icon-192x192.png", false) ?>">
   <!-- For iPhone 6 Plus with @3× display: -->

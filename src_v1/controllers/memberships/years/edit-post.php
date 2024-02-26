@@ -20,7 +20,7 @@ try {
     throw new Exception('Missing data');
   }
 
-  if (mb_strlen(trim($_POST['name'])) == 0) {
+  if (mb_strlen(trim((string) $_POST['name'])) == 0) {
     throw new Exception('Missing name');
   }
 
@@ -29,7 +29,7 @@ try {
 
   $insert = $db->prepare("UPDATE `membershipYear` SET `Name` = ?, `StartDate` = ?, `EndDate` = ? WHERE `ID` = ?");
   $insert->execute([
-    trim($_POST['name']),
+    trim((string) $_POST['name']),
     $startDate->format('Y-m-d'),
     $endDate->format('Y-m-d'),
     $id,
@@ -38,7 +38,7 @@ try {
   http_response_code(302);
   header("location: " . autoUrl("memberships/years/$id"));
 
-} catch (Exception $e) {
+} catch (Exception) {
   // Broke
   http_response_code(302);
   header("location: " . autoUrl("memberships/years/$id/edit"));

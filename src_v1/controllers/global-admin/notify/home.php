@@ -28,8 +28,8 @@ include BASE_PATH . "views/root/header.php";
   } ?>
 
   <div class="list-group">
-    <a href="<?= htmlspecialchars(autoUrl('admin/notify/history')) ?>" class="list-group-item list-group-item-action">Message History</a>
-    <a href="<?= htmlspecialchars(autoUrl('admin/notify/compose')) ?>" class="list-group-item list-group-item-action">New Email</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/notify/history')) ?>" class="list-group-item list-group-item-action">Message History</a>
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/notify/compose')) ?>" class="list-group-item list-group-item-action">New Email</a>
   </div>
 </div>
 

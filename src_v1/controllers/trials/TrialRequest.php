@@ -72,7 +72,7 @@ include BASE_PATH . 'views/header.php';
       <div class="alert alert-success">
         <p class="mb-0"><strong>Trial Appointment Time</strong></p>
         <p class="mb-0">
-          <?=date("H:i, j F Y", strtotime($swimmer['TrialStart']))?> - <?=date("H:i, j F Y", strtotime($swimmer['TrialEnd']))?>
+          <?=date("H:i, j F Y", strtotime((string) $swimmer['TrialStart']))?> - <?=date("H:i, j F Y", strtotime((string) $swimmer['TrialEnd']))?>
         </p>
       </div>
       <?php } else { ?>
@@ -90,21 +90,21 @@ include BASE_PATH . 'views/header.php';
       <form method="post">
         <div class="mb-3">
           <label class="form-label" for="trial-date">Trial Date</label>
-          <input type="date" class="form-control" id="trial-date" name="trial-date" value="<?=date("Y-m-d", strtotime($swimmer['TrialStart']))?>">
+          <input type="date" class="form-control" id="trial-date" name="trial-date" value="<?=date("Y-m-d", strtotime((string) $swimmer['TrialStart']))?>">
         </div>
 
         <div class="row">
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="trial-start">Trial Start Time</label>
-              <input type="time" class="form-control" id="trial-start" name="trial-start" value="<?=date("H:i", strtotime($swimmer['TrialStart']))?>">
+              <input type="time" class="form-control" id="trial-start" name="trial-start" value="<?=date("H:i", strtotime((string) $swimmer['TrialStart']))?>">
             </div>
           </div>
 
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="trial-end">Trial End Time</label>
-              <input type="time" class="form-control" id="trial-end" name="trial-end" value="<?=date("H:i", strtotime($swimmer['TrialEnd']))?>">
+              <input type="time" class="form-control" id="trial-end" name="trial-end" value="<?=date("H:i", strtotime((string) $swimmer['TrialEnd']))?>">
             </div>
           </div>
         </div>
@@ -125,8 +125,8 @@ include BASE_PATH . 'views/header.php';
         <?php if ($swimmer['ASA'] != null && $swimmer['ASA'] != "") { ?>
         <dt class="col-md-4">Swim England Number</dt>
         <dd class="col-md-8">
-          <a target="_blank" href="https://www.swimmingresults.org/biogs/biogs_details.php?tiref=<?=htmlspecialchars($swimmer['ASA'])?>">
-            <?=htmlspecialchars($swimmer['ASA'])?>
+          <a target="_blank" href="https://www.swimmingresults.org/biogs/biogs_details.php?tiref=<?=htmlspecialchars((string) $swimmer['ASA'])?>">
+            <?=htmlspecialchars((string) $swimmer['ASA'])?>
           </a>
         </dd>
         <?php } ?>
@@ -134,14 +134,14 @@ include BASE_PATH . 'views/header.php';
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
         <dt class="col-md-4">Date of Birth</dt>
         <dd class="col-md-8">
-          <?=date("j F Y", strtotime($swimmer['DoB']))?>
+          <?=date("j F Y", strtotime((string) $swimmer['DoB']))?>
         </dd>
         <?php } ?>
 
         <?php if ($swimmer['Club'] != null && $swimmer['Club'] != "") { ?>
         <dt class="col-md-4">Current/Previous Club</dt>
         <dd class="col-md-8">
-          <?=htmlspecialchars($swimmer['Club'])?>
+          <?=htmlspecialchars((string) $swimmer['Club'])?>
         </dd>
         <?php } ?>
 
@@ -153,7 +153,7 @@ include BASE_PATH . 'views/header.php';
         <?php if ($swimmer['XPDetails'] != null && $swimmer['XPDetails'] != "") { ?>
         <dt class="col-md-4">Experience Details</dt>
         <dd class="col-md-8">
-          <?=htmlspecialchars($swimmer['XPDetails'])?>
+          <?=htmlspecialchars((string) $swimmer['XPDetails'])?>
         </dd>
         <?php } ?>
 
@@ -161,7 +161,7 @@ include BASE_PATH . 'views/header.php';
         <?php if ($swimmer['Medical'] != null && $swimmer['Medical'] != "") { ?>
         <dt class="col-md-4">Medical Info</dt>
         <dd class="col-md-8">
-          <?=htmlspecialchars($swimmer['Medical'])?>
+          <?=htmlspecialchars((string) $swimmer['Medical'])?>
         </dd>
         <?php } ?>
         <?php } ?>
@@ -169,7 +169,7 @@ include BASE_PATH . 'views/header.php';
         <?php if ($swimmer['Questions'] != null && $swimmer['Questions'] != "") { ?>
         <dt class="col-md-4">Questions and Comments</dt>
         <dd class="col-md-8">
-          <?=htmlspecialchars($swimmer['Questions'])?>
+          <?=htmlspecialchars((string) $swimmer['Questions'])?>
         </dd>
         <?php } ?>
       </dl>

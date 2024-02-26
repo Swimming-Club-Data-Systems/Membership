@@ -22,7 +22,7 @@ include BASE_PATH . "views/notifyMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify"))?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify"))?>">Notify</a></li>
       <li class="breadcrumb-item active" aria-current="page">Lists</li>
     </ol>
   </nav>
@@ -51,8 +51,8 @@ include BASE_PATH . "views/notifyMenu.php";
           <tbody>
           <?php do { ?>
             <tr>
-              <td><a href="<?php echo autoUrl("notify/lists/" . $row['ID']); ?>"><?=htmlspecialchars($row['Name'])?></a></td>
-              <td><?=htmlspecialchars($row['Description'])?></td>
+              <td><a href="<?php echo autoUrl("notify/lists/" . $row['ID']); ?>"><?=htmlspecialchars((string) $row['Name'])?></a></td>
+              <td><?=htmlspecialchars((string) $row['Description'])?></td>
             </tr>
           <?php } while ($row = $lists->fetch(PDO::FETCH_ASSOC)); ?>
         </tbody>

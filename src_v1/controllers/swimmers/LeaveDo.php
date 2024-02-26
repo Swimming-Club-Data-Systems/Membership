@@ -37,7 +37,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['LeaveKey'] == $key) {
     $message = '<p>We\'re sorry to see you go.</p>';
     $message .= '<p>' . htmlspecialchars($row['MForename'] . ' ' . $row['MSurname']) . ' will be removed from our computer systems on ' . date("l j F Y", strtotime($date)) . '.</p>';
     $message .= '<p>They will not be allowed to take part in any training sessions on or after this date. If you think this was a mistake, please contact the membership secretary.</p>';
-    $message .= '<p>Kind regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+    $message .= '<p>Kind regards,<br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
     $notify_query->execute([
       $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'],
@@ -51,7 +51,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['LeaveKey'] == $key) {
     unset($_SESSION['TENANT-' . app()->tenant->getId()]['LeaveKey']);
     $_SESSION['TENANT-' . app()->tenant->getId()]['ConfirmLeave'] = true;
     header("Location: " . autoUrl("members/" . $id . "/leaveclub/"));
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(500);
   }
 } else {

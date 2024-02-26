@@ -16,7 +16,7 @@ $logos = app()->tenant->getKey('LOGO_DIR');
 
 $pagetitle = 'Logged In - Onboarding';
 
-$target = autoUrl("onboarding/go?session=" . urlencode($_GET['session']) . '&token=' . urlencode($_GET['token']));
+$target = autoUrl("onboarding/go?session=" . urlencode((string) $_GET['session']) . '&token=' . urlencode((string) $_GET['token']));
 
 include BASE_PATH . "views/head.php";
 
@@ -29,9 +29,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -42,7 +42,7 @@ include BASE_PATH . "views/head.php";
   <div class="container">
     <div class="row justify-content-center py-5">
       <div class="col-lg-8 col-md-10 text-center">
-        <h1>Hi <?= htmlspecialchars($user->getFirstName()) ?>!</h1>
+        <h1>Hi <?= htmlspecialchars((string) $user->getFirstName()) ?>!</h1>
 
         <p class="lead">
           This onboarding session is for a different account to that you are logged in with.
@@ -53,11 +53,11 @@ include BASE_PATH . "views/head.php";
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars('logout?redirect=' . urlencode($target)) ?>" class="btn btn-success">Continue</a>
+          <a href="<?= htmlspecialchars('logout?redirect=' . urlencode((string) $target)) ?>" class="btn btn-success">Continue</a>
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-dark">Cancel</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('')) ?>" class="btn btn-dark">Cancel</a>
         </p>
 
       </div>

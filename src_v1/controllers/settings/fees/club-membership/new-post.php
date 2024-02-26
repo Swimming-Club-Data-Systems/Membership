@@ -16,8 +16,8 @@ try {
   $insert = $db->prepare("INSERT INTO `clubMembershipClasses` (`ID`, `Type`, `Name`, `Description`, `Fees`, `Tenant`) VALUES (?, ?, ?, ?, ?, ?)");
 
   $description = null;
-  if (isset($_POST['class-description']) && mb_strlen(trim($_POST['class-description'])) > 0) {
-    $description = trim($_POST['class-description']);
+  if (isset($_POST['class-description']) && mb_strlen(trim((string) $_POST['class-description'])) > 0) {
+    $description = trim((string) $_POST['class-description']);
   }
 
   $newObject = [
@@ -36,7 +36,7 @@ try {
   $insert->execute([
     $id,
     $_POST['membership-type'],
-    mb_convert_case(trim($_POST['class-name']), MB_CASE_TITLE),
+    mb_convert_case(trim((string) $_POST['class-name']), MB_CASE_TITLE),
     $description,
     $json,
     $tenant->getId(),
@@ -44,7 +44,7 @@ try {
 
   http_response_code(302);
   header("location: " . autoUrl("settings/fees/membership-fees/$id"));
-} catch (Exception $e) {
+} catch (Exception) {
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
   http_response_code(302);

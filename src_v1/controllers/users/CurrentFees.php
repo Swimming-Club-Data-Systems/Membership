@@ -30,7 +30,7 @@ include BASE_PATH . "views/header.php";
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=autoUrl("users")?>">Users</a></li>
-      <li class="breadcrumb-item"><a href="<?=autoUrl("users/" . $id)?>"><?=htmlspecialchars(mb_substr($info['Forename'], 0, 1, 'utf-8') . mb_substr($info['Surname'], 0, 1, 'utf-8'))?></a></li>
+      <li class="breadcrumb-item"><a href="<?=autoUrl("users/" . $id)?>"><?=htmlspecialchars(mb_substr((string) $info['Forename'], 0, 1, 'utf-8') . mb_substr((string) $info['Surname'], 0, 1, 'utf-8'))?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Pending fees</li>
     </ol>
   </nav>
@@ -38,7 +38,7 @@ include BASE_PATH . "views/header.php";
 	<div class="row">
     <div class="col-lg-8">
   		<h1 class="">Charges since last bill</h1>
-  		<p class="lead">Fees and Charges created since <?=htmlspecialchars($info['Forename'])?>'s last bill</p>
+  		<p class="lead">Fees and Charges created since <?=htmlspecialchars((string) $info['Forename'])?>'s last bill</p>
   		<p>They'll be billed for these on the first working day of the next month.</p>
     </div>
   </div>

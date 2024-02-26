@@ -52,7 +52,7 @@ try {
       <?php do { ?>
         <li class="list-group-item" id="<?= htmlspecialchars('qualification-' . $qualification['QID']) ?>">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($qualification['Name']) ?></strong>
+            <strong><?= htmlspecialchars((string) $qualification['Name']) ?></strong>
           </p>
           <p class="mb-0">
             Valid since <em><?= htmlspecialchars($from->format('j F Y')) ?></em><?php if ($to) { ?> until <em><?= htmlspecialchars($to->format('j F Y')) ?></em><?php } ?>
@@ -63,10 +63,10 @@ try {
   <?php } else { ?>
   <div class="alert alert-warning">
     <p class="mb-0">
-      <strong><?= htmlspecialchars($member->getForename()) ?> has no qualifications</strong>
+      <strong><?= htmlspecialchars((string) $member->getForename()) ?> has no qualifications</strong>
     </p>
     <p class="mb-0">
-      <a href="<?= htmlspecialchars(autoUrl("members/$id/qualifications/new")) ?>" class="alert-link">Add one</a> to get started.
+      <a href="<?= htmlspecialchars((string) autoUrl("members/$id/qualifications/new")) ?>" class="alert-link">Add one</a> to get started.
     </p>
   </div>
   <?php } ?>
@@ -79,7 +79,7 @@ try {
     'status' => 200,
     'html' => $html,
   ];
-} catch (Exception $e) {
+} catch (Exception) {
   $json = [
     'status' => 500,
     'html' => '<p>Error</p>',

@@ -35,6 +35,6 @@ try {
   ]);
 
   header("Location: " . $return->url);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }

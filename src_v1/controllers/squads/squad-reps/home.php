@@ -43,10 +43,10 @@ include BASE_PATH . 'views/header.php';
           <?php if ($squad != null) { ?>
             <div class="news-grid">
               <?php do { ?>
-                <a href="/squads/<?= htmlspecialchars($squad['SquadID']) ?>">
+                <a href="/squads/<?= htmlspecialchars((string) $squad['SquadID']) ?>">
                   <span class="mb-3">
                     <span class="title mb-0">
-                      <?= htmlspecialchars($squad['SquadName']) ?>
+                      <?= htmlspecialchars((string) $squad['SquadName']) ?>
                     </span>
                   </span>
                   <span class="category">
@@ -79,10 +79,10 @@ include BASE_PATH . 'views/header.php';
                 <a href="<?= autoUrl("galas/" . $gala['GalaID'] . "/squad-rep-view") ?>">
                   <span class="mb-3">
                     <span class="title mb-0">
-                      <?= htmlspecialchars($gala['GalaName']) ?>
+                      <?= htmlspecialchars((string) $gala['GalaName']) ?>
                     </span>
                     <span>
-                      <?= htmlspecialchars($gala['GalaVenue']) ?>
+                      <?= htmlspecialchars((string) $gala['GalaVenue']) ?>
                     </span>
                   </span>
                   <span class="category">

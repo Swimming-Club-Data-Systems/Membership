@@ -14,10 +14,10 @@ try {
     throw new Exception('Cross Site Request Forgery Verification failed');
   }
 
-  $forename = trim(ucwords($_POST['first-name']));
-  $surname = trim(ucwords($_POST['last-name']));
-  $password1 = trim($_POST['password-1']);
-  $password2 = trim($_POST['password-2']);
+  $forename = trim(ucwords((string) $_POST['first-name']));
+  $surname = trim(ucwords((string) $_POST['last-name']));
+  $password1 = trim((string) $_POST['password-1']);
+  $password2 = trim((string) $_POST['password-2']);
 
   if ($password1 != $password2) {
     throw new Exception('Passwords do not match');
@@ -25,7 +25,7 @@ try {
 
   $hash = password_hash($password1, PASSWORD_ARGON2ID);
 
-  $email = mb_strtolower(trim($_POST['email-address']));
+  $email = mb_strtolower(trim((string) $_POST['email-address']));
   $mobile = null;
   try {
     $number = PhoneNumber::parse($_POST['phone'], 'GB');
@@ -103,14 +103,14 @@ try {
     }
 
     $db->commit();
-  } catch (PDOException $e) {
+  } catch (PDOException) {
     $db->rollBack();
     throw new Exception('A database error occurred');
   }
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationSuccess'] = true;
   header("location: " . autoUrl("users/$id"));
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError'] = [

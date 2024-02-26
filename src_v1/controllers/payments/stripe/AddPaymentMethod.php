@@ -67,7 +67,7 @@ include BASE_PATH . 'views/header.php';
 
 ?>
 
-<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-stripe-account-id="<?= htmlspecialchars($tenant->getStripeAccount()) ?>">
+<div id="stripe-data" data-stripe-publishable="<?= htmlspecialchars(getenv('STRIPE_PUBLISHABLE')) ?>" data-stripe-font-css="<?= htmlspecialchars($fontCss) ?>" data-stripe-account-id="<?= htmlspecialchars((string) $tenant->getStripeAccount()) ?>">
 </div>
 
 <div class="bg-light mt-n3 py-3 mb-3">
@@ -99,14 +99,14 @@ include BASE_PATH . 'views/header.php';
             <strong>An error occurred</strong>
           </p>
           <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage'])) { ?>
-            <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage']) ?></p>
+            <p class="mb-0"><?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage']) ?></p>
           <?php } ?>
         </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardError']);
         unset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardErrorMessage']); ?>
       <?php } ?>
 
-      <form action="<?= htmlspecialchars(autoUrl("payments/cards/add")) ?>" method="post" id="payment-form" class="mb-5 needs-validation" novalidate>
+      <form action="<?= htmlspecialchars((string) autoUrl("payments/cards/add")) ?>" method="post" id="payment-form" class="mb-5 needs-validation" novalidate>
         <div id="form-hideable" class="show fade">
           <div class="mb-3">
             <label class="form-label" for="cardholder-name">Cardholder name</label>
@@ -137,7 +137,7 @@ include BASE_PATH . 'views/header.php';
             <label class="form-label" for="addr-post-code">Country</label>
             <select class="form-select pm-can-disable" required id="addr-country" autocomplete="country">
               <?php foreach ($countries as $code => $name) { ?>
-                <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars($code) ?>"><?= htmlspecialchars($name) ?></option>
+                <option <?php if ($code == 'GB') { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $code) ?>"><?= htmlspecialchars((string) $name) ?></option>
               <?php } ?>
             </select>
             <div class="invalid-feedback">
@@ -151,7 +151,7 @@ include BASE_PATH . 'views/header.php';
               Card number
             </label>
             <div class="input-group has-validation">
-              <span class="input-group-text" id="card-brand-element"><img class="fa fa-fw" src="<?= htmlspecialchars(autoUrl("img/stripe/network-svgs/credit-card.svg", false)) ?>" aria-hidden="true"></span>
+              <span class="input-group-text" id="card-brand-element"><img class="fa fa-fw" src="<?= htmlspecialchars((string) autoUrl("img/stripe/network-svgs/credit-card.svg", false)) ?>" aria-hidden="true"></span>
               <div id="card-number-element" class="form-control stripe-form-control"></div>
               <div id="card-number-element-errors" class="stripe-feedback"></div>
             </div>
@@ -184,11 +184,11 @@ include BASE_PATH . 'views/header.php';
         <div id="card-errors" role="alert"></div>
 
         <p>
-          Please note that even when using a saved payment card, your bank may request additional verification, such as with a one-time password or a notification sent to one of your devices. When you add a new card, <?= htmlspecialchars(app()->tenant->getName()) ?> may place a temporary hold on your card for verification.
+          Please note that even when using a saved payment card, your bank may request additional verification, such as with a one-time password or a notification sent to one of your devices. When you add a new card, <?= htmlspecialchars((string) app()->tenant->getName()) ?> may place a temporary hold on your card for verification.
         </p>
 
         <p>
-          <button id="card-button" class="btn btn-success" data-secret="<?= htmlspecialchars($setupIntent->client_secret) ?>">Add payment card</button>
+          <button id="card-button" class="btn btn-success" data-secret="<?= htmlspecialchars((string) $setupIntent->client_secret) ?>">Add payment card</button>
         </p>
       </form>
     </div>

@@ -9,7 +9,7 @@ try {
 		$tenant->getId(),
 		$id
 	]);
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }
 

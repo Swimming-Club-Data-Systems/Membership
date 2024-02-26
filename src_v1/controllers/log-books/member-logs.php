@@ -60,8 +60,8 @@ include BASE_PATH . 'views/header.php';
     <?php } else { ?>
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Members</a></li>
-          <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr($memberInfo['fn'], 0, 1, 'utf-8') . mb_substr($memberInfo['sn'], 0, 1, 'utf-8')) ?></li>
+          <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Members</a></li>
+          <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars(mb_substr((string) $memberInfo['fn'], 0, 1, 'utf-8') . mb_substr((string) $memberInfo['sn'], 0, 1, 'utf-8')) ?></li>
         </ol>
       </nav>
     <?php } ?>
@@ -69,7 +69,7 @@ include BASE_PATH . 'views/header.php';
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars(\SCDS\Formatting\Names::format($memberInfo['fn'], $memberInfo['sn'])) ?>'s log book
+          <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($memberInfo['fn'], $memberInfo['sn'])) ?>'s log book
         </h1>
         <p class="lead mb-0">
           You can log training sessions and other activity.
@@ -79,15 +79,15 @@ include BASE_PATH . 'views/header.php';
       <div class="col text-end">
         <div class="btn-group" role="group" aria-label="Quick options">
           <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn']) && bool($_SESSION['TENANT-' . app()->tenant->getId()]['LogBooks-MemberLoggedIn'])) { ?>
-            <a href="<?= htmlspecialchars(autoUrl("log-books/settings")) ?>" class="btn btn-dark-l btn-outline-light-d">
+            <a href="<?= htmlspecialchars((string) autoUrl("log-books/settings")) ?>" class="btn btn-dark-l btn-outline-light-d">
               Settings <i class="fa fa-cog" aria-hidden="true"></i>
             </a>
           <?php } else { ?>
-            <a href="<?= htmlspecialchars(autoUrl("members/" . $member . "/password?return=" . urlencode(autoUrl("log-books/members/" . $member)))) ?>" class="btn btn-dark-l btn-outline-light-d">
+            <a href="<?= htmlspecialchars((string) autoUrl("members/" . $member . "/password?return=" . urlencode((string) autoUrl("log-books/members/" . $member)))) ?>" class="btn btn-dark-l btn-outline-light-d">
               Password settings <i class="fa fa-cog" aria-hidden="true"></i>
             </a>
           <?php } ?>
-          <a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member . "/new")) ?>" class="btn btn-success">New <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+          <a href="<?= htmlspecialchars((string) autoUrl("log-books/members/" . $member . "/new")) ?>" class="btn btn-success">New <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
         </div>
       </div>
     </div>
@@ -129,7 +129,7 @@ include BASE_PATH . 'views/header.php';
           </div>
           <div class="col text-end">
             <p class="lead text-muted mb-0">
-              <?= htmlspecialchars($numLogs) ?> training log<?php if ($numLogs != 1) { ?>s<?php } ?> in total
+              <?= htmlspecialchars((string) $numLogs) ?> training log<?php if ($numLogs != 1) { ?>s<?php } ?> in total
             </p>
           </div>
         </div>
@@ -142,27 +142,27 @@ include BASE_PATH . 'views/header.php';
             <li class="list-group-item" id="<?= htmlspecialchars("log-" . $log['ID']) ?>">
               <div class="row justify-content-between">
                 <div class="col-auto">
-                  <h2><a href="<?= htmlspecialchars(autoUrl("log-books/logs/" . $log['ID'])) ?>"><?= htmlspecialchars($log['Title']) ?></a></h2>
+                  <h2><a href="<?= htmlspecialchars((string) autoUrl("log-books/logs/" . $log['ID'])) ?>"><?= htmlspecialchars((string) $log['Title']) ?></a></h2>
                   <p class="mb-0"><?= htmlspecialchars($dateObject->format("H:i \\o\\n j F Y")) ?></p>
                 </div>
                 <div class="col-auto">
                   <p class="mb-0">
-                    <a href="<?= htmlspecialchars(autoUrl("log-books/logs/" . $log['ID'] . "/edit")) ?>" class="btn btn-light">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+                    <a href="<?= htmlspecialchars((string) autoUrl("log-books/logs/" . $log['ID'] . "/edit")) ?>" class="btn btn-light">Edit <i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
                   </p>
                 </div>
               </div>
               <hr>
-              <?php if (mb_strtolower($log['ContentType']) == 'text/markdown') { ?>
+              <?php if (mb_strtolower((string) $log['ContentType']) == 'text/markdown') { ?>
                 <div class="blog-main">
                   <?= $markdown->text($log['Content']) ?>
                 </div>
-              <?php } else if (mb_strtolower($log['ContentType']) == 'text/plain-font-monospacespace') { ?>
+              <?php } else if (mb_strtolower((string) $log['ContentType']) == 'text/plain-font-monospacespace') { ?>
                 <div class="font-monospace">
-                  <?= nl2br(htmlspecialchars($log['Content'])) ?>
+                  <?= nl2br(htmlspecialchars((string) $log['Content'])) ?>
                 </div>
               <?php } else { ?>
                 <div>
-                  <?= nl2br(htmlspecialchars($log['Content'])) ?>
+                  <?= nl2br(htmlspecialchars((string) $log['Content'])) ?>
                 </div>
               <?php } ?>
             </li>
@@ -215,7 +215,7 @@ include BASE_PATH . 'views/header.php';
             <strong>There are no logs to display</strong>
           </p>
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member . "/new")) ?>" class="alert-link">Create a new training log</a> to get started.
+            <a href="<?= htmlspecialchars((string) autoUrl("log-books/members/" . $member . "/new")) ?>" class="alert-link">Create a new training log</a> to get started.
           </p>
         </div>
       <?php } ?>
@@ -227,13 +227,13 @@ include BASE_PATH . 'views/header.php';
           <div class="cell">
             <h2>Member access</h2>
             <p class="lead">
-              You can give <?= htmlspecialchars($memberInfo['fn']) ?> access to their log book with their own account!
+              You can give <?= htmlspecialchars((string) $memberInfo['fn']) ?> access to their log book with their own account!
             </p>
             <p>
-              You just need to create a password for them to get started. If <?= htmlspecialchars($memberInfo['fn']) ?> ever forgets, you can reset their password yourself by coming back to this page.
+              You just need to create a password for them to get started. If <?= htmlspecialchars((string) $memberInfo['fn']) ?> ever forgets, you can reset their password yourself by coming back to this page.
             </p>
             <p>
-              <a href="<?= htmlspecialchars(autoUrl("members/" . $member . "/password?return=" . urlencode(autoUrl("log-books/members/" . $member)))) ?>" class="btn btn-primary">
+              <a href="<?= htmlspecialchars((string) autoUrl("members/" . $member . "/password?return=" . urlencode((string) autoUrl("log-books/members/" . $member)))) ?>" class="btn btn-primary">
                 Password settings
               </a>
             </p>
@@ -245,16 +245,16 @@ include BASE_PATH . 'views/header.php';
           <div class="cell">
             <h2>My account</h2>
             <p class="lead">
-              Hey <?= htmlspecialchars($memberInfo['fn']) ?>! Welcome to your account.
+              Hey <?= htmlspecialchars((string) $memberInfo['fn']) ?>! Welcome to your account.
             </p>
             <p>
               Need to change account settings?
             </p>
             <div class="btn-group" role="group" aria-label="Account options">
-              <a href="<?= htmlspecialchars(autoUrl("log-books/settings")) ?>" class="btn btn-primary">
+              <a href="<?= htmlspecialchars((string) autoUrl("log-books/settings")) ?>" class="btn btn-primary">
                 Account settings <i class="fa fa-cog" aria-hidden="true"></i>
               </a>
-              <a href="<?= htmlspecialchars(autoUrl("logout")) ?>" class="btn btn-danger">
+              <a href="<?= htmlspecialchars((string) autoUrl("logout")) ?>" class="btn btn-danger">
                 Sign out
               </a>
             </div>

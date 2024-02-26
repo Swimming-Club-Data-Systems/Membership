@@ -50,7 +50,7 @@ if ($amount < 0) throw new Exception('Negative number');
 $addBatchItem = $db->prepare("UPDATE `membershipBatchItems` SET `Amount` = ?, `Notes` = ?, `Year` = ? WHERE `ID` = ?;");
 $addBatchItem->execute([
   $amount,
-  trim($_POST['notes']),
+  trim((string) $_POST['notes']),
   $year,
   $_POST['item-id'],
 ]);

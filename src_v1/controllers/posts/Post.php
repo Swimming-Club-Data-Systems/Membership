@@ -18,7 +18,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
 		if ($query->fetchColumn() == 0) {
 			halt(404);
 		}
-	} catch (PDOException $e) {
+	} catch (PDOException) {
 		halt(500);
 	}
 }
@@ -31,7 +31,7 @@ if ($int) {
 			$id,
 			$tenant->getId()
 		]);
-	} catch (PDOException $e) {
+	} catch (PDOException) {
 		halt(500);
 	}
 } else {
@@ -42,7 +42,7 @@ if ($int) {
 			app()->request->args[1],
 			$tenant->getId()
 		]);
-	} catch (PDOException $e) {
+	} catch (PDOException) {
 		halt(500);
 	}
 }
@@ -59,7 +59,7 @@ if ($row['MIME'] != "text/html") {
 }
 
 $use_white_background = true;
-$pagetitle = htmlentities($row['Title']);
+$pagetitle = htmlentities((string) $row['Title']);
 
 $container_classes = "";
 if ($row['Type'] == "corporate_documentation") {
@@ -84,15 +84,15 @@ include BASE_PATH . "views/postsMenu.php";
 	<div class="container-xl">
 		<div class="row align-items-center">
 			<div class="col-lg-8">
-				<h1><?= htmlentities($row['Title']) ?></h1>
+				<h1><?= htmlentities((string) $row['Title']) ?></h1>
 				<p class="lead mb-0">Last updated at <?= htmlspecialchars($modified->format('H:i \o\n j F Y')) ?></p>
 			</div>
 			<div class="ms-auto col-lg-auto">
 				<div class="btn-group">
-					<a href="<?= htmlspecialchars(autoUrl("pages/" . $row['ID'] . "/print.pdf")) ?>" class="btn btn-primary">
+					<a href="<?= htmlspecialchars((string) autoUrl("pages/" . $row['ID'] . "/print.pdf")) ?>" class="btn btn-primary">
 						Print document <i class="fa fa-print" aria-hidden="true"></i>
 					</a>
-					<a href="<?= htmlspecialchars(autoUrl("pages/" . $row['ID'] . "/edit")) ?>" class="btn btn-dark-l btn-outline-light-d">
+					<a href="<?= htmlspecialchars((string) autoUrl("pages/" . $row['ID'] . "/edit")) ?>" class="btn btn-dark-l btn-outline-light-d">
 						Edit
 					</a>
 				</div>

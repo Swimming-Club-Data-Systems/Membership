@@ -15,7 +15,7 @@ if ($row == null) {
 	halt(404);
 }
 $swimEnglandText = "Swim England Number";
-if (mb_stripos($row['ASANumber'], app()->tenant->getKey('ASA_CLUB_CODE')) > -1) {
+if (mb_stripos((string) $row['ASANumber'], (string) app()->tenant->getKey('ASA_CLUB_CODE')) > -1) {
 	$swimEnglandText = "Temporary Membership Number";
 }
 
@@ -56,8 +56,8 @@ include BASE_PATH . "views/swimmersMenu.php";
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=autoUrl("members")?>">Members</a></li>
-      <li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>"><?=htmlspecialchars($row['MForename'])?>
-          <?=htmlspecialchars(mb_substr($row['MSurname'], 0, 1, 'utf-8'))?></a></li>
+      <li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>"><?=htmlspecialchars((string) $row['MForename'])?>
+          <?=htmlspecialchars(mb_substr((string) $row['MSurname'], 0, 1, 'utf-8'))?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Access key</li>
     </ol>
   </nav>
@@ -77,7 +77,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 
 	<div class="alert alert-danger d-print-none">
 		<p class="mb-0">
-      <strong>Account setup using access keys has been deprecated.</strong> Please use <a href="<?=htmlspecialchars(autoUrl("assisted-registration"))?>" class="alert-link">Assisted Registration</a> instead.
+      <strong>Account setup using access keys has been deprecated.</strong> Please use <a href="<?=htmlspecialchars((string) autoUrl("assisted-registration"))?>" class="alert-link">Assisted Registration</a> instead.
     </p>
 		<p class="mb-0">
 			Support for access keys will be removed in a future update.
@@ -115,11 +115,11 @@ include BASE_PATH . "views/swimmersMenu.php";
   </div>
 
   <div class="py-3 mb-3 text-end font-monospace">
-    <?=htmlspecialchars(app()->tenant->getCode())?> MEMBER ID: <?= htmlspecialchars($id) ?>
+    <?=htmlspecialchars((string) app()->tenant->getCode())?> MEMBER ID: <?= htmlspecialchars((string) $id) ?>
   </div>
 
   <div class="mb-3 p-5 bg-primary text-white">
-    <span class="h3 mb-0"><?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></span>
+    <span class="h3 mb-0"><?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></span>
     <h1 class="h2 mb-4">Online Membership System</h1>
     <p class="mb-0">
       <strong>
@@ -129,7 +129,7 @@ include BASE_PATH . "views/swimmersMenu.php";
   </div>
 
   <p>
-    Here at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, we provide a number of online services to
+    Here at <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, we provide a number of online services to
     manage our members. Our services allow you to manage your swimmers, enter competitions, stay up to date by email and make payments by Direct Debit or credit/debit card.
   </p>
 
@@ -156,7 +156,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 		If you have a device that can read QR Codes (A built in feature on iOS and
 		Android Devices), scan the QR Code below. You'll be taken to a page where
 		you'll be asked to log in, if you aren't already, and we'll automatically
-		add <?=htmlspecialchars($row['MForename'])?> to your account.
+		add <?=htmlspecialchars((string) $row['MForename'])?> to your account.
 	</p>
 
   <div class="border border-dark p-2 bg-white mb-3 px-5">
@@ -164,7 +164,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 			<div class="col-8">
 				<span class="h2">Already registered for an account?</span>
 				<p class="lead">
-					Scan this QR Code to add <?=htmlspecialchars($row['MForename'])?> quickly.
+					Scan this QR Code to add <?=htmlspecialchars((string) $row['MForename'])?> quickly.
 				</p>
 				<p class="mb-0">
 					This QR Code cannot be used once you've added this swimmer.
@@ -172,7 +172,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 				</p>
 			</div>
 			<div class="col-4 text-center">
-        <img class="img-fluid ms-auto d-block" src="<?=autoUrl("services/qr/0/200")?>" srcset="<?=autoUrl("services/qr/0/400")?> 2x, <?=autoUrl("services/qr/0/600")?> 3x" alt="<?=htmlspecialchars(autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']))?>" title="<?=htmlspecialchars(autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']))?>"></img>
+        <img class="img-fluid ms-auto d-block" src="<?=autoUrl("services/qr/0/200")?>" srcset="<?=autoUrl("services/qr/0/400")?> 2x, <?=autoUrl("services/qr/0/600")?> 3x" alt="<?=htmlspecialchars((string) autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']))?>" title="<?=htmlspecialchars((string) autoUrl("my-account/addswimmer/auto/" . $row['ASANumber'] . "/" . $row['AccessKey']))?>"></img>
 			</div>
 		</div>
   </div>
@@ -184,7 +184,7 @@ include BASE_PATH . "views/swimmersMenu.php";
   </p>
 
   <p>
-    You'll be directed to a page and asked to enter your swimmer's <?=$swimEnglandText?> and <?=htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key as below.
+    You'll be directed to a page and asked to enter your swimmer's <?=$swimEnglandText?> and <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key as below.
   </p>
 
   <div class="mb-3">
@@ -192,11 +192,11 @@ include BASE_PATH . "views/swimmersMenu.php";
       <tbody>
         <tr>
           <th scope="row" class="ps-0"><?=$swimEnglandText?></th>
-          <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars($row['ASANumber'])?></span></td>
+          <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars((string) $row['ASANumber'])?></span></td>
         </tr>
         <tr>
-          <th scope="row" class="ps-0"><?=htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key</th>
-          <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars($row['AccessKey'])?></span></td>
+          <th scope="row" class="ps-0"><?=htmlspecialchars((string) app()->tenant->getKey('CLUB_SHORT_NAME'))?> Access Key</th>
+          <td class="pe-0"><span class="font-monospace"><?=htmlspecialchars((string) $row['AccessKey'])?></span></td>
         </tr>
       </tbody>
     </table>
@@ -212,23 +212,23 @@ include BASE_PATH . "views/swimmersMenu.php";
       may need to verify your identity.
     </p>
 
-    <?php if (mb_stripos($row['ASANumber'], app()->tenant->getKey('ASA_CLUB_CODE')) > -1) { ?>
+    <?php if (mb_stripos((string) $row['ASANumber'], (string) app()->tenant->getKey('ASA_CLUB_CODE')) > -1) { ?>
     <p>
       At the time you were given this form we did not yet have a Swim England registration number for
-      <?=htmlspecialchars($row['MForename'])?>. We have given you a temporary number which starts with <span
-        class="font-monospace"><?=htmlspecialchars(app()->tenant->getKey('ASA_CLUB_CODE'))?></span> which you can use to add your swimmer to your
+      <?=htmlspecialchars((string) $row['MForename'])?>. We have given you a temporary number which starts with <span
+        class="font-monospace"><?=htmlspecialchars((string) app()->tenant->getKey('ASA_CLUB_CODE'))?></span> which you can use to add your swimmer to your
       account.
     </p>
     <?php } ?>
 
     <p>
       If you’d like more information about how we use data, contact
-      <?=htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL'))?>.
+      <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL'))?>.
     </p>
 
     <?php if (!app()->tenant->isCLS()) { ?>
     <p>
-      The membership system is provided to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> by
+      The membership system is provided to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> by
       <a href="https://wwww.myswimmingclub.uk/">Swimming Club Data Systems</a>.
     </p>
     <?php } ?>

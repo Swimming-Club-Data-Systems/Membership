@@ -16,7 +16,7 @@ $raw_payload = file_get_contents('php://input');
 $headers = getallheaders();
 $provided_signature = $headers["Webhook-Signature"];
 
-$calculated_signature = hash_hmac("sha256", $raw_payload, app()->tenant->getKey('GOCARDLESS_WEBHOOK_KEY'));
+$calculated_signature = hash_hmac("sha256", $raw_payload, (string) app()->tenant->getKey('GOCARDLESS_WEBHOOK_KEY'));
 
 if ($provided_signature == $calculated_signature) {
   $payload = json_decode($raw_payload, true);
@@ -37,20 +37,12 @@ if ($provided_signature == $calculated_signature) {
 
     if ($count == 0) {
 
-      switch ($event["resource_type"]) {
-        case "mandates":
-          process_mandate_event($event);
-          break;
-				case "payments":
-          process_payment_event($event);
-          break;
-        case "payouts":
-          process_payout_event($event);
-          break;
-        default:
-          print("Don't know how to process an event with resource_type " . $event["resource_type"] . "\n");
-          break;
-      }
+      match ($event["resource_type"]) {
+          "mandates" => process_mandate_event($event),
+          "payments" => process_payment_event($event),
+          "payouts" => process_payout_event($event),
+          default => print("Don't know how to process an event with resource_type " . $event["resource_type"] . "\n"),
+      };
 
       $addEvent->execute([$event["id"]]);
     } else {
@@ -101,12 +93,12 @@ function process_mandate_event($event) {
             $addMandate->execute([
               $user,
               'Mandate',
-              mb_strimwidth($mandate, 0, 20),
-              mb_strimwidth($customer, 0, 20),
-              mb_strimwidth($bankAccount, 0, 20),
-              mb_strimwidth($bankName, 0, 100),
-              mb_strimwidth($accHolderName, 0, 30),
-              mb_strimwidth($accNumEnd, 0, 2),
+              mb_strimwidth((string) $mandate, 0, 20),
+              mb_strimwidth((string) $customer, 0, 20),
+              mb_strimwidth((string) $bankAccount, 0, 20),
+              mb_strimwidth((string) $bankName, 0, 100),
+              mb_strimwidth((string) $accHolderName, 0, 30),
+              mb_strimwidth((string) $accNumEnd, 0, 2),
               true
             ]);
 
@@ -127,7 +119,7 @@ function process_mandate_event($event) {
                 $setDefault->execute([$result['MandateID'], $user]);
               }
             }
-          } catch (Exception $e) {
+          } catch (Exception) {
             // Do nothing for now - This functionality is for mandates created
             // via GoCardless
           }
@@ -189,18 +181,18 @@ function process_mandate_event($event) {
 
           if (bool($user['Active'])) {
             $message = "<h1>Hello " . htmlspecialchars($user['Forename'] . " " . $user['Surname']) . ".</h1>
-            <p>Your Direct Debit Mandate for " . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . " has been cancelled.</p>";
+            <p>Your Direct Debit Mandate for " . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . " has been cancelled.</p>";
 
             if ($oldMandate != null) {
-              $message .= '<p>The cancelled mandate was on ' . htmlspecialchars($oldMandate['AccountHolderName']) . '\'s account with ' . htmlspecialchars(getBankName($oldMandate['BankName'])) . '. Account number ending in &middot;&middot;&middot;&middot;&middot;&middot;' . htmlspecialchars($oldMandate['AccountNumEnd']) . '. Our internal reference for the mandate was ' . htmlspecialchars($oldMandate['Mandate']) . '.</p>';
+              $message .= '<p>The cancelled mandate was on ' . htmlspecialchars((string) $oldMandate['AccountHolderName']) . '\'s account with ' . htmlspecialchars(getBankName($oldMandate['BankName'])) . '. Account number ending in &middot;&middot;&middot;&middot;&middot;&middot;' . htmlspecialchars((string) $oldMandate['AccountNumEnd']) . '. Our internal reference for the mandate was ' . htmlspecialchars((string) $oldMandate['Mandate']) . '.</p>';
             }
 
             if ($currentMandate != null) {
-              $message .= '<p>Your current direct debit mandate is set to ' . htmlspecialchars($oldMandate['AccountHolderName']) . '\'s account with ' . htmlspecialchars(getBankName($currentMandate['BankName'])) . '. Account number ending in &middot;&middot;&middot;&middot;&middot;&middot;' . htmlspecialchars($currentMandate['AccountNumEnd']) . '. Our internal reference for this mandate is ' . htmlspecialchars($currentMandate['Mandate']) . '.</p>';
+              $message .= '<p>Your current direct debit mandate is set to ' . htmlspecialchars((string) $oldMandate['AccountHolderName']) . '\'s account with ' . htmlspecialchars(getBankName($currentMandate['BankName'])) . '. Account number ending in &middot;&middot;&middot;&middot;&middot;&middot;' . htmlspecialchars((string) $currentMandate['AccountNumEnd']) . '. Our internal reference for this mandate is ' . htmlspecialchars((string) $currentMandate['Mandate']) . '.</p>';
             }
 
-            $message .= "<p>Go to " . htmlspecialchars(autoUrl("")) . " to make any changes to your account and direct debit options.</p>
-            <p>Thank you, <br>" . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . "";
+            $message .= "<p>Go to " . htmlspecialchars((string) autoUrl("")) . " to make any changes to your account and direct debit options.</p>
+            <p>Thank you, <br>" . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . "";
             notifySend(
               $user['EmailAddress'],
               "Your Direct Debit Mandate has been Cancelled",
@@ -227,11 +219,11 @@ function process_mandate_event($event) {
 
       $setNewBank = $db->prepare("UPDATE `paymentMandates` SET `BankAccount` = ?, `AccountHolderName` = ?, `AccountNumEnd` = ?, `BankName` = ? WHERE `Mandate` = ?");
       $setNewBank->execute([
-        mb_strimwidth($bankAccount, 0, 20),
-        mb_strimwidth($accHolderName, 0, 30),
+        mb_strimwidth((string) $bankAccount, 0, 20),
+        mb_strimwidth((string) $accHolderName, 0, 30),
         $accNumEnd,
-        mb_strimwidth($bankName, 0, 100),
-        mb_strimwidth($mandate, 0, 20)
+        mb_strimwidth((string) $bankName, 0, 100),
+        mb_strimwidth((string) $mandate, 0, 20)
       ]);
 
 			break;
@@ -322,7 +314,7 @@ function process_payment_event($event) {
             $status,
             $user,
             $mandate,
-            mb_strimwidth($name, 0, 50),
+            mb_strimwidth((string) $name, 0, 50),
             $amount,
             $currency,
             $PMkey,
@@ -343,7 +335,7 @@ function process_payment_event($event) {
               $date,
               'Pending',
               $user,
-              mb_strimwidth($name, 0, 500),
+              mb_strimwidth((string) $name, 0, 500),
               $amount,
               $currency,
               $PMkey,

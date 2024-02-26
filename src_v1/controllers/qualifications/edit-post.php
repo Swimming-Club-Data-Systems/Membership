@@ -32,7 +32,7 @@ try {
 
   $update = $db->prepare("UPDATE `qualifications` SET `Name` = ?, `Description` = ?, `DefaultExpiry` = ? WHERE `ID` = ?;");
 
-  if (!isset($_POST['qualification-name']) || (mb_strlen(trim($_POST['qualification-name'])) == 0)) {
+  if (!isset($_POST['qualification-name']) || (mb_strlen(trim((string) $_POST['qualification-name'])) == 0)) {
     throw new Exception('You must provide a name for this qualification');
   }
 
@@ -55,8 +55,8 @@ try {
   $expiry = json_encode($expiry);
 
   $update->execute([
-    mb_convert_case(trim($_POST['qualification-name']), MB_CASE_TITLE_SIMPLE),
-    trim($_POST['qualification-description']),
+    mb_convert_case(trim((string) $_POST['qualification-name']), MB_CASE_TITLE_SIMPLE),
+    trim((string) $_POST['qualification-description']),
     $expiry,
     $id,
   ]);
@@ -66,7 +66,7 @@ try {
   http_response_code(302);
   header('location: ' . autoUrl('qualifications/' . $id));
 
-} catch (Exception $e) {
+} catch (Exception) {
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['EditQualificationError'] = true;
 

@@ -57,7 +57,7 @@ $countChargeable = 0;
 
 $numFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
-$pagetitle = "Charge Parents for " . htmlspecialchars($gala['name']);
+$pagetitle = "Charge Parents for " . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -74,10 +74,10 @@ include BASE_PATH . 'views/header.php';
 			</ol>
 		</nav>
 
-		<h1>Charge for <?= htmlspecialchars($gala['name']) ?></h1>
+		<h1>Charge for <?= htmlspecialchars((string) $gala['name']) ?></h1>
 		<?php if ($gala['fixed']) { ?>
 			<p class="lead mb-0">
-				This gala costs &pound;<?= htmlspecialchars($gala['fee']) ?>
+				This gala costs &pound;<?= htmlspecialchars((string) $gala['fee']) ?>
 			</p>
 		<?php } else { ?>
 			<p class="lead mb-0">
@@ -141,7 +141,7 @@ include BASE_PATH . 'views/header.php';
 							$stripeCusomer = null;
 							try {
 								$stripeCusomer = (new User($entry['user']))->getStripeCustomerID();
-							} catch (Exception $e) {
+							} catch (Exception) {
 								// Ignore
 							}
 							if ($stripeCusomer) {
@@ -163,10 +163,10 @@ include BASE_PATH . 'views/header.php';
 							<li class="list-group-item <?php if ($hasNoDD || $notReady) { ?>list-group-item-danger<?php } ?> <?php if ($entry['Charged']) { ?>list-group-item-success<?php } ?>">
 								<div class="row">
 									<div class="col-sm-5 col-md-4 col-lg-6">
-										<h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></h3>
+										<h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></h3>
 
 										<p class="mb-0">
-											<?= htmlspecialchars($entry['MForename']) ?> is entered in;
+											<?= htmlspecialchars((string) $entry['MForename']) ?> is entered in;
 										</p>
 										<ul class="list-unstyled">
 											<?php $count = 0; ?>
@@ -192,7 +192,7 @@ include BASE_PATH . 'views/header.php';
 													Processing fee
 												</div>
 												<div class="col">
-													<?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['ProcessingFee']), 'GBP')) ?>
+													<?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($entry['ProcessingFee']), 'GBP')) ?>
 												</div>
 											</div>
 										<?php } ?>

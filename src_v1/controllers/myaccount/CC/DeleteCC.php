@@ -21,7 +21,7 @@ try {
   if ($after < $before) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['DeleteCCSuccess'] = true;
   }
-} catch (Exception $e) {
+} catch (Exception) {
   $db->rollBack();
 }
 

@@ -62,7 +62,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
             <div class="<?= $container_class ?>">
                 <?php try { ?>
                     <?= $markdown->text(app()->tenant->getKey('EMERGENCY_MESSAGE')) ?>
-                <?php } catch (Exception $e) { ?>
+                <?php } catch (Exception) { ?>
                     <p>An emergency message has been set but cannot be rendered.</p>
                 <?php } ?>
             </div>
@@ -110,7 +110,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
                             browser today <i class="fa fa-external-link" aria-hidden="true"></i></a></strong>.
                 </p>
                 <p class="mb-0">
-                    <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a
+                    <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> recommends you <strong><a
                                 class="text-dark" href="https://www.firefox.com">install Firefox by Mozilla</a></strong>.
                     Firefox has great protections for your privacy with built in features including tracking protection.
                 </p>
@@ -143,7 +143,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
                     </strong>
                 </p>
                 <p class="mb-0">
-                    <a href="<?= htmlspecialchars(autoUrl("users/simulate/exit")) ?>" class="text-white">
+                    <a href="<?= htmlspecialchars((string) autoUrl("users/simulate/exit")) ?>" class="text-white">
                         Exit User Simulation Mode
                     </a>
                 </p>
@@ -164,7 +164,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
         <div class="bg-dark box-shadow py-2 d-print-none">
             <div class="<?= $container_class ?>">
                 <p class="mb-0">
-                    <a href="<?= htmlspecialchars($edit_link) ?>" class="text-white">
+                    <a href="<?= htmlspecialchars((string) $edit_link) ?>" class="text-white">
                         Edit this page
                     </a>
                 </p>
@@ -183,10 +183,10 @@ if (isset($fluidContainer) && $fluidContainer == true) {
         d-print-none justify-content-between px-0" role="navigation">
 
                                 <a class="navbar-brand align-items-center d-lg-none"
-                                   href="<?= htmlspecialchars(autoUrl("")) ?>">
+                                   href="<?= htmlspecialchars((string) autoUrl("")) ?>">
                                     <?php if ($tenant->getKey('LOGO_DIR')) { ?>
                                         <span class="d-md-none">
-                          <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>"
+                          <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>"
                                alt="Home" class="img-fluid"
                                style="height: 2rem">
                       </span>
@@ -224,7 +224,7 @@ if (isset($fluidContainer) && $fluidContainer == true) {
 
 <div class="d-none d-print-block">
     <?php
-    $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS'));
+    $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS'));
     $logoPath = null;
     if ($logos = app()->tenant->getKey('LOGO_DIR')) {
         $logoPath = ($logos . 'logo-1024.png');
@@ -235,18 +235,18 @@ if (isset($fluidContainer) && $fluidContainer == true) {
         <div class="row mb-3">
             <div class="col club-logos">
                 <?php if ($logoPath) { ?>
-                    <img src="<?= htmlspecialchars(getUploadedAssetUrl($logoPath)) ?>" class="">
+                    <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logoPath)) ?>" class="">
                 <?php } else { ?>
-                    <h1 class="primary"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></h1>
+                    <h1 class="primary"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></h1>
                 <?php } ?>
             </div>
             <div class="col text-end">
                 <!-- <p class="mb-0"> -->
                 <address>
-                    <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
+                    <strong><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
                     <?php
                     for ($i = 0; $i < sizeof($addr); $i++) { ?>
-                        <?= htmlspecialchars($addr[$i]) ?><br>
+                        <?= htmlspecialchars((string) $addr[$i]) ?><br>
                         <?php if (isset($addr[$i + 1]) && $addr[$i + 1] == "") {
                             break;
                         } ?>

@@ -18,7 +18,7 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') {
     if ($query->fetchColumn() == 0) {
       halt(404);
     }
-	} catch (PDOException $e) {
+	} catch (PDOException) {
 		halt(500);
 	}
 }
@@ -30,7 +30,7 @@ try {
     $id,
     $tenant->getId()
   ]);
-} catch (PDOException $e) {
+} catch (PDOException) {
   halt(500);
 }
 $row = $query->fetch(PDO::FETCH_ASSOC);
@@ -53,7 +53,7 @@ ob_start();?>
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i" rel="stylesheet" type="text/css">
   <?php } ?>
   <?php include BASE_PATH . 'helperclasses/PDFStyles/Main.php'; ?>
-  <title><?= htmlentities($row['Title']) ?></title>
+  <title><?= htmlentities((string) $row['Title']) ?></title>
   </head>
   <body>
     <?php include BASE_PATH . 'helperclasses/PDFStyles/Letterhead.php'; ?>
@@ -70,7 +70,7 @@ ob_start();?>
 
     <div class="" id="title">
       <h1>
-				<?=htmlspecialchars($row['Title'])?>
+				<?=htmlspecialchars((string) $row['Title'])?>
       </h1>
     </div>
 
@@ -118,7 +118,7 @@ if (!isset($attachment)) {
   header('Expires: 0');
   header('Cache-Control: must-revalidate');
   header('Pragma: public');
-  $dompdf->stream(str_replace(' ', '', $row['Title']) . ".pdf", ['Attachment' => 0]);
+  $dompdf->stream(str_replace(' ', '', (string) $row['Title']) . ".pdf", ['Attachment' => 0]);
 } else if ($attachment) {
   $pdfOutput = $dompdf->output();
 }

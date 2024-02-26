@@ -7,33 +7,13 @@
  * @return string coach role description
  */
 function coachTypeDescription($type) {
-  switch ($type) {
-    case 'LEAD_COACH':
-      return 'Lead Coach';
-      break;
-
-    case 'COACH':
-      return 'Coach';
-      break;
-
-    case 'ASSISTANT_COACH':
-      return 'Assistant Coach';
-      break;
-
-    case 'TEACHER':
-      return 'Teacher';
-      break;
-
-    case 'HELPER':
-      return 'Helper';
-      break;
-
-    case 'ADMINISTRATOR':
-      return 'Squad Administrator';
-      break;
-    
-    default:
-      return 'Unknown Coach Type';
-      break;
-  }
+  return match ($type) {
+      'LEAD_COACH' => 'Lead Coach',
+      'COACH' => 'Coach',
+      'ASSISTANT_COACH' => 'Assistant Coach',
+      'TEACHER' => 'Teacher',
+      'HELPER' => 'Helper',
+      'ADMINISTRATOR' => 'Squad Administrator',
+      default => 'Unknown Coach Type',
+  };
 }

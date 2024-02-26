@@ -58,7 +58,7 @@ include BASE_PATH . 'views/header.php';
       </div>
       <!-- <div class="col text-end">
         <p class="mb-0">
-          <a href="<?= htmlspecialchars(autoUrl("tick-sheets/new")) ?>" class="btn btn-success">New category</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("tick-sheets/new")) ?>" class="btn btn-success">New category</a>
         </p>
       </div> -->
     </div>

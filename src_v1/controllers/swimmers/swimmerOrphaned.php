@@ -45,12 +45,12 @@ if (isset($_POST['squad'])) {
           <option value="allSquads">Show All Squads</option>;
           <?php while ($row = $sql->fetch(PDO::FETCH_ASSOC)) {
             $id = $row['SquadID']; ?>
-            <option value="<?= $row['SquadID'] ?>" <?php if ($squadID == $id) { ?>selected<?php } ?>><?= htmlspecialchars($row['SquadName']) ?></option><?php
+            <option value="<?= $row['SquadID'] ?>" <?php if ($squadID == $id) { ?>selected<?php } ?>><?= htmlspecialchars((string) $row['SquadName']) ?></option><?php
                                                                                                                                                       } ?>
         </select></div>
       <div class="col-md-6 mb-3">
         <label class="visually-hidden" for="search">Search by Name</label>
-        <input class="form-control" placeholder="Search by name" id="search" name="search" value="<?= htmlspecialchars($search) ?>">
+        <input class="form-control" placeholder="Search by name" id="search" name="search" value="<?= htmlspecialchars((string) $search) ?>">
       </div>
 
     </div>

@@ -32,7 +32,7 @@ try {
   $_SESSION['TENANT-' . $tenant->getId()]['GC-Reg-Success'] = true;
   unset($_SESSION['GC-Reg-OAuth']['tenant']);
 
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . $tenant->getId()]['GC-Reg-Error'] = true;
 }
 

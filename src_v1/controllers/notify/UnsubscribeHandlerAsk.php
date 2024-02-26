@@ -3,8 +3,8 @@
 $db = app()->db;
 $tenant = app()->tenant;
 
-$user_id = hexdec($userid);
-$email = str_replace(' ', '+', urldecode($email));
+$user_id = hexdec((string) $userid);
+$email = str_replace(' ', '+', urldecode((string) $email));
 
 if ($list != "Notify" && $list != "Security" && $list != "Payments" && $list != "NewMember") {
 	halt(404);
@@ -17,7 +17,7 @@ try {
 		$email,
 		$tenant->getId()
 	]);
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }
 
@@ -38,13 +38,13 @@ include BASE_PATH . "views/header.php";?>
 	</p>
 	<p><a href="<?=currentUrl() . "do"?>" class="btn
 	btn-primary">Unsubscribe from <span
-	class="font-monospace"><?=htmlspecialchars($list)?></span></a></p>
+	class="font-monospace"><?=htmlspecialchars((string) $list)?></span></a></p>
 	<p>
-		For further help and support with emails from <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, visit
+		For further help and support with emails from <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, visit
 		our <a href="<?=autoUrl("notify")?>">Notify Help Centre</a>.
 	</p>
 	<p>
-		Notify by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+		Notify by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>
 	</p>
 </div>
 

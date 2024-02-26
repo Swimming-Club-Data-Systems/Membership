@@ -41,9 +41,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -109,8 +109,8 @@ include BASE_PATH . "views/head.php";
                 <div class="mb-3">
                   <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="1" id="<?= htmlspecialchars('email-category-' . $category->id) ?>" aria-describedby="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" name="<?= htmlspecialchars('email-category-' . $category->id) ?>" <?php if (isAbsolutelySubscribed($user->getId(), $category->id)) { ?>checked<?php } ?>>
-                    <label class="form-check-label" for="<?= htmlspecialchars('email-category-' . $category->id) ?>"><?= htmlspecialchars($category->name) ?></label>
-                    <div><small id="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" class="form-text text-muted"><?= htmlspecialchars($category->description) ?></small></div>
+                    <label class="form-check-label" for="<?= htmlspecialchars('email-category-' . $category->id) ?>"><?= htmlspecialchars((string) $category->name) ?></label>
+                    <div><small id="<?= htmlspecialchars('help-email-category-' . $category->id) ?>" class="form-text text-muted"><?= htmlspecialchars((string) $category->description) ?></small></div>
                   </div>
                 </div>
               <?php } ?>
@@ -127,7 +127,7 @@ include BASE_PATH . "views/head.php";
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="1" id="smsContactOK" aria-describedby="smsContactOKHelp" name="smsContactOK" <?php if ($details['MobileComms']) { ?>checked<?php } ?>>
                   <label class="form-check-label" for="smsContactOK">I would like to receive important text messages</label>
-                  <div><small id="smsContactOKHelp" class="form-text text-muted">We'll still use this to contact you in an emergency. <?= htmlspecialchars(app()->tenant->getName()) ?> may not offer SMS services.</small></div>
+                  <div><small id="smsContactOKHelp" class="form-text text-muted">We'll still use this to contact you in an emergency. <?= htmlspecialchars((string) app()->tenant->getName()) ?> may not offer SMS services.</small></div>
                 </div>
               </div>
             </div>

@@ -212,7 +212,7 @@ try {
           $intent->id,
         ]);
       }
-    } catch (Exception $e) {
+    } catch (Exception) {
       // This is not a showstopping error
     }
   }
@@ -225,7 +225,7 @@ try {
 
   if ($entryData['user']) {
 
-    $message = '<p>We\'ve issued a refund for ' . htmlspecialchars($entryData['MForename']) .  '\'s entry into ' . htmlspecialchars($gala['name']) . '.</p>';
+    $message = '<p>We\'ve issued a refund for ' . htmlspecialchars((string) $entryData['MForename']) .  '\'s entry into ' . htmlspecialchars((string) $gala['name']) . '.</p>';
 
     $message .= '<p>This refund is to the value of <strong>&pound;' . $amountString . '</strong>.</p>';
 
@@ -235,14 +235,14 @@ try {
 
     if (!$hasNoDD && !getUserOption($entryData['user'], 'GalaDirectDebitOptOut') && ($entryData['Intent'] == null || !bool($entryData['StripePaid']))) {
       $message .= '<p>This refund has been applied as a credit to your club account. This means you will either;</p>';
-      $message .= '<ul><li>If you have not paid the bill by direct debit for this gala yet, you will automatically be charged the correct amount for ' . htmlspecialchars($gala['name']) . ' on your next bill as refunds will be applied automatically</li><li>If you have already paid the bill by direct debit for this gala, the credit applied to your account will give you a discount on next month\'s bill</li></ul>';
+      $message .= '<ul><li>If you have not paid the bill by direct debit for this gala yet, you will automatically be charged the correct amount for ' . htmlspecialchars((string) $gala['name']) . ' on your next bill as refunds will be applied automatically</li><li>If you have already paid the bill by direct debit for this gala, the credit applied to your account will give you a discount on next month\'s bill</li></ul>';
     } else if ($entryData['Intent'] != null && bool($entryData['StripePaid'])) {
       $message .= '<p>We\'ve refunded this payment to your original payment card.</p>';
     } else {
       $message .= '<p>As you don\'t pay your club fees by direct debit or have opted out of paying for galas by direct debit, you\'ll need to collect this refund from the treasurer or gala coordinator.</p>';
     }
 
-    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+    $message .= '<p>Kind regards,<br> The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
 
     $notify->execute([
 

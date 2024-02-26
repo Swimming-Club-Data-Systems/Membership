@@ -11,8 +11,8 @@ include BASE_PATH . "views/paymentsMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments'))?>">Payments</a></li>
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments/extrafees'))?>">Extras</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments'))?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments/extrafees'))?>">Extras</a></li>
       <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
   </nav>

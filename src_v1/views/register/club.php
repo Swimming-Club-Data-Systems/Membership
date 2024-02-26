@@ -47,8 +47,8 @@ include BASE_PATH . "views/root/header.php";
             <option selected value="select">Select a club</option>
             <option value="not-se">Not Swim England Registered</option>
             <?php foreach ($clubs as $club) { ?>
-              <option value="<?= htmlspecialchars($club['Code']) ?>">
-                <?= htmlspecialchars($club['Name']) ?> (<?= htmlspecialchars($club['Code']) ?>)
+              <option value="<?= htmlspecialchars((string) $club['Code']) ?>">
+                <?= htmlspecialchars((string) $club['Name']) ?> (<?= htmlspecialchars((string) $club['Code']) ?>)
               </option>
             <?php } ?>
           </select>

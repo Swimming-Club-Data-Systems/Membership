@@ -37,9 +37,9 @@ include BASE_PATH . 'views/header.php';
       <?php if ($member) { ?>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl("log-books/members/" . $member['id'])) ?>" class="list-group-item list-group-item-action">
+            <a href="<?= htmlspecialchars((string) autoUrl("log-books/members/" . $member['id'])) ?>" class="list-group-item list-group-item-action">
               <p class="mb-0">
-                <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?>'s log book</strong>
+                <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?>'s log book</strong>
               </p>
             </a>
           <?php } while ($member = $getMembers->fetch(PDO::FETCH_ASSOC)); ?>

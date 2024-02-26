@@ -29,9 +29,9 @@ $query->execute([
 
 $parent = $query->fetch(PDO::FETCH_ASSOC);
 
-if (trim($_POST['email-addr']) != $parent['Email'] && v::email()->validate($_POST['email-addr'])) {
+if (trim((string) $_POST['email-addr']) != $parent['Email'] && v::email()->validate($_POST['email-addr'])) {
   $query = $db->prepare("UPDATE joinParents SET Email = ? WHERE Hash = ?");
-  $query->execute([trim($_POST['email-addr']), $hash]);
+  $query->execute([trim((string) $_POST['email-addr']), $hash]);
 } else if (!v::email()->validate($_POST['email-addr'])) {
   // cannot send email
   $_SESSION['TENANT-' . app()->tenant->getId()]['EmailInvalid'] = true;

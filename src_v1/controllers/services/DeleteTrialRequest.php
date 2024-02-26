@@ -33,7 +33,7 @@ if ($trial == "all" || $deleteAll) {
       $tenant->getId()
     ]);
     $all = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(404);
   }
 } else {
@@ -44,7 +44,7 @@ if ($trial == "all" || $deleteAll) {
       $trial,
       $tenant->getId()
     ]);
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(404);
   }
 }

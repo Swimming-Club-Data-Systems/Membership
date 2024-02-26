@@ -42,7 +42,7 @@ $update = false;
 if (!empty($_POST['forename'])) {
   if ($_POST['forename'] != $forename) {
     $update = $db->prepare("UPDATE `users` SET `Forename` = ? WHERE `UserID` = ?");
-    $update->execute([trim(mb_convert_case($_POST['forename'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+    $update->execute([trim(mb_convert_case((string) $_POST['forename'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
     $forenameUpdate = true;
     $update = true;
   }
@@ -50,7 +50,7 @@ if (!empty($_POST['forename'])) {
 if (!empty($_POST['surname'])) {
   if ($_POST['surname'] != $surname) {
     $update = $db->prepare("UPDATE `users` SET `Surname` = ? WHERE `UserID` = ?");
-    $update->execute([trim(mb_convert_case($_POST['surname'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
+    $update->execute([trim(mb_convert_case((string) $_POST['surname'], MB_CASE_TITLE_SIMPLE)), $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
     $surnameUpdate = true;
     $update = true;
   }
@@ -67,7 +67,7 @@ if (!empty($_POST['mobile'])) {
       $mobileUpdate = true;
       $update = true;
     }
-  } catch (PhoneNumberParseException $e) {
+  } catch (PhoneNumberParseException) {
     $status = false;
   }
 }
@@ -160,7 +160,7 @@ if (app('request')->method == "POST") {
   $examplePhone = '+447400123456';
   try {
     $examplePhone = PhoneNumber::getExampleNumber('GB', PhoneNumberType::MOBILE)->format(PhoneNumberFormat::E164);
-  } catch (Exception $e) {
+  } catch (Exception) {
   }
 
 ?>
@@ -180,7 +180,7 @@ if (app('request')->method == "POST") {
         ?>
       </div>
       <div class="col-md-9">
-        <h1>Hello <?= htmlspecialchars($forename) ?></h1>
+        <h1>Hello <?= htmlspecialchars((string) $forename) ?></h1>
         <p class="lead">Welcome to My Account where you can change your personal details, password, contact information and add swimmers to your account.</p>
         <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserDetailsUpdate'])) {
           $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
@@ -219,19 +219,19 @@ if (app('request')->method == "POST") {
                   <div class="col-md">
                     <div class="mb-3">
                       <label class="form-label" for="forename">Name</label>
-                      <input type="text" class="form-control" name="forename" id="forename" placeholder="Forename" value="<?= htmlspecialchars($forename) ?>">
+                      <input type="text" class="form-control" name="forename" id="forename" placeholder="Forename" value="<?= htmlspecialchars((string) $forename) ?>">
                     </div>
                   </div>
                   <div class="col-md">
                     <div class="mb-3">
                       <label class="form-label" for="surname">Surname</label>
-                      <input type="text" class="form-control" name="surname" id="surname" placeholder="Surname" value="<?= htmlspecialchars($surname) ?>">
+                      <input type="text" class="form-control" name="surname" id="surname" placeholder="Surname" value="<?= htmlspecialchars((string) $surname) ?>">
                     </div>
                   </div>
                 </div>
                 <div class="mb-3">
                   <label class="form-label" for="email">Email</label>
-                  <input readonly type="email" class="form-control" disabled name="email" id="emailbox" placeholder="Email Address" value="<?= htmlspecialchars($email) ?>" aria-describedby="emailHelp">
+                  <input readonly type="email" class="form-control" disabled name="email" id="emailbox" placeholder="Email Address" value="<?= htmlspecialchars((string) $email) ?>" aria-describedby="emailHelp">
                   <p class="mb-0 mt-3">
                     <a href="<?= autoUrl("my-account/email") ?>" class="btn btn-secondary">
                       Edit email address &amp; subscriptions
@@ -261,7 +261,7 @@ if (app('request')->method == "POST") {
           <div class="mb-3" id="gravitar">
             <label class="form-label" for="mobile" class="d-block">Account Image</label>
             <?php
-            $grav_url = "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim($_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress']))) . "?d=" . urlencode("https://www.chesterlestreetasc.co.uk/apple-touch-icon-ipad-retina.png") . "&s=240";
+            $grav_url = "https://www.gravatar.com/avatar/" . md5(mb_strtolower(trim((string) $_SESSION['TENANT-' . app()->tenant->getId()]['EmailAddress']))) . "?d=" . urlencode("https://www.chesterlestreetasc.co.uk/apple-touch-icon-ipad-retina.png") . "&s=240";
             ?>
             <img class="me-3 rounded" src="<?= $grav_url ?>" alt="" width="80" height="80">
             <small class="form-text text-muted">If you have <a href="https://en.gravatar.com/">an image linked to your email with Gravitar</a>, we'll display it in the system</small>
@@ -314,10 +314,10 @@ if (app('request')->method == "POST") {
                             <div class="col-9">
                               <p class="mb-0">
                                 <strong class="d-block">
-                                  <?= htmlspecialchars($contactsArray[$i]->getName()) ?>
+                                  <?= htmlspecialchars((string) $contactsArray[$i]->getName()) ?>
                                 </strong>
-                                <a href="tel:<?= htmlspecialchars($contactsArray[$i]->getContactNumber()) ?>">
-                                  <?= htmlspecialchars($contactsArray[$i]->getContactNumber()) ?>
+                                <a href="tel:<?= htmlspecialchars((string) $contactsArray[$i]->getContactNumber()) ?>">
+                                  <?= htmlspecialchars((string) $contactsArray[$i]->getContactNumber()) ?>
                                 </a>
                               </p>
                             </div>

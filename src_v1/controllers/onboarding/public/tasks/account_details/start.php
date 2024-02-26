@@ -27,9 +27,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -62,7 +62,7 @@ include BASE_PATH . "views/head.php";
             <div class="col">
               <div class="mb-3">
                 <label for="first-name" class="form-label">First name</label>
-                <input type="text" class="form-control" id="first-name" name="first-name" value="<?= htmlspecialchars($user->getFirstName()) ?>" required>
+                <input type="text" class="form-control" id="first-name" name="first-name" value="<?= htmlspecialchars((string) $user->getFirstName()) ?>" required>
                 <div class="invalid-feedback">
                   Please enter your first name
                 </div>
@@ -71,7 +71,7 @@ include BASE_PATH . "views/head.php";
             <div class="col">
               <div class="mb-3">
                 <label for="last-name" class="form-label">Last name</label>
-                <input type="text" class="form-control" id="last-name" name="last-name" value="<?= htmlspecialchars($user->getLastName()) ?>" required>
+                <input type="text" class="form-control" id="last-name" name="last-name" value="<?= htmlspecialchars((string) $user->getLastName()) ?>" required>
                 <div class="invalid-feedback">
                   Please enter your last name
                 </div>
@@ -81,7 +81,7 @@ include BASE_PATH . "views/head.php";
 
           <div class="mb-3">
             <label for="email-address" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="email-address" name="email-address" value="<?= htmlspecialchars($user->getEmail()) ?>" required>
+            <input type="email" class="form-control" id="email-address" name="email-address" value="<?= htmlspecialchars((string) $user->getEmail()) ?>" required>
             <div class="invalid-feedback">
               Please enter your email address
             </div>
@@ -89,7 +89,7 @@ include BASE_PATH . "views/head.php";
 
           <div class="mb-3">
             <label for="phone-number" class="form-label">Mobile number</label>
-            <input type="tel" class="form-control" id="phone-number" name="phone-number" value="<?= htmlspecialchars($user->getMobile()) ?>" required>
+            <input type="tel" class="form-control" id="phone-number" name="phone-number" value="<?= htmlspecialchars((string) $user->getMobile()) ?>" required>
             <div class="invalid-feedback">
               Please enter your mobile phone number
             </div>
@@ -142,7 +142,7 @@ include BASE_PATH . "views/head.php";
   </div>
 </div>
 
-<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars(autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
+<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars((string) autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
 
 <?php
 

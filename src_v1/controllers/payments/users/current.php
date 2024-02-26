@@ -5,7 +5,7 @@
 $user = $id;
 
 $name = getUserName($user);
-$pagetitle = "Current Fees for " . htmlspecialchars($name);
+$pagetitle = "Current Fees for " . htmlspecialchars((string) $name);
 
 include BASE_PATH . "views/header.php";
 include BASE_PATH . "views/paymentsMenu.php";
@@ -15,9 +15,9 @@ include BASE_PATH . "views/paymentsMenu.php";
 <div class="container-xl">
 	<div class="">
 		<h1 class="mb-3">
-      Current Fees for <?=htmlspecialchars($name)?>
+      Current Fees for <?=htmlspecialchars((string) $name)?>
     </h1>
-		<p class="lead">Fees and Charges created in the current Billing Period for <?=htmlspecialchars($name)?>.</p>
+		<p class="lead">Fees and Charges created in the current Billing Period for <?=htmlspecialchars((string) $name)?>.</p>
 		<p>These fees will be billed on the first working day of the next month.</p>
 		<?=feesToPay(null, $user)?>
 	</div>

@@ -7,10 +7,7 @@ use Brick\PhoneNumber\PhoneNumberFormat;
 
 function valueOrString($name)
 {
-  if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name])) {
-    return $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name];
-  }
-  return '';
+  return $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['fields'][$name] ?? '';
 }
 
 function checked($name)
@@ -24,7 +21,7 @@ function checked($name)
 $examplePhone = '+447400123456';
 try {
   $examplePhone = PhoneNumber::getExampleNumber('GB', PhoneNumberType::MOBILE)->format(PhoneNumberFormat::E164);
-} catch (Exception $e) {
+} catch (Exception) {
 }
 
 $pagetitle = 'Create a new user';
@@ -38,7 +35,7 @@ include BASE_PATH . 'views/header.php';
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item">
-        <a href="<?= htmlspecialchars(autoUrl("users")) ?>">Users</a>
+        <a href="<?= htmlspecialchars((string) autoUrl("users")) ?>">Users</a>
       </li>
       <li class="breadcrumb-item active" aria-current="page">
         Create
@@ -61,7 +58,7 @@ include BASE_PATH . 'views/header.php';
             <strong>We could not add the user</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['message']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['UserCreationError']['message']) ?>
           </p>
         </div>
       <?php } ?>
@@ -71,7 +68,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        If you're adding a new member/parent, please continue to use <a href="<?= htmlspecialchars(autoUrl('assisted-registration')) ?>">Assisted Registration</a>. If that new user requires admin or coaching access to the system, you can grant access once you have created their account with Assisted Registration.
+        If you're adding a new member/parent, please continue to use <a href="<?= htmlspecialchars((string) autoUrl('assisted-registration')) ?>">Assisted Registration</a>. If that new user requires admin or coaching access to the system, you can grant access once you have created their account with Assisted Registration.
       </p>
 
       <form method="post" class="needs-validation" novalidate>
@@ -81,14 +78,14 @@ include BASE_PATH . 'views/header.php';
         <div class="row">
           <div class="mb-3 col-md-6">
             <label class="form-label" for="first-name">First name</label>
-            <input type="text" required class="form-control" name="first-name" id="first-name" placeholder="First" value="<?= htmlspecialchars(valueOrString('first-name')) ?>">
+            <input type="text" required class="form-control" name="first-name" id="first-name" placeholder="First" value="<?= htmlspecialchars((string) valueOrString('first-name')) ?>">
             <div class="invalid-feedback">
               Please provide a first name
             </div>
           </div>
           <div class="mb-3 col-md-6">
             <label class="form-label" for="last-name">Last name</label>
-            <input type="text" required class="form-control" name="last-name" id="last-name" placeholder="Last" value="<?= htmlspecialchars(valueOrString('last-name')) ?>">
+            <input type="text" required class="form-control" name="last-name" id="last-name" placeholder="Last" value="<?= htmlspecialchars((string) valueOrString('last-name')) ?>">
             <div class="invalid-feedback">
               Please provide a last name
             </div>
@@ -97,7 +94,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="email-address">Email address</label>
-          <input type="email" required class="form-control" name="email-address" id="email-address" placeholder="first.last@example.com" value="<?= htmlspecialchars(valueOrString('email-address')) ?>">
+          <input type="email" required class="form-control" name="email-address" id="email-address" placeholder="first.last@example.com" value="<?= htmlspecialchars((string) valueOrString('email-address')) ?>">
           <div class="invalid-feedback">
             Please provide a valid email address
           </div>
@@ -105,7 +102,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="phone">Mobile number</label>
-          <input type="tel" pattern="\+{0,1}[0-9]*" required class="form-control" name="phone" id="phone" placeholder="<?= htmlspecialchars($examplePhone) ?>" value="<?= htmlspecialchars(valueOrString('phone')) ?>">
+          <input type="tel" pattern="\+{0,1}[0-9]*" required class="form-control" name="phone" id="phone" placeholder="<?= htmlspecialchars($examplePhone) ?>" value="<?= htmlspecialchars((string) valueOrString('phone')) ?>">
           <div class="invalid-feedback">
             You must provide a valid UK phone number
           </div>
@@ -182,7 +179,7 @@ include BASE_PATH . 'views/header.php';
   </div>
 </div>
 
-<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars(autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
+<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars((string) autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
 
 <?php
 

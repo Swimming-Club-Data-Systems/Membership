@@ -11,7 +11,7 @@ use Brick\PhoneNumber\PhoneNumberFormat;
 
 $db = app()->db;
 
-$captcha = trim($_POST['g-recaptcha-response']);
+$captcha = trim((string) $_POST['g-recaptcha-response']);
 $captchaStatus = null;
 
 #
@@ -21,11 +21,11 @@ $post_data = http_build_query([
   'response' => $_POST['g-recaptcha-response'],
   'remoteip' => getUserIp()
 ]);
-$opts = array('http' => [
+$opts = ['http' => [
   'method'  => 'POST',
   'header'  => 'Content-type: application/x-www-form-urlencoded',
   'content' => $post_data
-]);
+]];
 $context  = stream_context_create($opts);
 $response = file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
 $result = json_decode($response);
@@ -33,13 +33,13 @@ $result = json_decode($response);
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] == "Family-Manual") {
   $sql = "SELECT * FROM `familyIdentifiers` WHERE `ID` = ? AND `ACS` = ?";
 
-  $fid = trim(str_replace(["FAM", "fam"], "", $_POST['fam-reg-num']));
-  $acs = trim($_POST['fam-sec-key']);
+  $fid = trim(str_replace(["FAM", "fam"], "", (string) $_POST['fam-reg-num']));
+  $acs = trim((string) $_POST['fam-sec-key']);
 
   try {
   	$query = $db->prepare($sql);
   	$query->execute([$fid, $acs]);
-  } catch (PDOException $e) {
+  } catch (PDOException) {
   	halt(500);
   }
 
@@ -59,18 +59,18 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['RegistrationMode'] == "Family
 $status = true;
 $statusMessage = "";
 
-$forename = trim(ucwords($_POST['forename']));
-$surname = trim(ucwords($_POST['surname']));
+$forename = trim(ucwords((string) $_POST['forename']));
+$surname = trim(ucwords((string) $_POST['surname']));
 $username = $forename . $surname . "-" . md5(generateRandomString(20) . time());
-$password1 = trim($_POST['password1']);
-$password2 = trim($_POST['password2']);
-$email = mb_strtolower(trim($_POST['email']));
+$password1 = trim((string) $_POST['password1']);
+$password2 = trim((string) $_POST['password2']);
+$email = mb_strtolower(trim((string) $_POST['email']));
 $mobile = null;
 try {
   $number = PhoneNumber::parse($_POST['mobile'], 'GB');
   $mobile = $number->format(PhoneNumberFormat::E164);
 }
-catch (PhoneNumberParseException $e) {
+catch (PhoneNumberParseException) {
   // 'The string supplied is too short to be a phone number.'
   $status = false;
   $statusMessage .= "

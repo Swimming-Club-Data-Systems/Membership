@@ -38,8 +38,8 @@ try {
   }
 
   $welcomeText = null;
-  if (isset($_POST['welcome-text']) && mb_strlen(trim($_POST['welcome-text'])) > 0) {
-    $welcomeText = trim($_POST['welcome-text']);
+  if (isset($_POST['welcome-text']) && mb_strlen(trim((string) $_POST['welcome-text'])) > 0) {
+    $welcomeText = trim((string) $_POST['welcome-text']);
   } else {
     $welcomeText = null;
   }
@@ -121,7 +121,7 @@ try {
     // Just save
     header('location: ' . autoUrl("onboarding/sessions/a/$id"));
   }
-} catch (Exception $e) {
+} catch (Exception) {
 
   header('location: ' . autoUrl("onboarding/sessions/a/$id"));
 }

@@ -31,12 +31,12 @@ try {
       ]
     );
     $payment_method->detach();
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Probably isn't the end of the world if this fails since system disables use of card.
   }
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['CardDeleted'] = true;
   header("Location: " . autoUrl("payments/cards"));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }

@@ -45,7 +45,7 @@ include BASE_PATH . "views/paymentsMenu.php";
               <p class="mb-0">
                 <strong>
                   <a href="<?= autoUrl("galas/" . $gala['GalaID']); ?>">
-                    <?= htmlspecialchars($gala['GalaName']) ?>
+                    <?= htmlspecialchars((string) $gala['GalaName']) ?>
                   </a>
                 </strong>
               </p>

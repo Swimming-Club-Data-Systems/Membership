@@ -25,7 +25,7 @@ try {
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['HideCategorySuccess'] = $category['Name'];
   header("location: " . autoUrl('payments/categories/'));
-} catch (PDOException $e) {
+} catch (PDOException) {
   throw new Exception('A database error occurred');
 } catch (Exception $e) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError'] = $e->getMessage();

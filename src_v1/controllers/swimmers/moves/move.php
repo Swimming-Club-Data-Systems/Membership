@@ -14,7 +14,7 @@ try {
 
   try {
     $member = new Member($_POST['member']);
-  } catch (Exception $e) {
+  } catch (Exception) {
     throw new Exception('No such member under this tenant');
   }
   $tenant = app()->tenant;
@@ -81,7 +81,7 @@ try {
       $date = new DateTime('now', new DateTimeZone('Europe/London'));
       try {
         $date = new DateTime($_POST['move-date'], new DateTimeZone('Europe/London'));
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Date invalid
         throw new Exception('The date you provided is invalid');
       }
@@ -106,10 +106,10 @@ try {
         $leave = Squad::get($_POST['leave']);
         $join = Squad::get($_POST['join']);
         $subject = $member->getFullName() . ' is moving to ' . $join->getName();
-        $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars($member->getForename()) . ' will be moving to ' . htmlspecialchars($join->getName()) . ' and leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
+        $message = '<p>Hello ' . htmlspecialchars((string) $user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars((string) $member->getForename()) . ' will be moving to ' . htmlspecialchars($join->getName()) . ' and leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
       $statusMessage = 'We\'ve scheduled the squad move for ' . $member->getForename() . '.';
@@ -172,7 +172,7 @@ try {
       $date = new DateTime('now', new DateTimeZone('Europe/London'));
       try {
         $date = new DateTime($_POST['move-date'], new DateTimeZone('Europe/London'));
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Date invalid
         throw new Exception('The date you provided is invalid');
       }
@@ -196,10 +196,10 @@ try {
       if ($user = $getParent->fetch(PDO::FETCH_ASSOC)) {
         $join = Squad::get($_POST['join']);
         $subject = $member->getFullName() . ' is joining ' . $join->getName();
-        $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars($member->getForename()) . ' will be joining ' . htmlspecialchars($join->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
+        $message = '<p>Hello ' . htmlspecialchars((string) $user['Forename']) . ',</p><p>We\'re delighted to let you know that ' . htmlspecialchars((string) $member->getForename()) . ' will be joining ' . htmlspecialchars($join->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
       $statusMessage = 'We\'ve scheduled ' . $member->getForename() . ' joining their new squad.';
@@ -258,7 +258,7 @@ try {
       $date = new DateTime('now', new DateTimeZone('Europe/London'));
       try {
         $date = new DateTime($_POST['move-date'], new DateTimeZone('Europe/London'));
-      } catch (Exception $e) {
+      } catch (Exception) {
         // Date invalid
         throw new Exception('The date you provided is invalid');
       }
@@ -282,9 +282,9 @@ try {
       if ($user = $getParent->fetch(PDO::FETCH_ASSOC)) {
         $leave = Squad::get($_POST['leave']);
         $subject = $member->getFullName() . ' is leaving ' . $leave->getName();
-        $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re writing to let you know that ' . htmlspecialchars($member->getForename()) . ' will be leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
+        $message = '<p>Hello ' . htmlspecialchars((string) $user['Forename']) . ',</p><p>We\'re writing to let you know that ' . htmlspecialchars((string) $member->getForename()) . ' will be leaving ' . htmlspecialchars($leave->getName()) . ' on ' . htmlspecialchars($date->format("l j F Y")) . '.</p>';
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
 
@@ -300,7 +300,7 @@ try {
 } catch (Exception $e) {
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred.';
   }
 

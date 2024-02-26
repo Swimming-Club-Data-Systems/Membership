@@ -73,7 +73,7 @@ function fieldChecked($name)
 function fieldValue($name)
 {
   if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
-    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
+    return 'value="' . htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
   }
 }
 
@@ -209,6 +209,6 @@ echo json_encode([
   'settings' => [
     'replyEmailAddress' => (string) app()->user->getUserOption('NotifyReplyAddress'),
     'defaultReplyTo' => ($defaultReplyTo && $replyAddress) ? $defaultReplyTo : 'toClub',
-    'defaultSendAs' => ($defaultSendAs) ? $defaultSendAs : 'asClub',
+    'defaultSendAs' => $defaultSendAs ?: 'asClub',
   ],
 ]);

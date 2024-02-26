@@ -5,7 +5,7 @@ if (isset($_POST['leavers-squad'])) {
     
     app()->tenant->setKey('LeaversSquad', $_POST['leavers-squad']);
     $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED'] = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR'] = true;
   }
 }

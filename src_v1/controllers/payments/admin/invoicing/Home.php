@@ -11,7 +11,7 @@ include BASE_PATH . 'views/header.php';
 
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments'))?>">Payments</a></li>
+        <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments'))?>">Payments</a></li>
         <li class="breadcrumb-item active" aria-current="page">Invoicing</li>
       </ol>
     </nav>
@@ -27,7 +27,7 @@ include BASE_PATH . 'views/header.php';
 
       <div class="col-12">
         <div class="news-grid">
-          <a href="<?=htmlspecialchars(autoUrl('payments/invoice-payments/new'))?>" class="">
+          <a href="<?=htmlspecialchars((string) autoUrl('payments/invoice-payments/new'))?>" class="">
             <span class="mb-3">
               <span class="title mb-0">
                 New invoice payment
@@ -41,7 +41,7 @@ include BASE_PATH . 'views/header.php';
             </span>
           </a>
 
-          <a href="<?=htmlspecialchars(autoUrl('payments/invoice-payments/help'))?>" class="">
+          <a href="<?=htmlspecialchars((string) autoUrl('payments/invoice-payments/help'))?>" class="">
             <span class="mb-3">
               <span class="title mb-0">
                 Help

@@ -93,18 +93,18 @@ include BASE_PATH . 'views/header.php';
           $date = new DateTime($pm['DateTime'], new DateTimeZone('UTC'));
           $date->setTimezone(new DateTimeZone('Europe/London'));
         ?>
-          <a href="<?= htmlspecialchars(autoUrl("payments/card-transactions/" . $pm['ID'])) ?>" class="list-group-item list-group-item-action">
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/card-transactions/" . $pm['ID'])) ?>" class="list-group-item list-group-item-action">
             <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
-              <p class="h3 mb-3"><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname'])) ?></p>
+              <p class="h3 mb-3"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname'])) ?></p>
             <?php } ?>
             <?php if (isset($pm['Brand'])) { ?>
               <div class="row align-items-center mb-2">
                 <div class="col-auto">
-                  <img class="accepted-network-logo d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $pm['Brand'] . "_light.svg") ?>"><img class="accepted-network-logo  d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $pm['Brand'] . "_dark.svg") ?>"> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($pm['Brand'])) ?></span>
+                  <img class="accepted-network-logo d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $pm['Brand'] . "_light.svg") ?>"><img class="accepted-network-logo  d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $pm['Brand'] . "_dark.svg") ?>"> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($pm['Brand'])) ?></span>
                 </div>
                 <div class="col-auto">
                   <h2 class="my-0">
-                    &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($pm['Last4']) ?>
+                    &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $pm['Last4']) ?>
                   </h2>
                 </div>
               </div>

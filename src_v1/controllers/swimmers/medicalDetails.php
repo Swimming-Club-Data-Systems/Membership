@@ -35,7 +35,7 @@ if ($row == null) {
 	halt(404);
 }
 
-$pagetitle = "Medical Review - " . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']));
+$pagetitle = "Medical Review - " . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']));
 
 include BASE_PATH . "views/header.php";
 ?>
@@ -47,7 +47,7 @@ include BASE_PATH . "views/header.php";
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Members</a></li>
-				<li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $id) ?>">#<?= htmlspecialchars($id) ?></a></li>
+				<li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $id) ?>">#<?= htmlspecialchars((string) $id) ?></a></li>
 				<li class="breadcrumb-item active" aria-current="page">Medical Form</li>
 			</ol>
 		</nav>
@@ -58,7 +58,7 @@ include BASE_PATH . "views/header.php";
 					Medical Form
 				</h1>
 				<p class="lead mb-0" id="leadDesc">
-					Check the details for <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?> are correct.
+					Check the details for <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?> are correct.
 				</p>
 			</div>
 		</div>
@@ -89,14 +89,14 @@ include BASE_PATH . "views/header.php";
 		</div>
 		<div class="col-lg-8 order-2 order-lg-1">
 
-			<form method="post" action="<?= htmlspecialchars(autoUrl("members/" . $id . "/medical")) ?>" name="med" id="med">
+			<form method="post" action="<?= htmlspecialchars((string) autoUrl("members/" . $id . "/medical")) ?>" name="med" id="med">
 				<?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'])) {
 					echo $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'];
 					unset($_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState']);
 				} ?>
 
 				<div class="mb-2">
-					<p class="mb-2">Does <?= htmlspecialchars($row['MForename']) ?> have any specific medical conditions
+					<p class="mb-2">Does <?= htmlspecialchars((string) $row['MForename']) ?> have any specific medical conditions
 						or disabilities?</p>
 
 					<?php if ($row['Conditions'] != "") {
@@ -119,13 +119,13 @@ include BASE_PATH . "views/header.php";
 
 				<div class="mb-3">
 					<label class="form-label" for="medConDisDetails">If yes give details</label>
-					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="medConDisDetails" name="medConDisDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars($row['Conditions']) ?></textarea>
+					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="medConDisDetails" name="medConDisDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars((string) $row['Conditions']) ?></textarea>
 				</div>
 
 				<!-- -->
 
 				<div class="mb-2">
-					<p class="mb-2">Does <?= htmlspecialchars($row['MForename']) ?> have any allergies?</p>
+					<p class="mb-2">Does <?= htmlspecialchars((string) $row['MForename']) ?> have any allergies?</p>
 
 					<?php if ($row['Allergies'] != "") {
 						$yes = " checked ";
@@ -147,13 +147,13 @@ include BASE_PATH . "views/header.php";
 
 				<div class="mb-3">
 					<label class="form-label" for="allergiesDetails">If yes give details</label>
-					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="allergiesDetails" name="allergiesDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars($row['Allergies']) ?></textarea>
+					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="allergiesDetails" name="allergiesDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars((string) $row['Allergies']) ?></textarea>
 				</div>
 
 				<!-- -->
 
 				<div class="mb-2">
-					<p class="mb-2">Does <?= htmlspecialchars($row['MForename']) ?> take any regular medication?</p>
+					<p class="mb-2">Does <?= htmlspecialchars((string) $row['MForename']) ?> take any regular medication?</p>
 
 					<?php if ($row['Medication'] != "") {
 						$yes = " checked ";
@@ -175,13 +175,13 @@ include BASE_PATH . "views/header.php";
 
 				<div class="mb-3">
 					<label class="form-label" for="medConDisDetails">If yes give details</label>
-					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="medicineDetails" name="medicineDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars($row['Medication']) ?></textarea>
+					<textarea oninput="autoGrow(this)" class="form-control auto-grow" id="medicineDetails" name="medicineDetails" rows="8" <?php if ($yes == "") { ?>disabled<?php } ?>><?= htmlspecialchars((string) $row['Medication']) ?></textarea>
 				</div>
 
 				<?php if ($member->getAge() < 18 && $user) { ?>
 					<h2>Consent for emergency medical treatment</h2>
 					<p>
-						It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars($member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars(app()->tenant->getName()) ?>.
+						It may be essential at some time for the club to have the necessary authority to obtain any urgent medical treatment for <?= htmlspecialchars((string) $member->getForename()) ?> whilst they train, compete or take part in activities with <?= htmlspecialchars((string) app()->tenant->getName()) ?>.
 					</p>
 
 					<p>
@@ -189,40 +189,40 @@ include BASE_PATH . "views/header.php";
 					</p>
 
 					<p>
-						I, <?= htmlspecialchars($user->getFullName()) ?> being the parent/guardian of <?= htmlspecialchars($member->getFullName()) ?> hereby consent to the use of this information by <?= htmlspecialchars($tenant->getName()) ?> for the protection and safeguarding of my child’s health. I also give permission for the Coach, Team Manager or other Club Officer to give the immediate necessary authority on my behalf for any medical or surgical treatment recommended by competent medical authorities, where it would be contrary to my <?= htmlspecialchars($member->getFullName()) ?>'s interest, in the doctor’s medical opinion, for any delay to be incurred by seeking my personal consent.
+						I, <?= htmlspecialchars((string) $user->getFullName()) ?> being the parent/guardian of <?= htmlspecialchars($member->getFullName()) ?> hereby consent to the use of this information by <?= htmlspecialchars((string) $tenant->getName()) ?> for the protection and safeguarding of my child’s health. I also give permission for the Coach, Team Manager or other Club Officer to give the immediate necessary authority on my behalf for any medical or surgical treatment recommended by competent medical authorities, where it would be contrary to my <?= htmlspecialchars($member->getFullName()) ?>'s interest, in the doctor’s medical opinion, for any delay to be incurred by seeking my personal consent.
 					</p>
 
 					<p>
-						I understand that <?= htmlspecialchars($tenant->getName()) ?> may still have a lawful need to use this information for such purposes even if I later seek to withdraw this consent.
+						I understand that <?= htmlspecialchars((string) $tenant->getName()) ?> may still have a lawful need to use this information for such purposes even if I later seek to withdraw this consent.
 					</p>
 
 					<p>
-						<?= htmlspecialchars($tenant->getName()) ?> will use your personal data for the purpose of <?= htmlspecialchars($member->getFullName()) ?>'s involvement in training, activities or competitions with <?= htmlspecialchars($tenant->getName()) ?>.
+						<?= htmlspecialchars((string) $tenant->getName()) ?> will use your personal data for the purpose of <?= htmlspecialchars($member->getFullName()) ?>'s involvement in training, activities or competitions with <?= htmlspecialchars((string) $tenant->getName()) ?>.
 					</p>
 
 					<p>
-						For further details of how we process your personal data or your child’s personal data please <a href="<?= htmlspecialchars(autoUrl('privacy')) ?>" target="_blank">view our Privacy Policy</a> (opens in new tab).
+						For further details of how we process your personal data or your child’s personal data please <a href="<?= htmlspecialchars((string) autoUrl('privacy')) ?>" target="_blank">view our Privacy Policy</a> (opens in new tab).
 					</p>
 
 					<div class="mb-3">
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" value="1" id="emergency-medical-auth" name="emergency-medical-auth" <?php if (isset($row['WithholdConsent']) && !bool($row['WithholdConsent'])) { ?>checked<?php } ?>>
 							<label class="form-check-label" for="emergency-medical-auth">
-								I, <?= htmlspecialchars($user->getFullName()) ?> consent and grant such authority
+								I, <?= htmlspecialchars((string) $user->getFullName()) ?> consent and grant such authority
 							</label>
 						</div>
 					</div>
 
 					<div class="mb-3">
 						<label for="gp-name" class="form-label">Name of GP</label>
-						<input type="text" class="form-control" id="gp-name" name="gp-name" <?php if (isset($row['GPName'])) { ?>value="<?= htmlspecialchars($row['GPName']) ?>" <?php } ?>>
+						<input type="text" class="form-control" id="gp-name" name="gp-name" <?php if (isset($row['GPName'])) { ?>value="<?= htmlspecialchars((string) $row['GPName']) ?>" <?php } ?>>
 					</div>
 
 					<?php
 
 					$address = "";
 					if ($row['GPAddress']) {
-						$data = json_decode($row['GPAddress']);
+						$data = json_decode((string) $row['GPAddress']);
 						for ($i = 0; $i < sizeof($data); $i++) {
 							$address .= $data[$i] . "\r\n";
 						}
@@ -237,7 +237,7 @@ include BASE_PATH . "views/header.php";
 
 					<div class="mb-3">
 						<label for="gp-phone" class="form-label">GP telephone number</label>
-						<input type="tel" class="form-control" id="gp-phone" name="gp-phone" <?php if (isset($row['GPPhone'])) { ?>value="<?= htmlspecialchars($row['GPPhone']) ?>" <?php } ?>>
+						<input type="tel" class="form-control" id="gp-phone" name="gp-phone" <?php if (isset($row['GPPhone'])) { ?>value="<?= htmlspecialchars((string) $row['GPPhone']) ?>" <?php } ?>>
 					</div>
 				<?php } ?>
 

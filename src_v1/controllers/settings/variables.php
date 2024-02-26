@@ -50,7 +50,7 @@ foreach ($vars as $key => $value) {
 }
 
 if ($vars['CLUB_ADDRESS'] != null) {
-  $vars['CLUB_ADDRESS'] = json_decode($vars['CLUB_ADDRESS']);
+  $vars['CLUB_ADDRESS'] = json_decode((string) $vars['CLUB_ADDRESS']);
 }
 
 if ($vars['SYSTEM_COLOUR'] == null) {
@@ -129,7 +129,7 @@ include BASE_PATH . 'views/header.php';
               </p>
             </div>
             <div class="col col-lg-4">
-              <img src="<?= htmlspecialchars(autoUrl("img/settings/emergency-message.png", false)) ?>" class="border" alt="Picture of membership software displaying emergency message">
+              <img src="<?= htmlspecialchars((string) autoUrl("img/settings/emergency-message.png", false)) ?>" class="border" alt="Picture of membership software displaying emergency message">
             </div>
           </div>
 
@@ -155,7 +155,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="EMERGENCY_MESSAGE">Emergency message</label>
-            <textarea class="form-control font-monospace" rows="7" name="EMERGENCY_MESSAGE" id="EMERGENCY_MESSAGE" <?= $disabled['EMERGENCY_MESSAGE'] ?>><?= htmlspecialchars($vars['EMERGENCY_MESSAGE']) ?></textarea>
+            <textarea class="form-control font-monospace" rows="7" name="EMERGENCY_MESSAGE" id="EMERGENCY_MESSAGE" <?= $disabled['EMERGENCY_MESSAGE'] ?>><?= htmlspecialchars((string) $vars['EMERGENCY_MESSAGE']) ?></textarea>
           </div>
 
           <p>
@@ -170,8 +170,8 @@ include BASE_PATH . 'views/header.php';
             <label class="form-label" for="CLUB_INFO">Select club</label>
             <select class="form-select" name="CLUB_INFO" id="CLUB_INFO">
               <?php foreach ($clubs as $club) { ?>
-                <option <?php if ($club['Code'] == app()->tenant->getKey('ASA_CLUB_CODE')) { ?>selected<?php } ?> value="<?= htmlspecialchars($club['Code']) ?>">
-                  <?= htmlspecialchars($club['Name']) ?> (<?= htmlspecialchars($club['Code']) ?>)
+                <option <?php if ($club['Code'] == app()->tenant->getKey('ASA_CLUB_CODE')) { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $club['Code']) ?>">
+                  <?= htmlspecialchars((string) $club['Name']) ?> (<?= htmlspecialchars((string) $club['Code']) ?>)
                 </option>
               <?php } ?>
             </select>
@@ -180,32 +180,32 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="CLUB_NAME">Club Name</label>
-            <input class="form-control" type="text" name="CLUB_NAME" id="CLUB_NAME" value="<?= htmlspecialchars($vars['CLUB_NAME']) ?>" <?= $disabled['CLUB_NAME'] ?>>
+            <input class="form-control" type="text" name="CLUB_NAME" id="CLUB_NAME" value="<?= htmlspecialchars((string) $vars['CLUB_NAME']) ?>" <?= $disabled['CLUB_NAME'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="CLUB_SHORT_NAME">Club Short Name</label>
-            <input class="form-control" type="text" name="CLUB_SHORT_NAME" id="CLUB_SHORT_NAME" value="<?= htmlspecialchars($vars['CLUB_SHORT_NAME']) ?>" <?= $disabled['CLUB_SHORT_NAME'] ?>>
+            <input class="form-control" type="text" name="CLUB_SHORT_NAME" id="CLUB_SHORT_NAME" value="<?= htmlspecialchars((string) $vars['CLUB_SHORT_NAME']) ?>" <?= $disabled['CLUB_SHORT_NAME'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="ASA_CLUB_CODE">Swim England Club Code</label>
-            <input class="form-control font-monospace" type="text" name="ASA_CLUB_CODE" id="CLUB_SHORT_NAME" value="<?= htmlspecialchars($vars['ASA_CLUB_CODE']) ?>" <?= $disabled['ASA_CLUB_CODE'] ?>>
+            <input class="form-control font-monospace" type="text" name="ASA_CLUB_CODE" id="CLUB_SHORT_NAME" value="<?= htmlspecialchars((string) $vars['ASA_CLUB_CODE']) ?>" <?= $disabled['ASA_CLUB_CODE'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="ASA_COUNTY">Swim England County</label>
-            <input class="form-control" type="url" name="ASA_COUNTY" id="ASA_COUNTY" value="<?= htmlspecialchars($counties[$vars['ASA_COUNTY']]['name']) ?>" disabled>
+            <input class="form-control" type="url" name="ASA_COUNTY" id="ASA_COUNTY" value="<?= htmlspecialchars((string) $counties[$vars['ASA_COUNTY']]['name']) ?>" disabled>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="ASA_DISTRICT">Swim England District</label>
-            <input class="form-control" type="url" name="ASA_DISTRICT" id="ASA_DISTRICT" value="<?= htmlspecialchars($districts[$vars['ASA_DISTRICT']]['name']) ?>" disabled>
+            <input class="form-control" type="url" name="ASA_DISTRICT" id="ASA_DISTRICT" value="<?= htmlspecialchars((string) $districts[$vars['ASA_DISTRICT']]['name']) ?>" disabled>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="CLUB_WEBSITE">Club Website</label>
-            <input class="form-control font-monospace" type="url" name="CLUB_WEBSITE" id="CLUB_WEBSITE" value="<?= htmlspecialchars($vars['CLUB_WEBSITE']) ?>" <?= $disabled['CLUB_WEBSITE'] ?>>
+            <input class="form-control font-monospace" type="url" name="CLUB_WEBSITE" id="CLUB_WEBSITE" value="<?= htmlspecialchars((string) $vars['CLUB_WEBSITE']) ?>" <?= $disabled['CLUB_WEBSITE'] ?>>
           </div>
 
           <div class="mb-3">
@@ -213,7 +213,7 @@ include BASE_PATH . 'views/header.php';
             <textarea class="form-control" rows="5" id="CLUB_ADDRESS" name="CLUB_ADDRESS" aria-describedby="CLUB_ADDRESS_HELP" <?= $disabled['CLUB_ADDRESS'] ?>><?php
                                                                                                                                                                 if ($vars['CLUB_ADDRESS']) {
                                                                                                                                                                   for ($i = 0; $i < sizeof($vars['CLUB_ADDRESS']); $i++) {
-                                                                                                                                                                    echo htmlspecialchars($vars['CLUB_ADDRESS'][$i]);
+                                                                                                                                                                    echo htmlspecialchars((string) $vars['CLUB_ADDRESS'][$i]);
                                                                                                                                                                     if ($i + 1 < sizeof($vars['CLUB_ADDRESS'])) {
                                                                                                                                                                       echo "\r\n";
                                                                                                                                                                     }
@@ -227,19 +227,19 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="CLUB_EMAIL">Main Club Email Address</label>
-            <input class="form-control" type="email" name="CLUB_EMAIL" id="CLUB_EMAIL" value="<?= htmlspecialchars($vars['CLUB_EMAIL']) ?>" <?= $disabled['CLUB_EMAIL'] ?>>
+            <input class="form-control" type="email" name="CLUB_EMAIL" id="CLUB_EMAIL" value="<?= htmlspecialchars((string) $vars['CLUB_EMAIL']) ?>" <?= $disabled['CLUB_EMAIL'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="CLUB_TRIAL_EMAIL">Trial Request Email Address</label>
-            <input class="form-control" type="email" name="CLUB_TRIAL_EMAIL" id="CLUB_TRIAL_EMAIL" value="<?= htmlspecialchars($vars['CLUB_TRIAL_EMAIL']) ?>" <?= $disabled['CLUB_TRIAL_EMAIL'] ?>>
+            <input class="form-control" type="email" name="CLUB_TRIAL_EMAIL" id="CLUB_TRIAL_EMAIL" value="<?= htmlspecialchars((string) $vars['CLUB_TRIAL_EMAIL']) ?>" <?= $disabled['CLUB_TRIAL_EMAIL'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="EMAIL_DOMAIN">Email Domain</label>
             <div class="input-group">
               <span class="input-group-text">@</span>
-              <input class="form-control" type="text" name="EMAIL_DOMAIN" id="EMAIL_DOMAIN" value="<?= htmlspecialchars($vars['EMAIL_DOMAIN']) ?>" <?= $disabled['EMAIL_DOMAIN'] ?> aria-describedby="EMAIL_DOMAIN_HELP">
+              <input class="form-control" type="text" name="EMAIL_DOMAIN" id="EMAIL_DOMAIN" value="<?= htmlspecialchars((string) $vars['EMAIL_DOMAIN']) ?>" <?= $disabled['EMAIL_DOMAIN'] ?> aria-describedby="EMAIL_DOMAIN_HELP">
             </div>
             <small id="EMAIL_DOMAIN_HELP" class="form-text text-muted">The system sends emails to members under a subdomain of the above domain.</small>
           </div>
@@ -317,7 +317,7 @@ include BASE_PATH . 'views/header.php';
             <label class="form-label" for="DEFAULT_GALA_PROCESSING_FEE">Default per gala entry processing fee</label>
             <div class="input-group">
               <span class="input-group-text">£</span>
-              <input class="form-control font-monospace" type="number" min="0" step="0.01" name="DEFAULT_GALA_PROCESSING_FEE" id="DEFAULT_GALA_PROCESSING_FEE" value="<?= htmlspecialchars(MoneyHelpers::intToDecimal($vars['DEFAULT_GALA_PROCESSING_FEE'])) ?>" <?= $disabled['DEFAULT_GALA_PROCESSING_FEE'] ?>>
+              <input class="form-control font-monospace" type="number" min="0" step="0.01" name="DEFAULT_GALA_PROCESSING_FEE" id="DEFAULT_GALA_PROCESSING_FEE" value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($vars['DEFAULT_GALA_PROCESSING_FEE'])) ?>" <?= $disabled['DEFAULT_GALA_PROCESSING_FEE'] ?>>
             </div>
             <div class="small mt-1">To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer</div>
           </div>
@@ -343,22 +343,22 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="GOCARDLESS_ACCESS_TOKEN">GoCardless Access Token</label>
-            <input class="form-control font-monospace" type="text" name="GOCARDLESS_ACCESS_TOKEN" id="GOCARDLESS_ACCESS_TOKEN" value="<?= htmlspecialchars($vars['GOCARDLESS_ACCESS_TOKEN']) ?>" <?= $disabled['GOCARDLESS_ACCESS_TOKEN'] ?>>
+            <input class="form-control font-monospace" type="text" name="GOCARDLESS_ACCESS_TOKEN" id="GOCARDLESS_ACCESS_TOKEN" value="<?= htmlspecialchars((string) $vars['GOCARDLESS_ACCESS_TOKEN']) ?>" <?= $disabled['GOCARDLESS_ACCESS_TOKEN'] ?>>
           </div>
 
           <div class="mb-3">
             <label class="form-label" for="GOCARDLESS_WEBHOOK_KEY">GoCardless Webhook Key</label>
-            <input class="form-control font-monospace" type="text" name="GOCARDLESS_WEBHOOK_KEY" id="GOCARDLESS_WEBHOOK_KEY" value="<?= htmlspecialchars($vars['GOCARDLESS_WEBHOOK_KEY']) ?>" <?= $disabled['GOCARDLESS_WEBHOOK_KEY'] ?>>
+            <input class="form-control font-monospace" type="text" name="GOCARDLESS_WEBHOOK_KEY" id="GOCARDLESS_WEBHOOK_KEY" value="<?= htmlspecialchars((string) $vars['GOCARDLESS_WEBHOOK_KEY']) ?>" <?= $disabled['GOCARDLESS_WEBHOOK_KEY'] ?>>
           </div>
 
           <p>Your GoCardless webhook endpoint URL is</p>
           <div class="mb-3">
-            <input class="form-control font-monospace" type="text" readonly value="<?= htmlspecialchars(webhookUrl("payments/webhooks")) ?>">
+            <input class="form-control font-monospace" type="text" readonly value="<?= htmlspecialchars((string) webhookUrl("payments/webhooks")) ?>">
           </div>
 
           <h2>Stripe Setup</h2>
 
-          <p>Connect to SCDS without API keys or webhooks in <a href="<?= htmlspecialchars(autoUrl("settings/stripe")) ?>">Stripe Settings</a>.</p>
+          <p>Connect to SCDS without API keys or webhooks in <a href="<?= htmlspecialchars((string) autoUrl("settings/stripe")) ?>">Stripe Settings</a>.</p>
 
           <p>
             We will soon also be moving direct debit payments to Stripe. We will be in touch when this transition starts.
@@ -368,7 +368,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="SYSTEM_COLOUR">Primary Colour</label>
-            <input class="form-control" type="color" name="SYSTEM_COLOUR" id="SYSTEM_COLOUR" value="<?= htmlspecialchars($vars['SYSTEM_COLOUR']) ?>" <?= $disabled['SYSTEM_COLOUR'] ?> aria-describedby="SYSTEM_COLOUR_HELP">
+            <input class="form-control" type="color" name="SYSTEM_COLOUR" id="SYSTEM_COLOUR" value="<?= htmlspecialchars((string) $vars['SYSTEM_COLOUR']) ?>" <?= $disabled['SYSTEM_COLOUR'] ?> aria-describedby="SYSTEM_COLOUR_HELP">
             <small id="SYSTEM_COLOUR_HELP" class="form-text text-muted">The system primary colour is used in PDF documents generated by the membership system.</small>
           </div>
 
@@ -383,7 +383,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="GLOBAL_PERSONAL_KEY_ID_NUMBER">Membership Number</label>
-            <input class="form-control font-monospace" type="number" name="GLOBAL_PERSONAL_KEY_ID_NUMBER" id="GLOBAL_PERSONAL_KEY_ID_NUMBER" value="<?= htmlspecialchars($vars['GLOBAL_PERSONAL_KEY_ID_NUMBER']) ?>" <?= $disabled['GLOBAL_PERSONAL_KEY_ID_NUMBER'] ?> min="0">
+            <input class="form-control font-monospace" type="number" name="GLOBAL_PERSONAL_KEY_ID_NUMBER" id="GLOBAL_PERSONAL_KEY_ID_NUMBER" value="<?= htmlspecialchars((string) $vars['GLOBAL_PERSONAL_KEY_ID_NUMBER']) ?>" <?= $disabled['GLOBAL_PERSONAL_KEY_ID_NUMBER'] ?> min="0">
             <div class="invalid-feedback">
               Please enter a Swim England, Swim Wales or Scottish Swimming membership number
             </div>
@@ -391,7 +391,7 @@ include BASE_PATH . 'views/header.php';
 
           <div class="mb-3">
             <label class="form-label" for="GLOBAL_PERSONAL_KEY">Personal Key</label>
-            <input class="form-control font-monospace" type="text" name="GLOBAL_PERSONAL_KEY" id="GLOBAL_PERSONAL_KEY" value="<?= htmlspecialchars($vars['GLOBAL_PERSONAL_KEY']) ?>" <?= $disabled['GLOBAL_PERSONAL_KEY'] ?> pattern="[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}">
+            <input class="form-control font-monospace" type="text" name="GLOBAL_PERSONAL_KEY" id="GLOBAL_PERSONAL_KEY" value="<?= htmlspecialchars((string) $vars['GLOBAL_PERSONAL_KEY']) ?>" <?= $disabled['GLOBAL_PERSONAL_KEY'] ?> pattern="[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}-[a-f0-9]{8}">
             <div class="invalid-feedback">
               Please enter your personal key in the corrent format
             </div>

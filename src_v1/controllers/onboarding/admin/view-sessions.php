@@ -56,7 +56,7 @@ if ($pagination->get_limit_start() > 1 && $pagination->get_limit_start() >= $cou
 
 $pagination->records($count);
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) . " Sessions - Onboarding";
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) . " Sessions - Onboarding";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -67,7 +67,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">Onboarding</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>">Onboarding</a></li>
         <li class="breadcrumb-item active" aria-current="page">User Sessions</li>
       </ol>
     </nav>
@@ -75,10 +75,10 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars(\SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> onboarding sessions
+          <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($user['Forename'], $user['Surname'])) ?> onboarding sessions
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($pagination->get_page_description()) ?>
+          <?= htmlspecialchars((string) $pagination->get_page_description()) ?>
         </p>
       </div>
     </div>
@@ -96,8 +96,8 @@ include BASE_PATH . "views/header.php";
           <?php do {
             $onboardingSession = \SCDS\Onboarding\Session::retrieve($session->id);
           ?>
-            <a href="<?= htmlspecialchars(autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="list-group-item list-group-item-action">
-              <h2><?= htmlspecialchars(\SCDS\Formatting\Names::format($session->firstName, $session->lastName)) ?></h2>
+            <a href="<?= htmlspecialchars((string) autoUrl('onboarding/sessions/a/' . $session->id)) ?>" class="list-group-item list-group-item-action">
+              <h2><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($session->firstName, $session->lastName)) ?></h2>
 
               <?php if ($onboardingSession->renewal) { ?>
                 <p>
@@ -114,21 +114,21 @@ include BASE_PATH . "views/header.php";
                   Start
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars($onboardingSession->start->format('j F Y')) ?>
+                  <?= htmlspecialchars((string) $onboardingSession->start->format('j F Y')) ?>
                 </dd>
 
                 <dt class="col-md-3">
                   Due by
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars($onboardingSession->dueDate->format('j F Y')) ?>
+                  <?= htmlspecialchars((string) $onboardingSession->dueDate->format('j F Y')) ?>
                 </dd>
 
                 <dt class="col-md-3">
                   Status
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars(\SCDS\Onboarding\Session::getStates()[$onboardingSession->status]) ?>
+                  <?= htmlspecialchars((string) \SCDS\Onboarding\Session::getStates()[$onboardingSession->status]) ?>
                 </dd>
 
                 <?php if ($onboardingSession->status != 'complete' && isset(\SCDS\Onboarding\Session::stagesOrder()[$onboardingSession->getCurrentTask()])) { ?>
@@ -136,7 +136,7 @@ include BASE_PATH . "views/header.php";
                     Next stage
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars(\SCDS\Onboarding\Session::stagesOrder()[$onboardingSession->getCurrentTask()]) ?>
+                    <?= htmlspecialchars((string) \SCDS\Onboarding\Session::stagesOrder()[$onboardingSession->getCurrentTask()]) ?>
                   </dd>
                 <?php } ?>
 
@@ -145,7 +145,7 @@ include BASE_PATH . "views/header.php";
                     Completed at
                   </dt>
                   <dd class="col-9">
-                    <?= htmlspecialchars($onboardingSession->completedAt->format('j F Y')) ?>
+                    <?= htmlspecialchars((string) $onboardingSession->completedAt->format('j F Y')) ?>
                   </dd>
                 <?php } ?>
               </dl>
@@ -176,11 +176,11 @@ include BASE_PATH . "views/header.php";
           Filter by state
         </h3>
         <div class="d-grid gap-2">
-          <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?" . $queryString)) ?>">All</a>
-          <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?" . $queryString . "type=not_ready")) ?>">Not Ready</a>
-          <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?" . $queryString . "type=pending")) ?>">Pending</a>
-          <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?" . $queryString . "type=in_progress")) ?>">In Progress</a>
-          <a class="btn btn-primary" href="<?= htmlspecialchars(autoUrl("onboarding/all?" . $queryString . "type=complete")) ?>">Complete</a>
+          <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?" . $queryString)) ?>">All</a>
+          <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?" . $queryString . "type=not_ready")) ?>">Not Ready</a>
+          <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?" . $queryString . "type=pending")) ?>">Pending</a>
+          <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?" . $queryString . "type=in_progress")) ?>">In Progress</a>
+          <a class="btn btn-primary" href="<?= htmlspecialchars((string) autoUrl("onboarding/all?" . $queryString . "type=complete")) ?>">Complete</a>
         </div>
       </div>
     </div> -->

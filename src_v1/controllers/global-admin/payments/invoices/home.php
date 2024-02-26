@@ -17,7 +17,7 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
       <li class="breadcrumb-item active" aria-current="page">Invoices</li>
     </ol>
   </nav>
@@ -28,7 +28,7 @@ include BASE_PATH . "views/root/header.php";
   <p class="lead">View or create invoices.</p>
 
   <p>
-    <a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices/new')) ?>" class="btn btn-primary">
+    <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices/new')) ?>" class="btn btn-primary">
       New invoice
     </a>
   </p>
@@ -36,12 +36,12 @@ include BASE_PATH . "views/root/header.php";
   <?php if ($invoice) { ?>
     <div class="list-group">
       <?php do { ?>
-        <a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices/' . $invoice['ID'])) ?>" class="list-group-item list-group-item-action">
+        <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices/' . $invoice['ID'])) ?>" class="list-group-item list-group-item-action">
           <p class="mb-0">
-            <strong><?= htmlspecialchars($invoice['ID']) ?></strong>
+            <strong><?= htmlspecialchars((string) $invoice['ID']) ?></strong>
           </p>
           <p class="mb-0">
-            Invoice <?= htmlspecialchars($invoice['ID']) ?>
+            Invoice <?= htmlspecialchars((string) $invoice['ID']) ?>
           </p>
         </a>
       <?php } while ($invoice = $getInvoices->fetch(PDO::FETCH_ASSOC)); ?>
@@ -52,7 +52,7 @@ include BASE_PATH . "views/root/header.php";
         <strong>There are no invoices to show</strong>
       </p>
       <p class="mb-0">
-        Create an <a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices/new')) ?>" class="alert-link">invoice</a>
+        Create an <a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices/new')) ?>" class="alert-link">invoice</a>
       </p>
     </div>
   <?php } ?>

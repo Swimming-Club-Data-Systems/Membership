@@ -27,9 +27,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -46,7 +46,7 @@ include BASE_PATH . "views/head.php";
               <strong>We've started setting up your direct debit instruction</strong>
             </p>
             <p class="mb-0">
-              Account <?= htmlspecialchars($_SESSION['SetupMandateSuccess']['SortCode']) ?>, <?= htmlspecialchars($_SESSION['SetupMandateSuccess']['Last4']) ?>
+              Account <?= htmlspecialchars((string) $_SESSION['SetupMandateSuccess']['SortCode']) ?>, <?= htmlspecialchars((string) $_SESSION['SetupMandateSuccess']['Last4']) ?>
             </p>
           </div>
         <?php unset($_SESSION['SetupMandateSuccess']);
@@ -62,9 +62,9 @@ include BASE_PATH . "views/head.php";
         } ?>
 
         <?php if ($session->renewal) { ?>
-          <h1 class="text-center">Hi <?= htmlspecialchars($user->getFirstName()) ?>! Welcome to Membership Renewal</h1>
+          <h1 class="text-center">Hi <?= htmlspecialchars((string) $user->getFirstName()) ?>! Welcome to Membership Renewal</h1>
         <?php } else { ?>
-          <h1 class="text-center">Hi <?= htmlspecialchars($user->getFirstName()) ?>! Welcome to <?= htmlspecialchars($tenant->getName()) ?></h1>
+          <h1 class="text-center">Hi <?= htmlspecialchars((string) $user->getFirstName()) ?>! Welcome to <?= htmlspecialchars((string) $tenant->getName()) ?></h1>
         <?php } ?>
 
         <h2 class="text-center">We now need you to</h2>
@@ -74,11 +74,11 @@ include BASE_PATH . "views/head.php";
             if ($details->required) { ?>
               <li class="list-group-item <?php if ($session->isCurrentTask($stage)) { ?>py-3 fw-bold<?php } else { ?>disabled<?php } ?>">
                 <div class="d-flex justify-content-between align-items-center">
-                  <span><?= htmlspecialchars($tasks[$stage]) ?></span><?php if ($details->completed) { ?><span class="badge bg-success rounded-pill"><i class="fa fa-check-circle" aria-hidden="true"></i> Done</span><?php } else { ?><span class="badge bg-warning text-dark rounded-pill"><i class="fa fa-minus-circle" aria-hidden="true"></i> Pending</span><?php } ?>
+                  <span><?= htmlspecialchars((string) $tasks[$stage]) ?></span><?php if ($details->completed) { ?><span class="badge bg-success rounded-pill"><i class="fa fa-check-circle" aria-hidden="true"></i> Done</span><?php } else { ?><span class="badge bg-warning text-dark rounded-pill"><i class="fa fa-minus-circle" aria-hidden="true"></i> Pending</span><?php } ?>
                 </div>
                 <?php if ($session->isCurrentTask($stage)) { ?>
                   <p class="mb-0 mt-2">
-                    <a href="<?= htmlspecialchars(autoUrl('onboarding/go/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+                    <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
                   </p>
               <?php }
               } ?>
@@ -88,28 +88,28 @@ include BASE_PATH . "views/head.php";
 
         <?php if ($session->isCurrentTask('done')) { ?>
           <p>
-            You're all set. Welcome to <?= htmlspecialchars(app()->tenant->getName()) ?>.
+            You're all set. Welcome to <?= htmlspecialchars((string) app()->tenant->getName()) ?>.
           </p>
 
           <?php if (!isset(app()->user)) { ?>
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/sign-in')) ?>" class="btn btn-success">Continue to your account</a>
+              <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go/sign-in')) ?>" class="btn btn-success">Continue to your account</a>
             </p>
           <?php } else { ?>
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('')) ?>" class="btn btn-success">Return to your account</a>
+              <a href="<?= htmlspecialchars((string) autoUrl('')) ?>" class="btn btn-success">Return to your account</a>
             </p>
           <?php } ?>
         <?php } else { ?>
 
           <?php if ($session->dueDate) { ?>
             <p>
-              You must complete all registration tasks by the end of <?= htmlspecialchars($session->dueDate->format('j F Y')) ?>.
+              You must complete all registration tasks by the end of <?= htmlspecialchars((string) $session->dueDate->format('j F Y')) ?>.
             </p>
           <?php } ?>
 
           <p>
-            The <?= htmlspecialchars($tenant->getName()) ?> team.
+            The <?= htmlspecialchars((string) $tenant->getName()) ?> team.
           </p>
 
         <?php } ?>

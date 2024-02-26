@@ -21,7 +21,7 @@ include BASE_PATH . "views/header.php";
     </nav>
 
     <h1>User Directory</h1>
-    <p class="lead mb-0">All active <?= htmlspecialchars($tenant->getName()) ?> users. Useful for changing account settings.</p>
+    <p class="lead mb-0">All active <?= htmlspecialchars((string) $tenant->getName()) ?> users. Useful for changing account settings.</p>
   </div>
 </div>
 
@@ -30,11 +30,11 @@ include BASE_PATH . "views/header.php";
   <div class="mb-3 row">
     <label class="col-sm-4 col-md-3 col-lg-2" for="search">Search by Name</label>
     <div class="col-sm-8 col-md-9 col-lg-10">
-      <input class="form-control" id="search" name="search" value="<?= htmlspecialchars($search) ?>">
+      <input class="form-control" id="search" name="search" value="<?= htmlspecialchars((string) $search) ?>">
     </div>
   </div>
 
-  <div id="output" data-ajax-url="<?= htmlspecialchars(autoUrl('users/ajax/userList')) ?>" data-page="<?= htmlspecialchars(autoUrl("users")) ?>">
+  <div id="output" data-ajax-url="<?= htmlspecialchars((string) autoUrl('users/ajax/userList')) ?>" data-page="<?= htmlspecialchars((string) autoUrl("users")) ?>">
     <div class="ajaxPlaceholder">
       <span class="h1 d-block">
         <i class="fa fa-spin fa-circle-o-notch" aria-hidden="true"></i><br>

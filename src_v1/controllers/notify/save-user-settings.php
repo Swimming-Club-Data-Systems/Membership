@@ -44,6 +44,6 @@ echo json_encode([
   'settings' => [
     'replyEmailAddress' => (string) app()->user->getUserOption('NotifyReplyAddress'),
     'defaultReplyTo' => ($defaultReplyTo && $replyAddress) ? $defaultReplyTo : 'toClub',
-    'defaultSendAs' => ($defaultSendAs) ? $defaultSendAs : 'asClub',
+    'defaultSendAs' => $defaultSendAs ?: 'asClub',
   ],
 ]);

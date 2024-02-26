@@ -130,7 +130,7 @@ try {
             $id,
             $paymentID
           ]);
-        } catch (Exception $e) {
+        } catch (Exception) {
           // reportError($e);
           throw new Exception();
         }

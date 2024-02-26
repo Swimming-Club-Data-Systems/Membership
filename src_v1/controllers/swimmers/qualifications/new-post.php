@@ -43,13 +43,13 @@ try {
     if (isset($_POST['expires']) && $_POST['expires'] == 'yes') {
       $validTo = (new DateTime($_POST['valid-to'], new DateTimeZone('Europe/London')))->format('Y-m-d');
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     // Ignore
   }
 
   $notes = null;
-  if (isset($_POST['notes']) && mb_strlen(trim($_POST['notes'])) > 0) {
-    $notes = trim($_POST['notes']);
+  if (isset($_POST['notes']) && mb_strlen(trim((string) $_POST['notes'])) > 0) {
+    $notes = trim((string) $_POST['notes']);
   }
 
   $insert = $db->prepare("INSERT INTO `qualificationsMembers` (`ID`, `Qualification`, `Member`, `ValidFrom`, `ValidUntil`, `Notes`) VALUES (?, ?, ?, ?, ?, ?)");
@@ -70,7 +70,7 @@ try {
   // Error
 
   $message = $e->getMessage();
-  if (get_class($e) == 'PDOException') {
+  if ($e::class == 'PDOException') {
     $message = 'A database error occurred';
   }
 

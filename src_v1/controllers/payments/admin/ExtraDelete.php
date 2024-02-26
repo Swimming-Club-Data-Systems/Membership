@@ -10,6 +10,6 @@ try {
     $tenant->getId()
   ]);
   header("Location: " . autoUrl("payments/extrafees"));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }

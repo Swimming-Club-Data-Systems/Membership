@@ -2,99 +2,51 @@
 
 function outcomeTypeInfo($type)
 {
-  switch ($type) {
-    case 'authorized':
-      return '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Payment authorised by issuer';
-      break;
-    case 'manual_review':
-      return 'Requires manual review';
-      break;
-    case 'issuer_declined':
-      return '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Payment declined by issuer';
-      break;
-    case 'blocked':
-      return '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Payment blocked by Stripe';
-      break;
-    case 'invalid':
-      return '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Request details were invalid';
-      break;
-    default:
-      return 'Unknown outcome type';
-      break;
-  }
+  return match ($type) {
+      'authorized' => '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Payment authorised by issuer',
+      'manual_review' => 'Requires manual review',
+      'issuer_declined' => '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Payment declined by issuer',
+      'blocked' => '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Payment blocked by Stripe',
+      'invalid' => '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Request details were invalid',
+      default => 'Unknown outcome type',
+  };
 }
 
 function outcomeRiskLevel($riskLevel)
 {
-  switch ($riskLevel) {
-    case 'normal':
-      return '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Normal';
-      break;
-    case 'elevated':
-      return '<i class="text-danger fa fa-info-circle fa-fw" aria-hidden="true"></i> Elevated risk';
-      break;
-    case '<i class="text-danger fa fa-info-circle fa-fw" aria-hidden="true"></i> highest':
-      return 'High risk';
-      break;
-    case 'not_assessed':
-      return '<i class="text-muted fa fa-question-circle fa-fw" aria-hidden="true"></i> Risk not assessed';
-      break;
-    default:
-      return '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Error in risk evaluation';
-      break;
-  }
+  return match ($riskLevel) {
+      'normal' => '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Normal',
+      'elevated' => '<i class="text-danger fa fa-info-circle fa-fw" aria-hidden="true"></i> Elevated risk',
+      '<i class="text-danger fa fa-info-circle fa-fw" aria-hidden="true"></i> highest' => 'High risk',
+      'not_assessed' => '<i class="text-muted fa fa-question-circle fa-fw" aria-hidden="true"></i> Risk not assessed',
+      default => '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Error in risk evaluation',
+  };
 }
 
 function cardCheckInfo($value)
 {
-  switch ($value) {
-    case 'pass':
-      return '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i>
-       Verified';
-      break;
-    case 'failed':
-      return '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Check failed';
-      break;
-    case 'unavailable':
-      return '<i class="text-muted fa fa-question-circle fa-fw" aria-hidden="true"></i> Check not possible';
-      break;
-    case 'unchecked':
-      return '<i class="text-muted fa fa-circle fa-fw" aria-hidden="true"></i> Unverified';
-      break;
-    default:
-      return 'Unknown status';
-      break;
-  }
+  return match ($value) {
+      'pass' => '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i>
+       Verified',
+      'failed' => '<i class="text-danger fa fa-times-circle fa-fw" aria-hidden="true"></i> Check failed',
+      'unavailable' => '<i class="text-muted fa fa-question-circle fa-fw" aria-hidden="true"></i> Check not possible',
+      'unchecked' => '<i class="text-muted fa fa-circle fa-fw" aria-hidden="true"></i> Unverified',
+      default => 'Unknown status',
+  };
 }
 
 function paymentIntentStatus($value)
 {
-  switch ($value) {
-    case 'requires_payment_method':
-      return '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires payment method';
-      break;
-    case 'requires_confirmation':
-      return '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires confirmation';
-      break;
-    case 'requires_action':
-      return '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires action';
-      break;
-    case 'processing':
-      return '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Processing';
-      break;
-    case 'requires_capture':
-      return '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Required capture';
-      break;
-    case 'canceled':
-      return '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Cancelled';
-      break;
-    case 'succeeded':
-      return '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Succeeded';
-      break;
-    default:
-      return 'Unknown status';
-      break;
-  }
+  return match ($value) {
+      'requires_payment_method' => '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires payment method',
+      'requires_confirmation' => '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires confirmation',
+      'requires_action' => '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Requires action',
+      'processing' => '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Processing',
+      'requires_capture' => '<i class="text-muted fa fa-info-circle fa-fw" aria-hidden="true"></i> Required capture',
+      'canceled' => '<i class="text-warning fa fa-info-circle fa-fw" aria-hidden="true"></i> Cancelled',
+      'succeeded' => '<i class="text-success fa fa-check-circle fa-fw" aria-hidden="true"></i> Succeeded',
+      default => 'Unknown status',
+  };
 }
 
 $db = app()->db;
@@ -139,7 +91,7 @@ $getGalaEntries->execute([
 ]);
 $ents = $getGalaEntries->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = 'Card Payment #' . htmlspecialchars($id);
+$pagetitle = 'Card Payment #' . htmlspecialchars((string) $id);
 
 include BASE_PATH . 'views/header.php';
 
@@ -157,7 +109,7 @@ $countries = getISOAlpha2Countries();
 
 ?>
 
-<div id="data" data-ajax-url="<?= htmlspecialchars(autoUrl('payments/card-transactions/refund')) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
+<div id="data" data-ajax-url="<?= htmlspecialchars((string) autoUrl('payments/card-transactions/refund')) ?>" data-csrf="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
 
 <div class="bg-light mt-n3 py-3 mb-3">
   <div class="container-xl">
@@ -166,13 +118,13 @@ $countries = getISOAlpha2Countries();
         <li class="breadcrumb-item"><a href="<?= autoUrl("payments") ?>">Payments</a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("payments/cards") ?>">Cards</a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("payments/card-transactions") ?>">History</a></li>
-        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars($id) ?></li>
+        <li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars((string) $id) ?></li>
       </ol>
     </nav>
 
     <div class="row">
       <div class="col-lg-8">
-        <h1><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname']) . ':') ?> <?php } ?>Card payment #<?= htmlspecialchars($id) ?></h1>
+        <h1><?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname']) . ':') ?> <?php } ?>Card payment #<?= htmlspecialchars((string) $id) ?></h1>
         <p class="lead mb-0">At <?= $date->format("H:i \o\\n j F Y") ?></p>
       </div>
     </div>
@@ -204,10 +156,10 @@ $countries = getISOAlpha2Countries();
         <h2>Card information</h2>
         <dl class="row">
           <dt class="col-sm-5 col-md-4">Card</dt>
-          <dd class="col-sm-7 col-md-8"><i class="fa <?= htmlspecialchars(getCardFA($card->brand)) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($card->brand)) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card->last4) ?></dd>
+          <dd class="col-sm-7 col-md-8"><i class="fa <?= htmlspecialchars((string) getCardFA($card->brand)) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($card->brand)) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card->last4) ?></dd>
 
           <dt class="col-sm-5 col-md-4">Type</dt>
-          <dd class="col-sm-7 col-md-8"><?= htmlspecialchars(mb_convert_case($card->funding, MB_CASE_TITLE)) ?></dd>
+          <dd class="col-sm-7 col-md-8"><?= htmlspecialchars(mb_convert_case((string) $card->funding, MB_CASE_TITLE)) ?></dd>
 
           <?php if (isset($card->three_d_secure->authenticated) && $card->three_d_secure->authenticated && isset($card->three_d_secure->succeeded) && $card->three_d_secure->succeeded) { ?>
             <dt class="col-sm-5 col-md-4">Verification</dt>
@@ -220,7 +172,7 @@ $countries = getISOAlpha2Countries();
 
             <?php if (isset($card->wallet->dynamic_last4)) { ?>
               <dt class="col-sm-5 col-md-4">Device Account Number</dt>
-              <dd class="col-sm-7 col-md-8">&#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card->wallet->dynamic_last4) ?></dd>
+              <dd class="col-sm-7 col-md-8">&#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card->wallet->dynamic_last4) ?></dd>
             <?php } ?>
           <?php } ?>
         </dl>
@@ -235,7 +187,7 @@ $countries = getISOAlpha2Countries();
 
             <?php if (isset($payment->charges->data[0]->outcome->risk_score) && $payment->charges->data[0]->outcome->risk_score) { ?>
               <dt class="col-sm-5 col-md-4">Risk score</dt>
-              <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($payment->charges->data[0]->outcome->risk_score) ?></dd>
+              <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) $payment->charges->data[0]->outcome->risk_score) ?></dd>
             <?php } ?>
 
             <?php if (isset($payment->charges->data[0]->outcome->type) && $payment->charges->data[0]->outcome->type) { ?>
@@ -245,17 +197,17 @@ $countries = getISOAlpha2Countries();
 
             <?php if (isset($payment->charges->data[0]->outcome->seller_message) && $payment->charges->data[0]->outcome->seller_message) { ?>
               <dt class="col-sm-5 col-md-4">Status message*</dt>
-              <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($payment->charges->data[0]->outcome->seller_message) ?></dd>
+              <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) $payment->charges->data[0]->outcome->seller_message) ?></dd>
             <?php } ?>
 
             <?php if (isset($payment->charges->data[0]->receipt_url) && $payment->charges->data[0]->receipt_url) { ?>
               <dt class="col-sm-5 col-md-4">Stripe receipt</dt>
-              <dd class="col-sm-7 col-md-8"><a target="_blank" href="<?= htmlspecialchars($payment->charges->data[0]->receipt_url) ?>">View receipt</a></dd>
+              <dd class="col-sm-7 col-md-8"><a target="_blank" href="<?= htmlspecialchars((string) $payment->charges->data[0]->receipt_url) ?>">View receipt</a></dd>
             <?php } ?>
 
             <dt class="col-sm-5 col-md-4">Stripe PaymentIntent ID</dt>
             <dd class="col-sm-7 col-md-8">
-              <a href="<?= htmlspecialchars('https://dashboard.stripe.com/payments/' . urlencode($pm['Intent'])) ?>" target="_blank"><?= htmlspecialchars($pm['Intent']) ?></a>
+              <a href="<?= htmlspecialchars('https://dashboard.stripe.com/payments/' . urlencode((string) $pm['Intent'])) ?>" target="_blank"><?= htmlspecialchars((string) $pm['Intent']) ?></a>
             </dd>
 
             <dt class="col-sm-5 col-md-4">Stripe Balance Transaction</dt>
@@ -265,7 +217,7 @@ $countries = getISOAlpha2Countries();
 
             <dt class="col-sm-5 col-md-4">Statement Descriptor</dt>
             <dd class="col-sm-7 col-md-8">
-              <?= htmlspecialchars($payment->charges->data[0]->calculated_statement_descriptor) ?>
+              <?= htmlspecialchars((string) $payment->charges->data[0]->calculated_statement_descriptor) ?>
             </dd>
           </dl>
 
@@ -282,26 +234,26 @@ $countries = getISOAlpha2Countries();
                 <address class="mb-0">
                   <?php if (isset($payment->charges->data[0]->billing_details->name)) { ?>
                     <strong>
-                      <?= htmlspecialchars($payment->charges->data[0]->billing_details->name) ?>
+                      <?= htmlspecialchars((string) $payment->charges->data[0]->billing_details->name) ?>
                     </strong><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->line1) && $billingAddress->line1 != null) { ?>
-                    <?= htmlspecialchars($billingAddress->line1) ?><br>
+                    <?= htmlspecialchars((string) $billingAddress->line1) ?><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->line2) && $billingAddress->line2 != null) { ?>
-                    <?= htmlspecialchars($billingAddress->line2) ?><br>
+                    <?= htmlspecialchars((string) $billingAddress->line2) ?><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->city) && $billingAddress->city != null) { ?>
-                    <?= htmlspecialchars($billingAddress->city) ?><br>
+                    <?= htmlspecialchars((string) $billingAddress->city) ?><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->postal_code) && $billingAddress->postal_code != null) { ?>
-                    <?= htmlspecialchars($billingAddress->postal_code) ?><br>
+                    <?= htmlspecialchars((string) $billingAddress->postal_code) ?><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->state) && $billingAddress->state != null) { ?>
-                    <?= htmlspecialchars($billingAddress->state) ?><br>
+                    <?= htmlspecialchars((string) $billingAddress->state) ?><br>
                   <?php } ?>
                   <?php if (isset($billingAddress->country) && $billingAddress->country != null) { ?>
-                    <?= htmlspecialchars($countries[$billingAddress->country]) ?>
+                    <?= htmlspecialchars((string) $countries[$billingAddress->country]) ?>
                   <?php } ?>
                 </address>
               </dd>
@@ -340,8 +292,8 @@ $countries = getISOAlpha2Countries();
             <li class="list-group-item">
               <div class="row">
                 <div class="col-sm">
-                  <h3><?= htmlspecialchars($item['Name']) ?></h3>
-                  <p><?= htmlspecialchars($item['Description']) ?></p>
+                  <h3><?= htmlspecialchars((string) $item['Name']) ?></h3>
+                  <p><?= htmlspecialchars((string) $item['Description']) ?></p>
 
                   <p>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $item['Amount'])->withPointMovedLeft(2)->toScale(2) ?></p>
 
@@ -404,7 +356,7 @@ $countries = getISOAlpha2Countries();
 
       <?php if (isset($payment->charges->data[0]->amount_refunded) && $payment->charges->data[0]->amount_refunded > 0) { ?>
         <h2>Payment refunds</h2>
-        <p>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $payment->charges->data[0]->amount_refunded)->withPointMovedLeft(2)->toScale(2) ?> refunded to <?= htmlspecialchars(getCardBrand($card->brand)) ?> &middot;&middot;&middot;&middot; <?= htmlspecialchars($card->last4) ?></p>
+        <p>&pound;<?= (string) \Brick\Math\BigDecimal::of((string) $payment->charges->data[0]->amount_refunded)->withPointMovedLeft(2)->toScale(2) ?> refunded to <?= htmlspecialchars((string) getCardBrand($card->brand)) ?> &middot;&middot;&middot;&middot; <?= htmlspecialchars((string) $card->last4) ?></p>
 
         <?php if ($refunds && sizeof($refunds->data) > 0) { ?>
           <?php foreach ($refunds->data as $refund) {
@@ -418,21 +370,21 @@ $countries = getISOAlpha2Countries();
               <div class="card-body">
                 <dl class="row mb-0">
                   <dt class="col-sm-5 col-md-4">Amount</dt>
-                  <dd class="col-sm-7 col-md-8"><?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($refund->amount), $refund->currency)) ?></dd>
+                  <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($refund->amount), $refund->currency)) ?></dd>
 
                   <dt class="col-sm-5 col-md-4">Date and Time</dt>
                   <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($created->format('H:i:s, j F Y (T e)')) ?></dd>
 
                   <?php if (app()->user->hasPermission('Admin')) { ?>
                     <dt class="col-sm-5 col-md-4">Stripe Status</dt>
-                    <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($refund->status) ?></dd>
+                    <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) $refund->status) ?></dd>
 
                     <dt class="col-sm-5 col-md-4">Stripe Balance Transaction</dt>
-                    <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($refund->status) ?></dd>
+                    <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) $refund->status) ?></dd>
 
                     <?php if ($refund->reason) { ?>
                       <dt class="col-sm-5 col-md-4">Reason</dt>
-                      <dd class="col-sm-7 col-md-8"><?= htmlspecialchars($refund->reason) ?></dd>
+                      <dd class="col-sm-7 col-md-8"><?= htmlspecialchars((string) $refund->reason) ?></dd>
                     <?php } ?>
                   <?php } ?>
                 </dl>
@@ -454,7 +406,7 @@ $countries = getISOAlpha2Countries();
         <ul class="list-group mb-3">
           <?php do { ?>
             <li class="list-group-item">
-              <h3><?= htmlspecialchars($ents['GalaName']) ?><br><small><?= htmlspecialchars(\SCDS\Formatting\Names::format($ents['MForename'], $ents['MSurname'])) ?></small></h3>
+              <h3><?= htmlspecialchars((string) $ents['GalaName']) ?><br><small><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($ents['MForename'], $ents['MSurname'])) ?></small></h3>
 
               <p>Fee &pound;<?= (string) \Brick\Math\BigDecimal::of((string) $ents['FeeToPay'])->toScale(2) ?></p>
               <?php if (bool($ents['Refunded']) && $ents['AmountRefunded'] > 0) { ?>

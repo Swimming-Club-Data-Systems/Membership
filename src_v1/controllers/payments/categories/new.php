@@ -31,7 +31,7 @@ include BASE_PATH . 'views/header.php';
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewCategoryError']);

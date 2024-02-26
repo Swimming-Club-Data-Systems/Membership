@@ -76,7 +76,7 @@ try {
     $auth_via_google_authenticator;
     try {
       $auth_via_google_authenticator = (isset($_SESSION['TENANT-' . $club->getId()]['TWO_FACTOR_GOOGLE']) && $_SESSION['TENANT-' . $club->getId()]['TWO_FACTOR_GOOGLE']) && $ga2fa->verifyKey(getUserOption($_SESSION['TENANT-' . $club->getId()]['2FAUserID'], "GoogleAuth2FASecret"), $body->code);
-    } catch (Exception $e) {
+    } catch (Exception) {
       $auth_via_google_authenticator = false;
     }
 

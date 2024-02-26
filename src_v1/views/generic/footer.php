@@ -17,15 +17,15 @@ if ($this->showContent) {
 $script = autoUrl(getCompiledAsset('main.js'), false);
 
 ?>
-<script rel="preload" src="<?= htmlspecialchars($script) ?>"></script>
+<script rel="preload" src="<?= htmlspecialchars((string) $script) ?>"></script>
 <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
-  <script src="<?= htmlspecialchars(autoUrl("js/app.js", false)) ?>"></script>
+  <script src="<?= htmlspecialchars((string) autoUrl("js/app.js", false)) ?>"></script>
 <?php } ?>
 
 <?php if (isset($this->js)) { ?>
   <!-- Load per page JS -->
   <?php foreach ($this->js as $script) { ?>
-    <script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars($script['url']) ?>"></script>
+    <script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars((string) $script['url']) ?>"></script>
   <?php } ?>
 <?php } ?>
 

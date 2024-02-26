@@ -41,6 +41,6 @@ try {
       $systemInfo->setExistingEnvVar($key);
     }
   }
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }

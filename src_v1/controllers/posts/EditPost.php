@@ -14,7 +14,7 @@ try {
 		$id,
 		$tenant->getId()
 	]);
-} catch (PDOException $e) {
+} catch (PDOException) {
 	halt(404);
 }
 $row = $query->fetch(PDO::FETCH_ASSOC);
@@ -41,15 +41,15 @@ include BASE_PATH . "views/postsMenu.php";
 		<div class="row">
 			<div class="col-md-8">
 				<div>
-					<h1>Editing <?= htmlspecialchars($row['Title']) ?></h1>
+					<h1>Editing <?= htmlspecialchars((string) $row['Title']) ?></h1>
 					<div class="mb-3">
 						<label class="form-label" for="title">Title</label>
-						<input type="text" class="form-control" name="title" id="title" placeholder="Post Title" autocomplete="off" value="<?= htmlentities($row['Title']) ?>">
+						<input type="text" class="form-control" name="title" id="title" placeholder="Post Title" autocomplete="off" value="<?= htmlentities((string) $row['Title']) ?>">
 					</div>
 
 					<div class="mb-3 mb-0">
 						<label class="form-label" for="content">Content</label>
-						<textarea class="form-control auto-grow font-monospace" id="content" name="content" oninput="autoGrow(this)"><?= htmlspecialchars($row['Content']) ?></textarea>
+						<textarea class="form-control auto-grow font-monospace" id="content" name="content" oninput="autoGrow(this)"><?= htmlspecialchars((string) $row['Content']) ?></textarea>
 						<small id="contentHelp" class="form-text text-muted">
 							Posts are written in <a href="https://www.markdownguide.org" target="_blank">Markdown</a>. HTML is not allowed for security reasons.
 						</small>
@@ -68,9 +68,9 @@ include BASE_PATH . "views/postsMenu.php";
 					<p class="">We will publish this update immediately.</p>
 					<p class="mb-0">
 						<?php if ($row['Path'] != "") { ?>
-							View now at <a href="<?= htmlspecialchars(autoUrl("pages/" . $row['Path'])) ?>"><?= htmlspecialchars('/pages/' . $row['Path']) ?></a>
+							View now at <a href="<?= htmlspecialchars((string) autoUrl("pages/" . $row['Path'])) ?>"><?= htmlspecialchars('/pages/' . $row['Path']) ?></a>
 						<?php } else { ?>
-							View now at <a href="<?= htmlspecialchars(autoUrl("pages/" . $row['ID'])) ?>"><?= htmlspecialchars('/pages/' . $row['ID']) ?></a>
+							View now at <a href="<?= htmlspecialchars((string) autoUrl("pages/" . $row['ID'])) ?>"><?= htmlspecialchars('/pages/' . $row['ID']) ?></a>
 						<?php } ?>
 					</p>
 				</div>
@@ -80,9 +80,9 @@ include BASE_PATH . "views/postsMenu.php";
 					<div class="mb-3">
 						<label class="form-label" for="path">Path</label>
 						<p class="small mb-1">
-							<?= htmlspecialchars(autoUrl("pages/")) ?>
+							<?= htmlspecialchars((string) autoUrl("pages/")) ?>
 						</p>
-						<input type="text" class="form-control" name="path" id="path" placeholder="Leave blank to use Page ID" autocomplete="off" value="<?= htmlentities($row['Path']) ?>">
+						<input type="text" class="form-control" name="path" id="path" placeholder="Leave blank to use Page ID" autocomplete="off" value="<?= htmlentities((string) $row['Path']) ?>">
 					</div>
 					<div class="mb-3">
 						<label class="form-label" for="date">Date</label>
@@ -122,7 +122,7 @@ include BASE_PATH . "views/postsMenu.php";
 					<h3>SEO</h3>
 					<div class="mb-3 mb-0">
 						<label class="form-label" for="excerpt">Excerpt</label>
-						<textarea class="form-control" name="excerpt" id="excerpt" placeholder="This is about" autocomplete="off"><?= htmlentities($row['Excerpt']) ?></textarea>
+						<textarea class="form-control" name="excerpt" id="excerpt" placeholder="This is about" autocomplete="off"><?= htmlentities((string) $row['Excerpt']) ?></textarea>
 					</div>
 				</div>
 			</div>

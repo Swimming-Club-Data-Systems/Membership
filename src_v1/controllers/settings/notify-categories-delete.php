@@ -22,7 +22,7 @@ try {
     (int) false,
     $_POST['category'],
   ]);
-} catch (Exception $e) {
+} catch (Exception) {
   $success = false;
 }
 

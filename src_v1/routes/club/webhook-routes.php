@@ -47,5 +47,5 @@ $this->any(['/', '/*'], function () {
     $domain = app()->tenant->getUUID() . '.' . getenv('MAIN_DOMAIN');
   }
   http_response_code(303);
-  header("Location: " . 'https://' . rtrim($domain, '/') . '/' . ltrim(str_replace(app()->tenant->getCodeID(), '', $_SERVER['REQUEST_URI']), '/'));
+  header("Location: " . 'https://' . rtrim((string) $domain, '/') . '/' . ltrim(str_replace(app()->tenant->getCodeID(), '', (string) $_SERVER['REQUEST_URI']), '/'));
 });

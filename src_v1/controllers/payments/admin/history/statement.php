@@ -56,17 +56,17 @@ $name = getUserName($payment_info['UserID']);
 $use_white_background = true;
 $PMKey = null;
 if ($payment_info['PMKey'] != null) {
-  $PMKey = mb_strtoupper($payment_info['PMKey']);
+  $PMKey = mb_strtoupper((string) $payment_info['PMKey']);
 }
-$pagetitle = "Statement for " . htmlspecialchars($name) . ", " . htmlspecialchars("Statement #" . $id);
+$pagetitle = "Statement for " . htmlspecialchars((string) $name) . ", " . htmlspecialchars("Statement #" . $id);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars($id));
+$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars((string) $id));
 
 $billDate = null;
 try {
   $billDate = new DateTime($payment_info['Date'], new DateTimeZone('UTC'));
   $billDate->setTimezone(new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   $billDate = new DateTime('now', new DateTimeZone('Europe/London'));
 }
 
@@ -97,11 +97,11 @@ include BASE_PATH . "views/paymentsMenu.php";
     <?php } ?>
 
     <div class="">
-      <span class="d-none d-print-block h1"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Payments</span>
+      <span class="d-none d-print-block h1"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Payments</span>
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Parent") { ?>
-        <h1><?= htmlspecialchars($payment_info['Name']) ?> Statement</h1>
+        <h1><?= htmlspecialchars((string) $payment_info['Name']) ?> Statement</h1>
       <?php } else { ?>
-        <h1>Statement for <?= htmlspecialchars($name) ?></h1>
+        <h1>Statement for <?= htmlspecialchars((string) $name) ?></h1>
       <?php } ?>
     </div>
   </div>
@@ -110,7 +110,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 <div class="container-xl">
   <dl class="row">
     <dt class="col-md-4">Statement Identifier</dt>
-    <dd class="col-md-8"><span class="font-monospace"><?= htmlspecialchars($id) ?></span></dd>
+    <dd class="col-md-8"><span class="font-monospace"><?= htmlspecialchars((string) $id) ?></span></dd>
 
     <dt class="col-md-4">Statement Date</dt>
     <dd class="col-md-8"><?= htmlspecialchars($billDate->format("j F Y")) ?></dd>
@@ -124,14 +124,14 @@ include BASE_PATH . "views/paymentsMenu.php";
     <dd class="col-md-8"><span class="font-monospace">&pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $payment_info['Amount']))->withPointMovedLeft(2)->toScale(2) ?></span></dd>
 
     <dt class="col-md-4">Payment Status</dt>
-    <dd class="col-md-8"><span class=""><?= htmlspecialchars(paymentStatusString($payment_info['Status'], $payment_info['stripeFailureCode'])) ?></span></dd>
+    <dd class="col-md-8"><span class=""><?= htmlspecialchars((string) paymentStatusString($payment_info['Status'], $payment_info['stripeFailureCode'])) ?></span></dd>
 
     <?php if ($stripeMandateInfo) { ?>
       <dt class="col-md-4">Sort Code</dt>
-      <dd class="col-md-8"><span class="font-monospace"><?= htmlspecialchars(implode("-", str_split($stripeMandateInfo['SortCode'], 2))) ?></span></dd>
+      <dd class="col-md-8"><span class="font-monospace"><?= htmlspecialchars(implode("-", str_split((string) $stripeMandateInfo['SortCode'], 2))) ?></span></dd>
 
       <dt class="col-md-4">Account Number</dt>
-      <dd class="col-md-8"><span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($stripeMandateInfo['Last4']) ?></span></dd>
+      <dd class="col-md-8"><span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $stripeMandateInfo['Last4']) ?></span></dd>
     <?php } ?>
 
     <?php if ($payment_info['BankName'] != null || $payment_info['AccountNumEnd'] != null || $payment_info['AccountHolderName'] != null) { ?>
@@ -146,14 +146,14 @@ include BASE_PATH . "views/paymentsMenu.php";
       <dt class="col-md-4">Bank Account</dt>
       <dd class="col-md-8">
         <span>
-          &middot;&middot;&middot;&middot;&middot;&middot;<?= htmlspecialchars($payment_info['AccountNumEnd']) ?>
+          &middot;&middot;&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $payment_info['AccountNumEnd']) ?>
         </span>
       </dd>
 
       <dt class="col-md-4">Account Name</dt>
       <dd class="col-md-8">
         <span class="font-monospace">
-          <?= htmlspecialchars(mb_strtoupper($payment_info['AccountHolderName'])) ?>
+          <?= htmlspecialchars(mb_strtoupper((string) $payment_info['AccountHolderName'])) ?>
         </span>
       </dd>
 
@@ -166,7 +166,7 @@ include BASE_PATH . "views/paymentsMenu.php";
     $url = autoUrl("payments/statements/" . $id . "/mark-paid/" . $_SESSION['TENANT-' . app()->tenant->getId()]['Token' . $id]);
   ?>
     <p>
-      <a href="<?= htmlspecialchars($url) ?>" class="btn btn-primary">
+      <a href="<?= htmlspecialchars((string) $url) ?>" class="btn btn-primary">
         Mark as Paid
       </a>
     </p>
@@ -213,7 +213,7 @@ include BASE_PATH . "views/paymentsMenu.php";
               do {
                 $data = "";
                 if ($row['MetadataJSON'] != "" || $row['MetadataJSON'] != "") {
-                  $json = json_decode($row['MetadataJSON']);
+                  $json = json_decode((string) $row['MetadataJSON']);
                   if ($json->PaymentType == "SquadFees"  || $json->PaymentType == "ExtraFees") {
                     $data .= '<ul class="list-unstyled mb-0">';
                     //echo sizeof($json->Members);
@@ -223,7 +223,7 @@ include BASE_PATH . "views/paymentsMenu.php";
                     if (isset($json->Members) && $json->Members != null) {
                       $numMems = (int) sizeof($json->Members);
                       for ($y = 0; $y < $numMems; $y++) {
-                        $data .= '<li>' . htmlspecialchars($json->Members[$y]->FeeName) . " (&pound;" . htmlspecialchars($json->Members[$y]->Fee) . ") for " . htmlspecialchars($json->Members[$y]->MemberName) . '</li>';
+                        $data .= '<li>' . htmlspecialchars((string) $json->Members[$y]->FeeName) . " (&pound;" . htmlspecialchars((string) $json->Members[$y]->Fee) . ") for " . htmlspecialchars((string) $json->Members[$y]->MemberName) . '</li>';
                       }
                     }
                     $data .= '</ul>';
@@ -232,10 +232,10 @@ include BASE_PATH . "views/paymentsMenu.php";
               ?>
                 <tr>
                   <td>
-                    <?= date("D j M Y", strtotime($row['Date'])) ?>
+                    <?= date("D j M Y", strtotime((string) $row['Date'])) ?>
                   </td>
                   <td>
-                    <?= htmlspecialchars($row['Name']) ?>
+                    <?= htmlspecialchars((string) $row['Name']) ?>
                     <em><?= $data ?></em>
                   </td>
                   <td>
@@ -256,7 +256,7 @@ include BASE_PATH . "views/paymentsMenu.php";
   </div>
 
   <p>
-    <a href="<?= htmlspecialchars($pdfUrl) ?>" target="_blank" class="btn btn-primary">
+    <a href="<?= htmlspecialchars((string) $pdfUrl) ?>" target="_blank" class="btn btn-primary">
       PDF Download
     </a>
   </p>
@@ -271,10 +271,10 @@ include BASE_PATH . "views/paymentsMenu.php";
 
       <h2>Questions about Direct Debit</h2>
       <p>
-        Full help and support for payments by Direct Debit is available on the <a href="<?= htmlspecialchars(platformUrl('help-and-support')) ?>" target="_blank">support website</a>.
+        Full help and support for payments by Direct Debit is available on the <a href="<?= htmlspecialchars((string) platformUrl('help-and-support')) ?>" target="_blank">support website</a>.
       </p>
       <p>
-        Direct Debit payments to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> are covered by the Direct Debit Guarantee.
+        Direct Debit payments to <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> are covered by the Direct Debit Guarantee.
       </p>
     </div>
   </div>

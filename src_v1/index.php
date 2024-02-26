@@ -1,5 +1,8 @@
 <?php
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../src/.env');
+$dotenv->load();
+
 if (getenv('IS_DEV')) {
   // ----------------------------------------------------------------------------------------------------
   // - Display Errors
@@ -106,12 +109,11 @@ define('UOS_RETURN_FORM_NAME', 'Sport Sheffield Return to Training Form');
 
 // END
 
-use Symfony\Component\DomCrawler\Crawler;
-use GeoIp2\Database\Reader;
+require "framework/System/function.php";
 
-$app            = System\App::instance();
-$app->request   = System\Request::instance();
-$app->route     = System\Route::instance($app->request);
+$app            = \System\App::instance();
+$app->request   = \System\Request::instance();
+$app->route     = \System\Route::instance($app->request);
 
 $route          = $app->route;
 

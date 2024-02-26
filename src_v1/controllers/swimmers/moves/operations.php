@@ -40,17 +40,17 @@ try {
         if ($user['Old']) {
           try {
             $leave = Squad::get($user['Old']);
-          } catch (Exception $e) {
+          } catch (Exception) {
           }
         }
         if ($user['New']) {
           try {
             $join = Squad::get($user['New']);
-          } catch (Exception $e) {
+          } catch (Exception) {
           }
         }
         $subject = $member->getFullName() . '\'s move has been cancelled';
-        $message = '<p>Hello ' . htmlspecialchars($user['Forename']) . ',</p><p>We\'re writing to let you know that ' . htmlspecialchars($member->getForename()) . '\'s squad move (';
+        $message = '<p>Hello ' . htmlspecialchars((string) $user['Forename']) . ',</p><p>We\'re writing to let you know that ' . htmlspecialchars((string) $member->getForename()) . '\'s squad move (';
         if ($leave && $join) {
           $message .= 'from ' . $leave->getName() . ' to ' . $join->getName();
         } else if ($leave) {
@@ -63,7 +63,7 @@ try {
           $message .= '<p>The fee for ' . htmlspecialchars($join->getName()) . ' is &pound;' . htmlspecialchars($join->getFee(false)) . '.</p>';
         }
         $message .= '<p>If you have any questions, please contact your coach or a member of club staff.</p>';
-        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
+        $message .= '<p>Kind Regards,<br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Team</p>';
         notifySend(null, $subject, $message, $user['Forename'] . ' ' . $user['Surname'], $user['EmailAddress']);
       }
     } catch (Exception $e) {
@@ -78,7 +78,7 @@ try {
   } else {
     throw new Exception('Unsupported operation');
   }
-} catch (PDOException $e) {
+} catch (PDOException) {
   echo (json_encode([
     'status' => 200,
     'success' => false,

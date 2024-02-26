@@ -57,7 +57,7 @@ $countChargeable = 0;
 
 $numFormatter = new NumberFormatter("en", NumberFormatter::SPELLOUT);
 
-$pagetitle = "Refund Parents for " . htmlspecialchars($gala['name']);
+$pagetitle = "Refund Parents for " . htmlspecialchars((string) $gala['name']);
 
 include BASE_PATH . 'views/header.php';
 
@@ -73,9 +73,9 @@ include BASE_PATH . 'views/header.php';
 			</ol>
 		</nav>
 
-		<div id="data" data-ajax-url="<?= htmlspecialchars(autoUrl('galas/payments/ajax-refund-handler')) ?>"></div>
+		<div id="data" data-ajax-url="<?= htmlspecialchars((string) autoUrl('galas/payments/ajax-refund-handler')) ?>"></div>
 
-		<h1 class="mb-0">Refund for <?= htmlspecialchars($gala['name']) ?></h1>
+		<h1 class="mb-0">Refund for <?= htmlspecialchars((string) $gala['name']) ?></h1>
 	</div>
 </div>
 
@@ -143,11 +143,11 @@ include BASE_PATH . 'views/header.php';
 							$countChargeable++;
 						} ?>
 						<?php $notReady = !$entry['Processed']; ?>
-						<li class="list-group-item <?php if ($notReady) { ?>list-group-item-danger<?php } ?>" id="refund-box-<?= htmlspecialchars($entry['EntryID']) ?>">
-							<form id="refund-form-<?= htmlspecialchars($entry['EntryID']) ?>" novalidate autocomplete="off">
+						<li class="list-group-item <?php if ($notReady) { ?>list-group-item-danger<?php } ?>" id="refund-box-<?= htmlspecialchars((string) $entry['EntryID']) ?>">
+							<form id="refund-form-<?= htmlspecialchars((string) $entry['EntryID']) ?>" novalidate autocomplete="off">
 								<div class="row">
 									<div class="col-sm-5 col-md-4 col-lg-6">
-										<h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></h3>
+										<h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?></h3>
 
 										<?php if (!$entry['activeMember']) { ?>
 											<p>
@@ -162,7 +162,7 @@ include BASE_PATH . 'views/header.php';
 										<?php } ?>
 
 										<p class="mb-0">
-											<?= htmlspecialchars($entry['MForename']) ?> was entered in;
+											<?= htmlspecialchars((string) $entry['MForename']) ?> was entered in;
 										</p>
 										<ul class="list-unstyled">
 											<?php $count = 0; ?>
@@ -186,7 +186,7 @@ include BASE_PATH . 'views/header.php';
 										<div class="d-sm-none mb-3"></div>
 										<?php if ($entry['Intent'] != null && bool($entry['StripePaid'])) { ?>
 											<p>
-												<strong><i class="fa <?= htmlspecialchars(getCardFA($entry['Brand'])) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($entry['Brand'])) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($entry['Last4']) ?></strong>
+												<strong><i class="fa <?= htmlspecialchars((string) getCardFA($entry['Brand'])) ?>" aria-hidden="true"></i> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($entry['Brand'])) ?></span> &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $entry['Last4']) ?></strong>
 											</p>
 										<?php } ?>
 
@@ -208,7 +208,7 @@ include BASE_PATH . 'views/header.php';
 											</p>
 										<?php } else if ($entry['Intent'] != null && $amountRefundable > 0 && bool($entry['StripePaid'])) { ?>
 											<p>
-												This entry will be refunded to <?= htmlspecialchars(getCardBrand($entry['Brand'])) ?> <span class="font-monospace"><?= htmlspecialchars($entry['Last4']) ?></span>.
+												This entry will be refunded to <?= htmlspecialchars((string) getCardBrand($entry['Brand'])) ?> <span class="font-monospace"><?= htmlspecialchars((string) $entry['Last4']) ?></span>.
 											</p>
 										<?php } else if ($amountRefundable > 0) { ?>
 											<p>
@@ -266,7 +266,7 @@ include BASE_PATH . 'views/header.php';
 												<div class="col-12 mt-3">
 													<span id="<?= $entry['EntryID'] ?>-refund-error-warning-box"></span>
 													<p class="mb-0">
-														<button type="button" id="<?= $entry['EntryID'] ?>-refund-button" class="refund-button btn btn-primary" data-entry-id="<?= $entry['EntryID'] ?>" data-refund-location="<?= htmlspecialchars($refundSource) ?>" data-swimmer-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>">
+														<button type="button" id="<?= $entry['EntryID'] ?>-refund-button" class="refund-button btn btn-primary" data-entry-id="<?= $entry['EntryID'] ?>" data-refund-location="<?= htmlspecialchars($refundSource) ?>" data-swimmer-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry['MForename'], $entry['MSurname'])) ?>">
 															Refund
 														</button>
 													</p>

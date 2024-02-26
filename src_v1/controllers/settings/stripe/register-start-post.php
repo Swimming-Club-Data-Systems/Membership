@@ -25,11 +25,11 @@ $user = $getUser->fetch(PDO::FETCH_ASSOC);
 if (!$user) halt(404);
 
 // Validate password
-if (!password_verify($_POST['password'], $user['Password'])) {
+if (!password_verify((string) $_POST['password'], (string) $user['Password'])) {
   // Invalid
   $_SESSION['STRIPE_INVALID_PASSWORD'] = true;
   http_response_code(302);
-  header("Location: " . autoUrl('services/stripe/connect?tenant=' . urlencode($tenant->getUUID()) . '&user=' . urlencode($_GET['user'])));
+  header("Location: " . autoUrl('services/stripe/connect?tenant=' . urlencode($tenant->getUUID()) . '&user=' . urlencode((string) $_GET['user'])));
 } else {
 
 

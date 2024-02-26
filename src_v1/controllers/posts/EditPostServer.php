@@ -17,7 +17,7 @@ $data = [
 	$_POST['content'],
 	$_POST['title'],
 	$_POST['excerpt'],
-	trim($_POST['path'], " \t\n\r\0\x0B/"),
+	trim((string) $_POST['path'], " \t\n\r\0\x0B/"),
 	$_POST['type'],
 	$_POST['mime']
 ];
@@ -27,7 +27,7 @@ $data[] = $id;
 try {
 	$update = $db->prepare("UPDATE `posts` SET `Content` = ?, `Title` = ?, `Excerpt` = ?, `Path` = ?, `Type` = ?, `MIME` = ? WHERE `ID` = ?");
 	$update->execute($data);
-} catch (PDOException $e) {
+} catch (PDOException) {
 	halt(500);
 }
 

@@ -10,7 +10,7 @@ if (app('request')->protocol == 'http') {
   $secure = false;
 }
 
-setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', "", 0, "/", app('request')->hostname('request')->hostname, $secure, false);
+setcookie(COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin', "", ['expires' => 0, 'path' => "/", 'domain' => (string) app('request')->hostname('request')->hostname, 'secure' => $secure, 'httponly' => false]);
 
 if (isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'AutoLogin'])) {
   // Unset the hash.
@@ -24,7 +24,7 @@ if (isset($_COOKIE[COOKIE_PREFIX . 'TENANT-' . app()->tenant->getId() . '-' . 'A
 }
 
 session_destroy();
-setcookie(COOKIE_PREFIX . 'TenantSessionId', "", 0, "/", app('request')->hostname('request')->hostname, $secure, false);
+setcookie(COOKIE_PREFIX . 'TenantSessionId', "", ['expires' => 0, 'path' => "/", 'domain' => (string) app('request')->hostname('request')->hostname, 'secure' => $secure, 'httponly' => false]);
 
 if (isset($_GET['redirect'])) {
   header("location: " . $_GET['redirect']);

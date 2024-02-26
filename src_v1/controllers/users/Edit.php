@@ -38,15 +38,15 @@ include BASE_PATH . 'views/header.php';
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users")) ?>">Users</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("users/" . $id)) ?>"><?= htmlspecialchars(mb_substr($info["Forename"], 0, 1, 'utf-8') . mb_substr($info["Surname"], 0, 1, 'utf-8')) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users")) ?>">Users</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("users/" . $id)) ?>"><?= htmlspecialchars(mb_substr((string) $info["Forename"], 0, 1, 'utf-8') . mb_substr((string) $info["Surname"], 0, 1, 'utf-8')) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">
           Edit
         </li>
       </ol>
     </nav>
 
-    <h1>Edit <?= htmlspecialchars($info['Forename']) ?></h1>
+    <h1>Edit <?= htmlspecialchars((string) $info['Forename']) ?></h1>
     <p class="lead mb-0">Edit personal details, membership options and more</p>
   </div>
 
@@ -99,7 +99,7 @@ include BASE_PATH . 'views/header.php';
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="first-name">First name</label>
-              <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First" value="<?= htmlspecialchars($info['Forename']) ?>" required>
+              <input type="text" class="form-control" id="first-name" name="first-name" placeholder="First" value="<?= htmlspecialchars((string) $info['Forename']) ?>" required>
               <div class="invalid-feedback">
                 Please provide a first name.
               </div>
@@ -108,7 +108,7 @@ include BASE_PATH . 'views/header.php';
           <div class="col">
             <div class="mb-3">
               <label class="form-label" for="last-name">Last name</label>
-              <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last" value="<?= htmlspecialchars($info['Surname']) ?>" required>
+              <input type="text" class="form-control" id="last-name" name="last-name" placeholder="Last" value="<?= htmlspecialchars((string) $info['Surname']) ?>" required>
               <div class="invalid-feedback">
                 Please provide a surname name.
               </div>
@@ -118,7 +118,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="email-address">Email address</label>
-          <input type="email" class="form-control" id="email-address" name="email-address" value="<?= htmlspecialchars($info['EmailAddress']) ?>" required data-valid="true" data-ajax-url="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit/email")) ?>">
+          <input type="email" class="form-control" id="email-address" name="email-address" value="<?= htmlspecialchars((string) $info['EmailAddress']) ?>" required data-valid="true" data-ajax-url="<?= htmlspecialchars((string) autoUrl("users/" . $id . "/edit/email")) ?>">
           <div class="invalid-feedback" id="email-error-message">
             Please provide a valid email address.
           </div>
@@ -126,7 +126,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="mobile-phone">Mobile</label>
-          <input type="tel" class="form-control" id="mobile-phone" name="mobile-phone" value="<?= htmlspecialchars($info['Mobile']) ?>" aria-describedby="phone-help" required>
+          <input type="tel" class="form-control" id="mobile-phone" name="mobile-phone" value="<?= htmlspecialchars((string) $info['Mobile']) ?>" aria-describedby="phone-help" required>
           <small id="phone-help" class="form-text text-muted">You must use a UK phone number.</small>
           <div class="invalid-feedback">
             Please provide a mobile number.
@@ -137,7 +137,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <p>
-            Select access permissions for <?= htmlspecialchars($info['Forename']) ?>
+            Select access permissions for <?= htmlspecialchars((string) $info['Forename']) ?>
           </p>
           <div class="form-switch mb-2">
             <input class="form-check-input" type="checkbox" id="permissions-parent" name="permissions-parent" value="1" <?= selected($userObject, 'Parent') ?>>

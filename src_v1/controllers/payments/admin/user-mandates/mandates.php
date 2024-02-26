@@ -15,7 +15,7 @@ include BASE_PATH . 'views/header.php';
       </p>
 
       <p>
-        To view a user's mandates, please <a href="<?=htmlspecialchars(autoUrl("users"))?>">navigate to the user</a> and select <strong>Mandates</strong>.
+        To view a user's mandates, please <a href="<?=htmlspecialchars((string) autoUrl("users"))?>">navigate to the user</a> and select <strong>Mandates</strong>.
       </p>
     </div>
   </div>

@@ -84,7 +84,7 @@ include BASE_PATH . "views/notifyMenu.php";
       <?php } ?>
 
       <p class="small">
-        Provided by Swimming Club Data Systems to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.
+        Provided by Swimming Club Data Systems to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.
       </p>
     </div>
 

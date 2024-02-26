@@ -90,7 +90,7 @@ include BASE_PATH . 'views/header.php';
         $swimmer['TrialEnd'] != null && $swimmer['TrialEnd'] != "") { ?>
         <p class="mb-0"><strong>Trial Appointment Time</strong></p>
         <p>
-          <?=date("H:i, j F Y", strtotime($swimmer['TrialStart']))?> - <?=date("H:i, j F Y", strtotime($swimmer['TrialEnd']))?>
+          <?=date("H:i, j F Y", strtotime((string) $swimmer['TrialStart']))?> - <?=date("H:i, j F Y", strtotime((string) $swimmer['TrialEnd']))?>
         </p>
         <?php } else { ?>
         <p>
@@ -132,7 +132,7 @@ include BASE_PATH . 'views/header.php';
           <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == "Admin") { ?>
           <dt class="col-md-4 col-lg-3">Date of Birth</dt>
           <dd class="col-md-8 col-lg-9">
-            <?=date("j F Y", strtotime($swimmer['DoB']))?>
+            <?=date("j F Y", strtotime((string) $swimmer['DoB']))?>
           </dd>
           <?php } ?>
 

@@ -17,7 +17,7 @@ try {
 
   app()->tenant->setKey('SquadFeeMonths', json_encode($exemptMonths));
   $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Success'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['Update-Error'] = true;
 }
 

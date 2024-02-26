@@ -39,7 +39,7 @@ if (app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) {
     $ddi = new stdClass();
     $good = true;
     $ddi->last4 = $mandate['Last4'];
-    $ddi->sortCode = implode("-", str_split($mandate['SortCode'], 2));
+    $ddi->sortCode = implode("-", str_split((string) $mandate['SortCode'], 2));
   }
 } else if ($tenant->getGoCardlessAccessToken()) {
   $good = userHasMandates($user->getId());
@@ -57,9 +57,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -93,7 +93,7 @@ include BASE_PATH . "views/head.php";
                 <strong>We've started setting up your direct debit instruction</strong>
               </p>
               <p class="mb-0">
-                Account <?= htmlspecialchars($_SESSION['SetupMandateSuccess']['SortCode']) ?>, <?= htmlspecialchars($_SESSION['SetupMandateSuccess']['Last4']) ?>
+                Account <?= htmlspecialchars((string) $_SESSION['SetupMandateSuccess']['SortCode']) ?>, <?= htmlspecialchars((string) $_SESSION['SetupMandateSuccess']['Last4']) ?>
               </p>
             </div>
           <?php } ?>
@@ -104,7 +104,7 @@ include BASE_PATH . "views/head.php";
                 <strong>You already have a Direct Debit Instruction set up</strong>
               </p>
               <p class="">
-                Account <?= htmlspecialchars($ddi->sortCode) ?>, ****<?= htmlspecialchars($ddi->last4) ?>
+                Account <?= htmlspecialchars((string) $ddi->sortCode) ?>, ****<?= htmlspecialchars((string) $ddi->last4) ?>
               </p>
 
               <p class="mb-0">
@@ -131,7 +131,7 @@ include BASE_PATH . "views/head.php";
           <?php if (getenv('STRIPE') && app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') && !$good) { ?>
             <!-- STRIPE -->
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/stripe/set-up')) ?>" class="btn btn-success">Set up now</a>
+              <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go/direct-debit/stripe/set-up')) ?>" class="btn btn-success">Set up now</a>
             </p>
 
             <p>
@@ -140,7 +140,7 @@ include BASE_PATH . "views/head.php";
           <?php } else if ($tenant->getGoCardlessAccessToken() && !$good) { ?>
             <!-- GOCARDLESS -->
             <p>
-              <a href="<?= htmlspecialchars(autoUrl('onboarding/go/direct-debit/go-cardless/set-up')) ?>" class="btn btn-success">Set up now</a>
+              <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go/direct-debit/go-cardless/set-up')) ?>" class="btn btn-success">Set up now</a>
             </p>
 
             <p>

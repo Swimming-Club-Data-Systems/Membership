@@ -26,7 +26,7 @@ $date = new DateTime('now', new DateTimeZone('Europe/London'));
     <div class="col-6">
       <div class="mb-3">
         <label class="form-label" for="payment-name">Surname</label>
-        <input type="text" class="font-monospace form-control" id="payment-name" name="payment-name" aria-describedby="payment-name-help" placeholder="eg <?=htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['Surname'])?>">
+        <input type="text" class="font-monospace form-control" id="payment-name" name="payment-name" aria-describedby="payment-name-help" placeholder="eg <?=htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['Surname'])?>">
         <small id="payment-date-help" class="form-text text-muted">
           Enter the surname of the name shown on your bank statement*
         </small>

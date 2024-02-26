@@ -22,8 +22,8 @@ if ($info == null) {
 
 try {
 
-  $email = trim(mb_convert_case($_POST['email-address'], MB_CASE_LOWER));
-  $mobile = trim($_POST['mobile-phone']);
+  $email = trim(mb_convert_case((string) $_POST['email-address'], MB_CASE_LOWER));
+  $mobile = trim((string) $_POST['mobile-phone']);
 
   if (!v::email()->validate($email)) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['InvalidEmail'] = true;
@@ -45,15 +45,15 @@ try {
   try {
     $mobile = PhoneNumber::parse($mobile, 'GB');
     $mobile = $mobile->format(PhoneNumberFormat::E164);
-  } catch (PhoneNumberParseException $e) {
+  } catch (PhoneNumberParseException) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['InvalidPhone'] = true;
     throw new Exception();
   }
 
   $update = $db->prepare("UPDATE users SET Forename = ?, Surname = ?, EmailAddress = ?, Mobile = ? WHERE UserID = ?");
   $update->execute([
-    trim(mb_convert_case($_POST['first-name'], MB_CASE_TITLE_SIMPLE)),
-    trim(mb_convert_case($_POST['last-name'], MB_CASE_TITLE_SIMPLE)),
+    trim(mb_convert_case((string) $_POST['first-name'], MB_CASE_TITLE_SIMPLE)),
+    trim(mb_convert_case((string) $_POST['last-name'], MB_CASE_TITLE_SIMPLE)),
     $email,
     $mobile,
     $id,
@@ -104,7 +104,7 @@ try {
   }
 
   $_SESSION['TENANT-' . app()->tenant->getId()]['Success'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   // reportError($e);
   $_SESSION['TENANT-' . app()->tenant->getId()]['GeneralError'] = true;
 }

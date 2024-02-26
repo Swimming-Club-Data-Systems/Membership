@@ -5,7 +5,7 @@ http_response_code(500);
 if (isset($e)) {
   try {
     reportError($e);
-  } catch (Exception | Error $e) {
+  } catch (Exception | Error) {
     // Ignore
   }
 }

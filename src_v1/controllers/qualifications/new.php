@@ -14,7 +14,7 @@ include BASE_PATH . 'views/header.php';
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('qualifications')) ?>">Qualifications</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('qualifications')) ?>">Qualifications</a></li>
         <li class="breadcrumb-item active" aria-current="page">New</li>
       </ol>
     </nav>
@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
             <strong>Error</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['FormError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['FormError']);

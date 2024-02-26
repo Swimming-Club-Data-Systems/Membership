@@ -43,8 +43,8 @@ include BASE_PATH . "views/root/head.php";
             <div class="card card-body text-dark mb-0" id="central-card">
               <div class="row align-items-center mb-3">
                 <div class="col-auto">
-                  <a href="<?= htmlspecialchars(autoUrl("", false)) ?>">
-                  <img src="<?= htmlspecialchars(autoUrl("img/corporate/scds.png")) ?>" class="img-fluid rounded" style="height: 75px;">
+                  <a href="<?= htmlspecialchars((string) autoUrl("", false)) ?>">
+                  <img src="<?= htmlspecialchars((string) autoUrl("img/corporate/scds.png")) ?>" class="img-fluid rounded" style="height: 75px;">
                   </a>
                 </div>
                 <div class="col-auto">
@@ -57,10 +57,10 @@ include BASE_PATH . "views/root/head.php";
                 Sign in with your <?= htmlspecialchars($selectedClub) ?> account.
               </p>
 
-              <form action="<?= htmlspecialchars(autoUrl($club->getCodeId() . "/login", false)) ?>" method="post" id="login-form" class="needs-validation" novalidate data-prefilled="<?= htmlspecialchars((int) isset($_GET['user'])) ?>" data-ajax-login-url="<?= htmlspecialchars(autoUrl("login", false)) ?>" data-ajax-two-factor-url="<?= htmlspecialchars(autoUrl("login/2fa", false)) ?>">
+              <form action="<?= htmlspecialchars((string) autoUrl($club->getCodeId() . "/login", false)) ?>" method="post" id="login-form" class="needs-validation" novalidate data-prefilled="<?= htmlspecialchars((int) isset($_GET['user'])) ?>" data-ajax-login-url="<?= htmlspecialchars((string) autoUrl("login", false)) ?>" data-ajax-two-factor-url="<?= htmlspecialchars((string) autoUrl("login/2fa", false)) ?>">
                 <div class="mb-3">
                   <label class="form-label" for="email-address">Email address</label>
-                  <input type="email" class="form-control form-control-lg text-lowercase" id="email-address" name="email-address" placeholder="yourname@example.com" required autocomplete="email" <?php if (isset($_GET['user'])) { ?>value="<?= htmlspecialchars(urldecode($_GET['user'])) ?>" <?php } else { ?> autofocus <?php } ?>>
+                  <input type="email" class="form-control form-control-lg text-lowercase" id="email-address" name="email-address" placeholder="yourname@example.com" required autocomplete="email" <?php if (isset($_GET['user'])) { ?>value="<?= htmlspecialchars(urldecode((string) $_GET['user'])) ?>" <?php } else { ?> autofocus <?php } ?>>
                 </div>
 
                 <div class="mb-3">
@@ -68,7 +68,7 @@ include BASE_PATH . "views/root/head.php";
                   <input type="password" name="password" id="password" class="form-control form-control-lg" required placeholder="Password" autocomplete="current-password" <?php if (isset($_GET['user'])) { ?> autofocus <?php } ?>>
                 </div>
 
-                <input type="hidden" name="target" value="<?= htmlspecialchars($target) ?>">
+                <input type="hidden" name="target" value="<?= htmlspecialchars((string) $target) ?>">
 
                 <div class="mb-3">
                   <div class="form-check">
@@ -87,7 +87,7 @@ include BASE_PATH . "views/root/head.php";
                     Sign in
                   </button>
 
-                  <a class="btn btn-light btn-lg" id="cancel" href="<?= htmlspecialchars(autoUrl("", false)) ?>">
+                  <a class="btn btn-light btn-lg" id="cancel" href="<?= htmlspecialchars((string) autoUrl("", false)) ?>">
                     Cancel
                   </a>
                 </p>
@@ -100,7 +100,7 @@ include BASE_PATH . "views/root/head.php";
               </p>
 
               <p class="mb-0">
-                <a class="btn btn-light" id="find-account" href="<?= htmlspecialchars(autoUrl($club->getCodeId() . "/resetpassword", false)) ?>">
+                <a class="btn btn-light" id="find-account" href="<?= htmlspecialchars((string) autoUrl($club->getCodeId() . "/resetpassword", false)) ?>">
                   Find account
                 </a>
               </p>

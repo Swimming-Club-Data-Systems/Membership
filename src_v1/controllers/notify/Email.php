@@ -73,7 +73,7 @@ function fieldChecked($name)
 function fieldValue($name)
 {
   if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name])) {
-    return 'value="' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
+    return 'value="' . htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData'][$name]) . '"';
   }
 }
 
@@ -95,7 +95,7 @@ include BASE_PATH . "views/notifyMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("notify")) ?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("notify")) ?>">Notify</a></li>
       <li class="breadcrumb-item active" aria-current="page">Composer</li>
     </ol>
   </nav>
@@ -105,7 +105,7 @@ include BASE_PATH . "views/notifyMenu.php";
 
   <div class="alert alert-info">
     <p class="mb-0">
-      <a href="<?= htmlspecialchars(autoUrl("notify/new/react")) ?>" class="alert-link">Take a look at the new notify composer</a> and give us feedback before we launch it.
+      <a href="<?= htmlspecialchars((string) autoUrl("notify/new/react")) ?>" class="alert-link">Take a look at the new notify composer</a> and give us feedback before we launch it.
     </p>
   </div>
 
@@ -160,7 +160,7 @@ include BASE_PATH . "views/notifyMenu.php";
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="TL-<?= $list['ID'] ?>" name="TL-<?= $list['ID'] ?>" value="1" <?= fieldChecked('TL-' . $list['ID']) ?>>
               <label class="form-check-label" for="TL-<?= $list['ID'] ?>">
-                <?= htmlspecialchars($list['Name']) ?>
+                <?= htmlspecialchars((string) $list['Name']) ?>
               </label>
             </div>
           </div>
@@ -195,7 +195,7 @@ include BASE_PATH . "views/notifyMenu.php";
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="<?= $squad['SquadID'] ?>" name="<?= $squad['SquadID'] ?>" value="1" <?= fieldChecked($squad['SquadID']) ?>>
               <label class="form-check-label" for="<?= $squad['SquadID'] ?>">
-                <?= htmlspecialchars($squad['SquadName']) ?>
+                <?= htmlspecialchars((string) $squad['SquadName']) ?>
               </label>
             </div>
           </div>
@@ -212,7 +212,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="GALA-<?= $gala['GalaID'] ?>" name="GALA-<?= $gala['GalaID'] ?>" value="1" <?= fieldChecked('GALA-' . $gala['GalaID']) ?>>
                 <label class="form-check-label" for="GALA-<?= $gala['GalaID'] ?>">
-                  <?= htmlspecialchars($gala['GalaName']) ?>
+                  <?= htmlspecialchars((string) $gala['GalaName']) ?>
                 </label>
               </div>
             </div>
@@ -227,7 +227,7 @@ include BASE_PATH . "views/notifyMenu.php";
           <label class="form-label" for="from">Send message as</label>
           <div class="form-check">
             <input type="radio" id="from-club" name="from" class="form-check-input" value="club-sending-account" <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != 'Parent') { ?>checked<?php } ?> required>
-            <label class="form-check-label" for="from-club"><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></label>
+            <label class="form-check-label" for="from-club"><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></label>
           </div>
           <div class="form-check">
             <input type="radio" id="from-user" name="from" class="form-check-input" value="current-user" <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Parent') { ?>checked<?php } ?>>
@@ -251,7 +251,7 @@ include BASE_PATH . "views/notifyMenu.php";
             <label class="form-check-label" for="ReplyTo-Me">My reply-to email address</label>
           </div>
           <small class="form-text text-muted">
-            <a href="<?= htmlspecialchars(autoUrl("notify/reply-to")) ?>" target="_blank">Manage reply-to address</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("notify/reply-to")) ?>" target="_blank">Manage reply-to address</a>
           </small>
           <div class="invalid-feedback">
             Choose a reply-to address
@@ -276,7 +276,7 @@ include BASE_PATH . "views/notifyMenu.php";
           <span class="font-monospace">User Name</span>,".
         </em>
       </p>
-      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars(autoUrl("public/css/tinymce.css")) ?>" data-document-base-url="<?= htmlspecialchars(autoUrl("notify/new/")) ?>" data-images-upload-url="<?= htmlspecialchars(autoUrl("notify/new/image-upload")) ?>" required><?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message'])) { ?><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message']) ?><?php } ?></textarea>
+      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars((string) autoUrl("public/css/tinymce.css")) ?>" data-document-base-url="<?= htmlspecialchars((string) autoUrl("notify/new/")) ?>" data-images-upload-url="<?= htmlspecialchars((string) autoUrl("notify/new/image-upload")) ?>" required><?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message'])) { ?><?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyPostData']['message']) ?><?php } ?></textarea>
     </div>
 
     <input type="hidden" name="MAX_FILE_SIZE" value="10485760">
@@ -297,7 +297,7 @@ include BASE_PATH . "views/notifyMenu.php";
     <input type="hidden" name="email-attachments" id="email-attachments" value="<?= htmlspecialchars(json_encode($attachments)) ?>">
 
     <label class="form-label">Add attachments</label>
-    <div class="upload-drop card card-body mb-3" id="upload-zone" data-action="<?= htmlspecialchars(autoUrl('notify/file-uploads')) ?>" data-uuid="<?= htmlspecialchars($uuid) ?>" data-date="<?= htmlspecialchars($date) ?>" data-max-total-file-size="10" data-max-total-file-size-bytes="10485760" data-max-file-size-bytes="10485760">
+    <div class="upload-drop card card-body mb-3" id="upload-zone" data-action="<?= htmlspecialchars((string) autoUrl('notify/file-uploads')) ?>" data-uuid="<?= htmlspecialchars($uuid) ?>" data-date="<?= htmlspecialchars($date) ?>" data-max-total-file-size="10" data-max-total-file-size-bytes="10485760" data-max-file-size-bytes="10485760">
       <div class="dz-message d-flex flex-column text-center py-2">
         <i class="fa fa-cloud-upload fa-3x" aria-hidden="true"></i>
         Drag &amp; Drop attachments here or click to browse for files
@@ -335,7 +335,7 @@ include BASE_PATH . "views/notifyMenu.php";
       <select class="form-select" id="subscription-category" name="subscription-category" aria-describedby="subscription-category-help">
         <option value="DEFAULT" selected>Notify</option>
         <?php while ($category = $getCategories->fetch(PDO::FETCH_OBJ)) { ?>
-          <option value="<?= htmlspecialchars($category->id) ?>"><?= htmlspecialchars($category->name) ?></option>
+          <option value="<?= htmlspecialchars((string) $category->id) ?>"><?= htmlspecialchars((string) $category->name) ?></option>
         <?php } ?>
       </select>
       <small id="subscription-category-help" class="form-text text-muted">

@@ -40,7 +40,7 @@ $member = $getMembers->fetch(PDO::FETCH_OBJ);
 $getCurrentMemberships = $db->prepare("SELECT `Name` `name`, `Description` `description`, `Type` `type`, `memberships`.`Amount` `paid`, `clubMembershipClasses`.`Fees` `expectPaid` FROM `memberships` INNER JOIN clubMembershipClasses ON memberships.Membership = clubMembershipClasses.ID WHERE `Member` = ? AND `Year` = ?");
 $hasMembership = $db->prepare("SELECT COUNT(*) FROM memberships WHERE `Member` = ? AND `Year` = ? AND `Membership` = ?");
 
-$pagetitle = "New batch for " . htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " - " . htmlspecialchars($year['Name']) . " - Membership Centre";
+$pagetitle = "New batch for " . htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " - " . htmlspecialchars((string) $year['Name']) . " - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -51,8 +51,8 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">Onboarding</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("onboarding/a/$id")) ?>"><?= htmlspecialchars($session->getUser()->getName()) ?></a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>">Onboarding</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("onboarding/a/$id")) ?>"><?= htmlspecialchars((string) $session->getUser()->getName()) ?></a></li>
         <li class="breadcrumb-item active" aria-current="page">Fees</li>
       </ol>
     </nav>
@@ -60,14 +60,14 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          Membership fees for <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
+          Membership fees for <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
         </h1>
         <p class="lead mb-0">
-          For <?= htmlspecialchars($year['Name']) ?>
+          For <?= htmlspecialchars((string) $year['Name']) ?>
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl("onboarding/a/$id")) ?>" class="btn btn-warning">Cancel</a>
+        <a href="<?= htmlspecialchars((string) autoUrl("onboarding/a/$id")) ?>" class="btn btn-warning">Cancel</a>
       </div>
     </div>
   </div>
@@ -80,14 +80,14 @@ include BASE_PATH . "views/header.php";
 
       <form method="post" id="form">
 
-        <input type="hidden" name="year" value="<?= htmlspecialchars($_GET['year']) ?>">
+        <input type="hidden" name="year" value="<?= htmlspecialchars((string) $_GET['year']) ?>">
 
         <p class="lead">
           Welcome to the fee editor.
         </p>
 
         <p>
-          Select memberships to add for each member you are adding to <?= htmlspecialchars($info['Forename']) ?>'s account.
+          Select memberships to add for each member you are adding to <?= htmlspecialchars((string) $info['Forename']) ?>'s account.
         </p>
 
         <p>
@@ -112,19 +112,19 @@ include BASE_PATH . "views/header.php";
 
             ?>
               <li class="list-group-item">
-                <h2><?= htmlspecialchars(\SCDS\Formatting\Names::format($member->fn, $member->sn)) ?></h2>
+                <h2><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member->fn, $member->sn)) ?></h2>
 
-                <h3>Current Memberships for <?= htmlspecialchars($year['Name']) ?></h3>
+                <h3>Current Memberships for <?= htmlspecialchars((string) $year['Name']) ?></h3>
                 <?php if ($membership) { ?>
                   <ul class="mb-3">
                     <?php do { ?>
-                      <li><?= htmlspecialchars($membership->name) ?>, Paid <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->paid), 'GBP')) ?></li>
+                      <li><?= htmlspecialchars((string) $membership->name) ?>, Paid <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->paid), 'GBP')) ?></li>
                     <?php } while ($membership = $getCurrentMemberships->fetch(PDO::FETCH_OBJ)); ?>
                   </ul>
                 <?php } else { ?>
                   <div class="alert alert-warning">
                     <p class="mb-0">
-                      <strong><?= htmlspecialchars($member->fn) ?> has no existing memberships for <?= htmlspecialchars($year['Name']) ?></strong>
+                      <strong><?= htmlspecialchars((string) $member->fn) ?> has no existing memberships for <?= htmlspecialchars((string) $year['Name']) ?></strong>
                     </p>
                   </div>
                 <?php } ?>
@@ -149,7 +149,7 @@ include BASE_PATH . "views/header.php";
                 <?php if ($hasClub && $hasNgb) { ?>
                   <div class="alert alert-info mb-0">
                     <p class="mb-0">
-                      <strong>There are no additional memberships available for <?= htmlspecialchars($member->fn) ?></strong>
+                      <strong>There are no additional memberships available for <?= htmlspecialchars((string) $member->fn) ?></strong>
                     </p>
                   </div>
                 <?php } ?>
@@ -161,14 +161,14 @@ include BASE_PATH . "views/header.php";
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-yes') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-yes') ?>" data-type="membership-check" data-collapse-target="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-collapse') ?>">
                       <label class="form-check-label" for="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-yes') ?>">
-                        Add <?= htmlspecialchars($member->ngbName) ?>
+                        Add <?= htmlspecialchars((string) $member->ngbName) ?>
                       </label>
                     </div>
 
                     <div class="collapse pt-3" id="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-collapse') ?>">
 
                       <?php
-                      $fee = (json_decode($member->ngbFees))->fees[0];
+                      $fee = (json_decode((string) $member->ngbFees))->fees[0];
                       ?>
 
                       <div class="mb-3">
@@ -176,7 +176,7 @@ include BASE_PATH . "views/header.php";
                           <label for="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-amount') ?>" class="form-label">Fee</label>
                           <div class="input-group mb-3">
                             <span class="input-group-text">&pound;</span>
-                            <input type="num" class="form-control" id="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-amount') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-amount') ?>" min="0" step="0.01" placeholder="0" value="<?= htmlspecialchars(MoneyHelpers::intToDecimal(($fee))) ?>">
+                            <input type="num" class="form-control" id="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-amount') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->ngb . '-amount') ?>" min="0" step="0.01" placeholder="0" value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal(($fee))) ?>">
                           </div>
                         </div>
                       </div>
@@ -200,14 +200,14 @@ include BASE_PATH . "views/header.php";
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="" id="<?= htmlspecialchars($member->id . '-' . $member->club . '-yes') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->club . '-yes') ?>" data-type="membership-check" data-collapse-target="<?= htmlspecialchars($member->id . '-' . $member->club . '-collapse') ?>">
                       <label class="form-check-label" for="<?= htmlspecialchars($member->id . '-' . $member->club . '-yes') ?>">
-                        Add <?= htmlspecialchars($member->clubName) ?>
+                        Add <?= htmlspecialchars((string) $member->clubName) ?>
                       </label>
                     </div>
 
                     <div class="collapse pt-3" id="<?= htmlspecialchars($member->id . '-' . $member->club . '-collapse') ?>">
 
                       <?php
-                      $fee = (json_decode($member->clubFees))->fees[0];
+                      $fee = (json_decode((string) $member->clubFees))->fees[0];
                       ?>
 
                       <div class="mb-3">
@@ -215,7 +215,7 @@ include BASE_PATH . "views/header.php";
                           <label for="<?= htmlspecialchars($member->id . '-' . $member->club . '-amount') ?>" class="form-label">Fee</label>
                           <div class="input-group mb-3">
                             <span class="input-group-text">&pound;</span>
-                            <input type="num" class="form-control" id="<?= htmlspecialchars($member->id . '-' . $member->club . '-amount') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->club . '-amount') ?>" min="0" step="0.01" placeholder="0" value="<?= htmlspecialchars(MoneyHelpers::intToDecimal(($fee))) ?>">
+                            <input type="num" class="form-control" id="<?= htmlspecialchars($member->id . '-' . $member->club . '-amount') ?>" name="<?= htmlspecialchars($member->id . '-' . $member->club . '-amount') ?>" min="0" step="0.01" placeholder="0" value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal(($fee))) ?>">
                           </div>
                         </div>
                       </div>

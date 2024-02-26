@@ -85,14 +85,14 @@ try {
     if ($yearClub && isset($_POST['dd-club-bills-date'])) {
       try {
         $clubDate = (new DateTime($_POST['dd-club-bills-date'], new DateTimeZone('Europe/London')))->format('Y-m-d');
-      } catch (Exception $e) {
+      } catch (Exception) {
       }
     }
 
     if ($yearNgb && isset($_POST['dd-ngb-bills-date'])) {
       try {
         $ngbDate = (new DateTime($_POST['dd-ngb-bills-date'], new DateTimeZone('Europe/London')))->format('Y-m-d');
-      } catch (Exception $e) {
+      } catch (Exception) {
       }
     }
   }

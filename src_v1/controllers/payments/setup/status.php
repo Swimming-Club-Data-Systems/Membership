@@ -24,7 +24,7 @@ include BASE_PATH . "views/paymentsMenu.php";
       <h1>You've successfully set up your new direct debit.</h1>
       <p class="lead">GoCardless will appear on your bank statement when
         payments are taken against this Direct Debit.</p>
-      <p>GoCardless handles direct debit payments for <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+      <p>GoCardless handles direct debit payments for <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.</p>
       <?php if (isset($renewal_trap) && $renewal_trap) { ?>
       <a href="<?php echo autoUrl("renewal/go"); ?>" class="mb-3 btn btn-success">Continue registration or renewal</a>
       <?php } else { ?>

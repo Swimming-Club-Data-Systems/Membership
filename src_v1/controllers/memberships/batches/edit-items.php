@@ -52,14 +52,14 @@ ob_start();
     <div class="card card-body mb-2">
       <form class="needs-validation" novalidate id="<?= htmlspecialchars($item->id . '-form') ?>">
         <h3><?= htmlspecialchars($item->firstName . ' ' . $item->lastName) ?></h3>
-        <p class="lead"><?= htmlspecialchars($item->membershipName) ?></p>
+        <p class="lead"><?= htmlspecialchars((string) $item->membershipName) ?></p>
 
-        <input type="hidden" name="item-id" value="<?= htmlspecialchars($item->id) ?>">
+        <input type="hidden" name="item-id" value="<?= htmlspecialchars((string) $item->id) ?>">
 
         <div class="mb-3 row">
           <label for="<?= htmlspecialchars($item->id . '-membership-id') ?>" class="col-3 col-form-label">Membership ID</label>
           <div class="col-9">
-            <input type="text" class="form-control" id="<?= htmlspecialchars($item->id . '-membership-id') ?>" name="membership-id" value="<?= htmlspecialchars($item->membershipId) ?>" readonly>
+            <input type="text" class="form-control" id="<?= htmlspecialchars($item->id . '-membership-id') ?>" name="membership-id" value="<?= htmlspecialchars((string) $item->membershipId) ?>" readonly>
           </div>
         </div>
 
@@ -72,7 +72,7 @@ ob_start();
                 $start = new DateTime($year->start, new DateTimeZone('Europe/London'));
                 $end = new DateTime($year->end, new DateTimeZone('Europe/London'));
               ?>
-                <option <?php if ($item->yearId == $year->id) { ?>selected<?php } ?> value="<?= htmlspecialchars($year->id) ?>"><?= htmlspecialchars($year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
+                <option <?php if ($item->yearId == $year->id) { ?>selected<?php } ?> value="<?= htmlspecialchars((string) $year->id) ?>"><?= htmlspecialchars((string) $year->name) ?> (<?= htmlspecialchars($start->format('j M Y')) ?> - <?= htmlspecialchars($end->format('j M Y')) ?>)</option>
               <?php } ?>
             </select>
           </div>
@@ -83,7 +83,7 @@ ob_start();
           <div class="col-9">
             <div class="input-group">
               <span class="input-group-text" id="basic-addon1">&pound;</span>
-              <input type="number" class="form-control" id="<?= htmlspecialchars($item->id . '-amount') ?>" name="amount" min="0" step="0.01" value="<?= htmlspecialchars(MoneyHelpers::intToDecimal($item->amount)) ?>">
+              <input type="number" class="form-control" id="<?= htmlspecialchars($item->id . '-amount') ?>" name="amount" min="0" step="0.01" value="<?= htmlspecialchars((string) MoneyHelpers::intToDecimal($item->amount)) ?>">
             </div>
           </div>
         </div>
@@ -91,14 +91,14 @@ ob_start();
         <div class="mb-3 row">
           <label for="<?= htmlspecialchars($item->id . '-ngb-id') ?>" class="col-3 col-form-label">NGB ID</label>
           <div class="col-9">
-            <input type="text" class="form-control" id="<?= htmlspecialchars($item->id . '-ngb-id') ?>" name="ngb-id" value="<?= htmlspecialchars($item->ngbId) ?>" readonly>
+            <input type="text" class="form-control" id="<?= htmlspecialchars($item->id . '-ngb-id') ?>" name="ngb-id" value="<?= htmlspecialchars((string) $item->ngbId) ?>" readonly>
           </div>
         </div>
 
         <div class="mb-3 row">
           <label for="<?= htmlspecialchars($item->id . '-notes') ?>" class="col-3 col-form-label">Notes</label>
           <div class="col-9">
-            <textarea class="form-control" id="<?= htmlspecialchars($item->id . '-notes') ?>" name="notes"><?php if ($item->notes) { ?><?= htmlspecialchars($item->notes) ?><?php } ?></textarea>
+            <textarea class="form-control" id="<?= htmlspecialchars($item->id . '-notes') ?>" name="notes"><?php if ($item->notes) { ?><?= htmlspecialchars((string) $item->notes) ?><?php } ?></textarea>
           </div>
         </div>
 
@@ -115,7 +115,7 @@ ob_start();
           <button class="btn btn-success" type="submit" data-action="update">
             Save item
           </button>
-          <button class="btn btn-danger" type="button" data-action="delete" data-id="<?= htmlspecialchars($item->id) ?>">
+          <button class="btn btn-danger" type="button" data-action="delete" data-id="<?= htmlspecialchars((string) $item->id) ?>">
             Delete item
           </button>
         </p>

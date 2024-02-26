@@ -2,7 +2,7 @@
 
 $db = app()->db;
 
-$id = hexdec($id);
+$id = hexdec((string) $id);
 $hash_test = hash('sha256', $id);
 
 if ($hash != $hash_test) {
@@ -24,7 +24,7 @@ if ($query->fetchColumn() != 1) {
 try {
 	$query = $db->prepare("DELETE FROM `notifyAdditionalEmails` WHERE `ID` = ?");
 	$query->execute([$id]);
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }
 
@@ -35,11 +35,11 @@ include BASE_PATH . "views/header.php";?>
 	<h1>Successfully Unsubscribed</h1>
 	<p>You will no longer receive emails from this list.</p>
 	<p>
-		For further help and support with emails from <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, visit
+		For further help and support with emails from <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, visit
 		our <a href="<?=autoUrl("notify")?>">Notify Help Centre</a>.
 	</p>
 	<p>
-		Notify by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+		Notify by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>
 	</p>
 </div>
 

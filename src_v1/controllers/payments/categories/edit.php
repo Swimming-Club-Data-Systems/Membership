@@ -15,7 +15,7 @@ if (!$category) {
   halt(404);
 }
 
-$pagetitle = htmlspecialchars($category['Name']) . ' - Payment Categories';
+$pagetitle = htmlspecialchars((string) $category['Name']) . ' - Payment Categories';
 
 include BASE_PATH . 'views/header.php';
 
@@ -31,7 +31,7 @@ include BASE_PATH . 'views/header.php';
   </nav>
 
   <h1>
-    <?= htmlspecialchars($category['Name']) ?>
+    <?= htmlspecialchars((string) $category['Name']) ?>
   </h1>
 
   <div class="row">
@@ -68,7 +68,7 @@ include BASE_PATH . 'views/header.php';
               <strong>Error</strong>
             </p>
             <p class="mb-0">
-              <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError']) ?>
+              <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError']) ?>
             </p>
           </div>
         <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['SaveCategoryError']);
@@ -76,7 +76,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="category-name">Category name</label>
-          <input class="form-control" type="text" name="category-name" id="category-name" required value="<?= htmlspecialchars($category['Name']) ?>">
+          <input class="form-control" type="text" name="category-name" id="category-name" required value="<?= htmlspecialchars((string) $category['Name']) ?>">
           <div class="invalid-feedback">
             Please provide a name for this category.
           </div>
@@ -84,7 +84,7 @@ include BASE_PATH . 'views/header.php';
 
         <div class="mb-3">
           <label class="form-label" for="category-description">Category description</label>
-          <input class="form-control" type="text" name="category-description" id="category-description" required value="<?= htmlspecialchars($category['Description']) ?>">
+          <input class="form-control" type="text" name="category-description" id="category-description" required value="<?= htmlspecialchars((string) $category['Description']) ?>">
           <div class="invalid-feedback">
             Please provide a description for this category, such as what it is for.
           </div>
@@ -99,7 +99,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl("payments/categories/$id/remove")) ?>" class="btn btn-danger" title="Stop showing this category for new payments">Remove category from lists</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/categories/$id/remove")) ?>" class="btn btn-danger" title="Stop showing this category for new payments">Remove category from lists</a>
         </p>
 
       </form>

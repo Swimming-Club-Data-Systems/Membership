@@ -14,8 +14,8 @@ $parentCode = app()->tenant->getKey('ParentCodeOfConduct');
 
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
-$search  = array("\n##### ", "\n#### ", "\n### ", "\n## ", "\n# ");
-$replace = array("\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### ");
+$search  = ["\n##### ", "\n#### ", "\n### ", "\n## ", "\n# "];
+$replace = ["\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### "];
 
 $codeOfConduct = null;
 if ($parentCode != null && $parentCode != "") {
@@ -24,7 +24,7 @@ if ($parentCode != null && $parentCode != "") {
     $parentCode,
     $tenant->getId()
   ]);
-  $codeOfConduct = str_replace($search, $replace, $codeOfConduct->fetchColumn());
+  $codeOfConduct = str_replace($search, $replace, (string) $codeOfConduct->fetchColumn());
   if ($codeOfConduct[0] == '#') {
     $codeOfConduct = '##' . $codeOfConduct;
   }
@@ -65,9 +65,9 @@ include BASE_PATH . 'views/header.php';
                 Select an option
               </option>
               <?php while ($codeDetails = $codesOfConduct->fetch(PDO::FETCH_ASSOC)) { ?>
-              <option value="<?=htmlspecialchars($codeDetails['ID'])?>"
+              <option value="<?=htmlspecialchars((string) $codeDetails['ID'])?>"
                 <?php if ($parentCode == $codeDetails['ID']) { ?>selected<?php } ?>>
-                <?=htmlspecialchars($codeDetails['Title'])?>
+                <?=htmlspecialchars((string) $codeDetails['Title'])?>
               </option>
               <?php } ?>
             </select>

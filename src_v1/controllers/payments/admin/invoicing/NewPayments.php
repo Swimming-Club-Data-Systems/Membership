@@ -19,8 +19,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments/invoice-payments')) ?>">Invoicing</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments/invoice-payments')) ?>">Invoicing</a></li>
       <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
   </nav>
@@ -32,7 +32,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage'])) { ?>
         <div class="alert alert-success">
-          <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage']) ?>
+          <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage']) ?>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentSuccessMessage']);
       } ?>
@@ -40,7 +40,7 @@ include BASE_PATH . 'views/header.php';
       <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage'])) { ?>
         <div class="alert alert-danger">
           <p class="mb-0"><strong>An error occured and we have not added the payment</strong></p>
-          <p class="mb-0"><?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage']) ?></p>
+          <p class="mb-0"><?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage']) ?></p>
         </div>
       <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NewPaymentErrorMessage']);
       } ?>
@@ -48,13 +48,13 @@ include BASE_PATH . 'views/header.php';
       <form id="payment-form" method="post" class="needs-validation" novalidate>
         <div class="mb-3">
           <label class="form-label" for="user-first-name">User's name</label>
-          <input type="text" class="form-control" id="user-first-name" name="user-first-name" aria-describedby="user-first-name-help" data-ajax-url="<?= htmlspecialchars(autoUrl("payments/invoice-payments/new/search-users")) ?>">
+          <input type="text" class="form-control" id="user-first-name" name="user-first-name" aria-describedby="user-first-name-help" data-ajax-url="<?= htmlspecialchars((string) autoUrl("payments/invoice-payments/new/search-users")) ?>">
           <small id="user-first-name-help" class="form-text text-muted">Search for a user by name.</small>
         </div>
 
         <div class="mb-3">
           <label class="form-label" for="user-select">Select user</label>
-          <select class="form-select overflow-hidden" id="user-select" name="user-select" disabled data-ajax-url="<?= htmlspecialchars(autoUrl("payments/invoice-payments/new/get-user")) ?>">
+          <select class="form-select overflow-hidden" id="user-select" name="user-select" disabled data-ajax-url="<?= htmlspecialchars((string) autoUrl("payments/invoice-payments/new/get-user")) ?>">
             <option value="none" selected>Search for a user by name</option>
           </select>
           <small id="user-select-help" class="form-text text-muted">Pick a user from this drop down.</small>
@@ -98,7 +98,7 @@ include BASE_PATH . 'views/header.php';
               <?php } else { ?>
                 <option value="none" selected>Uncategorised</option>
                 <?php do { ?>
-                  <option value="<?= htmlspecialchars($category['UniqueID']) ?>"><?= htmlspecialchars($category['Name']) ?></option>
+                  <option value="<?= htmlspecialchars((string) $category['UniqueID']) ?>"><?= htmlspecialchars((string) $category['Name']) ?></option>
                 <?php } while ($category = $categories->fetch(PDO::FETCH_ASSOC)); ?>
               <?php } ?>
             </select>

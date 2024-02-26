@@ -43,14 +43,14 @@ include BASE_PATH . 'views/header.php';
   <div class="container-xl">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('qualifications')) ?>">Qualifications</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('qualifications')) ?>">Qualifications</a></li>
         <li class="breadcrumb-item active" aria-current="page">View</li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
-        <h1><?= htmlspecialchars($qualification['Name']) ?></h1>
+        <h1><?= htmlspecialchars((string) $qualification['Name']) ?></h1>
         <p class="lead mb-0">
           Qualification details
         </p>
@@ -58,8 +58,8 @@ include BASE_PATH . 'views/header.php';
       </div>
       <div class="col-auto ms-lg-auto">
         <div class="btn-group">
-          <a href="<?= htmlspecialchars(autoUrl("qualifications/$id/edit")) ?>" class="btn btn-success">Edit</a>
-          <!-- <a href="<?= htmlspecialchars(autoUrl("qualifications/$id/remove")) ?>" class="btn btn-danger" title="Remove this qualification for new additions">Remove</a> -->
+          <a href="<?= htmlspecialchars((string) autoUrl("qualifications/$id/edit")) ?>" class="btn btn-success">Edit</a>
+          <!-- <a href="<?= htmlspecialchars((string) autoUrl("qualifications/$id/remove")) ?>" class="btn btn-danger" title="Remove this qualification for new additions">Remove</a> -->
         </div>
       </div>
     </div>
@@ -99,8 +99,8 @@ include BASE_PATH . 'views/header.php';
       <?php if ($member) { ?>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl('members/' . $member['MemberID'] . '#qualifications')) ?>" class="list-group-item list-group-item-action">
-              <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>
+            <a href="<?= htmlspecialchars((string) autoUrl('members/' . $member['MemberID'] . '#qualifications')) ?>" class="list-group-item list-group-item-action">
+              <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>
             </a>
           <?php } while ($member = $getMembers->fetch(PDO::FETCH_ASSOC)); ?>
         </div>
@@ -117,7 +117,7 @@ include BASE_PATH . 'views/header.php';
 
       <h2>Expiry</h2>
       <?php if ($expiry->expires) { ?>
-        <p>This qualification usually expires after <?= htmlspecialchars($expiry->expiry_schedule->value) ?> <?= htmlspecialchars($expiry->expiry_schedule->type) ?></p>
+        <p>This qualification usually expires after <?= htmlspecialchars((string) $expiry->expiry_schedule->value) ?> <?= htmlspecialchars((string) $expiry->expiry_schedule->type) ?></p>
       <?php } else { ?>
         <p>This qualification has no default expiry date.</p>
       <?php } ?>

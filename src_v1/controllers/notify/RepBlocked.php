@@ -35,7 +35,7 @@ include BASE_PATH . "views/notifyMenu.php";
       <p class="mt-2"><a href="mailto:support@myswimmingclub.uk" title="Support Hotline">Email</a> or <a href="tel:+441912494320">call SCDS on +44 191 249 4320</a> for help and support if the issue persists.</p>
 
       <p class="small">
-        Provided by Swimming Club Data Systems to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+        Provided by Swimming Club Data Systems to <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
       </p>
     </div>
 
@@ -45,10 +45,10 @@ include BASE_PATH . "views/notifyMenu.php";
           Rep tools
         </div>
         <div class="list-group list-group-flush">
-          <a href="<?= htmlspecialchars(autoUrl('squad-reps')) ?>" class="list-group-item list-group-item-action">Rep dashboard</a>
-          <a href="<?= htmlspecialchars(autoUrl('covid')) ?>" class="list-group-item list-group-item-action">COVID-19 tools</a>
-          <a href="<?= htmlspecialchars(autoUrl('squad-reps/list')) ?>" class="list-group-item list-group-item-action">List of reps</a>
-          <a href="<?= htmlspecialchars(autoUrl('squad-reps/contact-details')) ?>" class="list-group-item list-group-item-action">My contact details</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('squad-reps')) ?>" class="list-group-item list-group-item-action">Rep dashboard</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('covid')) ?>" class="list-group-item list-group-item-action">COVID-19 tools</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('squad-reps/list')) ?>" class="list-group-item list-group-item-action">List of reps</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('squad-reps/contact-details')) ?>" class="list-group-item list-group-item-action">My contact details</a>
 
         </div>
       </div>

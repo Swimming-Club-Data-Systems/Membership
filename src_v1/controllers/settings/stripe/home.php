@@ -51,7 +51,7 @@ if (isset($stripeAccount->business_profile->support_phone)) {
 try {
     $number = \Brick\PhoneNumber\PhoneNumber::parse((string)$phone);
     $phone = $number->formatForCallingFrom('GB');
-} catch (Exception $e) {
+} catch (Exception) {
 }
 
 include BASE_PATH . 'views/header.php';
@@ -95,7 +95,7 @@ include BASE_PATH . 'views/header.php';
                                 <strong>We were unable to connect your Stripe Account</strong>
                             </p>
                             <p class="mb-0">
-                                <a href="<?= htmlspecialchars(autoUrl("settings/stripe/register")) ?>"
+                                <a href="<?= htmlspecialchars((string) autoUrl("settings/stripe/register")) ?>"
                                    class="alert-link">Try again now</a> or try again later.
                             </p>
                         </div>
@@ -109,7 +109,7 @@ include BASE_PATH . 'views/header.php';
                         </h2>
 
                         <p>
-                            Your Stripe account (<span class="font-monospace"><?= htmlspecialchars($at) ?></span>) is
+                            Your Stripe account (<span class="font-monospace"><?= htmlspecialchars((string) $at) ?></span>) is
                             currently connected.
                         </p>
 
@@ -119,35 +119,35 @@ include BASE_PATH . 'views/header.php';
 
                         <dl class="row">
                             <dt class="col-sm-3">Business name</dt>
-                            <dd class="col-sm-9"><?php if (isset($stripeAccount->business_profile->name)) { ?><?= htmlspecialchars($stripeAccount->business_profile->name) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9"><?php if (isset($stripeAccount->business_profile->name)) { ?><?= htmlspecialchars((string) $stripeAccount->business_profile->name) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Support email</dt>
-                            <dd class="col-sm-9"><?php if (isset($stripeAccount->business_profile->support_email)) { ?><?= htmlspecialchars($stripeAccount->business_profile->support_email) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9"><?php if (isset($stripeAccount->business_profile->support_email)) { ?><?= htmlspecialchars((string) $stripeAccount->business_profile->support_email) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Support phone</dt>
-                            <dd class="col-sm-9"><?php if ($phone) { ?><?= htmlspecialchars($phone) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9"><?php if ($phone) { ?><?= htmlspecialchars((string) $phone) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Support url</dt>
                             <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->business_profile->support_url)) { ?>
-                                    <a href="<?= htmlspecialchars($stripeAccount->business_profile->support_url) ?>"
-                                       target="_blank"><?= htmlspecialchars(trim(str_replace(['https://www.', 'http://www.', 'http://', 'https://'], '', $stripeAccount->business_profile->support_url), '/')) ?></a><?php } else { ?>Not set<?php } ?>
+                                    <a href="<?= htmlspecialchars((string) $stripeAccount->business_profile->support_url) ?>"
+                                       target="_blank"><?= htmlspecialchars(trim(str_replace(['https://www.', 'http://www.', 'http://', 'https://'], '', (string) $stripeAccount->business_profile->support_url), '/')) ?></a><?php } else { ?>Not set<?php } ?>
                             </dd>
 
                             <dt class="col-sm-3">Business url</dt>
                             <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->business_profile->url)) { ?>
-                                    <a href="<?= htmlspecialchars($stripeAccount->business_profile->url) ?>"
-                                       target="_blank"><?= htmlspecialchars(trim(str_replace(['https://www.', 'http://www.', 'http://', 'https://'], '', $stripeAccount->business_profile->url), '/')) ?></a><?php } else { ?>Not set<?php } ?>
+                                    <a href="<?= htmlspecialchars((string) $stripeAccount->business_profile->url) ?>"
+                                       target="_blank"><?= htmlspecialchars(trim(str_replace(['https://www.', 'http://www.', 'http://', 'https://'], '', (string) $stripeAccount->business_profile->url), '/')) ?></a><?php } else { ?>Not set<?php } ?>
                             </dd>
 
                             <dt class="col-sm-3">Statement descriptor</dt>
-                            <dd class="col-sm-9 font-monospace"><?php if (isset($stripeAccount->settings->payments->statement_descriptor)) { ?><?= htmlspecialchars($stripeAccount->settings->payments->statement_descriptor) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9 font-monospace"><?php if (isset($stripeAccount->settings->payments->statement_descriptor)) { ?><?= htmlspecialchars((string) $stripeAccount->settings->payments->statement_descriptor) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Short statement descriptor</dt>
-                            <dd class="col-sm-9 font-monospace"><?php if (isset($stripeAccount->settings->card_payments->statement_descriptor_prefix)) { ?><?= htmlspecialchars($stripeAccount->settings->card_payments->statement_descriptor_prefix) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9 font-monospace"><?php if (isset($stripeAccount->settings->card_payments->statement_descriptor_prefix)) { ?><?= htmlspecialchars((string) $stripeAccount->settings->card_payments->statement_descriptor_prefix) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Administrator email</dt>
                             <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->email)) { ?><a
-                                    href="mailto:<?= htmlspecialchars($stripeAccount->email) ?>"><?= htmlspecialchars($stripeAccount->email) ?></a><?php } else { ?>Not set<?php } ?>
+                                    href="mailto:<?= htmlspecialchars((string) $stripeAccount->email) ?>"><?= htmlspecialchars((string) $stripeAccount->email) ?></a><?php } else { ?>Not set<?php } ?>
                             </dd>
 
                             <dt class="col-sm-3">Details submitted</dt>
@@ -157,7 +157,7 @@ include BASE_PATH . 'views/header.php';
                             <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->payouts_enabled) && $stripeAccount->payouts_enabled) { ?>Yes<?php } else { ?>No<?php } ?></dd>
 
                             <dt class="col-sm-3">Country</dt>
-                            <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->country)) { ?><?= htmlspecialchars($countries[$stripeAccount->country]) ?><?php } else { ?>Not set<?php } ?></dd>
+                            <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->country)) { ?><?= htmlspecialchars((string) $countries[$stripeAccount->country]) ?><?php } else { ?>Not set<?php } ?></dd>
 
                             <dt class="col-sm-3">Default currency</dt>
                             <dd class="col-sm-9 text-truncate"><?php if (isset($stripeAccount->default_currency)) { ?><?= htmlspecialchars(mb_strtoupper($stripeAccount->default_currency)) ?> (SCDS Membership will always charge in GBP)<?php } else { ?>Not set<?php } ?></dd>

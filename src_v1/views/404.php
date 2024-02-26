@@ -27,7 +27,7 @@ if ($currentUser == null && false) {
       <h1 class="mb-0">
         <a href="<?= autoUrl("") ?>" class="<?= $clubLogoColour ?>">
           <strong>
-            <?= mb_strtoupper(htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))) ?>
+            <?= mb_strtoupper(htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))) ?>
           </strong>
         </a>
       </h1>
@@ -60,7 +60,7 @@ if ($currentUser == null && false) {
             </div>
             <div class="list-group list-group-flush">
               <?php
-              $url = rtrim(app('request')->curl, '/');
+              $url = rtrim((string) app('request')->curl, '/');
               $queries = app('request')->query;
               $i = 0;
               foreach ($queries as $key => $value) {
@@ -69,14 +69,14 @@ if ($currentUser == null && false) {
                 } else {
                   $url .= '&';
                 }
-                $url .= $key . '=' . urlencode($value);
+                $url .= $key . '=' . urlencode((string) $value);
               }
               ?>
               <?php foreach ($permissions as $permission) {
                 $disabled = $permission == $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
               ?>
-                <a href="<?= htmlspecialchars(autoUrl("account-switch?type=" . urlencode($permission) . "&redirect=" . urlencode($url))) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <?php if ($disabled) { ?>user-select-none disabled<?php } ?>">
-                  <?= htmlspecialchars($permission) ?> <?php if ($disabled) { ?><span>Current mode <i class="text-primary fa fa-check-circle fa-fw" aria-hidden="true"></i></span><?php } ?>
+                <a href="<?= htmlspecialchars((string) autoUrl("account-switch?type=" . urlencode((string) $permission) . "&redirect=" . urlencode($url))) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center <?php if ($disabled) { ?>user-select-none disabled<?php } ?>">
+                  <?= htmlspecialchars((string) $permission) ?> <?php if ($disabled) { ?><span>Current mode <i class="text-primary fa fa-check-circle fa-fw" aria-hidden="true"></i></span><?php } ?>
                 </a>
               <?php
               } ?>

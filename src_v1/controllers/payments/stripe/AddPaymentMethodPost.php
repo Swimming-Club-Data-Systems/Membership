@@ -17,7 +17,7 @@ if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId'])
         'stripe_account' => $tenant->getStripeAccount()
       ]
     );
-  } catch (Exception $e) {
+  } catch (Exception) {
     unset($_SESSION['TENANT-' . app()->tenant->getId()]['StripeSetupIntentId']);
     header("Location: " . autoUrl("payments/cards/add"));
     return;

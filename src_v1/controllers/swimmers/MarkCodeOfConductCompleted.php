@@ -64,7 +64,7 @@ include BASE_PATH . 'views/header.php';
 
   <p>
     Kind regards,<br>
-    The <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> Team.
+    The <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> Team.
   </p>
 
 <?php } ?>

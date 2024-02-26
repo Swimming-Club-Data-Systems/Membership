@@ -57,7 +57,7 @@ try {
   if ($changed) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSavedSuccessfully'] = true;
   }
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['CatChangesSaveError'] = true;
   $db->rollBack();
 }

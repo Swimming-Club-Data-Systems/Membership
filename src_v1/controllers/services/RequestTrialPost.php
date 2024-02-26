@@ -75,7 +75,7 @@ if ($isParent) {
   $swimmer = $parent;
 }
 
-$asa = trim($_POST['swimmer-asa']);
+$asa = trim((string) $_POST['swimmer-asa']);
 $biog_link = 'https://www.swimmingresults.org/biogs/biogs_details.php?tiref=' . $asa;
 
 $exp = "none";
@@ -137,7 +137,7 @@ if ($_POST['questions'] != "") {
 $email_club .= '<h2>What Next></h2>
 <p>Before replying, please wait a moment to check that this parent isn\'t applying for any more trials. Once you are sure of that, contact them by email to arrange a trial date. Head to ' . autoUrl("trials") . ' continue the trial process.</p>';
 
-$hash = sha1($_POST['email-addr']);
+$hash = sha1((string) $_POST['email-addr']);
 
 $forText = 'for ' . $swimmer;
 if ($isParent) {
@@ -146,9 +146,9 @@ if ($isParent) {
 
 $email_parent = '
 <p>Hello ' . $parent . '</p>
-<p>Thanks for your interest in a trial ' . $forText . ' at ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . '. We\'re working through your request and will get back to you as soon as we can.</p>';
+<p>Thanks for your interest in a trial ' . $forText . ' at ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . '. We\'re working through your request and will get back to you as soon as we can.</p>';
 
-$to_club = notifySend(null, 'New Trial Request', $email_club, 'Club Admins', htmlspecialchars(app()->tenant->getKey('CLUB_TRIAL_EMAIL')), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME'), 'Reply-To' => $_POST['email-addr']]);
+$to_club = notifySend(null, 'New Trial Request', $email_club, 'Club Admins', htmlspecialchars((string) app()->tenant->getKey('CLUB_TRIAL_EMAIL')), ["Email" => "noreply@" . getenv('EMAIL_DOMAIN'), "Name" => app()->tenant->getKey('CLUB_NAME'), 'Reply-To' => $_POST['email-addr']]);
 
 $to_parent = notifySend(null, 'Your Trial Request', $email_parent, $parent, $_POST['email-addr']);
 
@@ -161,9 +161,9 @@ if ($to_club && $to_parent) {
     $query = $db->prepare("INSERT INTO joinParents (Hash, First, Last, Email, Tenant) VALUES (?, ?, ?, ?, ?)");
     $query->execute([
       $hash,
-      htmlspecialchars(trim($_POST['forename'])),
-      htmlspecialchars(trim($_POST['surname'])),
-      trim($_POST['email-addr']),
+      htmlspecialchars(trim((string) $_POST['forename'])),
+      htmlspecialchars(trim((string) $_POST['surname'])),
+      trim((string) $_POST['email-addr']),
       $tenant->getId()
     ]);
   }
@@ -178,16 +178,16 @@ if ($to_club && $to_parent) {
   $query = $db->prepare("INSERT INTO joinSwimmers (Parent, First, Last, DoB, XP, XPDetails, Medical, Questions, Club, ASA, Sex, Tenant) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
   $query->execute([
     $hash,
-    htmlspecialchars(trim($swimmerForename)),
-    htmlspecialchars(trim($swimmerSurname)),
+    htmlspecialchars(trim((string) $swimmerForename)),
+    htmlspecialchars(trim((string) $swimmerSurname)),
     $dob,
     $_POST['experience'],
-    trim($_POST['swimmer-xp']),
-    trim($_POST['swimmer-med']),
-    trim($_POST['questions']),
-    trim($_POST['swimmer-club']),
-    trim($_POST['swimmer-asa']),
-    trim($_POST['sex']),
+    trim((string) $_POST['swimmer-xp']),
+    trim((string) $_POST['swimmer-med']),
+    trim((string) $_POST['questions']),
+    trim((string) $_POST['swimmer-club']),
+    trim((string) $_POST['swimmer-asa']),
+    trim((string) $_POST['sex']),
     $tenant->getId()
   ]);
 

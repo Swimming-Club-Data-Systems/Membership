@@ -57,7 +57,7 @@ include BASE_PATH . "views/header.php";
 				<ul class="list-group mb-3">
 					<?php do {
 
-						$payMethods = json_decode($pending->payMethods);
+						$payMethods = json_decode((string) $pending->payMethods);
 
 					?>
 						<li class="list-group-item">
@@ -70,14 +70,14 @@ include BASE_PATH . "views/header.php";
 									Batch ID
 								</dt>
 								<dd class="col-9">
-									<?= htmlspecialchars($pending->id) ?>
+									<?= htmlspecialchars((string) $pending->id) ?>
 								</dd>
 
 								<dt class="col-3">
 									Amount
 								</dt>
 								<dd class="col-9">
-									<?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($pending->total), 'GBP')) ?>
+									<?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($pending->total), 'GBP')) ?>
 								</dd>
 
 								<dt class="col-3">
@@ -99,7 +99,7 @@ include BASE_PATH . "views/header.php";
 							</dl>
 
 							<p class="mb-0">
-								<a href="<?= htmlspecialchars(autoUrl("memberships/batches/" . $pending->id)) ?>" class="btn btn-primary">View and pay</a>
+								<a href="<?= htmlspecialchars((string) autoUrl("memberships/batches/" . $pending->id)) ?>" class="btn btn-primary">View and pay</a>
 							</p>
 						</li>
 					<?php } while ($pending = $getPending->fetch(PDO::FETCH_OBJ)); ?>
@@ -140,7 +140,7 @@ include BASE_PATH . "views/header.php";
 						</p>
 					</div>
 					<p class="mb-0 mt-auto d-flex">
-						<a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>" class="btn btn-primary">
+						<a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>" class="btn btn-primary">
 							Go
 						</a>
 					</p>
@@ -176,7 +176,7 @@ include BASE_PATH . "views/header.php";
 						</p>
 					</div>
 					<p class="mb-0 mt-auto d-flex">
-						<a href="<?= htmlspecialchars(autoUrl('onboarding/all')) ?>" class="btn btn-primary">
+						<a href="<?= htmlspecialchars((string) autoUrl('onboarding/all')) ?>" class="btn btn-primary">
 							Go
 						</a>
 					</p>
@@ -194,7 +194,7 @@ include BASE_PATH . "views/header.php";
 						</p>
 					</div>
 					<p class="mb-0 mt-auto d-flex">
-						<a href="<?= htmlspecialchars(autoUrl('memberships/batches')) ?>" class="btn btn-primary">
+						<a href="<?= htmlspecialchars((string) autoUrl('memberships/batches')) ?>" class="btn btn-primary">
 							Go
 						</a>
 					</p>
@@ -212,7 +212,7 @@ include BASE_PATH . "views/header.php";
 						</p>
 					</div>
 					<p class="mb-0 mt-auto d-flex">
-						<a href="<?= htmlspecialchars(autoUrl('memberships/years')) ?>" class="btn btn-primary">
+						<a href="<?= htmlspecialchars((string) autoUrl('memberships/years')) ?>" class="btn btn-primary">
 							Go
 						</a>
 					</p>
@@ -229,7 +229,7 @@ include BASE_PATH . "views/header.php";
 				</p>
 
 				<p>
-					<a href="<?= htmlspecialchars(autoUrl('renewal')) ?>" class="btn btn-primary">
+					<a href="<?= htmlspecialchars((string) autoUrl('renewal')) ?>" class="btn btn-primary">
 						View legacy renewal periods
 					</a>
 				</p>

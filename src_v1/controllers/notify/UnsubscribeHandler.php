@@ -3,10 +3,10 @@
 $db = app()->db;
 $tenant = app()->tenant;
 
-$user_id = hexdec($userid);
-$email = str_replace(' ', '+', urldecode($email));
+$user_id = hexdec((string) $userid);
+$email = str_replace(' ', '+', urldecode((string) $email));
 
-$list_lc - mb_strtolower($list);
+$list_lc - mb_strtolower((string) $list);
 
 if ($list_lc != "notify" && $list_lc != "security" && $list_lc != "payments" && $list_lc != "newmember") {
 	halt(404);
@@ -19,7 +19,7 @@ try {
 		$email,
 		$tenant->getId()
 	]);
-} catch (Exception $e) {
+} catch (Exception) {
 	halt(500);
 }
 
@@ -35,13 +35,13 @@ include BASE_PATH . "views/header.php";?>
 
 <div class="container-xl">
 	<h1>Successfully Unsubscribed</h1>
-	<p>You will no longer receive emails from the <span class="font-monospace"><?=htmlspecialchars($list)?></span> list.</p>
+	<p>You will no longer receive emails from the <span class="font-monospace"><?=htmlspecialchars((string) $list)?></span> list.</p>
 	<p>
-		For further help and support with emails from <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, visit
+		For further help and support with emails from <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, visit
 		our <a href="<?=autoUrl("notify")?>">Notify Help Centre</a>.
 	</p>
 	<p>
-		Notify by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+		Notify by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>
 	</p>
 </div>
 

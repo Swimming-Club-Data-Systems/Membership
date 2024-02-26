@@ -11,8 +11,8 @@ include BASE_PATH . "views/notifyMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify"))?>">Notify</a></li>
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify/lists"))?>">Lists</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify"))?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify/lists"))?>">Lists</a></li>
       <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
   </nav>

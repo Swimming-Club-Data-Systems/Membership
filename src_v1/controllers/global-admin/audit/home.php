@@ -28,11 +28,11 @@ include BASE_PATH . "views/root/header.php";
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('admin/audit/logs')) ?>" class="btn btn-primary">View logs</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('admin/audit/logs')) ?>" class="btn btn-primary">View logs</a>
       </p>
 
       <p>
-        <a href="<?= htmlspecialchars(autoUrl('admin/audit/requests')) ?>" class="btn btn-primary">View HTTP request logs</a>
+        <a href="<?= htmlspecialchars((string) autoUrl('admin/audit/requests')) ?>" class="btn btn-primary">View HTTP request logs</a>
       </p>
 
     </div>

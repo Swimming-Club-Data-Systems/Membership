@@ -17,8 +17,8 @@ include BASE_PATH . "views/root/header.php";
 <div class="container-xl">
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments')) ?>">Pay</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('admin/payments/invoices')) ?>">Invoices</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments')) ?>">Pay</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('admin/payments/invoices')) ?>">Invoices</a></li>
       <li class="breadcrumb-item active" aria-current="page">New</li>
     </ol>
   </nav>
@@ -37,7 +37,7 @@ include BASE_PATH . "views/root/header.php";
             <strong>There was a problem trying to create the new subscription</strong>
           </p>
           <p class="mb-0">
-            <?= htmlspecialchars($_SESSION['SubscriptionAddError']) ?>
+            <?= htmlspecialchars((string) $_SESSION['SubscriptionAddError']) ?>
           </p>
         </div>
       <?php unset($_SESSION['SubscriptionAddError']);
@@ -49,10 +49,10 @@ include BASE_PATH . "views/root/header.php";
 
         <div class="mb-3">
           <label class="form-label" for="subscription-tenant">Tenant</label>
-          <select name="subscription-tenant" id="subscription-tenant" class="form-select" required data-payment-methods-ajax-url="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/new/get-tenant-payment-methods')) ?>">
+          <select name="subscription-tenant" id="subscription-tenant" class="form-select" required data-payment-methods-ajax-url="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/new/get-tenant-payment-methods')) ?>">
             <option value="" selected disabled>Select a customer</option>
             <?php while ($tenant = $getTenants->fetch(PDO::FETCH_ASSOC)) { ?>
-              <option value="<?= htmlspecialchars($tenant['ID']) ?>"><?= htmlspecialchars($tenant['Name']) ?></option>
+              <option value="<?= htmlspecialchars((string) $tenant['ID']) ?>"><?= htmlspecialchars((string) $tenant['Name']) ?></option>
             <?php } ?>
           </select>
           <div class="invalid-feedback">
@@ -145,10 +145,10 @@ include BASE_PATH . "views/root/header.php";
 
           <div class="mb-3">
             <label class="form-label" for="product-select">Product</label>
-            <select name="product-select" id="product-select" class="form-select" required data-plans-ajax-url="<?= htmlspecialchars(autoUrl('admin/payments/subscriptions/new/get-product-plans')) ?>">
+            <select name="product-select" id="product-select" class="form-select" required data-plans-ajax-url="<?= htmlspecialchars((string) autoUrl('admin/payments/subscriptions/new/get-product-plans')) ?>">
               <option value="" selected disabled>Select a product</option>
               <?php while ($product = $getProducts->fetch(PDO::FETCH_ASSOC)) { ?>
-                <option id="<?= htmlspecialchars('product-select-' . $product['ID']) ?>" value="<?= htmlspecialchars($product['ID']) ?>" data-name="<?= htmlspecialchars($product['Name']) ?>"><?= htmlspecialchars($product['Name']) ?></option>
+                <option id="<?= htmlspecialchars('product-select-' . $product['ID']) ?>" value="<?= htmlspecialchars((string) $product['ID']) ?>" data-name="<?= htmlspecialchars((string) $product['Name']) ?>"><?= htmlspecialchars((string) $product['Name']) ?></option>
               <?php } ?>
             </select>
             <div class="invalid-feedback">

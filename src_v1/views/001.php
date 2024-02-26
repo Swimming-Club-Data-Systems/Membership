@@ -27,7 +27,7 @@ if ($currentUser == null && false) {
       <h1 class="mb-0">
         <a href="<?= autoUrl("") ?>" class="<?= $clubLogoColour ?>">
           <strong>
-            <?= mb_strtoupper(htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))) ?>
+            <?= mb_strtoupper(htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))) ?>
           </strong>
         </a>
       </h1>

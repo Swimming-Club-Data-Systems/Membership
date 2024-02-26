@@ -5,7 +5,7 @@ if (isset($_POST['CodeOfConduct'])) {
     
     app()->tenant->setKey('ParentCodeOfConduct', $_POST['CodeOfConduct']);
     $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-SAVED'] = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['PCC-ERROR'] = true;
   }
 }

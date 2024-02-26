@@ -16,7 +16,7 @@ function fieldChecked($name)
 function fieldValue($name)
 {
   if (isset($_SESSION['SCDS-Notify']['NotifyPostData'][$name])) {
-    return 'value="' . htmlspecialchars($_SESSION['SCDS-Notify']['NotifyPostData'][$name]) . '"';
+    return 'value="' . htmlspecialchars((string) $_SESSION['SCDS-Notify']['NotifyPostData'][$name]) . '"';
   }
 }
 
@@ -32,7 +32,7 @@ include BASE_PATH . "views/root/header.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("admin/notify")) ?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("admin/notify")) ?>">Notify</a></li>
       <li class="breadcrumb-item active" aria-current="page">Composer</li>
     </ol>
   </nav>
@@ -91,7 +91,7 @@ include BASE_PATH . "views/root/header.php";
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="TL-<?= $list['ID'] ?>" name="TL-<?= $list['ID'] ?>" value="1" <?= fieldChecked('TL-' . $list['ID']) ?>>
               <label class="form-check-label" for="TL-<?= $list['ID'] ?>">
-                <?= htmlspecialchars($list['Name']) ?>
+                <?= htmlspecialchars((string) $list['Name']) ?>
               </label>
             </div>
           </div>
@@ -115,7 +115,7 @@ include BASE_PATH . "views/root/header.php";
           <span class="font-monospace">User Name</span>,".
         </em>
       </p>
-      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars(autoUrl("public/css/tinymce.css")) ?>" data-documentBaseUrl="<?= htmlspecialchars(autoUrl("notify/new/")) ?>" required><?php if (isset($_SESSION['SCDS-Notify']['NotifyPostData']['message'])) { ?><?= htmlspecialchars($_SESSION['SCDS-Notify']['NotifyPostData']['message']) ?><?php } ?></textarea>
+      <textarea class="form-control" id="message" name="message" rows="10" data-tinymce-css-location="<?= htmlspecialchars((string) autoUrl("public/css/tinymce.css")) ?>" data-documentBaseUrl="<?= htmlspecialchars((string) autoUrl("notify/new/")) ?>" required><?php if (isset($_SESSION['SCDS-Notify']['NotifyPostData']['message'])) { ?><?= htmlspecialchars((string) $_SESSION['SCDS-Notify']['NotifyPostData']['message']) ?><?php } ?></textarea>
     </div>
 
     <input type="hidden" name="MAX_FILE_SIZE" value="10485760">

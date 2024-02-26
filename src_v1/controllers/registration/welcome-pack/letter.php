@@ -23,7 +23,7 @@ $userObj = new \User($id, true);
 $json = $userObj->getUserOption('MAIN_ADDRESS');
 $address = null;
 if ($json != null) {
-  $address = json_decode($json);
+  $address = json_decode((string) $json);
 }
 
 $swimmers = $db->prepare("SELECT MForename fn, MSurname sn, SquadName squad, SquadFee fee, SquadCoC exempt, members.MemberID id FROM members INNER JOIN squads ON squads.SquadID = members.SquadID WHERE members.UserID = ? ORDER BY fn ASC");
@@ -71,12 +71,12 @@ ob_start();?>
     <?php if ($address != null && isset($address->streetAndNumber)) { ?>
     <address class="mb-3 address-font address-box">
       <strong><?=htmlspecialchars($email_info['Forename'] . " " . $email_info['Surname'])?></strong><br>
-      <?=htmlspecialchars($address->streetAndNumber)?><br>
+      <?=htmlspecialchars((string) $address->streetAndNumber)?><br>
       <?php if (isset($address->flatOrBuilding)) { ?>
-      <?=htmlspecialchars($address->flatOrBuilding)?><br>
+      <?=htmlspecialchars((string) $address->flatOrBuilding)?><br>
       <?php } ?>
-      <?=htmlspecialchars($address->city)?><br>
-      <?=htmlspecialchars(mb_strtoupper($address->postCode))?>
+      <?=htmlspecialchars((string) $address->city)?><br>
+      <?=htmlspecialchars(mb_strtoupper((string) $address->postCode))?>
     </address>
     <div class="after-address-box"></div>
     <?php } else { ?>
@@ -88,7 +88,7 @@ ob_start();?>
 
     <div class="primary-box mb-3" id="title">
       <h1 class="mb-0">
-        Welcome to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>
+        Welcome to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>
       </h1>
 
       <p class="mb-0">
@@ -97,7 +97,7 @@ ob_start();?>
 
       <ul class="mb-0 list-unstyled"> 
         <?php foreach ($swimmers as $s) { ?>
-        <li><?=htmlspecialchars($s['fn'] . ' ' . $s['sn'])?>, <?=htmlspecialchars($s['squad'])?></li>
+        <li><?=htmlspecialchars($s['fn'] . ' ' . $s['sn'])?>, <?=htmlspecialchars((string) $s['squad'])?></li>
         <?php } ?>
       </ul>
     </div>

@@ -91,7 +91,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
       <div class="mb-4">
         <div class="news-grid">
 
-          <a href="<?= htmlspecialchars(autoUrl("payments/history/" . $month->format("Y/m"))) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/history/" . $month->format("Y/m"))) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 All fees for <?= $dateString ?>
@@ -105,7 +105,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
             </span>
           </a>
 
-          <a href="<?= htmlspecialchars(autoUrl("payments/history/squads/" . $month->format("Y/m"))) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/history/squads/" . $month->format("Y/m"))) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Squad fees for <?= $dateString ?>
@@ -119,7 +119,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
             </span>
           </a>
 
-          <a href="<?= htmlspecialchars(autoUrl("payments/history/extras/" . $month->format("Y/m"))) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl("payments/history/extras/" . $month->format("Y/m"))) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Extra fees for <?= $dateString ?>
@@ -141,7 +141,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
       <div class="mb-4">
         <div class="news-grid">
 
-          <a href="<?= htmlspecialchars(autoUrl('payments/estimated-fees')) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl('payments/estimated-fees')) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Manual Billing Information
@@ -155,7 +155,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
             </span>
           </a>
 
-          <a href="<?= htmlspecialchars(autoUrl('payments/invoice-payments')) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl('payments/invoice-payments')) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Invoice payments
@@ -169,7 +169,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
             </span>
           </a>
 
-          <a href="<?= htmlspecialchars(autoUrl('galas/charges-and-refunds')) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl('galas/charges-and-refunds')) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Charge for gala entries
@@ -191,7 +191,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
       <div class="mb-4">
         <div class="news-grid">
 
-          <a href="<?= htmlspecialchars(autoUrl('payments/categories')) ?>">
+          <a href="<?= htmlspecialchars((string) autoUrl('payments/categories')) ?>">
             <span class="mb-3">
               <span class="title mb-0">
                 Payment categories
@@ -206,7 +206,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
           </a>
 
           <?php if (app()->tenant->getStripeAccount()) { ?>
-            <a href="<?= htmlspecialchars(autoUrl('payments/disputes')) ?>">
+            <a href="<?= htmlspecialchars((string) autoUrl('payments/disputes')) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
                   Disputes
@@ -220,7 +220,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
               </span>
             </a>
 
-            <a href="<?= htmlspecialchars(autoUrl('settings/stripe')) ?>">
+            <a href="<?= htmlspecialchars((string) autoUrl('settings/stripe')) ?>">
               <span class="mb-3">
                 <span class="title mb-0">
                   Stripe Options
@@ -244,7 +244,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
           <div class="mb-4">
             <div class="news-grid">
 
-              <a href="<?= htmlspecialchars(autoUrl('payments/cards')) ?>">
+              <a href="<?= htmlspecialchars((string) autoUrl('payments/cards')) ?>">
                 <span class="mb-3">
                   <span class="title mb-0">
                     Payment cards
@@ -258,7 +258,7 @@ $month = new DateTime('now', new DateTimeZone('Europe/London'));
                 </span>
               </a>
 
-              <a href="<?= htmlspecialchars(autoUrl('payments/card-transactions?users=all')) ?>">
+              <a href="<?= htmlspecialchars((string) autoUrl('payments/card-transactions?users=all')) ?>">
                 <span class="mb-3">
                   <span class="title mb-0">
                     Transactions

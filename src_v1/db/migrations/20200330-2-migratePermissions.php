@@ -17,7 +17,7 @@ while ($user = $users->fetch(PDO::FETCH_ASSOC)) {
       $user['AccessLevel'],
       $user['UserID']
     ]);
-  } catch (PDOException $e) {
+  } catch (PDOException) {
     // Do nothing
   }
 

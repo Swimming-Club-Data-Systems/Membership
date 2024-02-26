@@ -18,15 +18,15 @@ $forename = $middlenames = $surname = $dateOfBirth = $asaNumber = $sex = $cat = 
 $getASA = false;
 
 if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POST['datebirth'])) && (!empty($_POST['sex']))) {
-	$forename = trim(ucwords($_POST['forename']));
-	$surname = trim(ucwords($_POST['surname']));
-	$dateOfBirth = trim($_POST['datebirth']);
+	$forename = trim(ucwords((string) $_POST['forename']));
+	$surname = trim(ucwords((string) $_POST['surname']));
+	$dateOfBirth = trim((string) $_POST['datebirth']);
 	$sex = $_POST['sex'];
 	if ((!empty($_POST['middlenames']))) {
-		$middlenames = trim(ucwords($_POST['middlenames']));
+		$middlenames = trim(ucwords((string) $_POST['middlenames']));
 	}
 	if ((!empty($_POST['asa']))) {
-		$asaNumber = trim($_POST['asa']);
+		$asaNumber = trim((string) $_POST['asa']);
 	} else {
 		$getASA = true;
 	}
@@ -127,7 +127,7 @@ if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POS
 						(int) true,
 					]);
 				}
-			} catch (PDOException $e) {
+			} catch (PDOException) {
 				// Catch any already exists errors, despite fact this is not expected
 			}
 		}
@@ -142,15 +142,15 @@ if ((!empty($_POST['forename'])) && (!empty($_POST['surname'])) && (!empty($_POS
 			]);
 			$notify = $db->prepare("INSERT INTO notify (`UserID`, `Status`, `Subject`, `Message`, `ForceSend`, `EmailType`) VALUES (?, 'Queued', ?, ?, 0, 'NewMember')");
 			$subject = "New Club Member";
-			$message = '<p>' . htmlentities(getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) . ' has added a new member, <a href="' . htmlspecialchars(autoUrl('members/' . $last_id)) . '" target="_blank">' . htmlentities($forename . ' ' . $surname) . '</a> to our online membership system.</p><p>We have sent you this email (because you\'re an admin) to ensure you\'re aware of this.</p>';
+			$message = '<p>' . htmlentities((string) getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID'])) . ' has added a new member, <a href="' . htmlspecialchars((string) autoUrl('members/' . $last_id)) . '" target="_blank">' . htmlentities($forename . ' ' . $surname) . '</a> to our online membership system.</p><p>We have sent you this email (because you\'re an admin) to ensure you\'re aware of this.</p>';
 			while ($row = $getAdmins->fetch(PDO::FETCH_ASSOC)) {
 				try {
 					$notify->execute([$row['UserID'], $subject, $message]);
-				} catch (PDOException $e) {
+				} catch (PDOException) {
 					//halt(500);
 				}
 			}
-		} catch (PDOException $e) {
+		} catch (PDOException) {
 		}
 	} catch (Exception $e) {
 		reportError($e);

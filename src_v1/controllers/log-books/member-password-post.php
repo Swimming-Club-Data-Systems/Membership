@@ -28,7 +28,7 @@ try {
       throw new Exception('Passwords do not match');
     }
 
-    $hash = password_hash($_POST['password-1'], PASSWORD_BCRYPT);
+    $hash = password_hash((string) $_POST['password-1'], PASSWORD_BCRYPT);
 
     $setPw = $db->prepare("UPDATE members SET PWHash = ?, PWWrong = 0 WHERE MemberID = ?");
     $setPw->execute([
@@ -44,7 +44,7 @@ try {
     } else {
       header("location: " . autoUrl("log-books"));
     }
-  } catch (PDOException $e) {
+  } catch (PDOException) {
     // Was a DB error - throw generic exception so info isn't shown
     throw new Exception('A database error occurred. Your club staff may need to check there are no pending database migrations.');
   }

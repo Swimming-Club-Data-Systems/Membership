@@ -3,9 +3,9 @@
 function getISOAlpha2Countries() {
 	// Get the preferred locale
 	$prefLocales = array_reduce(
-    explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']), 
+    explode(',', (string) $_SERVER['HTTP_ACCEPT_LANGUAGE']), 
       function ($res, $el) { 
-        list($l, $q) = array_merge(explode(';q=', $el), [1]); 
+        [$l, $q] = array_merge(explode(';q=', $el), [1]); 
         $res[$l] = (float) $q; 
         return $res; 
       }, []);
@@ -13,7 +13,7 @@ function getISOAlpha2Countries() {
 
 	// Check if we have a list for a locale (order of priority) and return that if we do
 	foreach($prefLocales as $locale => $priority) {
-		$path = BASE_PATH . 'vendor/umpirsky/country-list/data/' . str_replace('-', '_', $locale) . '/country.php';
+		$path = BASE_PATH . 'vendor/umpirsky/country-list/data/' . str_replace('-', '_', (string) $locale) . '/country.php';
 		if (file_exists($path)) {
 			return require $path;
 		}

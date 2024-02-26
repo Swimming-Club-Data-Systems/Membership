@@ -34,7 +34,7 @@ include BASE_PATH . 'views/header.php';
 
       <p>
         If some children of a parent have been offered a place but won't be
-        joining <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>, please press <em>Reject Squad Place</em> on each
+        joining <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>, please press <em>Reject Squad Place</em> on each
         swimmer so that they aren't added to the membership system.
       </p>
 
@@ -51,12 +51,12 @@ include BASE_PATH . 'views/header.php';
         <p>
           Contact <?=htmlspecialchars($parent['PFirst'] . ' ' .
           $parent['PLast'])?> via email at <a
-          href="mailto:<?=htmlspecialchars($parent['Email'])?>"><?=htmlspecialchars($parent['Email'])?></a>
+          href="mailto:<?=htmlspecialchars((string) $parent['Email'])?>"><?=htmlspecialchars((string) $parent['Email'])?></a>
         </p>
 
         <?php if ($parent['Comments'] != null && $parent['Comments'] != "") { ?>
         <p>
-          <?=htmlspecialchars($parent['Comments'])?>
+          <?=htmlspecialchars((string) $parent['Comments'])?>
         </p>
         <?php } ?>
 
@@ -85,7 +85,7 @@ include BASE_PATH . 'views/header.php';
                 Advanced
               </button>
               <div class="dropdown-menu dropdown-menu-end" aria-labelledby="deleteDropdown">
-                <a class="dropdown-item" href="<?=autoUrl($url_path . $parent['Hash'] . "/cancel/" . $parent['ID'])?>?redirect=<?=urlencode(currentUrl())?>">Reject Squad Place</a>
+                <a class="dropdown-item" href="<?=autoUrl($url_path . $parent['Hash'] . "/cancel/" . $parent['ID'])?>?redirect=<?=urlencode((string) currentUrl())?>">Reject Squad Place</a>
               </div>
             </div>
           </div>

@@ -17,6 +17,6 @@ try {
 
   http_response_code(302);
   header("location: " . $session->url);
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }

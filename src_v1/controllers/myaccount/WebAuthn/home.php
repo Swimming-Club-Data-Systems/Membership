@@ -25,8 +25,8 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
   </div>
 </div>
 
-<div id="relying-party-info" data-name="<?= htmlspecialchars(app()->tenant->getName()) ?>"></div>
-<div id="user-info" data-display-name="<?= htmlspecialchars($user->getFullName()) ?>" data-id="<?= htmlspecialchars($user->getId()) ?>" data-name="<?= htmlspecialchars($user->getEmail()) ?>"></div>
+<div id="relying-party-info" data-name="<?= htmlspecialchars((string) app()->tenant->getName()) ?>"></div>
+<div id="user-info" data-display-name="<?= htmlspecialchars((string) $user->getFullName()) ?>" data-id="<?= htmlspecialchars((string) $user->getId()) ?>" data-name="<?= htmlspecialchars((string) $user->getEmail()) ?>"></div>
 
 <script>
 

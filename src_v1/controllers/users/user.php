@@ -62,26 +62,26 @@ if (!$balanceV2) {
 
 $bankName = $bank = $has_logo = $logo_path = null;
 if (userHasMandates($id)) {
-  $bankName = mb_strtoupper(bankDetails($id, "account_holder_name"));
+  $bankName = mb_strtoupper((string) bankDetails($id, "account_holder_name"));
   if ($bankName != "UNKNOWN") {
     $bankName = $bankName . ', ';
   } else {
     $bankName = null;
   }
-  $bank = mb_strtoupper(bankDetails($id, "bank_name"));
+  $bank = mb_strtoupper((string) bankDetails($id, "bank_name"));
   $logo_path = getBankLogo($bank);
 }
 
 $json = $userObj->getUserOption('MAIN_ADDRESS');
 $address = null;
 if ($json != null) {
-  $address = json_decode($json);
+  $address = json_decode((string) $json);
 }
 
 $number = null;
 try {
   $number = PhoneNumber::parse($info['Mobile']);
-} catch (PhoneNumberParseException $e) {
+} catch (PhoneNumberParseException) {
   $number = false;
 }
 
@@ -105,7 +105,7 @@ $pageHead = [
 
 $fluidContainer = true;
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " Information";
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) . " Information";
 $title = null;
 include BASE_PATH . "views/header.php";
 ?>
@@ -118,7 +118,7 @@ include BASE_PATH . "views/header.php";
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("users") ?>">Users</a></li>
         <li class="breadcrumb-item active" aria-current="page">
-          <?= htmlspecialchars(mb_substr($info["Forename"], 0, 1, 'utf-8') . mb_substr($info["Surname"], 0, 1, 'utf-8')) ?>
+          <?= htmlspecialchars(mb_substr((string) $info["Forename"], 0, 1, 'utf-8') . mb_substr((string) $info["Surname"], 0, 1, 'utf-8')) ?>
         </li>
       </ol>
     </nav>
@@ -126,7 +126,7 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-sm-9 col-md-10 col-lg-11">
         <h1 class="mb-0">
-          <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
+          <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>
           <small><?= htmlspecialchars($accessLevel) ?></small>
         </h1>
         <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
@@ -136,7 +136,7 @@ include BASE_PATH . "views/header.php";
       <?php if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') { ?>
         <div class="col text-sm-end">
           <p class="mb-0">
-            <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit")) ?>" class="btn btn-success">
+            <a href="<?= htmlspecialchars((string) autoUrl("users/" . $id . "/edit")) ?>" class="btn btn-success">
               Edit
             </a>
           </p>
@@ -166,7 +166,7 @@ include BASE_PATH . "views/header.php";
 
   <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) && $_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']) { ?>
     <div class="alert alert-success">
-      <strong>We've sent your email to <?= htmlspecialchars($info['Forename']) ?></strong>
+      <strong>We've sent your email to <?= htmlspecialchars((string) $info['Forename']) ?></strong>
     </div>
   <?php unset($_SESSION['TENANT-' . app()->tenant->getId()]['NotifyIndivSuccess']);
   } ?>
@@ -252,11 +252,11 @@ include BASE_PATH . "views/header.php";
         <div class="row">
           <div class="col-sm-6 col-lg-4">
             <h3 class="h6">Name</h3>
-            <p><?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?></p>
+            <p><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?></p>
           </div>
           <div class="col-sm-6 col-lg-4">
             <h3 class="h6">Email</h3>
-            <p class="text-truncate"><a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/email")) ?>"><?= htmlspecialchars($info['EmailAddress']) ?></a>
+            <p class="text-truncate"><a href="<?= htmlspecialchars((string) autoUrl("users/" . $id . "/email")) ?>"><?= htmlspecialchars((string) $info['EmailAddress']) ?></a>
             </p>
           </div>
           <?php if ($number !== false) { ?>
@@ -279,7 +279,7 @@ include BASE_PATH . "views/header.php";
           </h2>
           <p class="lead">Registration is still pending for this user.</p>
           <p>
-            <button id="registration-resend-button" class="btn btn-primary" data-ajax-url="<?= htmlspecialchars(autoUrl("users/ajax/resend-registration-email")) ?>" data-user-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>" data-user-edit-link="<?= htmlspecialchars(autoUrl("users/" . $id . "/edit")) ?>" data-user="<?= htmlspecialchars($id) ?>">
+            <button id="registration-resend-button" class="btn btn-primary" data-ajax-url="<?= htmlspecialchars((string) autoUrl("users/ajax/resend-registration-email")) ?>" data-user-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>" data-user-edit-link="<?= htmlspecialchars((string) autoUrl("users/" . $id . "/edit")) ?>" data-user="<?= htmlspecialchars((string) $id) ?>">
               Resend registration email <span class="fa fa-chevron-right"></span>
             </button>
           </p>
@@ -296,19 +296,19 @@ include BASE_PATH . "views/header.php";
           </h2>
           <address>
             <?php if (isset($address->streetAndNumber)) { ?>
-              <?= htmlspecialchars($address->streetAndNumber) ?><br>
+              <?= htmlspecialchars((string) $address->streetAndNumber) ?><br>
             <?php } ?>
             <?php if (isset($address->flatOrBuilding)) { ?>
-              <?= htmlspecialchars($address->flatOrBuilding) ?><br>
+              <?= htmlspecialchars((string) $address->flatOrBuilding) ?><br>
             <?php } ?>
             <?php if (isset($address->city)) { ?>
-              <?= htmlspecialchars(mb_strtoupper($address->city)) ?><br>
+              <?= htmlspecialchars(mb_strtoupper((string) $address->city)) ?><br>
             <?php } ?>
             <?php if (isset($address->county)) { ?>
-              <?= htmlspecialchars($address->county) ?><br>
+              <?= htmlspecialchars((string) $address->county) ?><br>
             <?php } ?>
             <?php if (isset($address->postCode)) { ?>
-              <?= htmlspecialchars(mb_strtoupper($address->postCode)) ?>
+              <?= htmlspecialchars(mb_strtoupper((string) $address->postCode)) ?>
             <?php } ?>
           </address>
         </div>
@@ -322,13 +322,13 @@ include BASE_PATH . "views/header.php";
             Squads
           </h2>
           <p class="lead">
-            Assign <?= htmlspecialchars($info['Forename']) ?> as a coach for a squad.
+            Assign <?= htmlspecialchars((string) $info['Forename']) ?> as a coach for a squad.
           </p>
 
-          <div id="coach-squad-list" data-user-id="<?= htmlspecialchars($id) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl("users/squads/list")) ?>"></div>
+          <div id="coach-squad-list" data-user-id="<?= htmlspecialchars((string) $id) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl("users/squads/list")) ?>"></div>
 
           <p id="coach-squad-assign-container" class="d-none">
-            <button id="coach-squad-assign" class="btn btn-primary" data-user-id="<?= htmlspecialchars($id) ?>" data-ajax-url="<?= htmlspecialchars(autoUrl("users/squads/assign-delete")) ?>">
+            <button id="coach-squad-assign" class="btn btn-primary" data-user-id="<?= htmlspecialchars((string) $id) ?>" data-ajax-url="<?= htmlspecialchars((string) autoUrl("users/squads/assign-delete")) ?>">
               Assign a squad
             </button>
           </p>
@@ -392,9 +392,9 @@ include BASE_PATH . "views/header.php";
                   <div class="col-lg">
                     <h4>Stripe DD (New System)</h4>
                     <?php if ($stripeDD) { ?>
-                      <p class="mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split($stripeDD['SortCode'], 2))) ?></span>
+                      <p class="mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split((string) $stripeDD['SortCode'], 2))) ?></span>
                       </p>
-                      <p class="mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($stripeDD['Last4']) ?></span></p>
+                      <p class="mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $stripeDD['Last4']) ?></span></p>
                     <?php } else { ?>
                       <p class="mb-0">No Direct Debit set up</p>
                     <?php } ?>
@@ -407,9 +407,9 @@ include BASE_PATH . "views/header.php";
                       <?php if ($logo_path) { ?>
                         <img class="img-fluid mb-3" style="max-height:35px;" src="<?= $logo_path ?>.png" srcset="<?= $logo_path ?>@2x.png 2x, <?= $logo_path ?>@3x.png 3x">
                       <?php } ?>
-                      <p class="mb-0"><?= $bankName ?><abbr title="<?= htmlspecialchars(mb_strtoupper(bankDetails($id, "bank_name"))) ?>"><?= htmlspecialchars(getBankName(bankDetails($id, "bank_name"))) ?></abbr>
+                      <p class="mb-0"><?= $bankName ?><abbr title="<?= htmlspecialchars(mb_strtoupper((string) bankDetails($id, "bank_name"))) ?>"><?= htmlspecialchars(getBankName(bankDetails($id, "bank_name"))) ?></abbr>
                       </p>
-                      <p class="mb-0 font-monospace">&middot;&middot;&middot;&middot;&middot;&middot;<?= mb_strtoupper(bankDetails($id, "account_number_end")) ?></p>
+                      <p class="mb-0 font-monospace">&middot;&middot;&middot;&middot;&middot;&middot;<?= mb_strtoupper((string) bankDetails($id, "account_number_end")) ?></p>
 
                     <?php } else { ?>
                       <p class="mb-0">No Direct Debit set up</p>
@@ -428,7 +428,7 @@ include BASE_PATH . "views/header.php";
                     Payment links
                   </div>
                   <div class="list-group list-group-flush">
-                    <a href="<?= htmlspecialchars(autoUrl("users/" . $id . "/membership-fees")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Annual membership fees <span class="fa fa-chevron-right"></span></a>
+                    <a href="<?= htmlspecialchars((string) autoUrl("users/" . $id . "/membership-fees")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Annual membership fees <span class="fa fa-chevron-right"></span></a>
                     <a href="<?= autoUrl("users/" . $id . "/pending-fees") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Pending payments <span class="fa fa-chevron-right"></span></a>
                     <a href="<?= autoUrl("payments/history/users/" . $id) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Previous bills <span class="fa fa-chevron-right"></span></a>
                     <?php if ($tenant->getKey('GOCARDLESS_ACCESS_TOKEN')) { ?>
@@ -438,7 +438,7 @@ include BASE_PATH . "views/header.php";
                       <a href="<?= autoUrl("users/" . $id . "/direct-debit") ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Stripe direct debit mandates <span class="fa fa-chevron-right"></span></a>
                     <?php } ?>
                     <?php if ($stripeDD || userHasMandates($id)) { ?>
-                      <button id="trigger-early-payment" data-info-url="<?= htmlspecialchars(autoUrl("users/$id/direct-debit/force-run-info")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Trigger early payment <span class="fa fa-chevron-right"></span></button>
+                      <button id="trigger-early-payment" data-info-url="<?= htmlspecialchars((string) autoUrl("users/$id/direct-debit/force-run-info")) ?>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">Trigger early payment <span class="fa fa-chevron-right"></span></button>
                     <?php } ?>
                   </div>
                 </div>
@@ -492,11 +492,11 @@ include BASE_PATH . "views/header.php";
                   <div class="col-lg">
                     <h4>Default Direct Debit</h4>
                     <?php if ($stripeDD2 && $stripeDD2['type'] == 'bacs_debit') {
-                      $jsonData = json_decode($stripeDD2['pm_type_data']);
+                      $jsonData = json_decode((string) $stripeDD2['pm_type_data']);
                       ?>
-                      <p class="mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split($jsonData->sort_code, 2))) ?></span>
+                      <p class="mb-0"><strong>Sort Code</strong> <span class="font-monospace"><?= htmlspecialchars(implode("-", str_split((string) $jsonData->sort_code, 2))) ?></span>
                       </p>
-                      <p class="mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($jsonData->last4) ?></span></p>
+                      <p class="mb-0"><strong>Account Number</strong> <span class="font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $jsonData->last4) ?></span></p>
                     <?php } else { ?>
                       <p class="mb-0">No Direct Debit Instruction is set up</p>
                     <?php } ?>
@@ -544,7 +544,7 @@ include BASE_PATH . "views/header.php";
             <div class="row">
               <?php do { ?>
                 <div class="col-sm-6 col-lg-4">
-                  <h3 class="h6"><a href="<?= autoUrl("swimmers/" . $s['id']) ?>" title="Full information about <?= htmlspecialchars(\SCDS\Formatting\Names::format($s['fn'], $s['sn'])) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($s['fn'], $s['sn'])) ?></a>
+                  <h3 class="h6"><a href="<?= autoUrl("swimmers/" . $s['id']) ?>" title="Full information about <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($s['fn'], $s['sn'])) ?>"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($s['fn'], $s['sn'])) ?></a>
                   </h3>
                   <?php
                   $getSquads->execute([
@@ -553,7 +553,7 @@ include BASE_PATH . "views/header.php";
                   <ul class="mb-0 list-unstyled">
                     <?php if ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) {
                       do { ?>
-                        <li><?= htmlspecialchars($squad['squad']) ?>, <em><?php if (!bool($squad['pays']) || (int) $squad['fee'] == 0) { ?><?php } else { ?>&pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $squad['fee']))->toScale(2) ?>/month<?php } ?></em></li>
+                        <li><?= htmlspecialchars((string) $squad['squad']) ?>, <em><?php if (!bool($squad['pays']) || (int) $squad['fee'] == 0) { ?><?php } else { ?>&pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $squad['fee']))->toScale(2) ?>/month<?php } ?></em></li>
                       <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC));
                     } else { ?>
                       <li>No squads</li>
@@ -566,10 +566,10 @@ include BASE_PATH . "views/header.php";
           <?php } else { ?>
             <div class="alert alert-warning mb-0">
               <p class="mb-0">
-                <strong>There are no members linked to <?= htmlspecialchars($info['Forename']) ?>'s account</strong>
+                <strong>There are no members linked to <?= htmlspecialchars((string) $info['Forename']) ?>'s account</strong>
               </p>
               <p class="mb-0">
-                Members can be added using <a href="<?= htmlspecialchars(autoUrl("assisted-registration")) ?>" class="alert-link">assissted registration</a>.
+                Members can be added using <a href="<?= htmlspecialchars((string) autoUrl("assisted-registration")) ?>" class="alert-link">assissted registration</a>.
               </p>
             </div>
           <?php } ?>
@@ -586,19 +586,19 @@ include BASE_PATH . "views/header.php";
           </p>
 
           <p class="">
-            <a href="<?= htmlspecialchars(autoUrl("users/$id/new-membership-batch")) ?>" class="btn btn-primary">New Payment Batch</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("users/$id/new-membership-batch")) ?>" class="btn btn-primary">New Payment Batch</a>
           </p>
 
           <p class="">
-            <a href="<?= htmlspecialchars(autoUrl("users/$id/current-memberships")) ?>" class="btn btn-primary">View Current Memberships</a> <i>including totals paid for this year</i>
+            <a href="<?= htmlspecialchars((string) autoUrl("users/$id/current-memberships")) ?>" class="btn btn-primary">View Current Memberships</a> <i>including totals paid for this year</i>
           </p>
 
           <p class="">
-            <a href="<?= htmlspecialchars(autoUrl("onboarding/new?user=$id")) ?>" class="btn btn-primary">Repeat onboarding forms</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("onboarding/new?user=$id")) ?>" class="btn btn-primary">Repeat onboarding forms</a>
           </p>
 
           <p class="">
-            <a href="<?= htmlspecialchars(autoUrl("onboarding/view-sessions?user=$id")) ?>" class="btn btn-primary">View current onboarding sessions</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("onboarding/view-sessions?user=$id")) ?>" class="btn btn-primary">View current onboarding sessions</a>
           </p>
 
         </div>
@@ -704,7 +704,7 @@ include BASE_PATH . "views/header.php";
             } else {
               $time = new DateTime($loginInfo['Time'], new DateTimeZone('UTC'));
               $time->setTimezone(new DateTimeZone('Europe/London'));
-              $details = $time->format('H:i T \o\n j F Y') . " from " . htmlspecialchars($loginInfo['Browser']) . " on " . htmlspecialchars($loginInfo['Platform']) . " (" . htmlspecialchars($loginInfo['IPAddress']) . ")";
+              $details = $time->format('H:i T \o\n j F Y') . " from " . htmlspecialchars((string) $loginInfo['Browser']) . " on " . htmlspecialchars((string) $loginInfo['Platform']) . " (" . htmlspecialchars((string) $loginInfo['IPAddress']) . ")";
             } ?>
             <p><?= $details ?></p>
           </div>
@@ -712,7 +712,7 @@ include BASE_PATH . "views/header.php";
           <div class="col-sm-6 col-lg-4">
             <h3 class="h6">Delete account</h3>
             <p>
-              <button data-ajax-url="<?= htmlspecialchars(autoUrl("users/delete-user")) ?>" data-users-url="<?= htmlspecialchars(autoUrl("users")) ?>" data-user-id="<?= htmlspecialchars($id) ?>" data-user-name="<?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>" id="delete-button" class="btn btn-danger">
+              <button data-ajax-url="<?= htmlspecialchars((string) autoUrl("users/delete-user")) ?>" data-users-url="<?= htmlspecialchars((string) autoUrl("users")) ?>" data-user-id="<?= htmlspecialchars((string) $id) ?>" data-user-name="<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>" id="delete-button" class="btn btn-danger">
                 Delete account
               </button>
             </p>

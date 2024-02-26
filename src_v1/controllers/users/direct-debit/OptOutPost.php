@@ -29,12 +29,12 @@ try {
         $person
       ]);
       $_SESSION['TENANT-' . app()->tenant->getId()]['Successful'] = true;
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Catches halt
       $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorNoReg'] = true;
     }
   }
-} catch (Exception $e) {
+} catch (Exception) {
 
 } finally {
   header("Location: " . autoUrl("users/" . $person . "/authorise-direct-debit-opt-out"));

@@ -29,12 +29,12 @@ try {
 
   $target = "";
   if (isset($_GET['target'])) {
-    $target = ltrim($_GET['target'], '/');
+    $target = ltrim((string) $_GET['target'], '/');
   }
 
   header("location: " . autoUrl($target, false));
 
-} catch (Exception $e) {
+} catch (Exception) {
   http_response_code(303);
   header("location: " . autoUrl("clubs"));
 }

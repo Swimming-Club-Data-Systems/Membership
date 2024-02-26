@@ -4,98 +4,50 @@ halt(404);
 
 function outcomeTypeInfo($type)
 {
-  switch ($type) {
-    case 'authorized':
-      return 'Payment authorised by issuer';
-      break;
-    case 'manual_review':
-      return 'Requires manual review';
-      break;
-    case 'issuer_declined':
-      return 'Payment declined by issuer';
-      break;
-    case 'blocked':
-      return 'Payment blocked by Stripe';
-      break;
-    case 'invalid':
-      return 'Request details were invalid';
-      break;
-    default:
-      return 'Unknown outcome type';
-      break;
-  }
+  return match ($type) {
+      'authorized' => 'Payment authorised by issuer',
+      'manual_review' => 'Requires manual review',
+      'issuer_declined' => 'Payment declined by issuer',
+      'blocked' => 'Payment blocked by Stripe',
+      'invalid' => 'Request details were invalid',
+      default => 'Unknown outcome type',
+  };
 }
 
 function outcomeRiskLevel($riskLevel)
 {
-  switch ($riskLevel) {
-    case 'normal':
-      return 'Normal';
-      break;
-    case 'elevated':
-      return 'Elevated risk';
-      break;
-    case 'highest':
-      return 'High risk';
-      break;
-    case 'not_assessed':
-      return 'Risk not assessed';
-      break;
-    default:
-      return 'Error in risk evaluation';
-      break;
-  }
+  return match ($riskLevel) {
+      'normal' => 'Normal',
+      'elevated' => 'Elevated risk',
+      'highest' => 'High risk',
+      'not_assessed' => 'Risk not assessed',
+      default => 'Error in risk evaluation',
+  };
 }
 
 function cardCheckInfo($value)
 {
-  switch ($value) {
-    case 'pass':
-      return 'Verified';
-      break;
-    case 'failed':
-      return 'Check failed';
-      break;
-    case 'unavailable':
-      return 'Check not possible';
-      break;
-    case 'unchecked':
-      return 'Unverified';
-      break;
-    default:
-      return 'Unknown status';
-      break;
-  }
+  return match ($value) {
+      'pass' => 'Verified',
+      'failed' => 'Check failed',
+      'unavailable' => 'Check not possible',
+      'unchecked' => 'Unverified',
+      default => 'Unknown status',
+  };
 }
 
 function paymentIntentStatus($value)
 {
-  switch ($value) {
-    case 'requires_payment_method':
-      return 'Requires payment method';
-      break;
-    case 'requires_confirmation':
-      return 'Requires confirmation';
-      break;
-    case 'requires_action':
-      return 'Requires action';
-      break;
-    case 'processing':
-      return 'Processing';
-      break;
-    case 'requires_capture':
-      return 'Required capture';
-      break;
-    case 'canceled':
-      return 'Cancelled';
-      break;
-    case 'succeeded':
-      return 'Succeeded';
-      break;
-    default:
-      return 'Unknown status';
-      break;
-  }
+  return match ($value) {
+      'requires_payment_method' => 'Requires payment method',
+      'requires_confirmation' => 'Requires confirmation',
+      'requires_action' => 'Requires action',
+      'processing' => 'Processing',
+      'requires_capture' => 'Required capture',
+      'canceled' => 'Cancelled',
+      'succeeded' => 'Succeeded',
+      default => 'Unknown status',
+  };
 }
 
 $db = app()->db;
@@ -127,7 +79,7 @@ if (isset($payment->charges->data[0]->payment_method_details->card)) {
 $date = new DateTime($pm['DateTime'], new DateTimeZone('UTC'));
 $date->setTimezone(new DateTimeZone('Europe/London'));
 
-$pagetitle = 'Payment Receipt SPM' . htmlspecialchars($id);
+$pagetitle = 'Payment Receipt SPM' . htmlspecialchars((string) $id);
 
 ob_start(); ?>
 
@@ -154,18 +106,18 @@ ob_start(); ?>
       </p>
 
       <p>
-        Internal Reference: <span class="font-monospace">SPM<?= htmlspecialchars($id) ?></span>
+        Internal Reference: <span class="font-monospace">SPM<?= htmlspecialchars((string) $id) ?></span>
       </p>
 
       <p>
         For help contact us via<br>
-        <?= htmlspecialchars(app()->tenant->getKey('CLUB_EMAIL')) ?>
+        <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_EMAIL')) ?>
       </p>
     </div>
   </div>
 
   <p>
-    <strong><?php if (isset($payment->charges->data[0]->billing_details->name)) { ?><?= htmlspecialchars($payment->charges->data[0]->billing_details->name) ?><?php } else { ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname'])) ?><?php } ?></strong><br>
+    <strong><?php if (isset($payment->charges->data[0]->billing_details->name)) { ?><?= htmlspecialchars((string) $payment->charges->data[0]->billing_details->name) ?><?php } else { ?><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($pm['Forename'], $pm['Surname'])) ?><?php } ?></strong><br>
     Cardholder
   </p>
 
@@ -176,7 +128,7 @@ ob_start(); ?>
   </div>
 
   <p>
-    Thank you for your payment to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+    Thank you for your payment to <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
   </p>
 
   <p>
@@ -195,7 +147,7 @@ ob_start(); ?>
       <?php
       do { ?>
         <div class="row">
-          <dt class="split-50"><?= htmlspecialchars($item['Name']) ?><br><?= htmlspecialchars($item['Description']) ?></dt>
+          <dt class="split-50"><?= htmlspecialchars((string) $item['Name']) ?><br><?= htmlspecialchars((string) $item['Description']) ?></dt>
           <dd class="split-50">
             <span class="font-monospace">
               &pound;<?= (string) (\Brick\Math\BigDecimal::of((string) $item['Amount']))->withPointMovedLeft(2)->toScale(2) ?>
@@ -249,8 +201,8 @@ ob_start(); ?>
         <dt class="split-50">Card</dt>
         <dd class="split-50">
           <span class="font-monospace">
-            <?= htmlspecialchars(getCardBrand($card->brand)) ?> <?= htmlspecialchars($card->funding) ?> card<br>
-            **** **** **** <?= htmlspecialchars($card->last4) ?>
+            <?= htmlspecialchars((string) getCardBrand($card->brand)) ?> <?= htmlspecialchars((string) $card->funding) ?> card<br>
+            **** **** **** <?= htmlspecialchars((string) $card->last4) ?>
           </span>
         </dd>
       </div>
@@ -284,7 +236,7 @@ ob_start(); ?>
           <dt class="split-50">Device account number</dt>
           <dd class="split-50">
             <span class="font-monospace">
-              **** **** **** <?= htmlspecialchars($card->wallet->dynamic_last4) ?>
+              **** **** **** <?= htmlspecialchars((string) $card->wallet->dynamic_last4) ?>
             </span>
           </dd>
         </div>
@@ -313,26 +265,26 @@ ob_start(); ?>
           <span class="font-monospace">
             <address class="mb-0">
               <?php if (isset($payment->charges->data[0]->billing_details->name)) { ?>
-                <?= htmlspecialchars($payment->charges->data[0]->billing_details->name) ?>
+                <?= htmlspecialchars((string) $payment->charges->data[0]->billing_details->name) ?>
                 <br>
               <?php } ?>
               <?php if (isset($billingAddress->line1) && $billingAddress->line1 != null) { ?>
-                <?= htmlspecialchars($billingAddress->line1) ?><br>
+                <?= htmlspecialchars((string) $billingAddress->line1) ?><br>
               <?php } ?>
               <?php if (isset($billingAddress->line2) && $billingAddress->line2 != null) { ?>
-                <?= htmlspecialchars($billingAddress->line2) ?><br>
+                <?= htmlspecialchars((string) $billingAddress->line2) ?><br>
               <?php } ?>
               <?php if (isset($billingAddress->city) && $billingAddress->city != null) { ?>
-                <?= htmlspecialchars($billingAddress->city) ?><br>
+                <?= htmlspecialchars((string) $billingAddress->city) ?><br>
               <?php } ?>
               <?php if (isset($billingAddress->postal_code) && $billingAddress->postal_code != null) { ?>
-                <?= htmlspecialchars($billingAddress->postal_code) ?><br>
+                <?= htmlspecialchars((string) $billingAddress->postal_code) ?><br>
               <?php } ?>
               <?php if (isset($billingAddress->state) && $billingAddress->state != null) { ?>
-                <?= htmlspecialchars($billingAddress->state) ?><br>
+                <?= htmlspecialchars((string) $billingAddress->state) ?><br>
               <?php } ?>
               <?php if (isset($billingAddress->country) && $billingAddress->country != null) { ?>
-                <?= htmlspecialchars($countries[$billingAddress->country]) ?>
+                <?= htmlspecialchars((string) $countries[$billingAddress->country]) ?>
               <?php } ?>
             </address>
           </span>

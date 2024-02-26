@@ -28,7 +28,7 @@ $squads->execute([
   $tenant->getId()
 ]);
 
-$pagetitle = htmlspecialchars($row['Name']) . " - Lists";
+$pagetitle = htmlspecialchars((string) $row['Name']) . " - Lists";
 
 include BASE_PATH . "views/header.php";
 include BASE_PATH . "views/notifyMenu.php";
@@ -39,16 +39,16 @@ include BASE_PATH . "views/notifyMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify"))?>">Notify</a></li>
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl("notify/lists"))?>">Lists</a></li>
-      <li class="breadcrumb-item active" aria-current="page"><?=htmlspecialchars($row['Name'])?></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify"))?>">Notify</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl("notify/lists"))?>">Lists</a></li>
+      <li class="breadcrumb-item active" aria-current="page"><?=htmlspecialchars((string) $row['Name'])?></li>
     </ol>
   </nav>
 
   <div class="row align-items-center mb-3">
     <div class="col-md-6">
-	    <h1><?=htmlspecialchars($row['Name'])?></h1>
-      <p class="lead"><?=htmlspecialchars($row['Description'])?></p>
+	    <h1><?=htmlspecialchars((string) $row['Name'])?></h1>
+      <p class="lead"><?=htmlspecialchars((string) $row['Description'])?></p>
     </div>
     <div class="col text-sm-end">
       <a href="<?=autoUrl("notify/lists/" . $id . "/edit")?>"
@@ -70,7 +70,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <option value="all" selected>Choose...</option>
               <?php while ($squadsRow = $squads->fetch(PDO::FETCH_ASSOC)) { ?>
               <option value="<?=$squadsRow['SquadID']?>">
-                <?=htmlspecialchars($squadsRow['SquadName'])?>
+                <?=htmlspecialchars((string) $squadsRow['SquadName'])?>
               </option>
               <?php } ?>
             </select>
@@ -81,7 +81,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <option value="null" selected>Select squad first</option>
             </select>
           </div>
-            <button type="button" class="btn btn-success" id="addSwimmer" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
+            <button type="button" class="btn btn-success" id="addSwimmer" data-ajax-url="<?=htmlspecialchars((string) autoUrl("notify/lists/ajax/" . $id))?>" disabled>
               Add member to list
             </button>
             <div id="status">
@@ -105,7 +105,7 @@ include BASE_PATH . "views/notifyMenu.php";
               <option value="null" selected>Search for a user</option>
             </select>
           </div>
-            <button type="button" class="btn btn-success" id="user-add" data-ajax-url="<?=htmlspecialchars(autoUrl("notify/lists/ajax/" . $id))?>" disabled>
+            <button type="button" class="btn btn-success" id="user-add" data-ajax-url="<?=htmlspecialchars((string) autoUrl("notify/lists/ajax/" . $id))?>" disabled>
               Add user to list
             </button>
             <div id="user-status">

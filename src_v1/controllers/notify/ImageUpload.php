@@ -74,7 +74,7 @@ if (is_uploaded_file($temp['tmp_name'])) {
   header('P3P: CP="There is no P3P policy."');
 
   $uuid = Ramsey\Uuid\Uuid::uuid4()->toString();
-  $filename = $uuid . '-' . preg_replace('@[^0-9a-z\.]+@i', '-', basename($temp['name']));
+  $filename = $uuid . '-' . preg_replace('@[^0-9a-z\.]+@i', '-', basename((string) $temp['name']));
 
   $date = (new DateTime('now', new DateTimeZone('Europe/London')))->format('Y/m/d');
   $urlPath = 'notify/public-uploads/' . $date . '/';
@@ -84,13 +84,13 @@ if (is_uploaded_file($temp['tmp_name'])) {
   $url = $urlPath . $filename;
 
   // Sanitize input
-  if (preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", $temp['name'])) {
+  if (preg_match("/([^\w\s\d\-_~,;:\[\]\(\).])|([\.]{2,})/", (string) $temp['name'])) {
     http_response_code(400);
     return;
   }
 
   // Verify extension
-  if (!in_array(strtolower(pathinfo($temp['name'], PATHINFO_EXTENSION)), array("gif", "jpg", "png"))) {
+  if (!in_array(strtolower(pathinfo((string) $temp['name'], PATHINFO_EXTENSION)), ["gif", "jpg", "png"])) {
     http_response_code(400);
     return;
   }
@@ -101,14 +101,14 @@ if (is_uploaded_file($temp['tmp_name'])) {
 
   try {
     $filesystem->write($filenamePath, file_get_contents($temp['tmp_name']), ['visibility' => 'public']);
-  } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile $exception) {
+  } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile) {
     http_response_code(500);
     return;
   }
 
   // Determine the base URL
   $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' ? "https://" : "http://";
-  $baseurl = $protocol . $_SERVER["HTTP_HOST"] . rtrim(dirname($_SERVER['REQUEST_URI']), "/") . "/";
+  $baseurl = $protocol . $_SERVER["HTTP_HOST"] . rtrim(dirname((string) $_SERVER['REQUEST_URI']), "/") . "/";
 
   // Respond to the successful upload with JSON.
   // Use a location key to specify the path to the saved image resource.

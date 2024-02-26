@@ -22,7 +22,7 @@ $getBatchItems->execute([
 ]);
 $item = $getBatchItems->fetch(PDO::FETCH_OBJ);
 
-$payMethods = json_decode($batch->payMethods);
+$payMethods = json_decode((string) $batch->payMethods);
 
 $payMethodStrings = [
   'card' => 'credit/debit card',
@@ -42,7 +42,7 @@ $canPay = $now < $due;
 $markdown = new \ParsedownExtra();
 $markdown->setSafeMode(true);
 
-$pagetitle = "Batch " . htmlspecialchars($id) . " - Membership Centre";
+$pagetitle = "Batch " . htmlspecialchars((string) $id) . " - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -53,7 +53,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
         <li class="breadcrumb-item active" aria-current="page">Batch</li>
       </ol>
     </nav>
@@ -64,12 +64,12 @@ include BASE_PATH . "views/header.php";
           Batch for <?= htmlspecialchars($batch->firstName . ' ' . $batch->lastName) ?>
         </h1>
         <p class="lead mb-0">
-          <?= htmlspecialchars($id) ?>
+          <?= htmlspecialchars((string) $id) ?>
         </p>
       </div>
       <?php if ($user->hasPermission('Admin')) { ?>
         <div class="col-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id/edit")) ?>" class="btn btn-success">Edit</a>
+          <a href="<?= htmlspecialchars((string) autoUrl("memberships/batches/$id/edit")) ?>" class="btn btn-success">Edit</a>
         </div>
       <?php } ?>
     </div>
@@ -109,14 +109,14 @@ include BASE_PATH . "views/header.php";
           Batch ID
         </dt>
         <dd class="col-9">
-          <?= htmlspecialchars($batch->id) ?>
+          <?= htmlspecialchars((string) $batch->id) ?>
         </dd>
 
         <dt class="col-3">
           Amount
         </dt>
         <dd class="col-9">
-          <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
+          <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($batch->total), 'GBP')) ?>
         </dd>
 
         <dt class="col-3">
@@ -187,7 +187,7 @@ include BASE_PATH . "views/header.php";
             </div>
           <?php } else if (sizeof($payMethods) > 0) { ?>
             <!-- Just go straight to payment -->
-            <input type="hidden" name="pay-method" value="<?= htmlspecialchars($payMethods[0]) ?>">
+            <input type="hidden" name="pay-method" value="<?= htmlspecialchars((string) $payMethods[0]) ?>">
             <p>You can only pay for this batch with <?= htmlspecialchars($payMethodStrings[$payMethods[0]]) ?>.</p>
           <?php } ?>
           <p class="d-grid mb-1">
@@ -204,35 +204,35 @@ include BASE_PATH . "views/header.php";
           <?php do { ?>
             <li class="list-group-item">
               <h3><?= htmlspecialchars($item->firstName . ' ' . $item->lastName) ?></h3>
-              <p class="lead"><?= htmlspecialchars($item->membershipName) ?></p>
+              <p class="lead"><?= htmlspecialchars((string) $item->membershipName) ?></p>
 
               <dl class="row">
                 <dt class="col-3">
                   Membership ID
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars($item->membershipId) ?>
+                  <?= htmlspecialchars((string) $item->membershipId) ?>
                 </dd>
 
                 <dt class="col-3">
                   Period
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars($item->yearName) ?> (<?= htmlspecialchars((new DateTime($item->yearStart))->format('j F Y')) ?> to <?= htmlspecialchars((new DateTime($item->yearEnd))->format('j F Y')) ?>)
+                  <?= htmlspecialchars((string) $item->yearName) ?> (<?= htmlspecialchars((new DateTime($item->yearStart))->format('j F Y')) ?> to <?= htmlspecialchars((new DateTime($item->yearEnd))->format('j F Y')) ?>)
                 </dd>
 
                 <dt class="col-3">
                   Amount
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), 'GBP')) ?>
+                  <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($item->amount), 'GBP')) ?>
                 </dd>
 
                 <dt class="col-3">
-                  <?= htmlspecialchars($tenant->getKey('NGB_NAME')) ?> #
+                  <?= htmlspecialchars((string) $tenant->getKey('NGB_NAME')) ?> #
                 </dt>
                 <dd class="col-9">
-                  <?= htmlspecialchars($item->ngbId) ?>
+                  <?= htmlspecialchars((string) $item->ngbId) ?>
                 </dd>
 
                 <?php if ($item->notes) { ?>
@@ -259,7 +259,7 @@ include BASE_PATH . "views/header.php";
 
         <?php if (app()->user->hasPermission('Admin')) { ?>
           <p>
-            <a href="<?= htmlspecialchars(autoUrl("memberships/batches/$id/send-email")) ?>">Send email to user</a>
+            <a href="<?= htmlspecialchars((string) autoUrl("memberships/batches/$id/send-email")) ?>">Send email to user</a>
           </p>
         <?php } ?>
       <?php } else { ?>

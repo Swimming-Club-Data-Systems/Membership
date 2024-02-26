@@ -18,7 +18,7 @@ use Ramsey\Uuid\Uuid as UuidUuid;
 $user = null;
 $status = true;
 
-$email = trim(mb_strtolower($_POST['user-email']));
+$email = trim(mb_strtolower((string) $_POST['user-email']));
 
 if (!isset($_POST['user'])) {
   $getUserInfo = $db->prepare("SELECT UserID FROM users WHERE EmailAddress = ? AND Tenant = ?");
@@ -48,8 +48,8 @@ if (!isset($_POST['user'])) {
 if (!$user) {
   // Check details and create a new user
 
-  $forename = trim($_POST['first']);
-  $surname = trim($_POST['last']);
+  $forename = trim((string) $_POST['first']);
+  $surname = trim((string) $_POST['last']);
 
   if (mb_strlen($forename) < 1 || mb_strlen($surname) < 1) {
     $status = false;
@@ -61,7 +61,7 @@ if (!$user) {
   try {
     $number = PhoneNumber::parse($_POST['phone'], 'GB');
     $mobile = $number->format(PhoneNumberFormat::E164);
-  } catch (PhoneNumberParseException $e) {
+  } catch (PhoneNumberParseException) {
     // 'The string supplied is too short to be a phone number.'
     $status = false;
   }

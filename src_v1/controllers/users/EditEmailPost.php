@@ -9,7 +9,7 @@ $tenant = app()->tenant;
 
 use Respect\Validation\Validator as v;
 
-$email = mb_strtolower(trim($_POST['new-user-email']));
+$email = mb_strtolower(trim((string) $_POST['new-user-email']));
 
 if (!v::email()->validate($email)) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Error'] = true;
@@ -19,7 +19,7 @@ if (!v::email()->validate($email)) {
     $update = $db->prepare("UPDATE users SET EmailAddress = ? WHERE UserID = ?");
     $update->execute([$email, $id]);
     $_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Success'] = true;
-  } catch (Exception $e) {
+  } catch (Exception) {
     $_SESSION['TENANT-' . app()->tenant->getId()]['User-Update-Email-Error'] = true;
   }
 }

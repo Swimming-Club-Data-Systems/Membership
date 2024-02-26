@@ -30,7 +30,7 @@ if (!function_exists('chesterStandardMenu')) {
             $key = 'USER_APP_MENU_JSON_' . $user->getId();
 
             if (isset($_SESSION[$key])) {
-                $menu = json_decode($_SESSION[$key], true);
+                $menu = json_decode((string) $_SESSION[$key], true);
             } else {
                 try {
                     $client = new GuzzleHttp\Client();
@@ -43,7 +43,7 @@ if (!function_exists('chesterStandardMenu')) {
                     $data = (string) $res->getBody();
                     $_SESSION[$key] = $data;
                     $menu = json_decode($data, true);
-                } catch (\GuzzleHttp\Exception\ClientException $e) {
+                } catch (\GuzzleHttp\Exception\ClientException) {
                     // ignore the error, no menu will be provided
                 }
             }
@@ -96,10 +96,10 @@ if (!function_exists('chesterStandardMenu')) {
             <ul class="navbar-nav me-auto">
                 <?php if (!empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
                     <li class="nav-item">
-                        <a href="<?= htmlspecialchars(autoUrl("")) ?>"
+                        <a href="<?= htmlspecialchars((string) autoUrl("")) ?>"
                            class="text-dark text-decoration-none fw-bold">
                             <?php if ($logos) { ?>
-                                <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>"
+                                <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>"
                                      alt="Home" class="img-fluid"
                                      style="height: 2rem">
                             <?php } else { ?>
@@ -113,12 +113,12 @@ if (!function_exists('chesterStandardMenu')) {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                                    aria-expanded="false">
-                                    <?= htmlspecialchars($item['name']) ?>
+                                    <?= htmlspecialchars((string) $item['name']) ?>
                                 </a>
                                 <ul class="dropdown-menu">
                                     <?php foreach ($item['children'] as $subItem) { ?>
                                         <li><a class="dropdown-item"
-                                               href="<?= htmlspecialchars($subItem['href']) ?>"><?= htmlspecialchars($subItem['name']) ?></a>
+                                               href="<?= htmlspecialchars((string) $subItem['href']) ?>"><?= htmlspecialchars((string) $subItem['name']) ?></a>
                                         </li>
                                     <?php } ?>
                                 </ul>
@@ -126,7 +126,7 @@ if (!function_exists('chesterStandardMenu')) {
                         <?php } else { ?>
                             <li class="nav-item">
                                 <a class="nav-link"
-                                   href="<?= htmlspecialchars($item['href']) ?>"><?= htmlspecialchars($item['name']) ?></a>
+                                   href="<?= htmlspecialchars((string) $item['href']) ?>"><?= htmlspecialchars((string) $item['name']) ?></a>
                             </li>
                         <?php } ?>
                     <?php } ?>
@@ -134,27 +134,27 @@ if (!function_exists('chesterStandardMenu')) {
                 <?php } ?>
                 <?php if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) { ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= htmlspecialchars(autoUrl("login")) ?>">Login</a>
+                        <a class="nav-link" href="<?= htmlspecialchars((string) autoUrl("login")) ?>">Login</a>
                     </li>
                     <?php if (isset(app()->tenant) && app()->tenant->getKey('ASA_CLUB_CODE') == 'UOSZ' && false) { ?>
                         <li class="nav-item">
                             <a class="nav-link"
-                               href="<?= htmlspecialchars(autoUrl("register/university-of-sheffield")) ?>">Sign Up
+                               href="<?= htmlspecialchars((string) autoUrl("register/university-of-sheffield")) ?>">Sign Up
                                 (Trials)</a>
                         </li>
                     <?php } ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= htmlspecialchars(autoUrl("timetable")) ?>">Timetable</a>
+                        <a class="nav-link" href="<?= htmlspecialchars((string) autoUrl("timetable")) ?>">Timetable</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= htmlspecialchars(autoUrl("timeconverter")) ?>">Time Converter</a>
+                        <a class="nav-link" href="<?= htmlspecialchars((string) autoUrl("timeconverter")) ?>">Time Converter</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= htmlspecialchars(autoUrl("log-books")) ?>">Log Books</a>
+                        <a class="nav-link" href="<?= htmlspecialchars((string) autoUrl("log-books")) ?>">Log Books</a>
                     </li>
                     <?php if (app()->tenant->getKey('CLUB_WEBSITE')) { ?>
                         <li class="nav-item d-lg-none">
-                            <a class="nav-link" href="<?= htmlspecialchars(app()->tenant->getKey('CLUB_WEBSITE')) ?>"
+                            <a class="nav-link" href="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_WEBSITE')) ?>"
                                target="_blank">Club Website <i class="fa fa-external-link" aria-hidden="true"></i></a>
                         </li>
                     <?php } ?>
@@ -162,7 +162,7 @@ if (!function_exists('chesterStandardMenu')) {
             </ul>
             <?php if (!empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
                 $currentUser = app()->user;
-                $user_name = preg_replace("/( +)/", '&nbsp;', htmlspecialchars($currentUser->getFirstName())); ?>
+                $user_name = preg_replace("/( +)/", '&nbsp;', htmlspecialchars((string) $currentUser->getFirstName())); ?>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
@@ -177,7 +177,7 @@ if (!function_exists('chesterStandardMenu')) {
                                 <h6 class="dropdown-header">Switch account mode</h6>
                                 <?php foreach ($perms as $perm => $name) { ?>
                                     <a class="dropdown-item"
-                                       href="<?= autoUrl("account-switch?type=" . urlencode($perm)) ?>"><?= htmlspecialchars($name) ?><?php if ($perm == $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) { ?>
+                                       href="<?= autoUrl("account-switch?type=" . urlencode((string) $perm)) ?>"><?= htmlspecialchars((string) $name) ?><?php if ($perm == $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel']) { ?>
                                             <i class="text-primary fa fa-check-circle fa-fw"
                                                aria-hidden="true"></i><?php } ?></a>
                                 <?php } ?>
@@ -190,19 +190,19 @@ if (!function_exists('chesterStandardMenu')) {
                             <a class="dropdown-item" href="/my-account/email-options">
                                 Email Options
                             </a>
-                            <a class="dropdown-item" href="<?= htmlspecialchars(autoUrl("emergency-contacts")) ?>">
+                            <a class="dropdown-item" href="<?= htmlspecialchars((string) autoUrl("emergency-contacts")) ?>">
                                 Emergency Contacts
                             </a>
                             <a class="dropdown-item" href="/my-account/password-and-security">
                                 Password and Security
                             </a>
                             <a class="dropdown-item"
-                               href="<?= htmlspecialchars(autoUrl("my-account/notify-history")) ?>">
+                               href="<?= htmlspecialchars((string) autoUrl("my-account/notify-history")) ?>">
                                 Message History
                             </a>
                             <?php if ($user->hasPermission('Parent')) { ?>
                                 <a class="dropdown-item"
-                                   href="<?= htmlspecialchars(autoUrl("account-switch?type=Parent&redirect=" . urlencode(autoUrl("my-account/add-member")))) ?>">
+                                   href="<?= htmlspecialchars((string) autoUrl("account-switch?type=Parent&redirect=" . urlencode((string) autoUrl("my-account/add-member")))) ?>">
                                     Add Member
                                 </a>
                             <?php } ?>

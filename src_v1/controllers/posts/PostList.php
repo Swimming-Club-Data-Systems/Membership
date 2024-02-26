@@ -52,7 +52,7 @@ try {
   $query->bindParam('tenant', $tenantId, PDO::PARAM_INT);
   $query->bindParam('start', $start, PDO::PARAM_INT);
   $query->execute();
-} catch (PDOException $e) {
+} catch (PDOException) {
   halt(500);
 }
 $row = $query->fetch(PDO::FETCH_ASSOC);
@@ -80,7 +80,7 @@ include BASE_PATH . "views/postsMenu.php"; ?>
       </div>
       <?php if (app()->user->hasPermission('Admin')) { ?>
         <div class="col-lg-auto ms-auto">
-          <a href="<?= htmlspecialchars(autoUrl('pages/new')) ?>" class="btn btn-success">Add page</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('pages/new')) ?>" class="btn btn-success">Add page</a>
         </div>
       <?php } ?>
     </div>
@@ -104,26 +104,26 @@ include BASE_PATH . "views/postsMenu.php"; ?>
                 <?php
                 $post_title = $row['Title'];
                 $truncate = "";
-                if (mb_strlen($post_title) == 0) {
+                if (mb_strlen((string) $post_title) == 0) {
                   $post_title = autoUrl($url);
                   $truncate = "text-truncate";
                 } ?>
                 <p class="mb-0 <?= $truncate ?>">
                   <?php
                   $url = "pages/" . $row['ID'];
-                  if ($row['Path'] != null && mb_strlen($row['Path']) > 0) {
+                  if ($row['Path'] != null && mb_strlen((string) $row['Path']) > 0) {
                     $url = "pages/" . $row['Path'];
                   }
                   ?>
                   <a href="<?= autoUrl($url) ?>">
                     <strong>
-                      <?= htmlspecialchars($post_title) ?>
+                      <?= htmlspecialchars((string) $post_title) ?>
                     </strong>
                   </a>
                 </p>
                 <?php if ($row['Excerpt'] != "") { ?>
                   <p class="mb-0">
-                    <?= htmlspecialchars($row['Excerpt']) ?>
+                    <?= htmlspecialchars((string) $row['Excerpt']) ?>
                   </p>
                 <?php } ?>
                 <p class="mb-0">
@@ -133,7 +133,7 @@ include BASE_PATH . "views/postsMenu.php"; ?>
               </div>
               <?php if (app()->user->hasPermission('Admin')) { ?>
                 <div class="col-auto">
-                  <a href="<?= htmlspecialchars(autoUrl("pages/$id/edit")) ?>" class="btn btn-light">Edit</a>
+                  <a href="<?= htmlspecialchars((string) autoUrl("pages/$id/edit")) ?>" class="btn btn-light">Edit</a>
                 </div>
               <?php } ?>
             </div>

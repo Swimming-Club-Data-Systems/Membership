@@ -44,7 +44,7 @@ try {
     throw new Exception('Current user does not exist. This means an unknown error occurred.');
   }
 
-  if (!password_verify($_POST['password'], $currentUser['Password'])) {
+  if (!password_verify((string) $_POST['password'], (string) $currentUser['Password'])) {
     throw new Exception('The password provided was incorrect.');
   }
 
@@ -115,7 +115,7 @@ try {
     $delete->execute([
       $_POST['member']
     ]);
-  } catch (PDOException $e) {
+  } catch (PDOException) {
     // Ignore lack of legacy table
   }
 

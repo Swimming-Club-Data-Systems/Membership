@@ -15,7 +15,7 @@ if ($row == null) {
 	halt(404);
 }
 
-$array = json_decode($row['UserJSON']);
+$array = json_decode((string) $row['UserJSON']);
 
 //pre($array);
 
@@ -55,7 +55,7 @@ try {
     $user_id,
     'Parent'
   ]);
-} catch (PDOException $e) {
+} catch (PDOException) {
 
 }
 
@@ -83,7 +83,7 @@ if ($count == 1) {
   <div class="alert alert-success mb-0">
     <p class="mb-0">
       <strong>
-        Hello ' . htmlspecialchars($forename) . '! You have successfully verified your email address.
+        Hello ' . htmlspecialchars((string) $forename) . '! You have successfully verified your email address.
       </strong>
     </p>
 

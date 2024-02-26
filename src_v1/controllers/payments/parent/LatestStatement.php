@@ -13,6 +13,6 @@ try {
   } else {
     header("Location: " . autoUrl("payments/statements/" . $payment));
   }
-} catch (Exception $e) {
+} catch (Exception) {
   halt(404);
 }

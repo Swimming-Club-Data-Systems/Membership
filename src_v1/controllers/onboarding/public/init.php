@@ -17,7 +17,7 @@ if ($session->status == 'not_ready') {
 } else if (!$session->tokenOn) {
   header("location: " . autoUrl("onboarding/go/error"));
 } else if (isset(app()->user) && app()->user->getId() != $session->user) {
-  header("location: " . autoUrl("onboarding/go/wrong-account?session=" . urlencode($_GET['session']) . '&token=' . urlencode($_GET['token'])));
+  header("location: " . autoUrl("onboarding/go/wrong-account?session=" . urlencode((string) $_GET['session']) . '&token=' . urlencode((string) $_GET['token'])));
 } else {
   // Good to go
 

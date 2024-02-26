@@ -38,9 +38,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -69,11 +69,11 @@ include BASE_PATH . "views/head.php";
                     <?php $showButton = ($onboardingMember->isCurrentTask($stage) && !$displayed); ?>
                     <li class="list-group-item <?php if ($showButton) { ?>py-3 fw-bold<?php } else { ?>disabled<?php } ?>">
                       <div class="d-flex justify-content-between align-items-center">
-                        <span><?= htmlspecialchars($tasks[$stage]) ?></span><?php if ($details->completed) { ?><span class="badge bg-success rounded-pill"><i class="fa fa-check-circle" aria-hidden="true"></i> Done</span><?php } else { ?><span class="badge bg-warning text-dark rounded-pill"><i class="fa fa-minus-circle" aria-hidden="true"></i> Pending</span><?php } ?>
+                        <span><?= htmlspecialchars((string) $tasks[$stage]) ?></span><?php if ($details->completed) { ?><span class="badge bg-success rounded-pill"><i class="fa fa-check-circle" aria-hidden="true"></i> Done</span><?php } else { ?><span class="badge bg-warning text-dark rounded-pill"><i class="fa fa-minus-circle" aria-hidden="true"></i> Pending</span><?php } ?>
                       </div>
                       <?php if ($showButton) { ?>
                         <p class="mb-0 mt-2">
-                          <a href="<?= htmlspecialchars(autoUrl('onboarding/go/member-forms/' . $onboardingMember->id . '/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+                          <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go/member-forms/' . $onboardingMember->id . '/start-task')) ?>" class="btn btn-success">Complete task <i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
                         </p>
                     <?php }
                     } ?>
@@ -99,7 +99,7 @@ include BASE_PATH . "views/head.php";
               <strong>There are no member tasks to complete</strong>
             </p>
             <p class="mb-0">
-              We have marked the member section as complete. <a href="<?= htmlspecialchars(autoUrl('onboarding/go')) ?>" class="alert-link">Return to main page</a>.
+              We have marked the member section as complete. <a href="<?= htmlspecialchars((string) autoUrl('onboarding/go')) ?>" class="alert-link">Return to main page</a>.
             </p>
           </div>
         <?php } ?>

@@ -59,7 +59,7 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
                 <td><?php if ($squad) { ?>
                     <ul class="list-unstyled mb-0">
                       <?php do { ?>
-                        <li><?= htmlspecialchars($squad['SquadName']) ?></li>
+                        <li><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
                       <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>
                     </ul>
                   <?php } else { ?>
@@ -71,9 +71,9 @@ include BASE_PATH . "views/swimmersMenu.php"; ?>
                 ?><td><span class="font-monospace"><?= htmlspecialchars($asaN) ?></span></td><?php
                                                                                     $updateASA->execute([$asaN, $memID]);
                                                                                   } else { ?>
-                  <td><span class="font-monospace"><?= htmlspecialchars($row['ASANumber']) ?></span></td>
+                  <td><span class="font-monospace"><?= htmlspecialchars((string) $row['ASANumber']) ?></span></td>
                 <?php } ?>
-                <td><samp><?= htmlspecialchars($row['AccessKey']) ?></samp></td>
+                <td><samp><?= htmlspecialchars((string) $row['AccessKey']) ?></samp></td>
               </tr>
             <?php } while ($row = $swimmers->fetch(PDO::FETCH_ASSOC)); ?>
           </tbody>

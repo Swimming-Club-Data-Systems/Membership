@@ -14,14 +14,14 @@ include BASE_PATH . "views/header.php";
         <p class="lead">By proceeding to use this progressive web app you agree to our use of cookies.</p>
       <?php } ?>
 
-      <h1 class="mb-5">Welcome to the <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership System</h1>
+      <h1 class="mb-5">Welcome to the <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Membership System</h1>
 
       <h2>Already registered?</h2>
       <p class="lead">
         Log in to your account now
       </p>
       <p class="mb-5">
-        <a class="btn btn-lg btn-primary" href="<?= htmlspecialchars(autoUrl('login')) ?>">
+        <a class="btn btn-lg btn-primary" href="<?= htmlspecialchars((string) autoUrl('login')) ?>">
           Login
         </a>
       </p>

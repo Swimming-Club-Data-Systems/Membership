@@ -21,6 +21,6 @@ try {
   $updateDefault = $db->prepare("UPDATE `paymentPreferredMandate` SET `MandateID` = ? WHERE `UserID` = ?");
   $updateDefault->execute([$id, $_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
   header("Location: " . autoUrl("payments/mandates"));
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }

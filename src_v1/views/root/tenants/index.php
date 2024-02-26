@@ -31,7 +31,7 @@ include BASE_PATH . "views/root/header.php";
               }
               $link = 'https://' . $link;
             ?>
-              <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars($link) ?>"><?= htmlspecialchars($club['Name']) ?></a>
+              <a class="list-group-item list-group-item-action" href="<?= htmlspecialchars($link) ?>"><?= htmlspecialchars((string) $club['Name']) ?></a>
             <?php } while ($club = $getClubs->fetch(PDO::FETCH_ASSOC)); ?>
           </div>
         </div>

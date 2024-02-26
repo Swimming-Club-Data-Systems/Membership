@@ -79,7 +79,7 @@ if ($order == 'time') {
 $getTime->execute([$id, (int) $_GET['stroke'], (int) $_GET['distance'], $_GET['course']]);
 $result = $getTime->fetch(PDO::FETCH_ASSOC);
 
-$pagetitle = htmlspecialchars(\SCDS\Formatting\Names::format($swimmer['MForename'], $swimmer['MSurname'])) . ' Times';
+$pagetitle = htmlspecialchars((string) \SCDS\Formatting\Names::format($swimmer['MForename'], $swimmer['MSurname'])) . ' Times';
 
 include BASE_PATH . 'views/header.php';
 
@@ -89,18 +89,18 @@ include BASE_PATH . 'views/header.php';
   <nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<?=autoUrl("members")?>">Members</a></li>
-			<li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>">#<?=htmlspecialchars($id)?></a></li>
+			<li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>">#<?=htmlspecialchars((string) $id)?></a></li>
       <li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id . "/times")?>">Best times</a></li>
 			<li class="breadcrumb-item active" aria-current="page"><?=htmlspecialchars((int) $_GET['distance'])?>m <?=$strokes[(int) $_GET['stroke']]?></li>
 		</ol>
 	</nav>
 
-  <h1><?=htmlspecialchars((int) $_GET['distance'])?>m <?=$strokes[(int) $_GET['stroke']]?> - <?=htmlspecialchars($swimmer["MForename"])?> <?=htmlspecialchars($swimmer["MSurname"])?></h1>
+  <h1><?=htmlspecialchars((int) $_GET['distance'])?>m <?=$strokes[(int) $_GET['stroke']]?> - <?=htmlspecialchars((string) $swimmer["MForename"])?> <?=htmlspecialchars((string) $swimmer["MSurname"])?></h1>
 
   <?php if ($order == 'time') { ?>
-  <p>Swims in time order. <a href="<?=htmlspecialchars(autoUrl("members/" . $id . "/times/event?course=" . $_GET['course'] . "&stroke=" . $_GET['stroke'] . "&distance=" . $_GET['distance'] . "&order=date"))?>">Switch to date order</a>.</p>
+  <p>Swims in time order. <a href="<?=htmlspecialchars((string) autoUrl("members/" . $id . "/times/event?course=" . $_GET['course'] . "&stroke=" . $_GET['stroke'] . "&distance=" . $_GET['distance'] . "&order=date"))?>">Switch to date order</a>.</p>
   <?php } else { ?>
-  <p>Swims in date order. <a href="<?=htmlspecialchars(autoUrl("members/" . $id . "/times/event?course=" . $_GET['course'] . "&stroke=" . $_GET['stroke'] . "&distance=" . $_GET['distance'] . "&order=time"))?>">Switch to time order</a>.</p>
+  <p>Swims in date order. <a href="<?=htmlspecialchars((string) autoUrl("members/" . $id . "/times/event?course=" . $_GET['course'] . "&stroke=" . $_GET['stroke'] . "&distance=" . $_GET['distance'] . "&order=time"))?>">Switch to time order</a>.</p>
   <?php } ?>
 
   <?php if ($result) { ?>
@@ -129,17 +129,17 @@ include BASE_PATH . 'views/header.php';
           <?=htmlspecialchars((new DateTime($result['Date'], new DateTimeZone('Europe/London')))->format("d/m/Y"))?>
         </div>
         <div class="col-4 col-sm-3 col-md-2 text-end">
-          <span class="font-monospace"><?=htmlspecialchars($result['Time'])?></span>
+          <span class="font-monospace"><?=htmlspecialchars((string) $result['Time'])?></span>
         </div>
-        <div class="col-8 col-sm-6 col-md-5 col-lg-4 text-truncate d-none d-sm-block" title="<?php if ($result['GalaName'] == null) { ?><?=htmlspecialchars($result['Name'])?><?php } else { ?><?=htmlspecialchars($result['GalaName'])?><?php } ?>">
+        <div class="col-8 col-sm-6 col-md-5 col-lg-4 text-truncate d-none d-sm-block" title="<?php if ($result['GalaName'] == null) { ?><?=htmlspecialchars((string) $result['Name'])?><?php } else { ?><?=htmlspecialchars((string) $result['GalaName'])?><?php } ?>">
           <?php if ($result['GalaName'] == null) { ?>
-          <?=htmlspecialchars($result['Name'])?><?php if (mb_strlen($result['Name']) == 30) { ?>&hellip;<?php } ?>
+          <?=htmlspecialchars((string) $result['Name'])?><?php if (mb_strlen((string) $result['Name']) == 30) { ?>&hellip;<?php } ?>
           <?php } else { ?>
-          <?=htmlspecialchars($result['GalaName'])?>
+          <?=htmlspecialchars((string) $result['GalaName'])?>
           <?php } ?>
         </div>
         <div class="col-4 col-sm-6 col-md-3 text-end text-lg-start col-lg-2 d-sm-none d-md-block text-truncate">
-          <?=htmlspecialchars($result['City'])?>
+          <?=htmlspecialchars((string) $result['City'])?>
         </div>
       </div>
     </div>

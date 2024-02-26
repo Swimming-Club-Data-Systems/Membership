@@ -2,7 +2,7 @@
 
 $emailPrefix = '';
 if (!app()->tenant->isCLS()) {
-	$emailPrefix = mb_strtolower(trim(app()->tenant->getKey('ASA_CLUB_CODE'))) . '-';
+	$emailPrefix = mb_strtolower(trim((string) app()->tenant->getKey('ASA_CLUB_CODE'))) . '-';
 }
 
 ignore_user_abort(true);

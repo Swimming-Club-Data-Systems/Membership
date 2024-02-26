@@ -28,11 +28,11 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
   <!-- <div class="mt-3 mb-n3 text-center" style="background: #000000;">
     <div class="container-xl">
       <video class="d-none d-sm-block mx-auto my-0 p-0 img-fluid" autoplay loop muted playsinline>
-        <source src="<?= htmlspecialchars($covidVideos[rand(0, sizeof($covidVideos) - 1)]) ?>" type="video/mp4" />
+        <source src="<?= htmlspecialchars($covidVideos[random_int(0, sizeof($covidVideos) - 1)]) ?>" type="video/mp4" />
         A COVID-19 video message appears here but your browser does not support the video element.
       </video>
       <video class="d-block d-sm-none mx-auto my-0 p-0 img-fluid" autoplay loop muted playsinline>
-        <source src="<?= htmlspecialchars($covidMobileVideos[rand(0, sizeof($covidMobileVideos) - 1)]) ?>" type="video/mp4" />
+        <source src="<?= htmlspecialchars($covidMobileVideos[random_int(0, sizeof($covidMobileVideos) - 1)]) ?>" type="video/mp4" />
         A COVID-19 video message appears here but your browser does not support the video element.
       </video>
     </div>
@@ -45,17 +45,17 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
           <div class="row">
             <div class="col">
               <address>
-                <?php $addr = json_decode(app()->tenant->getKey('CLUB_ADDRESS')); ?>
-                <strong><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
+                <?php $addr = json_decode((string) app()->tenant->getKey('CLUB_ADDRESS')); ?>
+                <strong><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></strong><br>
                 <?php
                 if ($addr) {
                   for ($i = 0; $i < sizeof($addr); $i++) { ?>
-                    <?= htmlspecialchars($addr[$i]) ?><br>
+                    <?= htmlspecialchars((string) $addr[$i]) ?><br>
                 <?php }
                 } ?>
               </address>
               <!--<p><i class="fa fa-envelope fa-fw" aria-hidden="true"></i> <a href="mailto:enquiries@chesterlestreetasc.co.uk" target="new">E-Mail Us</a></p>-->
-              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= autoUrl("reportanissue?url=" . urlencode(app('request')->curl)) ?>">Report an issue with this page</a>
+              <p><i class="fa fa-flag fa-fw" aria-hidden="true"></i> <a href="<?= autoUrl("reportanissue?url=" . urlencode((string) app('request')->curl)) ?>">Report an issue with this page</a>
               </p>
             </div>
           </div>
@@ -66,12 +66,12 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
               <ul class="list-unstyled cls-global-footer-link-spacer">
                 <li><strong>Membership System Support</strong></li>
                 <li>
-                  <a href="<?= autoUrl("privacy") ?>" target="_blank" title="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
+                  <a href="<?= autoUrl("privacy") ?>" target="_blank" title="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Privacy Policy">
                     Our Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="<?= htmlspecialchars(autoUrl('help-and-support', false)) ?>" title="Help and Support">
+                  <a href="<?= htmlspecialchars((string) autoUrl('help-and-support', false)) ?>" title="Help and Support">
                     Help and Support
                   </a>
                 </li>
@@ -98,8 +98,8 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
                 <li><a title="British Swimming" target="_blank" href="https://www.swimming.org/britishswimming/">British
                     Swimming</a></li>
                 <li><a title="the Amateur Swimming Association" target="_blank" href="https://www.swimming.org/swimengland/">Swim England</a></li>
-                <li><a title="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars($districts[app()->tenant->getKey('ASA_DISTRICT')]['name']) ?></a></li>
-                <li><a title="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars($counties[app()->tenant->getKey('ASA_COUNTY')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['title']) ?>" target="_blank" href="<?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['website']) ?>"><?= htmlspecialchars((string) $districts[app()->tenant->getKey('ASA_DISTRICT')]['name']) ?></a></li>
+                <li><a title="<?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['title']) ?>" target="_blank" href="<?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['website']) ?>"><?= htmlspecialchars((string) $counties[app()->tenant->getKey('ASA_COUNTY')]['name']) ?></a></li>
               </ul>
 
             </div>
@@ -131,9 +131,9 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
           $seconds = $time_end - $time_start;
           ?>
           <p class="hidden-print mb-1">
-            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+            Membership is designed and built by <a class="text-white" href="https://www.myswimmingclub.uk" target="_blank">Swimming Club Data Systems</a>. Licenced to <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
           </p>
-          <p class="mb-1">Page rendered in <?= number_format($seconds, 3) ?> seconds. <?php if (defined('SOFTWARE_VERSION')) { ?>Software version <?= mb_substr(SOFTWARE_VERSION, 0, 7); ?>.<?php } ?>
+          <p class="mb-1">Page rendered in <?= number_format($seconds, 3) ?> seconds. <?php if (defined('SOFTWARE_VERSION')) { ?>Software version <?= mb_substr((string) SOFTWARE_VERSION, 0, 7); ?>.<?php } ?>
           </p>
           <p class="mb-0">
             &copy; <?= $time->format('Y') ?> <span class="org fn">Swimming Club Data Systems</span>. Swimming Club Data Systems is not responsible
@@ -145,7 +145,7 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
   </div><!-- /.container -->
 </footer>
 
-<div id="app-js-info" data-root="<?= htmlspecialchars(autoUrl("")) ?>" data-check-login-url="<?= htmlspecialchars(autoUrl("check-login.json")) ?>" data-service-worker-url="<?= htmlspecialchars(autoUrl("sw.js", false)) ?>"></div>
+<div id="app-js-info" data-root="<?= htmlspecialchars((string) autoUrl("")) ?>" data-check-login-url="<?= htmlspecialchars((string) autoUrl("check-login.json")) ?>" data-service-worker-url="<?= htmlspecialchars((string) autoUrl("sw.js", false)) ?>"></div>
 
 <!-- Modals and Other Hidden HTML -->
 <?php
@@ -153,19 +153,19 @@ $time = new DateTime('now', new DateTimeZone('Europe/London'));
 $script = autoUrl(getCompiledAsset('main.js'), false);
 
 ?>
-<script rel="preload" src="<?= htmlspecialchars($script) ?>"></script>
+<script rel="preload" src="<?= htmlspecialchars((string) $script) ?>"></script>
 <?php if (!isset($_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) || !$_SESSION['TENANT-' . app()->tenant->getId()]['PWA']) { ?>
   <script defer src="https://static.chesterlestreetasc.co.uk/global/headers/GlobalNavigation.js"></script>
 <?php } ?>
 <?php if (isset($use_website_menu) && $use_website_menu) { ?>
   <script defer src="https://static.chesterlestreetasc.co.uk/global/headers/MainSiteMenu.js"></script>
 <?php } ?>
-<script src="<?= htmlspecialchars(autoUrl("js/app.js", false)) ?>"></script>
+<script src="<?= htmlspecialchars((string) autoUrl("js/app.js", false)) ?>"></script>
 
 <?php if (isset($this->js)) { ?>
   <!-- Load per page JS -->
   <?php foreach ($this->js as $script) { ?>
-    <script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars($script['url']) ?>"></script>
+    <script <?php if ($script['module']) { ?>type="module" <?php } ?> src="<?= htmlspecialchars((string) $script['url']) ?>"></script>
   <?php } ?>
 <?php } ?>
 

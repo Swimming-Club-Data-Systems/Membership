@@ -48,7 +48,7 @@ $pagination = new Zebra_Pagination();
 $pagination->records($count);
 $pagination->records_per_page(30);
 
-$pagetitle = htmlspecialchars($year['Name']) . " - Membership Years - Membership Centre";
+$pagetitle = htmlspecialchars((string) $year['Name']) . " - Membership Years - Membership Centre";
 include BASE_PATH . "views/header.php";
 
 ?>
@@ -59,23 +59,23 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars(autoUrl("memberships/years")) ?>">Years</a></li>
-        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars($year['Name']) ?></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item" aria-current="page"><a href="<?= htmlspecialchars((string) autoUrl("memberships/years")) ?>">Years</a></li>
+        <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) $year['Name']) ?></li>
       </ol>
     </nav>
 
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars($year['Name']) ?>
+          <?= htmlspecialchars((string) $year['Name']) ?>
         </h1>
         <p class="lead mb-0">
-          Full membership details for <?= htmlspecialchars($year['Name']) ?>
+          Full membership details for <?= htmlspecialchars((string) $year['Name']) ?>
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl("memberships/years/$id/edit")) ?>" class="btn btn-success">Edit</a>
+        <a href="<?= htmlspecialchars((string) autoUrl("memberships/years/$id/edit")) ?>" class="btn btn-success">Edit</a>
       </div>
     </div>
   </div>
@@ -86,7 +86,7 @@ include BASE_PATH . "views/header.php";
   <div class="row">
     <div class="col-lg-8">
       <p>
-        <?= htmlspecialchars($count) ?> member<?php if ($count != 1) { ?>s<?php } ?> in <?= htmlspecialchars($year['Name']) ?>.
+        <?= htmlspecialchars((string) $count) ?> member<?php if ($count != 1) { ?>s<?php } ?> in <?= htmlspecialchars((string) $year['Name']) ?>.
       </p>
 
       <?php if ($member) { ?>
@@ -101,12 +101,12 @@ include BASE_PATH . "views/header.php";
           ?>
             <li class="list-group-item">
               <h2>
-                <?php if (!$member->current) { ?><s><?php } ?><?= htmlspecialchars(\SCDS\Formatting\Names::format($member->fn, $member->sn)) ?><?php if (!$member->current) { ?></s><small class="text-muted"> (left the club)</small><?php } ?>
+                <?php if (!$member->current) { ?><s><?php } ?><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member->fn, $member->sn)) ?><?php if (!$member->current) { ?></s><small class="text-muted"> (left the club)</small><?php } ?>
               </h2>
 
               <dl class="row">
                 <dt class="col-3">Registration Number</dt>
-                <dd class="col-9"><?= htmlspecialchars($member->reg) ?></dd>
+                <dd class="col-9"><?= htmlspecialchars((string) $member->reg) ?></dd>
               </dl>
 
               <h3>Memberships</h3>
@@ -117,12 +117,12 @@ include BASE_PATH . "views/header.php";
                   $purchased = new DateTime($membership->timePurchased, new DateTimeZone('UTC'));
                   $purchased->setTimezone(new DateTimeZone('Europe/London'));
 
-                  $paymentInfo = json_decode($membership->paymentInfo);
+                  $paymentInfo = json_decode((string) $membership->paymentInfo);
 
                 ?>
                   <li>
                     <div class="d-block">
-                      <h4><?= htmlspecialchars($membership->name) ?></h4>
+                      <h4><?= htmlspecialchars((string) $membership->name) ?></h4>
 
                       <p>
                         <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#<?= htmlspecialchars('member-' . $member->member . '-' . $membership->id . '-collapse') ?>" aria-expanded="false" aria-controls="<?= htmlspecialchars('member-' . $member->member . '-' . $membership->id . '-collapse') ?>">
@@ -150,7 +150,7 @@ include BASE_PATH . "views/header.php";
                             Paid
                           </dt>
                           <dd class="col-9">
-                            <?= htmlspecialchars(MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->amount), 'GBP')) ?>
+                            <?= htmlspecialchars((string) MoneyHelpers::formatCurrency(MoneyHelpers::intToDecimal($membership->amount), 'GBP')) ?>
                           </dd>
 
                           <?php if ($paymentInfo->type == 'stripe') { ?>
@@ -160,14 +160,14 @@ include BASE_PATH . "views/header.php";
                                 Payment card
                               </dt>
                               <dd class="col-9">
-                                <?= htmlspecialchars(getCardBrand($paymentInfo->data->payment_intent->payment_method->card->brand)) ?> <?= htmlspecialchars($paymentInfo->data->payment_intent->payment_method->card->funding) ?> card ending <?= htmlspecialchars($paymentInfo->data->payment_intent->payment_method->card->last4) ?>
+                                <?= htmlspecialchars((string) getCardBrand($paymentInfo->data->payment_intent->payment_method->card->brand)) ?> <?= htmlspecialchars((string) $paymentInfo->data->payment_intent->payment_method->card->funding) ?> card ending <?= htmlspecialchars((string) $paymentInfo->data->payment_intent->payment_method->card->last4) ?>
                               </dd>
                             <?php } ?>
                             <dt class="col-3">
                               Payment status
                             </dt>
                             <dd class="col-9 text-uppercase">
-                              <?= htmlspecialchars($paymentInfo->data->payment_intent->status) ?>
+                              <?= htmlspecialchars((string) $paymentInfo->data->payment_intent->status) ?>
                             </dd>
                           <?php } ?>
 

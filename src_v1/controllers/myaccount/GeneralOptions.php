@@ -133,7 +133,7 @@ $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
             <br><small>Export a copy</small>
           </h2>
           <p>
-            Under the General Data Protection Regulation, you can request for free to download all personal data held about you by <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>.
+            Under the General Data Protection Regulation, you can request for free to download all personal data held about you by <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>.
           </p>
           <p>
             <a href="<?= autoUrl("my-account/general/download-personal-data") ?>" class="btn btn-primary">

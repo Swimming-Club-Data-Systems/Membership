@@ -14,7 +14,7 @@ if ($row == null) {
   halt(404);
 }
 
-$pagetitle = "Editing " . htmlspecialchars($row['ExtraName']);
+$pagetitle = "Editing " . htmlspecialchars((string) $row['ExtraName']);
 
 include BASE_PATH . "views/header.php";
 include BASE_PATH . "views/paymentsMenu.php";
@@ -25,9 +25,9 @@ include BASE_PATH . "views/paymentsMenu.php";
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments/extrafees')) ?>">Extras</a></li>
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments/extrafees/' . $id)) ?>"><?= htmlspecialchars($row['ExtraName']) ?></a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments/extrafees')) ?>">Extras</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments/extrafees/' . $id)) ?>"><?= htmlspecialchars((string) $row['ExtraName']) ?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Edit</li>
 
     </ol>
@@ -35,7 +35,7 @@ include BASE_PATH . "views/paymentsMenu.php";
 
   <div class="">
     <h1>
-      Edit <?= htmlspecialchars($row['ExtraName']) ?>
+      Edit <?= htmlspecialchars((string) $row['ExtraName']) ?>
     </h1>
     <p class="lead">Edit this extra monthly fee.</p>
 
@@ -50,7 +50,7 @@ include BASE_PATH . "views/paymentsMenu.php";
         <form method="post" class="needs-validation" novalidate>
           <div class="mb-3">
             <label class="form-label" for="name">Extra Name</label>
-            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?= htmlspecialchars($row['ExtraName']) ?>" required>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" value="<?= htmlspecialchars((string) $row['ExtraName']) ?>" required>
             <div class="invalid-feedback">
               Provide a name for this monthly extra
             </div>
@@ -60,7 +60,7 @@ include BASE_PATH . "views/paymentsMenu.php";
             <label class="form-label" for="price">Amount</label>
             <div class="input-group mb-3">
               <span class="input-group-text" id="basic-addon3">&pound;</span>
-              <input type="number" min="0" step="0.01" class="form-control rounded-end" id="price" name="price" placeholder="0" value="<?= htmlspecialchars($row['ExtraFee']) ?>" required>
+              <input type="number" min="0" step="0.01" class="form-control rounded-end" id="price" name="price" placeholder="0" value="<?= htmlspecialchars((string) $row['ExtraFee']) ?>" required>
               <div class="invalid-feedback">
                 Enter an amount for this extra
               </div>

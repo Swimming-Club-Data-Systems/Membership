@@ -34,7 +34,7 @@ if (isset($_SESSION['OnboardingSessionId'])) {
 
 $this->get('/auth/cookie/redirect', function () {
     //$target = urldecode($target);
-    setcookie('TENANT-' . app()->tenant->getId() . '-' . "SeenAccount", true, 0, "/", app('request')->hostname, true, false);
+    setcookie('TENANT-' . app()->tenant->getId() . '-' . "SeenAccount", true, ['expires' => 0, 'path' => "/", 'domain' => (string) app('request')->hostname, 'secure' => true, 'httponly' => false]);
     header("Location: https://www.chesterlestreetasc.co.uk");
 });
 

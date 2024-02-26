@@ -71,7 +71,7 @@ if ($allowed) {
       $_POST['membership'],
       $_POST['member'],
       $amount,
-      trim($_POST['membership-notes']),
+      trim((string) $_POST['membership-notes']),
       $year
     ]
   );

@@ -49,7 +49,7 @@ include BASE_PATH . "views/header.php";
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('onboarding/new')) ?>" class="btn btn-primary">Get started</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('onboarding/new')) ?>" class="btn btn-primary">Get started</a>
         </p>
 
         <h2>
@@ -61,7 +61,7 @@ include BASE_PATH . "views/header.php";
         </p>
 
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('onboarding/all')) ?>" class="btn btn-primary">View all</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('onboarding/all')) ?>" class="btn btn-primary">View all</a>
         </p>
       <?php } ?>
 

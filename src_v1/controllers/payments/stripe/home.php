@@ -47,7 +47,7 @@ include BASE_PATH . 'views/header.php';
             <strong>We have added your new card</strong>
           </p>
           <?php if (isset($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand'])) { ?>
-            <p class="mb-0">Your <?= htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand']) ?> card is now ready.</p>
+            <p class="mb-0">Your <?= htmlspecialchars((string) $_SESSION['TENANT-' . app()->tenant->getId()]['PayCardSetupSuccessBrand']) ?> card is now ready.</p>
           <?php } ?>
         </div>
       <?php } ?>
@@ -83,16 +83,16 @@ include BASE_PATH . 'views/header.php';
             <a href="<?= autoUrl("payments/cards/" . $card['ID']) ?>" class="list-group-item list-group-item-action">
               <div class="row align-items-center mb-2">
                 <div class="col-auto">
-                  <img class="d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_light.svg") ?>" style="width:40px;"><img class="d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_dark.svg") ?>" style="width:40px;"> <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($card['Brand'])) ?></span>
+                  <img class="d-dark-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_light.svg") ?>" style="width:40px;"><img class="d-light-none" src="<?= autoUrl("img/stripe/brand-stored-credentials/" . $card['Brand'] . "_dark.svg") ?>" style="width:40px;"> <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($card['Brand'])) ?></span>
                 </div>
                 <div class="col-auto">
                   <h2 class="h1 my-0">
-                    &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars($card['Last4']) ?>
+                    &#0149;&#0149;&#0149;&#0149; <?= htmlspecialchars((string) $card['Last4']) ?>
                   </h2>
                 </div>
               </div>
               <p class="lead">
-                <?= htmlspecialchars(mb_convert_case($card['Funding'], MB_CASE_TITLE)) ?> card
+                <?= htmlspecialchars(mb_convert_case((string) $card['Funding'], MB_CASE_TITLE)) ?> card
               </p>
 
               <p class="mb-0">

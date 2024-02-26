@@ -50,7 +50,7 @@ include BASE_PATH . "views/paymentsMenu.php";
     <div class="row align-items-center">
       <div class="col-md-6 col-lg-8">
         <h1>Payments</h1>
-        <p class="lead mb-0">Manage your payments to <?= htmlspecialchars(app()->tenant->getName()) ?></p>
+        <p class="lead mb-0">Manage your payments to <?= htmlspecialchars((string) app()->tenant->getName()) ?></p>
       </div>
     </div>
   </div>
@@ -85,13 +85,13 @@ include BASE_PATH . "views/paymentsMenu.php";
           <?php if ($mandate) { ?>
             <dl class="row">
               <dt class="col-sm-5">Sort code</dt>
-              <dd class="col-sm-7 font-monospace"><?= htmlspecialchars(implode("-", str_split($mandate['SortCode'], 2))) ?></dd>
+              <dd class="col-sm-7 font-monospace"><?= htmlspecialchars(implode("-", str_split((string) $mandate['SortCode'], 2))) ?></dd>
 
               <dt class="col-sm-5">Account number</dt>
-              <dd class="col-sm-7 font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars($mandate['Last4']) ?></dd>
+              <dd class="col-sm-7 font-monospace">&middot;&middot;&middot;&middot;<?= htmlspecialchars((string) $mandate['Last4']) ?></dd>
 
               <dt class="col-sm-5">Payment reference</dt>
-              <dd class="col-sm-7 font-monospace"><?= htmlspecialchars($mandate['Reference']) ?></dd>
+              <dd class="col-sm-7 font-monospace"><?= htmlspecialchars((string) $mandate['Reference']) ?></dd>
             </dl>
           <?php } ?>
 
@@ -110,21 +110,21 @@ include BASE_PATH . "views/paymentsMenu.php";
             My Bank Account<?php if ($tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP') || $tenant->getBooleanKey('USE_STRIPE_DIRECT_DEBIT')) { ?> (Legacy)<?php } ?>
           </h2>
           <?php
-          $name = mb_strtoupper(bankDetails($user, "account_holder_name"));
+          $name = mb_strtoupper((string) bankDetails($user, "account_holder_name"));
           if ($name != "UNKNOWN") {
             $name = $name . ', ';
           } else {
             $name = null;
           }
-          $bank = mb_strtoupper(bankDetails($user, "bank_name"));
+          $bank = mb_strtoupper((string) bankDetails($user, "bank_name"));
           $logo_path = getBankLogo($bank);
           ?>
           <?php if ($logo_path) { ?>
             <img class="img-fluid mb-3" style="max-height:35px;" src="<?= $logo_path ?>.png" srcset="<?= $logo_path ?>@2x.png 2x, <?= $logo_path ?>@3x.png 3x">
           <?php } ?>
-          <p class="mb-0"><?= htmlspecialchars($name) ?><abbr title="<?= htmlspecialchars(strtoupper(bankDetails($user, "bank_name"))) ?>"><?= htmlspecialchars(getBankName(bankDetails($user, "bank_name"))) ?></abbr></p>
-          <p class="font-monospace">&middot;&middot;&middot;&middot;&middot;&middot;<?= htmlspecialchars(strtoupper(bankDetails($user, "account_number_end"))) ?></p>
-          <p><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> does not store your bank details.</p>
+          <p class="mb-0"><?= htmlspecialchars((string) $name) ?><abbr title="<?= htmlspecialchars(strtoupper((string) bankDetails($user, "bank_name"))) ?>"><?= htmlspecialchars(getBankName(bankDetails($user, "bank_name"))) ?></abbr></p>
+          <p class="font-monospace">&middot;&middot;&middot;&middot;&middot;&middot;<?= htmlspecialchars(strtoupper((string) bankDetails($user, "account_number_end"))) ?></p>
+          <p><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> does not store your bank details.</p>
           <p class="mb-0">
           <div class="d-grid gap-2">
             <?php if (userHasMandates($user)) { ?>

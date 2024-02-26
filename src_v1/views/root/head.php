@@ -55,11 +55,11 @@ Chester-le-Street ASC is a non profit unincorporated association.
   <link rel="manifest" href="<?= autoUrl("manifest.webmanifest") ?>">
   <meta name="X-SCDS-Membership-Tracking" content="no">
   <script src="https://js.stripe.com/v3/"></script>
-  <link rel="stylesheet preload" href="<?= htmlspecialchars($stylesheet) ?>">
+  <link rel="stylesheet preload" href="<?= htmlspecialchars((string) $stylesheet) ?>">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
   <!-- Generic icon -->
-  <link rel="icon" href="<?= htmlspecialchars(autoUrl("img/corporate/scds.png")) ?>">
+  <link rel="icon" href="<?= htmlspecialchars((string) autoUrl("img/corporate/scds.png")) ?>">
 
   <!-- For iPhone 6 Plus with @3× display: -->
   <link rel="apple-touch-icon-precomposed" sizes="180x180" href="<?= autoUrl("img/corporate/icons/apple-touch-icon-180x180.png") ?>">
@@ -138,7 +138,7 @@ Chester-le-Street ASC is a non profit unincorporated association.
       </div>
     <?php } ?>
 
-    <?php if (mb_substr(debug_backtrace()[0]['file'], mb_strlen(BASE_PATH)) == 'views/root/header.php') { ?>
+    <?php if (mb_substr(debug_backtrace()[0]['file'], mb_strlen((string) BASE_PATH)) == 'views/root/header.php') { ?>
       <div class="">
     <?php } else { ?>
       <div class="have-full-height">

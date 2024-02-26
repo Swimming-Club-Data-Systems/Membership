@@ -97,11 +97,11 @@ try {
 
 
 
-} catch (PDOException $e) {
+} catch (PDOException) {
   // A serious error occurred
   $responseData['status'] = 500;
   $responseData['message'] = 'A database error occurred.';
-} catch (Exception $e) {
+} catch (Exception) {
   // Generic error caused by breaking out of code
 }
 

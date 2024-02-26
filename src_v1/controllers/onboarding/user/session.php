@@ -26,7 +26,7 @@ include BASE_PATH . "views/header.php";
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('onboarding')) ?>">Onboarding</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('onboarding')) ?>">Onboarding</a></li>
         <li class="breadcrumb-item active" aria-current="page">New</li>
       </ol>
     </nav>
@@ -34,7 +34,7 @@ include BASE_PATH . "views/header.php";
     <div class="row align-items-center">
       <div class="col-lg-8">
         <h1>
-          <?= htmlspecialchars(app()->tenant->getName()) ?> Onboarding
+          <?= htmlspecialchars((string) app()->tenant->getName()) ?> Onboarding
         </h1>
         <p class="lead mb-0">
           Onboarding is the replacement for assisted registration.
@@ -53,22 +53,22 @@ include BASE_PATH . "views/header.php";
 
         <div class="mb-3">
           <label for="user-name" class="form-label">Member/Parent Name</label>
-          <input type="text" class="form-control" id="user-name" name="user-name" value="<?= htmlspecialchars($session->getUser()->getName()) ?>" readonly>
+          <input type="text" class="form-control" id="user-name" name="user-name" value="<?= htmlspecialchars((string) $session->getUser()->getName()) ?>" readonly>
         </div>
 
         <div class="mb-3">
           <label for="session-id" class="form-label">Session ID</label>
-          <input type="text" class="form-control" id="session-id" name="session-id" value="<?= htmlspecialchars($session->id) ?>" readonly>
+          <input type="text" class="form-control" id="session-id" name="session-id" value="<?= htmlspecialchars((string) $session->id) ?>" readonly>
         </div>
 
         <div class="mb-3">
           <label for="creator-name" class="form-label">Onboarding Creator Name</label>
-          <input type="text" class="form-control" id="creator-name" name="creator-name" value="<?= htmlspecialchars($session->getCreator()->getName()) ?>" readonly>
+          <input type="text" class="form-control" id="creator-name" name="creator-name" value="<?= htmlspecialchars((string) $session->getCreator()->getName()) ?>" readonly>
         </div>
 
         <div class="mb-3">
           <label for="start-date" class="form-label">Start Date</label>
-          <input type="date" class="form-control" id="start-date" name="start-date" value="<?= htmlspecialchars($session->start->format('Y-m-d')) ?>" required>
+          <input type="date" class="form-control" id="start-date" name="start-date" value="<?= htmlspecialchars((string) $session->start->format('Y-m-d')) ?>" required>
         </div>
 
         <div class="mb-3">
@@ -105,7 +105,7 @@ include BASE_PATH . "views/header.php";
 
         <div class="mb-3">
           <label for="welcome-text" class="form-label">Welcome Text</label>
-          <textarea class="form-control" id="welcome-text" name="welcome-text" rows="5"><?= htmlspecialchars($session->welcomeText) ?></textarea>
+          <textarea class="form-control" id="welcome-text" name="welcome-text" rows="5"><?= htmlspecialchars((string) $session->welcomeText) ?></textarea>
         </div>
 
         <div class="mb-3">
@@ -135,7 +135,7 @@ include BASE_PATH . "views/header.php";
         <div class="collapse <?php if ($session->dueDate) { ?>show<?php } ?>" id="due-date-box">
           <div class="mb-3">
             <label for="due-date" class="form-label">Due Date</label>
-            <input type="date" class="form-control" id="due-date" name="due-date" value="<?php if ($session->dueDate) { ?><?= htmlspecialchars($session->dueDate->format('Y-m-d')) ?><?php } ?>">
+            <input type="date" class="form-control" id="due-date" name="due-date" value="<?php if ($session->dueDate) { ?><?= htmlspecialchars((string) $session->dueDate->format('Y-m-d')) ?><?php } ?>">
           </div>
         </div>
 

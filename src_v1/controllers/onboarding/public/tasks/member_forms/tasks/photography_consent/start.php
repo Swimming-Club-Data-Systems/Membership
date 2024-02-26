@@ -32,7 +32,7 @@ if (!$permissions) {
   $permissions = [];
 }
 
-$pagetitle = 'Photography Permissions - ' . htmlspecialchars($member->getFullName()) . ' - Onboarding';
+$pagetitle = 'Photography Permissions - ' . htmlspecialchars((string) $member->getFullName()) . ' - Onboarding';
 
 include BASE_PATH . "views/head.php";
 
@@ -45,9 +45,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -61,7 +61,7 @@ include BASE_PATH . "views/head.php";
         <h1 class="text-center">Photography and filming consent</h1>
 
         <p class="lead mb-5 text-center">
-          Provide medical details for <?= htmlspecialchars($member->getFullName()) ?>.
+          Provide medical details for <?= htmlspecialchars((string) $member->getFullName()) ?>.
         </p>
 
         <?php if ($member->getAge() >= 18) { ?>
@@ -70,7 +70,7 @@ include BASE_PATH . "views/head.php";
               <strong>This page is only for members under 18</strong>
             </p>
             <p class="mb-0">
-              You're seeing this because <?= htmlspecialchars($member->getForename()) ?> was under 18 when this onboarding session was created or a member of club staff has explicitly requested it.
+              You're seeing this because <?= htmlspecialchars((string) $member->getForename()) ?> was under 18 when this onboarding session was created or a member of club staff has explicitly requested it.
             </p>
           </div>
         <?php } ?>
@@ -78,23 +78,23 @@ include BASE_PATH . "views/head.php";
         <form method="post">
 
           <p>
-            You should complete this form after <a href="https://www.swimming.org/swimengland/wavepower-child-safeguarding-for-clubs/">reading the Swim England Photography and Filming guidance contained in Wavepower (opens in new tab)</a> and the <a href="<?= htmlspecialchars(autoUrl('privacy')) ?>" target="_blank"><?= htmlspecialchars($tenant->getName()) ?> Privacy Policy</a>.
+            You should complete this form after <a href="https://www.swimming.org/swimengland/wavepower-child-safeguarding-for-clubs/">reading the Swim England Photography and Filming guidance contained in Wavepower (opens in new tab)</a> and the <a href="<?= htmlspecialchars((string) autoUrl('privacy')) ?>" target="_blank"><?= htmlspecialchars((string) $tenant->getName()) ?> Privacy Policy</a>.
           </p>
 
           <p>
-            <?= htmlspecialchars($tenant->getName()) ?> may wish to take photographs or film individual or groups of members under the age of 18 that may include <?= htmlspecialchars($member->getFullName()) ?> during their membership of <?= htmlspecialchars($tenant->getName()) ?>. All photographs and filming and all use of such images will be in accordance with the Swim England Photography and Filming Guidance and <?= htmlspecialchars($tenant->getName()) ?>'s Privacy Policy.
+            <?= htmlspecialchars((string) $tenant->getName()) ?> may wish to take photographs or film individual or groups of members under the age of 18 that may include <?= htmlspecialchars((string) $member->getFullName()) ?> during their membership of <?= htmlspecialchars((string) $tenant->getName()) ?>. All photographs and filming and all use of such images will be in accordance with the Swim England Photography and Filming Guidance and <?= htmlspecialchars((string) $tenant->getName()) ?>'s Privacy Policy.
           </p>
 
           <p>
-            <?= htmlspecialchars($tenant->getName()) ?> will take all reasonable steps to ensure images and any footage is being used solely for their intended purpose and not kept for any longer than is necessary for that purpose. If you have any concerns or questions about how they are being used please contact the Welfare Officer to discuss this further.
+            <?= htmlspecialchars((string) $tenant->getName()) ?> will take all reasonable steps to ensure images and any footage is being used solely for their intended purpose and not kept for any longer than is necessary for that purpose. If you have any concerns or questions about how they are being used please contact the Welfare Officer to discuss this further.
           </p>
 
           <p>
-            As a parent/guardian please complete the below in respect of <?= htmlspecialchars($member->getFullName()) ?>. We encourage all parents/guardians to discuss and explain their choices with their child/ren. Please note that either you or your child can withdraw consent or object to a particular type of use by notifying the Welfare Officer at any time and changing the consents given from within your club account.
+            As a parent/guardian please complete the below in respect of <?= htmlspecialchars((string) $member->getFullName()) ?>. We encourage all parents/guardians to discuss and explain their choices with their child/ren. Please note that either you or your child can withdraw consent or object to a particular type of use by notifying the Welfare Officer at any time and changing the consents given from within your club account.
           </p>
 
           <p>
-            As the parent/guardian of <?= htmlspecialchars($member->getFullName()) ?> I am happy for:
+            As the parent/guardian of <?= htmlspecialchars((string) $member->getFullName()) ?> I am happy for:
           </p>
 
           <div class="card mb-3">
@@ -104,7 +104,7 @@ include BASE_PATH . "views/head.php";
             <div class="list-group list-group-flush">
               <div class="list-group-item">
                 <div class="mb-2">
-                  <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used on the <?= htmlspecialchars($tenant->getName()) ?> website.
+                  <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used on the <?= htmlspecialchars((string) $tenant->getName()) ?> website.
                 </div>
 
                 <div>
@@ -121,7 +121,7 @@ include BASE_PATH . "views/head.php";
 
               <div class="list-group-item">
                 <div class="mb-2">
-                  <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used on <?= htmlspecialchars($tenant->getName()) ?> social media platform/s.
+                  <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used on <?= htmlspecialchars((string) $tenant->getName()) ?> social media platform/s.
                 </div>
 
                 <div>
@@ -138,7 +138,7 @@ include BASE_PATH . "views/head.php";
 
               <div class="list-group-item">
                 <div class="mb-2">
-                  <?= htmlspecialchars($member->getForename()) ?>'s photograph to be used within other printed publications such as newspaper articles about <?= htmlspecialchars($tenant->getName()) ?>.
+                  <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be used within other printed publications such as newspaper articles about <?= htmlspecialchars((string) $tenant->getName()) ?>.
                 </div>
 
                 <div>
@@ -155,7 +155,7 @@ include BASE_PATH . "views/head.php";
 
               <div class="list-group-item">
                 <div class="mb-2">
-                  <?= htmlspecialchars($member->getForename()) ?>'s photograph to be taken by a professional photographer employed by <?= htmlspecialchars($tenant->getName()) ?> as the official photographer at competitions, galas and other organisational events.
+                  <?= htmlspecialchars((string) $member->getForename()) ?>'s photograph to be taken by a professional photographer employed by <?= htmlspecialchars((string) $tenant->getName()) ?> as the official photographer at competitions, galas and other organisational events.
                 </div>
 
                 <div>
@@ -179,7 +179,7 @@ include BASE_PATH . "views/head.php";
             <div class="list-group list-group-flush">
               <div class="list-group-item">
                 <div class="mb-2">
-                  <?= htmlspecialchars($member->getForename()) ?> to be filmed by <?= htmlspecialchars($tenant->getName()) ?> for training purposes.
+                  <?= htmlspecialchars((string) $member->getForename()) ?> to be filmed by <?= htmlspecialchars((string) $tenant->getName()) ?> for training purposes.
                 </div>
 
                 <div>

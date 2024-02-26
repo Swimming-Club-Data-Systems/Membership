@@ -23,7 +23,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl('payments')) ?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl('payments')) ?>">Payments</a></li>
       <li class="breadcrumb-item active" aria-current="page">Mandates</li>
     </ol>
   </nav>
@@ -35,7 +35,7 @@ include BASE_PATH . 'views/header.php';
 
       <?php if (app()->tenant->getStripeAccount() || app()->tenant->getBooleanKey('ALLOW_STRIPE_DIRECT_DEBIT_SET_UP')) { ?>
         <p>
-          <a href="<?= htmlspecialchars(autoUrl('payments/user-mandates')) ?>">View Stripe Mandates</a>
+          <a href="<?= htmlspecialchars((string) autoUrl('payments/user-mandates')) ?>">View Stripe Mandates</a>
         </p>
       <?php } ?>
     </div>
@@ -48,16 +48,16 @@ include BASE_PATH . 'views/header.php';
   <?php } else { ?>
     <div class="list-group">
       <?php do { ?>
-        <a href="<?= htmlspecialchars(autoUrl("users/" . $mandate['UserID'] . '#payment-information')) ?>" class="list-group-item list-group-item-action <?php if (!$mandate['BankName']) { ?> list-group-item-danger <?php } ?>">
+        <a href="<?= htmlspecialchars((string) autoUrl("users/" . $mandate['UserID'] . '#payment-information')) ?>" class="list-group-item list-group-item-action <?php if (!$mandate['BankName']) { ?> list-group-item-danger <?php } ?>">
           <div class="row align-items-center">
             <div class="col-md-6">
-              <h2 class="mb-0 h4"><?= htmlspecialchars(\SCDS\Formatting\Names::format($mandate['Surname'], $mandate['Forename'])) ?></h2>
+              <h2 class="mb-0 h4"><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($mandate['Surname'], $mandate['Forename'])) ?></h2>
               <div class="mb-3 d-md-none"></div>
             </div>
             <div class="col text-md-end">
               <?php if ($mandate['BankName']) { ?>
                 <p class="font-monospace mb-0"><?= htmlspecialchars(getBankName($mandate['BankName'])) ?></p>
-                <p class="font-monospace mb-0"><?= htmlspecialchars($mandate['AccountHolderName']) ?>, &#0149;&#0149;&#0149;&#0149;&#0149;&#0149;<?= htmlspecialchars($mandate['AccountNumEnd']) ?></p>
+                <p class="font-monospace mb-0"><?= htmlspecialchars((string) $mandate['AccountHolderName']) ?>, &#0149;&#0149;&#0149;&#0149;&#0149;&#0149;<?= htmlspecialchars((string) $mandate['AccountNumEnd']) ?></p>
               <?php } else { ?>
                 <p class="font-monospace mb-0">No mandate</p>
                 <p class="font-monospace mb-0">Contact user</p>

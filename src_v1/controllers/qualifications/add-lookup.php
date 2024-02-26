@@ -19,7 +19,7 @@ try {
 
   if (!$qualification) halt(404);
 
-  $expiry = json_decode($qualification['DefaultExpiry']);
+  $expiry = json_decode((string) $qualification['DefaultExpiry']);
   $expires = $expiry->expires;
 
   $plus = null;
@@ -38,7 +38,7 @@ try {
     'date_expires' => $date->format('Y-m-d'),
   ];
 
-} catch (Exception $e) {
+} catch (Exception) {
 
 }
 

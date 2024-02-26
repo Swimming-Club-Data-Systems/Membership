@@ -10,18 +10,18 @@ function reportError($e)
         $emailMessage .= '<p>The active user was ' . htmlspecialchars($_SESSION['TENANT-' . app()->tenant->getId()]['Forename'] . ' ' . $_SESSION['TENANT-' . app()->tenant->getId()]['Surname']) . ' (User ID #' . $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'] . ')</p>';
       }
 
-      $emailMessage .= '<p><strong>Path:</strong> ' . htmlspecialchars(app('request')->path) . '</p>';
-      $emailMessage .= '<p><strong>Host:</strong> ' . htmlspecialchars(app('request')->hostname) . '</p>';
-      $emailMessage .= '<p><strong>Router Browser:</strong> ' . htmlspecialchars(app('request')->browser()) . '</p>';
-      $emailMessage .= '<p><strong>Router Platform:</strong> ' . htmlspecialchars(app('request')->platform()) . '</p>';
-      $emailMessage .= '<p><strong>IP:</strong> ' . htmlspecialchars(getUserIp()) . '</p>';
+      $emailMessage .= '<p><strong>Path:</strong> ' . htmlspecialchars((string) app('request')->path) . '</p>';
+      $emailMessage .= '<p><strong>Host:</strong> ' . htmlspecialchars((string) app('request')->hostname) . '</p>';
+      $emailMessage .= '<p><strong>Router Browser:</strong> ' . htmlspecialchars((string) app('request')->browser()) . '</p>';
+      $emailMessage .= '<p><strong>Router Platform:</strong> ' . htmlspecialchars((string) app('request')->platform()) . '</p>';
+      $emailMessage .= '<p><strong>IP:</strong> ' . htmlspecialchars((string) getUserIp()) . '</p>';
       if (isset($_SERVER["HTTP_CF_IPCOUNTRY"])) {
         $emailMessage .= '<p><strong>Cloudflare:</strong> YES</p>';
-        $emailMessage .= '<p><strong>Country Code:</strong> ' . htmlspecialchars($_SERVER["HTTP_CF_IPCOUNTRY"]) . '</p>';
+        $emailMessage .= '<p><strong>Country Code:</strong> ' . htmlspecialchars((string) $_SERVER["HTTP_CF_IPCOUNTRY"]) . '</p>';
       } else {
         $emailMessage .= '<p><strong>Cloudflare:</strong> NO</p>';
       }
-      $emailMessage .= '<p><strong>Locale:</strong> ' . htmlspecialchars(app()->locale) . '</p>';
+      $emailMessage .= '<p><strong>Locale:</strong> ' . htmlspecialchars((string) app()->locale) . '</p>';
 
       try {
         $browser = new \WhichBrowser\Parser(getallheaders());
@@ -40,7 +40,7 @@ function reportError($e)
 
       notifySend(null, 'System Error Report', $emailMessage, "System Admin", getenv('ERROR_REPORTING_EMAIL'));
       $reportedError = true;
-    } catch (Exception $f) {
+    } catch (Exception) {
       $reportedError = false;
     }
   }

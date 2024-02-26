@@ -43,7 +43,7 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("members")) ?>">Members</a></li>
+      <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("members")) ?>">Members</a></li>
       <li class="breadcrumb-item active" aria-current="page">Upgradeable Members</li>
     </ol>
   </nav>
@@ -96,14 +96,14 @@ include BASE_PATH . 'views/header.php';
               <li class="list-group-item list-group-item-action">
                 <div class="row align-items-center">
                   <div class="col-md">
-                    <a href="<?= htmlspecialchars(autoUrl("members/" . $member['id'])) ?>" class="">
-                      <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></strong>
+                    <a href="<?= htmlspecialchars((string) autoUrl("members/" . $member['id'])) ?>" class="">
+                      <strong><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></strong>
                     </a>
                     <?php if ($squads) { ?>
                       <ul class="list-unstyled">
                         <?php do { ?>
                           <li>
-                            <?= htmlspecialchars($squads) ?>
+                            <?= htmlspecialchars((string) $squads) ?>
                           </li>
                         <?php } while ($squads = $getSqauds->fetchColumn()); ?>
                       </ul>
@@ -117,7 +117,7 @@ include BASE_PATH . 'views/header.php';
                     <select class="form-select" id="<?= htmlspecialchars("se-cat-" . $member['id']) ?>" name="<?= htmlspecialchars("se-cat-" . $member['id']) ?>">
                       <option value="0" <?php if (!$member['cat']) { ?>selected<?php } ?>>Not an SE member</option>
                       <?php foreach ($categories as $cat) { ?>
-                        <option value="<?= htmlspecialchars($cat['ID']) ?>" <?php if ($member['cat'] == $cat['ID']) { ?>selected<?php } ?>><?= htmlspecialchars($cat['Name']) ?></option>
+                        <option value="<?= htmlspecialchars((string) $cat['ID']) ?>" <?php if ($member['cat'] == $cat['ID']) { ?>selected<?php } ?>><?= htmlspecialchars((string) $cat['Name']) ?></option>
                       <?php } ?>
                     </select>
                     <div class="mb-3 d-md-none"></div>

@@ -66,7 +66,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 				Membership renewal ensures all our information about members is up to date.
 			</p>
 			<p>
-				The current membership renewal period is open until <?php echo date("l j F Y", strtotime($row['EndDate'])); ?>
+				The current membership renewal period is open until <?php echo date("l j F Y", strtotime((string) $row['EndDate'])); ?>
 			</p>
 		<?php } else { ?>
 			<h1>Membership Renewal System</h1>
@@ -82,12 +82,12 @@ include BASE_PATH . "views/swimmersMenu.php";
 			?>
 				<li>
 					<a href="<?= autoUrl("renewal/" . $row['ID']) ?>">
-						<?= htmlspecialchars($row['Name']) ?> (<?= date(
+						<?= htmlspecialchars((string) $row['Name']) ?> (<?= date(
 																											"j F Y",
-																											strtotime($row['StartDate'])
+																											strtotime((string) $row['StartDate'])
 																										) ?> - <?= date(
 																														"j F Y",
-																														strtotime($row['EndDate'])
+																														strtotime((string) $row['EndDate'])
 																													) ?>)
 					</a>
 				</li>

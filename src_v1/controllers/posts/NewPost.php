@@ -47,7 +47,7 @@ include BASE_PATH . "views/postsMenu.php";
 					<div class="mb-3">
 						<label class="form-label" for="path">Path</label>
 						<p class="small mb-1">
-							<?= htmlspecialchars(autoUrl("pages/")) ?>
+							<?= htmlspecialchars((string) autoUrl("pages/")) ?>
 						</p>
 						<input type="text" class="form-control" name="path" id="path" placeholder="Leave blank to use Post ID" autocomplete="off">
 					</div>

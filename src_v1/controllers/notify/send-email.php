@@ -118,11 +118,11 @@ try {
         $sendingCategory = $data->state->category;
     }
 
-    $subject = trim(str_replace('!', '', str_replace('*', '', $data->state->subject)));
+    $subject = trim(str_replace('!', '', str_replace('*', '', (string) $data->state->subject)));
     if (mb_strlen($subject) > 78) {
         $subject = mb_substr($subject, 0, 78);
     }
-    $message = str_replace($to_remove, "", $data->state->editorValue);
+    $message = str_replace($to_remove, "", (string) $data->state->editorValue);
 
     $force = 0;
     $sender = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
@@ -272,7 +272,7 @@ try {
     ];
 
     if ($data->state->from == "fromMe") {
-        $senderNames = explode(' ', $userSending);
+        $senderNames = explode(' ', (string) $userSending);
 
         $recipientGroups["NamedSender"] = [
             "Email" => "noreply@" . getenv('EMAIL_DOMAIN'),
@@ -351,7 +351,7 @@ try {
     while ($currentMessage = $getPendingGroupMail->fetch(PDO::FETCH_ASSOC)) {
         $getUsersForEmail->execute([$currentMessage['ID']]);
 
-        $jsonData = json_decode($currentMessage['JSONData']);
+        $jsonData = json_decode((string) $currentMessage['JSONData']);
 
         $mailObject = new \CLSASC\SuperMailer\CreateMail();
         $mailObject->setHtmlContent($currentMessage['Message']);
@@ -377,7 +377,7 @@ try {
                 $tos[$user['EmailAddress']] = [
                     'email' => $user['EmailAddress'],
                     'name' => $user['Forename'] . ' ' . $user['Surname'],
-                    'unsubscribe_link' => autoUrl("notify/unsubscribe/" . dechex($user['UserID']) . "/" . urlencode($user['EmailAddress']) . "/Notify"),
+                    'unsubscribe_link' => autoUrl("notify/unsubscribe/" . dechex($user['UserID']) . "/" . urlencode((string) $user['EmailAddress']) . "/Notify"),
                 ];
                 if ($sendingCategory == 'Notify') {
                     $getExtraEmails->execute([$user['UserID']]);
@@ -385,7 +385,7 @@ try {
                         $tos[$extraEmails['EmailAddress']] = [
                             'email' => $extraEmails['EmailAddress'],
                             'name' => $extraEmails['Name'],
-                            'unsubscribe_link' => autoUrl("cc/" . dechex($extraEmails['ID']) . "/" . hash('sha256', $extraEmails['ID']) . "/unsubscribe"),
+                            'unsubscribe_link' => autoUrl("cc/" . dechex($extraEmails['ID']) . "/" . hash('sha256', (string) $extraEmails['ID']) . "/unsubscribe"),
                         ];
                     }
                 }

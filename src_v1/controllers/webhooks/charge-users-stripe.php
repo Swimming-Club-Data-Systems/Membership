@@ -44,7 +44,7 @@ try {
 
             if ($mandateInfo && $row['Amount'] > 100) {
                 $amount = $row['Amount'];
-                $currency = mb_strtolower($row['Currency']);
+                $currency = mb_strtolower((string) $row['Currency']);
                 $description = $row['Name'];
                 $idemKey = "PaymentID-" . $row['PaymentID'];
                 $mandate = $mandateInfo['Mandate'];
@@ -127,7 +127,7 @@ try {
                         'Paid',
                         $paymentID
                     ]);
-                } catch (Exception $e) {
+                } catch (Exception) {
                     // reportError($e);
                     throw new Exception();
                 }

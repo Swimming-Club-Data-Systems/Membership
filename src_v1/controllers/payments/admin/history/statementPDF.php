@@ -56,17 +56,17 @@ $name = getUserName($payment_info['UserID']);
 $use_white_background = true;
 $PMKey = null;
 if ($payment_info['PMKey'] != null) {
-  $PMKey = mb_strtoupper($payment_info['PMKey']);
+  $PMKey = mb_strtoupper((string) $payment_info['PMKey']);
 }
 $pagetitle = htmlspecialchars("Statement #" . $id);
 
-$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars($id));
+$_SESSION['TENANT-' . app()->tenant->getId()]['qr'][0]['text'] = autoUrl("payments/statements/" . htmlspecialchars((string) $id));
 
 $billDate = null;
 try {
   $billDate = new DateTime($payment_info['Date'], new DateTimeZone('UTC'));
   $billDate->setTimezone(new DateTimeZone('Europe/London'));
-} catch (Exception $e) {
+} catch (Exception) {
   $billDate = new DateTime('now', new DateTimeZone('Europe/London'));
 }
 
@@ -74,7 +74,7 @@ $userObj = new \User($payment_info['UserID'], true);
 $json = $userObj->getUserOption('MAIN_ADDRESS');
 $address = null;
 if ($json != null) {
-  $address = json_decode($json);
+  $address = json_decode((string) $json);
 }
 
 ob_start();?>
@@ -100,35 +100,35 @@ ob_start();?>
         </p>
 
         <p>
-          Internal Reference: <span class="font-monospace">#<?=htmlspecialchars($id)?></span>
+          Internal Reference: <span class="font-monospace">#<?=htmlspecialchars((string) $id)?></span>
         </p>
       </div>
     </div>
 
     <?php if ($address != null && isset($address->streetAndNumber)) { ?>
     <address class="mb-3 address-font address-box">
-      <strong><?=htmlspecialchars($name)?></strong><br>
-      <?=htmlspecialchars($address->streetAndNumber)?><br>
+      <strong><?=htmlspecialchars((string) $name)?></strong><br>
+      <?=htmlspecialchars((string) $address->streetAndNumber)?><br>
       <?php if (isset($address->flatOrBuilding)) { ?>
-      <?=htmlspecialchars($address->flatOrBuilding)?><br>
+      <?=htmlspecialchars((string) $address->flatOrBuilding)?><br>
       <?php } ?>
-      <?=htmlspecialchars($address->city)?><br>
-      <?=htmlspecialchars(mb_strtoupper($address->postCode))?>
+      <?=htmlspecialchars((string) $address->city)?><br>
+      <?=htmlspecialchars(mb_strtoupper((string) $address->postCode))?>
     </address>
     <div class="after-address-box"></div>
     <?php } else { ?>
     <p>
-      <strong><?=htmlspecialchars($name)?></strong><br>
+      <strong><?=htmlspecialchars((string) $name)?></strong><br>
       Parent/Carer
     </p>
     <?php } ?>
 
     <div class="primary-box mb-3" id="title">
-      <h1 class="mb-0" title="<?=htmlspecialchars($payment_info['Name'])?>">
+      <h1 class="mb-0" title="<?=htmlspecialchars((string) $payment_info['Name'])?>">
         Statement of Fees and Charges
       </h1>
       <p class="lead mb-0">
-        <?=htmlspecialchars($payment_info['Name'])?>
+        <?=htmlspecialchars((string) $payment_info['Name'])?>
       </p>
     </div>
 
@@ -138,7 +138,7 @@ ob_start();?>
         <dt class="split-30">Statement Identifier</dt>
         <dd class="split-70">
           <span class="font-monospace">
-            <?=htmlspecialchars($id)?>
+            <?=htmlspecialchars((string) $id)?>
           </span>
         </dd>
       </div>
@@ -176,7 +176,7 @@ ob_start();?>
         <dt class="split-30">Payment Status as of <?=date("d/m/Y")?></dt>
         <dd class="split-70">
           <span class="font-monospace">
-            <?=htmlspecialchars(paymentStatusString($payment_info['Status']))?>
+            <?=htmlspecialchars((string) paymentStatusString($payment_info['Status']))?>
           </span>
         </dd>
       </div>
@@ -196,7 +196,7 @@ ob_start();?>
         <dt class="split-30">Bank Account</dt>
         <dd class="split-70">
           <span class="font-monospace">
-            &middot;&middot;&middot;&middot;&middot;&middot;<?=htmlspecialchars($payment_info['AccountNumEnd'])?>
+            &middot;&middot;&middot;&middot;&middot;&middot;<?=htmlspecialchars((string) $payment_info['AccountNumEnd'])?>
           </span>
         </dd>
       </div>
@@ -205,7 +205,7 @@ ob_start();?>
         <dt class="split-30">Account Name</dt>
         <dd class="split-70">
           <span class="font-monospace">
-            <?=htmlspecialchars(mb_strtoupper($payment_info['AccountHolderName']))?>
+            <?=htmlspecialchars(mb_strtoupper((string) $payment_info['AccountHolderName']))?>
           </span>
         </dd>
       </div>
@@ -249,7 +249,7 @@ ob_start();?>
           //$row = mysqli_fetch_array($result, MYSQLI_ASSOC);
           $data = "";
           if ($row['MetadataJSON'] != "" || $row['MetadataJSON'] != "") {
-            $json = json_decode($row['MetadataJSON']);
+            $json = json_decode((string) $row['MetadataJSON']);
             if ($json->PaymentType == "SquadFees"  || $json->PaymentType == "ExtraFees") {
               $data .= '<ul class="list-unstyled mb-0">';
               //echo sizeof($json->Members);
@@ -257,7 +257,7 @@ ob_start();?>
               //echo $json->Members[0]->MemberName;
               $numMems = (int) sizeof($json->Members);
               for ($y = 0; $y < $numMems; $y++) {
-                $data .= '<li>' . htmlspecialchars($json->Members[$y]->FeeName) . " (&pound;" . htmlspecialchars($json->Members[$y]->Fee) . ") for " . htmlspecialchars($json->Members[$y]->MemberName) . '</li>';
+                $data .= '<li>' . htmlspecialchars((string) $json->Members[$y]->FeeName) . " (&pound;" . htmlspecialchars((string) $json->Members[$y]->Fee) . ") for " . htmlspecialchars((string) $json->Members[$y]->MemberName) . '</li>';
               }
               $data .= '</ul>';
             }
@@ -265,10 +265,10 @@ ob_start();?>
           ?>
           <tr>
             <td>
-              <?=date("D j M Y",strtotime($row['Date']))?>
+              <?=date("D j M Y",strtotime((string) $row['Date']))?>
             </td>
             <td>
-              <?=htmlspecialchars($row['Name'])?>
+              <?=htmlspecialchars((string) $row['Name'])?>
               <em><?=$data?></em>
             </td>
             <td>
@@ -297,7 +297,7 @@ ob_start();?>
     </p>
 
     <h2 id="payment-questions">Questions about Direct Debit?</h2>
-    <p>Full help and support for payments by Direct Debit is available on the <a href="<?= htmlspecialchars(platformUrl('help-and-support')) ?>" target="_blank">Membership System Support Website</a>. Help and Support Documentation is provided by Swimming Club Data Systems to all clubs and users that use this service. If you need somebody to help you, please contact your own club.</p>
+    <p>Full help and support for payments by Direct Debit is available on the <a href="<?= htmlspecialchars((string) platformUrl('help-and-support')) ?>" target="_blank">Membership System Support Website</a>. Help and Support Documentation is provided by Swimming Club Data Systems to all clubs and users that use this service. If you need somebody to help you, please contact your own club.</p>
 
     <div class="row" id="payment-dd-guarantee">
       <div class="split-75">
@@ -307,21 +307,21 @@ ob_start();?>
         <img src="<?=BASE_PATH?>public/img/directdebit/directdebit@3x.png" style="height:1cm;" class="mb-3" alt="Direct Debit Logo">
       </div>
     </div>
-    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?></p>
+    <p>The Direct Debit Guarantee applies to payments made to <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?></p>
 
     <ul>
       <li>
         This Guarantee is offered by all banks and building societies that accept instructions to pay Direct Debits
       </li>
       <li>
-        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
+        If there are any changes to the amount, date or frequency of your Direct Debit <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> will notify you three working days in advance of your account being debited or as otherwise agreed. If you request <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> to collect a payment, confirmation of the amount and date will be given to you at the time of the request
       </li>
       <li>
-        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
+        If an error is made in the payment of your Direct Debit, by <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> or your bank or building society, you are entitled to a full and immediate refund of the amount paid from your bank or building society
       </li>
         <ul>
           <li>
-            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> asks you to
+            If you receive a refund you are not entitled to, you must pay it back when <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> asks you to
           </li>
         </ul>
       <li>
@@ -329,9 +329,9 @@ ob_start();?>
       </li>
     </ul>
 
-    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>.</p>
+    <p>Payments are handled by <a href="https://gocardless.com/">GoCardless</a> on behalf of <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>.</p>
 
-    <p>&copy; <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> <?=date("Y", strtotime($payment_info['Date']))?></p>
+    <p>&copy; <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> <?=date("Y", strtotime((string) $payment_info['Date']))?></p>
 
     <?php include BASE_PATH . 'helperclasses/PDFStyles/PageNumbers.php'; ?>
   </body>

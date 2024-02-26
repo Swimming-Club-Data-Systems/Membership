@@ -63,7 +63,7 @@ try {
   $attachments = [];
   $collectiveSize = 0;
 
-  $attachmentsList = json_decode($_POST['email-attachments']);
+  $attachmentsList = json_decode((string) $_POST['email-attachments']);
   for ($i = 0; $i < sizeof($attachmentsList); $i++) {
     try {
       if ($filesystem->fileExists($attachmentsList[$i]->s3_key)) {
@@ -163,7 +163,7 @@ try {
       try {
         $filesystem->write($attachments[$i]['store_name'], file_get_contents($attachments[$i]['tmp_name']), ['visibility' => 'private']);
         $attachments[$i]['uploaded'] = true;
-      } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile $exception) {
+      } catch (League\Flysystem\FilesystemException | League\Flysystem\UnableToWriteFile) {
       }
 
       // if (!is_writeable($attachments[$i]['store_name'])) {
@@ -213,8 +213,8 @@ try {
     $sendingCategory = $_POST['subscription-category'];
   }
 
-  $subject = trim(str_replace('!', '', str_replace('*', '', $_POST['subject'])));
-  $message = str_replace($to_remove, "", $_POST['message']);
+  $subject = trim(str_replace('!', '', str_replace('*', '', (string) $_POST['subject'])));
+  $message = str_replace($to_remove, "", (string) $_POST['message']);
   if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Admin" && !($replyAddress && isset($_POST['ReplyToMe']) && bool($_POST['ReplyToMe']))) {
     $name = getUserName($_SESSION['TENANT-' . app()->tenant->getId()]['UserID']);
     $message .= '<p class="small text-muted">Sent by ' . $name . '. Reply to this email to contact our Enquiries Team who can pass your message on to ' . $name . '.</p>';
@@ -389,7 +389,7 @@ try {
   ];
 
   if ($_POST['from'] == "current-user") {
-    $senderNames = explode(' ', $userSending);
+    $senderNames = explode(' ', (string) $userSending);
     $fromEmail = "";
     for ($i = 0; $i < sizeof($senderNames); $i++) {
       $fromEmail .= urlencode(strtolower($senderNames[$i]));
@@ -399,7 +399,7 @@ try {
     }
 
     if (!app()->tenant->isCLS()) {
-      $fromEmail .= '.' . urlencode(strtolower(str_replace(' ', '', app()->tenant->getKey("ASA_CLUB_CODE"))));
+      $fromEmail .= '.' . urlencode(strtolower(str_replace(' ', '', (string) app()->tenant->getKey("ASA_CLUB_CODE"))));
     }
 
     $fromEmail .= '@' . getenv('EMAIL_DOMAIN');
@@ -516,7 +516,7 @@ try {
   while ($currentMessage = $getPendingGroupMail->fetch(PDO::FETCH_ASSOC)) {
     $getUsersForEmail->execute([$currentMessage['ID']]);
 
-    $jsonData = json_decode($currentMessage['JSONData']);
+    $jsonData = json_decode((string) $currentMessage['JSONData']);
 
     $mailObject = new \CLSASC\SuperMailer\CreateMail();
     $mailObject->setHtmlContent($currentMessage['Message']);
@@ -538,7 +538,7 @@ try {
           $user['Forename'] . ' ' . $user['Surname'],
           [
             '-name-' => $user['Forename'] . ' ' . $user['Surname'],
-            '-unsub_link-' => autoUrl("notify/unsubscribe/" . dechex($user['UserID']) .  "/" . urlencode($user['EmailAddress']) . "/Notify")
+            '-unsub_link-' => autoUrl("notify/unsubscribe/" . dechex($user['UserID']) .  "/" . urlencode((string) $user['EmailAddress']) . "/Notify")
           ]
         );
         if ($sendingCategory == 'Notify') {
@@ -549,7 +549,7 @@ try {
               $extraEmails['Name'],
               [
                 '-name-' => $extraEmails['Name'],
-                '-unsub_link-' => autoUrl("cc/" . dechex($extraEmails['ID']) .  "/" . hash('sha256', $extraEmails['ID']) . "/unsubscribe")
+                '-unsub_link-' => autoUrl("cc/" . dechex($extraEmails['ID']) .  "/" . hash('sha256', (string) $extraEmails['ID']) . "/unsubscribe")
               ]
             );
             $ccEmails[$extraEmails['EmailAddress']] = $extraEmails['Name'];
@@ -588,7 +588,7 @@ try {
     if ($jsonData->ReplyToMe->Email != null && $jsonData->ReplyToMe->Name != null) {
       try {
         $email->setReplyTo($jsonData->ReplyToMe->Email, $jsonData->ReplyToMe->Name);
-      } catch (Exception $e) {
+      } catch (Exception) {
         $email->setReplyTo(app()->tenant->getKey('CLUB_EMAIL'), app()->tenant->getKey('CLUB_NAME') . ' Enquiries');
       }
     } else {
@@ -607,7 +607,7 @@ try {
   }
 
   header("Location: " . autoUrl("notify"));
-} catch (Exception $e) {
+} catch (Exception) {
   $db->rollback();
   header("Location: " . autoUrl("notify/new"));
 }

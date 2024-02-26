@@ -6,6 +6,6 @@
 $client = null;
 try {
   $client = SCDS\GoCardless\Client::get();
-} catch (Exception $e) {
+} catch (Exception) {
   halt(902);
 }

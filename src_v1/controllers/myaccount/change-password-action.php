@@ -13,13 +13,13 @@ try {
   $getPassword = $db->prepare("SELECT `Password` FROM users WHERE UserID = ?");
   $getPassword->execute([$_SESSION['TENANT-' . app()->tenant->getId()]['UserID']]);
   $hash = $getPassword->fetchColumn();
-} catch (Exception $e) {
+} catch (Exception) {
   halt(500);
 }
 
-$currentPW = trim($_POST['current']);
-$password1 = trim($_POST['password-1']);
-$password2 = trim($_POST['password-2']);
+$currentPW = trim((string) $_POST['current']);
+$password1 = trim((string) $_POST['password-1']);
+$password2 = trim((string) $_POST['password-2']);
 
 if (!v::stringType()->length(7, null)->validate($password1)) {
   $status = false;
@@ -36,7 +36,7 @@ if ($password1 != $password2) {
   ";
 }
 
-if (!password_verify($currentPW, $hash)) {
+if (!password_verify($currentPW, (string) $hash)) {
   $status = false;
   $statusMessage .= "
   <li>Current password incorrect</li>
@@ -55,7 +55,7 @@ if ($status) {
 
     $_SESSION['TENANT-' . app()->tenant->getId()]['PasswordUpdate'] = true;
     header("Location: " . autoUrl("my-account/password"));
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(500);
   }
 }

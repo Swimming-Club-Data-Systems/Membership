@@ -39,7 +39,7 @@ if ($contact->getUserID() == $user->getId()) {
     if ($_POST['num'] != null && $_POST['num'] != "") {
       $contact->setContactNumber($_POST['num']);
     }
-  } catch (Exception $e) {
+  } catch (Exception) {
     $good = false;
   }
 } else {

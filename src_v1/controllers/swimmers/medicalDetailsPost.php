@@ -48,32 +48,32 @@ try {
   $gpAddress = json_encode([]);
 
   // Deal with data
-  if (isset($_POST['medConDisDetails']) && mb_strlen(trim($_POST['medConDisDetails'])) > 0) {
-    $conditions = trim($_POST['medConDisDetails']);
+  if (isset($_POST['medConDisDetails']) && mb_strlen(trim((string) $_POST['medConDisDetails'])) > 0) {
+    $conditions = trim((string) $_POST['medConDisDetails']);
   }
 
-  if (isset($_POST['allergiesDetails']) && mb_strlen(trim($_POST['allergiesDetails'])) > 0) {
-    $allergies = trim($_POST['allergiesDetails']);
+  if (isset($_POST['allergiesDetails']) && mb_strlen(trim((string) $_POST['allergiesDetails'])) > 0) {
+    $allergies = trim((string) $_POST['allergiesDetails']);
   }
 
-  if (isset($_POST['medicineDetails']) && mb_strlen(trim($_POST['medicineDetails'])) > 0) {
-    $medication = trim($_POST['medicineDetails']);
+  if (isset($_POST['medicineDetails']) && mb_strlen(trim((string) $_POST['medicineDetails'])) > 0) {
+    $medication = trim((string) $_POST['medicineDetails']);
   }
 
   if ($member->getAge() < 18) {
-    if (isset($_POST['gp-name']) && mb_strlen(trim($_POST['gp-name'])) > 0) {
-      $gpName = trim($_POST['gp-name']);
+    if (isset($_POST['gp-name']) && mb_strlen(trim((string) $_POST['gp-name'])) > 0) {
+      $gpName = trim((string) $_POST['gp-name']);
     }
 
-    if (isset($_POST['gp-address']) && mb_strlen(trim($_POST['gp-address'])) > 0) {
-      $gpAddress = json_encode(explode("\r\n", trim($_POST['gp-address'])));
+    if (isset($_POST['gp-address']) && mb_strlen(trim((string) $_POST['gp-address'])) > 0) {
+      $gpAddress = json_encode(explode("\r\n", trim((string) $_POST['gp-address'])));
     }
 
-    if (isset($_POST['gp-phone']) && mb_strlen(trim($_POST['gp-phone'])) > 0 && v::phone()->validate($_POST['gp-phone'])) {
+    if (isset($_POST['gp-phone']) && mb_strlen(trim((string) $_POST['gp-phone'])) > 0 && v::phone()->validate($_POST['gp-phone'])) {
       try {
         $mobile = PhoneNumber::parse($_POST['gp-phone'], 'GB');
         $gpPhone = $mobile->format(PhoneNumberFormat::E164);
-      } catch (Exception $e) {
+      } catch (Exception) {
       }
     }
   }
@@ -115,7 +115,7 @@ try {
     ]);
   }
   header("Location: " . autoUrl("members/" . $id . "/medical"));
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['ErrorState'] = "
 	<div class=\"alert alert-danger\">
 	<strong>An error occured when we tried to update our records</strong>

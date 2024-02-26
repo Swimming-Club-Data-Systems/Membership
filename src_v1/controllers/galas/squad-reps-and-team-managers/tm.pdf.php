@@ -2,7 +2,7 @@
 
 $doNotHalt = true;
 require 'tm.json.php';
-$data = json_decode($output);
+$data = json_decode((string) $output);
 
 $swimsArray = [
   '25Free' => '25&nbsp;Free',
@@ -32,7 +32,7 @@ $swimsArray = [
 
 $swimsTextArray = ['25 Fr', '50 Fr', '100 Fr', '200 Fr', '400 Fr', '800 Fr', '1500 Fr', '25 Bk', '50 Bk', '100 Bk', '200 Bk', '50 Br', '50 Br', '100 Br', '200 Br', '25 Fly', '50 Fly', '100 Fly', '200 Fly', '100 IM', '150 IM', '200 IM', '400 IM'];
 
-$pagetitle = "Team Manager Report for " . htmlspecialchars($data->gala->name);
+$pagetitle = "Team Manager Report for " . htmlspecialchars((string) $data->gala->name);
 
 ob_start(); ?>
 
@@ -75,7 +75,7 @@ ob_start(); ?>
 
   <div class="primary-box mb-3" id="title">
     <h1 class="mb-0">
-      <?= htmlspecialchars($data->gala->name) ?>
+      <?= htmlspecialchars((string) $data->gala->name) ?>
     </h1>
     <p class="lead mb-0">Team Manager Gala Entry Report</p>
   </div>
@@ -104,7 +104,7 @@ ob_start(); ?>
       <p>&copy; Chester-le-Street ASC <?= date("Y") ?></p>
     <?php } else { ?>
       <p class="mb-0">&copy; Swimming Club Data Systems <?= date("Y") ?></p>
-      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?></p>
+      <p>Produced by Swimming Club Data Systems for <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?></p>
     <?php } ?>
   </div>
 
@@ -113,15 +113,15 @@ ob_start(); ?>
   <?php foreach ($data->entries as $entry) { ?>
     <div class="avoid-page-break-inside">
 
-      <h3><?= htmlspecialchars(\SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
+      <h3><?= htmlspecialchars((string) \SCDS\Formatting\Names::format($entry->forename, $entry->surname)) ?></h3>
 
       <div class="row">
         <div class="split-50">
           <p>
-            <strong>Swim England Number:</strong> <?= htmlspecialchars($entry->asa_number) ?><br>
-            <strong>Age today:</strong> <?= htmlspecialchars($entry->age_today) ?><br>
-            <strong>Age on day:</strong> <?= htmlspecialchars($entry->age_on_last_day) ?><br>
-            <strong>Age at end of year:</strong> <?= htmlspecialchars($entry->age_at_end_of_year) ?><br>
+            <strong>Swim England Number:</strong> <?= htmlspecialchars((string) $entry->asa_number) ?><br>
+            <strong>Age today:</strong> <?= htmlspecialchars((string) $entry->age_today) ?><br>
+            <strong>Age on day:</strong> <?= htmlspecialchars((string) $entry->age_on_last_day) ?><br>
+            <strong>Age at end of year:</strong> <?= htmlspecialchars((string) $entry->age_at_end_of_year) ?><br>
           </p>
         </div>
         <div class="split-50 text-end">
@@ -152,7 +152,7 @@ ob_start(); ?>
             <td>Time</td>
             <?php foreach ($entry->events as $event) { ?>
               <td class="text-center">
-                <?php if ($event->selected && isset($event->entry_time) && $event->entry_time != null) { ?><?= htmlspecialchars($event->entry_time) ?><?php } else { ?><?php } ?>
+                <?php if ($event->selected && isset($event->entry_time) && $event->entry_time != null) { ?><?= htmlspecialchars((string) $event->entry_time) ?><?php } else { ?><?php } ?>
               </td>
             <?php } ?>
           </tr>

@@ -76,15 +76,15 @@ include BASE_PATH . "views/swimmersMenu.php";
 		<!-- Page header -->
 		<nav aria-label="breadcrumb">
 			<ol class="breadcrumb">
-				<li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("renewal")) ?>">Renewal</a></li>
-				<li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars($id) ?></li>
+				<li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("renewal")) ?>">Renewal</a></li>
+				<li class="breadcrumb-item active" aria-current="page">#<?= htmlspecialchars((string) $id) ?></li>
 			</ol>
 		</nav>
 
 		<div class="row align-items-center">
 			<div class="col-lg-8">
 				<h1>
-					<?= htmlspecialchars($renewalArray['Name']) ?> Status
+					<?= htmlspecialchars((string) $renewalArray['Name']) ?> Status
 				</h1>
 				<p class="lead mb-0" id="leadDesc">
 					<?= htmlspecialchars($from->format("l j F Y")) ?> to <?= htmlspecialchars($to->format("l j F Y")) ?>
@@ -98,7 +98,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 <div class="container-fluid">
 	<div class="">
 		<p class="mb-0">
-			<?php foreach ($cats as $cat) { ?><?= htmlspecialchars($cat['count']) ?> <?= htmlspecialchars($cat['name']) ?>, <?php } ?> of <?= $numMembers ?> members*.
+			<?php foreach ($cats as $cat) { ?><?= htmlspecialchars($cat['count']) ?> <?= htmlspecialchars((string) $cat['name']) ?>, <?php } ?> of <?= $numMembers ?> members*.
 		</p>
 		<p class="small text-muted">
 			* Number of members on first day of renewal
@@ -120,7 +120,7 @@ include BASE_PATH . "views/swimmersMenu.php";
 				Please try again later.
 			</p>
 		</div>
-	<?php
+<?php
 	} else {  ?>
 		<div class="table-responsive-sm">
 			<table class="table table-light <?php if (app('request')->isMobile()) { ?>table-sm small<?php } ?>">
@@ -164,38 +164,38 @@ include BASE_PATH . "views/swimmersMenu.php";
 						}
 
 						if ($renewalItem['Status'] == "failed" || $renewalItem['Status'] == "charged_back" || $renewalItem['Status'] == "requires_payment_method") {
-						?><tr data-member="<?= htmlspecialchars($renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars($renewalItem['RMID']) ?>" class="table-danger"><?php
+						?><tr data-member="<?= htmlspecialchars((string) $renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars((string) $renewalItem['RMID']) ?>" class="table-danger"><?php
 																																																																																					} else if (bool($renewalItem['StripePaid']) || $renewalItem['Status'] == "paid_out" || $renewalItem['Status'] == "confirmed" || $renewalItem['Status'] == "paid_manually" || $renewalItem['Status'] == "succeeded") {
 																																																																																						?>
-							<tr data-member="<?= htmlspecialchars($renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars($renewalItem['RMID']) ?>" class="table-success"><?php
+							<tr data-member="<?= htmlspecialchars((string) $renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars((string) $renewalItem['RMID']) ?>" class="table-success"><?php
 																																																																																					} else if (!bool($renewalItem['Active'])) {
 																																																																																						?>
-							<tr data-member="<?= htmlspecialchars($renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars($renewalItem['RMID']) ?>" class="table-active"><?php
+							<tr data-member="<?= htmlspecialchars((string) $renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars((string) $renewalItem['RMID']) ?>" class="table-active"><?php
 																																																																																					} else {
 																																																																																						?>
-							<tr data-member="<?= htmlspecialchars($renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars($renewalItem['RMID']) ?>"><?php
+							<tr data-member="<?= htmlspecialchars((string) $renewalItem['MemberID']) ?>" data-renewal-record="<?= htmlspecialchars((string) $renewalItem['RMID']) ?>"><?php
 																																																																																					}
 																																																																											?>
 							<td>
-								<?= htmlspecialchars(\SCDS\Formatting\Names::format($renewalItem['MForename'], $renewalItem['MSurname'])) ?><?php if (!bool($renewalItem['Active'])) { ?> <em>INACTIVE</em><?php } ?>
+								<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($renewalItem['MForename'], $renewalItem['MSurname'])) ?><?php if (!bool($renewalItem['Active'])) { ?> <em>INACTIVE</em><?php } ?>
 							</td>
 							<td>
-								<?= htmlspecialchars(\SCDS\Formatting\Names::format($renewalItem['Forename'], $renewalItem['Surname'])) ?>
+								<?= htmlspecialchars((string) \SCDS\Formatting\Names::format($renewalItem['Forename'], $renewalItem['Surname'])) ?>
 							</td>
 							<td>
 								<span class="font-monospace">
-									<?= htmlspecialchars($renewalItem['ASANumber']) ?><?php if ($renewalItem['ASACategory']) { ?> (<?= htmlspecialchars($renewalItem['ASACategory']) ?>)<?php } ?>
+									<?= htmlspecialchars((string) $renewalItem['ASANumber']) ?><?php if ($renewalItem['ASACategory']) { ?> (<?= htmlspecialchars((string) $renewalItem['ASACategory']) ?>)<?php } ?>
 								</span>
 							</td>
 							<td>
 								<?php if (!bool($renewalItem['Renewed'])) { ?>
 									Not yet renewed
 								<?php } else if (bool($renewalItem['StripePaid'])) { ?>
-									<img src="<?= autoUrl("img/stripe/" . $renewalItem['Brand'] . ".svg", false) ?>" style="height: 1rem; width: 1.5rem;"> Paid by <span class="visually-hidden"><?= htmlspecialchars(getCardBrand($renewalItem['Brand'])) ?></span> <?= htmlspecialchars($renewalItem['Funding']) ?> card &middot;&middot;&middot;&middot; <?= htmlspecialchars($renewalItem['Last4']) ?> - <a class="font-weight-bold text-success" href="<?= htmlspecialchars(autoUrl("payments/card-transactions/" . $renewalItem['StripeDBID'])) ?>">SPM<?= htmlspecialchars($renewalItem['StripeDBID']) ?></a>
+									<img src="<?= autoUrl("img/stripe/" . $renewalItem['Brand'] . ".svg", false) ?>" style="height: 1rem; width: 1.5rem;"> Paid by <span class="visually-hidden"><?= htmlspecialchars((string) getCardBrand($renewalItem['Brand'])) ?></span> <?= htmlspecialchars((string) $renewalItem['Funding']) ?> card &middot;&middot;&middot;&middot; <?= htmlspecialchars((string) $renewalItem['Last4']) ?> - <a class="font-weight-bold text-success" href="<?= htmlspecialchars((string) autoUrl("payments/card-transactions/" . $renewalItem['StripeDBID'])) ?>">SPM<?= htmlspecialchars((string) $renewalItem['StripeDBID']) ?></a>
 								<?php } else if ($renewalItem['Status'] == "") { ?>
 									Payment not yet processed
 								<?php } else { ?>
-									<?= htmlspecialchars(paymentStatusString($renewalItem['Status'])) ?>
+									<?= htmlspecialchars((string) paymentStatusString($renewalItem['Status'])) ?>
 								<?php } ?>
 							</td>
 							</tr>

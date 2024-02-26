@@ -44,8 +44,8 @@ include BASE_PATH . 'views/header.php';
     <!-- Page header -->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships")) ?>">Memberships</a></li>
-        <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("memberships/years")) ?>">Years</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships")) ?>">Memberships</a></li>
+        <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("memberships/years")) ?>">Years</a></li>
         <li class="breadcrumb-item active" aria-current="page">New Batch</li>
       </ol>
     </nav>
@@ -56,11 +56,11 @@ include BASE_PATH . 'views/header.php';
           Select a year
         </h1>
         <p class="lead mb-0">
-          For <?= htmlspecialchars(\SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>'s batch
+          For <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($info['Forename'], $info['Surname'])) ?>'s batch
         </p>
       </div>
       <div class="col-auto ms-lg-auto">
-        <a href="<?= htmlspecialchars(autoUrl("users/" . urlencode($id))) ?>" class="btn btn-warning">Cancel</a>
+        <a href="<?= htmlspecialchars((string) autoUrl("users/" . urlencode((string) $id))) ?>" class="btn btn-warning">Cancel</a>
       </div>
     </div>
   </div>
@@ -73,8 +73,8 @@ include BASE_PATH . 'views/header.php';
 
       <div class="list-group">
         <?php do { ?>
-          <a href="<?= htmlspecialchars(autoUrl("memberships/years/$year->ID/new-batch?user=" . urlencode($id))) ?>" class="list-group-item list-group-item-action">
-            <?= htmlspecialchars($year->Name) ?>
+          <a href="<?= htmlspecialchars((string) autoUrl("memberships/years/$year->ID/new-batch?user=" . urlencode((string) $id))) ?>" class="list-group-item list-group-item-action">
+            <?= htmlspecialchars((string) $year->Name) ?>
           </a>
         <?php } while ($year = $getYears->fetch(PDO::FETCH_OBJ)); ?>
       </div>

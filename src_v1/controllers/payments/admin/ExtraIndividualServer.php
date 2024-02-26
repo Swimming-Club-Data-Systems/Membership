@@ -34,19 +34,19 @@ if ($_POST['response'] == "getSwimmers") {
                 <div class="col-auto">
                   <p class="mb-0">
                     <strong>
-                      <?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
+                      <?= htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?>
                     </strong>
                   </p>
                   <?php if ($squad) { ?>
                     <ul class="list-unstyled">
                       <?php do { ?>
-                        <li><?= htmlspecialchars($squad['SquadName']) ?></li>
+                        <li><?= htmlspecialchars((string) $squad['SquadName']) ?></li>
                       <?php } while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)); ?>
                     </ul>
                   <?php } ?>
                 </div>
                 <div class="col text-end">
-                  <button type="button" id="RelationDrop-<?= htmlspecialchars($row['RelationID']) ?>" class="btn btn-light" value="<?= htmlspecialchars($row['RelationID']) ?>">
+                  <button type="button" id="RelationDrop-<?= htmlspecialchars((string) $row['RelationID']) ?>" class="btn btn-light" value="<?= htmlspecialchars((string) $row['RelationID']) ?>">
                     Remove
                   </button>
                 </div>
@@ -88,7 +88,7 @@ if ($_POST['response'] == "getSwimmers") {
     $state = false;
     $output = '<option value="null" selected>Select a swimmer</option>';
     while ($row = $getSwimmers->fetch(PDO::FETCH_ASSOC)) {
-      $output .= '<option value="' . htmlspecialchars($row['MemberID']) . '">' . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . '</option>';
+      $output .= '<option value="' . htmlspecialchars((string) $row['MemberID']) . '">' . htmlspecialchars((string) \SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) . '</option>';
       $state = true;
     }
     echo json_encode([
@@ -129,7 +129,7 @@ if ($_POST['response'] == "getSwimmers") {
 
         $responseData = [
           'alertClass' => 'alert-success',
-          'alertContent' => '<p class="mb-0"><strong>' . htmlspecialchars(\SCDS\Formatting\Names::format($name['fn'], $name['sn'])) . ' added to extra</strong></p>',
+          'alertContent' => '<p class="mb-0"><strong>' . htmlspecialchars((string) \SCDS\Formatting\Names::format($name['fn'], $name['sn'])) . ' added to extra</strong></p>',
           'status' => true
         ];
       }
@@ -165,7 +165,7 @@ if ($_POST['response'] == "getSwimmers") {
 
     $delete = $db->prepare("DELETE FROM `extrasRelations` WHERE `RelationID` = ?");
     $delete->execute([$_POST['relation']]);
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(404);
   }
 } else {

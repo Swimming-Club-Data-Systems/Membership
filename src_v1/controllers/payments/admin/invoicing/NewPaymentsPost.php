@@ -32,7 +32,7 @@ try {
   }
 
   $description = mb_ucfirst($_POST['description']);
-  $descriptionLength = mb_strlen($description);
+  $descriptionLength = mb_strlen((string) $description);
   if (!($descriptionLength > 0)) {
     throw new Exception('The description is too short.');
   }
@@ -89,10 +89,10 @@ try {
     } else {
       $subject .= 'credit/refund on account';
     }
-    $message .= '<p>Hi ' . htmlspecialchars($user['Forename']) . ', </p>';
-    $message .= '<p>We\'ve manually added a ' . $typeString . ' of <strong>&pound;' . $amountString . '</strong> to your next ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' direct debit payment for <strong>' . htmlspecialchars($description) .  '</strong>.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . '.</p>';
+    $message .= '<p>Hi ' . htmlspecialchars((string) $user['Forename']) . ', </p>';
+    $message .= '<p>We\'ve manually added a ' . $typeString . ' of <strong>&pound;' . $amountString . '</strong> to your next ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' direct debit payment for <strong>' . htmlspecialchars((string) $description) .  '</strong>.</p><p>You will be able to see this charge in your pending charges and from the first day of next month, on your bill statement. You\'ll be charged for this as part of your next direct debit payment to ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . '.</p>';
 
-    $message .= '<p>Kind Regards, <br>The ' . htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) . ' Payments Team</p>';
+    $message .= '<p>Kind Regards, <br>The ' . htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) . ' Payments Team</p>';
 
     $notify = $db->prepare("INSERT INTO notify (UserID, `Status`, `Subject`, `Message`, EmailType) VALUES (?, ?, ?, ?, ?)");
 
@@ -122,7 +122,7 @@ try {
   if ($db->inTransaction()) {
     try {
       $db->rollBack();
-    } catch (Exception $e) {
+    } catch (Exception) {
       // Ignore
     }
   }

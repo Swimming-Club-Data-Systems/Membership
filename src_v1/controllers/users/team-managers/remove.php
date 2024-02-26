@@ -37,7 +37,7 @@ try {
 
   // Success
   $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaSuccess'] = true;
-} catch (Exception $e) {
+} catch (Exception) {
   $_SESSION['TENANT-' . app()->tenant->getId()]['RemoveGalaError'] = true;
 }
 

@@ -76,7 +76,7 @@ try {
     try {
       $image = Image::make($_FILES['icon-upload']['tmp_name']);
       $image->backup();
-    } catch (Exception $e) {
+    } catch (Exception) {
       $image->reset();
     }
   }

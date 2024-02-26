@@ -10,8 +10,8 @@ include BASE_PATH . 'views/header.php';
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments'))?>">Payments</a></li>
-      <li class="breadcrumb-item"><a href="<?=htmlspecialchars(autoUrl('payments/invoice-payments'))?>">Invoicing</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments'))?>">Payments</a></li>
+      <li class="breadcrumb-item"><a href="<?=htmlspecialchars((string) autoUrl('payments/invoice-payments'))?>">Invoicing</a></li>
       <li class="breadcrumb-item active" aria-current="page">Help</li>
     </ol>
   </nav>

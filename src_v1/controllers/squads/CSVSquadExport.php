@@ -67,8 +67,8 @@ header('Content-Disposition: attachment; filename=MonthlyFeesExport' . $year . '
 $output = fopen('php://output', 'w');
 echo "\xef\xbb\xbf";
 // output the column headings
-fputcsv($output, array($title));
-fputcsv($output, array('Parent', 'Swimmer', $info, 'Amount', 'FamilyTotal', 'Paid'));
+fputcsv($output, [$title]);
+fputcsv($output, ['Parent', 'Swimmer', $info, 'Amount', 'FamilyTotal', 'Paid']);
 
 $paid = [
   'confirmed',
@@ -117,7 +117,7 @@ for ($i = 0; $i < sizeof($rows); $i++) {
     //$status_text = "";
   }
 
-	fputcsv($output, array($name, $member, $row['Description'], $amount, $family_total, $status_text));
+	fputcsv($output, [$name, $member, $row['Description'], $amount, $family_total, $status_text]);
 
 	if ($i < sizeof($rows)-1) {
 		$row = $rows[$i+1];

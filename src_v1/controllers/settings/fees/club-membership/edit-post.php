@@ -23,8 +23,8 @@ try {
   $update = $db->prepare("UPDATE `clubMembershipClasses` SET `Name` = ?, `Description` = ?, `Fees` = ? WHERE `ID` = ?");
 
   $description = null;
-  if (isset($_POST['class-description']) && mb_strlen(trim($_POST['class-description'])) > 0) {
-    $description = trim($_POST['class-description']);
+  if (isset($_POST['class-description']) && mb_strlen(trim((string) $_POST['class-description'])) > 0) {
+    $description = trim((string) $_POST['class-description']);
   }
 
   $type = null;
@@ -60,7 +60,7 @@ try {
     if (isset($_POST["value-" . $date->format("m")])) {
       try {
         $values[] = MoneyHelpers::decimalToInt($_POST["value-" . $date->format("m")]);
-      } catch (Exception $e) {
+      } catch (Exception) {
         $values[] = null;
       }
     } else {
@@ -70,7 +70,7 @@ try {
     if (isset($_POST["percent-" . $date->format("m")])) {
       try {
         $percents[] = number_format($_POST["percent-" . $date->format("m")], 2);
-      } catch (Exception $e) {
+      } catch (Exception) {
         $percents[] = null;
       }
     } else {
@@ -91,12 +91,12 @@ try {
   $json = json_encode($newObject);
 
   $update->execute([
-    mb_convert_case(trim($_POST['class-name']), MB_CASE_TITLE),
+    mb_convert_case(trim((string) $_POST['class-name']), MB_CASE_TITLE),
     $description,
     $json,
     $id,
   ]);
-} catch (Exception $e) {
+} catch (Exception) {
 }
 
 http_response_code(302);

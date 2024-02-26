@@ -60,7 +60,7 @@ include BASE_PATH . 'views/header.php';
         </div>
       <?php } ?>
       <p class="lead">
-        It's great that you want to request a trial at <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>. To help us
+        It's great that you want to request a trial at <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>. To help us
         work out the best possible plan for you or your child, please fill in the
         details below.
       </p>
@@ -93,21 +93,21 @@ include BASE_PATH . 'views/header.php';
           <div class="row mb-3">
             <div class="col">
               <label class="form-label" for="forename">First name</label>
-              <input type="text" name="forename" id="forename" class="form-control" placeholder="First name" value="<?=htmlspecialchars(trim($value['forename']))?>" required>
+              <input type="text" name="forename" id="forename" class="form-control" placeholder="First name" value="<?=htmlspecialchars(trim((string) $value['forename']))?>" required>
               <div class="invalid-feedback">
                 Please enter a first name.
               </div>
             </div>
             <div class="col">
               <label class="form-label" for="surname">Last name</label>
-              <input type="text" name="surname" id="surname" class="form-control" placeholder="Last name" value="<?=htmlspecialchars(trim($value['surname']))?>" required>
+              <input type="text" name="surname" id="surname" class="form-control" placeholder="Last name" value="<?=htmlspecialchars(trim((string) $value['surname']))?>" required>
               <div class="invalid-feedback">
                 Please enter a last name.
               </div>
             </div>
           </div>
           <label class="form-label" for="email">Email address</label>
-          <input type="email" name="email-addr" id="email-addr" class="form-control" placeholder="abc@example.com" value="<?=htmlspecialchars(trim($value['email-addr']))?>" required>
+          <input type="email" name="email-addr" id="email-addr" class="form-control" placeholder="abc@example.com" value="<?=htmlspecialchars(trim((string) $value['email-addr']))?>" required>
           <div class="invalid-feedback">
             Please enter a valid email.
           </div>
@@ -128,14 +128,14 @@ include BASE_PATH . 'views/header.php';
             <div class="row mb-3 hide-if-parent">
               <div class="col">
                 <label class="form-label" for="swimmer-forename">First name</label>
-                <input type="text" name="swimmer-forename" id="swimmer-forename" class="form-control" placeholder="First name" value="<?=htmlspecialchars(trim($value['swimmer-forename']))?>" required>
+                <input type="text" name="swimmer-forename" id="swimmer-forename" class="form-control" placeholder="First name" value="<?=htmlspecialchars(trim((string) $value['swimmer-forename']))?>" required>
                 <div class="invalid-feedback">
                   Please enter a first name.
                 </div>
               </div>
               <div class="col">
                 <label class="form-label" for="swimmer-surname">Last name</label>
-                <input type="text" name="swimmer-surname" id="swimmer-surname" class="form-control" placeholder="Last name" value="<?=htmlspecialchars(trim($value['swimmer-surname']))?>" required>
+                <input type="text" name="swimmer-surname" id="swimmer-surname" class="form-control" placeholder="Last name" value="<?=htmlspecialchars(trim((string) $value['swimmer-surname']))?>" required>
                 <div class="invalid-feedback">
                   Please enter a last name.
                 </div>
@@ -275,13 +275,13 @@ include BASE_PATH . 'views/header.php';
 
             <div class="mb-3">
               <label class="form-label" for="swimmer-xp">About your Experience</label>
-              <textarea name="swimmer-xp" id="swimmer-xp" class="form-control" aria-describedby="xp-help"><?=htmlspecialchars(trim($value['swimmer-xp']))?></textarea>
+              <textarea name="swimmer-xp" id="swimmer-xp" class="form-control" aria-describedby="xp-help"><?=htmlspecialchars(trim((string) $value['swimmer-xp']))?></textarea>
               <small class="text-muted" id="xp-help">Tell us about any achievements or other details</small>
             </div>
 
             <div>
               <label class="form-label" for="swimmer-med">Medical Notes (Optional)</label>
-              <textarea name="swimmer-med" id="swimmer-med" class="form-control" aria-describedby="med-help"><?=htmlspecialchars(trim($value['swimmer-med']))?></textarea>
+              <textarea name="swimmer-med" id="swimmer-med" class="form-control" aria-describedby="med-help"><?=htmlspecialchars(trim((string) $value['swimmer-med']))?></textarea>
               <small class="text-muted" id="med-help">Let us know of any medical notes we should be aware of</small>
             </div>
           </div>
@@ -294,11 +294,11 @@ include BASE_PATH . 'views/header.php';
           </p>
           <div class="mb-3">
             <label class="form-label" for="swimmer-club">Current Swimming Club (Optional)</label>
-            <input type="test" name="swimmer-club" id="swimmer-club" class="form-control" placeholder="<?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?>" value="<?=htmlspecialchars(trim($value['swimmer-club']))?>">
+            <input type="test" name="swimmer-club" id="swimmer-club" class="form-control" placeholder="<?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?>" value="<?=htmlspecialchars(trim((string) $value['swimmer-club']))?>">
           </div>
           <div class="mb-3">
             <label class="form-label" for="swimmer-asa">Swim England Number (Optional)</label>
-            <input type="number" name="swimmer-asa" id="swimmer-asa" class="form-control" placeholder="123456" pattern="[0-9]*" inputmode="numeric" value="<?=htmlspecialchars(trim($value['swimmer-asa']))?>">
+            <input type="number" name="swimmer-asa" id="swimmer-asa" class="form-control" placeholder="123456" pattern="[0-9]*" inputmode="numeric" value="<?=htmlspecialchars(trim((string) $value['swimmer-asa']))?>">
             <div class="invalid-feedback">
               Please enter a number.
             </div>
@@ -308,7 +308,7 @@ include BASE_PATH . 'views/header.php';
         <h2>Final Details</h2>
         <div class="mb-3">
           <label class="form-label" for="questions">Questions or Comments (Optional)</label>
-          <textarea name="questions" id="questions" class="form-control"><?=htmlspecialchars(trim($value['questions']))?></textarea>
+          <textarea name="questions" id="questions" class="form-control"><?=htmlspecialchars(trim((string) $value['questions']))?></textarea>
         </div>
 
         <p>
@@ -316,7 +316,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          By submitting this form you agree to let <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> contact you by
+          By submitting this form you agree to let <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> contact you by
           email in relation to a trial and becoming a member. Your email address
           will not be used for any other purpose unless you choose to become a
           member. The trial and membership systems will send you a small number
@@ -324,7 +324,7 @@ include BASE_PATH . 'views/header.php';
         </p>
 
         <p>
-          <?=htmlspecialchars(app()->tenant->getKey('CLUB_NAME'))?> will not use your email address for marketing purposes.
+          <?=htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME'))?> will not use your email address for marketing purposes.
         </p>
 
       </form>

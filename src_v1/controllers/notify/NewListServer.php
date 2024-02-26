@@ -7,14 +7,14 @@ $name = $desc = $errorMessage = null;
 $errorState = false;
 
 if ($_POST['name'] != null && $_POST['name'] != "") {
-	$name =	trim($_POST['name']);
+	$name =	trim((string) $_POST['name']);
 } else {
 	$errorState = true;
 	$errorMessage .= "<li>There was a problem with that name</li>";
 }
 
 if ($_POST['desc'] != null && $_POST['desc'] != "") {
-	$desc = trim($_POST['desc']);
+	$desc = trim((string) $_POST['desc']);
 } else {
 	$errorState = true;
 	$errorMessage .= "<li>There was a problem with that description</li>";
@@ -32,7 +32,7 @@ if (!$errorState) {
 		AuditLog::new('Notify-List-Added', 'Created list #' . $db->lastInsertId());
 
     header("Location: " . autoUrl("notify/lists"));
-	} catch (Exception $e) {
+	} catch (Exception) {
 		$errorState = true;
 		$errorMessage .= "<li>Unable to add to database</li>";
 	}

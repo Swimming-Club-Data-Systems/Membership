@@ -23,7 +23,7 @@ if ($session->isCurrentTask('done') && !isset(app()->user)) {
     unset($_SESSION['OnboardingSessionId']);
 
     header("location: " . autoUrl(''));
-  } catch (Exception $e) {
+  } catch (Exception) {
     halt(403);
   }
 } else {

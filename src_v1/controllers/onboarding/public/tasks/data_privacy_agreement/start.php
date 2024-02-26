@@ -19,14 +19,14 @@ $db = app()->db;
 $privacy = app()->tenant->getKey('PrivacyPolicy');
 $Extra = new ParsedownExtra();
 $Extra->setSafeMode(true);
-$search  = array("\n##### ", "\n#### ", "\n### ", "\n## ", "\n# ");
-$replace = array("\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### ");
+$search  = ["\n##### ", "\n#### ", "\n### ", "\n## ", "\n# "];
+$replace = ["\n###### ", "\n###### ", "\n##### ", "\n#### ", "\n### "];
 
 $privacyPolicy = null;
 if ($privacy != null && $privacy != "") {
   $privacyPolicy = $db->prepare("SELECT Content FROM posts WHERE ID = ?");
   $privacyPolicy->execute([$privacy]);
-  $privacyPolicy = str_replace($search, $replace, $privacyPolicy->fetchColumn());
+  $privacyPolicy = str_replace($search, $replace, (string) $privacyPolicy->fetchColumn());
   if ($privacyPolicy[0] == '#') {
     $privacyPolicy = '##' . $privacyPolicy;
   }
@@ -45,9 +45,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -77,10 +77,10 @@ include BASE_PATH . "views/head.php";
 
           <h2>Data Protection Statement</h2>
           <p>
-            I understand that, in compliance with the UK Data Protection Act (which incorporates the pre-Brexit General Data Protection Regulation), all efforts will be made to ensure that information is accurate, kept up to date and secure, and that it is used only in connection with the purposes of <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?>. Information will be disclosed only to those members of the club for whom it is appropriate, and relevant officers of the Amateur Swimming Association (Swim England) or British Swimming. Information will not be kept once a person has left the club.
+            I understand that, in compliance with the UK Data Protection Act (which incorporates the pre-Brexit General Data Protection Regulation), all efforts will be made to ensure that information is accurate, kept up to date and secure, and that it is used only in connection with the purposes of <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?>. Information will be disclosed only to those members of the club for whom it is appropriate, and relevant officers of the Amateur Swimming Association (Swim England) or British Swimming. Information will not be kept once a person has left the club.
           </p>
 
-          <h2><?= htmlspecialchars(app()->tenant->getName()) ?> Privacy Policy</h2>
+          <h2><?= htmlspecialchars((string) app()->tenant->getName()) ?> Privacy Policy</h2>
           <?php if ($privacyPolicy != null) { ?>
             <?= $Extra->text($privacyPolicy) ?>
           <?php } else { ?>
@@ -91,14 +91,14 @@ include BASE_PATH . "views/head.php";
 
           <h2>myswimmingclub.uk (SCDS) Privacy Policy</h2>
           <p>
-            Use of your <?= htmlspecialchars(app()->tenant->getName()) ?> account is also subject to the terms of service and privacy policies of Swimming Club Data Systems. SCDS provides this platform on behalf of your club. Your club remains the data controller. SCDS is a data processor.
+            Use of your <?= htmlspecialchars((string) app()->tenant->getName()) ?> account is also subject to the terms of service and privacy policies of Swimming Club Data Systems. SCDS provides this platform on behalf of your club. Your club remains the data controller. SCDS is a data processor.
           </p>
 
           <div class="mb-3">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="agree" name="agree" value="1" required>
               <label class="form-check-label" for="agree">
-                I, <?= htmlspecialchars($user->getName()) ?> agree to the privacy terms shown to me on this page
+                I, <?= htmlspecialchars((string) $user->getName()) ?> agree to the privacy terms shown to me on this page
               </label>
               <div class="invalid-feedback">
                 Confirm your agreement

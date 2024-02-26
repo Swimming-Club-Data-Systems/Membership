@@ -29,9 +29,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -85,7 +85,7 @@ include BASE_PATH . "views/head.php";
   </div>
 </div>
 
-<div id="ajax-data" data-contacts-list-url="<?= htmlspecialchars(autoUrl('onboarding/go/emergency-contacts/list')) ?>" data-new-url="<?= htmlspecialchars(autoUrl('onboarding/go/emergency-contacts/new')) ?>" data-edit-url="<?= htmlspecialchars(autoUrl('onboarding/go/emergency-contacts/edit')) ?>" data-delete-url="<?= htmlspecialchars(autoUrl('onboarding/go/emergency-contacts/delete')) ?>"></div>
+<div id="ajax-data" data-contacts-list-url="<?= htmlspecialchars((string) autoUrl('onboarding/go/emergency-contacts/list')) ?>" data-new-url="<?= htmlspecialchars((string) autoUrl('onboarding/go/emergency-contacts/new')) ?>" data-edit-url="<?= htmlspecialchars((string) autoUrl('onboarding/go/emergency-contacts/edit')) ?>" data-delete-url="<?= htmlspecialchars((string) autoUrl('onboarding/go/emergency-contacts/delete')) ?>"></div>
 
 <!-- Modal for use by JS code -->
 <div class="modal fade" id="main-modal" tabindex="-1" role="dialog" aria-labelledby="main-modal-title" aria-hidden="true">

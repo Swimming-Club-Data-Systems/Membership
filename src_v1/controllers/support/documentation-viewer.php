@@ -10,7 +10,7 @@ if (defined('SOFTWARE_BRANCH')) {
   $branch = SOFTWARE_BRANCH;
 }
 
-$path = trim($this[0], '/');
+$path = trim((string) $this[0], '/');
 
 // This will do for now
 $path = str_replace('.md', '', $path);
@@ -57,7 +57,7 @@ if (!$file) {
   halt(404);
 } else if ($indexRedirect) {
   http_response_code(302);
-  header("location: " . autoUrl(trim(app('request')->path, '/') . '/index.md'));
+  header("location: " . autoUrl(trim((string) app('request')->path, '/') . '/index.md'));
   return;
 }
 if ($date != null) {
@@ -72,7 +72,7 @@ $headings = $markdown->getHeadings();
 
 $title = 'Untitled help article';
 if (sizeof($headings) > 0) {
-  $title = trim($headings[0], " \t\n\r\0\x0B,.");
+  $title = trim((string) $headings[0], " \t\n\r\0\x0B,.");
   $pagetitle = htmlspecialchars($title . ' - Help - SCDS Membership');
 }
 
@@ -87,7 +87,7 @@ include BASE_PATH . "views/root/header.php";
       <div class="col">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb my-0">
-            <li class="breadcrumb-item"><a href="<?= htmlspecialchars(autoUrl("help-and-support")) ?>">Support</a></li>
+            <li class="breadcrumb-item"><a href="<?= htmlspecialchars((string) autoUrl("help-and-support")) ?>">Support</a></li>
             <!-- <li class="breadcrumb-item active" aria-current="page">PLACEHOLDER</li> -->
           </ol>
         </nav>
@@ -137,7 +137,7 @@ include BASE_PATH . "views/root/header.php";
           <ul class="list-unstyled">
             <?php for ($i = 1; $i < sizeof($headings); $i++) {
               $heading = $headings[$i]; ?>
-              <li><a href="<?= htmlspecialchars('#' . mb_strtolower(preg_replace('@[^0-9a-z\.]+@i', '-', $heading))) ?>"><?= htmlspecialchars($heading) ?></a></li>
+              <li><a href="<?= htmlspecialchars('#' . mb_strtolower(preg_replace('@[^0-9a-z\.]+@i', '-', (string) $heading))) ?>"><?= htmlspecialchars((string) $heading) ?></a></li>
             <?php } ?>
           </ul>
         </nav>

@@ -35,7 +35,7 @@ include BASE_PATH . "views/header.php";
         <p class="mb-0">We've introduced support for passkeys (FIDO2 auth). These allow you to log in with something you have rather than something you remember. Support is widely rolling out to browsers and operating systems throughout 2022.</p>
       </div>
 
-      <form class=" needs-validation" method="post" action="<?= htmlspecialchars(autoUrl("my-account/password")) ?>" novalidate>
+      <form class=" needs-validation" method="post" action="<?= htmlspecialchars((string) autoUrl("my-account/password")) ?>" novalidate>
         <?= SCDS\CSRF::write() ?>
         <div class="mb-3">
           <label class="form-label" for="current">Confirm your current password</label>
@@ -78,7 +78,7 @@ include BASE_PATH . "views/header.php";
   </div>
 </div>
 
-<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars(autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
+<div id="ajax-options" data-get-pwned-list-ajax-url="<?= htmlspecialchars((string) autoUrl('ajax-utilities/pwned-password-check')) ?>" data-cross-site-request-forgery-value="<?= htmlspecialchars(\SCDS\CSRF::getValue()) ?>"></div>
 
 <?php $footer = new \SCDS\Footer();
 $footer->addJS("js/NeedsValidation.js");

@@ -52,7 +52,7 @@ while ($squad = $getSquads->fetch(PDO::FETCH_ASSOC)) {
 
 $numFormatter = new NumberFormatter('en-GB', NumberFormatter::SPELLOUT);
 
-$pagetitle = 'Code of Conduct - ' . htmlspecialchars($member->getFullName()) . ' - Onboarding';
+$pagetitle = 'Code of Conduct - ' . htmlspecialchars((string) $member->getFullName()) . ' - Onboarding';
 
 include BASE_PATH . "views/head.php";
 
@@ -65,9 +65,9 @@ include BASE_PATH . "views/head.php";
         <div class="col-lg-8 col-md-10">
 
           <?php if ($logos) { ?>
-            <img src="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars(getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75.png')) ?>" srcset="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@2x.png')) ?> 2x, <?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'logo-75@3x.png')) ?> 3x" alt="" class="img-fluid d-block mx-auto">
           <?php } else { ?>
-            <img src="<?= htmlspecialchars(autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
+            <img src="<?= htmlspecialchars((string) autoUrl('public/img/corporate/scds.png')) ?>" height="75" width="75" alt="" class="img-fluid d-block mx-auto">
           <?php } ?>
 
         </div>
@@ -81,7 +81,7 @@ include BASE_PATH . "views/head.php";
         <h1 class="text-center">Code of Conduct</h1>
 
         <p class="lead mb-5 text-center">
-          Provide medical details for <?= htmlspecialchars($member->getFullName()) ?>.
+          Provide medical details for <?= htmlspecialchars((string) $member->getFullName()) ?>.
         </p>
 
         <form method="post" class="needs-validation" novalidate>
@@ -101,12 +101,12 @@ include BASE_PATH . "views/head.php";
           <?php if ($member->getAge() < 18) { ?>
             <p>
               <strong>
-                You must ensure that <?= htmlspecialchars($member->getForename()) ?> is present to agree to the code of conduct before you continue as they must read and agree to it.
+                You must ensure that <?= htmlspecialchars((string) $member->getForename()) ?> is present to agree to the code of conduct before you continue as they must read and agree to it.
               </strong>
             </p>
 
             <p>
-              Please help explain the code of conduct if <?= htmlspecialchars($member->getForename()) ?> does not understand it.
+              Please help explain the code of conduct if <?= htmlspecialchars((string) $member->getForename()) ?> does not understand it.
             </p>
           <?php } ?>
 
@@ -123,7 +123,7 @@ include BASE_PATH . "views/head.php";
                 <h2 class="card-title">Code of Conduct</h2>
                 <p class="mb-0">
                   <?php $comma = false; ?>
-                  For <?php foreach ($squads as $squad) { ?><?php if ($comma) { ?>, <?php } ?><?= htmlspecialchars($squad['name']) ?><?php $comma = true;
+                  For <?php foreach ($squads as $squad) { ?><?php if ($comma) { ?>, <?php } ?><?= htmlspecialchars((string) $squad['name']) ?><?php $comma = true;
                                                                                                                                     } ?>
                 </p>
               </div>
@@ -140,7 +140,7 @@ include BASE_PATH . "views/head.php";
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="agree" name="agree" value="1" required>
               <label class="form-check-label" for="agree">
-                I, <?= htmlspecialchars($member->getFullName()) ?> agree to all of the codes of conduct that are shown to me on this page
+                I, <?= htmlspecialchars((string) $member->getFullName()) ?> agree to all of the codes of conduct that are shown to me on this page
               </label>
               <div class="invalid-feedback">
                 Confirm your agreement
@@ -153,7 +153,7 @@ include BASE_PATH . "views/head.php";
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="parent-agree" name="parent-agree" value="1" required>
                 <label class="form-check-label" for="parent-agree">
-                  I, <?= htmlspecialchars($user->getFullName()) ?> agree to all of the codes of conduct that are shown to <?= htmlspecialchars($member->getForename()) ?> on this page and that I have helped explain them if required
+                  I, <?= htmlspecialchars((string) $user->getFullName()) ?> agree to all of the codes of conduct that are shown to <?= htmlspecialchars((string) $member->getForename()) ?> on this page and that I have helped explain them if required
                 </label>
                 <div class="invalid-feedback">
                   Confirm your agreement

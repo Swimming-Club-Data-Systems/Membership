@@ -35,25 +35,25 @@ Chester-le-Street ASC is a non profit unincorporated association.
 <head>
   <meta charset="utf-8">
   <?php if (isset($pagetitle) && ($pagetitle != "" || $pagetitle != null)) { ?>
-    <title><?= $pagetitle ?> - <?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
+    <title><?= $pagetitle ?> - <?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
   <?php } else { ?>
-    <title><?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
+    <title><?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Membership</title>
   <?php } ?>
   <meta name="description" content="Your <?= app()->tenant->getKey('CLUB_NAME') ?> Account lets you make gala entries online and gives you access to all your information about your swimmers, including attendance.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0,
     user-scalable=no,maximum-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="apple-mobile-web-app-title" content="<?= htmlspecialchars(app()->tenant->getKey('CLUB_SHORT_NAME')) ?> Accounts">
+  <meta name="apple-mobile-web-app-title" content="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_SHORT_NAME')) ?> Accounts">
   <meta name="format-detection" content="telephone=no">
   <meta name="googlebot" content="noarchive, nosnippet">
   <meta name="X-CLSW-System" content="Membership">
   <meta name="og:type" content="website">
   <meta name="og:locale" content="en_GB">
-  <meta name="og:site_name" content="<?= htmlspecialchars(app()->tenant->getKey('CLUB_NAME')) ?> Account">
+  <meta name="og:site_name" content="<?= htmlspecialchars((string) app()->tenant->getKey('CLUB_NAME')) ?> Account">
   <link rel="manifest" href="<?= autoUrl("manifest.webmanifest") ?>">
   <meta name="X-SCDS-Membership-Tracking" content="no">
   <script src="https://js.stripe.com/v3/"></script>
-  <link rel="stylesheet preload" href="<?= htmlspecialchars($stylesheet) ?>">
+  <link rel="stylesheet preload" href="<?= htmlspecialchars((string) $stylesheet) ?>">
   <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
 
   <?php if (isset($pagetitle)) { ?>
@@ -62,8 +62,8 @@ Chester-le-Street ASC is a non profit unincorporated association.
 
   <!-- Generic icon first -->
   <?php if ($logos = $tenant->getKey('LOGO_DIR')) { ?>
-    <link rel="icon" sizes="196x196" href="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'icon-196x196.png')) ?>">
-    <link rel="icon" sizes="192x192" href="<?= htmlspecialchars(getUploadedAssetUrl($logos . 'icon-192x192.png')) ?>">
+    <link rel="icon" sizes="196x196" href="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'icon-196x196.png')) ?>">
+    <link rel="icon" sizes="192x192" href="<?= htmlspecialchars((string) getUploadedAssetUrl($logos . 'icon-192x192.png')) ?>">
     <link rel="apple-touch-icon-precomposed" sizes="180x180" href="<?= getUploadedAssetUrl($logos . 'icon-180x180.png') ?>">
     <link rel="apple-touch-icon-precomposed" sizes="167x167" href="<?= getUploadedAssetUrl($logos . 'icon-167x167.png') ?>">
     <link rel="apple-touch-icon-precomposed" sizes="152x152" href="<?= getUploadedAssetUrl($logos . 'icon-152x152.png') ?>">
