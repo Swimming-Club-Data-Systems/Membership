@@ -292,39 +292,11 @@ if ($headInfo[0] == 'ref:') {
 require_once "functions.php";
 
 if (!isset($_SESSION['Browser'])) {
-  $browser = new \WhichBrowser\Parser(getallheaders());
-
-  // reportError($browser);
-
-  if (isset($browser->browser->name) && $browser->browser->name) {
-    $_SESSION['Browser']['Name'] = $browser->browser->name;
-  } else {
     $_SESSION['Browser']['Name'] = 'Unknown Browser';
-  }
-
-  if (isset($browser->os) && $browser->os->toString()) {
-    $_SESSION['Browser']['OS'] = $browser->os->toString();
-  } else {
     $_SESSION['Browser']['OS'] = 'Unknown OS';
-  }
-
-  if (isset($browser->browser->version->value) && $browser->browser->version->value) {
-    $_SESSION['Browser']['Version'] = $browser->browser->version->value;
-  } else {
     $_SESSION['Browser']['Version'] = 'Unknown Browser Version';
-  }
-
-  if (isset($browser->os->version->value) && $browser->os->version->value) {
-    $_SESSION['Browser']['OSVersion'] = $browser->os->version->value;
-  } else {
     $_SESSION['Browser']['OSVersion'] = null;
-  }
-
-  if (isset($browser->os->name) && $browser->os->name) {
-    $_SESSION['Browser']['OSName'] = $browser->os->name;
-  } else {
     $_SESSION['Browser']['OSName'] = null;
-  }
 }
 
 // Make db available
