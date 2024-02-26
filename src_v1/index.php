@@ -1,8 +1,5 @@
 <?php
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../src/.env');
-$dotenv->load();
-
 if (getenv('IS_DEV')) {
   // ----------------------------------------------------------------------------------------------------
   // - Display Errors
@@ -78,6 +75,35 @@ define('BASE_PATH', __DIR__ . DS);
 require BASE_PATH . 'vendor/autoload.php';
 require "helperclasses/ClassLoader.php";
 require "classes-loader.php";
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../src');
+$dotenv->load();
+
+putenv("DB_CONNECTION=" . $_ENV['DB_CONNECTION']);
+putenv("DB_HOST=" .  $_ENV['DB_HOST']);
+putenv("DB_NAME=" . $_ENV['DB_DATABASE']);
+putenv("DB_USER=" . $_ENV['DB_USERNAME']);
+putenv("DB_PASS=" . $_ENV['DB_PASSWORD']);
+putenv("INTERNAL_KEY=" . $_ENV['INTERNAL_KEY']);
+//putenv("ROOT_URL=" . $_ENV['DB_CONNECTION']);
+//putenv("EMAIL_DOMAIN=" .  $_ENV['DB_HOST']);
+//putenv("CACHE_DIR=" . $_ENV['DB_DATABASE']);
+putenv("IS_DEV=" . $_ENV['APP_DEBUG']);
+//putenv("GOCARDLESS_CLIENT_ID=" . $_ENV['DB_PASSWORD']);
+//putenv("GOCARDLESS_CLIENT_SECRET=" . $_ENV['DB_CONNECTION']);
+putenv("STRIPE=" .  $_ENV['STRIPE_SECRET']);
+putenv("STRIPE_PUBLISHABLE=" . $_ENV['STRIPE_KEY']);
+putenv("STRIPE_APPLE_PAY_DOMAIN=" . $_ENV['DB_USERNAME']);
+putenv("STRIPE_CLIENT_ID=" . $_ENV['STRIPE_CLIENT_ID']);
+putenv("ERROR_REPORTING_EMAIL=" . $_ENV['DB_CONNECTION']);
+putenv("AWS_S3_BUCKET=" .  $_ENV['AWS_BUCKET']);
+putenv("AWS_S3_REGION=" . $_ENV['AWS_DEFAULT_REGION']);
+putenv("AWS_ACCESS_KEY_ID=" . $_ENV['AWS_ACCESS_KEY_ID']);
+putenv("AWS_SECRET_ACCESS_KEY=" . $_ENV['AWS_SECRET_ACCESS_KEY']);
+putenv("AWS_CLOUDFRONT_ROOT=" . $_ENV['AWS_CLOUDFRONT_ROOT']);
+putenv("MAIN_DOMAIN=" . $_ENV['CENTRAL_DOMAIN']);
+putenv("DOMAIN_TYPE=PRIMARY");
+putenv("WEBHOOK_DOMAIN=" .  $_ENV['CENTRAL_DOMAIN']);
 
 if (getenv('ENV_JSON_FILE')) {
   require 'common/env/loader.php';

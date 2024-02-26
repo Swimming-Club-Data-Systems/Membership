@@ -17,7 +17,7 @@ $this->get('/wrong-account', function () {
 });
 
 
-if ($_SESSION['OnboardingSessionId']) {
+if (isset($_SESSION['OnboardingSessionId']) && $_SESSION['OnboardingSessionId']) {
   $this->get('/start-task', function () {
     include 'task-handler.php';
   });
