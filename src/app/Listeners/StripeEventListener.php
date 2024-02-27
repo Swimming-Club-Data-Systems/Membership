@@ -58,7 +58,8 @@ class StripeEventListener
                 if ($tenant != null && $invoice->subscription == $tenant->subscription()?->stripe_id) {
                     // Get SMS messages in the period
                     $smsPeriod = Sms::where('created_at', '>=', Carbon::createFromTimestamp($invoice->period_start, 'UTC'))
-                        ->where('created_at', '<', Carbon::createFromTimestamp($invoice->period_end, 'UTC'));
+                        ->where('created_at', '<', Carbon::createFromTimestamp($invoice->period_end, 'UTC'))
+                        ->where('Tenant', '=', $tenant->ID);
 
                     $count = $smsPeriod->sum('segments_sent');
                     $amount = $smsPeriod->sum('amount');
