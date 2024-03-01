@@ -19,15 +19,17 @@ class HandlePaymentMethodDetached implements ShouldQueue
 
     public WebhookCall $webhookCall;
 
+    public int $webhookCallId;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(WebhookCall $webhookCall)
+    public function __construct(int $webhookCallId)
     {
-        $this->webhookCall = $webhookCall;
-        $this->onQueue(Queue::STRIPE->value);
+        $this->webhookCallId = $webhookCallId;
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -35,6 +37,8 @@ class HandlePaymentMethodDetached implements ShouldQueue
      */
     public function handle(): void
     {
+        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
+
         // Remove the user id from the PaymentMethod object
 
         /** @var Tenant $tenant */

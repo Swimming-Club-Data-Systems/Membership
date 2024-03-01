@@ -15,15 +15,17 @@ class HandleChargeDisputeUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, JobBackoff, Queueable, SerializesModels;
 
+    public WebhookCall $webhookCall;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
     public function __construct(
-        public WebhookCall $webhookCall
+        public int $webhookCallId
     ) {
-        $this->onQueue(Queue::STRIPE->value);
+        // $this->onQueue(Queue::STRIPE->value);
     }
 
     /**
@@ -33,6 +35,7 @@ class HandleChargeDisputeUpdated implements ShouldQueue
      */
     public function handle()
     {
+        $this->webhookCall = WebhookCall::findOrFail($this->webhookCallId);
         //
     }
 }

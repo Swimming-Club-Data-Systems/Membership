@@ -55,7 +55,7 @@ return [
      * Specify a connection and or a queue to process the webhooks
      */
     'connection' => env('STRIPE_WEBHOOK_CONNECTION'),
-    'queue' => env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
+    'queue' => 'default', //env('STRIPE_WEBHOOK_QUEUE', 'stripe'),
 
     /*
      * When disabled, the package will not verify if the signature is valid.

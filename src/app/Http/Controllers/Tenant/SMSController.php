@@ -40,14 +40,18 @@ class SMSController extends Controller
             $sms = Sms::with(['author'])->orderBy('created_at', 'desc')->paginate(config('app.per_page'));
         }
 
-        $sms->getCollection()->transform(function ($item) {
+        $sms->getCollection()->transform(function (Sms $item) {
             return [
                 'id' => $item->id,
                 'author' => [
-                    'Forename' => $item->author->Forename,
-                    'Surname' => $item->author->Surname,
+                    'first_name' => $item->author->Forename,
+                    'last_name' => $item->author->Surname,
                 ],
                 'message' => $item->message,
+                'number_sent' => $item->number_sent,
+                'segments_sent' => $item->segments_sent,
+                'amount' => $item->amount,
+                'formatted_amount' => $item->formatted_amount,
                 'created_at' => $item->created_at,
                 'updated_at' => $item->updated_at,
             ];

@@ -21,6 +21,10 @@ export type SMSListItemContentProps = {
     };
     created_at: string;
     message: string;
+    number_sent: number;
+    segments_sent: number;
+    amount: number;
+    formatted_amount: string;
     tenant: {
         name: string;
         id: number;
@@ -35,6 +39,16 @@ const SMSListItemContent: React.FC<SMSListItemContentProps> = (props) => {
             definition: props.author
                 ? props.author.first_name + " " + props.author.last_name
                 : "Unknown author",
+        },
+        {
+            key: "number_sent",
+            term: "Number of message sent",
+            definition: `${props.number_sent} messages, ${props.segments_sent} message segments`,
+        },
+        {
+            key: "formatted_amount",
+            term: "Total cost",
+            definition: props.formatted_amount,
         },
     ];
 
@@ -60,7 +74,7 @@ const SMSListItemContent: React.FC<SMSListItemContentProps> = (props) => {
                         <BaseLink
                             href={route(
                                 "central.clubs.redirect",
-                                props.tenant.id
+                                props.tenant.id,
                             )}
                         >
                             <Badge>{props.tenant.name}</Badge>
