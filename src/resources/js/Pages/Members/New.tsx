@@ -19,11 +19,14 @@ import Checkbox from "@/Components/Form/Checkbox";
 import RadioGroup from "@/Components/Form/RadioGroup";
 import Radio from "@/Components/Form/Radio";
 
+type ClubMembershipClass = {
+    value: string;
+    name: string;
+};
+
 type Props = {
-    codes_of_conduct: {
-        value: number;
-        name: ReactNode;
-    }[];
+    club_membership_classes: ClubMembershipClass[];
+    ngb_membership_classes: ClubMembershipClass[];
 };
 
 const New = (props: Props) => {
@@ -93,60 +96,90 @@ const New = (props: Props) => {
                             .string()
                             .required("A category is required."),
                         club_pays_ngb_fees: yup.boolean(),
+                        club_category: yup
+                            .string()
+                            .required("A category is required."),
+                        club_pays_club_membership_fees: yup.boolean(),
                         sex: yup
                             .string()
                             .required("A competition sex is required.")
                             .oneOf(["Male", "Female"]),
                     })}
                     submitTitle="Save"
-                    action={route("squads.index")}
+                    action={route("members.create")}
                     method="post"
                     hideDefaultButtons
+                    removeDefaultInputMargin
                 >
                     <Card footer={<SubmissionButtons />}>
                         <RenderServerErrors />
                         <FlashAlert className="mb-3" />
 
-                        <TextInput name="first_name" label="First name" />
+                        <div className="grid grid-cols-6 gap-4">
+                            <div className="col-span-3 md:col-span-2">
+                                <TextInput
+                                    name="first_name"
+                                    label="First name"
+                                />
+                            </div>
 
-                        <TextInput name="last_name" label="Last name" />
+                            <div className="col-span-3 md:col-span-2">
+                                <TextInput name="last_name" label="Last name" />
+                            </div>
 
-                        <DateNumeralInput
-                            name="date_of_birth"
-                            label="Date of birth"
-                        />
+                            <div className="col-span-6 md:col-span-2 md:col-start-1">
+                                <DateNumeralInput
+                                    name="date_of_birth"
+                                    label="Date of birth"
+                                />
+                            </div>
 
-                        <TextInput
-                            name="ngb_reg"
-                            label="Swim England registration number"
-                        />
+                            <div className="col-span-6 md:col-span-2">
+                                <RadioGroup label="Competition sex" name="sex">
+                                    <Radio
+                                        value="Male"
+                                        label="Open (formerly Male)"
+                                    />
+                                    <Radio value="Female" label="Female" />
+                                </RadioGroup>
+                            </div>
 
-                        <Select
-                            name="ngb_category"
-                            label="Swim England membership category"
-                            items={[]}
-                        />
+                            <div className="col-span-6 md:col-span-2 md:col-start-1">
+                                <TextInput
+                                    name="ngb_reg"
+                                    label="Swim England registration number"
+                                />
+                            </div>
 
-                        <Checkbox
-                            name="club_pays_ngb_fees"
-                            label="Club pays Swim England fees"
-                        />
+                            <div className="col-span-6 md:col-span-2">
+                                <Select
+                                    name="ngb_category"
+                                    label="Swim England membership category"
+                                    items={props.ngb_membership_classes}
+                                />
+                            </div>
 
-                        <RadioGroup label="Competition sex" name="sex">
-                            <Radio value="Male" label="Open (formerly Male)" />
-                            <Radio value="Female" label="Female" />
-                        </RadioGroup>
+                            <div className="col-span-6 md:col-span-2 md:col-start-1">
+                                <Checkbox
+                                    name="club_pays_ngb_fees"
+                                    label="Club pays Swim England fees"
+                                />
+                            </div>
 
-                        <Select
-                            name="club_category"
-                            label="Club membership category"
-                            items={[]}
-                        />
-
-                        <Checkbox
-                            name="club_pays_club_membership_fees"
-                            label="Club pays club membership fees"
-                        />
+                            <div className="col-span-6 md:col-span-2 md:col-start-1">
+                                <Select
+                                    name="club_category"
+                                    label="Club membership category"
+                                    items={props.club_membership_classes}
+                                />
+                            </div>
+                            <div className="col-span-6 md:col-span-2 md:col-start-1">
+                                <Checkbox
+                                    name="club_pays_club_membership_fees"
+                                    label="Club pays club membership fees"
+                                />
+                            </div>
+                        </div>
                     </Card>
                 </Form>
             </Container>

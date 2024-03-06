@@ -3,6 +3,8 @@
 namespace App\Models\Tenant;
 
 use App\Enums\Sex;
+use App\Events\Tenant\MemberCreated;
+use App\Events\Tenant\MemberCreating;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -54,6 +56,15 @@ class Member extends Model
 
     protected $attributes = [
         'OtherNotes' => '',
+    ];
+
+    protected $fillable = [
+        'MForename',
+        'MSurname',
+        'MMiddleNames',
+        'ASANumber',
+        'DateOfBirth',
+        'Gender',
     ];
 
     protected $primaryKey = 'MemberID';
@@ -174,4 +185,14 @@ class Member extends Model
     {
         return $this->ageAt(Carbon::now());
     }
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'creating' => MemberCreating::class,
+        'created' => MemberCreated::class,
+    ];
 }

@@ -28,6 +28,12 @@ class EventServiceProvider extends ServiceProvider
         CompetitionCreated::class => [
             PopulateBasicCompetition::class,
         ],
+        \App\Events\Tenant\MemberCreating::class => [
+            \App\Listeners\Tenant\InitialiseNewMemberDetails::class,
+        ],
+        \App\Events\Tenant\MemberCreated::class => [
+            \App\Listeners\Tenant\PopulateNewMemberDetails::class,
+        ],
         \App\Events\Tenant\SquadMoveCreated::class => [
             \App\Listeners\Tenant\SendSquadMoveCreatedNotification::class,
         ],
