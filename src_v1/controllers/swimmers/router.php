@@ -182,22 +182,6 @@ $this->post('/{id}:int/edit-times', function ($id) {
 });
 
 if ($access != "Parent" && $access != 'Galas') {
-	$this->get('/addmember', function () {
-		//
-		//include 'AddMember/SelectType.php';
-		header("Location: " . autoUrl("members/new"));
-	});
-
-	$this->get('/new', function () {
-
-		require('AddMember/addMember.php');
-	});
-
-	$this->post('/new', function () {
-
-		require('AddMember/addMemberPost.php');
-	});
-
 	$this->get(['/{id}:int/parenthelp', '/parenthelp/{id}:int'], function ($id) {
 
 		include 'parentSetupHelp.php';
