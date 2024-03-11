@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\Money;
+use App\Business\Helpers\PhoneNumber;
 use App\Enums\Sex;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\ClubMembershipClass;
+use App\Models\Tenant\EmergencyContact;
+use App\Models\Tenant\ExtraFee;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
@@ -126,11 +130,85 @@ class MemberController extends Controller
         return redirect()->route('members.show', ['member' => $member->MemberID]);
     }
 
-    public function show(Member $member)
+    public function show(Member $member, Request $request)
     {
         $this->authorize('view', $member);
 
-        return Inertia::location('/v1/members/'.$member->MemberID);
+        /** @var User $user */
+        $user = $request->user();
+
+        return Inertia::render('Members/Show', [
+            'id' => $member->MemberID,
+            'name' => $member->name,
+            'date_of_birth' => $member->DateOfBirth->format('Y-m-d'),
+            'age' => $member->age(),
+            'country' => $member->Country,
+            'governing_body_registration_number' => $member->ASANumber,
+            'sex' => $member->Gender,
+            'gender' => $member->GenderDisplay ? $member->GenderIdentity : null,
+            'pronouns' => $member->GenderDisplay ? $member->GenderPronouns : null,
+            'display_gender_identity' => $member->GenderDisplay,
+            'medical' => $member->memberMedical ? [
+                'conditions' => $member->memberMedical->Conditions,
+                'allergies' => $member->memberMedical->Allergies,
+                'medication' => $member->memberMedical->Medication,
+                'gp_name' => $member->memberMedical->GPName,
+                'gp_phone' => $member->memberMedical->GPPhone,
+                'gp_address' => $member->memberMedical->GPAddress,
+                'consent_withheld' => $member->memberMedical->WithholdConsent,
+            ] : null,
+            'emergency_contacts' => $member->user?->emergencyContacts->map(function (EmergencyContact $contact) {
+                $number = null;
+                try {
+                    $number = PhoneNumber::create($contact->ContactNumber);
+                } catch (\Exception $e) {
+                    // Swallow
+                }
+
+                return [
+                    'id' => $contact->ID,
+                    'name' => $contact->Name,
+                    'relation' => $contact->Relation,
+                    'contact_number_url' => $number?->toRfc() ?? 'tel:'.$contact->ContactNumber,
+                    'contact_number_display' => $number?->toNational() ?? $contact->ContactNumber,
+                ];
+            }),
+            'photography_permissions' => [
+                'website' => $member->photographyPermissions?->Website ?? false,
+                'social' => $member->photographyPermissions?->Social ?? false,
+                'noticeboard' => $member->photographyPermissions?->Noticeboard ?? false,
+                'film_training' => $member->photographyPermissions?->FilmTraining ?? false,
+                'professional_photographer' => $member->photographyPermissions?->ProPhoto ?? false,
+            ],
+            'squads' => $member->squads->map(function (Squad $squad) {
+                return [
+                    'id' => $squad->SquadID,
+                    'name' => $squad->SquadName,
+                    'fee' => $squad->fee,
+                    'formatted_fee' => Money::formatCurrency($squad->fee),
+                    'pays' => $squad->pivot->Paying,
+                ];
+            }),
+            'extra_fees' => $member->extraFees->map(function (ExtraFee $fee) {
+                return [
+                    'id' => $fee->ExtraID,
+                    'name' => $fee->ExtraName,
+                    'fee' => $fee->fee,
+                    'formatted_fee' => Money::formatCurrency($fee->fee),
+                    'type' => $fee->Type,
+                ];
+            }),
+            'club_membership_class' => [
+                'name' => $member->clubCategory->Name,
+            ],
+            'club_pays_club_membership_fee' => $member->ClubPaid,
+            'governing_body_membership_class' => [
+                'name' => $member->governingBodyCategory->Name,
+            ],
+            'club_pays_governing_body_membership_fee' => $member->ASAPaid,
+            'other_notes' => $member->OtherNotes,
+            'editable' => $user->can('update', $member),
+        ]);
     }
 
     public function combobox(Request $request): \Illuminate\Http\JsonResponse

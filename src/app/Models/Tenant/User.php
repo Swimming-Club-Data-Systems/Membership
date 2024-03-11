@@ -359,6 +359,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(CompetitionGuestEntryHeader::class);
     }
 
+    public function emergencyContacts(): HasMany
+    {
+        return $this->hasMany(EmergencyContact::class, 'UserID', 'UserID');
+    }
+
     /**
      * Auth stuff
      */

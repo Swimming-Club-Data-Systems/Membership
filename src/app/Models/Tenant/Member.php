@@ -8,11 +8,13 @@ use App\Events\Tenant\MemberCreating;
 use App\Traits\BelongsToTenant;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Scout\Searchable;
 
 /**
@@ -39,6 +41,10 @@ use Laravel\Scout\Searchable;
  * @property User user
  * @property MemberMedical|null $memberMedical
  * @property string|null $pronouns Pronouns if the member has chosen to display them
+ * @property Collection emergencyContacts
+ * @property MemberPhotography photographyPermissions
+ * @property ClubMembershipClass $governingBodyCategory
+ * @property ClubMembershipClass $clubCategory
  */
 class Member extends Model
 {
@@ -129,6 +135,21 @@ class Member extends Model
     public function competitionEntryAvailableSessions(): BelongsToMany
     {
         return $this->belongsToMany(CompetitionSession::class)->withTimestamps();
+    }
+
+    public function photographyPermissions(): HasOne
+    {
+        return $this->hasOne(MemberPhotography::class, 'MemberID');
+    }
+
+    public function governingBodyCategory(): BelongsTo
+    {
+        return $this->belongsTo(ClubMembershipClass::class, 'NGBCategory', 'ID');
+    }
+
+    public function clubCategory(): BelongsTo
+    {
+        return $this->belongsTo(ClubMembershipClass::class, 'ClubCategory', 'ID');
     }
 
     public function toSearchableArray(): array
