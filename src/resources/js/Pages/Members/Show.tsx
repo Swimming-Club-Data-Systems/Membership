@@ -12,6 +12,10 @@ import Modal from "@/Components/Modal";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import FlashAlert from "@/Components/FlashAlert";
 import { formatDate } from "@/Utils/date-utils";
+import { Tab, Tabs } from "@/Components/Tabs";
+import { BasicListTwo, BasicListTwoItem } from "@/Components/BasicListTwo";
+import EmptyState from "@/Components/EmptyState";
+import Alert from "@/Components/Alert";
 
 type Props = {
     id: number;
@@ -30,7 +34,7 @@ type Props = {
         medication: string;
         gp_name: string;
         gp_phone: string;
-        gp_address: string;
+        gp_address: string[];
         consent_withheld: boolean;
     };
     emergency_contacts: {
@@ -146,9 +150,394 @@ const Show = (props: Props) => {
                                     definition: props.age,
                                     truncate: true,
                                 },
+                                {
+                                    key: "membership_number",
+                                    term: "Swim England membership number",
+                                    definition:
+                                        props.governing_body_registration_number,
+                                },
+                                {
+                                    key: "category",
+                                    term: "Swim England membership category",
+                                    definition:
+                                        props.governing_body_membership_class
+                                            .name,
+                                },
+                                {
+                                    key: "country",
+                                    term: "Country of representation",
+                                    definition: props.country,
+                                },
+                                {
+                                    key: "sex",
+                                    term: "Sex (for the purposes of competition)",
+                                    definition: props.sex,
+                                },
+                                {
+                                    key: "gender_identity",
+                                    term: "Gender identity",
+                                    definition: props.gender || "Not set",
+                                },
+                                {
+                                    key: "pronouns",
+                                    term: "Pronouns",
+                                    definition: props.pronouns || "Not set",
+                                },
                             ]}
                         />
                     </Card>
+
+                    <Tabs>
+                        <Tab name="Medical">
+                            <div className="grid gap-4">
+                                <Card title="Medical notes">
+                                    <DefinitionList
+                                        items={[
+                                            {
+                                                key: "conditions",
+                                                term: "Conditions",
+                                                definition:
+                                                    props.medical.conditions ||
+                                                    "N/A",
+                                            },
+                                            {
+                                                key: "allergies",
+                                                term: "Allergies",
+                                                definition:
+                                                    props.medical.allergies ||
+                                                    "N/A",
+                                            },
+                                            {
+                                                key: "medication",
+                                                term: "Medication",
+                                                definition:
+                                                    props.medical.medication ||
+                                                    "N/A",
+                                            },
+                                        ]}
+                                    />
+                                </Card>
+
+                                <Card title="GP details">
+                                    <DefinitionList
+                                        items={[
+                                            {
+                                                key: "name",
+                                                term: "Name",
+                                                definition:
+                                                    props.medical.gp_name ||
+                                                    "Unknown",
+                                            },
+                                            {
+                                                key: "phone",
+                                                term: "Phone",
+                                                definition:
+                                                    props.medical.gp_phone ||
+                                                    "Unknown",
+                                            },
+                                            {
+                                                key: "address",
+                                                term: "Address",
+                                                definition:
+                                                    props.medical.gp_address.join(
+                                                        ", ",
+                                                    ) || "Unknown",
+                                            },
+                                        ]}
+                                    />
+                                </Card>
+                            </div>
+                        </Tab>
+                        <Tab name="Emergency Contacts">
+                            <Card title="Emergency contacts">
+                                {props.emergency_contacts.length === 0 && (
+                                    <Alert
+                                        variant="warning"
+                                        title="No emergency contacts"
+                                    >
+                                        {props.name} does not have any emergency
+                                        contact details on file. {props.name}{" "}
+                                        should not be allowed to train until
+                                        details have been provided.
+                                    </Alert>
+                                )}
+
+                                {props.emergency_contacts.length > 0 && (
+                                    <>
+                                        <p className="text-sm">
+                                            In an emergency, dial one of the
+                                            contact numbers shown below.
+                                        </p>
+
+                                        <BasicListTwo>
+                                            {props.emergency_contacts.map(
+                                                (contact) => {
+                                                    return (
+                                                        <BasicListTwoItem
+                                                            key={contact.id}
+                                                        >
+                                                            <div className="text-sm flex justify-between gap-4 items-center">
+                                                                <div>
+                                                                    <h3 className="font-medium">
+                                                                        {
+                                                                            contact.name
+                                                                        }
+                                                                    </h3>
+                                                                    <p className="text-gray-500">
+                                                                        {
+                                                                            contact.relation
+                                                                        }
+                                                                    </p>
+                                                                </div>
+                                                                <div>
+                                                                    <ButtonLink
+                                                                        href={
+                                                                            contact.contact_number_url
+                                                                        }
+                                                                        external
+                                                                    >
+                                                                        {
+                                                                            contact.contact_number_display
+                                                                        }
+                                                                    </ButtonLink>
+                                                                </div>
+                                                            </div>
+                                                        </BasicListTwoItem>
+                                                    );
+                                                },
+                                            )}
+                                        </BasicListTwo>
+                                    </>
+                                )}
+                            </Card>
+                        </Tab>
+                        <Tab name="Photography">
+                            <Card title="Photography permissions">
+                                {props.age >= 18 && (
+                                    <Alert
+                                        variant="success"
+                                        title="No restrictions"
+                                    >
+                                        {props.name} is {props.age} years old.
+                                        There are no photography restrictions in
+                                        place.
+                                    </Alert>
+                                )}
+                                {props.age < 18 && (
+                                    <>
+                                        <div className="prose prose-sm">
+                                            <p>
+                                                Club staff are required to
+                                                follow Swim England's Wavepower
+                                                as well as relevant club
+                                                guidance when taking photos or
+                                                videos.
+                                            </p>
+
+                                            <p>
+                                                The parent/guardian has allowed:
+                                            </p>
+                                        </div>
+
+                                        <DefinitionList
+                                            items={[
+                                                {
+                                                    key: "website",
+                                                    term: "Take photos for the club website",
+                                                    definition: props
+                                                        .photography_permissions
+                                                        .website
+                                                        ? "Yes"
+                                                        : "No",
+                                                },
+                                                {
+                                                    key: "social",
+                                                    term: "Take photos for social media",
+                                                    definition: props
+                                                        .photography_permissions
+                                                        .social
+                                                        ? "Yes"
+                                                        : "No",
+                                                },
+                                                {
+                                                    key: "noticeboard",
+                                                    term: "Take photos to display on the club noticeboard",
+                                                    definition: props
+                                                        .photography_permissions
+                                                        .noticeboard
+                                                        ? "Yes"
+                                                        : "No",
+                                                },
+                                                {
+                                                    key: "film_training",
+                                                    term: "Film for training purposes (video replay)",
+                                                    definition: props
+                                                        .photography_permissions
+                                                        .film_training
+                                                        ? "Yes"
+                                                        : "No",
+                                                },
+                                                {
+                                                    key: "professional_photographer",
+                                                    term: "Have photographs taken by a professional photographer employed by the club",
+                                                    definition: props
+                                                        .photography_permissions
+                                                        .professional_photographer
+                                                        ? "Yes"
+                                                        : "No",
+                                                },
+                                            ]}
+                                        />
+                                    </>
+                                )}
+                            </Card>
+                        </Tab>
+                        <Tab name="Squads">
+                            <Card title="Squads" footer={<Button>Add</Button>}>
+                                {props.squads.length === 0 && (
+                                    <Alert variant="warning" title="No squads">
+                                        {props.name} is not assigned to any
+                                        squads.
+                                    </Alert>
+                                )}
+
+                                {props.squads.length > 0 && (
+                                    <BasicListTwo>
+                                        {props.squads.map((squad) => {
+                                            return (
+                                                <BasicListTwoItem
+                                                    key={squad.id}
+                                                >
+                                                    <div className="text-sm flex flex-col sm:flex-row sm:justify-between gap-4 sm:items-center">
+                                                        <div>
+                                                            <h3 className="font-medium">
+                                                                <Link
+                                                                    href={route(
+                                                                        "squads.show",
+                                                                        squad.id,
+                                                                    )}
+                                                                >
+                                                                    {squad.name}
+                                                                </Link>
+                                                            </h3>
+                                                            <p className="text-gray-500">
+                                                                {
+                                                                    squad.formatted_fee
+                                                                }
+                                                                /month
+                                                                {!squad.pays &&
+                                                                    " (does not pay)"}
+                                                            </p>
+                                                        </div>
+                                                        <div className="flex gap-2">
+                                                            <Button variant="secondary">
+                                                                Schedule removal
+                                                            </Button>
+                                                            <Button variant="danger">
+                                                                Remove
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </BasicListTwoItem>
+                                            );
+                                        })}
+                                    </BasicListTwo>
+                                )}
+                            </Card>
+                        </Tab>
+                        <Tab name="Extra fees">
+                            <Card title="Extra fees">
+                                {props.extra_fees.length === 0 && (
+                                    <Alert
+                                        variant="warning"
+                                        title="No extra fees"
+                                    >
+                                        {props.name} has no extra fees assigned.
+                                    </Alert>
+                                )}
+                                {props.extra_fees.length > 0 && (
+                                    <BasicListTwo>
+                                        {props.extra_fees.map((extraFee) => {
+                                            return (
+                                                <BasicListTwoItem
+                                                    key={extraFee.id}
+                                                >
+                                                    <div className="text-sm flex flex-col sm:flex-row sm:justify-between gap-4 sm:items-center">
+                                                        <div>
+                                                            <h3 className="font-medium">
+                                                                {extraFee.name}
+                                                            </h3>
+                                                            <p className="text-gray-500">
+                                                                {
+                                                                    extraFee.formatted_fee
+                                                                }
+                                                                /month (
+                                                                {extraFee.type})
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </BasicListTwoItem>
+                                            );
+                                        })}
+                                    </BasicListTwo>
+                                )}
+                            </Card>
+                        </Tab>
+                        <Tab name="Membership">
+                            <div className="grid gap-4">
+                                <Card title="Club membership">
+                                    <DefinitionList
+                                        items={[
+                                            {
+                                                key: "category",
+                                                term: "Club membership category",
+                                                definition:
+                                                    props.club_membership_class
+                                                        .name,
+                                            },
+                                            {
+                                                key: "club_pays",
+                                                term: "Club pays club membership fees ",
+                                                definition:
+                                                    props.club_pays_club_membership_fee
+                                                        ? "Yes"
+                                                        : "No",
+                                            },
+                                        ]}
+                                    />
+                                </Card>
+
+                                <Card title="Swim England membership">
+                                    <DefinitionList
+                                        items={[
+                                            {
+                                                key: "category",
+                                                term: "Swim England membership category",
+                                                definition:
+                                                    props
+                                                        .governing_body_membership_class
+                                                        .name,
+                                            },
+                                            {
+                                                key: "membership_number",
+                                                term: "Swim England membership number",
+                                                definition:
+                                                    props.governing_body_registration_number,
+                                            },
+                                            {
+                                                key: "club_pays",
+                                                term: "Club pays club membership fees ",
+                                                definition:
+                                                    props.club_pays_governing_body_membership_fee
+                                                        ? "Yes"
+                                                        : "No",
+                                            },
+                                        ]}
+                                    />
+                                </Card>
+                            </div>
+                        </Tab>
+                    </Tabs>
                 </div>
             </Container>
 

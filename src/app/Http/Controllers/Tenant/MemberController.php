@@ -148,15 +148,15 @@ class MemberController extends Controller
             'gender' => $member->GenderDisplay ? $member->GenderIdentity : null,
             'pronouns' => $member->GenderDisplay ? $member->GenderPronouns : null,
             'display_gender_identity' => $member->GenderDisplay,
-            'medical' => $member->memberMedical ? [
-                'conditions' => $member->memberMedical->Conditions,
-                'allergies' => $member->memberMedical->Allergies,
-                'medication' => $member->memberMedical->Medication,
-                'gp_name' => $member->memberMedical->GPName,
-                'gp_phone' => $member->memberMedical->GPPhone,
-                'gp_address' => $member->memberMedical->GPAddress,
-                'consent_withheld' => $member->memberMedical->WithholdConsent,
-            ] : null,
+            'medical' => [
+                'conditions' => $member->memberMedical?->Conditions,
+                'allergies' => $member->memberMedical?->Allergies,
+                'medication' => $member->memberMedical?->Medication,
+                'gp_name' => $member->memberMedical?->GPName,
+                'gp_phone' => $member->memberMedical?->GPPhone,
+                'gp_address' => $member->memberMedical?->GPAddress ?? [],
+                'consent_withheld' => $member->memberMedical?->WithholdConsent,
+            ],
             'emergency_contacts' => $member->user?->emergencyContacts->map(function (EmergencyContact $contact) {
                 $number = null;
                 try {

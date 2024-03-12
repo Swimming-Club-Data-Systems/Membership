@@ -13,7 +13,7 @@ use Stancl\Tenancy\Database\Concerns\BelongsToPrimaryModel;
  * @property string $Allergies
  * @property string $Medication
  * @property string $GPName
- * @property string $GPAddress
+ * @property array $GPAddress
  * @property string $GPPhone
  * @property bool $WithholdConsent
  * @property Carbon $created_at
