@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Business\Helpers\CountriesOfRepresentation;
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
 use App\Enums\Sex;
@@ -142,7 +143,7 @@ class MemberController extends Controller
             'name' => $member->name,
             'date_of_birth' => $member->DateOfBirth->format('Y-m-d'),
             'age' => $member->age(),
-            'country' => $member->Country,
+            'country' => CountriesOfRepresentation::getCountryName($member->Country),
             'governing_body_registration_number' => $member->ASANumber,
             'sex' => $member->Gender,
             'gender' => $member->GenderDisplay ? $member->GenderIdentity : null,
