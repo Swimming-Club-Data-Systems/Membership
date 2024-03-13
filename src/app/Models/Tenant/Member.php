@@ -58,6 +58,9 @@ class Member extends Model
     protected $casts = [
         'DateOfBirth' => 'datetime',
         'Gender' => Sex::class,
+        'GenderDisplay' => 'boolean',
+        'ASAPaid' => 'boolean',
+        'ClubPaid' => 'boolean',
     ];
 
     protected $attributes = [

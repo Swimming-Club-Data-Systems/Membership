@@ -11,6 +11,7 @@ use App\Models\Tenant\ClubMembershipClass;
 use App\Models\Tenant\EmergencyContact;
 use App\Models\Tenant\ExtraFee;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\MemberPhotography;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\User;
 use Illuminate\Database\Query\Builder;
@@ -56,12 +57,8 @@ class MemberController extends Controller
         ]);
     }
 
-    public function new()
+    private function membershipClassesForSelects()
     {
-        $this->authorize('create', Member::class);
-
-        // Array of value/name
-
         $clubMembershipClass = ClubMembershipClass::where('Type', \App\Enums\ClubMembershipClassType::CLUB)->get();
         $ngb = ClubMembershipClass::where('Type', \App\Enums\ClubMembershipClassType::NGB)->get();
 
@@ -84,9 +81,18 @@ class MemberController extends Controller
             ];
         }
 
-        return Inertia::render('Members/New', [
+        return [
             'ngb_membership_classes' => $ngbClasses,
             'club_membership_classes' => $clubClasses,
+        ];
+    }
+
+    public function new()
+    {
+        $this->authorize('create', Member::class);
+
+        return Inertia::render('Members/New', [
+            ...$this->membershipClassesForSelects(),
         ]);
     }
 
@@ -209,7 +215,151 @@ class MemberController extends Controller
             'club_pays_governing_body_membership_fee' => $member->ASAPaid,
             'other_notes' => $member->OtherNotes,
             'editable' => $user->can('update', $member),
+            'deletable' => $user->can('delete', $member),
         ]);
+    }
+
+    public function edit(Member $member, Request $request)
+    {
+        $this->authorize('update', $member);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $countries = [];
+        foreach (CountriesOfRepresentation::all() as $code => $name) {
+            $countries[] = [
+                'value' => $code,
+                'name' => $name,
+            ];
+        }
+
+        return Inertia::render('Members/Edit', [
+            'id' => $member->MemberID,
+            'name' => $member->name,
+            'first_name' => $member->MForename,
+            'age' => $member->age(),
+            'form_initial_values' => [
+                'first_name' => $member->MForename,
+                'last_name' => $member->MSurname,
+                'date_of_birth' => $member->DateOfBirth->format('Y-m-d'),
+                'country' => $member->Country,
+                'ngb_reg' => $member->ASANumber,
+                'ngb_category' => $member->NGBCategory,
+                'club_category' => $member->ClubCategory,
+                'club_pays_ngb_fees' => $member->ASAPaid,
+                'club_pays_club_membership_fees' => $member->ClubPaid,
+                'sex' => $member->Gender,
+                'gender' => $member->GenderDisplay ? $member->GenderIdentity : null,
+                'pronouns' => $member->GenderDisplay ? $member->GenderPronouns : null,
+                'display_gender_identity' => $member->GenderDisplay,
+                'other_notes' => $member->OtherNotes,
+                'photo_website' => $member->photographyPermissions?->Website ?? false,
+                'photo_social' => $member->photographyPermissions?->Social ?? false,
+                'photo_noticeboard' => $member->photographyPermissions?->Noticeboard ?? false,
+                'photo_film_training' => $member->photographyPermissions?->FilmTraining ?? false,
+                'photo_professional_photographer' => $member->photographyPermissions?->ProPhoto ?? false,
+            ],
+            ...$this->membershipClassesForSelects(),
+            'countries_of_representation' => $countries,
+            'is_admin' => $user->hasPermission('Admin'),
+            'is_linked_user' => $user->UserID === $member->UserID,
+        ]);
+    }
+
+    public function update(Member $member, Request $request)
+    {
+        $this->authorize('update', $member);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $isLinkedUser = $user->UserID === $member->UserID;
+
+        $genericValidationRules = [
+            'first_name' => ['required', 'max:255'],
+            'last_name' => ['required', 'max:255'],
+            'date_of_birth' => ['required', 'date', 'before:today'],
+            'sex' => ['required', Rule::enum(Sex::class)],
+            'gender' => ['string', 'nullable', 'max:256'],
+            'pronouns' => ['string', 'nullable', 'max:256'],
+            'display_gender_identity' => ['boolean'],
+            'other_notes' => ['string', 'nullable', 'max:8192'],
+            'country' => ['required', Rule::in(CountriesOfRepresentation::getISOKeys())],
+        ];
+
+        $adminValidationRules = [];
+        $photoValidationRules = [];
+
+        if ($user->hasPermission('Admin')) {
+            $adminValidationRules = [
+                'ngb_reg' => ['max:36'],
+                'ngb_category' => ['required', 'uuid', Rule::exists('clubMembershipClasses', 'ID')->where(function (Builder $query) {
+                    return $query
+                        ->where('Type', \App\Enums\ClubMembershipClassType::NGB)
+                        ->where('Tenant', tenant('id'));
+                })],
+                'club_category' => ['required', 'uuid', Rule::exists('clubMembershipClasses', 'ID')->where(function (Builder $query) {
+                    return $query
+                        ->where('Type', \App\Enums\ClubMembershipClassType::CLUB)
+                        ->where('Tenant', tenant('id'));
+                })],
+                'club_pays_ngb_fees' => ['boolean'],
+                'club_pays_club_membership_fees' => ['boolean'],
+            ];
+        }
+
+        if ($isLinkedUser) {
+            $photoValidationRules = [
+                'photo_website' => ['boolean'],
+                'photo_social' => ['boolean'],
+                'photo_noticeboard' => ['boolean'],
+                'photo_professional_photographer' => ['boolean'],
+                'photo_film_training' => ['boolean'],
+            ];
+        }
+
+        $request->validate([
+            ...$genericValidationRules,
+            ...$adminValidationRules,
+            ...$photoValidationRules,
+        ]);
+
+        $member->MForename = $request->string('first_name');
+        $member->MSurname = $request->string('last_name');
+        $member->DateOfBirth = $request->date('date_of_birth');
+        $member->Gender = $request->enum('sex', Sex::class);
+        $member->GenderIdentity = $request->string('gender');
+        $member->GenderPronouns = $request->string('pronouns');
+        $member->GenderDisplay = $request->boolean('display_gender_identity');
+        $member->Country = $request->string('country');
+
+        if ($user->hasPermission('Admin')) {
+            $member->ASANumber = $request->string('ngb_reg');
+            $member->NGBCategory = $request->string('ngb_category');
+            $member->ClubCategory = $request->string('club_category');
+            $member->ASAPaid = $request->boolean('club_pays_ngb_fees');
+            $member->ClubPaid = $request->boolean('club_pays_club_membership_fees');
+        }
+
+        if ($isLinkedUser && $member->age() < 18) {
+            // Handle photography permissions update
+            $permissions = $member->photographyPermissions ?? new MemberPhotography();
+
+            $permissions->Website = $request->boolean('photo_website');
+            $permissions->Social = $request->boolean('photo_social');
+            $permissions->Noticeboard = $request->boolean('photo_noticeboard');
+            $permissions->ProPhoto = $request->boolean('photo_professional_photographer');
+            $permissions->FilmTraining = $request->boolean('photo_film_training');
+
+            $member->photographyPermissions()->save($permissions);
+        }
+
+        $member->save();
+
+        $request->session()->flash('success', $member->MForename.'\'s details have been updated successfully.');
+
+        return redirect()->route('members.show', $member);
     }
 
     public function combobox(Request $request): \Illuminate\Http\JsonResponse

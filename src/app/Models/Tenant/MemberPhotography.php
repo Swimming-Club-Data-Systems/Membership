@@ -19,6 +19,30 @@ class MemberPhotography extends Model
         return $this->belongsTo(Member::class, 'MemberID', 'MemberID');
     }
 
+    protected $casts = [
+        'Website' => 'boolean',
+        'Social' => 'boolean',
+        'Noticeboard' => 'boolean',
+        'FilmTraining' => 'boolean',
+        'ProPhoto' => 'boolean',
+    ];
+
+    protected $attributes = [
+        'Website' => false,
+        'Social' => false,
+        'Noticeboard' => false,
+        'FilmTraining' => false,
+        'ProPhoto' => false,
+    ];
+
+    protected $fillable = [
+        'Website',
+        'Social',
+        'Noticeboard',
+        'FilmTraining',
+        'ProPhoto',
+    ];
+
     protected $primaryKey = 'ID';
 
     protected $table = 'memberPhotography';

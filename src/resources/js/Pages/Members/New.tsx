@@ -110,6 +110,7 @@ const New = (props: Props) => {
                     method="post"
                     hideDefaultButtons
                     removeDefaultInputMargin
+                    hideErrors
                 >
                     <Card footer={<SubmissionButtons />}>
                         <RenderServerErrors />
@@ -135,7 +136,10 @@ const New = (props: Props) => {
                             </div>
 
                             <div className="col-span-6 md:col-span-2">
-                                <RadioGroup label="Competition sex" name="sex">
+                                <RadioGroup
+                                    label="Competition category"
+                                    name="sex"
+                                >
                                     <Radio
                                         value="Male"
                                         label="Open (formerly Male)"

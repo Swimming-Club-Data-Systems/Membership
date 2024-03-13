@@ -75,6 +75,7 @@ type Props = {
     club_pays_governing_body_membership_fee: boolean;
     other_notes: string;
     editable: boolean;
+    deletable: boolean;
 };
 
 const Show = (props: Props) => {
@@ -92,6 +93,7 @@ const Show = (props: Props) => {
         <>
             <Head
                 title={props.name}
+                subtitle="Member"
                 breadcrumbs={[
                     { name: "Members", route: "members.index" },
                     {
@@ -110,22 +112,22 @@ const Show = (props: Props) => {
                     subtitle="Member"
                     buttons={
                         <>
+                            {props.deletable && (
+                                <Button
+                                    variant="danger"
+                                    onClick={() => {
+                                        setShowDeleteModal(true);
+                                    }}
+                                >
+                                    Delete
+                                </Button>
+                            )}
                             {props.editable && (
-                                <>
-                                    <Button
-                                        variant="danger"
-                                        onClick={() => {
-                                            setShowDeleteModal(true);
-                                        }}
-                                    >
-                                        Delete
-                                    </Button>
-                                    <ButtonLink
-                                        href={route("squads.edit", props.id)}
-                                    >
-                                        Edit
-                                    </ButtonLink>
-                                </>
+                                <ButtonLink
+                                    href={route("members.edit", props.id)}
+                                >
+                                    Edit
+                                </ButtonLink>
                             )}
                         </>
                     }
