@@ -208,6 +208,12 @@ const Show = (props: Props) => {
                                     term: "Pronouns",
                                     definition: props.pronouns || "Not set",
                                 },
+                                {
+                                    key: "other_notes",
+                                    term: "Other notes",
+                                    definition: props.other_notes || "None",
+                                    unsafe: true,
+                                },
                             ]}
                         />
                     </Card>
@@ -224,6 +230,7 @@ const Show = (props: Props) => {
                                                 definition:
                                                     props.medical.conditions ||
                                                     "N/A",
+                                                unsafe: true,
                                             },
                                             {
                                                 key: "allergies",
@@ -231,6 +238,7 @@ const Show = (props: Props) => {
                                                 definition:
                                                     props.medical.allergies ||
                                                     "N/A",
+                                                unsafe: true,
                                             },
                                             {
                                                 key: "medication",
@@ -238,6 +246,7 @@ const Show = (props: Props) => {
                                                 definition:
                                                     props.medical.medication ||
                                                     "N/A",
+                                                unsafe: true,
                                             },
                                         ]}
                                     />

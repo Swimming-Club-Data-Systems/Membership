@@ -9,6 +9,8 @@ export type DefinitionListItemProps = {
     definition: ReactNode;
     /** Whether to truncate the string to prevent text overflow */
     truncate?: boolean;
+    /** Whether the item should be rendered as HTML. This is unsafe. */
+    unsafe?: boolean;
 };
 
 export type DefinitionListProps = {
@@ -35,10 +37,16 @@ export const DefinitionList: React.FC<DefinitionListProps> = ({
                             <dd
                                 className={`mt-1 text-sm text-gray-900 @sm:col-start-2 @sm:col-span-2 @sm:mt-0 @sm:row-start-1 ${
                                     item.truncate ? "truncate" : ""
-                                }`}
-                            >
-                                {item.definition}
-                            </dd>
+                                } ${item.unsafe ? "prose prose-sm" : ""}`}
+                                dangerouslySetInnerHTML={
+                                    item.unsafe
+                                        ? { __html: item.definition }
+                                        : undefined
+                                }
+                                children={
+                                    item.unsafe ? undefined : item.definition
+                                }
+                            />
                         </div>
                     );
                 })}

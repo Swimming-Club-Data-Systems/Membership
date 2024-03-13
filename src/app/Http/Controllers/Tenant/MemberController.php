@@ -18,6 +18,7 @@ use App\Models\Tenant\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -145,6 +146,11 @@ class MemberController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $markdownOptions = [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ];
+
         return Inertia::render('Members/Show', [
             'id' => $member->MemberID,
             'name' => $member->name,
@@ -159,9 +165,9 @@ class MemberController extends Controller
             'pronouns' => $member->GenderDisplay ? $member->GenderPronouns : null,
             'display_gender_identity' => $member->GenderDisplay,
             'medical' => [
-                'conditions' => $member->memberMedical?->Conditions,
-                'allergies' => $member->memberMedical?->Allergies,
-                'medication' => $member->memberMedical?->Medication,
+                'conditions' => Str::markdown($member->memberMedical?->Conditions, $markdownOptions),
+                'allergies' => Str::markdown($member->memberMedical?->Allergies, $markdownOptions),
+                'medication' => Str::markdown($member->memberMedical?->Medication, $markdownOptions),
                 'gp_name' => $member->memberMedical?->GPName,
                 'gp_phone' => $member->memberMedical?->GPPhone,
                 'gp_address' => $member->memberMedical?->GPAddress ?? [],
@@ -231,7 +237,7 @@ class MemberController extends Controller
                 'name' => $member->governingBodyCategory->Name,
             ],
             'club_pays_governing_body_membership_fee' => $member->ASAPaid,
-            'other_notes' => $member->OtherNotes,
+            'other_notes' => Str::markdown($member->OtherNotes, $markdownOptions),
             'editable' => $user->can('update', $member),
             'deletable' => $user->can('delete', $member),
         ]);
