@@ -164,6 +164,10 @@ class MemberController extends Controller
             'gender' => $member->GenderDisplay ? $member->GenderIdentity : null,
             'pronouns' => $member->GenderDisplay ? $member->GenderPronouns : null,
             'display_gender_identity' => $member->GenderDisplay,
+            'user' => ($user->hasPermission('Admin') && $member->user) ? [
+                'id' => $member->user->UserID,
+                'name' => $member->user->name,
+            ] : null,
             'medical' => [
                 'conditions' => Str::markdown($member->memberMedical?->Conditions, $markdownOptions),
                 'allergies' => Str::markdown($member->memberMedical?->Allergies, $markdownOptions),

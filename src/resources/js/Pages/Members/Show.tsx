@@ -33,6 +33,10 @@ type Props = {
     gender?: string;
     pronouns?: string;
     display_gender_identity: boolean;
+    user?: {
+        id: number;
+        name: string;
+    };
     medical?: {
         conditions: string;
         allergies: string;
@@ -161,62 +165,97 @@ const Show = (props: Props) => {
 
             <Container noMargin>
                 <div className="grid gap-4">
-                    <Card title={`About ${props.name}`}>
-                        <DefinitionList
-                            items={[
-                                {
-                                    key: "date_of_birth",
-                                    term: "Date of birth",
-                                    definition: formatDate(props.date_of_birth),
-                                },
-                                {
-                                    key: "age",
-                                    term: "Age",
-                                    definition: props.age,
-                                    truncate: true,
-                                },
-                                {
-                                    key: "membership_number",
-                                    term: "Swim England membership number",
-                                    definition:
-                                        props.governing_body_registration_number,
-                                },
-                                {
-                                    key: "category",
-                                    term: "Swim England membership category",
-                                    definition:
-                                        props.governing_body_membership_class
-                                            .name,
-                                },
-                                {
-                                    key: "country",
-                                    term: "Country of representation",
-                                    definition: props.country,
-                                },
-                                {
-                                    key: "sex",
-                                    term: "Sex (for the purposes of competition)",
-                                    definition: props.sex,
-                                },
-                                {
-                                    key: "gender_identity",
-                                    term: "Gender identity",
-                                    definition: props.gender || "Not set",
-                                },
-                                {
-                                    key: "pronouns",
-                                    term: "Pronouns",
-                                    definition: props.pronouns || "Not set",
-                                },
-                                {
-                                    key: "other_notes",
-                                    term: "Other notes",
-                                    definition: props.other_notes || "None",
-                                    unsafe: true,
-                                },
-                            ]}
-                        />
-                    </Card>
+                    <div className="grid gap-4 grid-cols-12">
+                        <div className="col-span-12 md:col-span-6">
+                            <Card title={`About ${props.name}`}>
+                                <DefinitionList
+                                    items={[
+                                        {
+                                            key: "date_of_birth",
+                                            term: "Date of birth",
+                                            definition: formatDate(
+                                                props.date_of_birth,
+                                            ),
+                                        },
+                                        {
+                                            key: "age",
+                                            term: "Age",
+                                            definition: props.age,
+                                            truncate: true,
+                                        },
+                                        {
+                                            key: "membership_number",
+                                            term: "Swim England membership number",
+                                            definition:
+                                                props.governing_body_registration_number,
+                                        },
+                                        {
+                                            key: "category",
+                                            term: "Swim England membership category",
+                                            definition:
+                                                props
+                                                    .governing_body_membership_class
+                                                    .name,
+                                        },
+                                        {
+                                            key: "country",
+                                            term: "Country of representation",
+                                            definition: props.country,
+                                        },
+                                        {
+                                            key: "sex",
+                                            term: "Sex (for the purposes of competition)",
+                                            definition: props.sex,
+                                        },
+                                        {
+                                            key: "gender_identity",
+                                            term: "Gender identity",
+                                            definition:
+                                                props.gender || "Not set",
+                                        },
+                                        {
+                                            key: "pronouns",
+                                            term: "Pronouns",
+                                            definition:
+                                                props.pronouns || "Not set",
+                                        },
+                                        {
+                                            key: "other_notes",
+                                            term: "Other notes",
+                                            definition:
+                                                props.other_notes || "None",
+                                            unsafe: true,
+                                        },
+                                    ]}
+                                />
+                            </Card>
+                        </div>
+
+                        {props.user && (
+                            <div className="col-span-12 md:col-span-6">
+                                <Card title="Associated user">
+                                    <DefinitionList
+                                        items={[
+                                            {
+                                                key: "name",
+                                                term: "Name",
+                                                definition: (
+                                                    <Link
+                                                        href={route(
+                                                            "users.show",
+                                                            props.user.id,
+                                                        )}
+                                                    >
+                                                        {props.user.name}
+                                                    </Link>
+                                                ),
+                                            },
+                                        ]}
+                                    />
+                                </Card>
+                            </div>
+                        )}
+                    </div>
 
                     <Tabs>
                         <Tab name="Medical">
