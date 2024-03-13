@@ -51,8 +51,8 @@ class SquadMoveController extends Controller
     {
         $request->validate([
             'member' => ['required'],
-            'date' => ['required', 'date'],
-            'old_squad' => ['required_without:new_squad', 'after_or_equal:today'],
+            'date' => ['required', 'date', 'after_or_equal:today'],
+            'old_squad' => ['required_without:new_squad'],
             'new_squad' => ['required_without:old_squad'],
             'paying' => ['boolean'],
         ]);

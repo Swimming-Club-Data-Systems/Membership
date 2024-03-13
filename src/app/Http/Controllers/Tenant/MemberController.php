@@ -13,6 +13,7 @@ use App\Models\Tenant\ExtraFee;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\MemberPhotography;
 use App\Models\Tenant\Squad;
+use App\Models\Tenant\SquadMove;
 use App\Models\Tenant\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
@@ -147,6 +148,8 @@ class MemberController extends Controller
         return Inertia::render('Members/Show', [
             'id' => $member->MemberID,
             'name' => $member->name,
+            'first_name' => $member->MForename,
+            'last_name' => $member->MSurname,
             'date_of_birth' => $member->DateOfBirth->format('Y-m-d'),
             'age' => $member->age(),
             'country' => CountriesOfRepresentation::getCountryName($member->Country),
@@ -194,6 +197,21 @@ class MemberController extends Controller
                     'fee' => $squad->fee,
                     'formatted_fee' => Money::formatCurrency($squad->fee),
                     'pays' => $squad->pivot->Paying,
+                ];
+            }),
+            'squad_moves' => $member->squadMoves->map(function (SquadMove $move) {
+                return [
+                    'id' => $move->ID,
+                    'old_squad' => $move->oldSquad ? [
+                        'id' => $move->oldSquad->SquadID,
+                        'name' => $move->oldSquad->SquadName,
+                    ] : null,
+                    'new_squad' => $move->newSquad ? [
+                        'id' => $move->newSquad->SquadID,
+                        'name' => $move->newSquad->SquadName,
+                    ] : null,
+                    'paying' => $move->Paying,
+                    'date' => $move->Date,
                 ];
             }),
             'extra_fees' => $member->extraFees->map(function (ExtraFee $fee) {

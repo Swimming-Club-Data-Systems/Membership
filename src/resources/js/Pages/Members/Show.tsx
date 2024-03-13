@@ -14,12 +14,17 @@ import FlashAlert from "@/Components/FlashAlert";
 import { formatDate } from "@/Utils/date-utils";
 import { Tab, Tabs } from "@/Components/Tabs";
 import { BasicListTwo, BasicListTwoItem } from "@/Components/BasicListTwo";
-import EmptyState from "@/Components/EmptyState";
 import Alert from "@/Components/Alert";
+import { NewSquadMoveDialog } from "@/Components/SquadMove/NewSquadMoveDialog";
+import { ArrowRightIcon } from "@heroicons/react/24/solid";
+import { EditSquadMoveDialog } from "@/Components/SquadMove/EditSquadMoveDialog";
+import { CancelSquadMoveDialog } from "@/Components/SquadMove/CancelSquadMoveDialog";
 
 type Props = {
     id: number;
     name: string;
+    first_name: string;
+    last_name: string;
     date_of_birth: string;
     age: number;
     country: string;
@@ -58,6 +63,19 @@ type Props = {
         formatted_fee: string;
         pays: boolean;
     }[];
+    squad_moves: {
+        id: number;
+        old_squad?: {
+            id: number;
+            name: string;
+        };
+        new_squad?: {
+            id: number;
+            name: string;
+        };
+        paying: boolean;
+        date: string;
+    }[];
     extra_fees: {
         id: number;
         name: string;
@@ -79,7 +97,12 @@ type Props = {
 };
 
 const Show = (props: Props) => {
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+    const [showNewSquadMoveModal, setShowNewSquadMoveModal] =
+        useState<boolean>(false);
+    const [showRemoveModal, setShowRemoveModal] = useState<number>(null);
+    const [showEditModal, setShowEditModal] = useState<number>(null);
+    const [showCancelModal, setShowCancelModal] = useState<number>(null);
 
     const deleteSquad = async () => {
         // router.delete(route("squads.delete", [props.id]), {
@@ -395,57 +418,255 @@ const Show = (props: Props) => {
                             </Card>
                         </Tab>
                         <Tab name="Squads">
-                            <Card title="Squads" footer={<Button>Add</Button>}>
-                                {props.squads.length === 0 && (
-                                    <Alert variant="warning" title="No squads">
-                                        {props.name} is not assigned to any
-                                        squads.
-                                    </Alert>
-                                )}
+                            <div className="grid gap-4">
+                                <Card
+                                    title="Squads"
+                                    footer={
+                                        <Button
+                                            onClick={() =>
+                                                setShowNewSquadMoveModal(true)
+                                            }
+                                        >
+                                            Add
+                                        </Button>
+                                    }
+                                >
+                                    {props.squads.length === 0 && (
+                                        <Alert
+                                            variant="warning"
+                                            title="No squads"
+                                        >
+                                            {props.name} is not assigned to any
+                                            squads.
+                                        </Alert>
+                                    )}
 
-                                {props.squads.length > 0 && (
-                                    <BasicListTwo>
-                                        {props.squads.map((squad) => {
-                                            return (
-                                                <BasicListTwoItem
-                                                    key={squad.id}
-                                                >
-                                                    <div className="text-sm flex flex-col sm:flex-row sm:justify-between gap-4 sm:items-center">
-                                                        <div>
-                                                            <h3 className="font-medium">
-                                                                <Link
-                                                                    href={route(
-                                                                        "squads.show",
-                                                                        squad.id,
-                                                                    )}
+                                    {props.squads.length > 0 && (
+                                        <BasicListTwo>
+                                            {props.squads.map((squad) => {
+                                                return (
+                                                    <BasicListTwoItem
+                                                        key={squad.id}
+                                                    >
+                                                        <div className="text-sm flex flex-col sm:flex-row sm:justify-between gap-4 sm:items-center">
+                                                            <div>
+                                                                <h3 className="font-medium">
+                                                                    <Link
+                                                                        href={route(
+                                                                            "squads.show",
+                                                                            squad.id,
+                                                                        )}
+                                                                    >
+                                                                        {
+                                                                            squad.name
+                                                                        }
+                                                                    </Link>
+                                                                </h3>
+                                                                <p className="text-gray-500">
+                                                                    {
+                                                                        squad.formatted_fee
+                                                                    }
+                                                                    /month
+                                                                    {!squad.pays &&
+                                                                        " (does not pay)"}
+                                                                </p>
+                                                            </div>
+                                                            <div className="flex gap-2">
+                                                                {/*<Button variant="secondary">*/}
+                                                                {/*    Edit*/}
+                                                                {/*</Button>*/}
+                                                                <Button
+                                                                    variant="danger"
+                                                                    onClick={() => {
+                                                                        setShowRemoveModal(
+                                                                            squad.id,
+                                                                        );
+                                                                    }}
                                                                 >
-                                                                    {squad.name}
-                                                                </Link>
-                                                            </h3>
-                                                            <p className="text-gray-500">
-                                                                {
-                                                                    squad.formatted_fee
+                                                                    Remove
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+
+                                                        <NewSquadMoveDialog
+                                                            show={
+                                                                showRemoveModal ===
+                                                                squad.id
+                                                            }
+                                                            onClose={() =>
+                                                                setShowRemoveModal(
+                                                                    null,
+                                                                )
+                                                            }
+                                                            squadToLeave={
+                                                                squad.id
+                                                            }
+                                                            member={{
+                                                                name: props.name,
+                                                                id: props.id,
+                                                                first_name:
+                                                                    props.first_name,
+                                                            }}
+                                                        />
+                                                    </BasicListTwoItem>
+                                                );
+                                            })}
+                                        </BasicListTwo>
+                                    )}
+                                </Card>
+
+                                {props.squad_moves.length > 0 && (
+                                    <Card title="Pending squad moves">
+                                        <BasicListTwo>
+                                            {props.squad_moves.map((move) => {
+                                                return (
+                                                    <BasicListTwoItem
+                                                        key={move.id}
+                                                    >
+                                                        <div className="text-sm flex flex-col sm:flex-row sm:justify-between gap-4 sm:items-center">
+                                                            <div>
+                                                                {move.old_squad && (
+                                                                    <>
+                                                                        {!move.new_squad && (
+                                                                            <>
+                                                                                Leaving{" "}
+                                                                            </>
+                                                                        )}
+                                                                        <Link
+                                                                            href={route(
+                                                                                "squads.show",
+                                                                                move
+                                                                                    .old_squad
+                                                                                    .id,
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                move
+                                                                                    .old_squad
+                                                                                    .name
+                                                                            }
+                                                                        </Link>
+                                                                    </>
+                                                                )}
+                                                                {move.old_squad &&
+                                                                    move.new_squad && (
+                                                                        <>
+                                                                            {" "}
+                                                                            <ArrowRightIcon className="inline h-4" />{" "}
+                                                                        </>
+                                                                    )}
+                                                                {move.new_squad && (
+                                                                    <>
+                                                                        {!move.old_squad && (
+                                                                            <>
+                                                                                Joining{" "}
+                                                                            </>
+                                                                        )}
+                                                                        <Link
+                                                                            href={route(
+                                                                                "squads.show",
+                                                                                move
+                                                                                    .new_squad
+                                                                                    .id,
+                                                                            )}
+                                                                        >
+                                                                            {
+                                                                                move
+                                                                                    .new_squad
+                                                                                    .name
+                                                                            }
+                                                                        </Link>
+                                                                    </>
+                                                                )}{" "}
+                                                                on{" "}
+                                                                {formatDate(
+                                                                    move.date,
+                                                                )}
+                                                            </div>
+                                                            <div className="flex gap-2">
+                                                                <Button
+                                                                    variant="secondary"
+                                                                    onClick={() =>
+                                                                        setShowEditModal(
+                                                                            move.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Edit
+                                                                </Button>
+                                                                <Button
+                                                                    variant="danger"
+                                                                    onClick={() =>
+                                                                        setShowCancelModal(
+                                                                            move.id,
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Cancel
+                                                                </Button>
+                                                            </div>
+
+                                                            <EditSquadMoveDialog
+                                                                moveId={move.id}
+                                                                paying_in_new_squad={
+                                                                    move.paying
                                                                 }
-                                                                /month
-                                                                {!squad.pays &&
-                                                                    " (does not pay)"}
-                                                            </p>
+                                                                new_squad={
+                                                                    move.new_squad
+                                                                }
+                                                                old_squad={
+                                                                    move.old_squad
+                                                                }
+                                                                show={
+                                                                    showEditModal ===
+                                                                    move.id
+                                                                }
+                                                                onClose={() => {
+                                                                    setShowEditModal(
+                                                                        null,
+                                                                    );
+                                                                }}
+                                                                date={move.date}
+                                                                member={{
+                                                                    id: props.id,
+                                                                    name: props.name,
+                                                                }}
+                                                            />
+
+                                                            <CancelSquadMoveDialog
+                                                                show={
+                                                                    showCancelModal ===
+                                                                    move.id
+                                                                }
+                                                                onClose={() =>
+                                                                    setShowCancelModal(
+                                                                        null,
+                                                                    )
+                                                                }
+                                                                member={{
+                                                                    id: props.id,
+                                                                    name: props.name,
+                                                                }}
+                                                                moveId={move.id}
+                                                            />
                                                         </div>
-                                                        <div className="flex gap-2">
-                                                            <Button variant="secondary">
-                                                                Schedule removal
-                                                            </Button>
-                                                            <Button variant="danger">
-                                                                Remove
-                                                            </Button>
-                                                        </div>
-                                                    </div>
-                                                </BasicListTwoItem>
-                                            );
-                                        })}
-                                    </BasicListTwo>
+                                                    </BasicListTwoItem>
+                                                );
+                                            })}
+                                        </BasicListTwo>
+                                    </Card>
                                 )}
-                            </Card>
+                            </div>
+
+                            <NewSquadMoveDialog
+                                show={showNewSquadMoveModal}
+                                onClose={() => setShowNewSquadMoveModal(false)}
+                                member={{
+                                    id: props.id,
+                                    name: props.name,
+                                    first_name: props.first_name,
+                                }}
+                            />
                         </Tab>
                         <Tab name="Extra fees">
                             <Card title="Extra fees">

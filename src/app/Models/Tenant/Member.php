@@ -42,6 +42,7 @@ use Laravel\Scout\Searchable;
  * @property MemberMedical|null $memberMedical
  * @property string|null $pronouns Pronouns if the member has chosen to display them
  * @property Collection emergencyContacts
+ * @property Collection squadMoves
  * @property MemberPhotography photographyPermissions
  * @property ClubMembershipClass $governingBodyCategory
  * @property ClubMembershipClass $clubCategory
@@ -127,7 +128,7 @@ class Member extends Model
 
     public function squadMoves(): HasMany
     {
-        return $this->hasMany(SquadMove::class, 'Member');
+        return $this->hasMany(SquadMove::class, 'Member')->with(['oldSquad', 'newSquad']);
     }
 
     public function competitionEntries(): HasMany
