@@ -167,6 +167,10 @@ Route::middleware([
                 ->name('edit');
             Route::put('/{member}/edit', [MemberController::class, 'update'])
                 ->whereNumber('member');
+            Route::put('/{member}/squads/{squad}', [MemberController::class, 'updateSquad'])
+                ->whereNumber('member')
+                ->whereNumber('squad')
+                ->name('edit_squad_membership');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');

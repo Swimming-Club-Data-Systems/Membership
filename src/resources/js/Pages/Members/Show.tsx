@@ -19,6 +19,9 @@ import { NewSquadMoveDialog } from "@/Components/SquadMove/NewSquadMoveDialog";
 import { ArrowRightIcon } from "@heroicons/react/24/solid";
 import { EditSquadMoveDialog } from "@/Components/SquadMove/EditSquadMoveDialog";
 import { CancelSquadMoveDialog } from "@/Components/SquadMove/CancelSquadMoveDialog";
+import Form from "@/Components/Form/Form";
+import Checkbox from "@/Components/Form/Checkbox";
+import * as yup from "yup";
 
 type Props = {
     id: number;
@@ -98,6 +101,7 @@ type Props = {
     other_notes: string;
     editable: boolean;
     deletable: boolean;
+    can_edit_squads: boolean;
 };
 
 const Show = (props: Props) => {
@@ -106,6 +110,7 @@ const Show = (props: Props) => {
         useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = useState<number>(null);
     const [showEditModal, setShowEditModal] = useState<number>(null);
+    const [showEditSquadModal, setShowEditSquadModal] = useState<number>(null);
     const [showCancelModal, setShowCancelModal] = useState<number>(null);
 
     const deleteSquad = async () => {
@@ -470,13 +475,17 @@ const Show = (props: Props) => {
                                 <Card
                                     title="Squads"
                                     footer={
-                                        <Button
-                                            onClick={() =>
-                                                setShowNewSquadMoveModal(true)
-                                            }
-                                        >
-                                            Add
-                                        </Button>
+                                        props.can_edit_squads && (
+                                            <Button
+                                                onClick={() =>
+                                                    setShowNewSquadMoveModal(
+                                                        true,
+                                                    )
+                                                }
+                                            >
+                                                Add
+                                            </Button>
+                                        )
                                     }
                                 >
                                     {props.squads.length === 0 && (
@@ -519,22 +528,82 @@ const Show = (props: Props) => {
                                                                         " (does not pay)"}
                                                                 </p>
                                                             </div>
-                                                            <div className="flex gap-2">
-                                                                {/*<Button variant="secondary">*/}
-                                                                {/*    Edit*/}
-                                                                {/*</Button>*/}
-                                                                <Button
-                                                                    variant="danger"
-                                                                    onClick={() => {
-                                                                        setShowRemoveModal(
-                                                                            squad.id,
-                                                                        );
-                                                                    }}
-                                                                >
-                                                                    Remove
-                                                                </Button>
-                                                            </div>
+                                                            {props.can_edit_squads && (
+                                                                <div className="flex gap-2">
+                                                                    <Button
+                                                                        variant="secondary"
+                                                                        onClick={() => {
+                                                                            setShowEditSquadModal(
+                                                                                squad.id,
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        Edit
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="danger"
+                                                                        onClick={() => {
+                                                                            setShowRemoveModal(
+                                                                                squad.id,
+                                                                            );
+                                                                        }}
+                                                                    >
+                                                                        Remove
+                                                                    </Button>
+                                                                </div>
+                                                            )}
                                                         </div>
+
+                                                        <Modal
+                                                            show={
+                                                                showEditSquadModal ===
+                                                                squad.id
+                                                            }
+                                                            onClose={() =>
+                                                                setShowEditSquadModal(
+                                                                    null,
+                                                                )
+                                                            }
+                                                            title={`Edit ${squad.name} membership`}
+                                                        >
+                                                            <Form
+                                                                initialValues={{
+                                                                    pays: squad.pays,
+                                                                }}
+                                                                validationSchema={yup
+                                                                    .object()
+                                                                    .shape({
+                                                                        pays: yup.boolean(),
+                                                                    })}
+                                                                submitTitle="Save"
+                                                                method="put"
+                                                                action={route(
+                                                                    "members.edit_squad_membership",
+                                                                    {
+                                                                        member: props.id,
+                                                                        squad: squad.id,
+                                                                    },
+                                                                )}
+                                                                inertiaOptions={{
+                                                                    onSuccess: (
+                                                                        page,
+                                                                    ) => {
+                                                                        setShowEditSquadModal(
+                                                                            null,
+                                                                        );
+                                                                    },
+                                                                    preserveState:
+                                                                        true,
+                                                                    preserveScroll:
+                                                                        true,
+                                                                }}
+                                                            >
+                                                                <Checkbox
+                                                                    name="pays"
+                                                                    label={`${props.first_name} pays monthly fees for this squad`}
+                                                                />
+                                                            </Form>
+                                                        </Modal>
 
                                                         <NewSquadMoveDialog
                                                             show={
@@ -631,28 +700,30 @@ const Show = (props: Props) => {
                                                                     move.date,
                                                                 )}
                                                             </div>
-                                                            <div className="flex gap-2">
-                                                                <Button
-                                                                    variant="secondary"
-                                                                    onClick={() =>
-                                                                        setShowEditModal(
-                                                                            move.id,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Edit
-                                                                </Button>
-                                                                <Button
-                                                                    variant="danger"
-                                                                    onClick={() =>
-                                                                        setShowCancelModal(
-                                                                            move.id,
-                                                                        )
-                                                                    }
-                                                                >
-                                                                    Cancel
-                                                                </Button>
-                                                            </div>
+                                                            {props.can_edit_squads && (
+                                                                <div className="flex gap-2">
+                                                                    <Button
+                                                                        variant="secondary"
+                                                                        onClick={() =>
+                                                                            setShowEditModal(
+                                                                                move.id,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Edit
+                                                                    </Button>
+                                                                    <Button
+                                                                        variant="danger"
+                                                                        onClick={() =>
+                                                                            setShowCancelModal(
+                                                                                move.id,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Cancel
+                                                                    </Button>
+                                                                </div>
+                                                            )}
 
                                                             <EditSquadMoveDialog
                                                                 moveId={move.id}

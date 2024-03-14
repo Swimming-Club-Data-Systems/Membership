@@ -206,7 +206,7 @@ class MemberController extends Controller
                     'name' => $squad->SquadName,
                     'fee' => $squad->fee,
                     'formatted_fee' => Money::formatCurrency($squad->fee),
-                    'pays' => $squad->pivot->Paying,
+                    'pays' => (bool) $squad->pivot->Paying,
                 ];
             }),
             'squad_moves' => $member->squadMoves->map(function (SquadMove $move) {
@@ -244,6 +244,7 @@ class MemberController extends Controller
             'other_notes' => Str::markdown($member->OtherNotes, $markdownOptions),
             'editable' => $user->can('update', $member),
             'deletable' => $user->can('delete', $member),
+            'can_edit_squads' => $this->authorize('create', SquadMove::class),
         ]);
     }
 
@@ -446,5 +447,19 @@ class MemberController extends Controller
         });
 
         return \response()->json($data);
+    }
+
+    public function updateSquad(Request $request, Member $member, Squad $squad)
+    {
+        $this->authorize('update', $member);
+        $this->authorize('create', SquadMove::class);
+
+        $member->squads()->updateExistingPivot($squad->SquadID, [
+            'Paying' => $request->boolean('pays'),
+        ]);
+
+        $request->session()->flash('success', 'Squad details have been updated successfully.');
+
+        return redirect()->back();
     }
 }

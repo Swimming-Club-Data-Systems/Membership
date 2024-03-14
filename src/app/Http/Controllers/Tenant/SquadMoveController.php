@@ -14,7 +14,7 @@ class SquadMoveController extends Controller
 {
     public function index(Request $request)
     {
-        //        $this->authorize('viewAll', SquadMove::class);
+        $this->authorize('viewAll', SquadMove::class);
 
         $moves = SquadMove::orderBy('Date')
             ->with(['member', 'oldSquad', 'newSquad'])
@@ -49,6 +49,8 @@ class SquadMoveController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize('create', SquadMove::class);
+
         $request->validate([
             'member' => ['required'],
             'date' => ['required', 'date', 'after_or_equal:today'],
@@ -86,6 +88,8 @@ class SquadMoveController extends Controller
 
     public function update(SquadMove $squadMove, Request $request)
     {
+        $this->authorize('update', $squadMove);
+
         $request->validate([
             'date' => ['required', 'date', 'after_or_equal:today'],
             'old_squad' => ['required_without:new_squad'],
@@ -120,6 +124,8 @@ class SquadMoveController extends Controller
 
     public function delete(SquadMove $squadMove, Request $request)
     {
+        $this->authorize('delete', SquadMove::class);
+
         $squadMove->delete();
 
         $request->session()->flash('success', 'Squad move deleted.');
