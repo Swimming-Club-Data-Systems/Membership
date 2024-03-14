@@ -305,6 +305,17 @@ const Show = (props: Props) => {
                     <Tabs>
                         <Tab name="Medical">
                             <div className="grid gap-4">
+                                {props.medical.consent_withheld && (
+                                    <Alert
+                                        variant="danger"
+                                        title="Consent for emergency medical treatment"
+                                    >
+                                        No consent has been given for emergency
+                                        medical treatment for {props.first_name}
+                                        .
+                                    </Alert>
+                                )}
+
                                 <Card title="Medical notes">
                                     <DefinitionList
                                         items={[

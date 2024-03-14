@@ -265,7 +265,6 @@ const New = (props: Props) => {
 
                         <Card title="Medical details">
                             <div className="prose prose-sm">
-                                §
                                 <p>
                                     <Link
                                         href={`/v1/members/${props.id}/medical`}
