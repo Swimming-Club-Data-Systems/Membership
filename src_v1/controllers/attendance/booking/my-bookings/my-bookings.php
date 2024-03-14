@@ -186,7 +186,7 @@ include BASE_PATH . 'views/header.php';
                         $bookedAt = new DateTime($bookedMember['BookedAt'], new DateTimeZone('UTC'));
                         $bookedAt->setTimezone(new DateTimeZone('Europe/London'));
                       ?>
-                        <a href="<?= htmlspecialchars(autoUrl('members/' . $bookedMember['id'])) ?>" class="list-group-item list-group-item-action">
+                        <a href="/members/<?= htmlspecialchars($bookedMember['id']) ?>" class="list-group-item list-group-item-action">
                           <span class="mb-0 d-block">
                             <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?></strong>
                           </span>

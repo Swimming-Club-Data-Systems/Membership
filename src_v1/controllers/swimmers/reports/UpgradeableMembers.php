@@ -96,7 +96,7 @@ include BASE_PATH . 'views/header.php';
               <li class="list-group-item list-group-item-action">
                 <div class="row align-items-center">
                   <div class="col-md">
-                    <a href="<?= htmlspecialchars(autoUrl("members/" . $member['id'])) ?>" class="">
+                    <a href="/members/<?= htmlspecialchars($member['id']) ?>" class="">
                       <strong><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></strong>
                     </a>
                     <?php if ($squads) { ?>

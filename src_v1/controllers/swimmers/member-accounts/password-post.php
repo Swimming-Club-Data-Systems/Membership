@@ -46,7 +46,7 @@ try {
     if (isset($_POST['return'])) {
       header("location: " . $_POST['return']);
     } else {
-      header("location: " . autoUrl("members/" . $id));
+      header("location: /members/" . $id);
     }
   } catch (PDOException $e) {
     // Was a DB error - throw generic exception so info isn't shown

@@ -38,7 +38,7 @@ include BASE_PATH . 'views/header.php';
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Members</a></li>
-        <li class="breadcrumb-item"><a href="<?= autoUrl("members/$id") ?>">#<?= htmlspecialchars($member->getId()) ?></a></li>
+        <li class="breadcrumb-item"><a href="/members/<?= htmlspecialchars($id) ?>">#<?= htmlspecialchars($member->getId()) ?></a></li>
         <li class="breadcrumb-item"><a href="<?= autoUrl("members/$id/qualifications") ?>">Qualifications</a></li>
         <li class="breadcrumb-item active" aria-current="page">Add</li>
       </ol>

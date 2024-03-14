@@ -64,7 +64,7 @@ include "galaMenu.php";
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
           <li class="breadcrumb-item"><a href="<?= autoUrl("members") ?>">Swimmers</a></li>
-          <li class="breadcrumb-item"><a href="<?= autoUrl("members/" . $swimmer) ?>"><?= htmlspecialchars($mySwimmer['fn']) ?> <?= htmlspecialchars(mb_substr($mySwimmer['sn'], 0, 1, 'utf-8')) ?></a></li>
+          <li class="breadcrumb-item"><a href="/members/<?= htmlspecialchars($swimmer) ?>"><?= htmlspecialchars($mySwimmer['fn']) ?> <?= htmlspecialchars(mb_substr($mySwimmer['sn'], 0, 1, 'utf-8')) ?></a></li>
           <li class="breadcrumb-item active" aria-current="page">Enter a gala</li>
         </ol>
       </nav>
