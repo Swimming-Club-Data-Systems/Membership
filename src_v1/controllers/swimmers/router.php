@@ -26,6 +26,10 @@ if ($access == "Parent") {
 		});
 	}
 
+    $this->post('/ajax/swimmerDirectory', function () {
+        include BASE_PATH . "controllers/ajax/membersList.php";
+    });
+
 	$this->get('/{swimmer}:int/enter-gala', function ($swimmer) {
 		require BASE_PATH . 'controllers/galas/GalaEntryForm.php';
 	});
