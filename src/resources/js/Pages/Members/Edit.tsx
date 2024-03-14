@@ -263,6 +263,21 @@ const New = (props: Props) => {
                             </div>
                         </Card>
 
+                        <Card title="Medical details">
+                            <div className="prose prose-sm">
+                                §
+                                <p>
+                                    <Link
+                                        href={`/v1/members/${props.id}/medical`}
+                                        external
+                                    >
+                                        Edit medical details
+                                    </Link>{" "}
+                                    (opens in new tab).
+                                </p>
+                            </div>
+                        </Card>
+
                         {props.is_admin && (
                             <Card title="Membership information">
                                 <div className="grid grid-cols-6 gap-4">
