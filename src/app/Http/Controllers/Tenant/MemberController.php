@@ -245,6 +245,7 @@ class MemberController extends Controller
             'editable' => $user->can('update', $member),
             'deletable' => $user->can('delete', $member),
             'can_edit_squads' => $this->authorize('create', SquadMove::class),
+            'show_quick_actions' => $user->hasPermission(['Admin', 'Coach', 'Galas']),
         ]);
     }
 

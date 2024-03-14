@@ -102,6 +102,7 @@ type Props = {
     editable: boolean;
     deletable: boolean;
     can_edit_squads: boolean;
+    show_quick_actions: boolean;
 };
 
 const Show = (props: Props) => {
@@ -236,28 +237,67 @@ const Show = (props: Props) => {
                             </Card>
                         </div>
 
-                        {props.user && (
+                        {(props.user || props.show_quick_actions) && (
                             <div className="col-span-12 md:col-span-6">
-                                <Card title="Associated user">
-                                    <DefinitionList
-                                        items={[
-                                            {
-                                                key: "name",
-                                                term: "Name",
-                                                definition: (
-                                                    <Link
-                                                        href={route(
-                                                            "users.show",
-                                                            props.user.id,
-                                                        )}
+                                <div className="grid gap-4">
+                                    {props.user && (
+                                        <Card title="Associated user">
+                                            <DefinitionList
+                                                items={[
+                                                    {
+                                                        key: "name",
+                                                        term: "Name",
+                                                        definition: (
+                                                            <Link
+                                                                href={route(
+                                                                    "users.show",
+                                                                    props.user
+                                                                        .id,
+                                                                )}
+                                                            >
+                                                                {
+                                                                    props.user
+                                                                        .name
+                                                                }
+                                                            </Link>
+                                                        ),
+                                                    },
+                                                ]}
+                                            />
+                                        </Card>
+                                    )}
+
+                                    {props.show_quick_actions && (
+                                        <Card title="Quick actions">
+                                            <div className="grid gap-2">
+                                                <ButtonLink
+                                                    variant="secondary"
+                                                    href={`/v1/members/${props.id}/enter-gala`}
+                                                    external
+                                                >
+                                                    Enter a gala
+                                                </ButtonLink>
+                                                {props.user && (
+                                                    <ButtonLink
+                                                        variant="secondary"
+                                                        href={`/v1/members/${props.id}/contact-parent`}
+                                                        external
                                                     >
-                                                        {props.user.name}
-                                                    </Link>
-                                                ),
-                                            },
-                                        ]}
-                                    />
-                                </Card>
+                                                        Email
+                                                        user/parent/guardian
+                                                    </ButtonLink>
+                                                )}
+                                                <ButtonLink
+                                                    variant="secondary"
+                                                    href={`/v1/members/${props.id}/parenthelp`}
+                                                    external
+                                                >
+                                                    Print access key
+                                                </ButtonLink>
+                                            </div>
+                                        </Card>
+                                    )}
+                                </div>
                             </div>
                         )}
                     </div>
