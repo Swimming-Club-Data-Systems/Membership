@@ -137,12 +137,6 @@ $this->group('/{swimmer}:int/times', function () {
 	include 'times/router.php';
 });
 
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') {
-	$this->post('/delete', function () {
-		include 'delete.php';
-	});
-}
-
 $this->group('/{id}:int/qualifications', function($id) {
 	$this->get('/', function($id) {
 		include 'qualifications/list.php';
