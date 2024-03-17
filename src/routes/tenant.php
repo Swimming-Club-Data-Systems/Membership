@@ -179,6 +179,11 @@ Route::middleware([
                 ->whereNumber('member')
                 ->middleware(['password.confirm'])
                 ->name('delete');
+            Route::get('/{member}/medical-notes', [MemberController::class, 'editMedical'])
+                ->whereNumber('member')
+                ->name('edit_medical');
+            Route::put('/{member}/medical-notes', [MemberController::class, 'updateMedical'])
+                ->whereNumber('member');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');

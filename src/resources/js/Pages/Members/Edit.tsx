@@ -267,7 +267,10 @@ const New = (props: Props) => {
                             <div className="prose prose-sm">
                                 <p>
                                     <Link
-                                        href={`/v1/members/${props.id}/medical`}
+                                        href={route(
+                                            "members.edit_medical",
+                                            props.id,
+                                        )}
                                         external
                                     >
                                         Edit medical details

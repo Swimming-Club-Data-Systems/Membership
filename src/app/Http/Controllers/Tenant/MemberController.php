@@ -12,10 +12,12 @@ use App\Models\Tenant\ClubMembershipClass;
 use App\Models\Tenant\EmergencyContact;
 use App\Models\Tenant\ExtraFee;
 use App\Models\Tenant\Member;
+use App\Models\Tenant\MemberMedical;
 use App\Models\Tenant\MemberPhotography;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\SquadMove;
 use App\Models\Tenant\User;
+use App\Rules\ValidPhone;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -487,5 +489,73 @@ class MemberController extends Controller
         $request->session()->flash('success', $member->name.' is pending deletion.');
 
         return redirect()->route('members.index');
+    }
+
+    public function editMedical(Member $member)
+    {
+        $this->authorize('update', $member);
+
+        return Inertia::render('Members/EditMedical', [
+            'id' => $member->MemberID,
+            'name' => $member->name,
+            'first_name' => $member->MForename,
+            'last_name' => $member->MSurname,
+            'age' => $member->age(),
+            'form_initial_values' => [
+                'conditions' => $member->memberMedical?->Conditions ?? '',
+                'allergies' => $member->memberMedical?->Allergies ?? '',
+                'medication' => $member->memberMedical?->Medication ?? '',
+                'gp_name' => $member->memberMedical?->GPName,
+                'gp_phone' => $member->memberMedical?->GPPhone,
+                'gp_address' => implode("\n", ($member->memberMedical?->GPAddress ?? [])),
+                'consent' => ! $member->memberMedical?->WithholdConsent,
+            ],
+            'member_user' => $member->user ? [
+                'id' => $member->user->UserID,
+                'name' => $member->user->name,
+                'is_current_user' => $member->user->UserID === Auth::id(),
+            ] : null,
+        ]);
+    }
+
+    public function updateMedical(Request $request, Member $member)
+    {
+        $this->authorize('update', $member);
+
+        $minor = $member->age() < 18 && $member->user->UserID === Auth::id();
+
+        $under18sValidation = ($minor) ? [
+            'gp_name' => ['string', 'nullable', 'max:255', 'required'],
+            'gp_phone' => ['string', 'nullable', 'max:255', 'required', new ValidPhone],
+            'gp_address' => ['string', 'nullable', 'max:1024'],
+            'consent' => ['boolean', 'nullable'],
+        ] : [];
+
+        $request->validate([
+            'conditions' => ['string', 'nullable', Rule::requiredIf($request->string('conditions_yes_no') == 'yes'), 'max:2048'],
+            'allergies' => ['string', 'nullable', Rule::requiredIf($request->string('allergies_yes_no') == 'yes'), 'max:2048'],
+            'medication' => ['string', 'nullable', Rule::requiredIf($request->string('medication_yes_no') == 'yes'), 'max:2048'],
+            ...$under18sValidation,
+        ]);
+
+        // Handle medical update
+        $medical = $member->memberMedical ?? new MemberMedical();
+
+        $medical->Conditions = ($request->string('conditions_yes_no') == 'yes') ? $request->string('conditions') : '';
+        $medical->Allergies = ($request->string('allergies_yes_no') == 'yes') ? $request->string('allergies') : '';
+        $medical->Medication = ($request->string('medication_yes_no') == 'yes') ? $request->string('medication') : '';
+
+        if ($minor) {
+            $medical->GPName = $request->string('gp_name');
+            $medical->GPPhone = PhoneNumber::toDatabaseFormat($request->string('gp_phone'));
+            $medical->GPAddress = explode("\n", $request->string('gp_address'));
+            $medical->WithholdConsent = ! $request->boolean('consent');
+        }
+
+        $member->memberMedical()->save($medical);
+
+        $request->session()->flash('success', 'Medical details have been updated.');
+
+        return redirect()->route('members.show', $member);
     }
 }
