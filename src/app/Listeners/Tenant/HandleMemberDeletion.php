@@ -65,6 +65,41 @@ class HandleMemberDeletion implements ShouldQueue
                 DB::table('timesIndividual')->where('MemberID', $member->MemberID)->delete();
             }
 
+            // Legacy table, clear out details
+            DB::table('completedForms')->where('MemberID', $member->MemberID)->delete();
+
+            // Legacy table, clear out details
+            if (DB::getSchemaBuilder()->hasTable('covidGalaHealthScreen')) {
+                DB::table('covidGalaHealthScreen')->where('Member', $member->MemberID)->delete();
+            }
+
+            // Legacy table, clear out details
+            if (DB::getSchemaBuilder()->hasTable('covidHealthScreen')) {
+                DB::table('covidHealthScreen')->where('Member', $member->MemberID)->delete();
+            }
+
+            // Legacy table, clear out details
+            if (DB::getSchemaBuilder()->hasTable('covidRiskAwareness')) {
+                DB::table('covidRiskAwareness')->where('Member', $member->MemberID)->delete();
+            }
+
+            // Legacy table, clear out details
+            if (DB::getSchemaBuilder()->hasTable('covidVisitors')) {
+                DB::table('covidVisitors')->where('Type', 'Member')->where('Person', $member->MemberID)->delete();
+            }
+
+            DB::table('galaSessionsCanEnter')->where('Member', $member->MemberID)->delete();
+
+            if (DB::getSchemaBuilder()->hasTable('qualificationsMembers')) {
+                DB::table('qualificationsMembers')->where('Member', $member->MemberID)->delete();
+            }
+
+            DB::table('sessionsAttendance')->where('MemberID', $member->MemberID)->delete();
+
+            DB::table('sessionsBookings')->where('Member', $member->MemberID)->delete();
+
+            DB::table('trainingLogs')->where('Member', $member->MemberID)->delete();
+
             // Deactivate the member
             $member->Active = false;
             //            $member->MForename = Str::padLeft('', Str::length($member->MForename), 'X');
