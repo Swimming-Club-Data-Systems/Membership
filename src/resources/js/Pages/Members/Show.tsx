@@ -46,6 +46,8 @@ type Props = {
         medication: string;
         gp_name: string;
         gp_phone: string;
+        gp_phone_url: string;
+        gp_phone_formatted: string;
         gp_address: string[];
         consent_withheld: boolean;
     };
@@ -353,9 +355,24 @@ const Show = (props: Props) => {
                                             {
                                                 key: "phone",
                                                 term: "Phone",
-                                                definition:
+                                                definition: props.medical
+                                                    .gp_phone_url ? (
+                                                    <Link
+                                                        href={
+                                                            props.medical
+                                                                .gp_phone_url
+                                                        }
+                                                        external
+                                                    >
+                                                        {
+                                                            props.medical
+                                                                .gp_phone_formatted
+                                                        }
+                                                    </Link>
+                                                ) : (
                                                     props.medical.gp_phone ||
-                                                    "Unknown",
+                                                    "Unknown"
+                                                ),
                                             },
                                             {
                                                 key: "address",

@@ -149,6 +149,13 @@ class MemberController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $gpPhone = null;
+        try {
+            $gpPhone = $member->memberMedical?->GPPhone ? PhoneNumber::create($member->memberMedical?->GPPhone) : null;
+        } catch (\Exception $e) {
+            // Ignore
+        }
+
         $markdownOptions = [
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
@@ -177,6 +184,8 @@ class MemberController extends Controller
                 'medication' => $member->memberMedical?->Medication ? Str::markdown($member->memberMedical?->Medication, $markdownOptions) : '',
                 'gp_name' => $member->memberMedical?->GPName,
                 'gp_phone' => $member->memberMedical?->GPPhone,
+                'gp_phone_url' => $gpPhone?->toRfc(),
+                'gp_phone_formatted' => $gpPhone?->toNational(),
                 'gp_address' => $member->memberMedical?->GPAddress ?? [],
                 'consent_withheld' => $member->memberMedical?->WithholdConsent,
             ],
