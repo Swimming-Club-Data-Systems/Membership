@@ -45,6 +45,13 @@ class MemberPolicy
         }
     }
 
+    public function create(User $user)
+    {
+        if ($user->hasPermission(['Admin', 'Coach'])) {
+            return true;
+        }
+    }
+
     /**
      * Can the current user view the member?
      *
@@ -59,5 +66,32 @@ class MemberPolicy
         if ($user->UserID === $member->UserID) {
             return true;
         }
+    }
+
+    /**
+     * Can the current user view the member?
+     *
+     * @return void|bool
+     */
+    public function update(User $user, Member $member)
+    {
+        if ($user->hasPermission(['Coach'])) {
+            return true;
+        }
+
+        if ($user->UserID === $member->UserID) {
+            return true;
+        }
+    }
+
+    /**
+     * Can the current user delete the member?
+     *
+     * @return void|bool
+     */
+    public function delete(User $user, Member $member)
+    {
+        // Admins only
+        return false;
     }
 }

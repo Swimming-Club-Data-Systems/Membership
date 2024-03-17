@@ -99,7 +99,7 @@ include BASE_PATH . 'views/header.php';
       <?php if ($member) { ?>
         <div class="list-group mb-3">
           <?php do { ?>
-            <a href="<?= htmlspecialchars(autoUrl('members/' . $member['MemberID'] . '#qualifications')) ?>" class="list-group-item list-group-item-action">
+            <a href="/members/<?= htmlspecialchars($member['MemberID']) ?>" class="list-group-item list-group-item-action">
               <?= htmlspecialchars(\SCDS\Formatting\Names::format($member['MForename'], $member['MSurname'])) ?>
             </a>
           <?php } while ($member = $getMembers->fetch(PDO::FETCH_ASSOC)); ?>

@@ -41,7 +41,7 @@ function getAllBookedMembersForSession($session, $date)
           <div class="row align-items-center">
             <div class="col">
               <div>
-                <a class="font-weight-bold" href="<?= htmlspecialchars(autoUrl('members/' . $bookedMember['id'])) ?>">
+                <a class="font-weight-bold" href="/members/<?= htmlspecialchars($bookedMember['id']) ?>">
                   <?= htmlspecialchars(\SCDS\Formatting\Names::format($bookedMember['fn'], $bookedMember['sn'])) ?>
                 </a>
               </div>

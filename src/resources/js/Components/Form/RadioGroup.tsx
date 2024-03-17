@@ -8,7 +8,7 @@ export const RadioGroupContext = createContext<RadioGroupContextType>({});
 
 interface Props {
     label: string;
-    name?: string;
+    name: string;
     children: ReactNode;
     subtext?: string;
     legend?: string;

@@ -28,6 +28,12 @@ class EventServiceProvider extends ServiceProvider
         CompetitionCreated::class => [
             PopulateBasicCompetition::class,
         ],
+        \App\Events\Tenant\MemberCreating::class => [
+            \App\Listeners\Tenant\InitialiseNewMemberDetails::class,
+        ],
+        \App\Events\Tenant\MemberCreated::class => [
+            \App\Listeners\Tenant\PopulateNewMemberDetails::class,
+        ],
         \App\Events\Tenant\SquadMoveCreated::class => [
             \App\Listeners\Tenant\SendSquadMoveCreatedNotification::class,
         ],
@@ -48,6 +54,15 @@ class EventServiceProvider extends ServiceProvider
         ],
         \App\Events\Tenant\CompetitionEntryVetoed::class => [
             \App\Listeners\Tenant\SendCompetitionEntryVetoedNotification::class,
+        ],
+        \App\Events\Tenant\MemberDeletionRequested::class => [
+            \App\Listeners\Tenant\HandleMemberDeletion::class,
+        ],
+        \App\Events\Tenant\MemberDeletionCompleted::class => [
+            \App\Listeners\Tenant\HandleMemberDeleted::class,
+        ],
+        \App\Events\Tenant\MemberDeletionFailed::class => [
+            \App\Listeners\Tenant\HandleMemberDeletionFailed::class,
         ],
     ];
 

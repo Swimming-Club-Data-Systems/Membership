@@ -118,7 +118,7 @@ function getMySessionBookingMembers($session, $date)
       ?>
         <li class="list-group-item d-flex justify-content-between align-items-center">
           <span>
-            <span class="d-block"><strong><a href="<?= htmlspecialchars(autoUrl('members/' . $member['id'])) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></a></strong></span>
+            <span class="d-block"><strong><a href="/members/<?= htmlspecialchars($member['id']) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($member['fn'], $member['sn'])) ?></a></strong></span>
             <?php if ($booking) { ?></strong><span class="d-block">Booked at <?= htmlspecialchars($bookingTime->format('H:i, j F Y')) ?></span><?php } ?>
           </span>
           <?php if ($bookingClosed && $booking) { ?>

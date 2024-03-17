@@ -1,8 +1,11 @@
 import React from "react";
 import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container";
-import Collection from "@/Components/Collection";
+import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import MainLayout from "@/Layouts/MainLayout";
+import MainHeader from "@/Layouts/Components/MainHeader.jsx";
+import FlashAlert from "@/Components/FlashAlert.jsx";
+import ButtonLink from "@/Components/ButtonLink.js";
 
 const ItemContent = (props) => {
     const squadNames = props.squads.map((squad) => squad.SquadName);
@@ -40,10 +43,32 @@ const ItemContent = (props) => {
     );
 };
 
-const Index = (props) => {
+type Props = {
+    members: LaravelPaginatorProps;
+    can_create: boolean;
+};
+
+const Index = (props: Props) => {
     return (
         <>
             <Head title="Members" />
+
+            <Container>
+                <MainHeader
+                    title="Members"
+                    subtitle="Member list"
+                    buttons={
+                        props.can_create && (
+                            <ButtonLink href={route("members.new")}>
+                                New
+                            </ButtonLink>
+                        )
+                    }
+                    breadcrumbs={[{ name: "Members", route: "members.index" }]}
+                />
+
+                <FlashAlert className="mb-3" />
+            </Container>
 
             <Container noMargin>
                 <Collection
@@ -58,12 +83,6 @@ const Index = (props) => {
     );
 };
 
-const crumbs = [{ route: "members.index", name: "Members" }];
-
-Index.layout = (page) => (
-    <MainLayout title="Members" subtitle="Member list" breadcrumbs={crumbs}>
-        {page}
-    </MainLayout>
-);
+Index.layout = (page) => <MainLayout hideHeader>{page}</MainLayout>;
 
 export default Index;

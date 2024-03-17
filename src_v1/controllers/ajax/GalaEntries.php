@@ -115,7 +115,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
       }
 
       // First part of the row content
-      $content .= "<tr><td><strong><a href=\"" . htmlspecialchars(autoUrl('members/' . $row['MemberID'])) . "\">" . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']))  . "</a></strong>" . $hyTekPrintDate . "<br><a
+      $content .= "<tr><td><strong><a href=\"/members/" . htmlspecialchars($row['MemberID']) . "\">" . htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname']))  . "</a></strong>" . $hyTekPrintDate . "<br><a
       class=\"d-print-none\"
       href=\"https://www.swimmingresults.org/biogs/biogs_details.php?tiref=" .
         htmlspecialchars($row['ASANumber']) . "\" target=\"_blank\" title=\"Click to see times\">" .

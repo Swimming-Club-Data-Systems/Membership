@@ -47,7 +47,7 @@ if ($access == "Committee" || $access == "Admin" || $access == "Coach" || $acces
             <div class="col-md-4">
               <p class="mb-0">
                 <strong>
-                  <a href="<?= htmlspecialchars(autoUrl("members/" . $row['MemberID'])) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></a>
+                  <a href="<?= htmlspecialchars("/members/" . $row['MemberID']) ?>"><?= htmlspecialchars(\SCDS\Formatting\Names::format($row['MForename'], $row['MSurname'])) ?></a>
                 </strong>
               </p>
               <p class="mb-0"><?php if ($squad) {

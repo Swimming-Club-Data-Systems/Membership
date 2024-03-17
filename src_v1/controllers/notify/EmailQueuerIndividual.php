@@ -225,7 +225,7 @@ try {
     }
   } else {
     if (isset($returnToSwimmer) && $returnToSwimmer) {
-      header("location: " . autoUrl("members/" . $id));
+      header("location: " . "/members/" . $id);
     } else if (isset($userOnly) && $userOnly) {
       header("location: " . autoUrl("users/" . $user));
     } else {

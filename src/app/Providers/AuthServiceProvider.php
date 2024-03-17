@@ -39,6 +39,7 @@ class AuthServiceProvider extends ServiceProvider
         \App\Models\Tenant\CompetitionEntry::class => \App\Policies\Tenant\CompetitionEntryPolicy::class,
         \App\Models\Tenant\Squad::class => \App\Policies\Tenant\SquadPolicy::class,
         \App\Models\Tenant\Renewal::class => \App\Policies\Tenant\RenewalPolicy::class,
+        \App\Models\Tenant\SquadMove::class => \App\Policies\Tenant\SquadMovePolicy::class,
     ];
 
     /**

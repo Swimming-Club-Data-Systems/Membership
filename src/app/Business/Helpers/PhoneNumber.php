@@ -53,32 +53,32 @@ class PhoneNumber
         ];
     }
 
-    public function toE164()
+    public function toE164(): string
     {
         return $this->number->format(PhoneNumberFormat::E164);
     }
 
-    public function toInternational()
+    public function toInternational(): string
     {
         return $this->number->format(PhoneNumberFormat::INTERNATIONAL);
     }
 
-    public function toNational()
+    public function toNational(): string
     {
         return $this->number->format(PhoneNumberFormat::NATIONAL);
     }
 
-    public function toRfc()
+    public function toRfc(): string
     {
         return $this->number->format(PhoneNumberFormat::RFC3966);
     }
 
-    public function forCallingFrom($isoCode = 'GB')
+    public function forCallingFrom($isoCode = 'GB'): string
     {
         return $this->number->formatForCallingFrom($isoCode);
     }
 
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->number->getDescription('en_GB', 'GB');
     }
