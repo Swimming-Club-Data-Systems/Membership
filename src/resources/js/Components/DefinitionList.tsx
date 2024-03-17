@@ -23,20 +23,20 @@ export const DefinitionList: React.FC<DefinitionListProps> = ({
     verticalPadding = 2,
 }) => {
     return (
-        <div className="">
-            <dl className="@container">
+        <div className="@container">
+            <dl>
                 {items.map((item) => {
                     return (
                         <div
                             key={item.key}
                             className={`py-${verticalPadding} @sm:grid @sm:grid-cols-3 @sm:gap-4`}
                         >
-                            <dt className="text-sm font-medium text-gray-500 @sm:col-start-1 @sm:col-span-1 @sm:row-start-1">
+                            <dt className="text-sm font-medium text-gray-500 text-wrap @sm:col-start-1 @sm:col-span-1 @sm:row-start-1">
                                 {item.term}
                             </dt>
                             <dd
                                 className={`mt-1 text-sm text-gray-900 @sm:col-start-2 @sm:col-span-2 @sm:mt-0 @sm:row-start-1 ${
-                                    item.truncate ? "truncate" : ""
+                                    item.truncate ? "truncate" : "text-wrap"
                                 } ${item.unsafe ? "prose prose-sm" : ""}`}
                                 dangerouslySetInnerHTML={
                                     item.unsafe
