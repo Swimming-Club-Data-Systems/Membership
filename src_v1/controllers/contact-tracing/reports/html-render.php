@@ -61,7 +61,7 @@ $toDate->setTimezone(new DateTimeZone('Europe/London'));
                       <a target="_blank" href="<?= htmlspecialchars(autoUrl('users/' . $json->visitors[$i]->user)) ?>">
                       <?php } ?>
                       <?php if ($json->visitors[$i]->type == 'member') { ?>
-                        <a target="_blank" href="<?= htmlspecialchars(autoUrl('members/' . $json->visitors[$i]->member)) ?>">
+                        <a target="_blank" href="/members/<?= htmlspecialchars($json->visitors[$i]->member) ?>">
                         <?php } ?>
                         <strong><?= htmlspecialchars($json->visitors[$i]->name) ?></strong>
                         <?php if ($json->visitors[$i]->type == 'user' || $json->visitors[$i]->type == 'member') { ?>

@@ -1,4 +1,10 @@
-import React, { ReactNode, useContext, useRef } from "react";
+import React, {
+    ReactNode,
+    useContext,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { useField, useFormikContext } from "formik";
 import BaseInput from "./BaseInput";
 import { FormSpecialContext } from "@/Components/Form/Form";
@@ -42,7 +48,7 @@ const DateNumeralInput: React.FC<Props> = ({
     max,
     ...props
 }) => {
-    const [{ ...field }, meta] = useField(props);
+    const [{ ...field }, meta] = useField<string>(props);
     const { isSubmitting } = useFormikContext();
     const { formName, readOnly, ...context } = useContext(FormSpecialContext);
     // const isValid = props.showValid && meta.touched && !meta.error;
@@ -53,6 +59,10 @@ const DateNumeralInput: React.FC<Props> = ({
     const yearRef = useRef<HTMLInputElement | null>();
     const monthRef = useRef<HTMLInputElement | null>();
     const dayRef = useRef<HTMLInputElement | null>();
+
+    const [year, setYear] = useState<string>("");
+    const [month, setMonth] = useState<string>("");
+    const [day, setDay] = useState<string>("");
 
     if (!type) {
         type = "text";
@@ -72,16 +82,45 @@ const DateNumeralInput: React.FC<Props> = ({
         className += " rounded-r-md ";
     }
 
-    const dateValues = field.value.split("T");
-    const values = dateValues[0].split("-");
+    // let year = "";
+    // let month = "";
+    // let day = "";
+    // try {
+    //     if (field.value) {
+    //         const date = new Date(field.value);
+    //         year = date.getFullYear().toString();
+    //         month = (date.getMonth() + 1).toString();
+    //         day = date.getDate().toString();
+    //     }
+    // } catch (e) {
+    //     console.error(e);
+    // }
 
-    const year = values[0];
-    const month = values[1];
-    const day = values[2];
+    useEffect(() => {
+        if (field.value) {
+            try {
+                const date = new Date(field.value);
+                if (Number.isNaN(date.getFullYear())) {
+                    throw new Error("Invalid date");
+                }
+                setYear(date.getFullYear().toString().padStart(4, "0"));
+                setMonth((date.getMonth() + 1).toString().padStart(2, "0"));
+                setDay(date.getDate().toString().padStart(2, "0"));
+            } catch (e) {
+                setYear("");
+                setMonth("");
+                setDay("");
+            }
+        } else {
+            setYear("");
+            setMonth("");
+            setDay("");
+        }
+    }, [field.value]);
 
     const handleValueChange = (
         newValue: { target: { value: string } },
-        type: "year" | "month" | "day"
+        type: "year" | "month" | "day",
     ) => {
         // Calculate date
 
@@ -91,18 +130,14 @@ const DateNumeralInput: React.FC<Props> = ({
 
         if (type === "year") {
             newYear = newValue.target.value; //.padStart(4, "0");
+            setYear(newYear);
         } else if (type === "month") {
             newMonth = newValue.target.value; //.padStart(2, "0");
+            setMonth(newMonth);
         } else if (type === "day") {
             newDay = newValue.target.value; //.padStart(2, "0");
+            setDay(newDay);
         }
-
-        field.onChange({
-            target: {
-                name: props.name,
-                value: newYear + "-" + newMonth + "-" + newDay,
-            },
-        });
     };
 
     const handleYearChange = (v) => handleValueChange(v, "year");
@@ -118,11 +153,31 @@ const DateNumeralInput: React.FC<Props> = ({
             );
 
             if (hasBlurred) {
-                field.onBlur({
-                    target: {
-                        name: props.name,
-                    },
-                });
+                // Create date
+                try {
+                    const date = new Date(
+                        parseInt(year),
+                        parseInt(month) - 1,
+                        parseInt(day),
+                    );
+
+                    field.onChange({
+                        target: {
+                            name: props.name,
+                            value: date.toISOString(),
+                        },
+                    });
+                } catch (e) {
+                    // console.error(e);
+                }
+
+                setTimeout(() => {
+                    field.onBlur({
+                        target: {
+                            name: props.name,
+                        },
+                    });
+                }, 5);
             }
         }, 5);
     };
@@ -161,6 +216,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                         }
                                         pattern="[0-9]{4}"
                                         ref={yearRef}
+                                        inputMode="numeric"
                                     />
                                 </div>
                                 <div className="w-14">
@@ -184,6 +240,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                         }
                                         pattern="[0-9]{2}"
                                         ref={monthRef}
+                                        inputMode="numeric"
                                     />
                                 </div>
                                 <div className="w-14">
@@ -207,6 +264,7 @@ const DateNumeralInput: React.FC<Props> = ({
                                         }
                                         pattern="[0-9]{2}"
                                         ref={dayRef}
+                                        inputMode="numeric"
                                     />
                                 </div>
                             </div>

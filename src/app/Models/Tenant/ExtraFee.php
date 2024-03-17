@@ -6,15 +6,16 @@ use App\Traits\BelongsToTenant;
 use Brick\Math\BigDecimal;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Carbon;
 
 /**
- * @property int ExtraID
- * @property string ExtraName
- * @property float ExtraFee
- * @property string Type
- * @property Date created_at
- * @property Date updated_at
+ * @property int $ExtraID
+ * @property string $ExtraName
+ * @property float $ExtraFee
+ * @property int $fee
+ * @property string $Type
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class ExtraFee extends Model
 {

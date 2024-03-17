@@ -126,9 +126,16 @@ class AppMenu
             ];
         }
 
+        if ($this->user->hasPermission('Admin')) {
+            $menu[] = [
+                'name' => 'New Member',
+                'href' => route('members.new'),
+            ];
+        }
+
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
-                'name' => 'Link a New Member',
+                'name' => 'Connect Member to Account',
                 'href' => '/my-account/add-member',
             ];
         }
@@ -151,13 +158,6 @@ class AppMenu
             $menu[] = [
                 'name' => 'Membership Centre',
                 'href' => '/memberships',
-            ];
-        }
-
-        if ($this->user->hasPermission('Admin')) {
-            $menu[] = [
-                'name' => 'Create New Member',
-                'href' => '/members/new',
             ];
         }
 

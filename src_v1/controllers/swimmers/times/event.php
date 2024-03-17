@@ -89,7 +89,7 @@ include BASE_PATH . 'views/header.php';
   <nav aria-label="breadcrumb">
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item"><a href="<?=autoUrl("members")?>">Members</a></li>
-			<li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>">#<?=htmlspecialchars($id)?></a></li>
+			<li class="breadcrumb-item"><a href="/members/<?=htmlspecialchars($id)?>">#<?=htmlspecialchars($id)?></a></li>
       <li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id . "/times")?>">Best times</a></li>
 			<li class="breadcrumb-item active" aria-current="page"><?=htmlspecialchars((int) $_GET['distance'])?>m <?=$strokes[(int) $_GET['stroke']]?></li>
 		</ol>

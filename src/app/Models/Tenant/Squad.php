@@ -18,7 +18,7 @@ use Laravel\Scout\Searchable;
  * @property string SquadTimetable
  * @property string SquadCoC
  * @property string SquadKey
- * @property int fee the monthly fee for the squad
+ * @property int $fee the monthly fee for the squad
  */
 class Squad extends Model
 {

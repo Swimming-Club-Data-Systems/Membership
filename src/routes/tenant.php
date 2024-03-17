@@ -152,6 +152,8 @@ Route::middleware([
     Route::prefix('/members')->group(function () {
         Route::name('members.')->group(function () {
             Route::get('/', [MemberController::class, 'index'])->name('index');
+            Route::get('/new', [MemberController::class, 'new'])->name('new');
+            Route::post('/', [MemberController::class, 'create'])->name('create');
             Route::get('/combobox', [MemberController::class, 'combobox'])
                 ->name('combobox');
             Route::get('/{member}/squads', [MemberController::class, 'squads'])
@@ -160,6 +162,28 @@ Route::middleware([
             Route::get('/{member}', [MemberController::class, 'show'])
                 ->whereNumber('member')
                 ->name('show');
+            Route::get('/{member}/edit', [MemberController::class, 'edit'])
+                ->whereNumber('member')
+                ->name('edit');
+            Route::put('/{member}/edit', [MemberController::class, 'update'])
+                ->whereNumber('member');
+            Route::put('/{member}/squads/{squad}', [MemberController::class, 'updateSquad'])
+                ->whereNumber('member')
+                ->whereNumber('squad')
+                ->name('edit_squad_membership');
+            Route::get('/{member}/delete', [MemberController::class, 'confirmDelete'])
+                ->whereNumber('member')
+                ->middleware(['password.confirm'])
+                ->name('confirm_delete');
+            Route::delete('/{member}', [MemberController::class, 'delete'])
+                ->whereNumber('member')
+                ->middleware(['password.confirm'])
+                ->name('delete');
+            Route::get('/{member}/medical-notes', [MemberController::class, 'editMedical'])
+                ->whereNumber('member')
+                ->name('edit_medical');
+            Route::put('/{member}/medical-notes', [MemberController::class, 'updateMedical'])
+                ->whereNumber('member');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');

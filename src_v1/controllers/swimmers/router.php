@@ -3,50 +3,10 @@
 $userID = $_SESSION['TENANT-' . app()->tenant->getId()]['UserID'];
 $access = $_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'];
 
-// View a Swimmer
-$this->get('/{id}:int', function ($id) {
-	include 'view.php';
-});
-
-$this->get('/{id}:int/edit', function ($id) {
-	include 'edit.php';
-});
-
-$this->post('/{id}:int/edit', function ($id) {
-	include 'edit-post.php';
-});
-
 if ($access == "Parent") {
 	// My Swimmers
 	$this->get('/', function () {
 		header("location: /#members");
-	});
-
-
-	// $leavers = app()->tenant->getKey('LeaversSquad');
-
-	// if ($leavers != null) {
-	// 	// Swimmer is leaving
-	// 	$this->get('/{id}:int/leaveclub', function ($id) {
-	// 		require('Leave.php');
-	// 	});
-
-	// 	// Swimmer is leaving
-	// 	$this->get('/{id}:int/leaveclub/{key}', function ($id, $key) {
-	// 		require('LeaveDo.php');
-	// 	});
-	// }
-
-	// Edit a Swimmer
-	$this->get('/{id}:int/edit', function ($id) {
-
-		require 'parentSingleSwimmer.php';
-	});
-
-	// Edit a Swimmer
-	$this->post('/{id}:int/edit', function ($id) {
-
-		require 'parentSingleSwimmerPost.php';
 	});
 
 	$this->group('/{id}:int/password', function ($id) {
@@ -60,21 +20,15 @@ if ($access == "Parent") {
 	});
 } else if ($access == "Committee" || $access == "Galas" || $access == "Coach" || $access == "Admin") {
 	// Directory
-	$this->get('/', function () {
-		header("location: /members");
-	});
-
 	if ($access == "Admin") {
 		$this->get('/orphaned', function () {
-
 			require('swimmerOrphaned.php');
 		});
 	}
 
-	$this->post('/ajax/swimmerDirectory', function () {
-
-		include BASE_PATH . "controllers/ajax/membersList.php";
-	});
+    $this->post('/ajax/swimmerDirectory', function () {
+        include BASE_PATH . "controllers/ajax/membersList.php";
+    });
 
 	$this->get('/{swimmer}:int/enter-gala', function ($swimmer) {
 		require BASE_PATH . 'controllers/galas/GalaEntryForm.php';
@@ -87,19 +41,6 @@ if ($access == "Parent") {
 	$this->get('/{swimmer}:int/enter-gala-success', function ($swimmer) {
 		require BASE_PATH . 'controllers/galas/GalaEntryStaffSuccess.php';
 	});
-
-	/*
-   * Squad moves
-   *
-   */
-	if ($access == "Coach" || $access == 'Admin') {
-		$this->get('/{id}:int/move-contract', function ($id) {
-			require BASE_PATH . 'controllers/squads/SquadMoveContract.php';
-		});
-	}
-	/*
-   * End of squad moves
-   */
 
 	/**
 	 * Member access passwords
@@ -148,17 +89,6 @@ if ($access == "Parent") {
 }
 
 if ($access == "Admin") {
-	// Edit Individual Swimmers
-	$this->get('/{id}:int/edit', function ($id) {
-
-		require('singleSwimmerEdit.php');
-	});
-
-	$this->post('/{id}:int/edit', function ($id) {
-
-		require('singleSwimmerEdit.php');
-	});
-
 	$this->group('/reports', function () {
 		$this->get('/upgradeable', function () {
 			include "reports/UpgradeableMembers.php";
@@ -182,39 +112,10 @@ $this->post('/{id}:int/edit-times', function ($id) {
 });
 
 if ($access != "Parent" && $access != 'Galas') {
-	$this->get('/addmember', function () {
-		//
-		//include 'AddMember/SelectType.php';
-		header("Location: " . autoUrl("members/new"));
-	});
-
-	$this->get('/new', function () {
-
-		require('AddMember/addMember.php');
-	});
-
-	$this->post('/new', function () {
-
-		require('AddMember/addMemberPost.php');
-	});
-
 	$this->get(['/{id}:int/parenthelp', '/parenthelp/{id}:int'], function ($id) {
-
 		include 'parentSetupHelp.php';
 	});
 }
-
-// View Medical Notes
-$this->get('/{id}:int/medical', function ($id) {
-
-	include 'medicalDetails.php';
-});
-
-// View Medical Notes
-$this->post('/{id}:int/medical', function ($id) {
-
-	include 'medicalDetailsPost.php';
-});
 
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
 	$this->get('/{swimmer}:int/agreement-to-code-of-conduct/{squad}:int', function ($swimmer, $squad) {
@@ -224,24 +125,6 @@ if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
 
 $this->group('/{swimmer}:int/times', function () {
 	include 'times/router.php';
-});
-
-if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] == 'Admin') {
-	$this->post('/delete', function () {
-		include 'delete.php';
-	});
-}
-
-$this->post('/{id}:int/squads.json', function ($id) {
-	include 'moves/squads.php';
-});
-
-$this->post('/move-squad', function () {
-	include 'moves/move.php';
-});
-
-$this->post('/move-operations', function () {
-	include 'moves/operations.php';
 });
 
 $this->group('/{id}:int/qualifications', function($id) {

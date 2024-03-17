@@ -56,7 +56,7 @@ include BASE_PATH . "views/swimmersMenu.php";
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="<?=autoUrl("members")?>">Members</a></li>
-      <li class="breadcrumb-item"><a href="<?=autoUrl("members/" . $id)?>"><?=htmlspecialchars($row['MForename'])?>
+      <li class="breadcrumb-item"><a href="/members/<?=htmlspecialchars($id)?>"><?=htmlspecialchars($row['MForename'])?>
           <?=htmlspecialchars(mb_substr($row['MSurname'], 0, 1, 'utf-8'))?></a></li>
       <li class="breadcrumb-item active" aria-current="page">Access key</li>
     </ol>
