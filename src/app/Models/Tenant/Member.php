@@ -44,8 +44,8 @@ use Laravel\Scout\Searchable;
  * @property Collection emergencyContacts
  * @property Collection squadMoves
  * @property MemberPhotography photographyPermissions
- * @property ClubMembershipClass $governingBodyCategory
- * @property ClubMembershipClass $clubCategory
+ * @property ClubMembershipClass|null $governingBodyCategory
+ * @property ClubMembershipClass|null $clubCategory
  */
 class Member extends Model
 {
