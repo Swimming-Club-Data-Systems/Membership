@@ -246,11 +246,11 @@ class MemberController extends Controller
                 ];
             }),
             'club_membership_class' => [
-                'name' => $member->clubCategory->Name,
+                'name' => $member->clubCategory?->Name ?? 'N/A',
             ],
             'club_pays_club_membership_fee' => $member->ClubPaid,
             'governing_body_membership_class' => [
-                'name' => $member->governingBodyCategory->Name,
+                'name' => $member->governingBodyCategory?->Name ?? 'N/A',
             ],
             'club_pays_governing_body_membership_fee' => $member->ASAPaid,
             'other_notes' => Str::markdown($member->OtherNotes, $markdownOptions),
