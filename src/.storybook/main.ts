@@ -7,9 +7,7 @@ const config: StorybookConfig = {
         "../resources/js/**/*.stories.@(js|jsx|mjs|ts|tsx)",
     ],
     staticDirs: ["../public"],
-    core: {
-        builder: "@storybook/builder-vite",
-    },
+    core: {},
     addons: [
         "@storybook/addon-links",
         "@storybook/addon-essentials",
