@@ -7,6 +7,7 @@ use App\Events\Tenant\MemberDeletionFailed;
 use App\Events\Tenant\MemberDeletionRequested;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class HandleMemberDeletion implements ShouldQueue
 {
@@ -66,13 +67,30 @@ class HandleMemberDeletion implements ShouldQueue
 
             // Deactivate the member
             $member->Active = false;
+            //            $member->MForename = Str::padLeft('', Str::length($member->MForename), 'X');
+            //            $member->MMiddleNames = Str::padLeft('', Str::length($member->MMiddleNames), 'X');
+            //            $member->MSurname = Str::padLeft('', Str::length($member->MSurname), 'X');
+            $member->OtherNotes = '';
+            $member->AccessKey = Str::random();
+            $member->ASAMember = false;
+            $member->ASANumber = 'FORMER-MEMBER-'.$member->MemberID;
+            $member->ASAPrimary = false;
+            $member->ASAPaid = false;
+            $member->ClubMember = false;
+            $member->ClubPaid = false;
+            $member->Country = 'GB-ENG'; // Default for all members
+            $member->GenderPronouns = null;
+            $member->GenderIdentity = null;
+            $member->GenderDisplay = false;
+            $member->PWHash = null;
+            $member->PWWrong = 0;
             $member->user()->dissociate();
             $member->save();
 
             DB::commit();
 
             // On success fire the MemberDeletionCompleted event
-            MemberDeletionCompleted::dispatch($event->member, $event->deletingFor, $event->member->user);
+            MemberDeletionCompleted::dispatch($event->member->name, $event->deletingFor, $event->member->user);
 
         } catch (\Exception $e) {
             DB::rollBack();

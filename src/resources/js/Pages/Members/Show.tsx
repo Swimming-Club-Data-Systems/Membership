@@ -103,24 +103,16 @@ type Props = {
     deletable: boolean;
     can_edit_squads: boolean;
     show_quick_actions: boolean;
+    can_delete: boolean;
 };
 
 const Show = (props: Props) => {
-    const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
     const [showNewSquadMoveModal, setShowNewSquadMoveModal] =
         useState<boolean>(false);
     const [showRemoveModal, setShowRemoveModal] = useState<number>(null);
     const [showEditModal, setShowEditModal] = useState<number>(null);
     const [showEditSquadModal, setShowEditSquadModal] = useState<number>(null);
     const [showCancelModal, setShowCancelModal] = useState<number>(null);
-
-    const deleteSquad = async () => {
-        // router.delete(route("squads.delete", [props.id]), {
-        //     onFinish: (page) => {
-        //         setShowDeleteModal(false);
-        //     },
-        // });
-    };
 
     return (
         <>
@@ -145,15 +137,16 @@ const Show = (props: Props) => {
                     subtitle="Member"
                     buttons={
                         <>
-                            {props.deletable && (
-                                <Button
+                            {props.can_delete && (
+                                <ButtonLink
                                     variant="danger"
-                                    onClick={() => {
-                                        setShowDeleteModal(true);
-                                    }}
+                                    href={route(
+                                        "members.confirm_delete",
+                                        props.id,
+                                    )}
                                 >
                                     Delete
-                                </Button>
+                                </ButtonLink>
                             )}
                             {props.editable && (
                                 <ButtonLink
@@ -933,29 +926,6 @@ const Show = (props: Props) => {
                     </Tabs>
                 </div>
             </Container>
-
-            <Modal
-                onClose={() => setShowDeleteModal(false)}
-                title="Delete squad"
-                show={showDeleteModal}
-                variant="danger"
-                Icon={TrashIcon}
-                buttons={
-                    <>
-                        <Button variant="danger" onClick={deleteSquad}>
-                            Confirm delete
-                        </Button>
-                        <Button
-                            variant="secondary"
-                            onClick={() => setShowDeleteModal(false)}
-                        >
-                            Cancel
-                        </Button>
-                    </>
-                }
-            >
-                <p>Are you sure you want to delete {props.name}?</p>
-            </Modal>
         </>
     );
 };

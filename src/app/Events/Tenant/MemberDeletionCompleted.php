@@ -2,7 +2,6 @@
 
 namespace App\Events\Tenant;
 
-use App\Models\Tenant\Member;
 use App\Models\Tenant\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -16,7 +15,7 @@ class MemberDeletionCompleted
     /**
      * Create a new event instance.
      */
-    public function __construct(public Member $member, public User $deletedFor, public ?User $user)
+    public function __construct(public string $memberName, public User $deletedFor, public ?User $user)
     {
         //
     }

@@ -171,6 +171,14 @@ Route::middleware([
                 ->whereNumber('member')
                 ->whereNumber('squad')
                 ->name('edit_squad_membership');
+            Route::get('/{member}/delete', [MemberController::class, 'confirmDelete'])
+                ->whereNumber('member')
+                ->middleware(['password.confirm'])
+                ->name('confirm_delete');
+            Route::delete('/{member}', [MemberController::class, 'delete'])
+                ->whereNumber('member')
+                ->middleware(['password.confirm'])
+                ->name('delete');
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');

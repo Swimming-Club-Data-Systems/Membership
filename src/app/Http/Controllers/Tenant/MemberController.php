@@ -6,6 +6,7 @@ use App\Business\Helpers\CountriesOfRepresentation;
 use App\Business\Helpers\Money;
 use App\Business\Helpers\PhoneNumber;
 use App\Enums\Sex;
+use App\Events\Tenant\MemberDeletionRequested;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\ClubMembershipClass;
 use App\Models\Tenant\EmergencyContact;
@@ -169,9 +170,9 @@ class MemberController extends Controller
                 'name' => $member->user->name,
             ] : null,
             'medical' => [
-                'conditions' => Str::markdown($member->memberMedical?->Conditions, $markdownOptions),
-                'allergies' => Str::markdown($member->memberMedical?->Allergies, $markdownOptions),
-                'medication' => Str::markdown($member->memberMedical?->Medication, $markdownOptions),
+                'conditions' => $member->memberMedical?->Conditions ? Str::markdown($member->memberMedical?->Conditions, $markdownOptions) : '',
+                'allergies' => $member->memberMedical?->Allergies ? Str::markdown($member->memberMedical?->Allergies, $markdownOptions) : '',
+                'medication' => $member->memberMedical?->Medication ? Str::markdown($member->memberMedical?->Medication, $markdownOptions) : '',
                 'gp_name' => $member->memberMedical?->GPName,
                 'gp_phone' => $member->memberMedical?->GPPhone,
                 'gp_address' => $member->memberMedical?->GPAddress ?? [],
@@ -192,7 +193,7 @@ class MemberController extends Controller
                     'contact_number_url' => $number?->toRfc() ?? 'tel:'.$contact->ContactNumber,
                     'contact_number_display' => $number?->toNational() ?? $contact->ContactNumber,
                 ];
-            }),
+            }) ?? [],
             'photography_permissions' => [
                 'website' => $member->photographyPermissions?->Website ?? false,
                 'social' => $member->photographyPermissions?->Social ?? false,
@@ -246,6 +247,7 @@ class MemberController extends Controller
             'deletable' => $user->can('delete', $member),
             'can_edit_squads' => $this->authorize('create', SquadMove::class),
             'show_quick_actions' => $user->hasPermission(['Admin', 'Coach', 'Galas']),
+            'can_delete' => $user->can('delete', $member),
         ]);
     }
 
@@ -462,5 +464,28 @@ class MemberController extends Controller
         $request->session()->flash('success', 'Squad details have been updated successfully.');
 
         return redirect()->back();
+    }
+
+    public function confirmDelete(Member $member)
+    {
+        $this->authorize('delete', $member);
+
+        return Inertia::render('Members/ConfirmDelete', [
+            'id' => $member->MemberID,
+            'name' => $member->name,
+            'first_name' => $member->MForename,
+            'last_name' => $member->MSurname,
+        ]);
+    }
+
+    public function delete(Request $request, Member $member)
+    {
+        $this->authorize('delete', $member);
+
+        MemberDeletionRequested::dispatch($member, $request->user());
+
+        $request->session()->flash('success', $member->name.' is pending deletion.');
+
+        return redirect()->route('members.index');
     }
 }

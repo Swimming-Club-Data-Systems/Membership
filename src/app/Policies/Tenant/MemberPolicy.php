@@ -83,4 +83,15 @@ class MemberPolicy
             return true;
         }
     }
+
+    /**
+     * Can the current user delete the member?
+     *
+     * @return void|bool
+     */
+    public function delete(User $user, Member $member)
+    {
+        // Admins only
+        return false;
+    }
 }

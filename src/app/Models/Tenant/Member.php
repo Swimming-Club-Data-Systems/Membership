@@ -63,6 +63,9 @@ class Member extends Model
         'ASAPaid' => 'boolean',
         'ClubPaid' => 'boolean',
         'Active' => 'boolean',
+        'ClubMember' => 'boolean',
+        'ASAPrimary' => 'boolean',
+        'ASAMember' => 'boolean',
     ];
 
     protected $attributes = [
