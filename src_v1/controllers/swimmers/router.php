@@ -117,16 +117,6 @@ if ($access != "Parent" && $access != 'Galas') {
 	});
 }
 
-// View Medical Notes
-$this->get('/{id}:int/medical', function ($id) {
-	include 'medicalDetails.php';
-});
-
-// View Medical Notes
-$this->post('/{id}:int/medical', function ($id) {
-	include 'medicalDetailsPost.php';
-});
-
 if ($_SESSION['TENANT-' . app()->tenant->getId()]['AccessLevel'] != "Parent") {
 	$this->get('/{swimmer}:int/agreement-to-code-of-conduct/{squad}:int', function ($swimmer, $squad) {
 		include 'MarkCodeOfConductCompleted.php';
