@@ -521,10 +521,6 @@ if (empty($_SESSION['TENANT-' . app()->tenant->getId()]['LoggedIn'])) {
         include BASE_PATH . 'controllers/log-books/router.php';
     });
 
-    $this->group(['/emergency-contacts', '/emergencycontacts'], function () {
-        include BASE_PATH . 'controllers/emergencycontacts/router.php';
-    });
-
     $this->any('/login/oauth', function () {
         header('Location: ' . autoUrl(''));
     });
