@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $ID
+ * @property int $UserID
  * @property string $Name
  * @property string $ContactNumber
  * @property string $Relation
