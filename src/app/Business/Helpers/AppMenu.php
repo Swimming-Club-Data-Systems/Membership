@@ -143,7 +143,7 @@ class AppMenu
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Emergency Contacts',
-                'href' => '/emergency-contacts',
+                'href' => route('emergency-contacts.index'),
             ];
         }
 

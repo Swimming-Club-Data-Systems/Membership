@@ -19,6 +19,7 @@ use App\Http\Controllers\Tenant\CompetitionMemberEntryReportController;
 use App\Http\Controllers\Tenant\CompetitionSessionController;
 use App\Http\Controllers\Tenant\CustomerStatementController;
 use App\Http\Controllers\Tenant\DashboardController;
+use App\Http\Controllers\Tenant\EmergencyContactController;
 use App\Http\Controllers\Tenant\JournalAccountController;
 use App\Http\Controllers\Tenant\JournalController;
 use App\Http\Controllers\Tenant\LedgerAccountController;
@@ -187,6 +188,19 @@ Route::middleware([
             Route::any('/{path}', function ($path) {
                 return Inertia::location('/v1/members/'.$path);
             })->where('path', '.*');
+        });
+    });
+
+    Route::prefix('/emergency-contacts')->group(function () {
+        Route::name('emergency-contacts.')->group(function () {
+            Route::get('/', [EmergencyContactController::class, 'index'])->name('index');
+            Route::post('/', [EmergencyContactController::class, 'create']);
+            Route::put('/{contact}', [EmergencyContactController::class, 'update'])
+                ->whereNumber('contact')
+                ->name('update');
+            Route::delete('/{contact}', [EmergencyContactController::class, 'delete'])
+                ->whereNumber('contact')
+                ->name('delete');
         });
     });
 
