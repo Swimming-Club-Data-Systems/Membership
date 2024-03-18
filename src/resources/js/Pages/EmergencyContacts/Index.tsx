@@ -14,6 +14,7 @@ import Form from "@/Components/Form/Form";
 import * as yup from "yup";
 import "yup-phone";
 import TextInput from "@/Components/Form/TextInput";
+import Card from "@/Components/Card";
 
 type Contact = {
     id: number;
@@ -166,10 +167,31 @@ const Index = (props: Props) => {
             </Container>
 
             <Container noMargin>
-                <PlainCollection
-                    {...props.contacts}
-                    itemRenderer={ItemContent}
-                />
+                <div className="grid gap-4">
+                    <Card title="About emergency contacts">
+                        <div className="prose prose-sm">
+                            <p>
+                                We'll use these emergency contacts for all
+                                members connected to your account if we can't
+                                reach you on your phone number. You can change
+                                your own phone number in{" "}
+                                <Link href={route("my_account.index")}>
+                                    My Account
+                                </Link>
+                                .
+                            </p>
+                            <p>
+                                Please let people know if you have assigned them
+                                as your emergency contacts.
+                            </p>
+                        </div>
+                    </Card>
+
+                    <PlainCollection
+                        {...props.contacts}
+                        itemRenderer={ItemContent}
+                    />
+                </div>
             </Container>
 
             <Modal
