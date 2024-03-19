@@ -129,9 +129,9 @@ const DateTimeInput: React.FC<Props> = ({
         };
 
         let newDate: string;
-        if (type === "date") {
+        if (type === "date" && "startDate" in newValue) {
             newDate = newValue?.startDate + " " + formatTime(calculatedValue);
-        } else if (type === "time") {
+        } else if (type === "time" && "target" in newValue) {
             newDate =
                 formatDate(calculatedValue) +
                 " " +

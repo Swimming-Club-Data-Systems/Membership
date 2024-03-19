@@ -8,7 +8,7 @@ type Props = {
     name: string;
     showValid?: boolean;
     label: string;
-    help?: string;
+    help?: ReactNode;
     mb?: string;
     disabled?: boolean;
     type?: string;

@@ -127,7 +127,7 @@ const New: Layout<Props> = (props: Props) => {
                                         }
                                     }
                                     return true;
-                                }
+                                },
                             ),
                     })}
                     initialValues={{
@@ -167,29 +167,12 @@ const New: Layout<Props> = (props: Props) => {
                                 items={CompetitionStatusSelectValues}
                                 help="Competitions won't be visible or open to users or guests until the competition state has been set to published."
                             />
-                            <RadioGroup label="Pool length">
+                            <RadioGroup label="Pool length" name="pool_course">
+                                <Radio label="Short course" value="short" />
+                                <Radio label="Long course" value="long" />
+                                <Radio label="Open water" value="open_water" />
+                                <Radio label="Other" value="irregular" />
                                 <Radio
-                                    name="pool_course"
-                                    label="Short course"
-                                    value="short"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Long course"
-                                    value="long"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Open water"
-                                    value="open_water"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Other"
-                                    value="irregular"
-                                />
-                                <Radio
-                                    name="pool_course"
                                     label="Not applicable"
                                     value="not_applicable"
                                 />

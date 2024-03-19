@@ -4,7 +4,7 @@ import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
-import { EntryForm } from "@/Components/Competitions/EntryForm";
+import { EntryForm, Session } from "@/Components/Competitions/EntryForm";
 import Alert from "@/Components/Alert";
 import ButtonLink from "@/Components/ButtonLink";
 
@@ -32,7 +32,7 @@ export type Props = {
     tenant: {
         name: string;
     };
-    sessions: object[];
+    sessions: Session[];
     paid: boolean;
 };
 

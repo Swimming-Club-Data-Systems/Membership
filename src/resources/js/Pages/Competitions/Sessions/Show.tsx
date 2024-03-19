@@ -92,7 +92,9 @@ export type Props = {
 };
 
 const Ages = (props) => {
-    const { values } = useFormikContext();
+    const { values } = useFormikContext<{
+        ages: string[];
+    }>();
 
     return (
         <FieldArray
@@ -154,7 +156,7 @@ const Show: Layout<Props> = (props: Props) => {
                 onFinish: () => {
                     setShowDeleteEventModal(false);
                 },
-            }
+            },
         );
     };
     const Event = (item: Event) => {
@@ -295,7 +297,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 competition:
                                                     props.competition.id,
                                                 session: props.id,
-                                            }
+                                            },
                                         )}
                                         variant="primary"
                                     >
@@ -318,28 +320,28 @@ const Show: Layout<Props> = (props: Props) => {
                                     name: yup
                                         .string()
                                         .required(
-                                            "A name is required for this session."
+                                            "A name is required for this session.",
                                         )
                                         .max(
                                             255,
-                                            "The session name must not exceed 255 characters."
+                                            "The session name must not exceed 255 characters.",
                                         ),
                                     venue: yup.number().required().integer(),
                                     start_time: yup
                                         .date()
                                         .typeError("Start date must be a date.")
                                         .required(
-                                            "A start date and time is required."
+                                            "A start date and time is required.",
                                         ),
                                     end_time: yup
                                         .date()
                                         .typeError("End date must be a date.")
                                         .required(
-                                            "An end date and time is required."
+                                            "An end date and time is required.",
                                         )
                                         .min(
                                             yup.ref("start_time"),
-                                            "End time must be after the start time."
+                                            "End time must be after the start time.",
                                         ),
                                     timezone: yup.string().required(),
                                 })}
@@ -436,16 +438,16 @@ const Show: Layout<Props> = (props: Props) => {
                                     name: yup
                                         .string()
                                         .required(
-                                            "A name is required for this event."
+                                            "A name is required for this event.",
                                         )
                                         .max(
                                             255,
-                                            "The event name must be less than 255 characters."
+                                            "The event name must be less than 255 characters.",
                                         ),
                                     category: yup
                                         .string()
                                         .required(
-                                            "An event category is required."
+                                            "An event category is required.",
                                         )
                                         .oneOf(
                                             [
@@ -456,7 +458,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                 "boy",
                                                 "girl",
                                             ],
-                                            "The event category must be one of the supported types."
+                                            "The event category must be one of the supported types.",
                                         ),
                                     stroke: yup
                                         .string()
@@ -471,41 +473,41 @@ const Show: Layout<Props> = (props: Props) => {
                                                 "individual_medley",
                                                 "custom",
                                             ],
-                                            "The stroke must be one of the supported types."
+                                            "The stroke must be one of the supported types.",
                                         ),
                                     distance: yup
                                         .number()
                                         .required("Distance is required")
                                         .moreThan(
                                             0,
-                                            "Distance must be more than 0."
+                                            "Distance must be more than 0.",
                                         ),
                                     units: yup
                                         .string()
                                         .required(
-                                            "A distance unit is required."
+                                            "A distance unit is required.",
                                         )
                                         .oneOf(
                                             ["metres", "yards", "feet"],
-                                            "The distance unit must be one of the supported types."
+                                            "The distance unit must be one of the supported types.",
                                         ),
                                     entry_fee_string: yup
                                         .number()
                                         .required(
-                                            "An entry fee is required, but may be £0."
+                                            "An entry fee is required, but may be £0.",
                                         )
                                         .min(
                                             0,
-                                            "Entry fee must be £0 or more."
+                                            "Entry fee must be £0 or more.",
                                         ),
                                     processing_fee_string: yup
                                         .number()
                                         .required(
-                                            "An processing fee is required, but may be £0."
+                                            "An processing fee is required, but may be £0.",
                                         )
                                         .min(
                                             0,
-                                            "Processing fee must be £0 or more."
+                                            "Processing fee must be £0 or more.",
                                         ),
                                     ages: yup
                                         .array()
@@ -514,7 +516,7 @@ const Show: Layout<Props> = (props: Props) => {
                                             yup
                                                 .string()
                                                 .required(
-                                                    "An age group is required."
+                                                    "An age group is required.",
                                                 )
                                                 .test(
                                                     "is-valid-age-group-string",
@@ -532,7 +534,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                             /^\d+$/;
                                                         if (
                                                             singleValueExpression.test(
-                                                                value
+                                                                value,
                                                             )
                                                         ) {
                                                             return true;
@@ -543,7 +545,7 @@ const Show: Layout<Props> = (props: Props) => {
                                                             /^\d*-\d*$/;
                                                         if (
                                                             rangeExpression.test(
-                                                                value
+                                                                value,
                                                             )
                                                         ) {
                                                             // Regex valid, check second number greater than first
@@ -554,10 +556,10 @@ const Show: Layout<Props> = (props: Props) => {
                                                                 .filter(
                                                                     (v) =>
                                                                         v.length >
-                                                                        0
+                                                                        0,
                                                                 )
                                                                 .map((v) =>
-                                                                    parseInt(v)
+                                                                    parseInt(v),
                                                                 );
                                                             if (
                                                                 values.length >
@@ -575,8 +577,8 @@ const Show: Layout<Props> = (props: Props) => {
                                                         } else {
                                                             return false;
                                                         }
-                                                    }
-                                                )
+                                                    },
+                                                ),
                                         )
                                         .min(1),
                                 })}
@@ -602,7 +604,7 @@ const Show: Layout<Props> = (props: Props) => {
                                     {
                                         competition: props.competition.id,
                                         session: props.id,
-                                    }
+                                    },
                                 )}
                             >
                                 {/*<Card*/}
@@ -657,23 +659,11 @@ const Show: Layout<Props> = (props: Props) => {
                                     precision={0}
                                 />
 
-                                <RadioGroup label="Units">
+                                <RadioGroup label="Units" name="units">
                                     <div className="grid grid-cols-2 lg:grid-cols-3">
-                                        <Radio
-                                            label="Metres"
-                                            name="units"
-                                            value="metres"
-                                        />
-                                        <Radio
-                                            label="Yards"
-                                            name="units"
-                                            value="yards"
-                                        />
-                                        <Radio
-                                            label="Feet"
-                                            name="units"
-                                            value="feet"
-                                        />
+                                        <Radio label="Metres" value="metres" />
+                                        <Radio label="Yards" value="yards" />
+                                        <Radio label="Feet" value="feet" />
                                     </div>
                                 </RadioGroup>
 
@@ -714,9 +704,9 @@ const Show: Layout<Props> = (props: Props) => {
                                 allowFullScreen
                                 referrerPolicy="no-referrer-when-downgrade"
                                 src={`https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(
-                                    props.google_maps_api_key
+                                    props.google_maps_api_key,
                                 )}&q=place_id:${encodeURIComponent(
-                                    props.venue.place_id
+                                    props.venue.place_id,
                                 )}`}
                             ></iframe>
                         </Card>

@@ -32,6 +32,12 @@ export interface Props {
     nullable?: boolean;
 }
 
+type Item = {
+    id: any;
+    name: string;
+    image_url?: string;
+};
+
 export const Combobox: React.FC<Props> = ({
     keyField = "id",
     className = "",
@@ -43,7 +49,7 @@ export const Combobox: React.FC<Props> = ({
 }) => {
     const [query, setQuery] = useState("");
     const deferredQuery = useDeferredValue(query);
-    const [items, setItems] = useState([]);
+    const [items, setItems] = useState<Item[]>([]);
     const [selectedItem, setSelectedItem] = useState(null);
     const inputRef = useRef(null);
 
@@ -66,7 +72,7 @@ export const Combobox: React.FC<Props> = ({
                 });
             }
         },
-        [onBlurProps, name, id]
+        [onBlurProps, name, id],
     );
 
     /**
@@ -108,7 +114,7 @@ export const Combobox: React.FC<Props> = ({
             });
     }, [deferredQuery, endpoint]);
 
-    const mergedItems = props.nullable
+    const mergedItems: Item[] = props.nullable
         ? [{ id: null, name: "N/A" }, ...items]
         : items;
 
@@ -126,7 +132,7 @@ export const Combobox: React.FC<Props> = ({
             disabled={props.disabled}
             onBlur={onBlur}
             name={name}
-            nullable={props.nullable}
+            nullable={props.nullable ? true : undefined}
         >
             <HeadlessCombobox.Label className="block text-sm font-medium text-gray-700">
                 {props.label}
@@ -140,7 +146,7 @@ export const Combobox: React.FC<Props> = ({
                     onFocus={() => {
                         selectTextOnFocus(inputRef);
                     }}
-                    displayValue={(person) => person?.name}
+                    displayValue={(item: Item) => item?.name}
                 />
                 <HeadlessCombobox.Button className="absolute inset-y-0 right-0 flex items-center rounded-r-md px-3 py-2 text-sm focus:outline-none">
                     {props.isInvalid && (
@@ -166,7 +172,7 @@ export const Combobox: React.FC<Props> = ({
                                         "relative cursor-default select-none py-2 pl-3 pr-9",
                                         active
                                             ? "bg-indigo-600 text-white"
-                                            : "text-gray-900"
+                                            : "text-gray-900",
                                     )
                                 }
                             >
@@ -183,7 +189,7 @@ export const Combobox: React.FC<Props> = ({
                                             <span
                                                 className={classNames(
                                                     "ml-3 truncate",
-                                                    selected && "font-semibold"
+                                                    selected && "font-semibold",
                                                 )}
                                             >
                                                 {item.name}
@@ -196,7 +202,7 @@ export const Combobox: React.FC<Props> = ({
                                                     "absolute inset-y-0 right-0 flex items-center pr-4",
                                                     active
                                                         ? "text-white"
-                                                        : "text-indigo-600"
+                                                        : "text-indigo-600",
                                                 )}
                                             >
                                                 <CheckIcon

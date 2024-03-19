@@ -92,14 +92,14 @@ const New: Layout<Props> = (props: Props) => {
                             .required("A closing date is required.")
                             .min(
                                 todaysDate,
-                                "The closing date must be in the future."
+                                "The closing date must be in the future.",
                             ),
                         age_at_date: yup
                             .date()
                             .required("An age at date is required.")
                             .min(
                                 todaysDate,
-                                "The age at date must be in the future."
+                                "The age at date must be in the future.",
                             ),
                         default_entry_fee: yup.number().required().min(0),
                         processing_fee: yup.number().required().min(0),
@@ -146,7 +146,7 @@ const New: Layout<Props> = (props: Props) => {
                                         }
                                     }
                                     return true;
-                                }
+                                },
                             ),
                     })}
                     initialValues={{
@@ -178,29 +178,12 @@ const New: Layout<Props> = (props: Props) => {
                         >
                             <TextInput name="name" label="Name" />
                             <VenueCombobox name="venue_select" />
-                            <RadioGroup label="Pool length">
+                            <RadioGroup label="Pool length" name="pool_course">
+                                <Radio label="Short course" value="short" />
+                                <Radio label="Long course" value="long" />
+                                <Radio label="Open water" value="open_water" />
+                                <Radio label="Other" value="irregular" />
                                 <Radio
-                                    name="pool_course"
-                                    label="Short course"
-                                    value="short"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Long course"
-                                    value="long"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Open water"
-                                    value="open_water"
-                                />
-                                <Radio
-                                    name="pool_course"
-                                    label="Other"
-                                    value="irregular"
-                                />
-                                <Radio
-                                    name="pool_course"
                                     label="Not applicable"
                                     value="not_applicable"
                                 />
@@ -263,15 +246,16 @@ const New: Layout<Props> = (props: Props) => {
                                 help="Processing fee per swimmer. To comply with the law on credit/debit card surcharges, you must charge this fee for any payment method you support - even cash or bank transfer."
                                 precision={2}
                             />
-                            <RadioGroup label="How do you want to configure this competition?">
+                            <RadioGroup
+                                label="How do you want to configure this competition?"
+                                name="setup_type"
+                            >
                                 <Radio
-                                    name="setup_type"
                                     label="Basic"
                                     value="basic"
                                     help="No sessions, created with default events. You can remove any events which don't apply."
                                 />
                                 <Radio
-                                    name="setup_type"
                                     label="Full"
                                     value="full"
                                     help="Configure all sessions and events manually."
