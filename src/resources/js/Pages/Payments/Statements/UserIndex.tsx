@@ -3,11 +3,14 @@ import MainLayout from "@/Layouts/MainLayout.jsx";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
-import Collection from "@/Components/Collection";
-import { StatementIndexItemContent } from "@/Components/Payments/Statements/StatementIndexItemContent";
+import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
+import {
+    StatementIndexItemContent,
+    StatementIndexItemContentProps,
+} from "@/Components/Payments/Statements/StatementIndexItemContent";
 
 type Props = {
-    statements: [];
+    statements: LaravelPaginatorProps<StatementIndexItemContentProps>;
     user: {
         id: number;
         name: string;

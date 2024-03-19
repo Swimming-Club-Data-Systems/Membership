@@ -2,7 +2,7 @@ import React from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainLayout from "@/Layouts/MainLayout";
-import Collection from "@/Components/Collection";
+import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import { formatDateTime } from "@/Utils/date-utils";
 import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
@@ -30,11 +30,11 @@ export type PaymentIndexProps = {
         id: number;
         name: string;
     };
-    payments: PaymentItemContentProps[];
+    payments: LaravelPaginatorProps<PaymentItemContentProps>;
 };
 
 export const PaymentItemContent: React.FC<PaymentItemContentProps> = (
-    props
+    props,
 ) => {
     return (
         <>

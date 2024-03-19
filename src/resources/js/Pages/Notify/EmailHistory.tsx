@@ -6,11 +6,10 @@ import { Head } from "@inertiajs/react";
 import EmailListItemContent, {
     EmailListItemContentProps,
 } from "@/Components/Notify/EmailListItemContent";
+import { LaravelPaginatorProps } from "@/Components/Collection.tsx";
 
 type Props = {
-    emails: {
-        data: EmailListItemContentProps[];
-    };
+    emails: LaravelPaginatorProps<EmailListItemContentProps>;
 };
 
 interface Layout<P> extends React.FC<P> {
@@ -24,8 +23,6 @@ const EmailHistory: Layout<Props> = (props) => {
             <PlainCollection
                 {...props.emails}
                 itemRenderer={EmailListItemContent}
-                route="notify.email.history"
-                routeIdName="id"
             />
         </Container>
     );

@@ -9,6 +9,7 @@ import { usePage } from "@inertiajs/react";
 import { formatDateTime } from "@/Utils/date-utils";
 
 export type SMSListItemContentProps = {
+    id: number;
     items: {
         key: string | number;
         term: ReactNode;

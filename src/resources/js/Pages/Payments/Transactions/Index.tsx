@@ -8,6 +8,7 @@ import MainHeader from "@/Layouts/Components/MainHeader";
 import { Layout } from "@/Common/Layout";
 import Stats from "@/Components/Stats";
 import Stat from "@/Components/Stat";
+import { LaravelPaginatorProps } from "@/Components/Collection.tsx";
 
 type TransactionItemContentProps = {
     id: number;
@@ -25,12 +26,12 @@ export type TransactionIndexProps = {
         id: number;
         name: string;
     };
-    transactions: TransactionItemContentProps[];
+    transactions: LaravelPaginatorProps<TransactionItemContentProps>;
     balance: string;
 };
 
 export const TransactionItemContent: React.FC<TransactionItemContentProps> = (
-    props
+    props,
 ) => {
     return (
         <>

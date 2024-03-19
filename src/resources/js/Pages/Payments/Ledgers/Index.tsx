@@ -3,14 +3,20 @@ import MainLayout from "@/Layouts/MainLayout.jsx";
 import { Head } from "@inertiajs/react";
 import Container from "@/Components/Container.jsx";
 import { Layout } from "@/Common/Layout.jsx";
-import Collection from "@/Components/Collection";
+import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 import ButtonLink from "@/Components/ButtonLink";
 
-type Props = {
-    ledgers: [];
+type LedgerProps = {
+    id: number;
+    name: string;
+    type: string;
 };
 
-const ItemContent = (props) => {
+type Props = {
+    ledgers: LaravelPaginatorProps<LedgerProps>;
+};
+
+const ItemContent = (props: LedgerProps) => {
     return (
         <>
             <div className="flex items-center justify-between">

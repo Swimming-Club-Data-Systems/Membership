@@ -6,11 +6,10 @@ import { Head } from "@inertiajs/react";
 import SMSListItemContent, {
     SMSListItemContentProps,
 } from "@/Components/Notify/SMSListItemContent";
+import { LaravelPaginatorProps } from "@/Components/Collection.tsx";
 
 type Props = {
-    messages: {
-        data: SMSListItemContentProps[];
-    };
+    messages: LaravelPaginatorProps<SMSListItemContentProps>;
 };
 
 interface Layout<P> extends React.FC<P> {
@@ -24,8 +23,6 @@ const SMSHistory: Layout<Props> = (props) => {
             <PlainCollection
                 {...props.messages}
                 itemRenderer={SMSListItemContent}
-                route="notify.sms.history"
-                routeIdName="id"
             />
         </Container>
     );
