@@ -62,4 +62,20 @@ class SquadMove extends Model
     {
         return 'member';
     }
+
+    public function handleMove()
+    {
+        if ($this->oldSquad) {
+            $this->member->squads()->detach($this->oldSquad);
+        }
+
+        if ($this->newSquad) {
+            $this->member->squads()->attach($this->newSquad, [
+                'Paying' => $this->Paying,
+            ]);
+        }
+
+        // Do not trigger events
+        $this->deleteQuietly();
+    }
 }

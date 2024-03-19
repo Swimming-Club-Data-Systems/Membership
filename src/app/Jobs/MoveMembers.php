@@ -42,18 +42,7 @@ class MoveMembers implements ShouldQueue
 
                 foreach ($moves as $move) {
                     /** @var SquadMove $move */
-                    if ($move->oldSquad) {
-                        $move->member->squads()->detach($move->oldSquad);
-                    }
-
-                    if ($move->newSquad) {
-                        $move->member->squads()->attach($move->newSquad, [
-                            'Paying' => $move->Paying,
-                        ]);
-                    }
-
-                    // Do not trigger events
-                    $move->deleteQuietly();
+                    $move->handleMove();
                 }
             });
         }
