@@ -256,7 +256,7 @@ class MemberController extends Controller
             'other_notes' => Str::markdown($member->OtherNotes, $markdownOptions),
             'editable' => $user->can('update', $member),
             'deletable' => $user->can('delete', $member),
-            'can_edit_squads' => $this->authorize('create', SquadMove::class),
+            'can_edit_squads' => $user->can('create', SquadMove::class),
             'show_quick_actions' => $user->hasPermission(['Admin', 'Coach', 'Galas']),
             'can_delete' => $user->can('delete', $member),
         ]);
