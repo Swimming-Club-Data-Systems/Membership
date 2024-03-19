@@ -101,7 +101,7 @@ class AppMenu
         if ($this->user->can('create', Competition::class)) {
             $menu[] = [
                 'name' => 'Guest Competitions',
-                'href' => route('competitions.index'),
+                'href' => route('competitions.index', [], false),
             ];
         }
 
@@ -129,7 +129,7 @@ class AppMenu
         if ($this->user->hasPermission('Admin')) {
             $menu[] = [
                 'name' => 'New Member',
-                'href' => route('members.new'),
+                'href' => route('members.new', [], false),
             ];
         }
 
@@ -143,7 +143,7 @@ class AppMenu
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Emergency Contacts',
-                'href' => route('emergency-contacts.index'),
+                'href' => route('emergency-contacts.index', [], false),
             ];
         }
 
@@ -553,32 +553,32 @@ class AppMenu
 
         $menu[] = [
             'name' => 'Payment Methods',
-            'href' => route('payments.methods.index'),
+            'href' => route('payments.methods.index', [], false),
         ];
 
         $menu[] = [
             'name' => 'Ledgers and Journals',
-            'href' => route('payments.ledgers.index'),
+            'href' => route('payments.ledgers.index', [], false),
         ];
 
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Statements',
-                'href' => route('payments.statements.index'),
+                'href' => route('payments.statements.index', [], false),
             ];
         }
 
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Transactions',
-                'href' => route('payments.transactions.index'),
+                'href' => route('payments.transactions.index', [], false),
             ];
         }
 
         if ($this->user->hasPermission('Parent')) {
             $menu[] = [
                 'name' => 'Payments',
-                'href' => route('payments.payments.index'),
+                'href' => route('payments.payments.index', [], false),
             ];
         }
 
@@ -722,7 +722,7 @@ class AppMenu
 
         $menu[] = [
             'name' => 'Home',
-            'href' => route('competitions.index'),
+            'href' => route('competitions.index', [], false),
         ];
 
         return $menu;
