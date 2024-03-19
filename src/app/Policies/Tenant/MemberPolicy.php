@@ -63,7 +63,7 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->UserID === $member->UserID) {
+        if ($user->UserID == $member->UserID) {
             return true;
         }
     }
@@ -79,7 +79,7 @@ class MemberPolicy
             return true;
         }
 
-        if ($user->UserID === $member->UserID) {
+        if ($user->UserID == $member->UserID) {
             return true;
         }
     }
