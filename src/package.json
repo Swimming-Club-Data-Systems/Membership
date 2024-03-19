@@ -8,7 +8,8 @@
     "build-storybook": "storybook build",
     "lint": "eslint ./resources",
     "lint-fix": "eslint ./resources --fix",
-    "chromatic": "npx chromatic --project-token=chpt_58e5f6e1f380507"
+    "chromatic": "npx chromatic --project-token=chpt_58e5f6e1f380507",
+    "tsc": "tsc --noEmit --project tsconfig.json"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -20,6 +21,7 @@
     "@storybook/react": "^8.0.0",
     "@storybook/react-vite": "^8.0.0",
     "@types/google.maps": "^3.53.1",
+    "@types/jest": "^29.5.12",
     "@typescript-eslint/parser": "^6.15.0",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.14",

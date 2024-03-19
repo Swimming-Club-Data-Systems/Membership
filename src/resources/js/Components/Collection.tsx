@@ -10,6 +10,7 @@ import * as yup from "yup";
 import { useFormikContext } from "formik";
 import Button from "./Button";
 import InternalContainer from "@/Components/InternalContainer";
+import EmptyState from "@/Components/EmptyState";
 
 type SearchProps = {
     path: string;
@@ -78,7 +79,7 @@ const Search: React.FC<SearchProps> = (props) => {
     );
 };
 
-export interface LaravelPaginatorProps {
+export interface LaravelPaginatorProps<ItemData> {
     current_page: number;
     first_page_url: string;
     from: number;
@@ -91,10 +92,10 @@ export interface LaravelPaginatorProps {
     prev_page_url: string;
     to: number;
     total: number;
-    data: Array<unknown>;
+    data: Array<ItemData>;
 }
 
-interface CollectonProps extends LaravelPaginatorProps {
+interface CollectionProps<ItemData> extends LaravelPaginatorProps<ItemData> {
     route: string;
     routeIdName?: string;
     routeParams?: [number | string];
@@ -102,10 +103,12 @@ interface CollectonProps extends LaravelPaginatorProps {
     path: string;
     current_page: number;
     last_page: number;
-    itemRenderer: (item: unknown) => ReactNode;
+    itemRenderer: (item: ItemData) => ReactNode;
 }
 
-const Collection: React.FC<CollectonProps> = (props) => {
+const Collection = <ItemData extends { id: any }>(
+    props: CollectionProps<ItemData>,
+) => {
     const items = props.data.map((item, idx) => {
         const routeIdName = props.routeIdName || "id";
 
@@ -159,29 +162,12 @@ const Collection: React.FC<CollectonProps> = (props) => {
             )}
 
             {props.data.length === 0 && (
-                <>
-                    <div className="overflow-hidden bg-white px-4 pt-5 pb-4 shadow sm:p-6 sm:pb-4 lg:rounded-lg">
-                        <div className="sm:flex sm:items-start">
-                            <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-red-100 sm:mx-0 sm:h-10 sm:w-10">
-                                <ExclamationTriangleIcon
-                                    className="h-6 w-6 text-red-600"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                            <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                <h3 className="text-lg font-medium leading-6 text-gray-900">
-                                    No results
-                                </h3>
-                                <div className="mt-2">
-                                    <p className="text-sm text-gray-500">
-                                        We could not find any items to match
-                                        your search.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </>
+                <EmptyState>
+                    {props.searchable && (
+                        <p>We could not find any items to match your search.</p>
+                    )}
+                    {!props.searchable && <p>There are no items to display.</p>}
+                </EmptyState>
             )}
         </>
     );

@@ -13,13 +13,9 @@ interface VenueProps {
     formatted_address: string;
 }
 
-interface Venues extends LaravelPaginatorProps {
-    data: VenueProps[];
-}
-
 export type Props = {
     google_maps_api_key: string;
-    venues: Venues;
+    venues: LaravelPaginatorProps<VenueProps>;
     can_create: boolean;
 };
 

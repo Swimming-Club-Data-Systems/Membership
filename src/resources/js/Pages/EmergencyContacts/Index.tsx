@@ -25,8 +25,8 @@ type Contact = {
     phone_url: string;
 };
 
-interface Props extends LaravelPaginatorProps {
-    contacts: Contact[];
+interface Props {
+    contacts: LaravelPaginatorProps<Contact>;
 }
 
 const contactValidationSchema = yup.object().shape({

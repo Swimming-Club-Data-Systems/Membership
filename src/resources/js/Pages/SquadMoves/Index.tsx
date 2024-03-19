@@ -35,8 +35,8 @@ type Item = {
     paying_in_new_squad: boolean;
 };
 
-interface Props extends LaravelPaginatorProps {
-    moves: Item[];
+interface Props {
+    moves: LaravelPaginatorProps<Item>;
 }
 
 const ItemContent = (props: Item) => {
