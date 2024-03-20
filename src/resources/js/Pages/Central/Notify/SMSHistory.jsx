@@ -3,12 +3,6 @@ import Container from "@/Components/Container";
 import CentralMainLayout from "@/Layouts/CentralMainLayout";
 import PlainCollection from "@/Components/PlainCollection";
 import { Head } from "@inertiajs/react";
-import Badge from "@/Components/Badge";
-import FileList from "@/Components/FileList";
-import { DefinitionList } from "@/Components/DefinitionList";
-import { format } from "date-fns";
-import BaseLink from "@/Components/BaseLink";
-import EmailListItemContent from "@/Components/Notify/EmailListItemContent";
 import SMSListItemContent from "@/Components/Notify/SMSListItemContent";
 
 const Index = (props) => {

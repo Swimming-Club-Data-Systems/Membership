@@ -18,6 +18,7 @@ import { CancellationReasonsSelectItems } from "@/Utils/Competitions/Cancellatio
 import Button from "@/Components/Button";
 import { ReceiptRefundIcon } from "@heroicons/react/24/outline";
 import Alert from "@/Components/Alert";
+import { LaravelPaginatorProps } from "@/Components/Collection.tsx";
 
 interface EntrantProps {
     id: string;
@@ -84,6 +85,7 @@ type GuestEntryListProps = {
         name: string;
         id: number;
     };
+    entrants: LaravelPaginatorProps<EntrantProps>;
 };
 
 const EntrantRenderer = (props: EntrantProps): ReactNode => {
@@ -327,8 +329,6 @@ const Index = (props: GuestEntryListProps) => {
 
                 <PlainCollection
                     {...props.entrants}
-                    route="competitions.entries.show"
-                    routeParams={[props.competition.id]}
                     itemRenderer={EntrantRenderer}
                 />
             </Container>

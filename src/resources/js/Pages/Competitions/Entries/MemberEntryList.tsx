@@ -19,6 +19,7 @@ import useCustomFieldsList, {
     CustomFields,
 } from "@/Components/Competitions/useCustomFieldsList";
 import { DefinitionList } from "@/Components/DefinitionList";
+import { LaravelPaginatorProps } from "@/Components/Collection.tsx";
 
 interface EntryProps {
     id: string;
@@ -60,6 +61,7 @@ type GuestEntryListProps = {
         name: string;
         id: number;
     };
+    entries: LaravelPaginatorProps<EntryProps>;
 };
 
 const EntryRenderer = (props: EntryProps): ReactNode => {
@@ -67,6 +69,9 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
         props.entrant.custom_fields,
         "show_in_preview",
     );
+
+    // @ts-ignore Buried in props
+    const competitionId = usePage().props.competition.id;
 
     return (
         <Form
@@ -174,7 +179,7 @@ const EntryRenderer = (props: EntryProps): ReactNode => {
                 <div className="col-start-1 col-span-6 text-sm">
                     <Link
                         href={route("competitions.entries.show", {
-                            competition: usePage().props.competition.id,
+                            competition: competitionId,
                             entry: props.id,
                         })}
                     >
@@ -222,8 +227,6 @@ const MemberEntryList = (props: GuestEntryListProps) => {
 
                 <PlainCollection
                     {...props.entries}
-                    route="competitions.entries.show"
-                    routeParams={[props.competition.id]}
                     itemRenderer={EntryRenderer}
                 />
             </Container>

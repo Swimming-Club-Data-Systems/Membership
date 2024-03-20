@@ -1,14 +1,17 @@
 import React from "react";
 import { formatDate } from "@/Utils/date-utils";
 
-type ItemProps = {
+export type StatementIndexItemContentProps = {
+    id: number;
     start: string;
     end: string;
     closing_balance: number;
     closing_balance_formatted: string;
 };
 
-export const StatementIndexItemContent: React.FC<ItemProps> = (props) => {
+export const StatementIndexItemContent: React.FC<
+    StatementIndexItemContentProps
+> = (props) => {
     return (
         <>
             <div className="flex items-center justify-between">

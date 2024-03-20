@@ -27,12 +27,8 @@ interface CompetitionProps {
     }[];
 }
 
-interface Competitions extends LaravelPaginatorProps {
-    data: CompetitionProps[];
-}
-
 export type Props = {
-    competitions: Competitions;
+    competitions: LaravelPaginatorProps<CompetitionProps>;
     can_create: boolean;
 };
 

@@ -8,7 +8,7 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Footer from "./Components/Footer.jsx";
 import ApplicationLogo from "@/Components/ApplicationLogo.jsx";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, InertiaLinkProps, usePage } from "@inertiajs/react";
 import Link from "@/Components/BaseLink.jsx";
 import MainHeader from "./Components/MainHeader.jsx";
 import Container from "@/Components/Container.jsx";
@@ -16,7 +16,7 @@ import TenantLogo from "@/Components/TenantLogo.jsx";
 import { connect } from "react-redux";
 import { TurnstileWidget } from "@/Components/TurnstileWidget";
 
-const userNavigation = [
+const userNavigation: Item[] = [
     { name: "My Account", href: route("my_account.index") },
     { name: "Help", href: "https://docs.myswimmingclub.uk/", external: true },
     { name: "Sign out", href: route("logout"), method: "post" },
@@ -39,6 +39,13 @@ interface Props {
     hideHeader?: boolean;
 }
 
+type Item = {
+    name: string;
+    href: string;
+    external?: boolean;
+    method?: InertiaLinkProps["method"];
+};
+
 const MainLayout: React.FC<Props> = ({
     title,
     subtitle,
@@ -47,8 +54,10 @@ const MainLayout: React.FC<Props> = ({
     buttons,
     hideHeader = false,
 }) => {
+    // @ts-ignore
     const userObject = usePage().props.auth.user;
 
+    // @ts-ignore
     const navigation = usePage().props.tenant.menu;
 
     const url = usePage().url;

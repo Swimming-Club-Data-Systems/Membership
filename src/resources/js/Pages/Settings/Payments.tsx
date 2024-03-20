@@ -14,22 +14,22 @@ import Select from "@/Components/Form/Select";
 import { useField, useFormikContext } from "formik";
 import DateTimeInput from "@/Components/Form/DateTimeInput";
 
-const WrappedDate = (props) => {
-    const { setFieldValue } = useFormikContext();
-    const [field] = useField(props);
-
-    return (
-        <DateTimeInput
-            id={props.name}
-            {...props}
-            {...field}
-            onChange={(ev) => {
-                console.log(ev);
-                setFieldValue(props.name, ev.target.value.formattedValue);
-            }}
-        />
-    );
-};
+// const WrappedDate = (props) => {
+//     const { setFieldValue } = useFormikContext();
+//     const [field] = useField(props);
+//
+//     return (
+//         <DateTimeInput
+//             id={props.name}
+//             {...props}
+//             {...field}
+//             onChange={(ev) => {
+//                 console.log(ev);
+//                 setFieldValue(props.name, ev.target.value.formattedValue);
+//             }}
+//         />
+//     );
+// };
 
 const Payments = (props) => {
     const mustBeBool = yup.boolean().oneOf([true, false], "Must be yes or no");
@@ -137,7 +137,7 @@ const Payments = (props) => {
 
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6 sm:col-span-4">
-                                    <WrappedDate name="date" label="Date" />
+                                    {/*<WrappedDate name="date" label="Date" />*/}
                                 </div>
                                 <div className="col-span-6">
                                     <Checkbox
@@ -169,28 +169,28 @@ const Payments = (props) => {
 
                             <div className="grid grid-cols-6 gap-6">
                                 <div className="col-span-6 sm:col-span-4">
-                                    <Select
-                                        name="squad_fee_calculation_date"
-                                        label="Squad fee calculation day"
-                                        options={dayOptions}
-                                        help="The day of the month on which we will calculate squad and extra fees and post them to user accounts."
-                                    />
+                                    {/*<Select*/}
+                                    {/*    name="squad_fee_calculation_date"*/}
+                                    {/*    label="Squad fee calculation day"*/}
+                                    {/*    options={dayOptions}*/}
+                                    {/*    help="The day of the month on which we will calculate squad and extra fees and post them to user accounts."*/}
+                                    {/*/>*/}
                                 </div>
                                 <div className="col-span-6 sm:col-span-4">
-                                    <Select
-                                        name="fee_calculation_date"
-                                        label="Fee calculation day"
-                                        options={dayOptions}
-                                        help="The day of the month on which we will calculate amounts due to clear an account balance and generate statements."
-                                    />
+                                    {/*<Select*/}
+                                    {/*    name="fee_calculation_date"*/}
+                                    {/*    label="Fee calculation day"*/}
+                                    {/*    options={dayOptions}*/}
+                                    {/*    help="The day of the month on which we will calculate amounts due to clear an account balance and generate statements."*/}
+                                    {/*/>*/}
                                 </div>
                                 <div className="col-span-6 sm:col-span-4">
-                                    <Select
-                                        name="billing_date"
-                                        label="Billing day"
-                                        options={dayOptions}
-                                        help="The day of the month on which we will request Direct Debit payments for each user's most recent statement"
-                                    />
+                                    {/*<Select*/}
+                                    {/*    name="billing_date"*/}
+                                    {/*    label="Billing day"*/}
+                                    {/*    options={dayOptions}*/}
+                                    {/*    help="The day of the month on which we will request Direct Debit payments for each user's most recent statement"*/}
+                                    {/*/>*/}
                                 </div>
                                 <div className="col-span-6">
                                     <Checkbox

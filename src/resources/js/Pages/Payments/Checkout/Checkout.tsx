@@ -75,6 +75,9 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
         ...props.payment_methods,
     ];
 
+    // @ts-ignore
+    const businessName = usePage().props?.tenant?.name;
+
     useEffect(() => {
         if (stripe) {
             const pr = stripe.paymentRequest({
@@ -246,14 +249,15 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                         <h2 className="lg font-bold leading-7 text-gray-900 sm:truncate sm:text-xl sm:tracking-tight">
                                             Use a saved payment method
                                         </h2>
-                                        {alert && alert.name === "saved_cards" && (
-                                            <Alert
-                                                title={alert.title}
-                                                variant={alert.variant}
-                                            >
-                                                <p>{alert.message}</p>
-                                            </Alert>
-                                        )}
+                                        {alert &&
+                                            alert.name === "saved_cards" && (
+                                                <Alert
+                                                    title={alert.title}
+                                                    variant={alert.variant}
+                                                >
+                                                    <p>{alert.message}</p>
+                                                </Alert>
+                                            )}
 
                                         <Select
                                             name="payment_method"
@@ -266,7 +270,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                                         value: payment_method.stripe_id,
                                                         name: payment_method.description,
                                                     };
-                                                }
+                                                },
                                             )}
                                             label="Choose a saved payment method"
                                         />
@@ -335,7 +339,7 @@ const CheckoutForm: React.FC<Props> = (props: Props) => {
                                             },
                                         },
                                         business: {
-                                            name: usePage().props?.tenant?.name,
+                                            name: businessName,
                                         },
                                         paymentMethodOrder: [
                                             "apple_pay",

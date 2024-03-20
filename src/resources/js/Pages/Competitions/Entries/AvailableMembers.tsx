@@ -2,23 +2,10 @@ import React, { ReactNode } from "react";
 import Head from "@/Components/Head";
 import Container from "@/Components/Container";
 import MainHeader from "@/Layouts/Components/MainHeader";
-import Link from "@/Components/Link";
 import { formatDate } from "@/Utils/date-utils";
 import MainLayout from "@/Layouts/MainLayout";
-import Badge from "@/Components/Badge";
-import PlainCollection from "@/Components/PlainCollection";
-import { usePage } from "@inertiajs/react";
-import Form, {
-    RenderServerErrors,
-    SubmissionButtons,
-} from "@/Components/Form/Form";
-import * as yup from "yup";
-import Checkbox from "@/Components/Form/Checkbox";
+import { RenderServerErrors } from "@/Components/Form/Form";
 import FlashAlert from "@/Components/FlashAlert";
-import useCustomFieldsList, {
-    CustomFields,
-} from "@/Components/Competitions/useCustomFieldsList";
-import { DefinitionList } from "@/Components/DefinitionList";
 import Collection, { LaravelPaginatorProps } from "@/Components/Collection";
 
 interface EntryProps {
@@ -36,7 +23,7 @@ type GuestEntryListProps = {
         name: string;
         id: number;
     };
-    members: LaravelPaginatorProps;
+    members: LaravelPaginatorProps<EntryProps>;
 };
 
 const EntryRenderer = (props: EntryProps): ReactNode => {

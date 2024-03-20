@@ -7,7 +7,17 @@ import MainHeader from "@/Layouts/Components/MainHeader.jsx";
 import FlashAlert from "@/Components/FlashAlert.jsx";
 import ButtonLink from "@/Components/ButtonLink.js";
 
-const ItemContent = (props) => {
+type Member = {
+    id: number;
+    MForename: string;
+    MSurname: string;
+    ASANumber: string;
+    squads: {
+        SquadName: string;
+    }[];
+};
+
+const ItemContent = (props: Member) => {
     const squadNames = props.squads.map((squad) => squad.SquadName);
 
     return (
@@ -44,7 +54,7 @@ const ItemContent = (props) => {
 };
 
 type Props = {
-    members: LaravelPaginatorProps;
+    members: LaravelPaginatorProps<Member>;
     can_create: boolean;
 };
 

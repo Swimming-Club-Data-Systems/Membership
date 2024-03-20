@@ -23,12 +23,8 @@ export interface RenewalProps {
     started: boolean;
 }
 
-interface Renewals extends LaravelPaginatorProps {
-    data: RenewalProps[];
-}
-
 export type Props = {
-    renewals: Renewals;
+    renewals: LaravelPaginatorProps<RenewalProps>;
     can_create: boolean;
 };
 

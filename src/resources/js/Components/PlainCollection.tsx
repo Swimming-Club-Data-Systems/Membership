@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { ReactNode, useEffect } from "react";
 import Pagination from "./Pagination";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
@@ -9,8 +9,13 @@ import { useFormikContext } from "formik";
 import Button from "./Button";
 import InternalContainer from "@/Components/InternalContainer";
 import EmptyState from "@/Components/EmptyState";
+import { LaravelPaginatorProps } from "@/Components/Collection";
 
-const Search = (props) => {
+type SearchProps = {
+    path: string;
+};
+
+const Search = (props: SearchProps) => {
     const url = props.path;
 
     const handleSubmit = (values) => {
@@ -73,7 +78,18 @@ const Search = (props) => {
     );
 };
 
-const PlainCollection = (props) => {
+interface PlainCollectionProps<ItemData>
+    extends LaravelPaginatorProps<ItemData> {
+    searchable?: boolean;
+    path: string;
+    current_page: number;
+    last_page: number;
+    itemRenderer: (item: ItemData) => ReactNode;
+}
+
+const PlainCollection = <ItemData extends { id: any }>(
+    props: PlainCollectionProps<ItemData>,
+) => {
     const items = props.data.map((item, idx) => {
         return (
             <li key={item.id || idx}>
@@ -115,7 +131,10 @@ const PlainCollection = (props) => {
 
             {props.data.length === 0 && (
                 <EmptyState>
-                    <p>We could not find any items to match your search.</p>
+                    {props.searchable && (
+                        <p>We could not find any items to match your search.</p>
+                    )}
+                    {!props.searchable && <p>There are no items to display.</p>}
                 </EmptyState>
             )}
         </>

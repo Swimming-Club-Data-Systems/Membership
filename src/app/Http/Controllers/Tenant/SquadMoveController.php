@@ -86,6 +86,11 @@ class SquadMoveController extends Controller
 
         $squadMove->save();
 
+        if ($squadMove->Date->isToday()) {
+            // If the move is today, handle it immediately
+            $squadMove->handleMove();
+        }
+
         $request->session()->flash('success', 'Squad move created.');
 
         return redirect()->back();
@@ -121,6 +126,11 @@ class SquadMoveController extends Controller
         $squadMove->Paying = $request->boolean('paying');
 
         $squadMove->save();
+
+        if ($squadMove->Date->isToday()) {
+            // If the move is today, handle it immediately
+            $squadMove->handleMove();
+        }
 
         $request->session()->flash('success', 'Squad move updated.');
 

@@ -9,6 +9,7 @@ type Props = {
     name: string;
     id: number;
     ledger_id: number;
+    ledger_name: string;
 };
 
 const Show: Layout<Props> = (props: Props) => {

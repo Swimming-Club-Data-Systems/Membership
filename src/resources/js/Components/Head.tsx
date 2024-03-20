@@ -8,7 +8,11 @@ type HeadProps = {
     breadcrumbs?: {
         name: string;
         route: string;
-        routeParams?: string | number | Record<string, unknown>;
+        routeParams?:
+            | string
+            | number
+            | Record<string, unknown>
+            | (string | number)[];
     }[];
 };
 
@@ -19,7 +23,7 @@ export const Head: React.FC<HeadProps> = (props) => {
                 ["title", props.title],
                 ["subtitle", props.subtitle],
                 ["breadcrumbs", props.breadcrumbs],
-            ])
+            ]),
         );
         return () => {
             store.dispatch(
@@ -27,7 +31,7 @@ export const Head: React.FC<HeadProps> = (props) => {
                     ["title", null],
                     ["subtitle", null],
                     ["breadcrumbs", null],
-                ])
+                ]),
             );
         };
     }, [props.title, props.subtitle, props.breadcrumbs]);

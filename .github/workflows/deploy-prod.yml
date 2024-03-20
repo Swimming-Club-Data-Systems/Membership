@@ -6,34 +6,13 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-fe-v2:
-    name: Build Laravel App Front End
-    runs-on: self-hosted
-
-    strategy:
-      matrix:
-        node-version: [18.x, 20.x]
-
-    steps:
-    - uses: actions/checkout@v3
-
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
-
-    - name: Build
-      working-directory: ./src
-      run: |
-        npm install
-        npm run build
   build-fe-v1:
     name: Build Legacy App Front End
     runs-on: self-hosted
 
     strategy:
       matrix:
-        node-version: [18.x, 20.x]
+        node-version: [20.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -48,24 +27,36 @@ jobs:
         npm install
         npm run build
   laravel-tests:
-    name: "Test Laravel"
+    name: "Build and Test Laravel"
     runs-on: self-hosted
-    needs: [build-fe-v2, build-fe-v1]
+    needs: [build-fe-v1]
     steps:
-    - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
+    - name: Use PHP 8.2
+      uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
       with:
         php-version: '8.2'
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
     - uses: actions/checkout@v3
     - name: Copy .env
       working-directory: ./src
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Dependencies
+    - name: Install Composer dependencies
       working-directory: ./src
       run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Build front end
+    - name: Install npm dependencies
       working-directory: ./src
       run: |
         npm install
+    - name: Validate Types
+      working-directory: ./src
+      run: |
+        npm run tsc
+    - name: Build
+      working-directory: ./src
+      run: |
         npm run build
     - name: Generate key
       working-directory: ./src

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link as InertiaLink } from "@inertiajs/react";
+import { InertiaLinkProps, Link as InertiaLink } from "@inertiajs/react";
 
 interface AProps {
     href: string;
@@ -22,7 +22,7 @@ const A: React.FC<AProps> = ({ children, ...props }) => {
 };
 
 export interface LinkProps extends AProps {
-    method?: string;
+    method?: InertiaLinkProps["method"];
 }
 
 const Link: React.FC<LinkProps> = (props) => {

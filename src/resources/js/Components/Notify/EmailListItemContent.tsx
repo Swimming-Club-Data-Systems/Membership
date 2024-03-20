@@ -10,6 +10,7 @@ import { usePage } from "@inertiajs/react";
 import { formatDateTime } from "@/Utils/date-utils";
 
 export type EmailListItemContentProps = {
+    id: number;
     items: {
         key: string | number;
         term: ReactNode;
@@ -117,7 +118,7 @@ const EmailListItemContent: React.FC<EmailListItemContentProps> = (props) => {
                         <BaseLink
                             href={route(
                                 "central.clubs.redirect",
-                                props.tenant.id
+                                props.tenant.id,
                             )}
                         >
                             <Badge>{props.tenant.name}</Badge>

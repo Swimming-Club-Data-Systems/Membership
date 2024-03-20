@@ -2,6 +2,8 @@
     "compilerOptions": {
         "module": "ESNext",
         "moduleResolution": "bundler",
+        "noEmit": true,
+        "allowImportingTsExtensions": true,
         "target": "ESNext",
         "jsx": "react",
         "sourceMap": true,
@@ -15,13 +17,13 @@
             ]
         },
         "allowSyntheticDefaultImports": true,
-        "types": ["vite/client"],
+        "types": ["vite/client", "jest"],
         "allowJs": true,
-        "moduleSuffixes": [".tsx", ".jsx", ""],
         "isolatedModules": true,
     },
     "exclude": [
-        "node_modules",
-        "public"
+        "./node_modules",
+        "./public",
+        "./vendor"
     ]
 }

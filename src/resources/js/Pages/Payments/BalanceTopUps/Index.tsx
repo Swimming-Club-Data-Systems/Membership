@@ -22,20 +22,16 @@ type BalanceTopUpContentProps = {
     };
 };
 
-interface BalanceTopUps extends LaravelPaginatorProps {
-    data: BalanceTopUpContentProps[];
-}
-
 export type BalanceTopUpIndexProps = {
     user: {
         id: number;
         name: string;
     };
-    balance_top_ups: BalanceTopUps;
+    balance_top_ups: LaravelPaginatorProps<BalanceTopUpContentProps>;
 };
 
 export const BalanceTopUpContent: React.FC<BalanceTopUpContentProps> = (
-    props
+    props,
 ) => {
     return (
         <>
@@ -79,7 +75,7 @@ export const BalanceTopUpContent: React.FC<BalanceTopUpContentProps> = (
 };
 
 const Index: Layout<BalanceTopUpIndexProps> = (
-    props: BalanceTopUpIndexProps
+    props: BalanceTopUpIndexProps,
 ) => {
     return (
         <>
