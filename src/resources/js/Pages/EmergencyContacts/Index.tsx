@@ -216,9 +216,17 @@ const Index = (props: Props) => {
                     method="post"
                     onSuccess={() => setShowCreateModal(false)}
                 >
-                    <TextInput name="name" label="Name of contact" />
+                    <TextInput
+                        name="name"
+                        label="Name of contact"
+                        autoComplete="off"
+                    />
                     <TextInput name="relation" label="Relation to you" />
-                    <TextInput name="phone" label="Phone number" />
+                    <TextInput
+                        name="phone"
+                        label="Phone number"
+                        inputMode="tel"
+                    />
                 </Form>
             </Modal>
         </>

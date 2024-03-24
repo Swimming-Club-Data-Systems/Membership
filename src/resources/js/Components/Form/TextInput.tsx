@@ -5,15 +5,14 @@ import { FormSpecialContext } from "@/Components/Form/Form";
 import Input, { InputProps } from "@/Components/Form/base/Input";
 
 interface Props extends InputProps {
-    disabled?: boolean;
-    type?: string;
+    disabled?: InputProps["disabled"];
+    type?: InputProps["type"];
     leftText?: string;
     rightButton?: ReactNode;
     className?: string;
     id?: string;
     name: string;
     label: string;
-    autoComplete?: string;
     help?: string;
     showErrorIconOnLabel?: boolean;
 }
@@ -30,7 +29,7 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>(
             className = "",
             ...props
         }: Props,
-        ref
+        ref,
     ): JSX.Element => {
         const [{ onBlur, ...field }, meta] = useField(props);
         const { isSubmitting } = useFormikContext();
@@ -85,7 +84,7 @@ const TextInput = React.forwardRef<HTMLInputElement, Props>(
                 {...props}
             />
         );
-    }
+    },
 );
 
 TextInput.displayName = "TextInput";
