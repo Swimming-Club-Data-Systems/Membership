@@ -91,6 +91,7 @@ const Login = ({ status, canResetPassword }) => {
                     type="email"
                     label="Email"
                     autoComplete="username webauthn"
+                    inputMode="email"
                 />
 
                 <Transition

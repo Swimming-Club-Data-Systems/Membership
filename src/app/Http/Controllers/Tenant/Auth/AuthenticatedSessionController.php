@@ -135,7 +135,15 @@ class AuthenticatedSessionController extends Controller
 
             return $controller($request);
         } else {
-            return redirect()->intended(RouteServiceProvider::HOME);
+            $target = $request->session()->pull('url.intended', RouteServiceProvider::HOME);
+
+            // OAuth urls need a proper redirect
+            if (Str::startsWith(Route::getRoutes()->match(Request::create($target))->getName(), 'passport.')) {
+                return Inertia::location($target);
+            } else {
+                return redirect()->to($target);
+            }
+
         }
     }
 

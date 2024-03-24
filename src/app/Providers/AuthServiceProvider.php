@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Central\User;
-use App\Models\Tenant\Passport\Client;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 use Laravel\Passport\Passport;
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -71,15 +73,31 @@ class AuthServiceProvider extends ServiceProvider
                 : Response::denyAsNotFound(404);
         });
 
-        Passport::useClientModel(Client::class);
-
         Passport::tokensCan([
-            'view-user' => 'View basic user information',
+            'openid' => 'Identify user',
+            'profile' => 'View user profile information',
+            'email' => 'View email address',
+            'all_read' => 'Read all information visible to the user',
+            'all_write' => 'Read and write with all information visible to the user',
         ]);
 
         Passport::setDefaultScope([
-            'view-user',
+            'openid',
+            'profile',
+            'email',
         ]);
+
+        Route::group([
+            'as' => 'passport.',
+            'middleware' => [
+                InitializeTenancyByDomain::class, // Use tenancy initialization middleware of your choice
+                PreventAccessFromCentralDomains::class,
+            ],
+            'prefix' => config('passport.path', 'oauth'),
+            'namespace' => 'Laravel\Passport\Http\Controllers',
+        ], function () {
+            $this->loadRoutesFrom(__DIR__.'/../../vendor/laravel/passport/src/../routes/web.php');
+        });
 
         Gate::define('manage-settings', function (\App\Models\Tenant\User $user) {
             return $user->hasPermission('Admin')

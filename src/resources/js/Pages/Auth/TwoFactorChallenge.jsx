@@ -18,6 +18,12 @@ const TwoFactorChallenge = (props) => {
     const onSubmit = (values, formikBag) => {
         router.post(route("two_factor"), values, {
             onSuccess: (arg) => console.log(arg),
+            onCancel: (arg) => console.log(arg),
+            onError: (arg) => console.log(arg),
+            onFinish: (arg) => {
+                if (props.target) {
+                }
+            },
         });
     };
 
@@ -41,7 +47,7 @@ const TwoFactorChallenge = (props) => {
                         .required("You must enter an authentication code")
                         .matches(
                             /[0-9]{6,6}/,
-                            "Authentication codes are 6 digits"
+                            "Authentication codes are 6 digits",
                         ),
                 })}
                 onSubmit={onSubmit}

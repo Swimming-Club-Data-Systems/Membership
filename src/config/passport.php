@@ -11,11 +11,14 @@ return [
     | your application. By default, the keys are stored as local files but
     | can be set via environment variables when that is more convenient.
     |
+    | As we set up tenancy, file paths become scoped and Passport needs help
+    | to locate the keys. In prod use the .env file!
+    |
     */
 
-    'private_key' => env('PASSPORT_PRIVATE_KEY'),
+    'private_key' => env('PASSPORT_PRIVATE_KEY') ?? file_exists(__DIR__.'/../storage/oauth-private.key') ? file_get_contents(__DIR__.'/../storage/oauth-private.key') : null,
 
-    'public_key' => env('PASSPORT_PUBLIC_KEY'),
+    'public_key' => env('PASSPORT_PUBLIC_KEY') ?? file_exists(__DIR__.'/../storage/oauth-public.key') ? file_get_contents(__DIR__.'/../storage/oauth-public.key') : null,
 
     /*
     |--------------------------------------------------------------------------

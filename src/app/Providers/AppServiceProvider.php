@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Central\Tenant;
+use App\Models\PassportClient;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -27,7 +28,9 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
+        Passport::ignoreRoutes();
         Passport::ignoreMigrations();
+        Passport::hashClientSecrets();
 
         \Stripe\Stripe::setApiKey(config('cashier.secret'));
     }
@@ -61,5 +64,7 @@ class AppServiceProvider extends ServiceProvider
         Cashier::calculateTaxes();
 
         \Locale::setDefault('en_GB');
+
+        Passport::useClientModel(PassportClient::class);
     }
 }
