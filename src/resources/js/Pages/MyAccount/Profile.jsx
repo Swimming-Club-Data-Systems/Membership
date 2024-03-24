@@ -108,6 +108,7 @@ const Show = (props) => {
                                     label="Email address"
                                     help="If you change your email address, we'll send an email to verify it before the change takes effect."
                                     autoComplete="email"
+                                    inputMode="email"
                                 />
                             </div>
 
@@ -117,6 +118,7 @@ const Show = (props) => {
                                     type="tel"
                                     label="Phone number"
                                     autoComplete="tel"
+                                    inputMode="tel"
                                 />
                             </div>
 
