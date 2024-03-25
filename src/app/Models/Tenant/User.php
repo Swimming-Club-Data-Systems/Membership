@@ -96,6 +96,8 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
         'edit' => 'datetime',
+        'EmailComms' => 'boolean',
+        'MobileComms' => 'boolean',
     ];
 
     protected $attributes = [

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Central\Api\Internal;
+use App\Models\Central\Tenant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -23,4 +24,11 @@ Route::middleware('auth.internal')->prefix('internal')->group(function () {
     Route::get('/application-menu/{id}', [Internal::class, 'getMenu'])->withoutMiddleware('throttle:api');
 
     Route::post('/notify/email', [Internal::class, 'triggerEmailSend'])->withoutMiddleware('throttle:api');
+});
+
+Route::get('/tenants', function () {
+    return new \App\Http\Resources\Central\TenantCollection(Tenant::paginate());
+});
+Route::get('/tenants/{id}', function (int $id) {
+    return new \App\Http\Resources\Central\TenantResource(Tenant::findOrFail($id));
 });
