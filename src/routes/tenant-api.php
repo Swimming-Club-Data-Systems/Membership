@@ -13,16 +13,12 @@
 
 use App\Models\Central\Tenant;
 
-Route::middleware('auth:api')->group(function () {
-    Route::get('/tenant', function () {
-        return new \App\Http\Resources\Central\TenantResource(tenant());
-    });
-
-    Route::get('/userinfo', function () {
-        return new \App\Http\Resources\Tenant\UserResource(Auth::user());
-    });
+Route::get('/tenant', function () {
+    return new \App\Http\Resources\Central\TenantResource(tenant());
 });
 
-//Route::get('/tenant', function () {
-//    return new \App\Http\Resources\Central\TenantResource(tenant());
-//});
+Route::middleware('auth:api')->group(function () {
+    Route::get('/userinfo', function () {
+        return new \App\Http\Resources\Tenant\UserResource(Auth::user());
+    })->middleware('scope:profile');
+});

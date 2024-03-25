@@ -50,6 +50,11 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+
+        'central_api' => [
+            'driver' => 'passport',
+            'provider' => 'central_users',
+        ],
     ],
 
     /*

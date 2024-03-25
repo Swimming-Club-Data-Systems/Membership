@@ -19,6 +19,7 @@ class TenantResource extends JsonResource
             'uuid' => $this->UniqueID,
             'name' => $this->Name,
             'code' => $this->Code,
+            'membership_system_url' => $request->getScheme().'://'.$this->Domain,
             'website' => $this->Website,
             'verified' => $this->Verified,
             'domain' => $this->Domain,
