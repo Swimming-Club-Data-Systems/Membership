@@ -11,7 +11,7 @@ const Index = (props) => {
             <Head title="Notify SMS History" />
             <PlainCollection
                 {...props.messages}
-                itemRenderer={SMSListItemContent}
+                itemRenderer={(item) => <SMSListItemContent {...item} />}
                 route="central.notify.show"
                 routeIdName="id"
             />

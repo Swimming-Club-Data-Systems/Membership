@@ -329,7 +329,7 @@ const Index = (props: GuestEntryListProps) => {
 
                 <PlainCollection
                     {...props.entrants}
-                    itemRenderer={EntrantRenderer}
+                    itemRenderer={(item) => <EntrantRenderer {...item} />}
                 />
             </Container>
         </>

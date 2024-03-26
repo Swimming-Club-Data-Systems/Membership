@@ -227,7 +227,7 @@ const GuestEntryList = (props: GuestEntryListProps) => {
 
                 <PlainCollection
                     {...props.entries}
-                    itemRenderer={EntryRenderer}
+                    itemRenderer={(item) => <EntryRenderer {...item} />}
                 />
             </Container>
         </>

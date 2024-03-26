@@ -22,7 +22,7 @@ const SMSHistory: Layout<Props> = (props) => {
             <Head title="Notify SMS History" />
             <PlainCollection
                 {...props.messages}
-                itemRenderer={SMSListItemContent}
+                itemRenderer={(item) => <SMSListItemContent {...item} />}
             />
         </Container>
     );

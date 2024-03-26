@@ -11,7 +11,7 @@ const Index = (props) => {
             <Head title="Notify Email History" />
             <PlainCollection
                 {...props.emails}
-                itemRenderer={EmailListItemContent}
+                itemRenderer={(item) => <EmailListItemContent {...item} />}
                 route="central.notify.show"
                 routeIdName="id"
             />
