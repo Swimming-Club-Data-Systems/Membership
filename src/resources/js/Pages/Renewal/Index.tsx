@@ -89,7 +89,7 @@ const Index: Layout<Props> = (props: Props) => {
                 <Collection
                     {...props.renewals}
                     route="renewals.show"
-                    itemRenderer={RenewalRenderer}
+                    itemRenderer={(item) => <RenewalRenderer {...item} />}
                 />
             </Container>
         </>

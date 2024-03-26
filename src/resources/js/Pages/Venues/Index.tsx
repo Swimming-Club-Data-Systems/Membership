@@ -65,7 +65,7 @@ const Index: Layout<Props> = (props: Props) => {
                     searchable
                     {...props.venues}
                     route="venues.show"
-                    itemRenderer={VenueRenderer}
+                    itemRenderer={(item) => <VenueRenderer {...item} />}
                 />
             </Container>
         </>

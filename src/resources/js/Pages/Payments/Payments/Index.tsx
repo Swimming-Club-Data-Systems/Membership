@@ -84,7 +84,7 @@ const Index: Layout<PaymentIndexProps> = (props: PaymentIndexProps) => {
                 <Collection
                     {...props.payments}
                     route="payments.payments.show"
-                    itemRenderer={PaymentItemContent}
+                    itemRenderer={(item) => <PaymentItemContent {...item} />}
                 />
             </Container>
         </>

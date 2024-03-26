@@ -13,7 +13,7 @@ import MainHeader from "@/Layouts/Components/MainHeader";
 import FlashAlert from "@/Components/FlashAlert";
 
 const Index: Layout<BalanceTopUpIndexProps> = (
-    props: BalanceTopUpIndexProps
+    props: BalanceTopUpIndexProps,
 ) => {
     const title = "Balance Top Ups";
     const subtitle = `View balance top ups for ${props.user.name}`;
@@ -61,7 +61,7 @@ const Index: Layout<BalanceTopUpIndexProps> = (
                     {...props.balance_top_ups}
                     route="users.top_up.show"
                     routeParams={[props.user.id]}
-                    itemRenderer={BalanceTopUpContent}
+                    itemRenderer={(item) => <BalanceTopUpContent {...item} />}
                 />
             </Container>
         </>

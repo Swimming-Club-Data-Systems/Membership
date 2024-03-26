@@ -58,7 +58,7 @@ const Index = (props) => {
                 <Collection
                     searchable
                     {...props.squads}
-                    itemRenderer={ItemContent}
+                    itemRenderer={(item) => <ItemContent {...item} />}
                     route="squads.show"
                     routeIdName="SquadID"
                 />
