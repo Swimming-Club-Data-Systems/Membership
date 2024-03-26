@@ -159,7 +159,12 @@ const Index = (props: Props) => {
             </Container>
 
             <Container noMargin>
-                <PlainCollection {...props.moves} itemRenderer={ItemContent} />
+                <PlainCollection
+                    {...props.moves}
+                    itemRenderer={(item) => {
+                        return <ItemContent {...item} />;
+                    }}
+                />
             </Container>
 
             <NewSquadMoveDialog
