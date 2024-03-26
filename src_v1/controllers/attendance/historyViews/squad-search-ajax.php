@@ -26,7 +26,7 @@ header('content-type: application/json');
 
 try {
 
-  $getMembers = $db->prepare("SELECT MForename, MSurname, MemberID FROM squadMembers INNER JOIN members ON squadMembers.Member = members.MemberID WHERE squadMembers.Squad = ? ORDER BY MForename ASC, MSurname ASC");
+  $getMembers = $db->prepare("SELECT MForename, MSurname, MemberID FROM squadMembers INNER JOIN members ON squadMembers.Member = members.MemberID WHERE members.Active AND squadMembers.Squad = ? ORDER BY MForename ASC, MSurname ASC");
   $getMembers->execute([
     $_POST['squad']
   ]);

@@ -10,7 +10,7 @@ $json = [
 ];
 
 // Verify member
-$getMember = $db->prepare("SELECT MForename, MSurname FROM members WHERE MemberID = ? AND Tenant = ?");
+$getMember = $db->prepare("SELECT `MForename`, `MSurname` FROM `members` WHERE `Active` AND `MemberID` = ? AND `Tenant` = ?");
 $getMember->execute([
   $_POST['member'],
   $tenant->getId(),
