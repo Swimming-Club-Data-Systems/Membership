@@ -71,6 +71,7 @@ export const NewSquadMoveDialog = (props: Props) => {
                     old_squad: props.squadToLeave ?? null,
                     paying: true,
                 }}
+                enableReinitialize={false}
                 formName="create-move"
                 submitTitle="Save"
                 method="post"
