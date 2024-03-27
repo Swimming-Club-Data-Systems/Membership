@@ -187,8 +187,16 @@ const Show = (props: Props) => {
                                         {
                                             key: "membership_number",
                                             term: "Swim England membership number",
-                                            definition:
-                                                props.governing_body_registration_number,
+                                            definition: (
+                                                <Link
+                                                    href={`https://www.swimmingresults.org/biogs/biogs_details.php?tiref=${props.governing_body_registration_number}`}
+                                                    external
+                                                >
+                                                    {
+                                                        props.governing_body_registration_number
+                                                    }
+                                                </Link>
+                                            ),
                                         },
                                         {
                                             key: "category",
