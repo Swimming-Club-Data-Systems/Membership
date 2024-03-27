@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Member;
 use App\Models\Tenant\Squad;
 use App\Models\Tenant\SquadMove;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -59,8 +61,20 @@ class SquadMoveController extends Controller
         $request->validate([
             'member' => ['required'],
             'date' => ['required', 'date', 'after_or_equal:today'],
-            'old_squad' => ['required_without:new_squad'],
-            'new_squad' => ['required_without:old_squad'],
+            'old_squad' => [
+                'nullable',
+                'required_without:new_squad',
+                Rule::exists('squadMembers', 'Squad')->where(function (Builder $query) use ($request) {
+                    return $query->where('Member', $request->integer('member'));
+                }),
+            ],
+            'new_squad' => [
+                'nullable',
+                'required_without:old_squad',
+                Rule::unique('squadMembers', 'Squad')->where(function (Builder $query) use ($request) {
+                    return $query->where('Member', $request->integer('member'));
+                }),
+            ],
             'paying' => ['boolean'],
         ]);
 
@@ -102,8 +116,20 @@ class SquadMoveController extends Controller
 
         $request->validate([
             'date' => ['required', 'date', 'after_or_equal:today'],
-            'old_squad' => ['required_without:new_squad'],
-            'new_squad' => ['required_without:old_squad'],
+            'old_squad' => [
+                'nullable',
+                'required_without:new_squad',
+                Rule::exists('squadMembers', 'Squad')->where(function (Builder $query) use ($request) {
+                    return $query->where('Member', $request->integer('member'));
+                }),
+            ],
+            'new_squad' => [
+                'nullable',
+                'required_without:old_squad',
+                Rule::unique('squadMembers', 'Squad')->where(function (Builder $query) use ($request) {
+                    return $query->where('Member', $request->integer('member'));
+                }),
+            ],
             'paying' => ['boolean'],
         ]);
 

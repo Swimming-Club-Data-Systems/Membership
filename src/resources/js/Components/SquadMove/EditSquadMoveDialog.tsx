@@ -98,7 +98,7 @@ export const EditSquadMoveDialog = (props: Props) => {
                     endpoint={route("squads.combobox")}
                     name="new_squad"
                     label="New squad"
-                    help="Start typing to find a squad."
+                    help="Start typing to find a squad. Leave this field blank if the member is not joining a new squad."
                     nullable
                 />
 

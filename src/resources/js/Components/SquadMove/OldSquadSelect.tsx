@@ -35,6 +35,12 @@ export const OldSquadSelect = (props: OldSquadSelectProps) => {
     }, [setValue, value, values, valuesLoaded]);
 
     return (
-        <Select name="old_squad" items={values} label="Old squad" nullable />
+        <Select
+            name="old_squad"
+            items={values}
+            label="Old squad"
+            nullable
+            help="Leave this field blank if the member is not leaving an old squad."
+        />
     );
 };

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
-import Form from "@/Components/Form/Form";
+import Form, { RenderServerErrors } from "@/Components/Form/Form";
 import * as yup from "yup";
 import { formatISO } from "date-fns";
 import Combobox from "@/Components/Form/Combobox";
@@ -9,6 +9,8 @@ import Checkbox from "@/Components/Form/Checkbox";
 import Modal from "@/Components/Modal";
 import startOfDay from "date-fns/startOfDay";
 import { OldSquadSelect } from "@/Components/SquadMove/OldSquadSelect";
+import ValidationErrors from "@/Components/ValidationErrors";
+import FlashAlert from "@/Components/FlashAlert";
 
 type Props = {
     show: boolean;
@@ -69,6 +71,7 @@ export const NewSquadMoveDialog = (props: Props) => {
                     old_squad: props.squadToLeave ?? null,
                     paying: true,
                 }}
+                formName="create-move"
                 submitTitle="Save"
                 method="post"
                 action={route("squad-moves.create")}
@@ -80,6 +83,10 @@ export const NewSquadMoveDialog = (props: Props) => {
                     preserveScroll: true,
                 }}
             >
+                <FlashAlert bag="create-move" />
+
+                <RenderServerErrors />
+
                 {!props.member && (
                     <Combobox
                         endpoint={route("members.combobox")}
@@ -104,7 +111,7 @@ export const NewSquadMoveDialog = (props: Props) => {
                     endpoint={route("squads.combobox")}
                     name="new_squad"
                     label="New squad"
-                    help="Start typing to find a squad."
+                    help="Start typing to find a squad. Leave this field blank if the member is not joining a new squad."
                     nullable
                 />
 
