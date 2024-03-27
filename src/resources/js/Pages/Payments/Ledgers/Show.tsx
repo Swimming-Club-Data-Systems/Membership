@@ -69,7 +69,7 @@ const Show: Layout<Props> = (props: Props) => {
 
             <Collection
                 {...props.journals}
-                itemRenderer={ItemContent}
+                itemRenderer={(item) => <ItemContent {...item} />}
                 route="payments.ledgers.journals.show"
                 routeParams={[props.id]}
             />

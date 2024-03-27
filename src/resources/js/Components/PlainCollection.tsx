@@ -1,6 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
 import Pagination from "./Pagination";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { router } from "@inertiajs/react";
 import Form from "./Form/Form";
 import TextInput from "./Form/TextInput";
@@ -23,15 +22,15 @@ const Search = (props: SearchProps) => {
     };
 
     const SetSearchValue = () => {
-        const formikProps = useFormikContext();
+        const { setFieldValue } = useFormikContext();
 
         useEffect(() => {
             const params = new URLSearchParams(window.location.search);
             const searchValue = params.get("query");
             if (searchValue) {
-                formikProps.setFieldValue("query", searchValue);
+                setFieldValue("query", searchValue);
             }
-        }, []);
+        }, [setFieldValue]);
 
         return null;
     };

@@ -99,7 +99,7 @@ const Index: Layout<BalanceTopUpIndexProps> = (
                 <Collection
                     {...props.balance_top_ups}
                     route="payments.top_up.show"
-                    itemRenderer={BalanceTopUpContent}
+                    itemRenderer={(item) => <BalanceTopUpContent {...item} />}
                 />
             </Container>
         </>

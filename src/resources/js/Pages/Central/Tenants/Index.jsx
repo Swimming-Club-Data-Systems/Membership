@@ -47,7 +47,7 @@ const Index = (props) => {
             <Head title="Clubs" />
             <Collection
                 {...props.tenants}
-                itemRenderer={ItemContent}
+                itemRenderer={(item) => <ItemContent {...item} />}
                 route="central.tenants.show"
                 routeIdName="ID"
             />

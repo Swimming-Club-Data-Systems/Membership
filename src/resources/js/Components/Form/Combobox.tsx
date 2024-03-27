@@ -51,7 +51,7 @@ const Combobox: React.FC<Props> = ({
     }
 
     const changeHandler = (value) => {
-        helpers.setValue(value[keyField]);
+        helpers.setValue(value?.[keyField]);
     };
 
     return (

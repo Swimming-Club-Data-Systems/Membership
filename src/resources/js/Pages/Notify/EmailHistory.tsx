@@ -22,7 +22,7 @@ const EmailHistory: Layout<Props> = (props) => {
             <Head title="Notify Email History" />
             <PlainCollection
                 {...props.emails}
-                itemRenderer={EmailListItemContent}
+                itemRenderer={(item) => <EmailListItemContent {...item} />}
             />
         </Container>
     );

@@ -92,7 +92,7 @@ const Index: Layout<Props> = (props: Props) => {
                     searchable
                     {...props.competitions}
                     route="competitions.show"
-                    itemRenderer={CompetitionRenderer}
+                    itemRenderer={(item) => <CompetitionRenderer {...item} />}
                 />
             </Container>
         </>

@@ -164,7 +164,14 @@ const DateNumeralInput: React.FC<Props> = ({
                     field.onChange({
                         target: {
                             name: props.name,
-                            value: date.toISOString(),
+                            value:
+                                date.getFullYear() +
+                                "-" +
+                                (date.getMonth() + 1)
+                                    .toString()
+                                    .padStart(2, "0") +
+                                "-" +
+                                date.getDate().toString().padStart(2, "0"),
                         },
                     });
                 } catch (e) {

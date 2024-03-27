@@ -3,7 +3,7 @@
 $db = app()->db;
 $tenant = app()->tenant;
 
-$getMember = $db->prepare("SELECT MForename first, MSurname last FROM `members` WHERE `MemberID` = ? AND Tenant = ?");
+$getMember = $db->prepare("SELECT MForename first, MSurname last FROM `members` WHERE `Active` AND `MemberID` = ? AND Tenant = ?");
 $getMember->execute([
   $id,
   $tenant->getId()

@@ -29,9 +29,9 @@ const Link: React.FC<LinkProps> = (props) => {
     return <InertiaLink {...props} />;
 };
 
-const BaseLink: React.FC<LinkProps> = ({ external, ...props }) => {
+const BaseLink: React.FC<LinkProps> = ({ external, children, ...props }) => {
     if (external || props.target === "_blank") {
-        return <A {...props} />;
+        return <A {...props}>{children}</A>;
     }
 
     // eslint-disable-next-line prefer-const
@@ -41,7 +41,11 @@ const BaseLink: React.FC<LinkProps> = ({ external, ...props }) => {
         as = "button";
     }
 
-    return <Link as={as} {...otherProps} />;
+    return (
+        <Link as={as} {...otherProps}>
+            {children}
+        </Link>
+    );
 };
 
 export default BaseLink;

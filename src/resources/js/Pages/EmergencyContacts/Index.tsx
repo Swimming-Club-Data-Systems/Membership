@@ -193,7 +193,7 @@ const Index = (props: Props) => {
 
                     <PlainCollection
                         {...props.contacts}
-                        itemRenderer={ItemContent}
+                        itemRenderer={(item) => <ItemContent {...item} />}
                     />
                 </div>
             </Container>

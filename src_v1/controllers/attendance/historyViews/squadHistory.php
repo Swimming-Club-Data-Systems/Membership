@@ -25,7 +25,7 @@ if (!$squadName) {
 $get = $db->prepare("SELECT * FROM ((`members` LEFT JOIN `sessionsAttendance` ON
 `sessionsAttendance`.`MemberID` = `members`.`MemberID`) INNER JOIN `sessions` ON
 `sessionsAttendance`.`SessionID` = `sessions`.`SessionID` INNER JOIN sessionsSquads ON sessions.SessionID = sessionsSquads.Squad) WHERE
-`sessionsSquads`.`Squad` = ? AND `WeekID` = ? AND members.Tenant = ? ORDER BY `MForename` ASC,
+`members`.`Active` AND `sessionsSquads`.`Squad` = ? AND `WeekID` = ? AND members.Tenant = ? ORDER BY `MForename` ASC,
 `MSurname` ASC, `SessionDay` ASC, `StartTime` ASC");
 $get->execute([$id, $week, $tenant->getId()]);
 

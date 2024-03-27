@@ -85,7 +85,9 @@ const Index: Layout<TransactionIndexProps> = (props) => {
             <Container noMargin>
                 <PlainCollection
                     {...props.transactions}
-                    itemRenderer={TransactionItemContent}
+                    itemRenderer={(item) => (
+                        <TransactionItemContent {...item} />
+                    )}
                 />
             </Container>
         </>

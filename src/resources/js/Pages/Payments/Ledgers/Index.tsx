@@ -42,7 +42,7 @@ const Index: Layout<Props> = (props: Props) => {
 
             <Collection
                 {...props.ledgers}
-                itemRenderer={ItemContent}
+                itemRenderer={(item) => <ItemContent {...item} />}
                 route="payments.ledgers.show"
             />
         </>

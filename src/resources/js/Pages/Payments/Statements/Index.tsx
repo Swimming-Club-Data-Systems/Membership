@@ -20,7 +20,7 @@ const Index: Layout<Props> = (props: Props) => {
 
             <Collection
                 {...props.statements}
-                itemRenderer={StatementIndexItemContent}
+                itemRenderer={(item) => <StatementIndexItemContent {...item} />}
                 route="payments.statements.show"
             />
         </>

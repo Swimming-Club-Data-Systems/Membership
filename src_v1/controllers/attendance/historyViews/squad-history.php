@@ -75,7 +75,7 @@ $sessions = $otherDays;
 $getCoaches = $db->prepare("SELECT Forename fn, Surname sn, coaches.Type code FROM coaches INNER JOIN users ON coaches.User = users.UserID WHERE coaches.Squad = ? ORDER BY coaches.Type ASC, Forename ASC, Surname ASC");
 
 // Get attendance
-$getAttendees = $db->prepare("SELECT AttendanceBoolean, MForename fn, MSurname sn, members.MemberID mid FROM sessionsAttendance INNER JOIN members ON sessionsAttendance.MemberID = members.MemberID WHERE sessionsAttendance.SessionID = ? AND sessionsAttendance.WeekID = ? ORDER BY MForename ASC, MSurname ASC");
+$getAttendees = $db->prepare("SELECT AttendanceBoolean, MForename fn, MSurname sn, members.MemberID mid FROM sessionsAttendance INNER JOIN members ON sessionsAttendance.MemberID = members.MemberID WHERE members.Active AND sessionsAttendance.SessionID = ? AND sessionsAttendance.WeekID = ? ORDER BY MForename ASC, MSurname ASC");
 
 $days = [
   0 => false,

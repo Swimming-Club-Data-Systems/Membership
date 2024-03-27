@@ -48,7 +48,7 @@ const Clubs = (props) => {
             <Collection
                 searchable
                 {...props.tenants}
-                itemRenderer={ItemContent}
+                itemRenderer={(item) => <ItemContent {...item} />}
                 route="central.clubs.redirect"
                 routeIdName="ID"
             />

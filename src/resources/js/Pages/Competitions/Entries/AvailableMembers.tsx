@@ -94,7 +94,7 @@ const AvailableMembers = (props: GuestEntryListProps) => {
                     {...props.members}
                     route="competitions.enter.edit_entry"
                     routeParams={[props.competition.id]}
-                    itemRenderer={EntryRenderer}
+                    itemRenderer={(item) => <EntryRenderer {...item} />}
                 />
             </Container>
         </>
